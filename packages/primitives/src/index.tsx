@@ -1,11 +1,17 @@
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
+export { Box } from "./Box";
+export type { BoxProps } from "./Box";
 
-type BoxProps = React.ComponentPropsWithoutRef<"div"> & {
-  asChild?: boolean;
-};
+export { Text } from "./Text";
+export type { TextProps } from "./Text";
 
-export function Box({ asChild, ...props }: BoxProps) {
-  const Comp = asChild ? Slot : "div";
-  return <Comp {...props} />;
-}
+export { VisuallyHidden } from "./VisuallyHidden";
+export type { VisuallyHiddenProps } from "./VisuallyHidden";
+
+export { Portal } from "./Portal";
+export type { PortalProps } from "./Portal";
+
+export { FocusScope } from "./FocusScope";
+export type { FocusScopeProps } from "./FocusScope";
+
+export { DismissableLayer } from "./DismissableLayer";
+export type { DismissableLayerProps } from "./DismissableLayer";
