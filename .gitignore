@@ -1,0 +1,10 @@
+node_modules
+.pnpm-store
+.turbo
+dist
+coverage
+storybook-static
+.DS_Store
+.env
+.env.*
+!.env.example

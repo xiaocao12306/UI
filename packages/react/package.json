@@ -1,0 +1,25 @@
+{
+  "name": "@aurora-ui/react",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "dependencies": {
+    "@aurora-ui/primitives": "workspace:*",
+    "@aurora-ui/tokens": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsup src/index.tsx --format esm,cjs --dts",
+    "dev": "tsup src/index.tsx --watch --format esm,cjs --dts",
+    "lint": "echo 'todo: lint @aurora-ui/react'",
+    "test": "echo 'todo: test @aurora-ui/react'",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}
