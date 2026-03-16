@@ -10,8 +10,8 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "tsup src/index.ts --watch --format esm,cjs --dts",
-    "lint": "echo 'todo: lint @aurora-ui/tokens'",
-    "test": "echo 'todo: test @aurora-ui/tokens'",
+    "lint": "eslint src --ext .ts",
+    "test": "pnpm run typecheck",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   }
 }

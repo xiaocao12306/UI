@@ -12,6 +12,11 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@aurora-ui/tokens": ["packages/tokens/src"],
+      "@aurora-ui/primitives": ["packages/primitives/src"],
+      "@aurora-ui/react": ["packages/react/src"]
+    }
   }
 }
