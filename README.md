@@ -33,6 +33,7 @@ Aurora UI is a token-first React component library monorepo with accessibility-f
 - `docs/storybook.md`: Storybook runbook and blocker log
 - `docs/chromatic.md`: visual regression setup and workflow guide
 - `docs/secrets.md`: CHROMATIC/NPM token setup instructions
+- `docs/production-quality-checklist.md`: production-grade acceptance matrix for core components
 - `docs/component-recipes.md`: copy-ready integration snippets
 - `docs/overlay-behavior.md`: overlay dismiss/keyboard behavior guide
 - `docs/ai-components-guide.md`: AI component composition guide
