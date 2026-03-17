@@ -135,6 +135,7 @@
   - Tag/Badge 覆盖补齐（单测 + Storybook `Core/Tag`、`Core/Badge`）
   - Verify 门禁修复（Pagination 键盘事件语义、RadioGroup invalid 语义、Tooltip/Textarea Storybook lint 合规）
   - Storybook API/Catalog 同步（补齐 Tag/Badge 文档入口，RadioGroup invalid 描述与实现一致）
+  - CommandPalette 结果播报增强（`getResultsStatusText` + live region 语义收口 + 回归测试）
   - 横向收口（Tabs/Table：Home/End 焦点流、`aria-sort` 与排序切换断言、排序 telemetry 示例）
   - Table 语义边界修复（`defaultSortKey` 指向非 sortable 列时忽略初始排序，保持 `aria-sort` 正确）
   - Table Storybook 边界示例补齐（`InvalidDefaultSortKeyFallback` 覆盖无效默认排序键）

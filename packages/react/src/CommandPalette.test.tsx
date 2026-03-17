@@ -56,7 +56,8 @@ describe("CommandPalette", () => {
     );
 
     fireEvent.change(screen.getByLabelText("Search commands"), { target: { value: "no-match" } });
-    expect(screen.getByRole("status")).toHaveTextContent("No commands found.");
+    expect(screen.getByText("No commands found.")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent('No commands match "no-match".');
   });
 
   it("renders filtered results as listbox options", () => {
@@ -185,7 +186,45 @@ describe("CommandPalette", () => {
     });
 
     expect(onQueryChange).toHaveBeenCalledWith("no-hit");
-    expect(screen.getByRole("status")).toHaveTextContent("No workflow commands yet.");
+    expect(screen.getByText("No workflow commands yet.")).toBeInTheDocument();
+  });
+
+  it("announces result count in live region", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings", keywords: ["settings"] },
+          { key: "open-changelog", label: "Open Changelog", keywords: ["release"] }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("2 commands available.");
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "release" }
+    });
+    expect(screen.getByRole("status")).toHaveTextContent('1 command found for "release".');
+  });
+
+  it("supports custom result status narration", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+        getResultsStatusText={({ query, visibleCount }) =>
+          query.trim().length === 0 ? "Ready for command search." : `${visibleCount} match(es) for ${query}`
+        }
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("Ready for command search.");
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "settings" }
+    });
+    expect(screen.getByRole("status")).toHaveTextContent("1 match(es) for settings");
   });
 
   it("keeps selection unset when all commands are disabled", () => {

@@ -79,6 +79,11 @@ function QueryTelemetryPalette() {
         commands={[{ key: "open-changelog", label: "Open Changelog", keywords: ["release", "notes"] }]}
         emptyMessage="No matching AI workflow command."
         onQueryChange={setQuery}
+        getResultsStatusText={({ query: nextQuery, visibleCount }) =>
+          nextQuery.trim().length === 0
+            ? "Command search ready."
+            : `${visibleCount} AI workflow match${visibleCount === 1 ? "" : "es"} for ${nextQuery}`
+        }
       />
     </div>
   );

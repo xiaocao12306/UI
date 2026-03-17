@@ -17,6 +17,7 @@ export type CommandPaletteProps = {
   placeholder?: string;
   emptyMessage?: React.ReactNode;
   onQueryChange?: (query: string) => void;
+  getResultsStatusText?: (params: { query: string; visibleCount: number; totalCount: number }) => string;
 };
 
 export function CommandPalette({
@@ -25,7 +26,8 @@ export function CommandPalette({
   commands,
   placeholder = "Search commands...",
   emptyMessage = "No commands found.",
-  onQueryChange
+  onQueryChange,
+  getResultsStatusText = defaultGetResultsStatusText
 }: CommandPaletteProps) {
   const [query, setQuery] = React.useState("");
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -53,6 +55,16 @@ export function CommandPalette({
       return haystack.includes(normalized);
     });
   }, [commands, query]);
+
+  const resultsStatusText = React.useMemo(
+    () =>
+      getResultsStatusText({
+        query,
+        visibleCount: filtered.length,
+        totalCount: commands.length
+      }),
+    [commands.length, filtered.length, getResultsStatusText, query]
+  );
 
   const firstEnabledIndex = React.useMemo(() => filtered.findIndex((command) => !command.disabled), [filtered]);
   const lastEnabledIndex = React.useMemo(() => {
@@ -157,6 +169,23 @@ export function CommandPalette({
           }}
           aria-label="Search commands"
         />
+        <p
+          role="status"
+          aria-live="polite"
+          style={{
+            position: "absolute",
+            width: 1,
+            height: 1,
+            padding: 0,
+            margin: -1,
+            overflow: "hidden",
+            clip: "rect(0, 0, 0, 0)",
+            whiteSpace: "nowrap",
+            border: 0
+          }}
+        >
+          {resultsStatusText}
+        </p>
         <div
           id={listId}
           role="listbox"
@@ -206,7 +235,7 @@ export function CommandPalette({
               );
             })
           ) : (
-            <p role="status" aria-live="polite" style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+            <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
               {emptyMessage}
             </p>
           )}
@@ -214,4 +243,25 @@ export function CommandPalette({
       </div>
     </Dialog>
   );
+}
+
+function defaultGetResultsStatusText({
+  query,
+  visibleCount,
+  totalCount
+}: {
+  query: string;
+  visibleCount: number;
+  totalCount: number;
+}) {
+  const normalized = query.trim();
+  if (normalized.length === 0) {
+    return `${totalCount} command${totalCount === 1 ? "" : "s"} available.`;
+  }
+
+  if (visibleCount === 0) {
+    return `No commands match "${normalized}".`;
+  }
+
+  return `${visibleCount} command${visibleCount === 1 ? "" : "s"} found for "${normalized}".`;
 }
