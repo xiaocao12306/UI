@@ -6,7 +6,8 @@ const commands: CommandItem[] = [
   { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
   { key: "open-theme", label: "Open Theme Pack", keywords: ["theme", "token"] },
   { key: "run-e2e", label: "Run E2E Smoke", keywords: ["playwright", "test"] },
-  { key: "generate-readme", label: "Generate README Draft", keywords: ["ai", "docs"] }
+  { key: "generate-readme", label: "Generate README Draft", keywords: ["ai", "docs"] },
+  { key: "publish-release", label: "Publish Release", keywords: ["release"], disabled: true }
 ];
 
 const meta = {
@@ -33,7 +34,14 @@ type Story = StoryObj<typeof meta>;
 
 function OpenPalette() {
   const [open, setOpen] = React.useState(true);
-  return <CommandPalette open={open} onOpenChange={setOpen} commands={commands} />;
+  return (
+    <CommandPalette
+      open={open}
+      onOpenChange={setOpen}
+      commands={commands}
+      placeholder="Search commands (ArrowUp/ArrowDown + Enter)..."
+    />
+  );
 }
 
 function AiFlowPalette() {

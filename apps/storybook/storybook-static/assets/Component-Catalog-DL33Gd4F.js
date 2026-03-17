@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as d}from"./index-CHKtz2QT.js";import{M as t,T as c,S as s,D as i}from"./index-DoRs_BHx.js";import"./index-BWu4c2F4.js";import"./iframe-DUUIL-zI.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function r(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as d}from"./index-CHKtz2QT.js";import{M as t,T as c,S as s,D as i}from"./index-C2c43Eu8.js";import"./index-BWu4c2F4.js";import"./iframe-C2Hv-uHj.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function r(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
 `,e.jsx(c,{}),`
 `,e.jsx(s,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(i,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.

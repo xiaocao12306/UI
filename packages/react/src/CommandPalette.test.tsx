@@ -76,6 +76,29 @@ describe("CommandPalette", () => {
     expect(screen.getAllByRole("option")).toHaveLength(2);
   });
 
+  it("supports keyboard navigation and enter selection", () => {
+    const onCreate = vi.fn();
+    const onOpenChange = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "create-project", label: "Create Project", onSelect: onCreate }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(onCreate).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it("resets search query after palette closes", () => {
     const onOpenChange = vi.fn();
     const { rerender } = render(

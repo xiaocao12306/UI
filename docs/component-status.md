@@ -26,8 +26,7 @@
 - Overlay
   - `Tooltip`, `Drawer`: done
   - `Dialog`: production-refined
-  - `Popover`, `Dropdown`: production-refining
-  - `CommandPalette`: done
+  - `Popover`, `Dropdown`, `CommandPalette`: production-refined
 - AI Components
   - `PromptInput`, `MessageBubble`, `ReasoningPanel`, `StreamingCodeBlock`: done
 
@@ -42,4 +41,4 @@
 ## Planned Next (v0.2)
 - `DatePicker` / `Combobox` / `Pagination`
 - Storybook interaction test runner expansion
-- Remaining production refinements: `CommandPalette`, `Toast`, `Tabs`, `Table`
+- Remaining production refinements: `Toast`, `Tabs`, `Table`
