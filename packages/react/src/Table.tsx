@@ -56,6 +56,8 @@ export function Table<T>({
   defaultSortDirection = "asc",
   onSortChange
 }: TableProps<T>) {
+  const resolvedAriaLabel = ariaLabel ?? (caption ? undefined : "Data table");
+
   const [sortState, setSortState] = React.useState<{ key: string; direction: TableSortDirection } | null>(() =>
     resolveInitialSortState(columns, defaultSortKey, defaultSortDirection)
   );
@@ -110,7 +112,7 @@ export function Table<T>({
         overflow: "auto"
       }}
     >
-      <table aria-label={ariaLabel} style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}>
+      <table aria-label={resolvedAriaLabel} style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}>
         {caption ? (
           <caption
             style={{

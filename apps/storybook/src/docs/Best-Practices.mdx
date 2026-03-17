@@ -90,7 +90,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 ## Data Presentation Patterns
 
 - Use typed columns and stable row keys in data tables.
-- Ensure each table has an accessible name through either `caption` or `ariaLabel`.
+- Ensure each table has an accessible name through `caption` or `ariaLabel`; fallback `Data table` naming exists but should be treated as a safety net.
 - Prefer sortable columns with explicit `aria-sort` state for keyboard and screen-reader parity.
 - Surface status semantics with tokens instead of custom ad-hoc colors.
 - Keep row actions predictable and keyboard reachable.

@@ -298,7 +298,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `columns` | `TableColumn<T>[]` | `sortable` + optional `sortAccessor` for stable sorting behavior. |
 | `data` | `T[]` | Empty arrays render `emptyContent`. |
-| `caption` / `ariaLabel` | `ReactNode` / `string` | Provide an accessible table name with visible caption or screen-reader-only label. |
+| `caption` / `ariaLabel` | `ReactNode` / `string` | Prefer explicit naming via visible caption or screen-reader label; when both are omitted, table falls back to `aria-label="Data table"`. |
 | `defaultSortKey` / `defaultSortDirection` | `string` / `'asc' \| 'desc'` | Sets initial `aria-sort` and data order when key points to a sortable column. |
 | `onSortChange` | `(key, direction) => void` | Useful for telemetry and analytics. |
 

@@ -22,6 +22,23 @@ describe("Table", () => {
     expect(screen.getByText("Dialog")).toBeInTheDocument();
   });
 
+  it("falls back to a default accessible table name when caption and ariaLabel are absent", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("table", { name: "Data table" })).toBeInTheDocument();
+  });
+
   it("renders empty state when no rows", () => {
     render(
       <Table
@@ -53,6 +70,25 @@ describe("Table", () => {
     );
 
     expect(screen.getByRole("table", { name: "Component release status" })).toBeInTheDocument();
+  });
+
+  it("prefers caption naming when ariaLabel is not provided", () => {
+    render(
+      <Table
+        caption="Release readiness board"
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    const table = screen.getByRole("table", { name: "Release readiness board" });
+    expect(table).not.toHaveAttribute("aria-label");
   });
 
   it("sorts sortable columns and emits sort change", () => {

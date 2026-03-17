@@ -102,6 +102,18 @@ export const AccessibleNameWithoutCaption: Story = {
   }
 };
 
+export const AccessibleNameFallback: Story = {
+  render: () => (
+    <div style={{ width: 780 }}>
+      <Table columns={columns} data={rows} rowKey={(row) => row.id} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("table", { name: "Data table" })).toBeInTheDocument();
+  }
+};
+
 function SortTelemetryDemo() {
   const [sortState, setSortState] = React.useState("id asc");
 
