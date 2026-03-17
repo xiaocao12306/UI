@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Toast supports tone variants, auto-close duration, Escape dismissal, and hover pause for actionable notifications."
+          "Toast supports tone variants, auto-close duration, Escape dismissal, and hover/focus pause for actionable notifications."
       }
     }
   },

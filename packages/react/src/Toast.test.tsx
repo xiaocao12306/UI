@@ -96,6 +96,57 @@ describe("Toast", () => {
     }
   });
 
+  it("pauses auto dismiss while toast controls are focused", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+
+    try {
+      render(<Toast open title="Focus pause" duration={1500} onOpenChange={onOpenChange} />);
+
+      act(() => {
+        vi.advanceTimersByTime(700);
+      });
+
+      const closeButton = screen.getByRole("button", { name: "Close toast" });
+      fireEvent.focus(closeButton);
+      act(() => {
+        vi.advanceTimersByTime(2000);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+
+      fireEvent.blur(closeButton);
+      act(() => {
+        vi.advanceTimersByTime(1499);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("does not pause on focus when pauseOnHover is disabled", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+
+    try {
+      render(<Toast open title="No pause" duration={1000} pauseOnHover={false} onOpenChange={onOpenChange} />);
+
+      fireEvent.focus(screen.getByRole("button", { name: "Close toast" }));
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("does not close on escape when closeOnEscape is disabled", () => {
     const onOpenChange = vi.fn();
 

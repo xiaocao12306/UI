@@ -148,6 +148,7 @@
   - Table Storybook 边界示例补齐（`InvalidDefaultSortKeyFallback` 覆盖无效默认排序键）
   - CommandPalette 语义补强（`aria-disabled` option 语义与全禁用状态测试）
   - Toast 生命周期补丁（hover pause 状态在 close/reopen 后复位）
+  - Toast 键盘可访问性补齐（`pauseOnHover` 同时覆盖 toast 内部 focus 路径，避免键盘操作期间自动消失）
   - Table 可访问性增强（sortable header `aria-label` 下一步排序提示、`scope="col"`）
   - Table 可访问性增强（`ariaLabel` API，支持无 caption 场景下的命名语义）
   - Overlay 层级 token 化收口（Dialog/Drawer/Popover/Dropdown/Tooltip 使用统一 `z` 变量）

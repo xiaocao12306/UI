@@ -62,11 +62,12 @@ export function Toast({
   onClose,
   onOpenChange
 }: ToastProps) {
-  const [paused, setPaused] = React.useState(false);
+  const [pauseState, setPauseState] = React.useState({ hover: false, focus: false });
+  const paused = pauseOnHover && (pauseState.hover || pauseState.focus);
 
   React.useEffect(() => {
     if (!open) {
-      setPaused(false);
+      setPauseState({ hover: false, focus: false });
     }
   }, [open]);
 
@@ -120,12 +121,22 @@ export function Toast({
       aria-atomic="true"
       onMouseEnter={() => {
         if (pauseOnHover) {
-          setPaused(true);
+          setPauseState((current) => ({ ...current, hover: true }));
         }
       }}
       onMouseLeave={() => {
         if (pauseOnHover) {
-          setPaused(false);
+          setPauseState((current) => ({ ...current, hover: false }));
+        }
+      }}
+      onFocusCapture={() => {
+        if (pauseOnHover) {
+          setPauseState((current) => ({ ...current, focus: true }));
+        }
+      }}
+      onBlurCapture={(event) => {
+        if (pauseOnHover && !event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          setPauseState((current) => ({ ...current, focus: false }));
         }
       }}
       style={{
