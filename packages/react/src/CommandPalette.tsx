@@ -226,6 +226,8 @@ export function CommandPalette({
                   role="option"
                   aria-selected={active}
                   aria-disabled={item.disabled || undefined}
+                  aria-posinset={index + 1}
+                  aria-setsize={filtered.length}
                   tabIndex={-1}
                   disabled={item.disabled}
                   onMouseDown={(event) => {

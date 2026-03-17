@@ -216,6 +216,7 @@
   - Demo Table loading 验收场景（`aria-busy` + 禁用排序 + 抑制旧数据）与 Playwright 回归
   - Tabs manual 模式键盘边界补强（`Home/End` 仅移动焦点，`Enter/Space` 才激活）并补单测 + Storybook 交互断言
   - Toast Escape 事件优先级补测（`defaultPrevented` 分支单测，避免与上层快捷键处理冲突）
+  - CommandPalette listbox 语义补强（`aria-posinset/aria-setsize`）并补回归测试
   - Tabs 命名语义收口（`ariaLabelledBy` 支持外部标题命名 tablist，减少泛化标签）
   - Popover/Dropdown 关闭策略收口（`closeOnEscape`/`closeOnOutsidePointer` + dismiss 事件钩子，覆盖阻塞式流程）
   - Overlay 焦点策略收口（Popover/Dropdown 仅在键盘关闭时回焦 trigger，外部点击关闭保留指针目标焦点）

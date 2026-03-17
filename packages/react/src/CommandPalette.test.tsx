@@ -141,7 +141,12 @@ describe("CommandPalette", () => {
 
     const listbox = screen.getByRole("listbox", { name: "Command results" });
     expect(listbox).toBeInTheDocument();
-    expect(screen.getAllByRole("option")).toHaveLength(2);
+    const options = screen.getAllByRole("option");
+    expect(options).toHaveLength(2);
+    expect(options[0]).toHaveAttribute("aria-posinset", "1");
+    expect(options[0]).toHaveAttribute("aria-setsize", "2");
+    expect(options[1]).toHaveAttribute("aria-posinset", "2");
+    expect(options[1]).toHaveAttribute("aria-setsize", "2");
   });
 
   it("supports keyboard navigation and enter selection", () => {
