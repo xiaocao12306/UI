@@ -15,10 +15,17 @@
 - `Popover`, `Dropdown`: toggle from trigger and close on `Escape` / outside pointer interaction.
 - `Toast`: controlled by `open` + `onClose`.
 
+## Layering Scale
+- `Dialog` / `Drawer`: `--aurora-z-modal`
+- `Popover` / `Dropdown` / `Tooltip`: `--aurora-z-overlay`
+- `Toast`: `--aurora-z-toast`
+- Recommendation: do not use hard-coded numeric `z-index` in app integrations; compose on top of these token tiers.
+
 ## Keyboard Expectations
 - Trigger buttons expose `aria-expanded` where applicable.
 - `Dropdown` exposes `role="menu"` with `role="menuitem"` entries.
 - `CommandPalette` can be opened by app-level shortcut (`Ctrl/Cmd + K` in demo).
+- `Popover` and `Dropdown` should return focus to the trigger after dismiss to avoid keyboard dead ends.
 
 ## Example
 ```tsx

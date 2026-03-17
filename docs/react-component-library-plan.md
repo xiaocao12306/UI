@@ -133,6 +133,7 @@
   - Toast 生命周期补丁（hover pause 状态在 close/reopen 后复位）
   - Table 可访问性增强（sortable header `aria-label` 下一步排序提示、`scope="col"`）
   - Overlay 层级 token 化收口（Dialog/Drawer/Popover/Dropdown/Tooltip 使用统一 `z` 变量）
+  - Overlay 行为文档深化（层级 token 标尺 + focus return 规则，`docs/overlay-behavior.md`）
   - Demo E2E 扩展（Data 区域 Tabs Home/End 与 Table 排序回归）
   - Pagination 组件落地（`@aurora-ui/react` 导出、单元测试、Storybook `Data/Pagination`）
   - Demo 数据区分页示例与 E2E 回归（Release feed 翻页路径）
