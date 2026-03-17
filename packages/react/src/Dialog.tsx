@@ -9,6 +9,7 @@ export type DialogProps = {
   description?: React.ReactNode;
   children: React.ReactNode;
   size?: DialogSize;
+  restoreFocus?: boolean;
   closeOnEscape?: boolean;
   closeOnOutsidePointer?: boolean;
   showCloseButton?: boolean;
@@ -30,6 +31,7 @@ export function Dialog({
   description,
   children,
   size = "md",
+  restoreFocus = true,
   closeOnEscape = true,
   closeOnOutsidePointer = true,
   showCloseButton = true,
@@ -85,7 +87,7 @@ export function Dialog({
           }}
           onDismiss={() => onOpenChange(false)}
         >
-          <FocusScope>
+          <FocusScope restoreFocus={restoreFocus}>
             <section
               role="dialog"
               aria-modal="true"

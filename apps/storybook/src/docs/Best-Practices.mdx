@@ -50,6 +50,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 ## Overlay Policies
 
 - Dialog/Drawer should explicitly define dismiss policy (`closeOnEscape`, `closeOnOutsidePointer`) for critical workflows.
+- Keep `restoreFocus` enabled for dialogs unless product flow intentionally redirects focus after close.
 - Popover and Dropdown should return focus to trigger on close to avoid keyboard dead-ends.
 - Dropdown menus should expose an accessible name via trigger-linked `aria-labelledby`.
 - Keep trigger `aria-controls` conditional on open state for popover/menu patterns to avoid stale ID references.

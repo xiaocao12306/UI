@@ -1,4 +1,6 @@
+import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Dialog } from "./Dialog";
 
@@ -79,5 +81,59 @@ describe("Dialog", () => {
       </Dialog>
     );
     expect(document.body.style.overflow).toBe("");
+  });
+
+  it("restores focus to the previously focused element after close by default", async () => {
+    const user = userEvent.setup();
+
+    function FocusRestoreFixture() {
+      const [open, setOpen] = React.useState(false);
+
+      return (
+        <div>
+          <button type="button" onClick={() => setOpen(true)}>
+            Open dialog
+          </button>
+          <Dialog open={open} onOpenChange={setOpen} title="Focus restore dialog">
+            <p>Body</p>
+          </Dialog>
+        </div>
+      );
+    }
+
+    render(<FocusRestoreFixture />);
+    const trigger = screen.getByRole("button", { name: "Open dialog" });
+
+    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: "Close dialog" }));
+
+    expect(trigger).toHaveFocus();
+  });
+
+  it("does not restore focus when restoreFocus is false", async () => {
+    const user = userEvent.setup();
+
+    function FocusRestoreDisabledFixture() {
+      const [open, setOpen] = React.useState(false);
+
+      return (
+        <div>
+          <button type="button" onClick={() => setOpen(true)}>
+            Open dialog
+          </button>
+          <Dialog open={open} onOpenChange={setOpen} title="Focus restore disabled" restoreFocus={false}>
+            <p>Body</p>
+          </Dialog>
+        </div>
+      );
+    }
+
+    render(<FocusRestoreDisabledFixture />);
+    const trigger = screen.getByRole("button", { name: "Open dialog" });
+
+    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: "Close dialog" }));
+
+    expect(trigger).not.toHaveFocus();
   });
 });

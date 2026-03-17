@@ -230,6 +230,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `open` / `onOpenChange` | `boolean` / `(open: boolean) => void` | Controlled visibility contract for overlays. |
 | `title` / `description` | `ReactNode` | Wires `aria-labelledby` + optional `aria-describedby`. |
 | `size` | `'sm' \| 'md' \| 'lg'` | Overlay width presets. |
+| `restoreFocus` | `boolean` | Whether to restore focus to the previously focused element when dialog closes. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls dismiss policy for blocking vs non-blocking dialogs. |
 | `showCloseButton` / `closeLabel` | `boolean` / `string` | Close affordance visibility and accessible label text. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Inspect or cancel dismiss intent before `onOpenChange(false)`. |

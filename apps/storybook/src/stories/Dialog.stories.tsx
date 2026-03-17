@@ -67,6 +67,34 @@ export const Interactive: Story = {
   }
 };
 
+function FocusReturnDialog() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <div style={{ display: "grid", gap: 12 }}>
+      <Button onClick={() => setOpen(true)}>Open Focus Return Dialog</Button>
+      <Dialog open={open} onOpenChange={setOpen} title="Focus Return">
+        <p style={{ margin: 0 }}>Close this dialog and focus should return to the trigger button.</p>
+      </Dialog>
+    </div>
+  );
+}
+
+export const FocusReturn: Story = {
+  render: () => <FocusReturnDialog />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    const trigger = canvas.getByRole("button", { name: "Open Focus Return Dialog" });
+
+    await userEvent.click(trigger);
+    await expect(await body.findByRole("dialog", { name: "Focus Return" })).toBeInTheDocument();
+
+    await userEvent.click(body.getByRole("button", { name: "Close dialog" }));
+    await expect(trigger).toHaveFocus();
+  }
+};
+
 export const OpenByDefault: Story = {
   render: () => <InitiallyOpenDialog />
 };
