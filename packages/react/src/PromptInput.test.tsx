@@ -15,4 +15,38 @@ describe("PromptInput", () => {
     expect(onSubmit).toHaveBeenCalledWith("Draft release notes");
     expect((textbox as HTMLTextAreaElement).value).toBe("");
   });
+
+  it("submits with Ctrl + Enter shortcut", () => {
+    const onSubmit = vi.fn();
+
+    render(<PromptInput onSubmit={onSubmit} />);
+    const textbox = screen.getByRole("textbox", { name: "Prompt input" });
+
+    fireEvent.change(textbox, { target: { value: "  Summarize migration risk  " } });
+    fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
+
+    expect(onSubmit).toHaveBeenCalledWith("Summarize migration risk");
+    expect((textbox as HTMLTextAreaElement).value).toBe("");
+  });
+
+  it("blocks submit when empty or submitting", () => {
+    const onSubmit = vi.fn();
+    const { rerender } = render(<PromptInput onSubmit={onSubmit} />);
+
+    const idleButton = screen.getByRole("button", { name: "Send" });
+    expect(idleButton).toBeDisabled();
+    fireEvent.click(idleButton);
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    rerender(<PromptInput onSubmit={onSubmit} submitting />);
+
+    const loadingButton = screen.getByRole("button", { name: "Sending..." });
+    const textbox = screen.getByRole("textbox", { name: "Prompt input" });
+
+    expect(loadingButton).toBeDisabled();
+    expect(textbox).toBeDisabled();
+    fireEvent.click(loadingButton);
+    fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
 });

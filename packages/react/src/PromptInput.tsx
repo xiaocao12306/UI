@@ -10,19 +10,20 @@ export type PromptInputProps = {
 
 export function PromptInput({ onSubmit, submitting, placeholder = "Type your prompt..." }: PromptInputProps) {
   const [value, setValue] = React.useState("");
+  const trimmedValue = value.trim();
 
   const submit = () => {
-    const trimmed = value.trim();
-    if (!trimmed || submitting) {
+    if (!trimmedValue || submitting) {
       return;
     }
 
-    onSubmit?.(trimmed);
+    onSubmit?.(trimmedValue);
     setValue("");
   };
 
   return (
     <div
+      aria-busy={submitting || undefined}
       style={{
         border: "1px solid var(--aurora-border-default)",
         borderRadius: "var(--aurora-radius-lg)",
@@ -36,6 +37,8 @@ export function PromptInput({ onSubmit, submitting, placeholder = "Type your pro
         value={value}
         onChange={(event) => setValue(event.target.value)}
         placeholder={placeholder}
+        aria-label="Prompt input"
+        disabled={submitting}
         rows={4}
         onKeyDown={(event) => {
           if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
@@ -44,8 +47,10 @@ export function PromptInput({ onSubmit, submitting, placeholder = "Type your pro
         }}
       />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <small style={{ color: "var(--aurora-text-secondary)" }}>Ctrl/Cmd + Enter to send</small>
-        <Button onClick={submit} disabled={submitting || !value.trim()}>
+        <small aria-live="polite" style={{ color: "var(--aurora-text-secondary)" }}>
+          {submitting ? "Generating response..." : "Ctrl/Cmd + Enter to send"}
+        </small>
+        <Button onClick={submit} disabled={submitting || !trimmedValue}>
           {submitting ? "Sending..." : "Send"}
         </Button>
       </div>

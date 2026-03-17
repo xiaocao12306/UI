@@ -42,6 +42,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `Overlay/Popover` click/Escape/ArrowDown 打开关闭路径
   - `Overlay/Dropdown` End/Enter 选择 + ArrowDown 再次打开路径
   - `AI/CommandPalette` 搜索/禁用项/回车关闭流程
+  - `AI/PromptInput` 提交/禁用边界与多动作反馈路径
   - `Feedback/Toast` 关闭与重开流程
   - `Data/Tabs` 点击切换 + Home 键回到首个可用标签
   - `Data/Table` 排序切换与 `aria-sort` 状态同步

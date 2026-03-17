@@ -45,4 +45,5 @@
 - Data pagination E2E (`Release feed` page switching): covered
 
 ## Planned Next (v0.2)
-- Storybook interaction coverage expansion（下一步补齐 `AI/PromptInput` 提交/禁用边界与多动作反馈路径）
+- Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
+- Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
