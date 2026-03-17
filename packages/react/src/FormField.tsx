@@ -1,5 +1,5 @@
 import * as React from "react";
-import { resolveInvalidState } from "./a11y";
+import { mergeAriaReferenceIds, resolveInvalidState, resolveRequiredState } from "./a11y";
 
 export type FormFieldProps = {
   label: React.ReactNode;
@@ -26,18 +26,21 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const childDescribedBy = childProps?.["aria-describedby"] as string | undefined;
   const childErrorMessage = childProps?.["aria-errormessage"] as string | undefined;
   const childInvalid = childProps?.["aria-invalid"] as React.AriaAttributes["aria-invalid"] | undefined;
-  const childRequired = Boolean(childProps?.required || childProps?.["aria-required"]);
+  const childRequired = resolveRequiredState(
+    typeof childProps?.required === "boolean" ? childProps.required : undefined,
+    childProps?.["aria-required"] as React.AriaAttributes["aria-required"] | undefined
+  );
   const mergedRequired = Boolean(required || childRequired);
   const mergedInvalid = isInvalid || resolveInvalidState(undefined, childInvalid);
-
-  const describedBy = [childDescribedBy, description ? describedById : null, error ? errorId : null].filter(Boolean).join(" ");
+  const mergedDescribedBy = mergeAriaReferenceIds(childDescribedBy, description ? describedById : undefined, error ? errorId : undefined);
+  const mergedErrorMessage = mergeAriaReferenceIds(childErrorMessage, error ? errorId : undefined);
 
   const control =
     React.isValidElement(children) && typeof children.type !== "symbol"
       ? React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
           id: controlId,
-          "aria-describedby": describedBy || undefined,
-          "aria-errormessage": error ? errorId : childErrorMessage,
+          "aria-describedby": mergedDescribedBy,
+          "aria-errormessage": mergedErrorMessage,
           "aria-invalid": mergedInvalid || undefined,
           "aria-required": mergedRequired || undefined,
           required: mergedRequired || undefined,
@@ -61,7 +64,7 @@ export function FormField({ label, htmlFor, description, error, required, disabl
         }}
       >
         {label}
-        {required ? <span style={{ color: "var(--aurora-color-red-500)" }}>*</span> : null}
+        {mergedRequired ? <span style={{ color: "var(--aurora-color-red-500)" }}>*</span> : null}
       </label>
 
       <div>{control}</div>

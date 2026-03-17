@@ -88,8 +88,35 @@ describe("FormField", () => {
       </FormField>
     );
 
-    const input = screen.getByRole("textbox", { name: "API key" });
+    const input = screen.getByRole("textbox", { name: /API key/ });
     expect(input).toHaveAttribute("required");
     expect(input).toHaveAttribute("aria-required", "true");
+    expect(screen.getByText("*")).toBeInTheDocument();
+  });
+
+  it("treats aria-required false as optional", () => {
+    render(
+      <FormField label="Optional note">
+        <Input aria-required="false" />
+      </FormField>
+    );
+
+    expect(screen.getByRole("textbox", { name: "Optional note" })).not.toHaveAttribute("required");
+    expect(screen.queryByText("*")).not.toBeInTheDocument();
+  });
+
+  it("merges child aria-errormessage with field error id", () => {
+    render(
+      <FormField label="Email" error="Must be company email">
+        <Input aria-invalid="true" aria-errormessage="custom-error" />
+      </FormField>
+    );
+
+    const input = screen.getByRole("textbox", { name: "Email" });
+    const mergedErrorMessage = input.getAttribute("aria-errormessage") ?? "";
+    expect(mergedErrorMessage).toContain("custom-error");
+
+    const alert = screen.getByRole("alert");
+    expect(mergedErrorMessage.split(" ")).toContain(alert.id);
   });
 });

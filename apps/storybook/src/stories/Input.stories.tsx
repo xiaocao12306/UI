@@ -53,6 +53,10 @@ export const StateMatrix: Story = {
         <Input placeholder="name@company.com" defaultValue="invalid-email" />
       </FormField>
 
+      <FormField label="Required inherited from control">
+        <Input placeholder="Inherited required field" required />
+      </FormField>
+
       <FormField label="Disabled" description="Disabled fields remain readable with lower emphasis." disabled>
         <Input placeholder="Disabled field" />
       </FormField>

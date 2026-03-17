@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveInvalidState } from "./a11y";
+import { mergeAriaReferenceIds, resolveInvalidState, resolveRequiredState } from "./a11y";
 
 describe("resolveInvalidState", () => {
   it("prioritizes explicit invalid prop", () => {
@@ -17,5 +17,32 @@ describe("resolveInvalidState", () => {
     expect(resolveInvalidState(undefined, "false")).toBe(false);
     expect(resolveInvalidState(undefined, "grammar")).toBe(false);
     expect(resolveInvalidState(undefined, "spelling")).toBe(false);
+  });
+});
+
+describe("resolveRequiredState", () => {
+  it("prioritizes explicit required prop", () => {
+    expect(resolveRequiredState(true, "false")).toBe(true);
+    expect(resolveRequiredState(false, "true")).toBe(false);
+  });
+
+  it("accepts true aria-required values when required prop is undefined", () => {
+    expect(resolveRequiredState(undefined, true)).toBe(true);
+    expect(resolveRequiredState(undefined, "true")).toBe(true);
+  });
+
+  it("treats false aria-required values as optional", () => {
+    expect(resolveRequiredState(undefined, false)).toBe(false);
+    expect(resolveRequiredState(undefined, "false")).toBe(false);
+  });
+});
+
+describe("mergeAriaReferenceIds", () => {
+  it("deduplicates idrefs while preserving order", () => {
+    expect(mergeAriaReferenceIds("hint-a hint-b", "hint-b", "error-a")).toBe("hint-a hint-b error-a");
+  });
+
+  it("returns undefined when every input is empty", () => {
+    expect(mergeAriaReferenceIds(undefined, "", "   ", null)).toBeUndefined();
   });
 });
