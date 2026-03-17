@@ -107,6 +107,27 @@ test("keeps command palette open when blocking dismiss mode is enabled", async (
   await expect(palette).toBeHidden();
 });
 
+test("keeps command palette open after command select in persistent mode", async ({ page }) => {
+  await page.goto("/");
+
+  const persistentSwitch = page.getByRole("switch", { name: "Keep palette open after command select" });
+  await persistentSwitch.click();
+  await expect(persistentSwitch).toHaveAttribute("aria-checked", "true");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await expect(palette).toBeVisible();
+
+  await palette.getByPlaceholder("Search commands...").fill("create");
+  await palette.getByRole("option", { name: "Create Project" }).click();
+
+  await expect(palette).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "Prompt submitted" })).toBeVisible();
+
+  await palette.getByRole("button", { name: "Close dialog" }).click();
+  await expect(palette).toBeHidden();
+});
+
 test("highlights active section in anchor nav", async ({ page }) => {
   await page.goto("/");
 

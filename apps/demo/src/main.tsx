@@ -118,6 +118,7 @@ function App() {
   const [blockingToastOpen, setBlockingToastOpen] = React.useState(false);
   const [paletteOpen, setPaletteOpen] = React.useState(false);
   const [paletteBlocking, setPaletteBlocking] = React.useState(false);
+  const [palettePersistent, setPalettePersistent] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
   const [framework, setFramework] = React.useState("react");
@@ -468,6 +469,12 @@ function App() {
             label="Block palette dismiss gestures"
             description="Disable Escape and outside-click dismissal for approval workflows."
           />
+          <Switch
+            checked={palettePersistent}
+            onCheckedChange={setPalettePersistent}
+            label="Keep palette open after command select"
+            description="Enable batch command execution without reopening the palette."
+          />
         </Section>
 
         <Section id="ai-components" title="AI Components" description="Prompt, reasoning, and streaming response building blocks.">
@@ -515,6 +522,7 @@ function App() {
         <CommandPalette
           open={paletteOpen}
           onOpenChange={setPaletteOpen}
+          closeOnSelect={!palettePersistent}
           closeOnEscape={!paletteBlocking}
           closeOnOutsidePointer={!paletteBlocking}
           commands={[
