@@ -108,10 +108,14 @@ export function Table<T>({
               const key = String(column.key);
               const sorted = sortState?.key === key ? sortState.direction : undefined;
               const textAlign = column.align ?? "left";
+              const headerLabel = typeof column.header === "string" ? column.header : key;
+              const nextDirection: TableSortDirection = sorted === "asc" ? "desc" : "asc";
+              const nextDirectionLabel = nextDirection === "asc" ? "ascending" : "descending";
 
               return (
                 <th
                   key={key}
+                  scope="col"
                   aria-sort={sorted ? (sorted === "asc" ? "ascending" : "descending") : "none"}
                   style={{
                     textAlign,
@@ -127,8 +131,8 @@ export function Table<T>({
                   {column.sortable ? (
                     <button
                       type="button"
+                      aria-label={`${headerLabel} sort ${nextDirectionLabel}`}
                       onClick={() => {
-                        const nextDirection = sorted === "asc" ? "desc" : "asc";
                         setSortState({ key, direction: nextDirection });
                         onSortChange?.(key, nextDirection);
                       }}

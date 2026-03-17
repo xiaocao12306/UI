@@ -55,7 +55,7 @@ describe("Table", () => {
       />
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /Name/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Name sort descending" }));
     expect(onSortChange).toHaveBeenCalledWith("name", "desc");
   });
 
@@ -80,11 +80,14 @@ describe("Table", () => {
     expect(scoreHeader).toHaveAttribute("aria-sort", "none");
     expect(screen.getAllByRole("cell")[0]).toHaveTextContent("Button");
 
-    fireEvent.click(screen.getByRole("button", { name: /Name/ }));
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Name sort descending" }));
     expect(nameHeader).toHaveAttribute("aria-sort", "descending");
     expect(screen.getAllByRole("cell")[0]).toHaveTextContent("Dialog");
+    expect(screen.getByRole("button", { name: "Name sort ascending" })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /Name/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Name sort ascending" }));
     expect(nameHeader).toHaveAttribute("aria-sort", "ascending");
     expect(screen.getAllByRole("cell")[0]).toHaveTextContent("Button");
   });
