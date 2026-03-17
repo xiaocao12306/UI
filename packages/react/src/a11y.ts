@@ -8,7 +8,16 @@ export function resolveInvalidState(invalid: boolean | undefined, ariaInvalid: A
     return invalid;
   }
 
-  return ariaInvalid === true || ariaInvalid === "true";
+  if (ariaInvalid === true) {
+    return true;
+  }
+
+  if (typeof ariaInvalid === "string") {
+    const normalized = ariaInvalid.trim().toLowerCase();
+    return normalized === "true" || normalized === "grammar" || normalized === "spelling";
+  }
+
+  return false;
 }
 
 export function resolveRequiredState(required: boolean | undefined, ariaRequired: AriaRequiredValue): boolean {

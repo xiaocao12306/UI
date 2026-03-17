@@ -12,11 +12,15 @@ describe("resolveInvalidState", () => {
     expect(resolveInvalidState(undefined, "true")).toBe(true);
   });
 
-  it("treats false or token values as valid", () => {
+  it("treats false aria-invalid values as valid", () => {
     expect(resolveInvalidState(undefined, false)).toBe(false);
     expect(resolveInvalidState(undefined, "false")).toBe(false);
-    expect(resolveInvalidState(undefined, "grammar")).toBe(false);
-    expect(resolveInvalidState(undefined, "spelling")).toBe(false);
+  });
+
+  it("accepts grammar/spelling aria-invalid tokens as invalid", () => {
+    expect(resolveInvalidState(undefined, "grammar")).toBe(true);
+    expect(resolveInvalidState(undefined, "spelling")).toBe(true);
+    expect(resolveInvalidState(undefined, " Grammar ")).toBe(true);
   });
 });
 

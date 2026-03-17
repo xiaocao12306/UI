@@ -127,6 +127,7 @@
   - 生产级返工（Tabs）
   - Tabs 交互语义收口（重复选择当前 tab 不再触发 `onValueChange`，降低遥测噪音）
   - Tabs 引用语义收口（所有 `tabpanel` 常驻并通过 `hidden` 切换，保证 `aria-controls` 始终有效）
+  - 表单 invalid 语义补齐（`aria-invalid="grammar|spelling"` 视为错误态并参与视觉/语义分支）
   - 生产级返工（Table）
   - 横向收口（CommandPalette：Home/End 键盘分支、禁用项跳过、Query Telemetry 示例）
   - CommandPalette 焦点模型补强（`tabIndex=-1` option + pointer 选择保持 combobox 焦点）
