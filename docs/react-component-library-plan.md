@@ -105,6 +105,10 @@
   - Storybook Playground（Button/Input/Dialog/CommandPalette）与主题切换
   - Chromatic 视觉回归工作流（支持 token 缺失时优雅跳过）
   - Changesets 发布工作流（支持缺失 NPM token 时仅创建 release PR）
+  - Storybook 文档体系（Getting Started / Component API / Component Catalog / Best Practices）
+  - Data 与 AI 组件故事补齐（Tabs/Table/PromptInput）
+  - 组件可访问性补强（Dialog `aria-labelledby`、CommandPalette listbox 语义、Toast live region）
+  - Demo 体验增强（主题持久化、分区导航活跃态）与 E2E 回归补齐
 - 进行中
-  - 文档体系细化（组件 API、示例最佳实践，AI/Overlay/Storybook 指南）
   - Storybook 视觉回归基线（待配置仓库 token 后启用快照对比）
+  - Release 发布实链验证（待配置 NPM token 后执行 npm publish）
