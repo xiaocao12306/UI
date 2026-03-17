@@ -146,6 +146,27 @@ export const SortTelemetry: Story = {
   }
 };
 
+export const LocalizedSortLabels: Story = {
+  render: () => (
+    <div style={{ width: 780 }}>
+      <Table
+        columns={columns}
+        data={rows}
+        defaultSortKey="id"
+        getSortAriaLabel={({ columnHeader, nextDirection }) =>
+          `按${nextDirection === "asc" ? "升序" : "降序"}排序：${columnHeader}`
+        }
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const descendingButton = canvas.getByRole("button", { name: "按降序排序：Issue" });
+    await userEvent.click(descendingButton);
+    await expect(canvas.getByRole("button", { name: "按升序排序：Issue" })).toBeInTheDocument();
+  }
+};
+
 export const InvalidDefaultSortKeyFallback: Story = {
   render: () => {
     const nonSortableStatusColumns: Array<TableColumn<ReleaseRow>> = [

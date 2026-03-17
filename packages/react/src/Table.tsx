@@ -22,6 +22,11 @@ export type TableProps<T> = {
   emptyContent?: React.ReactNode;
   defaultSortKey?: string;
   defaultSortDirection?: TableSortDirection;
+  getSortAriaLabel?: (params: {
+    columnKey: string;
+    columnHeader: string;
+    nextDirection: TableSortDirection;
+  }) => string;
   onSortChange?: (key: string, direction: TableSortDirection) => void;
 };
 
@@ -54,6 +59,7 @@ export function Table<T>({
   emptyContent = "No data available.",
   defaultSortKey,
   defaultSortDirection = "asc",
+  getSortAriaLabel = defaultGetSortAriaLabel,
   onSortChange
 }: TableProps<T>) {
   const resolvedAriaLabel = ariaLabel ?? (caption ? undefined : "Data table");
@@ -138,7 +144,7 @@ export function Table<T>({
               const textAlign = column.align ?? "left";
               const headerLabel = typeof column.header === "string" ? column.header : key;
               const nextDirection: TableSortDirection = sorted === "asc" ? "desc" : "asc";
-              const nextDirectionLabel = nextDirection === "asc" ? "ascending" : "descending";
+              const sortAriaLabel = getSortAriaLabel({ columnKey: key, columnHeader: headerLabel, nextDirection });
 
               return (
                 <th
@@ -159,7 +165,7 @@ export function Table<T>({
                   {column.sortable ? (
                     <button
                       type="button"
-                      aria-label={`${headerLabel} sort ${nextDirectionLabel}`}
+                      aria-label={sortAriaLabel}
                       onClick={() => {
                         setSortState({ key, direction: nextDirection });
                         onSortChange?.(key, nextDirection);
@@ -233,4 +239,15 @@ export function Table<T>({
       </table>
     </div>
   );
+}
+
+function defaultGetSortAriaLabel({
+  columnHeader,
+  nextDirection
+}: {
+  columnKey: string;
+  columnHeader: string;
+  nextDirection: TableSortDirection;
+}) {
+  return `${columnHeader} sort ${nextDirection === "asc" ? "ascending" : "descending"}`;
 }

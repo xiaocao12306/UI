@@ -98,6 +98,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Use typed columns and stable row keys in data tables; fallback source-index keys exist for safety but explicit `rowKey` is preferred.
 - Ensure each table has an accessible name through `caption` or `ariaLabel`; fallback `Data table` naming exists but should be treated as a safety net.
 - Prefer sortable columns with explicit `aria-sort` state for keyboard and screen-reader parity.
+- Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - Surface status semantics with tokens instead of custom ad-hoc colors.
 - Keep row actions predictable and keyboard reachable.
 - Ensure tabs support orientation-aware arrows (`Left/Right` or `Up/Down`) plus `Home/End`, and skip disabled entries.
@@ -107,3 +108,4 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={TabsStories.KeyboardNavigationGuide} />
 <Canvas of={TableStories.ReleaseChecklist} />
 <Canvas of={TableStories.SortTelemetry} />
+<Canvas of={TableStories.LocalizedSortLabels} />

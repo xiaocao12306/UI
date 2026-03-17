@@ -306,9 +306,11 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `rowKey` | `(row, rowIndex) => string` | Recommended stable row identity; fallback key uses source index to avoid remount churn while sorting. |
 | `caption` / `ariaLabel` | `ReactNode` / `string` | Prefer explicit naming via visible caption or screen-reader label; when both are omitted, table falls back to `aria-label="Data table"`. |
 | `defaultSortKey` / `defaultSortDirection` | `string` / `'asc' \| 'desc'` | Sets initial `aria-sort` and data order when key points to a sortable column. |
+| `getSortAriaLabel` | `({ columnKey, columnHeader, nextDirection }) => string` | Localize sortable-header aria labels without changing sorting behavior. |
 | `onSortChange` | `(key, direction) => void` | Useful for telemetry and analytics. |
 
 <Canvas of={TableStories.SortTelemetry} />
+<Canvas of={TableStories.LocalizedSortLabels} />
 <Canvas of={TableStories.AccessibleNameWithoutCaption} />
 
 ### Pagination

@@ -113,6 +113,29 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledWith("name", "desc");
   });
 
+  it("supports localized sort aria labels via getSortAriaLabel", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score" }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        getSortAriaLabel={({ columnHeader, nextDirection }) =>
+          `按${nextDirection === "asc" ? "升序" : "降序"}排序：${columnHeader}`
+        }
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "按降序排序：Name" });
+    fireEvent.click(sortButton);
+    expect(screen.getByRole("button", { name: "按升序排序：Name" })).toBeInTheDocument();
+  });
+
   it("updates aria-sort state and row order as sort toggles", () => {
     render(
       <Table
