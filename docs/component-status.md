@@ -32,7 +32,8 @@
   - `Alert`, `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
   - `Toast`: production-refined
 - Overlay
-  - `Tooltip`, `Drawer`: done
+  - `Tooltip`: done
+  - `Drawer`: production-refined
   - `Dialog`: production-refined
   - `Popover`, `Dropdown`, `CommandPalette`: production-refined
 - AI Components

@@ -60,6 +60,18 @@ test("opens and dismisses dialog with keyboard", async ({ page }) => {
   await expect(dialog).toBeHidden();
 });
 
+test("opens and dismisses drawer with keyboard", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Drawer" }).click();
+  const drawer = page.getByRole("dialog", { name: "Drawer Example" });
+  await expect(drawer).toBeVisible();
+  await expect(drawer).toContainText("Contextual panel for filters, details, and quick actions.");
+
+  await page.keyboard.press("Escape");
+  await expect(drawer).toBeHidden();
+});
+
 test("filters command palette and triggers drawer action", async ({ page }) => {
   await page.goto("/");
 

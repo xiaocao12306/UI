@@ -23,4 +23,32 @@ describe("Drawer", () => {
     fireEvent.pointerDown(document.body);
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
+
+  it("supports non-dismissible escape and outside-pointer branches", () => {
+    const onOpenChange = vi.fn();
+
+    render(
+      <Drawer open onOpenChange={onOpenChange} title="Release notes" closeOnEscape={false} closeOnOutsidePointer={false}>
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    fireEvent.pointerDown(document.body);
+
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it("wires title and description semantics", () => {
+    render(
+      <Drawer open onOpenChange={() => {}} title="Keyboard shortcuts" description="Use Ctrl/Cmd + K to open command palette.">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    const dialog = screen.getByRole("dialog", { name: "Keyboard shortcuts" });
+    const description = screen.getByText("Use Ctrl/Cmd + K to open command palette.");
+
+    expect(dialog).toHaveAttribute("aria-describedby", description.getAttribute("id"));
+  });
 });

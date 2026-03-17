@@ -459,7 +459,12 @@ function App() {
           <p style={{ margin: 0 }}>Modal built with FocusScope + DismissableLayer.</p>
         </Dialog>
 
-        <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} title="Drawer Example">
+        <Drawer
+          open={drawerOpen}
+          onOpenChange={setDrawerOpen}
+          title="Drawer Example"
+          description="Contextual panel for filters, details, and quick actions."
+        >
           <p style={{ margin: 0 }}>This drawer can host contextual forms, filters, or details.</p>
         </Drawer>
 

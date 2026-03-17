@@ -9,6 +9,7 @@ import * as ComboboxStories from '../stories/Combobox.stories';
 import * as DatePickerStories from '../stories/DatePicker.stories';
 import * as TextareaStories from '../stories/Textarea.stories';
 import * as DialogStories from '../stories/Dialog.stories';
+import * as DrawerStories from '../stories/Drawer.stories';
 import * as PopoverStories from '../stories/Popover.stories';
 import * as DropdownStories from '../stories/Dropdown.stories';
 import * as CommandPaletteStories from '../stories/CommandPalette.stories';
@@ -148,6 +149,18 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 <Canvas of={DialogStories.Interactive} />
 <Controls of={DialogStories.Interactive} />
+
+### Drawer
+
+<Canvas of={DrawerStories.Interactive} />
+<Controls of={DrawerStories.NonDismissible} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `side` | `'left' \| 'right'` | Controls panel placement and border direction. |
+| `description` | `ReactNode` | Wires helper copy through `aria-describedby`. |
+| `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Fine-grained dismiss policy for blocking flows. |
+| `showCloseButton` | `boolean` | Allows explicit in-panel action-only dismissal. |
 
 ### Popover
 

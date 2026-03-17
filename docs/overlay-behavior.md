@@ -10,7 +10,8 @@
 - `Toast` (non-blocking feedback overlay)
 
 ## Dismiss Rules
-- `Dialog`, `Drawer`, `CommandPalette`: close on `Escape` and outside pointer interaction.
+- `Dialog`, `Drawer`, `CommandPalette`: default close on `Escape` and outside pointer interaction.
+- `Dialog` and `Drawer` can disable dismiss paths via `closeOnEscape={false}` / `closeOnOutsidePointer={false}` for blocking workflows.
 - `Popover`, `Dropdown`: toggle from trigger and close on `Escape` / outside pointer interaction.
 - `Toast`: controlled by `open` + `onClose`.
 

@@ -21,6 +21,7 @@
 | Switch | production-refined | `Form/Switch` | `Switch.test.tsx` |
 | Combobox | production-refined | `Form/Combobox` | `Combobox.test.tsx` |
 | Dialog | production-refined | `Overlay/Dialog` | `Dialog.test.tsx` |
+| Drawer | production-refined | `Overlay/Drawer` | `Drawer.test.tsx` |
 | Tooltip | production-refined | `Overlay/Tooltip` | `Tooltip.test.tsx` |
 | Popover | production-refined | `Overlay/Popover` | `Popover.test.tsx` |
 | Dropdown | production-refined | `Overlay/Dropdown` | `Dropdown.test.tsx` |
@@ -58,3 +59,4 @@
 - Checkbox production hardening: added mixed-state (`indeterminate`) semantics, helper narration wiring, and dedicated unit + Storybook coverage.
 - RadioGroup production hardening: added controlled/uncontrolled flow, disabled options, invalid semantics, and dedicated unit + Storybook coverage.
 - Switch production hardening: added controlled/uncontrolled flow, helper narration wiring, invalid/disabled semantics, and keyboard interaction coverage.
+- Drawer production hardening: aligned with dialog-level aria semantics, configurable dismiss policy, and dedicated Storybook overlay scenarios.

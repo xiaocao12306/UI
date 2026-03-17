@@ -43,6 +43,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `Form/DatePicker` 受控日期更新流程
   - `Data/Pagination` 翻页流程
   - `Overlay/Dialog` Escape dismiss 与 non-dismissible 分支
+  - `Overlay/Drawer` 侧边抽屉打开关闭、non-dismissible 分支
   - `Overlay/Tooltip` hover/focus 打开与 Escape 关闭路径
   - `Overlay/Popover` click/Escape/ArrowDown 打开关闭路径
   - `Overlay/Dropdown` End/Enter 选择 + ArrowDown 再次打开路径
@@ -65,6 +66,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - `Form/Combobox`
 - `Form/DatePicker`
 - `Overlay/Dialog`
+- `Overlay/Drawer`
 - `Overlay/Tooltip`
 - `Overlay/Popover`
 - `Overlay/Dropdown`
