@@ -1,5 +1,7 @@
 import { Meta, Title, Subtitle, Description, Canvas, Controls } from '@storybook/blocks';
 import * as ButtonStories from '../stories/Button.stories';
+import * as TagStories from '../stories/Tag.stories';
+import * as BadgeStories from '../stories/Badge.stories';
 import * as InputStories from '../stories/Input.stories';
 import * as CheckboxStories from '../stories/Checkbox.stories';
 import * as RadioGroupStories from '../stories/RadioGroup.stories';
@@ -52,6 +54,25 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `loading` / `loadingText` | `boolean` / `ReactNode` | Locks interactions, sets `aria-busy`, and shows deterministic loading copy. |
 | native button props | `ButtonHTMLAttributes` | Supports `type`, `disabled`, `onClick`, keyboard handlers. |
 
+### Tag
+
+<Canvas of={TagStories.Default} />
+<Controls of={TagStories.Default} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| native span props | `HTMLAttributes<HTMLSpanElement>` | Supports custom `aria-*` metadata and style overrides. |
+
+### Badge
+
+<Canvas of={BadgeStories.Default} />
+<Controls of={BadgeStories.Default} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `tone` | `'default' \| 'success' \| 'danger'` | Semantic status signal without hardcoded app-level palettes. |
+| native span props | `HTMLAttributes<HTMLSpanElement>` | Supports custom labels and style overrides for compact status chips. |
+
 ## Form
 
 ### Input
@@ -89,7 +110,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled single-choice flows. |
 | `options[].disabled` | `boolean` | Disable specific choices without removing context. |
-| `invalid` | `boolean` | Applies `aria-invalid` to both group and option controls. |
+| `invalid` | `boolean` | Applies `aria-invalid` to the `radiogroup` container for screen-reader narration. |
 | `direction` | `'vertical' \| 'horizontal'` | Layout direction for stacked vs inline groups. |
 
 <Canvas of={RadioGroupStories.InvalidState} />
