@@ -62,6 +62,11 @@ const releaseFeed = [
   "v0.1.0: Storybook component API docs expanded with edge recipes.",
   "v0.1.0: Release dry-run evidence recorded for all npm packages."
 ];
+const readinessRows = [
+  { component: "Button", status: "Stable", coverage: 92 },
+  { component: "Dialog", status: "Stable", coverage: 88 },
+  { component: "StreamingCodeBlock", status: "Beta", coverage: 73 }
+];
 
 function Section({
   id,
@@ -119,9 +124,11 @@ function App() {
   const [releaseDate, setReleaseDate] = React.useState("2026-03-17");
   const [feedPage, setFeedPage] = React.useState(1);
   const [tableLoading, setTableLoading] = React.useState(false);
+  const [tableEmpty, setTableEmpty] = React.useState(false);
   const feedPageSize = 3;
   const feedPageCount = Math.ceil(releaseFeed.length / feedPageSize);
   const visibleFeed = releaseFeed.slice((feedPage - 1) * feedPageSize, feedPage * feedPageSize);
+  const tableRows = tableEmpty ? [] : readinessRows;
 
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -333,20 +340,20 @@ function App() {
             defaultSortKey="component"
             loading={tableLoading}
             loadingContent="Syncing component readiness metrics..."
+            emptyContent="No component readiness metrics yet."
             columns={[
               { key: "component", header: "Component", sortable: true },
               { key: "status", header: "Status", sortable: true },
               { key: "coverage", header: "Coverage", sortable: true, render: (row) => `${row.coverage}%` }
             ]}
-            data={[
-              { component: "Button", status: "Stable", coverage: 92 },
-              { component: "Dialog", status: "Stable", coverage: 88 },
-              { component: "StreamingCodeBlock", status: "Beta", coverage: 73 }
-            ]}
+            data={tableRows}
           />
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <Button variant="outline" onClick={() => setTableLoading((value) => !value)}>
               Toggle table loading
+            </Button>
+            <Button variant="outline" onClick={() => setTableEmpty((value) => !value)}>
+              Toggle table empty state
             </Button>
           </div>
           <div style={{ display: "grid", gap: 10 }}>

@@ -165,6 +165,21 @@ test("toggles table loading state and disables sort controls", async ({ page }) 
   await expect(table.getByRole("cell", { name: "Button" })).toBeVisible();
 });
 
+test("shows empty table state and keeps sort controls disabled", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
+  const emptyToggle = page.getByRole("button", { name: "Toggle table empty state" });
+
+  await emptyToggle.click();
+  await expect(page.getByText("No component readiness metrics yet.")).toBeVisible();
+  await expect(table.getByRole("button", { name: "Component sort descending" })).toBeDisabled();
+  await expect(table.getByRole("cell", { name: "Button" })).toHaveCount(0);
+
+  await emptyToggle.click();
+  await expect(table.getByRole("cell", { name: "Button" })).toBeVisible();
+});
+
 test("keeps manual tabs panel stable until Enter activation", async ({ page }) => {
   await page.goto("/");
 
