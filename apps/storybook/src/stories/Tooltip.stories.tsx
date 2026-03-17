@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Tooltip } from "@aurora-ui/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
+import * as React from "react";
 
 const meta = {
   title: "Overlay/Tooltip",
@@ -10,12 +11,15 @@ const meta = {
     layout: "centered",
     docs: {
       description: {
-        component: "Tooltip opens on hover/focus and closes on leave/blur/Escape for keyboard and pointer parity."
+        component:
+          "Tooltip supports controlled/uncontrolled mode, pointer delay, and deterministic Escape/blur close behavior."
       }
     }
   },
   args: {
-    content: "Use Cmd/Ctrl + K to open command palette."
+    content: "Use Cmd/Ctrl + K to open command palette.",
+    delayDuration: 200,
+    side: "top"
   }
 } satisfies Meta<typeof Tooltip>;
 
@@ -30,6 +34,13 @@ export const Default: Story = {
     const canvas = within(canvasElement);
     const trigger = await canvas.findByRole("button", { name: "Keyboard Shortcut" });
 
+    await userEvent.hover(trigger);
+    await expect(await canvas.findByRole("tooltip")).toHaveTextContent("Use Cmd/Ctrl + K to open command palette.");
+    await userEvent.unhover(trigger);
+    await waitFor(() => {
+      expect(canvas.queryByRole("tooltip")).not.toBeInTheDocument();
+    });
+
     trigger.focus();
     await expect(await canvas.findByRole("tooltip")).toHaveTextContent("Use Cmd/Ctrl + K to open command palette.");
     await userEvent.keyboard("{Escape}");
@@ -43,9 +54,61 @@ export const InlineHint: Story = {
   args: {
     content: "Theme tokens are inherited from AuroraProvider.",
     children: (
-      <button type="button" style={{ border: 0, background: "transparent", color: "var(--aurora-text-secondary)", textDecoration: "underline", cursor: "pointer" }}>
+      <button
+        type="button"
+        style={{ border: 0, background: "transparent", color: "var(--aurora-text-secondary)", textDecoration: "underline", cursor: "pointer" }}
+      >
         Token inheritance
       </button>
     )
+  }
+};
+
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+    content: "This tooltip should never open",
+    children: <Button variant="ghost">Disabled Tooltip</Button>
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Disabled Tooltip" });
+    await userEvent.hover(trigger);
+    await waitFor(() => {
+      expect(canvas.queryByRole("tooltip")).not.toBeInTheDocument();
+    });
+  }
+};
+
+function ControlledTooltipStory({ content, children }: { content: React.ReactNode; children: React.ReactElement }) {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <Button onClick={() => setOpen((previous) => !previous)}>{open ? "Hide tooltip" : "Show tooltip"}</Button>
+      <Tooltip open={open} onOpenChange={setOpen} content={content}>
+        {children}
+      </Tooltip>
+    </div>
+  );
+}
+
+export const Controlled: Story = {
+  args: {
+    content: "Controlled tooltip content",
+    children: <Button variant="outline">Controlled target</Button>
+  },
+  render: (args) => <ControlledTooltipStory content={args.content} children={args.children} />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toggleButton = await canvas.findByRole("button", { name: "Show tooltip" });
+
+    await userEvent.click(toggleButton);
+    await expect(await canvas.findByRole("tooltip")).toHaveTextContent("Controlled tooltip content");
+    const target = await canvas.findByRole("button", { name: "Controlled target" });
+    target.focus();
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => {
+      expect(canvas.queryByRole("tooltip")).not.toBeInTheDocument();
+    });
   }
 };

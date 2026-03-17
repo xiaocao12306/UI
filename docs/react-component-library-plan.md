@@ -147,6 +147,7 @@
   - RadioGroup 生产级返工（受控/非受控、禁用选项、invalid 语义、单测 + Storybook `Form/RadioGroup`）
   - Switch 生产级返工（受控/非受控、描述语义、invalid/disabled 状态、单测 + Storybook `Form/Switch`）
   - Drawer 生产级返工（title/description aria 语义、可配置 dismiss policy、单测 + Storybook `Overlay/Drawer`）
+  - Tooltip 生产级返工（受控/非受控、延迟开关策略、`aria-describedby` 语义合并、单测 + Storybook `Overlay/Tooltip`）
   - Pagination 细节打磨（禁用态视觉与 `showFirstLast=false` 分支测试）
   - Pagination 生产级返工（Home/End/Arrow 键盘快捷翻页、重复回调防抖、可定制 aria label、单测 + Storybook `Data/Pagination`）
   - DatePicker 生产级返工（`aria-invalid` 推断、`onChange` + `onValueChange` 双回调、状态矩阵 Storybook 与单测补齐）

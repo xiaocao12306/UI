@@ -44,7 +44,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `Data/Pagination` 翻页流程与 Home/End 快捷切页
   - `Overlay/Dialog` Escape dismiss 与 non-dismissible 分支
   - `Overlay/Drawer` 侧边抽屉打开关闭、non-dismissible 分支
-  - `Overlay/Tooltip` hover/focus 打开与 Escape 关闭路径
+  - `Overlay/Tooltip` hover 延迟打开、受控/禁用分支与 Escape 关闭路径
   - `Overlay/Popover` click/Escape/ArrowDown 打开关闭路径
   - `Overlay/Dropdown` End/Enter 选择 + ArrowDown 再次打开路径
   - `AI/CommandPalette` 搜索/禁用项/回车关闭流程

@@ -33,7 +33,7 @@
   - `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
   - `Toast`: production-refined
 - Overlay
-  - `Tooltip`: done
+  - `Tooltip`: production-refined
   - `Drawer`: production-refined
   - `Dialog`: production-refined
   - `Popover`, `Dropdown`, `CommandPalette`: production-refined
