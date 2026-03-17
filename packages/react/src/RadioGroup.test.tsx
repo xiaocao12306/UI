@@ -55,4 +55,15 @@ describe("RadioGroup", () => {
     expect(screen.getByRole("radiogroup", { name: "Invalid group" })).toHaveAttribute("aria-invalid", "true");
     expect(screen.getByRole("radio", { name: "Small" })).toHaveAttribute("aria-invalid", "true");
   });
+
+  it("accepts invalid semantics from aria-invalid", () => {
+    render(<RadioGroup name="Aria group" aria-invalid="true" options={baseOptions} />);
+    expect(screen.getByRole("radiogroup", { name: "Aria group" })).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByRole("radio", { name: "Small" })).toHaveAttribute("aria-invalid", "true");
+  });
+
+  it("treats aria-invalid=false as valid", () => {
+    render(<RadioGroup name="Valid group" aria-invalid="false" options={baseOptions} />);
+    expect(screen.getByRole("radiogroup", { name: "Valid group" })).not.toHaveAttribute("aria-invalid");
+  });
 });

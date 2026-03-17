@@ -1,4 +1,5 @@
 import * as React from "react";
+import { resolveInvalidState } from "./a11y";
 
 export type CheckboxProps = Omit<React.ComponentPropsWithoutRef<"input">, "type"> & {
   label?: React.ReactNode;
@@ -8,12 +9,13 @@ export type CheckboxProps = Omit<React.ComponentPropsWithoutRef<"input">, "type"
 };
 
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
-  { label, description, invalid = false, indeterminate = false, disabled, style, onFocus, onBlur, ...props },
+  { label, description, invalid, indeterminate = false, disabled, style, onFocus, onBlur, "aria-invalid": ariaInvalid, ...props },
   forwardedRef
 ) {
   const [focused, setFocused] = React.useState(false);
   const localRef = React.useRef<HTMLInputElement | null>(null);
   const descriptionId = React.useId();
+  const isInvalid = resolveInvalidState(invalid, ariaInvalid);
   const describedBy = [props["aria-describedby"], description ? descriptionId : undefined].filter(Boolean).join(" ") || undefined;
 
   React.useEffect(() => {
@@ -52,7 +54,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
         ref={assignRef}
         type="checkbox"
         disabled={disabled}
-        aria-invalid={invalid || undefined}
+        aria-invalid={isInvalid || undefined}
         aria-checked={indeterminate ? "mixed" : props["aria-checked"]}
         aria-describedby={describedBy}
         data-focused={focused ? "true" : undefined}
@@ -60,10 +62,10 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
           margin: "2px 0 0",
           width: 16,
           height: 16,
-          accentColor: invalid ? "var(--aurora-color-red-500)" : "var(--aurora-accent-default)",
+          accentColor: isInvalid ? "var(--aurora-color-red-500)" : "var(--aurora-accent-default)",
           cursor: disabled ? "not-allowed" : "pointer",
           boxShadow: focused
-            ? `0 0 0 3px ${invalid ? "color-mix(in srgb, var(--aurora-color-red-500) 24%, transparent)" : "color-mix(in srgb, var(--aurora-accent-default) 24%, transparent)"}`
+            ? `0 0 0 3px ${isInvalid ? "color-mix(in srgb, var(--aurora-color-red-500) 24%, transparent)" : "color-mix(in srgb, var(--aurora-accent-default) 24%, transparent)"}`
             : "none"
         }}
         onFocus={(event) => {

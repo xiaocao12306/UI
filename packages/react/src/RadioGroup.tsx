@@ -1,4 +1,5 @@
 import * as React from "react";
+import { resolveInvalidState } from "./a11y";
 
 export type RadioOption = {
   label: React.ReactNode;
@@ -15,6 +16,7 @@ export type RadioGroupProps = {
   onChange?: (nextValue: string) => void;
   ariaLabel?: string;
   invalid?: boolean;
+  "aria-invalid"?: React.AriaAttributes["aria-invalid"];
   disabled?: boolean;
   direction?: "vertical" | "horizontal";
 };
@@ -26,12 +28,14 @@ export function RadioGroup({
   options,
   onChange,
   ariaLabel,
-  invalid = false,
+  invalid,
+  "aria-invalid": ariaInvalid,
   disabled = false,
   direction = "vertical"
 }: RadioGroupProps) {
   const [internalValue, setInternalValue] = React.useState(defaultValue);
   const currentValue = value ?? internalValue;
+  const isInvalid = resolveInvalidState(invalid, ariaInvalid);
 
   const handleChange = (nextValue: string, optionDisabled: boolean | undefined) => {
     if (disabled || optionDisabled) {
@@ -52,7 +56,7 @@ export function RadioGroup({
       }}
       role="radiogroup"
       aria-label={ariaLabel ?? name}
-      aria-invalid={invalid || undefined}
+      aria-invalid={isInvalid || undefined}
     >
       {options.map((option) => (
         <label
@@ -73,11 +77,11 @@ export function RadioGroup({
             value={option.value}
             checked={currentValue === option.value}
             disabled={disabled || option.disabled}
-            aria-invalid={invalid || undefined}
+            aria-invalid={isInvalid || undefined}
             onChange={() => handleChange(option.value, option.disabled)}
             style={{
               marginTop: 2,
-              accentColor: invalid ? "var(--aurora-color-red-500)" : "var(--aurora-accent-default)",
+              accentColor: isInvalid ? "var(--aurora-color-red-500)" : "var(--aurora-accent-default)",
               cursor: disabled || option.disabled ? "not-allowed" : "pointer"
             }}
           />

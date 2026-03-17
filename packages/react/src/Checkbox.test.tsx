@@ -14,6 +14,16 @@ describe("Checkbox", () => {
     expect(screen.getByRole("checkbox", { name: "Policy" })).toHaveAttribute("aria-invalid", "true");
   });
 
+  it("accepts invalid semantics from aria-invalid", () => {
+    render(<Checkbox label="Policy" aria-label="Policy" aria-invalid="true" />);
+    expect(screen.getByRole("checkbox", { name: "Policy" })).toHaveAttribute("aria-invalid", "true");
+  });
+
+  it("treats aria-invalid=false as valid", () => {
+    render(<Checkbox label="Policy" aria-label="Policy" aria-invalid="false" />);
+    expect(screen.getByRole("checkbox", { name: "Policy" })).not.toHaveAttribute("aria-invalid");
+  });
+
   it("wires description into aria-describedby", () => {
     render(<Checkbox label="Deploy gate" description="Requires 2 approvals" aria-label="Deploy gate" />);
     const checkbox = screen.getByRole("checkbox", { name: "Deploy gate" });

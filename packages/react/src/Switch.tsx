@@ -1,4 +1,5 @@
 import * as React from "react";
+import { resolveInvalidState } from "./a11y";
 
 export type SwitchProps = Omit<React.ComponentPropsWithoutRef<"button">, "children" | "role" | "onChange"> & {
   checked?: boolean;
@@ -15,7 +16,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     defaultChecked = false,
     onCheckedChange,
     disabled = false,
-    invalid = false,
+    invalid,
     label,
     description,
     style,
@@ -28,6 +29,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     onMouseDown,
     onMouseUp,
     onKeyDown,
+    "aria-invalid": ariaInvalid,
     ...props
   },
   forwardedRef
@@ -36,6 +38,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
   const [focused, setFocused] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
   const [pressed, setPressed] = React.useState(false);
+  const isInvalid = resolveInvalidState(invalid, ariaInvalid);
 
   const descriptionId = React.useId();
   const labelId = React.useId();
@@ -46,17 +49,17 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
   const labelledBy =
     props["aria-label"] || props["aria-labelledby"] || !label ? props["aria-labelledby"] : labelId;
 
-  const focusRingColor = invalid
+  const focusRingColor = isInvalid
     ? "color-mix(in srgb, var(--aurora-color-red-500) 24%, transparent)"
     : "color-mix(in srgb, var(--aurora-accent-default) 30%, transparent)";
-  const trackBorderColor = invalid
+  const trackBorderColor = isInvalid
     ? "var(--aurora-color-red-500)"
     : hovered && !disabled
       ? "var(--aurora-border-strong)"
       : "var(--aurora-border-default)";
   const trackBackground = disabled
     ? "color-mix(in srgb, var(--aurora-surface-elevated) 75%, var(--aurora-surface-default))"
-    : invalid
+    : isInvalid
       ? currentChecked
         ? "color-mix(in srgb, var(--aurora-color-red-500) 78%, var(--aurora-surface-elevated))"
         : "color-mix(in srgb, var(--aurora-color-red-500) 14%, var(--aurora-surface-elevated))"
@@ -82,13 +85,13 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       type={type ?? "button"}
       role="switch"
       aria-checked={currentChecked}
-      aria-invalid={invalid || undefined}
+      aria-invalid={isInvalid || undefined}
       aria-disabled={disabled || undefined}
       aria-describedby={describedBy}
       aria-labelledby={labelledBy}
       disabled={disabled}
       data-state={currentChecked ? "checked" : "unchecked"}
-      data-invalid={invalid ? "true" : undefined}
+      data-invalid={isInvalid ? "true" : undefined}
       style={{
         border: "none",
         margin: 0,

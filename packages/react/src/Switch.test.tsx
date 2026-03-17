@@ -60,4 +60,14 @@ describe("Switch", () => {
     expect(control).toHaveAttribute("aria-invalid", "true");
     expect(control).toHaveAttribute("aria-describedby", helper.getAttribute("id"));
   });
+
+  it("accepts invalid semantics from aria-invalid", () => {
+    render(<Switch label="Aria invalid switch" aria-invalid="true" />);
+    expect(screen.getByRole("switch", { name: "Aria invalid switch" })).toHaveAttribute("aria-invalid", "true");
+  });
+
+  it("treats aria-invalid=false as valid", () => {
+    render(<Switch label="Valid switch" aria-invalid="false" />);
+    expect(screen.getByRole("switch", { name: "Valid switch" })).not.toHaveAttribute("aria-invalid");
+  });
 });
