@@ -1,6 +1,7 @@
 import { Meta, Title, Subtitle, Description, Canvas, Controls } from '@storybook/blocks';
 import * as ButtonStories from '../stories/Button.stories';
 import * as InputStories from '../stories/Input.stories';
+import * as ComboboxStories from '../stories/Combobox.stories';
 import * as DialogStories from '../stories/Dialog.stories';
 import * as PopoverStories from '../stories/Popover.stories';
 import * as DropdownStories from '../stories/Dropdown.stories';
@@ -33,6 +34,18 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 <Canvas of={InputStories.Default} />
 <Controls of={InputStories.Default} />
+
+### Combobox
+
+<Canvas of={ComboboxStories.Controlled} />
+<Controls of={ComboboxStories.WithCustomEmptyMessage} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `options` | `ComboboxOption[]` | Supports disabled entries and keyword filtering. |
+| `value` / `defaultValue` | `string` | Controlled and uncontrolled modes are both available. |
+| `onValueChange` | `(value: string) => void` | Fires when user confirms option by click or Enter. |
+| `emptyMessage` | `ReactNode` | Custom no-result content for search miss scenarios. |
 
 ## Overlay
 

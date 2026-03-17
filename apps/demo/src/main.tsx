@@ -7,6 +7,7 @@ import {
   Badge,
   Button,
   Checkbox,
+  Combobox,
   CommandPalette,
   Dialog,
   Drawer,
@@ -45,6 +46,12 @@ const sectionLinks = [
 ];
 const availableThemes: ThemeName[] = ["core-light", "core-dark", "glass", "neo-brutal"];
 const themeStorageKey = "aurora-ui-demo-theme";
+const frameworkOptions = [
+  { value: "react", label: "React", keywords: ["library", "jsx"] },
+  { value: "vue", label: "Vue", keywords: ["framework"] },
+  { value: "svelte", label: "Svelte", keywords: ["compiler"] },
+  { value: "solid", label: "Solid", keywords: ["signals"], disabled: true }
+];
 const releaseFeed = [
   "v0.1.0: Button interaction states promoted to production grade.",
   "v0.1.0: Dialog close policy docs updated for a11y consistency.",
@@ -105,6 +112,7 @@ function App() {
   const [paletteOpen, setPaletteOpen] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
+  const [framework, setFramework] = React.useState("react");
   const [feedPage, setFeedPage] = React.useState(1);
   const feedPageSize = 3;
   const feedPageCount = Math.ceil(releaseFeed.length / feedPageSize);
@@ -247,6 +255,15 @@ function App() {
                 <option value="vue">Vue</option>
                 <option value="svelte">Svelte</option>
               </Select>
+            </FormField>
+            <FormField label="Framework Combobox" htmlFor="framework-combobox" description={`Current selection: ${framework}`}>
+              <Combobox
+                id="framework-combobox"
+                ariaLabel="Framework Combobox"
+                options={frameworkOptions}
+                value={framework}
+                onValueChange={setFramework}
+              />
             </FormField>
             <Checkbox label="Enable analytics" defaultChecked />
             <RadioGroup

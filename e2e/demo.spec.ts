@@ -111,6 +111,19 @@ test("paginates release activity feed", async ({ page }) => {
   await expect(page.getByText("v0.1.0: Button interaction states promoted to production grade.")).toBeHidden();
 });
 
+test("selects framework from combobox", async ({ page }) => {
+  await page.goto("/");
+
+  const combobox = page.getByRole("combobox", { name: "Framework Combobox" });
+  await combobox.click();
+  await combobox.fill("sv");
+  await expect(page.getByRole("listbox", { name: "Framework Combobox options" }).getByRole("option", { name: "Svelte" })).toBeVisible();
+
+  await combobox.press("ArrowDown");
+  await combobox.press("Enter");
+  await expect(page.getByText("Current selection: svelte")).toBeVisible();
+});
+
 test("opens dropdown using keyboard", async ({ page }) => {
   await page.goto("/");
 

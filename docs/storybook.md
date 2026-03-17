@@ -25,6 +25,7 @@ pnpm --filter @aurora-ui/storybook-app build-storybook
 ## 当前已覆盖故事
 - `Core/Button`
 - `Form/Input`
+- `Form/Combobox`
 - `Overlay/Dialog`
 - `Overlay/Popover`
 - `Overlay/Dropdown`
