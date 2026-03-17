@@ -31,7 +31,7 @@
   - `Dialog`: production-refined
   - `Popover`, `Dropdown`, `CommandPalette`: production-refined
 - AI Components
-  - `PromptInput`, `MessageBubble`, `ReasoningPanel`, `StreamingCodeBlock`: done
+  - `PromptInput`, `MessageBubble`, `ReasoningPanel`, `StreamingCodeBlock`: production-refined
 
 ## Demo Coverage
 - Basic components: covered

@@ -10,6 +10,11 @@ export function StreamingCodeBlock({ code, language = "txt", speed = 8 }: Stream
   const [visible, setVisible] = React.useState("");
 
   React.useEffect(() => {
+    if (speed <= 0 || code.length === 0) {
+      setVisible(code);
+      return;
+    }
+
     let pointer = 0;
     setVisible("");
 
@@ -28,6 +33,7 @@ export function StreamingCodeBlock({ code, language = "txt", speed = 8 }: Stream
 
   return (
     <div
+      aria-busy={visible.length < code.length}
       style={{
         border: "1px solid var(--aurora-border-default)",
         borderRadius: "var(--aurora-radius-md)",

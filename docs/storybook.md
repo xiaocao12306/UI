@@ -43,6 +43,8 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `Overlay/Dropdown` End/Enter 选择 + ArrowDown 再次打开路径
   - `AI/CommandPalette` 搜索/禁用项/回车关闭流程
   - `AI/PromptInput` 提交/禁用边界与多动作反馈路径
+  - `AI/ReasoningPanel` 展开/折叠可访问性路径
+  - `AI/StreamingCodeBlock` streaming 完成与 busy 状态路径
   - `Feedback/Toast` 关闭与重开流程
   - `Data/Tabs` 点击切换 + Home 键回到首个可用标签
   - `Data/Table` 排序切换与 `aria-sort` 状态同步
@@ -62,6 +64,9 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - `Feedback/Toast`
 - `AI/CommandPalette`
 - `AI/PromptInput`
+- `AI/MessageBubble`
+- `AI/ReasoningPanel`
+- `AI/StreamingCodeBlock`
 - `Docs/Getting Started`
 - `Docs/Component API`
 - `Docs/Component Catalog`

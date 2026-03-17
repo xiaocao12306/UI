@@ -28,9 +28,17 @@ const speakerStyles: Record<MessageSpeaker, React.CSSProperties> = {
   }
 };
 
+const speakerLabels: Record<MessageSpeaker, string> = {
+  user: "User",
+  assistant: "Assistant",
+  system: "System"
+};
+
 export function MessageBubble({ speaker, children }: MessageBubbleProps) {
   return (
     <article
+      aria-label={`${speakerLabels[speaker]} message`}
+      data-speaker={speaker}
       style={{
         maxWidth: "min(680px, 90%)",
         borderRadius: 12,
