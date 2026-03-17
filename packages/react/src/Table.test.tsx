@@ -169,4 +169,33 @@ describe("Table", () => {
     expect(screen.queryByRole("button", { name: /Status sort/ })).toBeNull();
     expect(screen.getAllByRole("cell")[0]).toHaveTextContent("Dialog");
   });
+
+  it("keeps equal sort values in source order for deterministic rendering", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Alpha", score: 1 },
+          { name: "Beta", score: 1 },
+          { name: "Gamma", score: 2 }
+        ]}
+        defaultSortKey="score"
+      />
+    );
+
+    let cells = screen.getAllByRole("cell");
+    expect(cells[0]).toHaveTextContent("Alpha");
+    expect(cells[2]).toHaveTextContent("Beta");
+    expect(cells[4]).toHaveTextContent("Gamma");
+
+    fireEvent.click(screen.getByRole("button", { name: "Score sort descending" }));
+
+    cells = screen.getAllByRole("cell");
+    expect(cells[0]).toHaveTextContent("Gamma");
+    expect(cells[2]).toHaveTextContent("Alpha");
+    expect(cells[4]).toHaveTextContent("Beta");
+  });
 });

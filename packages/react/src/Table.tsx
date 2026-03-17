@@ -87,21 +87,26 @@ export function Table<T>({
         return String(value ?? "");
       });
 
-    return [...data].sort((left, right) => {
-      const leftValue = accessor(left);
-      const rightValue = accessor(right);
+    return data
+      .map((row, index) => ({ row, index }))
+      .sort((leftEntry, rightEntry) => {
+        const leftValue = accessor(leftEntry.row);
+        const rightValue = accessor(rightEntry.row);
 
-      const normalizedLeft = leftValue instanceof Date ? leftValue.getTime() : leftValue;
-      const normalizedRight = rightValue instanceof Date ? rightValue.getTime() : rightValue;
+        const normalizedLeft = leftValue instanceof Date ? leftValue.getTime() : leftValue;
+        const normalizedRight = rightValue instanceof Date ? rightValue.getTime() : rightValue;
 
-      if (normalizedLeft < normalizedRight) {
-        return sortState.direction === "asc" ? -1 : 1;
-      }
-      if (normalizedLeft > normalizedRight) {
-        return sortState.direction === "asc" ? 1 : -1;
-      }
-      return 0;
-    });
+        if (normalizedLeft < normalizedRight) {
+          return sortState.direction === "asc" ? -1 : 1;
+        }
+        if (normalizedLeft > normalizedRight) {
+          return sortState.direction === "asc" ? 1 : -1;
+        }
+
+        // Preserve deterministic order for equal sort values.
+        return leftEntry.index - rightEntry.index;
+      })
+      .map((entry) => entry.row);
   }, [columns, data, sortState]);
 
   return (
