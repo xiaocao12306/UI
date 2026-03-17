@@ -15,13 +15,15 @@ const rows: ReleaseRow[] = [
 ];
 
 const columns: Array<TableColumn<ReleaseRow>> = [
-  { key: "id", header: "Issue", width: 120 },
-  { key: "component", header: "Component" },
-  { key: "owner", header: "Owner" },
+  { key: "id", header: "Issue", width: 120, sortable: true },
+  { key: "component", header: "Component", sortable: true },
+  { key: "owner", header: "Owner", sortable: true },
   {
     key: "status",
     header: "Status",
     width: 140,
+    sortable: true,
+    sortAccessor: (row) => row.status,
     render: (row) => {
       const tone = row.status === "ready" ? "success" : row.status === "review" ? "default" : "danger";
       return <Badge tone={tone}>{row.status}</Badge>;
@@ -48,7 +50,7 @@ type Story = StoryObj<typeof meta>;
 export const ReleaseChecklist: Story = {
   render: () => (
     <div style={{ width: 780, display: "grid", gap: 10 }}>
-      <Table columns={columns} data={rows} rowKey={(row) => row.id} />
+      <Table caption="Release readiness board" columns={columns} data={rows} rowKey={(row) => row.id} defaultSortKey="id" />
     </div>
   )
 };
@@ -76,4 +78,12 @@ export const WithRowAction: Story = {
 
     return <Table columns={actionColumns} data={rows} rowKey={(row) => row.id} />;
   }
+};
+
+export const EmptyState: Story = {
+  render: () => (
+    <div style={{ width: 780 }}>
+      <Table columns={columns} data={[]} emptyContent="No release items yet." />
+    </div>
+  )
 };

@@ -21,7 +21,7 @@
   - `FormField`: done
 - Data/Navigation
   - `Tabs`: production-refined
-  - `Table`: done
+  - `Table`: production-refined
 - Feedback/State
   - `Alert`, `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
   - `Toast`: production-refined
@@ -43,4 +43,3 @@
 ## Planned Next (v0.2)
 - `DatePicker` / `Combobox` / `Pagination`
 - Storybook interaction test runner expansion
-- Remaining production refinements: `Table`
