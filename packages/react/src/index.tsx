@@ -66,6 +66,18 @@ export type { DropdownItem, DropdownProps } from "./Dropdown";
 export { CommandPalette } from "./CommandPalette";
 export type { CommandItem, CommandPaletteProps } from "./CommandPalette";
 
+export { PromptInput } from "./PromptInput";
+export type { PromptInputProps } from "./PromptInput";
+
+export { MessageBubble } from "./MessageBubble";
+export type { MessageBubbleProps, MessageRole } from "./MessageBubble";
+
+export { ReasoningPanel } from "./ReasoningPanel";
+export type { ReasoningPanelProps } from "./ReasoningPanel";
+
+export { StreamingCodeBlock } from "./StreamingCodeBlock";
+export type { StreamingCodeBlockProps } from "./StreamingCodeBlock";
+
 export { GlobalStyles } from "./GlobalStyles";
 
 export { Box, DismissableLayer, FocusScope, Portal, Text, VisuallyHidden } from "@aurora-ui/primitives";
