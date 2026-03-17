@@ -72,6 +72,34 @@ importers:
         specifier: ^3.0.9
         version: 3.2.4(jsdom@27.4.0)
 
+  apps/demo:
+    dependencies:
+      '@aurora-ui/react':
+        specifier: workspace:*
+        version: link:../../packages/react
+      '@aurora-ui/tokens':
+        specifier: workspace:*
+        version: link:../../packages/tokens
+      react:
+        specifier: ^19.2.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.4(react@19.2.4)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.2.2
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.2.2
+        version: 19.2.3(@types/react@19.2.14)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vite:
+        specifier: ^7.1.7
+        version: 7.3.1
+
   packages/primitives:
     dependencies:
       '@radix-ui/react-slot':

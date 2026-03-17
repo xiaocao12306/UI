@@ -1,13 +1,13 @@
 import * as React from "react";
 
-export type MessageRole = "user" | "assistant" | "system";
+export type MessageSpeaker = "user" | "assistant" | "system";
 
 export type MessageBubbleProps = {
-  role: MessageRole;
+  speaker: MessageSpeaker;
   children: React.ReactNode;
 };
 
-const roleStyles: Record<MessageRole, React.CSSProperties> = {
+const speakerStyles: Record<MessageSpeaker, React.CSSProperties> = {
   user: {
     marginLeft: "auto",
     background: "var(--aurora-accent-default)",
@@ -28,7 +28,7 @@ const roleStyles: Record<MessageRole, React.CSSProperties> = {
   }
 };
 
-export function MessageBubble({ role, children }: MessageBubbleProps) {
+export function MessageBubble({ speaker, children }: MessageBubbleProps) {
   return (
     <article
       style={{
@@ -36,7 +36,7 @@ export function MessageBubble({ role, children }: MessageBubbleProps) {
         borderRadius: 12,
         border: "1px solid",
         padding: "10px 12px",
-        ...roleStyles[role]
+        ...speakerStyles[speaker]
       }}
     >
       {children}

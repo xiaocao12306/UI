@@ -70,7 +70,7 @@ export { PromptInput } from "./PromptInput";
 export type { PromptInputProps } from "./PromptInput";
 
 export { MessageBubble } from "./MessageBubble";
-export type { MessageBubbleProps, MessageRole } from "./MessageBubble";
+export type { MessageBubbleProps, MessageSpeaker } from "./MessageBubble";
 
 export { ReasoningPanel } from "./ReasoningPanel";
 export type { ReasoningPanelProps } from "./ReasoningPanel";
