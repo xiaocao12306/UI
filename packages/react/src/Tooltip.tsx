@@ -15,6 +15,11 @@ export function Tooltip({ content, children }: TooltipProps) {
       onMouseLeave={() => setOpen(false)}
       onFocus={() => setOpen(true)}
       onBlur={() => setOpen(false)}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") {
+          setOpen(false);
+        }
+      }}
     >
       {children}
       {open ? (

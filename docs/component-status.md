@@ -45,4 +45,4 @@
 - Data pagination E2E (`Release feed` page switching): covered
 
 ## Planned Next (v0.2)
-- Storybook interaction coverage expansion（下一步补齐 `AI/PromptInput` 提交/禁用边界与 `Overlay/Tooltip` 可达性路径）
+- Storybook interaction coverage expansion（下一步补齐 `AI/PromptInput` 提交/禁用边界与多动作反馈路径）
