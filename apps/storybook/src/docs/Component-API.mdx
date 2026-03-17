@@ -1,0 +1,34 @@
+import { Meta, Title, Subtitle, Description, Canvas, Controls } from '@storybook/blocks';
+import * as ButtonStories from '../stories/Button.stories';
+import * as InputStories from '../stories/Input.stories';
+import * as DialogStories from '../stories/Dialog.stories';
+import * as CommandPaletteStories from '../stories/CommandPalette.stories';
+
+<Meta title="Docs/Component API" />
+
+<Title />
+<Subtitle>Primary API Reference</Subtitle>
+<Description>
+This page links the most-used Aurora UI components to their executable stories and prop controls.
+The controls table is the source of truth for Storybook-level API behavior.
+</Description>
+
+## Button
+
+<Canvas of={ButtonStories.Primary} />
+<Controls of={ButtonStories.Primary} />
+
+## Input
+
+<Canvas of={InputStories.Default} />
+<Controls of={InputStories.Default} />
+
+## Dialog
+
+<Canvas of={DialogStories.Interactive} />
+<Controls of={DialogStories.Interactive} />
+
+## CommandPalette
+
+<Canvas of={CommandPaletteStories.SearchCommands} />
+<Controls of={CommandPaletteStories.SearchCommands} />

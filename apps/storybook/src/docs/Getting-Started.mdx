@@ -1,0 +1,23 @@
+import { Meta, Title, Subtitle, Description } from '@storybook/blocks';
+
+<Meta title="Docs/Getting Started" />
+
+<Title />
+<Subtitle>Aurora UI Storybook</Subtitle>
+<Description>
+Aurora UI Storybook is the primary visual documentation surface for React components.
+Use the toolbar theme selector to validate token behavior across `core-light`, `core-dark`, `glass`, and `neo-brutal`.
+</Description>
+
+## Coverage Scope
+
+- Core controls: Button, Input
+- Overlay primitives in composed components: Dialog, CommandPalette
+- AI interaction demonstration paths
+
+## How To Validate A Component Change
+
+1. Open the affected story and switch all themes.
+2. Confirm keyboard and pointer interactions are preserved.
+3. Verify story docs and controls match real component props.
+4. Run Chromatic (when token is configured) to compare snapshots.

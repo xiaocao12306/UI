@@ -1,0 +1,33 @@
+import { Meta, Title, Subtitle, Description } from '@storybook/blocks';
+
+<Meta title="Docs/Best Practices" />
+
+<Title />
+<Subtitle>Design + Engineering Checklist</Subtitle>
+<Description>
+Use these rules to keep components consistent with the Aurora plan and avoid regressions in accessibility or theming.
+</Description>
+
+## API Design
+
+- Keep props minimal and composable; avoid business-specific flags.
+- Prefer controlled APIs for overlays (`open`, `onOpenChange`).
+- Expose semantic variants (`solid`, `outline`) instead of hardcoded colors.
+
+## Theming
+
+- Do not hardcode color values inside component internals.
+- Resolve styling via Aurora CSS variables only.
+- Validate stories under all four theme packs before merge.
+
+## Accessibility
+
+- Ensure keyboard dismissal paths for overlay components.
+- Keep visible labels or accessible names for form controls.
+- Avoid `autoFocus`; use intentional focus management when opening overlays.
+
+## Testing
+
+- Add unit tests for any new interaction branch.
+- Add/extend Playwright smoke tests when user-facing flows change.
+- Keep Storybook stories deterministic so visual regression remains stable.
