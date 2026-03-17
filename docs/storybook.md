@@ -39,6 +39,7 @@ pnpm --filter @aurora-ui/storybook-app build-storybook
 - `Docs/Best Practices`
 
 说明：预览层通过 toolbar 全局切换 `core-light/core-dark/glass/neo-brutal`，用于验证 token 与主题一致性。
+生产级验收矩阵：`docs/production-quality-checklist.md`
 
 ## Chromatic
 - 工作流：`.github/workflows/chromatic.yml`
