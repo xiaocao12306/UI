@@ -249,6 +249,9 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `description` | `ReactNode` | Wires helper copy through `aria-describedby`. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Fine-grained dismiss policy for blocking flows. |
 | `showCloseButton` | `boolean` | Allows explicit in-panel action-only dismissal. |
+| nested dismiss order | top layer first | Nested overlays inside drawer dismiss one layer per Escape/outside interaction. |
+
+<Canvas of={DrawerStories.NestedDismissOrder} />
 
 ### Popover
 

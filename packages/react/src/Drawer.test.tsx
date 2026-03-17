@@ -1,6 +1,8 @@
+import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Drawer } from "./Drawer";
+import { Dropdown } from "./Dropdown";
 
 describe("Drawer", () => {
   it("calls onOpenChange(false) from close controls", () => {
@@ -50,5 +52,36 @@ describe("Drawer", () => {
     const description = screen.getByText("Use Ctrl/Cmd + K to open command palette.");
 
     expect(dialog).toHaveAttribute("aria-describedby", description.getAttribute("id"));
+  });
+
+  it("dismisses nested overlays from top layer first on Escape", () => {
+    function NestedOverlayFixture() {
+      const [open, setOpen] = React.useState(true);
+
+      return (
+        <Drawer open={open} onOpenChange={setOpen} title="Nested overlay drawer">
+          <Dropdown
+            label="Drawer actions"
+            items={[
+              { key: "duplicate", label: "Duplicate" },
+              { key: "archive", label: "Archive" }
+            ]}
+          />
+        </Drawer>
+      );
+    }
+
+    render(<NestedOverlayFixture />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Drawer actions" }));
+    expect(screen.getByRole("menu", { name: "Drawer actions" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Nested overlay drawer" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("menu", { name: "Drawer actions" })).toBeNull();
+    expect(screen.getByRole("dialog", { name: "Nested overlay drawer" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Nested overlay drawer" })).toBeNull();
   });
 });

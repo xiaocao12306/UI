@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button, Drawer } from "@aurora-ui/react";
+import { Button, Drawer, Dropdown } from "@aurora-ui/react";
 import { expect, userEvent, within } from "@storybook/test";
 
 const meta = {
@@ -104,5 +104,50 @@ export const NonDismissible: Story = {
 
     await userEvent.click(body.getByRole("button", { name: "I understand" }));
     await expect(body.queryByRole("dialog", { name: "Security checklist" })).not.toBeInTheDocument();
+  }
+};
+
+function NestedOverlayDrawerDemo() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <div style={{ minHeight: 420, padding: 16 }}>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Open Nested Overlay Drawer
+      </Button>
+      <Drawer open={open} onOpenChange={setOpen} title="Nested overlay drawer">
+        <div style={{ display: "grid", gap: 10 }}>
+          <p style={{ margin: 0 }}>Escape should close dropdown first, then drawer.</p>
+          <Dropdown
+            label="Drawer actions"
+            items={[
+              { key: "duplicate", label: "Duplicate" },
+              { key: "archive", label: "Archive" }
+            ]}
+          />
+        </div>
+      </Drawer>
+    </div>
+  );
+}
+
+export const NestedDismissOrder: Story = {
+  render: () => <NestedOverlayDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.click(canvas.getByRole("button", { name: "Open Nested Overlay Drawer" }));
+    await expect(await body.findByRole("dialog", { name: "Nested overlay drawer" })).toBeInTheDocument();
+
+    await userEvent.click(body.getByRole("button", { name: "Drawer actions" }));
+    await expect(body.getByRole("menu", { name: "Drawer actions" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(body.queryByRole("menu", { name: "Drawer actions" })).not.toBeInTheDocument();
+    await expect(body.getByRole("dialog", { name: "Nested overlay drawer" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(body.queryByRole("dialog", { name: "Nested overlay drawer" })).not.toBeInTheDocument();
   }
 };
