@@ -30,6 +30,7 @@ pnpm --filter @aurora-ui/storybook-app build-storybook
 - `Overlay/Dropdown`
 - `Data/Tabs`
 - `Data/Table`
+- `Data/Pagination`
 - `Feedback/Toast`
 - `AI/CommandPalette`
 - `AI/PromptInput`

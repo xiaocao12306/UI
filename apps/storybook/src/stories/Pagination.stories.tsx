@@ -1,0 +1,61 @@
+import * as React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+import { Badge, Pagination } from "@aurora-ui/react";
+
+const meta = {
+  title: "Data/Pagination",
+  component: Pagination,
+  tags: ["autodocs"],
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component:
+          "Pagination provides first/previous/number/next/last controls with compact ellipsis behavior and accessible page labels."
+      }
+    }
+  },
+  args: {
+    page: 6,
+    pageCount: 20,
+    onPageChange: () => {}
+  }
+} satisfies Meta<typeof Pagination>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+function ControlledPaginationDemo() {
+  const [page, setPage] = React.useState(1);
+
+  return (
+    <div style={{ width: 640, display: "grid", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ color: "var(--aurora-text-secondary)" }}>Active page</span>
+        <Badge tone="default">{page}</Badge>
+      </div>
+      <Pagination page={page} pageCount={12} onPageChange={setPage} />
+    </div>
+  );
+}
+
+export const Controlled: Story = {
+  render: () => <ControlledPaginationDemo />
+};
+
+export const CompactRange: Story = {
+  args: {
+    page: 9,
+    pageCount: 48,
+    onPageChange: () => {}
+  }
+};
+
+export const WithoutFirstLast: Story = {
+  args: {
+    page: 3,
+    pageCount: 10,
+    showFirstLast: false,
+    onPageChange: () => {}
+  }
+};

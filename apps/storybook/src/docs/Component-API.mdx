@@ -8,6 +8,7 @@ import * as CommandPaletteStories from '../stories/CommandPalette.stories';
 import * as ToastStories from '../stories/Toast.stories';
 import * as TabsStories from '../stories/Tabs.stories';
 import * as TableStories from '../stories/Table.stories';
+import * as PaginationStories from '../stories/Pagination.stories';
 import * as PromptInputStories from '../stories/PromptInput.stories';
 
 <Meta title="Docs/Component API" />
@@ -77,6 +78,19 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onSortChange` | `(key, direction) => void` | Useful for telemetry and analytics. |
 
 <Canvas of={TableStories.SortTelemetry} />
+
+### Pagination
+
+<Canvas of={PaginationStories.Controlled} />
+<Controls of={PaginationStories.CompactRange} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `page` | `number` | Current page index (1-based). |
+| `pageCount` | `number` | Total number of pages; values `<= 1` render no UI. |
+| `onPageChange` | `(page: number) => void` | Called for navigation intent. |
+| `showFirstLast` | `boolean` | Toggle first/last jump buttons. |
+| `siblingCount` / `boundaryCount` | `number` | Controls visible number tokens before ellipsis. |
 
 ## Feedback
 
