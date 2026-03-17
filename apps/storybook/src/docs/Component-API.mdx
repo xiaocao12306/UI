@@ -12,6 +12,9 @@ import * as TabsStories from '../stories/Tabs.stories';
 import * as TableStories from '../stories/Table.stories';
 import * as PaginationStories from '../stories/Pagination.stories';
 import * as PromptInputStories from '../stories/PromptInput.stories';
+import * as MessageBubbleStories from '../stories/MessageBubble.stories';
+import * as ReasoningPanelStories from '../stories/ReasoningPanel.stories';
+import * as StreamingCodeBlockStories from '../stories/StreamingCodeBlock.stories';
 
 <Meta title="Docs/Component API" />
 
@@ -154,3 +157,41 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 <Canvas of={PromptInputStories.WithAiRequestState} />
 <Controls of={PromptInputStories.Default} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `onSubmit` | `(prompt: string) => void` | Triggered by send button or Ctrl/Cmd + Enter shortcut. |
+| `submitting` | `boolean` | Locks input + button and updates live hint during AI request execution. |
+| `placeholder` | `string` | Optional prompt guidance text. |
+
+### MessageBubble
+
+<Canvas of={MessageBubbleStories.Conversation} />
+<Controls of={MessageBubbleStories.Default} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `speaker` | `'user' \| 'assistant' \| 'system'` | Applies alignment and semantic labeling (`aria-label`). |
+| `children` | `ReactNode` | Message content body. |
+
+### ReasoningPanel
+
+<Canvas of={ReasoningPanelStories.Default} />
+<Controls of={ReasoningPanelStories.Default} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `title` | `ReactNode` | Toggle trigger title. |
+| `steps` | `string[]` | Ordered reasoning steps; empty arrays show fallback state. |
+| `defaultOpen` | `boolean` | Initial expanded state for diagnostics-oriented views. |
+
+### StreamingCodeBlock
+
+<Canvas of={StreamingCodeBlockStories.Default} />
+<Controls of={StreamingCodeBlockStories.Default} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `code` | `string` | Source content to progressively reveal. |
+| `language` | `string` | Header hint for syntax context. |
+| `speed` | `number` | Milliseconds per character; `0` renders immediately. |

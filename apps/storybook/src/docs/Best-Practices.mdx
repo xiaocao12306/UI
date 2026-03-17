@@ -3,6 +3,9 @@ import * as ButtonStories from '../stories/Button.stories';
 import * as DialogStories from '../stories/Dialog.stories';
 import * as CommandPaletteStories from '../stories/CommandPalette.stories';
 import * as PromptInputStories from '../stories/PromptInput.stories';
+import * as MessageBubbleStories from '../stories/MessageBubble.stories';
+import * as ReasoningPanelStories from '../stories/ReasoningPanel.stories';
+import * as StreamingCodeBlockStories from '../stories/StreamingCodeBlock.stories';
 import * as ToastStories from '../stories/Toast.stories';
 import * as TabsStories from '../stories/Tabs.stories';
 import * as TableStories from '../stories/Table.stories';
@@ -49,8 +52,13 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep command labels explicit and searchable.
 - Provide empty-state guidance when no command matches the query.
 - Track user query updates with `onQueryChange` for downstream telemetry.
+- Show reasoning disclosure with explicit user intent (default collapsed).
+- Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
 
 <Canvas of={PromptInputStories.WithAiRequestState} />
+<Canvas of={MessageBubbleStories.Conversation} />
+<Canvas of={ReasoningPanelStories.Default} />
+<Canvas of={StreamingCodeBlockStories.Default} />
 <Canvas of={CommandPaletteStories.AiInteractionFlow} />
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
 
