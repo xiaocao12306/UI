@@ -23,7 +23,7 @@
   - `DatePicker`: done
   - `Checkbox`: production-refined
   - `RadioGroup`: production-refined
-  - `Switch`: done
+  - `Switch`: production-refined
 - Data/Navigation
   - `Tabs`: production-refined
   - `Table`: production-refined

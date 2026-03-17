@@ -287,7 +287,12 @@ function App() {
                 { label: "Large", value: "l" }
               ]}
             />
-            <Switch checked={switchChecked} onCheckedChange={setSwitchChecked} label="Live updates" />
+            <Switch
+              checked={switchChecked}
+              onCheckedChange={setSwitchChecked}
+              label="Live updates"
+              description="Automatically refresh release feed every 30 seconds."
+            />
           </div>
         </Section>
 

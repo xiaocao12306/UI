@@ -3,6 +3,7 @@ import * as ButtonStories from '../stories/Button.stories';
 import * as InputStories from '../stories/Input.stories';
 import * as CheckboxStories from '../stories/Checkbox.stories';
 import * as RadioGroupStories from '../stories/RadioGroup.stories';
+import * as SwitchStories from '../stories/Switch.stories';
 import * as SelectStories from '../stories/Select.stories';
 import * as ComboboxStories from '../stories/Combobox.stories';
 import * as DatePickerStories from '../stories/DatePicker.stories';
@@ -70,6 +71,20 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `direction` | `'vertical' \| 'horizontal'` | Layout direction for stacked vs inline groups. |
 
 <Canvas of={RadioGroupStories.InvalidState} />
+
+### Switch
+
+<Canvas of={SwitchStories.Controlled} />
+<Controls of={SwitchStories.KeyboardToggle} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `checked` / `defaultChecked` | `boolean` | Controlled and uncontrolled switch flows. |
+| `onCheckedChange` | `(checked: boolean) => void` | Triggered from pointer and keyboard (`Space`) interactions. |
+| `description` | `ReactNode` | Auto-wires helper copy to `aria-describedby`. |
+| `invalid` | `boolean` | Applies invalid semantics and error-token visual states. |
+
+<Canvas of={SwitchStories.InvalidAndDisabled} />
 
 ### Select
 

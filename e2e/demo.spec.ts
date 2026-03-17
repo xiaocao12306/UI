@@ -23,6 +23,20 @@ test("persists selected theme after reload", async ({ page }) => {
   await expect(page.getByText("Current theme: glass")).toBeVisible();
 });
 
+test("toggles live updates switch via pointer and keyboard", async ({ page }) => {
+  await page.goto("/");
+
+  const control = page.getByRole("switch", { name: "Live updates" });
+  await expect(control).toHaveAttribute("aria-checked", "true");
+
+  await control.click();
+  await expect(control).toHaveAttribute("aria-checked", "false");
+
+  await control.focus();
+  await control.press("Space");
+  await expect(control).toHaveAttribute("aria-checked", "true");
+});
+
 test("opens command palette with keyboard shortcut", async ({ page }) => {
   await page.goto("/");
 
