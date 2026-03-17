@@ -62,6 +62,12 @@ export function Toast({
 }: ToastProps) {
   const [paused, setPaused] = React.useState(false);
 
+  React.useEffect(() => {
+    if (!open) {
+      setPaused(false);
+    }
+  }, [open]);
+
   const close = React.useCallback(() => {
     onClose?.();
     onOpenChange?.(false);

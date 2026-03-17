@@ -98,4 +98,26 @@ describe("Toast", () => {
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onOpenChange).not.toHaveBeenCalled();
   });
+
+  it("resets paused state after close and reopen", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+
+    try {
+      const { rerender } = render(<Toast open title="Retryable" duration={1000} onOpenChange={onOpenChange} />);
+      const toast = screen.getByRole("status");
+      fireEvent.mouseEnter(toast);
+
+      rerender(<Toast open={false} title="Retryable" duration={1000} onOpenChange={onOpenChange} />);
+      rerender(<Toast open title="Retryable" duration={1000} onOpenChange={onOpenChange} />);
+
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });
