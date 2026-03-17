@@ -49,4 +49,20 @@ describe("PromptInput", () => {
     fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
     expect(onSubmit).not.toHaveBeenCalled();
   });
+
+  it("does not submit while IME composition is active", () => {
+    const onSubmit = vi.fn();
+
+    render(<PromptInput onSubmit={onSubmit} />);
+    const textbox = screen.getByRole("textbox", { name: "Prompt input" });
+
+    fireEvent.change(textbox, { target: { value: "中文输入草稿" } });
+    fireEvent.compositionStart(textbox);
+    fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    fireEvent.compositionEnd(textbox);
+    fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
+    expect(onSubmit).toHaveBeenCalledWith("中文输入草稿");
+  });
 });

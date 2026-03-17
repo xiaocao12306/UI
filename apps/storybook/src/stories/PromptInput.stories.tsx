@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { PromptInput } from "@aurora-ui/react";
-import { expect, userEvent, waitFor, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 
 const meta = {
   title: "AI/PromptInput",
@@ -62,6 +62,12 @@ export const WithAiRequestState: Story = {
     await expect(sendButton).toBeDisabled();
     await userEvent.type(textbox, "Draft release retrospective");
     await expect(sendButton).toBeEnabled();
+    await expect(canvas.getByText(/Submission count:/)).toHaveTextContent("Submission count: 0");
+
+    fireEvent.compositionStart(textbox);
+    fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
+    await expect(canvas.getByText(/Submission count:/)).toHaveTextContent("Submission count: 0");
+    fireEvent.compositionEnd(textbox);
 
     await userEvent.keyboard("{Control>}{Enter}{/Control}");
     await expect(canvas.getByText("Draft release retrospective")).toBeInTheDocument();

@@ -162,6 +162,7 @@
   - Storybook interaction runner 接入（`@storybook/test-runner`、`storybook:test:ci`、CI 集成）
   - Storybook `play` 交互样例扩展（Button/Input/Combobox/DatePicker/Dialog/Tooltip/Popover/Dropdown/Pagination/CommandPalette/Toast/Tabs/Table）与本地静态站回归通过
   - PromptInput 生产级交互补齐（Ctrl/Cmd+Enter 提交、submitting 禁用边界、多动作反馈 Storybook 路径）
+  - PromptInput IME 边界补齐（组合输入期间屏蔽 Ctrl/Cmd+Enter 提交）
   - AI 组件补齐（MessageBubble/ReasoningPanel/StreamingCodeBlock 的单测 + Storybook + 交互验证）
   - Storybook 文档补齐（Component API / Component Catalog / Best Practices 增补 AI 组件章节）
   - Storybook API 文档深化（Button/Input/Dialog/Popover/Dropdown API 与 overlay 关闭策略说明）

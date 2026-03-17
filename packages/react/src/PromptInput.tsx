@@ -10,6 +10,7 @@ export type PromptInputProps = {
 
 export function PromptInput({ onSubmit, submitting, placeholder = "Type your prompt..." }: PromptInputProps) {
   const [value, setValue] = React.useState("");
+  const composingRef = React.useRef(false);
   const trimmedValue = value.trim();
 
   const submit = () => {
@@ -40,7 +41,17 @@ export function PromptInput({ onSubmit, submitting, placeholder = "Type your pro
         aria-label="Prompt input"
         disabled={submitting}
         rows={4}
+        onCompositionStart={() => {
+          composingRef.current = true;
+        }}
+        onCompositionEnd={() => {
+          composingRef.current = false;
+        }}
         onKeyDown={(event) => {
+          if (composingRef.current || event.nativeEvent.isComposing) {
+            return;
+          }
+
           if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
             submit();
           }
