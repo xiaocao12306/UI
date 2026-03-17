@@ -36,6 +36,7 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm demo:e2e
 # or run all in one:
 pnpm verify
 ```
@@ -48,6 +49,12 @@ pnpm --filter @aurora-ui/demo dev
 Build demo output:
 ```bash
 pnpm --filter @aurora-ui/demo build
+```
+
+Run demo smoke E2E:
+```bash
+pnpm exec playwright install chromium
+pnpm demo:e2e
 ```
 
 ## Demo External Link

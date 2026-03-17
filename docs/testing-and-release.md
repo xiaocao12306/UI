@@ -16,6 +16,15 @@ Examples:
 ```bash
 pnpm --filter @aurora-ui/react test
 pnpm --filter @aurora-ui/demo build
+pnpm demo:e2e
+```
+
+## E2E (Playwright)
+Install browser once in local environment:
+
+```bash
+pnpm exec playwright install chromium
+pnpm demo:e2e
 ```
 
 ## Versioning
@@ -34,6 +43,7 @@ GitHub Actions workflow runs:
 - typecheck
 - test
 - build
+- demo e2e smoke test
 
 ## Release Readiness Checklist
 - all quality gates green

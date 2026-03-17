@@ -38,4 +38,3 @@
 ## Planned Next (v0.2)
 - `DatePicker` / `Combobox` / `Pagination`
 - Storybook app and visual regression baseline
-- Playwright smoke tests for demo site
