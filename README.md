@@ -1,5 +1,8 @@
 # Aurora UI (React Component Library)
 
+![CI](https://github.com/xiaocao12306/UI/actions/workflows/ci.yml/badge.svg)
+![Demo Pages](https://github.com/xiaocao12306/UI/actions/workflows/demo-pages.yml/badge.svg)
+
 Aurora UI is a token-first React component library monorepo with accessibility-focused primitives, AI interaction components, and a demo site.
 
 ## Current Status
