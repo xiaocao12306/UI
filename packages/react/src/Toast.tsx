@@ -114,6 +114,14 @@ export function Toast({
     onOpenChange?.(false);
   }, [onClose, onOpenChange]);
 
+  const promoteToTop = React.useCallback(() => {
+    const element = rootRef.current;
+    if (!open || !element) {
+      return;
+    }
+    pushToastToStack(element);
+  }, [open]);
+
   React.useEffect(() => {
     if (!open || duration <= 0 || (pauseOnHover && paused)) {
       return;
@@ -170,6 +178,7 @@ export function Toast({
       aria-labelledby={ariaLabel ? undefined : titleId}
       aria-describedby={description ? descriptionId : undefined}
       onMouseEnter={() => {
+        promoteToTop();
         if (pauseOnHover) {
           setPauseState((current) => ({ ...current, hover: true }));
         }
@@ -180,6 +189,7 @@ export function Toast({
         }
       }}
       onFocusCapture={() => {
+        promoteToTop();
         if (pauseOnHover) {
           setPauseState((current) => ({ ...current, focus: true }));
         }

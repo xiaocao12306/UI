@@ -152,6 +152,17 @@ export const EscapeStackOrder: Story = {
   render: () => <EscapeStackOrderDemo />
 };
 
+export const FocusedToastEscapesFirst: Story = {
+  render: () => (
+    <div style={{ minHeight: 280, padding: 16, display: "grid", gap: 8 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Focus or hover any older toast to promote it to top priority before pressing Escape.
+      </p>
+      <EscapeStackOrderDemo />
+    </div>
+  )
+};
+
 export const AriaLabelOverride: Story = {
   args: {
     title: <span aria-hidden>✅</span>,
