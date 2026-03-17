@@ -37,3 +37,4 @@
 - Pagination: added accessible nav controls, ellipsis behavior tests, Storybook examples, and demo feed page-switch E2E.
 - Combobox: added searchable option filtering, disabled-option keyboard skip, and Storybook/demo regression coverage.
 - DatePicker: added controlled date input wrapper, range/invalid coverage, and demo interaction regression.
+- Storybook interaction runner: added `play`-based interaction checks and static-site test-runner execution (`storybook:test:ci`).

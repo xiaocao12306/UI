@@ -13,6 +13,8 @@
     "storybook": "storybook dev -p 6006",
     "storybook:smoke": "storybook dev -p 6006 --smoke-test --ci",
     "build-storybook": "storybook build",
+    "storybook:test": "test-storybook --url http://127.0.0.1:6106 --maxWorkers=2",
+    "storybook:test:ci": "start-server-and-test \"http-server storybook-static -p 6106 -c-1\" http-get://127.0.0.1:6106 \"pnpm storybook:test\"",
     "chromatic": "chromatic --exit-once-uploaded --storybook-build-dir storybook-static"
   },
   "dependencies": {
@@ -27,9 +29,13 @@
     "@storybook/blocks": "8.6.18",
     "@storybook/react": "8.6.18",
     "@storybook/react-vite": "8.6.18",
+    "@storybook/test": "8.6.18",
+    "@storybook/test-runner": "^0.20.1",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "chromatic": "^11.29.0",
+    "http-server": "^14.1.1",
+    "start-server-and-test": "^2.1.5",
     "storybook": "8.6.18",
     "typescript": "^5.9.3",
     "vite": "^5.4.14"

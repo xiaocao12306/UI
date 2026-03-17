@@ -18,6 +18,7 @@ pnpm --filter @aurora-ui/react test
 pnpm --filter @aurora-ui/demo build
 pnpm demo:e2e
 pnpm storybook:build
+pnpm storybook:test:ci
 ```
 
 ## E2E (Playwright)

@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Pagination } from "@aurora-ui/react";
+import { expect, userEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Data/Pagination",
@@ -40,7 +41,12 @@ function ControlledPaginationDemo() {
 }
 
 export const Controlled: Story = {
-  render: () => <ControlledPaginationDemo />
+  render: () => <ControlledPaginationDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Go to page 2" }));
+    await expect(canvas.getByRole("button", { name: "Current page, 2" })).toBeInTheDocument();
+  }
 };
 
 export const CompactRange: Story = {

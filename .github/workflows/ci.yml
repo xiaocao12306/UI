@@ -23,6 +23,8 @@ jobs:
       - run: pnpm test
       - run: pnpm build
       - run: pnpm storybook:build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm storybook:test:ci
 
   demo-e2e:
     runs-on: ubuntu-latest

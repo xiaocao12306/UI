@@ -45,4 +45,4 @@
 - Data pagination E2E (`Release feed` page switching): covered
 
 ## Planned Next (v0.2)
-- Storybook interaction test runner expansion
+- Storybook interaction coverage expansion（在现有 `Form/Combobox`、`Form/DatePicker`、`Data/Pagination` 基础上继续扩展）

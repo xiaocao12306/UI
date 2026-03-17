@@ -12,6 +12,8 @@
 pnpm storybook:dev
 pnpm storybook:smoke
 pnpm storybook:build
+pnpm storybook:test
+pnpm storybook:test:ci
 ```
 
 或直接在包级别执行：
@@ -20,7 +22,19 @@ pnpm storybook:build
 pnpm --filter @aurora-ui/storybook-app storybook
 pnpm --filter @aurora-ui/storybook-app storybook:smoke
 pnpm --filter @aurora-ui/storybook-app build-storybook
+pnpm --filter @aurora-ui/storybook-app storybook:test
+pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 ```
+
+## Interaction Runner
+- 工具：`@storybook/test-runner`
+- 入口脚本：
+  - `storybook:test`：针对已运行的 Storybook URL 执行交互测试
+  - `storybook:test:ci`：在本地静态产物（`storybook-static`）上启动临时服务并运行测试
+- 当前已覆盖 play 场景：
+  - `Form/Combobox` 选择流程
+  - `Form/DatePicker` 日期更新流程
+  - `Data/Pagination` 翻页流程
 
 ## 当前已覆盖故事
 - `Core/Button`

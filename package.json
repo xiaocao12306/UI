@@ -22,6 +22,8 @@
     "storybook:dev": "pnpm --filter @aurora-ui/storybook-app storybook",
     "storybook:smoke": "pnpm --filter @aurora-ui/storybook-app storybook:smoke",
     "storybook:build": "pnpm --filter @aurora-ui/storybook-app build-storybook",
+    "storybook:test": "pnpm --filter @aurora-ui/storybook-app storybook:test",
+    "storybook:test:ci": "pnpm --filter @aurora-ui/storybook-app storybook:test:ci",
     "chromatic": "pnpm --filter @aurora-ui/storybook-app chromatic",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "lint": "turbo run lint",

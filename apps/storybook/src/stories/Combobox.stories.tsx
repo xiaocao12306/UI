@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Combobox, type ComboboxOption } from "@aurora-ui/react";
+import { expect, userEvent, within } from "@storybook/test";
 
 const frameworkOptions: ComboboxOption[] = [
   { value: "react", label: "React", keywords: ["library", "jsx"] },
@@ -46,7 +47,18 @@ function ControlledComboboxDemo() {
 }
 
 export const Controlled: Story = {
-  render: () => <ControlledComboboxDemo />
+  render: () => <ControlledComboboxDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Framework" });
+
+    await userEvent.click(input);
+    await userEvent.clear(input);
+    await userEvent.type(input, "sv");
+    await userEvent.keyboard("{ArrowDown}{Enter}");
+
+    await expect(canvas.getByText("svelte")).toBeInTheDocument();
+  }
 };
 
 export const WithCustomEmptyMessage: Story = {

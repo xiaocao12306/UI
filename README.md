@@ -70,6 +70,8 @@ pnpm demo:e2e
 ```bash
 pnpm storybook:dev
 pnpm storybook:build
+pnpm storybook:test
+pnpm storybook:test:ci
 pnpm chromatic
 ```
 

@@ -133,6 +133,8 @@
   - Storybook `Form/Combobox` + Demo 表单集成 + E2E 选项选择回归
   - DatePicker 组件落地（受控/非受控日期输入、min/max、invalid 状态）
   - Storybook `Form/DatePicker` + Demo 日期联动 + E2E 日期更新回归
+  - Storybook interaction runner 接入（`@storybook/test-runner`、`storybook:test:ci`、CI 集成）
+  - Storybook `play` 交互样例（Combobox/Pagination）与本地静态站回归通过
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中
