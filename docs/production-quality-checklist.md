@@ -17,6 +17,7 @@
 | Select | production-refined | `Form/Select` | `Select.test.tsx` |
 | Textarea | production-refined | `Form/Textarea` | `Textarea.test.tsx` |
 | Checkbox | production-refined | `Form/Checkbox` | `Checkbox.test.tsx` |
+| RadioGroup | production-refined | `Form/RadioGroup` | `RadioGroup.test.tsx` |
 | Combobox | production-refined | `Form/Combobox` | `Combobox.test.tsx` |
 | Dialog | production-refined | `Overlay/Dialog` | `Dialog.test.tsx` |
 | Tooltip | production-refined | `Overlay/Tooltip` | `Tooltip.test.tsx` |
@@ -54,3 +55,4 @@
 - Textarea production hardening: aligned invalid/focus/hover/disabled/readOnly visual states with Input tokens, and added dedicated unit + Storybook coverage.
 - Select production hardening: aligned invalid/focus/hover/disabled state semantics with Input tokens, and added dedicated unit + Storybook coverage.
 - Checkbox production hardening: added mixed-state (`indeterminate`) semantics, helper narration wiring, and dedicated unit + Storybook coverage.
+- RadioGroup production hardening: added controlled/uncontrolled flow, disabled options, invalid semantics, and dedicated unit + Storybook coverage.
