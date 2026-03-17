@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as o}from"./index-CHKtz2QT.js";import{M as t,T as l,S as a,D as c,C as i}from"./index-DwkDgjq7.js";import{VariantMatrix as d}from"./Button.stories-CioKYm6d.js";import{Interactive as h}from"./Dialog.stories-8rOsPSXQ.js";import{AiInteractionFlow as m,QueryTelemetry as x}from"./CommandPalette.stories-BNE0ITqD.js";import{WithAiRequestState as p}from"./PromptInput.stories-dhUe7XyJ.js";import{Conversation as j}from"./MessageBubble.stories-wEP5cOKd.js";import{Default as u}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as f}from"./StreamingCodeBlock.stories-Jd4VPz8N.js";import{ActionRequired as b}from"./Toast.stories-85nlmZPq.js";import{KeyboardNavigationGuide as y}from"./Tabs.stories-Cy2LOKSd.js";import{ReleaseChecklist as g,SortTelemetry as v}from"./Table.stories-COdgi_cR.js";import"./index-BWu4c2F4.js";import"./iframe-k3rJ1Tam.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Badge-Dkm8CRgf.js";import"./index-DgAF9SIF.js";import"./Input-vIzakoOT.js";import"./FieldStyles-CQy9UjBZ.js";import"./Textarea-D83jYE7Q.js";import"./Dialog-BEnLK-UC.js";import"./FocusScope-Db3t2k9z.js";import"./DismissableLayer-0Dn_Gr2D.js";function r(s){const n={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...o(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Best Practices"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as o}from"./index-CHKtz2QT.js";import{M as t,T as l,S as a,D as c,C as i}from"./index-BKarAeQ9.js";import{VariantMatrix as d}from"./Button.stories-CioKYm6d.js";import{Interactive as h}from"./Dialog.stories-8rOsPSXQ.js";import{AiInteractionFlow as x,QueryTelemetry as m}from"./CommandPalette.stories-Cv5hGd8D.js";import{WithAiRequestState as p}from"./PromptInput.stories-dhUe7XyJ.js";import{Conversation as j}from"./MessageBubble.stories-wEP5cOKd.js";import{Default as u}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as f}from"./StreamingCodeBlock.stories-Jd4VPz8N.js";import{ActionRequired as b}from"./Toast.stories-85nlmZPq.js";import{KeyboardNavigationGuide as y}from"./Tabs.stories-Cy2LOKSd.js";import{ReleaseChecklist as g,SortTelemetry as v}from"./Table.stories-COdgi_cR.js";import"./index-BWu4c2F4.js";import"./iframe-D-MduWA9.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Badge-Dkm8CRgf.js";import"./index-DgAF9SIF.js";import"./Input-vIzakoOT.js";import"./FieldStyles-CQy9UjBZ.js";import"./Textarea-D83jYE7Q.js";import"./Dialog-BEnLK-UC.js";import"./FocusScope-Db3t2k9z.js";import"./DismissableLayer-0Dn_Gr2D.js";function r(s){const n={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...o(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Best Practices"}),`
 `,e.jsx(l,{}),`
 `,e.jsx(a,{children:"Design + Engineering Checklist"}),`
 `,e.jsx(c,{children:e.jsx(n.p,{children:"Use these rules to keep components consistent with the Aurora plan and avoid regressions in accessibility or theming."})}),`
@@ -21,6 +21,7 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as o}from"
 `,e.jsx(n.li,{children:"Keep visible labels or accessible names for form controls."}),`
 `,e.jsxs(n.li,{children:["Avoid ",e.jsx(n.code,{children:"autoFocus"}),"; use intentional focus management when opening overlays."]}),`
 `,e.jsxs(n.li,{children:["For combobox/listbox patterns, map ",e.jsx(n.code,{children:"aria-selected"})," to the committed value, not temporary active focus."]}),`
+`,e.jsxs(n.li,{children:["For ",e.jsx(n.code,{children:"aria-activedescendant"})," combobox flows, keep listbox options out of tab order and preserve input focus during pointer selection."]}),`
 `]}),`
 `,e.jsx(i,{of:h}),`
 `,e.jsx(n.h2,{id:"testing",children:"Testing"}),`
@@ -42,8 +43,8 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as o}from"
 `,e.jsx(i,{of:j}),`
 `,e.jsx(i,{of:u}),`
 `,e.jsx(i,{of:f}),`
-`,e.jsx(i,{of:m}),`
 `,e.jsx(i,{of:x}),`
+`,e.jsx(i,{of:m}),`
 `,e.jsx(n.h2,{id:"notification-behavior",children:"Notification Behavior"}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsxs(n.li,{children:["Use ",e.jsx(n.code,{children:"duration={0}"})," for blocking notifications that require explicit user action."]}),`
