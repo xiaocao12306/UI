@@ -8,3 +8,5 @@ storybook-static
 .env
 .env.*
 !.env.example
+!apps/demo/dist/
+!apps/demo/dist/**
