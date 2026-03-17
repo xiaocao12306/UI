@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Dialog } from "./Dialog";
+import { Dropdown } from "./Dropdown";
 
 describe("Dialog", () => {
   it("calls onOpenChange(false) when close button clicked", () => {
@@ -135,5 +136,36 @@ describe("Dialog", () => {
     await user.click(screen.getByRole("button", { name: "Close dialog" }));
 
     expect(trigger).not.toHaveFocus();
+  });
+
+  it("dismisses nested overlays from top layer first on Escape", () => {
+    function NestedOverlayFixture() {
+      const [open, setOpen] = React.useState(true);
+
+      return (
+        <Dialog open={open} onOpenChange={setOpen} title="Nested overlay dialog">
+          <Dropdown
+            label="Dialog actions"
+            items={[
+              { key: "duplicate", label: "Duplicate" },
+              { key: "archive", label: "Archive" }
+            ]}
+          />
+        </Dialog>
+      );
+    }
+
+    render(<NestedOverlayFixture />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Dialog actions" }));
+    expect(screen.getByRole("menu", { name: "Dialog actions" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Nested overlay dialog" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("menu", { name: "Dialog actions" })).toBeNull();
+    expect(screen.getByRole("dialog", { name: "Nested overlay dialog" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Nested overlay dialog" })).toBeNull();
   });
 });
