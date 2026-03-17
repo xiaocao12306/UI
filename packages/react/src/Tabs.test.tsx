@@ -161,4 +161,45 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Build")).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Build" })).toHaveFocus();
   });
+
+  it("supports manual activation mode with Enter", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        activationMode="manual"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> },
+          { key: "three", label: "Three", content: <div>Panel Three</div> }
+        ]}
+      />
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    fireEvent.keyDown(oneTab, { key: "ArrowRight" });
+
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveFocus();
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+
+    fireEvent.keyDown(screen.getByRole("tab", { name: "Two" }), { key: "Enter" });
+    expect(screen.getByText("Panel Two")).toBeInTheDocument();
+  });
+
+  it("supports manual activation mode with Space", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        activationMode="manual"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    fireEvent.keyDown(screen.getByRole("tab", { name: "One" }), { key: "ArrowRight" });
+    fireEvent.keyDown(screen.getByRole("tab", { name: "Two" }), { key: " " });
+
+    expect(screen.getByText("Panel Two")).toBeInTheDocument();
+  });
 });

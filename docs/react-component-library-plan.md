@@ -200,6 +200,7 @@
   - Alert 生产级返工（status/alert live region 语义、dismiss 分支、单测 + Storybook `Feedback/Alert`）
   - CommandPalette 搜索语义收口（`textValue` 非文本标签别名 + 重音归一匹配，`cafe` 可命中 `Café`）
   - Table i18n 语义收口（`getSortAriaLabel` 支持排序按钮 aria-label 本地化）
+  - Tabs 激活模式收口（`activationMode` 支持 manual/automatic，键盘焦点与激活解耦）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

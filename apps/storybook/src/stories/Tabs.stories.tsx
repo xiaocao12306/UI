@@ -150,6 +150,40 @@ export const Vertical: Story = {
   }
 };
 
+export const ManualActivation: Story = {
+  render: () => (
+    <div style={{ width: 620, display: "grid", gap: 12 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Manual mode keeps panel selection stable while arrows move focus; press Enter or Space to activate.
+      </p>
+      <Tabs
+        ariaLabel="Manual activation tabs"
+        activationMode="manual"
+        defaultValue="spec"
+        items={[
+          { key: "spec", label: "Spec", content: "Specification stage." },
+          { key: "build", label: "Build", content: "Build stage." },
+          { key: "release", label: "Release", content: "Release stage." }
+        ]}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+
+    await userEvent.click(specTab);
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(canvas.getByRole("tab", { name: "Build" })).toHaveFocus();
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
+  }
+};
+
 function ChangeTelemetryDemo() {
   const [value, setValue] = React.useState("build");
   const [changes, setChanges] = React.useState(0);

@@ -13,6 +13,7 @@ export type TabsProps = {
   defaultValue?: string;
   ariaLabel?: string;
   orientation?: "horizontal" | "vertical";
+  activationMode?: "automatic" | "manual";
   onValueChange?: (value: string) => void;
 };
 
@@ -38,6 +39,7 @@ export function Tabs({
   defaultValue,
   ariaLabel = "Tabs",
   orientation = "horizontal",
+  activationMode = "automatic",
   onValueChange
 }: TabsProps) {
   const baseId = React.useId();
@@ -47,12 +49,18 @@ export function Tabs({
 
   const currentRawValue = value ?? internalValue;
   const currentValue = items.some((item) => item.key === currentRawValue && !item.disabled) ? currentRawValue : firstEnabledKey;
+  const [focusedValue, setFocusedValue] = React.useState<string | undefined>(currentValue);
+  const focusTargetValue = items.some((item) => item.key === focusedValue && !item.disabled) ? focusedValue : currentValue;
 
   React.useEffect(() => {
     if (value === undefined && currentValue !== internalValue) {
       setInternalValue(currentValue);
     }
   }, [currentValue, internalValue, value]);
+
+  React.useEffect(() => {
+    setFocusedValue(currentValue);
+  }, [currentValue]);
 
   const select = React.useCallback(
     (nextValue: string) => {
@@ -98,29 +106,46 @@ export function Tabs({
               aria-selected={selected}
               aria-controls={`${baseId}-panel-${item.key}`}
               aria-disabled={disabled || undefined}
-              tabIndex={selected ? 0 : -1}
+              tabIndex={focusTargetValue === item.key ? 0 : -1}
               disabled={disabled}
-              onClick={() => select(item.key)}
+              onClick={() => {
+                setFocusedValue(item.key);
+                select(item.key);
+              }}
+              onFocus={() => {
+                setFocusedValue(item.key);
+              }}
               onKeyDown={(event) => {
+                if (activationMode === "manual" && (event.key === "Enter" || event.key === " ")) {
+                  event.preventDefault();
+                  select(item.key);
+                  return;
+                }
+
+                const moveToIndex = (nextIndex: number) => {
+                  const nextKey = items[nextIndex]?.key;
+                  if (!nextKey) {
+                    return;
+                  }
+
+                  setFocusedValue(nextKey);
+                  if (activationMode === "automatic") {
+                    select(nextKey);
+                  }
+                  tabRefs.current[nextIndex]?.focus();
+                };
+
                 if (event.key === "Home") {
                   event.preventDefault();
                   const firstIndex = getNextEnabledIndex(items, -1, 1);
-                  const firstKey = items[firstIndex]?.key;
-                  if (firstKey) {
-                    select(firstKey);
-                    tabRefs.current[firstIndex]?.focus();
-                  }
+                  moveToIndex(firstIndex);
                   return;
                 }
 
                 if (event.key === "End") {
                   event.preventDefault();
                   const lastIndex = getNextEnabledIndex(items, 0, -1);
-                  const lastKey = items[lastIndex]?.key;
-                  if (lastKey) {
-                    select(lastKey);
-                    tabRefs.current[lastIndex]?.focus();
-                  }
+                  moveToIndex(lastIndex);
                   return;
                 }
 
@@ -136,11 +161,7 @@ export function Tabs({
                 event.preventDefault();
 
                 const nextIndex = getNextEnabledIndex(items, index, direction);
-                const nextKey = items[nextIndex]?.key;
-                if (nextKey) {
-                  select(nextKey);
-                  tabRefs.current[nextIndex]?.focus();
-                }
+                moveToIndex(nextIndex);
               }}
               style={{
                 height: 34,
