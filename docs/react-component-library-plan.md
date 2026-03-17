@@ -122,6 +122,8 @@
   - 横向收口（CommandPalette：Home/End 键盘分支、禁用项跳过、Query Telemetry 示例）
   - 横向收口（Toast：auto-dismiss/pauseOnHover/closeOnEscape=false 测试分支、ActionRequired 示例）
   - 横向收口（Tabs/Table：Home/End 焦点流、`aria-sort` 与排序切换断言、排序 telemetry 示例）
+  - Table 可访问性增强（sortable header `aria-label` 下一步排序提示、`scope="col"`）
+  - Demo E2E 扩展（Data 区域 Tabs Home/End 与 Table 排序回归）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中
