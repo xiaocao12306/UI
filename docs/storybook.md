@@ -40,7 +40,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `Form/Select` 选项切换与 invalid/disabled 展示路径
   - `Form/Textarea` 多行输入提交与 invalid/readOnly/disabled 展示路径
   - `Form/Combobox` 选择流程 + Escape/blur 关闭路径
-  - `Form/DatePicker` 受控日期更新流程
+  - `Form/DatePicker` 受控日期更新流程与 StateMatrix 展示路径
   - `Data/Pagination` 翻页流程与 Home/End 快捷切页
   - `Overlay/Dialog` Escape dismiss 与 non-dismissible 分支
   - `Overlay/Drawer` 侧边抽屉打开关闭、non-dismissible 分支

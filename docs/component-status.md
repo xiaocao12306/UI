@@ -20,7 +20,7 @@
   - `Combobox`: production-refined
   - `Select`: production-refined
   - `Textarea`: production-refined
-  - `DatePicker`: done
+  - `DatePicker`: production-refined
   - `Checkbox`: production-refined
   - `RadioGroup`: production-refined
   - `Switch`: production-refined

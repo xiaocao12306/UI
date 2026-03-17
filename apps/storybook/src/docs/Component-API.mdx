@@ -118,17 +118,19 @@ When controls are available, Storybook reflects the runtime API contract directl
 ### DatePicker
 
 <Canvas of={DatePickerStories.Controlled} />
-<Controls of={DatePickerStories.InvalidState} />
+<Controls of={DatePickerStories.StateMatrix} />
 
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `value` / `defaultValue` | `string` | Uses native `YYYY-MM-DD` value format. |
 | `onValueChange` | `(value: string) => void` | Emits selected date string from native date input. |
+| `onChange` | `(event) => void` | Optional native change callback for analytics/instrumentation hooks. |
 | `min` / `max` | `string` | Native date range constraints. |
 | `invalid` | `boolean` | Adds `aria-invalid` to communicate validation state. |
 | `errorMessageId` | `string` | Appends error helper ID into `aria-describedby` when `invalid` is true. |
 
 <Canvas of={DatePickerStories.InvalidWithHelper} />
+<Canvas of={DatePickerStories.StateMatrix} />
 
 ### Textarea
 

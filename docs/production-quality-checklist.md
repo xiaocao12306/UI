@@ -20,6 +20,7 @@
 | RadioGroup | production-refined | `Form/RadioGroup` | `RadioGroup.test.tsx` |
 | Switch | production-refined | `Form/Switch` | `Switch.test.tsx` |
 | Combobox | production-refined | `Form/Combobox` | `Combobox.test.tsx` |
+| DatePicker | production-refined | `Form/DatePicker` | `DatePicker.test.tsx` |
 | Dialog | production-refined | `Overlay/Dialog` | `Dialog.test.tsx` |
 | Drawer | production-refined | `Overlay/Drawer` | `Drawer.test.tsx` |
 | Tooltip | production-refined | `Overlay/Tooltip` | `Tooltip.test.tsx` |
@@ -62,3 +63,4 @@
 - Switch production hardening: added controlled/uncontrolled flow, helper narration wiring, invalid/disabled semantics, and keyboard interaction coverage.
 - Drawer production hardening: aligned with dialog-level aria semantics, configurable dismiss policy, and dedicated Storybook overlay scenarios.
 - Pagination production hardening: added keyboard shortcuts (`Home/End/Arrow`), redundant-change guards, and customizable aria label generation for i18n.
+- DatePicker production hardening: aligned invalid inference with `aria-invalid`, exposed native `onChange` hook, and expanded state-matrix Storybook coverage.

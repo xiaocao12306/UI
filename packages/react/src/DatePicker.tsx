@@ -8,6 +8,7 @@ export type DatePickerProps = Omit<
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
   invalid?: boolean;
   errorMessageId?: string;
 };
@@ -16,11 +17,13 @@ export function DatePicker({
   value,
   defaultValue,
   onValueChange,
-  invalid = false,
+  onChange,
+  invalid,
   errorMessageId,
   ...restProps
 }: DatePickerProps) {
-  const describedBy = [restProps["aria-describedby"], invalid ? errorMessageId : undefined].filter(Boolean).join(" ") || undefined;
+  const isInvalid = Boolean(invalid ?? restProps["aria-invalid"]);
+  const describedBy = [restProps["aria-describedby"], isInvalid ? errorMessageId : undefined].filter(Boolean).join(" ") || undefined;
 
   return (
     <Input
@@ -29,8 +32,11 @@ export function DatePicker({
       value={value}
       defaultValue={defaultValue}
       aria-describedby={describedBy}
-      aria-invalid={invalid || undefined}
-      onChange={(event) => onValueChange?.(event.target.value)}
+      aria-invalid={isInvalid || undefined}
+      onChange={(event) => {
+        onChange?.(event);
+        onValueChange?.(event.target.value);
+      }}
     />
   );
 }

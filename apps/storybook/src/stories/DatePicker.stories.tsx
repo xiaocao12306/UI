@@ -83,3 +83,20 @@ export const InvalidWithHelper: Story = {
     </div>
   )
 };
+
+export const StateMatrix: Story = {
+  render: () => (
+    <div style={{ width: 360, display: "grid", gap: 12 }}>
+      <DatePicker aria-label="Default date picker" defaultValue="2026-03-17" onValueChange={() => {}} />
+      <DatePicker
+        aria-label="Invalid date picker"
+        defaultValue="2025-12-31"
+        min="2026-01-01"
+        invalid
+        onValueChange={() => {}}
+      />
+      <DatePicker aria-label="Read only date picker" value="2026-07-01" readOnly onValueChange={() => {}} />
+      <DatePicker aria-label="Disabled date picker" defaultValue="2026-08-15" disabled onValueChange={() => {}} />
+    </div>
+  )
+};

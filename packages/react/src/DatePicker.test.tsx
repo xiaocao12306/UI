@@ -10,9 +10,11 @@ describe("DatePicker", () => {
 
   it("emits value updates on change", () => {
     const onValueChange = vi.fn();
-    render(<DatePicker aria-label="Release date" onValueChange={onValueChange} />);
+    const onChange = vi.fn();
+    render(<DatePicker aria-label="Release date" onValueChange={onValueChange} onChange={onChange} />);
 
     fireEvent.change(screen.getByLabelText("Release date"), { target: { value: "2026-04-01" } });
+    expect(onChange).toHaveBeenCalledTimes(1);
     expect(onValueChange).toHaveBeenCalledWith("2026-04-01");
   });
 
@@ -51,5 +53,24 @@ describe("DatePicker", () => {
     );
 
     expect(screen.getByLabelText("Release date")).toHaveAttribute("aria-describedby", "release-hint release-error");
+  });
+
+  it("does not append error message id when field is not invalid", () => {
+    render(
+      <DatePicker
+        aria-label="Release date"
+        aria-describedby="release-hint"
+        errorMessageId="release-error"
+        onValueChange={() => {}}
+      />
+    );
+
+    expect(screen.getByLabelText("Release date")).toHaveAttribute("aria-describedby", "release-hint");
+  });
+
+  it("accepts invalid semantics from aria-invalid", () => {
+    render(<DatePicker aria-label="Release date" aria-invalid="true" onValueChange={() => {}} />);
+
+    expect(screen.getByLabelText("Release date")).toHaveAttribute("aria-invalid", "true");
   });
 });
