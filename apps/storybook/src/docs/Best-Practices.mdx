@@ -42,6 +42,12 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 
 <Canvas of={DialogStories.Interactive} />
 
+## Overlay Policies
+
+- Dialog/Drawer should explicitly define dismiss policy (`closeOnEscape`, `closeOnOutsidePointer`) for critical workflows.
+- Popover and Dropdown should return focus to trigger on close to avoid keyboard dead-ends.
+- Command palette and combobox-style overlays should keep text input as the primary focus anchor for navigation.
+
 ## Testing
 
 - Add unit tests for any new interaction branch.

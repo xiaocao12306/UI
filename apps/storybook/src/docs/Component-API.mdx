@@ -45,12 +45,26 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={ButtonStories.Primary} />
 <Controls of={ButtonStories.Primary} />
 
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `variant` | `'solid' \| 'ghost' \| 'outline'` | Semantic visual variants without hardcoded color usage. |
+| `size` | `'sm' \| 'md' \| 'lg'` | Token-aligned button density. |
+| `loading` / `loadingText` | `boolean` / `ReactNode` | Locks interactions, sets `aria-busy`, and shows deterministic loading copy. |
+| native button props | `ButtonHTMLAttributes` | Supports `type`, `disabled`, `onClick`, keyboard handlers. |
+
 ## Form
 
 ### Input
 
 <Canvas of={InputStories.Default} />
 <Controls of={InputStories.Default} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `invalid` | `boolean` | Applies `aria-invalid` and error-token border/ring styles. |
+| `readOnly` / `disabled` | `boolean` | Preserves semantic behavior and visual state boundaries. |
+| `aria-describedby` | `string` | Recommended for helper/error narration in forms. |
+| native input props | `InputHTMLAttributes` | Includes `value`, `defaultValue`, `onChange`, `type`, and autocomplete controls. |
 
 ### Checkbox
 
@@ -174,6 +188,15 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={DialogStories.Interactive} />
 <Controls of={DialogStories.Interactive} />
 
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `open` / `onOpenChange` | `boolean` / `(open: boolean) => void` | Controlled visibility contract for overlays. |
+| `title` / `description` | `ReactNode` | Wires `aria-labelledby` + optional `aria-describedby`. |
+| `size` | `'sm' \| 'md' \| 'lg'` | Overlay width presets. |
+| `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls dismiss policy for blocking vs non-blocking dialogs. |
+| `showCloseButton` / `closeLabel` | `boolean` / `string` | Close affordance visibility and accessible label text. |
+| `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Inspect or cancel dismiss intent before `onOpenChange(false)`. |
+
 ### Drawer
 
 <Canvas of={DrawerStories.Interactive} />
@@ -191,10 +214,23 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={PopoverStories.WithInteractiveContent} />
 <Controls of={PopoverStories.Default} />
 
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `triggerLabel` | `ReactNode` | Trigger button content. |
+| `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Supports both managed and unmanaged overlay state. |
+| `align` / `sideOffset` | `'start' \| 'end'` / `number` | Horizontal alignment and vertical spacing from trigger. |
+| `contentLabel` | `string` | Accessible name for popover dialog content region. |
+
 ### Dropdown
 
 <Canvas of={DropdownStories.Default} />
 <Controls of={DropdownStories.Default} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `items` | `DropdownItem[]` | Each item supports `disabled` and `onSelect`. |
+| `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Works in both controlled and uncontrolled menu flows. |
+| keyboard behavior | Arrow / Home / End / Escape / Tab | Roving-focus menu navigation with deterministic close policy. |
 
 ## Data
 

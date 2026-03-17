@@ -141,6 +141,7 @@
   - PromptInput 生产级交互补齐（Ctrl/Cmd+Enter 提交、submitting 禁用边界、多动作反馈 Storybook 路径）
   - AI 组件补齐（MessageBubble/ReasoningPanel/StreamingCodeBlock 的单测 + Storybook + 交互验证）
   - Storybook 文档补齐（Component API / Component Catalog / Best Practices 增补 AI 组件章节）
+  - Storybook API 文档深化（Button/Input/Dialog/Popover/Dropdown API 与 overlay 关闭策略说明）
   - Demo E2E 扩展（AI 区域 PromptInput 提交 + ReasoningPanel 展开 + StreamingCodeBlock 完成态）
   - Combobox 生产级补齐（Escape/blur 关闭策略、`aria-selected` 语义修正、状态 Storybook 场景）
   - Textarea 生产级返工（invalid/focus/hover/readOnly/disabled 状态对齐、单测 + Storybook `Form/Textarea`）
