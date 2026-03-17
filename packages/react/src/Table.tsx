@@ -24,6 +24,26 @@ export type TableProps<T> = {
   onSortChange?: (key: string, direction: TableSortDirection) => void;
 };
 
+function resolveInitialSortState<T>(
+  columns: Array<TableColumn<T>>,
+  defaultSortKey: string | undefined,
+  defaultSortDirection: TableSortDirection
+) {
+  if (!defaultSortKey) {
+    return null;
+  }
+
+  const initialColumn = columns.find((item) => String(item.key) === defaultSortKey);
+  if (!initialColumn?.sortable) {
+    return null;
+  }
+
+  return { key: defaultSortKey, direction: defaultSortDirection } satisfies {
+    key: string;
+    direction: TableSortDirection;
+  };
+}
+
 export function Table<T>({
   columns,
   data,
@@ -34,8 +54,8 @@ export function Table<T>({
   defaultSortDirection = "asc",
   onSortChange
 }: TableProps<T>) {
-  const [sortState, setSortState] = React.useState<{ key: string; direction: TableSortDirection } | null>(
-    defaultSortKey ? { key: defaultSortKey, direction: defaultSortDirection } : null
+  const [sortState, setSortState] = React.useState<{ key: string; direction: TableSortDirection } | null>(() =>
+    resolveInitialSortState(columns, defaultSortKey, defaultSortDirection)
   );
 
   const sortedData = React.useMemo(() => {

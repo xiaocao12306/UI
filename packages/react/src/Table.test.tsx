@@ -91,4 +91,28 @@ describe("Table", () => {
     expect(nameHeader).toHaveAttribute("aria-sort", "ascending");
     expect(screen.getAllByRole("cell")[0]).toHaveTextContent("Button");
   });
+
+  it("ignores non-sortable default sort key to keep aria-sort semantics valid", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Dialog", status: "Stable" },
+          { name: "Button", status: "Stable" }
+        ]}
+        defaultSortKey="status"
+      />
+    );
+
+    const nameHeader = screen.getByRole("columnheader", { name: "Name" });
+    const statusHeader = screen.getByRole("columnheader", { name: "Status" });
+
+    expect(nameHeader).toHaveAttribute("aria-sort", "none");
+    expect(statusHeader).toHaveAttribute("aria-sort", "none");
+    expect(screen.queryByRole("button", { name: /Status sort/ })).toBeNull();
+    expect(screen.getAllByRole("cell")[0]).toHaveTextContent("Dialog");
+  });
 });

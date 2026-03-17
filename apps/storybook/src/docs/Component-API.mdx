@@ -255,7 +255,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `columns` | `TableColumn<T>[]` | `sortable` + optional `sortAccessor` for stable sorting behavior. |
 | `data` | `T[]` | Empty arrays render `emptyContent`. |
-| `defaultSortKey` / `defaultSortDirection` | `string` / `'asc' \| 'desc'` | Sets initial `aria-sort` and data order. |
+| `defaultSortKey` / `defaultSortDirection` | `string` / `'asc' \| 'desc'` | Sets initial `aria-sort` and data order when key points to a sortable column. |
 | `onSortChange` | `(key, direction) => void` | Useful for telemetry and analytics. |
 
 <Canvas of={TableStories.SortTelemetry} />
