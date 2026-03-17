@@ -143,6 +143,44 @@ export const FocusReturn: Story = {
   }
 };
 
+function FocusReturnDisabledDrawerDemo() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <div style={{ minHeight: 420, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Open No Focus Return Drawer
+      </Button>
+      <button type="button">Post-close target</button>
+      <Drawer
+        open={open}
+        onOpenChange={setOpen}
+        side="right"
+        title="No focus return drawer"
+        description="Closing should not force focus back to the trigger."
+        restoreFocus={false}
+      >
+        <p style={{ margin: 0 }}>Use this mode when close flow intentionally hands off focus.</p>
+      </Drawer>
+    </div>
+  );
+}
+
+export const NoFocusReturn: Story = {
+  render: () => <FocusReturnDisabledDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    const trigger = canvas.getByRole("button", { name: "Open No Focus Return Drawer" });
+
+    await userEvent.click(trigger);
+    await expect(await body.findByRole("dialog", { name: "No focus return drawer" })).toBeInTheDocument();
+
+    await userEvent.click(body.getByRole("button", { name: "Close drawer" }));
+    await expect(trigger).not.toHaveFocus();
+  }
+};
+
 function NestedOverlayDrawerDemo() {
   const [open, setOpen] = React.useState(false);
 
