@@ -38,3 +38,4 @@
 - Combobox: added searchable option filtering, disabled-option keyboard skip, and Storybook/demo regression coverage.
 - DatePicker: added controlled date input wrapper, range/invalid coverage, and demo interaction regression.
 - Storybook interaction runner: added `play`-based interaction checks and static-site test-runner execution (`storybook:test:ci`).
+- Pagination polish: added disabled visual semantics and `showFirstLast={false}` branch coverage.
