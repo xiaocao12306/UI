@@ -17,6 +17,7 @@ import * as CommandPaletteStories from '../stories/CommandPalette.stories';
 import * as EmptyStories from '../stories/Empty.stories';
 import * as SkeletonStories from '../stories/Skeleton.stories';
 import * as LoadingDotsStories from '../stories/LoadingDots.stories';
+import * as StreamingTextStories from '../stories/StreamingText.stories';
 import * as ProgressStories from '../stories/Progress.stories';
 import * as AlertStories from '../stories/Alert.stories';
 import * as ToastStories from '../stories/Toast.stories';
@@ -281,6 +282,20 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `label` / `live` | `string` / `'polite' \| 'assertive' \| 'off'` | Screen-reader narration and live-region urgency. |
 
 <Canvas of={LoadingDotsStories.Paused} />
+
+### StreamingText
+
+<Canvas of={StreamingTextStories.Default} />
+<Controls of={StreamingTextStories.InstantDone} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `streaming` | `boolean` | Toggle realtime token streaming vs instant completion mode. |
+| `speed` / `startDelay` | `number` | Controls token cadence and delayed start. |
+| `cursorChar` / `showCursorWhenDone` | `string` / `boolean` | Cursor visual customization and completion behavior. |
+| `onProgress` / `onComplete` | callbacks | Lifecycle hooks for telemetry and completion flow. |
+
+<Canvas of={StreamingTextStories.MultilineCursor} />
 
 ### Progress
 

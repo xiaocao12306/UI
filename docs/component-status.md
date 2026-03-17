@@ -34,7 +34,7 @@
   - `Empty`: production-refined
   - `Skeleton`: production-refined
   - `LoadingDots`: production-refined
-  - `StreamingText`: done
+  - `StreamingText`: production-refined
   - `Toast`: production-refined
 - Overlay
   - `Tooltip`: production-refined

@@ -36,6 +36,7 @@
 | Empty | production-refined | `Feedback/Empty` | `Empty.test.tsx` |
 | Skeleton | production-refined | `Feedback/Skeleton` | `Skeleton.test.tsx` |
 | LoadingDots | production-refined | `Feedback/LoadingDots` | `LoadingDots.test.tsx` |
+| StreamingText | production-refined | `Feedback/StreamingText` | `StreamingText.test.tsx` |
 | Alert | production-refined | `Feedback/Alert` | `Alert.test.tsx` |
 | Tabs | production-refined | `Data/Tabs` | `Tabs.test.tsx` |
 | Table | production-refined | `Data/Table` | `Table.test.tsx` |
@@ -72,6 +73,7 @@
 - Empty production hardening: added role/label narration, tone/align variants, and action/icon story validation.
 - Skeleton production hardening: added decorative-vs-narrated semantics, variant geometry controls, and profile-card Storybook scenarios.
 - LoadingDots production hardening: added pause/resume/live-region branches, interval/dotCount controls, and Storybook paused state validation.
+- StreamingText production hardening: added streaming lifecycle callbacks, cursor policies, and instant-done accessibility branch coverage.
 - Pagination production hardening: added keyboard shortcuts (`Home/End/Arrow`), redundant-change guards, and customizable aria label generation for i18n.
 - DatePicker production hardening: aligned invalid inference with `aria-invalid`, exposed native `onChange` hook, and expanded state-matrix Storybook coverage.
 - Alert production hardening: added tone-based live-region semantics, dismiss action branch, and dedicated Storybook + unit coverage.
