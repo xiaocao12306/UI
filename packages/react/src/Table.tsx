@@ -62,14 +62,15 @@ export function Table<T>({
     resolveInitialSortState(columns, defaultSortKey, defaultSortDirection)
   );
 
-  const sortedData = React.useMemo(() => {
+  const sortedEntries = React.useMemo(() => {
+    const sourceEntries = data.map((row, sourceIndex) => ({ row, sourceIndex }));
     if (!sortState) {
-      return data;
+      return sourceEntries;
     }
 
     const column = columns.find((item) => String(item.key) === sortState.key);
     if (!column?.sortable) {
-      return data;
+      return sourceEntries;
     }
 
     const accessor =
@@ -87,8 +88,7 @@ export function Table<T>({
         return String(value ?? "");
       });
 
-    return data
-      .map((row, index) => ({ row, index }))
+    return sourceEntries
       .sort((leftEntry, rightEntry) => {
         const leftValue = accessor(leftEntry.row);
         const rightValue = accessor(rightEntry.row);
@@ -104,9 +104,8 @@ export function Table<T>({
         }
 
         // Preserve deterministic order for equal sort values.
-        return leftEntry.index - rightEntry.index;
-      })
-      .map((entry) => entry.row);
+        return leftEntry.sourceIndex - rightEntry.sourceIndex;
+      });
   }, [columns, data, sortState]);
 
   return (
@@ -189,7 +188,7 @@ export function Table<T>({
           </tr>
         </thead>
         <tbody>
-          {sortedData.length === 0 ? (
+          {sortedEntries.length === 0 ? (
             <tr>
               <td
                 colSpan={columns.length}
@@ -203,8 +202,15 @@ export function Table<T>({
               </td>
             </tr>
           ) : (
-            sortedData.map((row, index) => (
-              <tr key={rowKey ? rowKey(row, index) : String(index)} style={{ background: index % 2 === 0 ? "transparent" : "var(--aurora-surface-elevated)" }}>
+            sortedEntries.map((entry, index) => {
+              const row = entry.row;
+              const fallbackKey = String(entry.sourceIndex);
+
+              return (
+                <tr
+                  key={rowKey ? rowKey(row, index) : fallbackKey}
+                  style={{ background: index % 2 === 0 ? "transparent" : "var(--aurora-surface-elevated)" }}
+                >
                 {columns.map((column) => (
                   <td
                     key={String(column.key)}
@@ -219,8 +225,9 @@ export function Table<T>({
                     {column.render ? column.render(row, index) : String((row as Record<string, unknown>)[String(column.key)] ?? "")}
                   </td>
                 ))}
-              </tr>
-            ))
+                </tr>
+              );
+            })
           )}
         </tbody>
       </table>

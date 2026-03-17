@@ -170,3 +170,44 @@ export const InvalidDefaultSortKeyFallback: Story = {
     await expect(canvas.getAllByRole("cell")[0]).toHaveTextContent("Button");
   }
 };
+
+type StatefulRow = ReleaseRow & { note: string };
+
+const statefulRows: StatefulRow[] = rows.map((row) => ({ ...row, note: "" }));
+const statefulColumns: Array<TableColumn<StatefulRow>> = [
+  { key: "component", header: "Component", sortable: true },
+  {
+    key: "note",
+    header: "QA Note",
+    render: (row) => (
+      <input
+        defaultValue={row.note}
+        aria-label={`${row.id} note`}
+        style={{
+          width: "100%",
+          borderRadius: 6,
+          border: "1px solid var(--aurora-border-default)",
+          background: "var(--aurora-surface-default)",
+          color: "var(--aurora-text-primary)",
+          padding: "6px 8px"
+        }}
+      />
+    )
+  }
+];
+
+export const FallbackRowKeyStability: Story = {
+  render: () => (
+    <div style={{ width: 720 }}>
+      <Table columns={statefulColumns} data={statefulRows} defaultSortKey="component" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const alphaInput = canvas.getByRole("textbox", { name: "BTN-102 note" });
+
+    await userEvent.type(alphaInput, "persist me");
+    await userEvent.click(canvas.getByRole("button", { name: "Component sort descending" }));
+    await expect(canvas.getByRole("textbox", { name: "BTN-102 note" })).toHaveValue("persist me");
+  }
+};

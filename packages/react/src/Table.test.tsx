@@ -198,4 +198,27 @@ describe("Table", () => {
     expect(cells[2]).toHaveTextContent("Alpha");
     expect(cells[4]).toHaveTextContent("Beta");
   });
+
+  it("keeps fallback row keys stable across sorting when rowKey is not provided", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Alpha", score: 1 },
+          { name: "Beta", score: 2 },
+          { name: "Gamma", score: 3 }
+        ]}
+        defaultSortKey="score"
+      />
+    );
+
+    const alphaCellBefore = screen.getByRole("cell", { name: "Alpha" });
+    fireEvent.click(screen.getByRole("button", { name: "Score sort descending" }));
+    const alphaCellAfter = screen.getByRole("cell", { name: "Alpha" });
+
+    expect(alphaCellAfter).toBe(alphaCellBefore);
+  });
 });

@@ -126,6 +126,7 @@
   - CommandPalette 结果播报收口（live region 新增 enabledCount 语义，禁用项命中时播报不可执行结果）
   - Toast 命名语义收口（`aria-labelledby/aria-describedby` + `ariaLabel` 覆盖 icon-only 标题）
   - Tabs 方向语义收口（`orientation` API + `ArrowUp/ArrowDown` 纵向键盘流）
+  - Table 行标识收口（无 `rowKey` 时改为源索引稳定 key，避免排序后行节点抖动）
   - Popover/Dropdown 图标触发器可访问性补齐（`triggerAriaLabel`，覆盖 icon-only 交互）
   - 生产级返工（Toast）
   - 生产级返工（Tabs）
