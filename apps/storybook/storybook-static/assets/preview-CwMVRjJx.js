@@ -2,6 +2,10 @@ import{j as a}from"./jsx-runtime-BjG_zV1W.js";import{r as c}from"./index-BWu4c2F
         0% { background-position: 100% 0; }
         100% { background-position: -100% 0; }
       }
+      @keyframes aurora-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
       * { box-sizing: border-box; }
       body { margin: 0; }
       `})}l.__docgenInfo={description:"",methods:[],displayName:"GlobalStyles"};const v=["core-light","core-dark","glass","neo-brutal"],w={globalTypes:{theme:{name:"Theme",description:"Aurora theme pack",defaultValue:"core-light",toolbar:{icon:"paintbrush",items:v,showName:!0}}},decorators:[(e,r)=>a.jsxs(n,{theme:r.globals.theme,children:[a.jsx(l,{}),a.jsx("div",{style:{minHeight:"100vh",padding:24,background:"var(--aurora-surface-default)",color:"var(--aurora-text-primary)",fontFamily:"var(--aurora-font-family-base)"},children:a.jsx(e,{})})]})],parameters:{controls:{matchers:{color:/(background|color)$/i,date:/Date$/i}}}};export{w as default};

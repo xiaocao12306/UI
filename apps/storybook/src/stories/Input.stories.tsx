@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button, Input } from "@aurora-ui/react";
+import { Button, FormField, Input } from "@aurora-ui/react";
 
 const meta = {
   title: "Form/Input",
@@ -36,6 +36,28 @@ export const AiPromptStyle: Story = {
       <small style={{ color: "var(--aurora-text-secondary)" }}>
         Tip: switch theme in toolbar to validate input token contrast.
       </small>
+    </div>
+  )
+};
+
+export const StateMatrix: Story = {
+  render: () => (
+    <div style={{ width: 560, display: "grid", gap: 12 }}>
+      <FormField label="Default" description="Hover and focus to verify border and ring states.">
+        <Input placeholder="Type project name..." />
+      </FormField>
+
+      <FormField label="Error" error="Please provide a valid email address." required>
+        <Input placeholder="name@company.com" defaultValue="invalid-email" />
+      </FormField>
+
+      <FormField label="Disabled" description="Disabled fields remain readable with lower emphasis." disabled>
+        <Input placeholder="Disabled field" />
+      </FormField>
+
+      <FormField label="Read-only" description="Read-only fields are focusable but not editable.">
+        <Input value="release/0.1.0" readOnly aria-label="Release branch" />
+      </FormField>
     </div>
   )
 };
