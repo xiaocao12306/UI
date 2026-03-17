@@ -3,32 +3,59 @@ import * as ButtonStories from '../stories/Button.stories';
 import * as InputStories from '../stories/Input.stories';
 import * as DialogStories from '../stories/Dialog.stories';
 import * as CommandPaletteStories from '../stories/CommandPalette.stories';
+import * as TabsStories from '../stories/Tabs.stories';
+import * as TableStories from '../stories/Table.stories';
+import * as PromptInputStories from '../stories/PromptInput.stories';
 
 <Meta title="Docs/Component API" />
 
 <Title />
 <Subtitle>Primary API Reference</Subtitle>
 <Description>
-This page links the most-used Aurora UI components to their executable stories and prop controls.
-The controls table is the source of truth for Storybook-level API behavior.
+This page links the most-used Aurora UI components to executable stories and prop controls.
+When controls are available, Storybook reflects the runtime API contract directly.
 </Description>
 
-## Button
+## Core
+
+### Button
 
 <Canvas of={ButtonStories.Primary} />
 <Controls of={ButtonStories.Primary} />
 
-## Input
+## Form
+
+### Input
 
 <Canvas of={InputStories.Default} />
 <Controls of={InputStories.Default} />
 
-## Dialog
+## Overlay
+
+### Dialog
 
 <Canvas of={DialogStories.Interactive} />
 <Controls of={DialogStories.Interactive} />
 
-## CommandPalette
+## Data
+
+### Tabs
+
+<Canvas of={TabsStories.Default} />
+<Controls of={TabsStories.Default} />
+
+### Table
+
+<Canvas of={TableStories.ReleaseChecklist} />
+
+## AI
+
+### CommandPalette
 
 <Canvas of={CommandPaletteStories.SearchCommands} />
 <Controls of={CommandPaletteStories.SearchCommands} />
+
+### PromptInput
+
+<Canvas of={PromptInputStories.WithAiRequestState} />
+<Controls of={PromptInputStories.Default} />

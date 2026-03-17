@@ -26,7 +26,10 @@ pnpm --filter @aurora-ui/storybook-app build-storybook
 - `Core/Button`
 - `Form/Input`
 - `Overlay/Dialog`
+- `Data/Tabs`
+- `Data/Table`
 - `AI/CommandPalette`
+- `AI/PromptInput`
 - `Docs/Getting Started`
 - `Docs/Component API`
 - `Docs/Best Practices`
