@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
+import type { ThemeName } from "@aurora-ui/tokens";
 import {
   Alert,
   AuroraProvider,
@@ -44,6 +45,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function App() {
+  const [theme, setTheme] = React.useState<ThemeName>("core-light");
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [toastOpen, setToastOpen] = React.useState(false);
@@ -52,7 +54,7 @@ function App() {
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
 
   return (
-    <AuroraProvider theme="core-light">
+    <AuroraProvider theme={theme}>
       <GlobalStyles />
       <main
         style={{
@@ -66,9 +68,27 @@ function App() {
         }}
       >
         <header style={{ display: "grid", gap: 10 }}>
-          <h1 style={{ margin: 0, fontSize: 32 }}>Aurora UI Demo</h1>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+            <h1 style={{ margin: 0, fontSize: 32 }}>Aurora UI Demo</h1>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <label htmlFor="theme-select" style={{ color: "var(--aurora-text-secondary)" }}>
+                Theme
+              </label>
+              <Select
+                id="theme-select"
+                value={theme}
+                onChange={(event) => setTheme(event.target.value as ThemeName)}
+                style={{ width: 180 }}
+              >
+                <option value="core-light">core-light</option>
+                <option value="core-dark">core-dark</option>
+                <option value="glass">glass</option>
+                <option value="neo-brutal">neo-brutal</option>
+              </Select>
+            </div>
+          </div>
           <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-            Token-first React component library with AI interaction patterns.
+            Token-first React component library with AI interaction patterns. Current theme: <strong>{theme}</strong>
           </p>
         </header>
 
