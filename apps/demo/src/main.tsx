@@ -35,11 +35,44 @@ import {
   Tooltip
 } from "@aurora-ui/react";
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+const sectionLinks = [
+  { id: "basic-components", label: "Basic" },
+  { id: "data-navigation", label: "Data" },
+  { id: "feedback-states", label: "States" },
+  { id: "overlays-navigation", label: "Overlays" },
+  { id: "ai-components", label: "AI" }
+];
+
+function Section({
+  id,
+  title,
+  description,
+  children
+}: {
+  id: string;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section style={{ display: "grid", gap: 12 }}>
-      <h2 style={{ margin: 0, fontSize: 18 }}>{title}</h2>
-      {children}
+    <section id={id} style={{ display: "grid", gap: 12, scrollMarginTop: 84 }}>
+      <header style={{ display: "grid", gap: 4 }}>
+        <h2 style={{ margin: 0, fontSize: 18 }}>{title}</h2>
+        {description ? <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>{description}</p> : null}
+      </header>
+      <div
+        style={{
+          border: "1px solid var(--aurora-border-default)",
+          borderRadius: "var(--aurora-radius-lg)",
+          background: "var(--aurora-surface-elevated)",
+          boxShadow: "var(--aurora-shadow-sm)",
+          padding: 16,
+          display: "grid",
+          gap: 14
+        }}
+      >
+        {children}
+      </div>
     </section>
   );
 }
@@ -107,9 +140,42 @@ function App() {
           <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
             Token-first React component library with AI interaction patterns. Current theme: <strong>{theme}</strong>
           </p>
+          <nav
+            aria-label="Demo sections"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+              padding: 10,
+              border: "1px solid var(--aurora-border-default)",
+              borderRadius: "var(--aurora-radius-md)",
+              background: "var(--aurora-surface-elevated)"
+            }}
+          >
+            {sectionLinks.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                style={{
+                  color: "var(--aurora-text-primary)",
+                  textDecoration: "none",
+                  fontWeight: "var(--aurora-font-weight-medium)",
+                  border: "1px solid var(--aurora-border-default)",
+                  borderRadius: 999,
+                  padding: "4px 10px"
+                }}
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
         </header>
 
-        <Section title="Basic Components">
+        <Section
+          id="basic-components"
+          title="Basic Components"
+          description="Core controls and form primitives with theme-driven tokens."
+        >
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Button>Primary</Button>
             <Button variant="outline">Outline</Button>
@@ -147,7 +213,11 @@ function App() {
           </div>
         </Section>
 
-        <Section title="Data & Navigation">
+        <Section
+          id="data-navigation"
+          title="Data & Navigation"
+          description="Common data surfaces and navigation containers."
+        >
           <Tabs
             defaultValue="overview"
             items={[
@@ -170,7 +240,11 @@ function App() {
           />
         </Section>
 
-        <Section title="Feedback & States">
+        <Section
+          id="feedback-states"
+          title="Feedback & States"
+          description="System status, loading skeletons, and streaming indicators."
+        >
           <Alert title="Network recovered" tone="success">
             All queued jobs were synchronized.
           </Alert>
@@ -185,7 +259,11 @@ function App() {
           <StreamingText text="Streaming response in progress..." />
         </Section>
 
-        <Section title="Overlays & Navigation">
+        <Section
+          id="overlays-navigation"
+          title="Overlays & Navigation"
+          description="Layered surfaces with keyboard and pointer dismissal behavior."
+        >
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Tooltip content="Runs a dry-run build">
               <Button variant="outline">Hover me</Button>
@@ -210,11 +288,44 @@ function App() {
             </Button>
           </div>
           <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
-            Keyboard shortcut: press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>K</kbd> to open Command Palette.
+            Keyboard shortcut: press{" "}
+            <kbd
+              style={{
+                fontFamily: "var(--aurora-font-family-mono)",
+                border: "1px solid var(--aurora-border-default)",
+                borderRadius: 6,
+                padding: "2px 6px"
+              }}
+            >
+              Ctrl
+            </kbd>
+            /
+            <kbd
+              style={{
+                fontFamily: "var(--aurora-font-family-mono)",
+                border: "1px solid var(--aurora-border-default)",
+                borderRadius: 6,
+                padding: "2px 6px"
+              }}
+            >
+              Cmd
+            </kbd>{" "}
+            +{" "}
+            <kbd
+              style={{
+                fontFamily: "var(--aurora-font-family-mono)",
+                border: "1px solid var(--aurora-border-default)",
+                borderRadius: 6,
+                padding: "2px 6px"
+              }}
+            >
+              K
+            </kbd>{" "}
+            to open Command Palette.
           </p>
         </Section>
 
-        <Section title="AI Components">
+        <Section id="ai-components" title="AI Components" description="Prompt, reasoning, and streaming response building blocks.">
           <PromptInput
             onSubmit={(prompt) => {
               setSubmittedPrompt(prompt);
