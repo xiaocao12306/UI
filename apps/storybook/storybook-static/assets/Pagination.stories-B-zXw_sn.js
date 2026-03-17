@@ -1,0 +1,27 @@
+import{j as a}from"./jsx-runtime-BjG_zV1W.js";import{r as I}from"./index-BWu4c2F4.js";import{B as L}from"./Badge-Dkm8CRgf.js";import{within as V,userEvent as W,expect as _}from"./index-DgAF9SIF.js";function j(t,e,o){return Math.min(Math.max(t,e),o)}function v(t,e){const o=e-t+1;return Array.from({length:o},(r,p)=>t+p)}function k(t,e,o,r){const p=r*2+o*2+3;if(e<=p)return v(1,e);const i=Math.max(t-o,r+2),c=Math.min(t+o,e-r-1),n=[],l=v(1,r),x=v(e-r+1,e);n.push(...l),i>r+2?n.push("ellipsis-left"):r+1<i&&n.push(r+1);for(let u=i;u<=c;u+=1)n.push(u);return c<e-r-1?n.push("ellipsis-right"):c+1<e-r+1&&n.push(e-r),n.push(...x),n}function b({page:t,pageCount:e,onPageChange:o,siblingCount:r=1,boundaryCount:p=1,disabled:i=!1,showFirstLast:c=!0,ariaLabel:n="Pagination"}){if(e<=1)return null;const l=j(t,1,e),x=k(l,e,r,p),u=!i&&l>1,P=!i&&l<e,d=s=>{i||o(j(s,1,e))};return a.jsx("nav",{"aria-label":n,children:a.jsxs("ul",{style:{listStyle:"none",padding:0,margin:0,display:"flex",flexWrap:"wrap",gap:6,alignItems:"center"},children:[c?a.jsx("li",{children:a.jsx("button",{type:"button",disabled:!u,onClick:()=>d(1),"aria-label":"Go to first page",style:g(!1),children:"«"})}):null,a.jsx("li",{children:a.jsx("button",{type:"button",disabled:!u,onClick:()=>d(l-1),"aria-label":"Go to previous page",style:g(!1),children:"‹"})}),x.map((s,D)=>{if(typeof s!="number")return a.jsx("li",{"aria-hidden":"true",style:{color:"var(--aurora-text-secondary)",minWidth:32,textAlign:"center"},children:"…"},`${s}-${D}`);const y=s===l;return a.jsx("li",{children:a.jsx("button",{type:"button",onClick:()=>d(s),disabled:i,"aria-current":y?"page":void 0,"aria-label":y?`Current page, ${s}`:`Go to page ${s}`,style:g(y),children:s})},s)}),a.jsx("li",{children:a.jsx("button",{type:"button",disabled:!P,onClick:()=>d(l+1),"aria-label":"Go to next page",style:g(!1),children:"›"})}),c?a.jsx("li",{children:a.jsx("button",{type:"button",disabled:!P,onClick:()=>d(e),"aria-label":"Go to last page",style:g(!1),children:"»"})}):null]})})}function g(t){return{minWidth:32,height:32,padding:"0 8px",borderRadius:"var(--aurora-radius-sm)",border:t?"1px solid var(--aurora-accent-default)":"1px solid var(--aurora-border-default)",background:t?"color-mix(in srgb, var(--aurora-accent-default) 12%, var(--aurora-surface-default))":"var(--aurora-surface-default)",color:"var(--aurora-text-primary)",cursor:"pointer",font:"inherit"}}b.__docgenInfo={description:"",methods:[],displayName:"Pagination",props:{page:{required:!0,tsType:{name:"number"},description:""},pageCount:{required:!0,tsType:{name:"number"},description:""},onPageChange:{required:!0,tsType:{name:"signature",type:"function",raw:"(page: number) => void",signature:{arguments:[{type:{name:"number"},name:"page"}],return:{name:"void"}}},description:""},siblingCount:{required:!1,tsType:{name:"number"},description:"",defaultValue:{value:"1",computed:!1}},boundaryCount:{required:!1,tsType:{name:"number"},description:"",defaultValue:{value:"1",computed:!1}},disabled:{required:!1,tsType:{name:"boolean"},description:"",defaultValue:{value:"false",computed:!1}},showFirstLast:{required:!1,tsType:{name:"boolean"},description:"",defaultValue:{value:"true",computed:!1}},ariaLabel:{required:!1,tsType:{name:"string"},description:"",defaultValue:{value:'"Pagination"',computed:!1}}}};const O={title:"Data/Pagination",component:b,tags:["autodocs"],parameters:{layout:"centered",docs:{description:{component:"Pagination provides first/previous/number/next/last controls with compact ellipsis behavior and accessible page labels."}}},args:{page:6,pageCount:20,onPageChange:()=>{}}};function F(){const[t,e]=I.useState(1);return a.jsxs("div",{style:{width:640,display:"grid",gap:12},children:[a.jsxs("div",{style:{display:"flex",alignItems:"center",gap:8},children:[a.jsx("span",{style:{color:"var(--aurora-text-secondary)"},children:"Active page"}),a.jsx(L,{tone:"default",children:t})]}),a.jsx(b,{page:t,pageCount:12,onPageChange:e})]})}const m={render:()=>a.jsx(F,{}),play:async({canvasElement:t})=>{const e=V(t);await W.click(e.getByRole("button",{name:"Go to page 2"})),await _(e.getByRole("button",{name:"Current page, 2"})).toBeInTheDocument()}},f={args:{page:9,pageCount:48,onPageChange:()=>{}}},h={args:{page:3,pageCount:10,showFirstLast:!1,onPageChange:()=>{}}};var w,T,G;m.parameters={...m.parameters,docs:{...(w=m.parameters)==null?void 0:w.docs,source:{originalSource:`{
+  render: () => <ControlledPaginationDemo />,
+  play: async ({
+    canvasElement
+  }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", {
+      name: "Go to page 2"
+    }));
+    await expect(canvas.getByRole("button", {
+      name: "Current page, 2"
+    })).toBeInTheDocument();
+  }
+}`,...(G=(T=m.parameters)==null?void 0:T.docs)==null?void 0:G.source}}};var R,S,q;f.parameters={...f.parameters,docs:{...(R=f.parameters)==null?void 0:R.docs,source:{originalSource:`{
+  args: {
+    page: 9,
+    pageCount: 48,
+    onPageChange: () => {}
+  }
+}`,...(q=(S=f.parameters)==null?void 0:S.docs)==null?void 0:q.source}}};var B,E,C;h.parameters={...h.parameters,docs:{...(B=h.parameters)==null?void 0:B.docs,source:{originalSource:`{
+  args: {
+    page: 3,
+    pageCount: 10,
+    showFirstLast: false,
+    onPageChange: () => {}
+  }
+}`,...(C=(E=h.parameters)==null?void 0:E.docs)==null?void 0:C.source}}};const z=["Controlled","CompactRange","WithoutFirstLast"];export{f as CompactRange,m as Controlled,h as WithoutFirstLast,z as __namedExportsOrder,O as default};
