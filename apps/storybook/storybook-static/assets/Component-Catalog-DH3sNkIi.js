@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as s,T as c,S as i,D as t}from"./index-DsvnMJdw.js";import"./index-BWu4c2F4.js";import"./iframe-BiTc4VUI.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(s,{title:"Docs/Component Catalog"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as s,T as c,S as i,D as t}from"./index-BtFEhwpS.js";import"./index-BWu4c2F4.js";import"./iframe-B16v0xn8.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(s,{title:"Docs/Component Catalog"}),`
 `,e.jsx(c,{}),`
 `,e.jsx(i,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(t,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
@@ -40,7 +40,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 | Tooltip | `,e.jsx(o.code,{children:"Tooltip"})," | ",e.jsx(o.code,{children:"Overlay/Tooltip"}),` | yes |
 | Popover | `,e.jsx(o.code,{children:"Popover"})," | ",e.jsx(o.code,{children:"Overlay/Popover"}),` | yes |
 | Dialog | `,e.jsx(o.code,{children:"Dialog"})," | ",e.jsx(o.code,{children:"Overlay/Dialog"}),` | yes |
-| Drawer | `,e.jsx(o.code,{children:"Drawer"}),` | demo coverage | yes |
+| Drawer | `,e.jsx(o.code,{children:"Drawer"})," | ",e.jsx(o.code,{children:"Overlay/Drawer"}),` | yes |
 | Dropdown | `,e.jsx(o.code,{children:"Dropdown"})," | ",e.jsx(o.code,{children:"Overlay/Dropdown"}),` | yes |
 | CommandPalette | `,e.jsx(o.code,{children:"CommandPalette"})," | ",e.jsx(o.code,{children:"AI/CommandPalette"})," + ",e.jsx(o.code,{children:"QueryTelemetry"})," | yes |"]}),`
 `,e.jsx(o.h2,{id:"ai-components",children:"AI Components"}),`
