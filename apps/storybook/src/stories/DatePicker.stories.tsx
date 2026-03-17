@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, DatePicker } from "@aurora-ui/react";
+import { expect, fireEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Form/DatePicker",
@@ -44,7 +45,14 @@ function ControlledDatePickerDemo() {
 }
 
 export const Controlled: Story = {
-  render: () => <ControlledDatePickerDemo />
+  render: () => <ControlledDatePickerDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByLabelText("Release date");
+
+    fireEvent.change(input, { target: { value: "2026-04-02" } });
+    await expect(canvas.getByText("2026-04-02")).toBeInTheDocument();
+  }
 };
 
 export const InvalidState: Story = {

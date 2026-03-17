@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Dialog, Input, Textarea } from "@aurora-ui/react";
+import { expect, userEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Overlay/Dialog",
@@ -53,7 +54,17 @@ function InitiallyOpenDialog() {
 }
 
 export const Interactive: Story = {
-  render: () => <InteractiveDialog />
+  render: () => <InteractiveDialog />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+
+    await userEvent.click(canvas.getByRole("button", { name: "Open Draft Dialog" }));
+    await expect(await body.findByRole("dialog", { name: "Create AI Draft" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(body.queryByRole("dialog", { name: "Create AI Draft" })).not.toBeInTheDocument();
+  }
 };
 
 export const OpenByDefault: Story = {
@@ -87,5 +98,15 @@ function NonDismissableDialog() {
 }
 
 export const NonDismissable: Story = {
-  render: () => <NonDismissableDialog />
+  render: () => <NonDismissableDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+
+    await expect(await body.findByRole("dialog", { name: "Critical Confirmation" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    await expect(body.getByRole("dialog", { name: "Critical Confirmation" })).toBeInTheDocument();
+
+    await userEvent.click(body.getByRole("button", { name: "Cancel" }));
+    await expect(body.queryByRole("dialog", { name: "Critical Confirmation" })).not.toBeInTheDocument();
+  }
 };

@@ -88,7 +88,7 @@ export const SearchCommands: Story = {
   render: () => <OpenPalette />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
-    const input = canvas.getByRole("combobox", { name: "Search commands" });
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
 
     await userEvent.clear(input);
     await userEvent.type(input, "publish");
@@ -106,7 +106,7 @@ export const QueryTelemetry: Story = {
   render: () => <QueryTelemetryPalette />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
-    const input = canvas.getByRole("combobox", { name: "Search commands" });
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
 
     await userEvent.clear(input);
     await userEvent.type(input, "release");
