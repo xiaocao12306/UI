@@ -203,6 +203,32 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
+  it("keeps manual mode panel stable on Home/End until explicit activation", () => {
+    render(
+      <Tabs
+        defaultValue="build"
+        activationMode="manual"
+        items={[
+          { key: "spec", label: "Spec", content: <div>Panel Spec</div> },
+          { key: "build", label: "Build", content: <div>Panel Build</div> },
+          { key: "release", label: "Release", content: <div>Panel Release</div> }
+        ]}
+      />
+    );
+
+    const buildTab = screen.getByRole("tab", { name: "Build" });
+    fireEvent.keyDown(buildTab, { key: "End" });
+    expect(screen.getByRole("tab", { name: "Release" })).toHaveFocus();
+    expect(screen.getByText("Panel Build")).toBeInTheDocument();
+
+    fireEvent.keyDown(screen.getByRole("tab", { name: "Release" }), { key: "Home" });
+    expect(screen.getByRole("tab", { name: "Spec" })).toHaveFocus();
+    expect(screen.getByText("Panel Build")).toBeInTheDocument();
+
+    fireEvent.keyDown(screen.getByRole("tab", { name: "Spec" }), { key: " " });
+    expect(screen.getByText("Panel Spec")).toBeInTheDocument();
+  });
+
   it("supports tablist naming through aria-labelledby", () => {
     render(
       <div>
