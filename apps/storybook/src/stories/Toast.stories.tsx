@@ -71,3 +71,33 @@ function ToneMatrixDemo() {
 export const ToneMatrix: Story = {
   render: () => <ToneMatrixDemo />
 };
+
+function ActionRequiredToastDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <div style={{ minHeight: 260, padding: 16 }}>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Reopen
+      </Button>
+      <Toast
+        open={open}
+        onOpenChange={setOpen}
+        closeOnEscape={false}
+        duration={0}
+        title="Publish blocked"
+        description="Set CHROMATIC_PROJECT_TOKEN before release. This toast stays until explicit action."
+        tone="warning"
+        action={
+          <Button size="sm" onClick={() => setOpen(false)}>
+            Acknowledge
+          </Button>
+        }
+      />
+    </div>
+  );
+}
+
+export const ActionRequired: Story = {
+  render: () => <ActionRequiredToastDemo />
+};

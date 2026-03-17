@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Toast } from "./Toast";
 
@@ -32,5 +32,70 @@ describe("Toast", () => {
   it("does not render when closed", () => {
     render(<Toast open={false} title="Hidden" />);
     expect(screen.queryByRole("status")).toBeNull();
+  });
+
+  it("auto dismisses when duration elapses", () => {
+    vi.useFakeTimers();
+    const onClose = vi.fn();
+    const onOpenChange = vi.fn();
+
+    try {
+      render(<Toast open title="Timed" duration={1200} onClose={onClose} onOpenChange={onOpenChange} />);
+
+      act(() => {
+        vi.advanceTimersByTime(1199);
+      });
+      expect(onClose).not.toHaveBeenCalled();
+      expect(onOpenChange).not.toHaveBeenCalled();
+
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(onClose).toHaveBeenCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("pauses auto dismiss while hovered when pauseOnHover is enabled", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+
+    try {
+      render(<Toast open title="Hover pause" duration={2000} onOpenChange={onOpenChange} />);
+
+      const toast = screen.getByRole("status");
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      fireEvent.mouseEnter(toast);
+      act(() => {
+        vi.advanceTimersByTime(3000);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+
+      fireEvent.mouseLeave(toast);
+      act(() => {
+        vi.advanceTimersByTime(1999);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("does not close on escape when closeOnEscape is disabled", () => {
+    const onOpenChange = vi.fn();
+
+    render(<Toast open title="Sticky" closeOnEscape={false} onOpenChange={onOpenChange} />);
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onOpenChange).not.toHaveBeenCalled();
   });
 });
