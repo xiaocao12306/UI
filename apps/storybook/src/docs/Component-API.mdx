@@ -57,9 +57,26 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={TabsStories.Default} />
 <Controls of={TabsStories.Default} />
 
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `items` | `TabItem[]` | Include `disabled` for unavailable states. |
+| `value` / `defaultValue` | `string` | Controlled and uncontrolled modes are both supported. |
+| `onValueChange` | `(value: string) => void` | Fires only for enabled tabs. |
+
+<Canvas of={TabsStories.KeyboardNavigationGuide} />
+
 ### Table
 
 <Canvas of={TableStories.ReleaseChecklist} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `columns` | `TableColumn<T>[]` | `sortable` + optional `sortAccessor` for stable sorting behavior. |
+| `data` | `T[]` | Empty arrays render `emptyContent`. |
+| `defaultSortKey` / `defaultSortDirection` | `string` / `'asc' \| 'desc'` | Sets initial `aria-sort` and data order. |
+| `onSortChange` | `(key, direction) => void` | Useful for telemetry and analytics. |
+
+<Canvas of={TableStories.SortTelemetry} />
 
 ## Feedback
 
@@ -68,12 +85,30 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={ToastStories.Default} />
 <Controls of={ToastStories.Default} />
 
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `tone` | `'info' \| 'success' \| 'warning' \| 'danger'` | Drives semantics: danger uses `role="alert"`. |
+| `duration` | `number` | Auto-dismiss delay in ms; `0` disables timer. |
+| `pauseOnHover` | `boolean` | Suspends timer while hovered. |
+| `closeOnEscape` | `boolean` | Optional keyboard dismiss path. |
+
+<Canvas of={ToastStories.ActionRequired} />
+
 ## AI
 
 ### CommandPalette
 
 <Canvas of={CommandPaletteStories.SearchCommands} />
 <Controls of={CommandPaletteStories.SearchCommands} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `commands` | `CommandItem[]` | `disabled` commands remain visible but non-selectable. |
+| `emptyMessage` | `ReactNode` | Custom empty-state guidance for no-match queries. |
+| `onQueryChange` | `(query: string) => void` | Use for analytics and AI telemetry pipelines. |
+| `onOpenChange` | `(open: boolean) => void` | Required controlled dialog state. |
+
+<Canvas of={CommandPaletteStories.QueryTelemetry} />
 
 ### PromptInput
 

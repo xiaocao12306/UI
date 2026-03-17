@@ -14,7 +14,7 @@ Use it as the first stop before extending APIs or adding new stories.
 | Component | Export | Storybook | Unit Test |
 | --- | --- | --- | --- |
 | Button | `Button` | `Core/Button` | yes |
-| Input | `Input` | `Form/Input` | covered via FormField |
+| Input | `Input` | `Form/Input` | yes |
 | Textarea | `Textarea` | used in `Overlay/Dialog` and `AI/PromptInput` stories | indirect |
 | Select | `Select` | demo coverage | - |
 | Checkbox | `Checkbox` | demo coverage | - |
@@ -26,8 +26,8 @@ Use it as the first stop before extending APIs or adding new stories.
 
 | Component | Export | Storybook | Unit Test |
 | --- | --- | --- | --- |
-| Tabs | `Tabs` | `Data/Tabs` | yes |
-| Table | `Table` | `Data/Table` | yes |
+| Tabs | `Tabs` | `Data/Tabs` + `KeyboardNavigationGuide` | yes |
+| Table | `Table` | `Data/Table` + `SortTelemetry` | yes |
 | Tag | `Tag` | used in `Core/Button` story | - |
 | Badge | `Badge` | used in multiple stories | - |
 
@@ -52,7 +52,7 @@ Use it as the first stop before extending APIs or adding new stories.
 | Dialog | `Dialog` | `Overlay/Dialog` | yes |
 | Drawer | `Drawer` | demo coverage | yes |
 | Dropdown | `Dropdown` | `Overlay/Dropdown` | yes |
-| CommandPalette | `CommandPalette` | `AI/CommandPalette` | yes |
+| CommandPalette | `CommandPalette` | `AI/CommandPalette` + `QueryTelemetry` | yes |
 
 ## AI Components
 
