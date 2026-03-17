@@ -87,7 +87,12 @@ export const EmptyState: Story = {
     <div style={{ width: 780 }}>
       <Table columns={columns} data={[]} emptyContent="No release items yet." />
     </div>
-  )
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("No release items yet.")).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Issue sort ascending" })).toBeDisabled();
+  }
 };
 
 export const LoadingState: Story = {

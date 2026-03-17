@@ -208,7 +208,8 @@ export const ManualActivation: Story = {
     await expect(releaseTab).toHaveFocus();
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
 
-    await userEvent.keyboard("{Space}");
+    releaseTab.focus();
+    await userEvent.keyboard("{Enter}");
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Release stage.");
   }
 };

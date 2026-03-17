@@ -153,6 +153,7 @@ export function Table<T>({
               const headerLabel = typeof column.header === "string" ? column.header : key;
               const nextDirection: TableSortDirection = sorted === "asc" ? "desc" : "asc";
               const sortAriaLabel = getSortAriaLabel({ columnKey: key, columnHeader: headerLabel, nextDirection });
+              const sortDisabled = loading || sortedEntries.length === 0;
 
               return (
                 <th
@@ -174,9 +175,9 @@ export function Table<T>({
                     <button
                       type="button"
                       aria-label={sortAriaLabel}
-                      disabled={loading}
+                      disabled={sortDisabled}
                       onClick={() => {
-                        if (loading) {
+                        if (sortDisabled) {
                           return;
                         }
                         setSortState({ key, direction: nextDirection });
@@ -187,12 +188,12 @@ export function Table<T>({
                         background: "transparent",
                         color: "inherit",
                         font: "inherit",
-                        cursor: loading ? "not-allowed" : "pointer",
+                        cursor: sortDisabled ? "not-allowed" : "pointer",
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 6,
                         padding: 0,
-                        opacity: loading ? 0.64 : 1
+                        opacity: sortDisabled ? 0.64 : 1
                       }}
                     >
                       {column.header}

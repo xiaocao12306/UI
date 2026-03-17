@@ -54,6 +54,27 @@ describe("Table", () => {
     expect(screen.getByText("No components")).toBeInTheDocument();
   });
 
+  it("disables sortable controls when no rows are available", () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={[]}
+        onSortChange={onSortChange}
+      />
+    );
+
+    const nameSort = screen.getByRole("button", { name: "Name sort ascending" });
+    expect(nameSort).toBeDisabled();
+
+    fireEvent.click(nameSort);
+    expect(onSortChange).not.toHaveBeenCalled();
+  });
+
   it("renders loading state with aria-busy and suppresses table rows", () => {
     render(
       <Table
