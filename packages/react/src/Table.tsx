@@ -18,6 +18,7 @@ export type TableProps<T> = {
   data: T[];
   rowKey?: (row: T, rowIndex: number) => string;
   caption?: React.ReactNode;
+  ariaLabel?: string;
   emptyContent?: React.ReactNode;
   defaultSortKey?: string;
   defaultSortDirection?: TableSortDirection;
@@ -49,6 +50,7 @@ export function Table<T>({
   data,
   rowKey,
   caption,
+  ariaLabel,
   emptyContent = "No data available.",
   defaultSortKey,
   defaultSortDirection = "asc",
@@ -108,7 +110,7 @@ export function Table<T>({
         overflow: "auto"
       }}
     >
-      <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}>
+      <table aria-label={ariaLabel} style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}>
         {caption ? (
           <caption
             style={{

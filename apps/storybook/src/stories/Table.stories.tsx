@@ -90,6 +90,18 @@ export const EmptyState: Story = {
   )
 };
 
+export const AccessibleNameWithoutCaption: Story = {
+  render: () => (
+    <div style={{ width: 780 }}>
+      <Table ariaLabel="Release checklist table" columns={columns} data={rows} rowKey={(row) => row.id} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("table", { name: "Release checklist table" })).toBeInTheDocument();
+  }
+};
+
 function SortTelemetryDemo() {
   const [sortState, setSortState] = React.useState("id asc");
 

@@ -37,6 +37,24 @@ describe("Table", () => {
     expect(screen.getByText("No components")).toBeInTheDocument();
   });
 
+  it("accepts ariaLabel to provide an explicit table name without caption", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+        ariaLabel="Component release status"
+      />
+    );
+
+    expect(screen.getByRole("table", { name: "Component release status" })).toBeInTheDocument();
+  });
+
   it("sorts sortable columns and emits sort change", () => {
     const onSortChange = vi.fn();
 

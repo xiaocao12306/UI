@@ -144,6 +144,7 @@
   - CommandPalette 语义补强（`aria-disabled` option 语义与全禁用状态测试）
   - Toast 生命周期补丁（hover pause 状态在 close/reopen 后复位）
   - Table 可访问性增强（sortable header `aria-label` 下一步排序提示、`scope="col"`）
+  - Table 可访问性增强（`ariaLabel` API，支持无 caption 场景下的命名语义）
   - Overlay 层级 token 化收口（Dialog/Drawer/Popover/Dropdown/Tooltip 使用统一 `z` 变量）
   - Overlay 行为文档深化（层级 token 标尺 + focus return 规则，`docs/overlay-behavior.md`）
   - Demo E2E 扩展（Data 区域 Tabs Home/End 与 Table 排序回归）
