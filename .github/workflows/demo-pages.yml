@@ -17,6 +17,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      pages_enabled: ${{ steps.pages-status.outputs.enabled }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -28,14 +30,32 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm demo:build
+      - id: pages-status
+        name: Check Pages Enablement
+        run: |
+          status_code=$(curl -s -o /tmp/pages-response.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${{ github.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages")
+          if [ "$status_code" = "200" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Pages Disabled Notice
+        if: steps.pages-status.outputs.enabled != 'true'
+        run: echo "GitHub Pages is not enabled for this repository. Skipping Pages deployment."
       - uses: actions/configure-pages@v5
+        if: steps.pages-status.outputs.enabled == 'true'
         with:
-          enablement: true
+          enablement: false
       - uses: actions/upload-pages-artifact@v3
+        if: steps.pages-status.outputs.enabled == 'true'
         with:
           path: ./apps/demo/dist
 
   deploy:
+    if: needs.build.outputs.pages_enabled == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

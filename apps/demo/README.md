@@ -27,3 +27,4 @@ The demo showcases:
   - `https://rawcdn.githack.com/xiaocao12306/UI/main/apps/demo/dist/index.html`
 - After enabling GitHub Pages, the demo is published to:
   - `https://xiaocao12306.github.io/UI/`
+- If Pages is not enabled yet, workflow will skip deployment gracefully.
