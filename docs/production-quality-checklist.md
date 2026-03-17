@@ -69,6 +69,7 @@
 - Verify 质量门禁修复：Pagination 键盘快捷键改为按钮级处理以满足 a11y lint，RadioGroup `aria-invalid` 收敛到 `radiogroup` 容器，Tooltip/Storybook 示例补齐 lint 合规写法。
 - CommandPalette 可访问性补强：新增可定制结果播报 `getResultsStatusText`，将空状态可视文案与 live region 解耦，补齐单测与 Storybook 遥测场景。
 - Core 组件回归补点：为 `Core/Tag` 与 `Core/Badge` 增加 Storybook `play` 断言，确保状态文案进入视觉/交互回归链路。
+- FormField 文档收口：新增 `Form/FormField` Storybook 入口与 `play` 断言，补齐子控件 `aria-describedby` / `aria-errormessage` 合并的可执行示例。
 - Toast: added timer-path tests (`duration`, `pauseOnHover`) and `closeOnEscape={false}` branch, then fixed paused-state reset on close/reopen; Storybook now includes action-required persistent notification example.
 - Tabs: validated `Home/End` focus + selection behavior with disabled tabs in keyboard flow tests.
 - Table: validated `aria-sort` transitions and ascending/descending row-order toggling assertions; sortable headers now expose next-direction `aria-label` and `scope="col"`.

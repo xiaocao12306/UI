@@ -3,6 +3,7 @@ import * as ButtonStories from '../stories/Button.stories';
 import * as TagStories from '../stories/Tag.stories';
 import * as BadgeStories from '../stories/Badge.stories';
 import * as InputStories from '../stories/Input.stories';
+import * as FormFieldStories from '../stories/FormField.stories';
 import * as CheckboxStories from '../stories/Checkbox.stories';
 import * as RadioGroupStories from '../stories/RadioGroup.stories';
 import * as SwitchStories from '../stories/Switch.stories';
@@ -86,6 +87,20 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `readOnly` / `disabled` | `boolean` | Preserves semantic behavior and visual state boundaries. |
 | `aria-describedby` | `string` | Recommended for helper/error narration in forms. |
 | native input props | `InputHTMLAttributes` | Includes `value`, `defaultValue`, `onChange`, `type`, and autocomplete controls. |
+
+### FormField
+
+<Canvas of={FormFieldStories.WithInputControl} />
+<Controls of={FormFieldStories.WithInputControl} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `label` | `ReactNode` | Primary accessible name for the wrapped control via generated `htmlFor`. |
+| `description` / `error` | `ReactNode` | Auto-merges helper and error IDs into child `aria-describedby` contracts. |
+| `required` / `disabled` | `boolean` | Field-level semantics merged with child state without dropping existing control props. |
+| `children` | `ReactNode` | Works with Aurora controls (Input/Select/etc.) and preserves child `aria-*` attributes. |
+
+<Canvas of={FormFieldStories.InheritedControlSemantics} />
 
 ### Checkbox
 

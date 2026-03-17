@@ -48,6 +48,7 @@
 ## Demo Coverage
 - Basic components: covered
 - Form with validation context: covered
+- FormField dedicated Storybook entry (`Form/FormField`): covered
 - Overlay/navigation: covered
 - AI flow and reasoning panel: covered
 - Data components (`Tabs`, `Table`): covered
