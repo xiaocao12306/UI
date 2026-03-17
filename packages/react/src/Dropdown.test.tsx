@@ -91,4 +91,19 @@ describe("Dropdown", () => {
     expect(onSelect).not.toHaveBeenCalled();
     expect(screen.getByRole("menu")).toBeInTheDocument();
   });
+
+  it("exposes menu accessible name from trigger label", () => {
+    render(
+      <Dropdown
+        label="Deployment actions"
+        items={[
+          { key: "ship", label: "Ship" },
+          { key: "rollback", label: "Rollback" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Deployment actions" }));
+    expect(screen.getByRole("menu", { name: "Deployment actions" })).toBeInTheDocument();
+  });
 });

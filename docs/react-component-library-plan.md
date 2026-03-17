@@ -120,6 +120,7 @@
   - Release 工作流缺失 `NPM_TOKEN` 提示增强（GitHub warning + secret 配置路径）
   - 生产级返工（Button、Input/FormField、Dialog）
   - 生产级返工（Popover、Dropdown、CommandPalette）
+  - Dropdown 菜单命名语义补齐（`role="menu"` 通过 trigger `aria-labelledby` 获取可访问名称）
   - 生产级返工（Toast）
   - 生产级返工（Tabs）
   - Tabs 交互语义收口（重复选择当前 tab 不再触发 `onValueChange`，降低遥测噪音）

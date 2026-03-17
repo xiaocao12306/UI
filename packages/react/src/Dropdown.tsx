@@ -38,6 +38,7 @@ export function Dropdown({ label, items, open, defaultOpen, onOpenChange }: Drop
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const itemRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
+  const triggerId = React.useId();
   const menuId = React.useId();
 
   const isControlled = open !== undefined;
@@ -74,6 +75,7 @@ export function Dropdown({ label, items, open, defaultOpen, onOpenChange }: Drop
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
       <Button
+        id={triggerId}
         ref={triggerRef}
         variant="outline"
         aria-haspopup="menu"
@@ -106,6 +108,7 @@ export function Dropdown({ label, items, open, defaultOpen, onOpenChange }: Drop
           <ul
             id={menuId}
             role="menu"
+            aria-labelledby={triggerId}
             aria-orientation="vertical"
             style={{
               position: "absolute",
