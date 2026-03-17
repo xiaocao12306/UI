@@ -111,6 +111,7 @@ function App() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [toastOpen, setToastOpen] = React.useState(false);
   const [paletteOpen, setPaletteOpen] = React.useState(false);
+  const [paletteBlocking, setPaletteBlocking] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
   const [framework, setFramework] = React.useState("react");
@@ -424,6 +425,12 @@ function App() {
             </kbd>{" "}
             to open Command Palette.
           </p>
+          <Switch
+            checked={paletteBlocking}
+            onCheckedChange={setPaletteBlocking}
+            label="Block palette dismiss gestures"
+            description="Disable Escape and outside-click dismissal for approval workflows."
+          />
         </Section>
 
         <Section id="ai-components" title="AI Components" description="Prompt, reasoning, and streaming response building blocks.">
@@ -471,6 +478,8 @@ function App() {
         <CommandPalette
           open={paletteOpen}
           onOpenChange={setPaletteOpen}
+          closeOnEscape={!paletteBlocking}
+          closeOnOutsidePointer={!paletteBlocking}
           commands={[
             { key: "open-settings", label: "Open Settings", keywords: ["preferences", "config"] },
             {

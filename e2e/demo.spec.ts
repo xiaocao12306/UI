@@ -86,6 +86,27 @@ test("filters command palette and triggers drawer action", async ({ page }) => {
   await expect(page.getByRole("dialog").filter({ hasText: "Drawer Example" })).toBeVisible();
 });
 
+test("keeps command palette open when blocking dismiss mode is enabled", async ({ page }) => {
+  await page.goto("/");
+
+  const blockingSwitch = page.getByRole("switch", { name: "Block palette dismiss gestures" });
+  await blockingSwitch.click();
+  await expect(blockingSwitch).toHaveAttribute("aria-checked", "true");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await expect(palette).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeVisible();
+
+  await page.mouse.click(8, 8);
+  await expect(palette).toBeVisible();
+
+  await palette.getByRole("button", { name: "Close dialog" }).click();
+  await expect(palette).toBeHidden();
+});
+
 test("highlights active section in anchor nav", async ({ page }) => {
   await page.goto("/");
 

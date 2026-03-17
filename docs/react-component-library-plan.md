@@ -210,6 +210,7 @@
   - Toast 交互优先级收口（focus/hover 的 toast 提升为栈顶，Escape 优先关闭当前操作通知）
   - CommandPalette 批量执行收口（`closeOnSelect=false` 支持连续执行命令，避免重复打开面板）
   - CommandPalette 关闭策略收口（`closeOnEscape`/`closeOnOutsidePointer` 支持阻塞式审批流，避免误关闭）
+  - Demo 阻塞式命令面板模式（可切换 `closeOnEscape/closeOnOutsidePointer`）与 Playwright 外部点击/Escape 回归用例
   - Tabs 命名语义收口（`ariaLabelledBy` 支持外部标题命名 tablist，减少泛化标签）
   - Popover/Dropdown 关闭策略收口（`closeOnEscape`/`closeOnOutsidePointer` + dismiss 事件钩子，覆盖阻塞式流程）
   - Overlay 焦点策略收口（Popover/Dropdown 仅在键盘关闭时回焦 trigger，外部点击关闭保留指针目标焦点）
