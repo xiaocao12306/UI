@@ -23,5 +23,7 @@ The demo showcases:
 
 ## Hosting
 - CI workflow: `.github/workflows/demo-pages.yml`
+- Immediate preview link:
+  - `https://rawcdn.githack.com/xiaocao12306/UI/main/apps/demo/dist/index.html`
 - After enabling GitHub Pages, the demo is published to:
   - `https://xiaocao12306.github.io/UI/`

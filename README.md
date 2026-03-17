@@ -59,6 +59,8 @@ pnpm demo:e2e
 
 ## Demo External Link
 - GitHub Pages workflow: `.github/workflows/demo-pages.yml`
+- Immediate preview (no Pages dependency):
+  - `https://rawcdn.githack.com/xiaocao12306/UI/main/apps/demo/dist/index.html`
 - Expected URL after Pages is enabled in repo settings:
   - `https://xiaocao12306.github.io/UI/`
 
