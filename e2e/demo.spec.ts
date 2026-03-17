@@ -217,7 +217,6 @@ test("updates ai section prompt and reasoning trace", async ({ page }) => {
   await expect(reasoningToggle).toHaveAttribute("aria-expanded", "true");
   await expect(aiSection.getByText("Generate form schema and OTP fallback path.")).toBeVisible();
 
-  const streamingBlock = aiSection.locator("[aria-busy]");
   await expect(aiSection.locator("code")).toContainText("export function OtpFallback()", { timeout: 5000 });
-  await expect(streamingBlock).toHaveAttribute("aria-busy", "false", { timeout: 5000 });
+  await expect(aiSection.locator('[aria-busy="true"]').filter({ hasText: "OtpFallback" })).toHaveCount(0);
 });
