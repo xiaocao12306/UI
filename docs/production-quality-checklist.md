@@ -56,6 +56,7 @@
 - Toast: live region now wires `aria-labelledby/aria-describedby` by default and supports `ariaLabel` override for icon-only titles.
 - Tabs: added `orientation` API with vertical ArrowUp/ArrowDown flow while preserving Home/End and disabled-tab skipping.
 - Table: fallback row key now uses source index (not sorted index) so row DOM/state remains stable across sort toggles.
+- Dropdown: typeahead now supports buffered multi-character matching, repeated-key cycling, and accent-normalized `textValue` search.
 - CommandPalette focus model hardening: option nodes now stay out of tab order (`tabIndex=-1`) and preserve combobox focus on pointer selection for `aria-activedescendant` parity.
 - Storybook API 文档补齐：新增 Button/Input/Dialog/Popover/Dropdown 的 prop 契约与键盘/关闭策略说明，减少集成歧义。
 - Overlay 分层一致性收口：Dialog/Drawer/Popover/Dropdown/Tooltip 改为统一引用 `z` token 变量，避免硬编码层级漂移。

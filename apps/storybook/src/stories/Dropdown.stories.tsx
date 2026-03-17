@@ -107,6 +107,8 @@ export const TypeaheadNavigation: Story = {
       { key: "duplicate", label: "Duplicate" },
       { key: "archive", label: "Archive", disabled: true },
       { key: "add-note", label: "Add note" },
+      { key: "assign", label: "Assign" },
+      { key: "resume", label: "Resume card", textValue: "Résumé" },
       { key: "rename", label: "Rename" }
     ]
   },
@@ -118,8 +120,10 @@ export const TypeaheadNavigation: Story = {
     const menu = canvas.getByRole("menu");
     await userEvent.keyboard("a");
     await expect(canvas.getByRole("menuitem", { name: "Add note" })).toHaveFocus();
-    await userEvent.keyboard("r");
-    await expect(canvas.getByRole("menuitem", { name: "Rename" })).toHaveFocus();
+    await userEvent.keyboard("a");
+    await expect(canvas.getByRole("menuitem", { name: "Assign" })).toHaveFocus();
+    await userEvent.keyboard("res");
+    await expect(canvas.getByRole("menuitem", { name: "Resume card" })).toHaveFocus();
     await expect(menu).toBeInTheDocument();
   }
 };

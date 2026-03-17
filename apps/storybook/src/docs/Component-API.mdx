@@ -268,12 +268,12 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `items` | `DropdownItem[]` | Each item supports `disabled` and `onSelect`. |
-| `items[].textValue` | `string` | Optional typeahead search text for non-string labels or locale-specific matching. |
+| `items[].textValue` | `string` | Optional buffered typeahead search text for non-string labels or locale-specific/accent-normalized matching. |
 | `triggerAriaLabel` | `string` | Accessible name override for icon-only trigger button content. |
 | `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Works in both controlled and uncontrolled menu flows. |
 | menu naming | trigger-linked `aria-labelledby` | Menu inherits an accessible name from trigger content for screen-reader context. |
 | trigger relation | conditional `aria-controls` | Trigger points to menu ID only when expanded. |
-| keyboard behavior | Arrow / Home / End / Escape / Tab / Typeahead | Roving-focus menu navigation with deterministic close policy and letter-key jump. |
+| keyboard behavior | Arrow / Home / End / Escape / Tab / Typeahead | Roving-focus menu navigation with deterministic close policy, buffered multi-character typeahead, and repeated-key cycling. |
 
 ## Data
 

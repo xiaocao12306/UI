@@ -99,6 +99,62 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Rename" })).toHaveFocus();
   });
 
+  it("supports buffered multi-character typeahead and textValue accent normalization", () => {
+    render(
+      <Dropdown
+        label="Buffered"
+        items={[
+          { key: "duplicate", label: "Duplicate" },
+          { key: "rename", label: "Rename" },
+          { key: "resume", label: "Resume card", textValue: "Résumé" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Buffered" }));
+    let menu = screen.getByRole("menu");
+
+    fireEvent.keyDown(menu, { key: "r" });
+    fireEvent.keyDown(menu, { key: "e" });
+    fireEvent.keyDown(menu, { key: "n" });
+    expect(screen.getByRole("menuitem", { name: "Rename" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "Escape" });
+    fireEvent.click(screen.getByRole("button", { name: "Buffered" }));
+    menu = screen.getByRole("menu");
+
+    fireEvent.keyDown(menu, { key: "r" });
+    fireEvent.keyDown(menu, { key: "e" });
+    fireEvent.keyDown(menu, { key: "s" });
+    expect(screen.getByRole("menuitem", { name: "Resume card" })).toHaveFocus();
+  });
+
+  it("cycles repeated typeahead key presses across matching items", () => {
+    render(
+      <Dropdown
+        label="Cycle"
+        items={[
+          { key: "duplicate", label: "Duplicate" },
+          { key: "archive", label: "Archive" },
+          { key: "add-note", label: "Add note" },
+          { key: "assign", label: "Assign" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Cycle" }));
+    const menu = screen.getByRole("menu");
+
+    fireEvent.keyDown(menu, { key: "a" });
+    expect(screen.getByRole("menuitem", { name: "Archive" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "a" });
+    expect(screen.getByRole("menuitem", { name: "Add note" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "a" });
+    expect(screen.getByRole("menuitem", { name: "Assign" })).toHaveFocus();
+  });
+
   it("does not trigger selection for disabled item", () => {
     const onSelect = vi.fn();
     render(

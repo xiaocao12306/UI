@@ -43,12 +43,31 @@ function getDropdownItemText(item: DropdownItem) {
   return typeof item.label === "string" ? item.label.trim() : "";
 }
 
+function normalizeTypeaheadText(text: string) {
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
+function getNextTypeaheadQuery(previousQuery: string, nextChar: string, elapsedMs: number, timeoutMs = 500) {
+  if (elapsedMs > timeoutMs || previousQuery.length === 0) {
+    return nextChar;
+  }
+
+  if (previousQuery.length === 1 && previousQuery === nextChar) {
+    return nextChar;
+  }
+
+  return `${previousQuery}${nextChar}`;
+}
+
 function getTypeaheadIndex(items: DropdownItem[], currentIndex: number, query: string) {
   if (items.length === 0 || query.length === 0) {
     return -1;
   }
 
-  const normalized = query.toLowerCase();
+  const normalized = normalizeTypeaheadText(query);
   for (let offset = 1; offset <= items.length; offset += 1) {
     const index = (currentIndex + offset + items.length) % items.length;
     const item = items[index];
@@ -56,7 +75,7 @@ function getTypeaheadIndex(items: DropdownItem[], currentIndex: number, query: s
       continue;
     }
 
-    if (getDropdownItemText(item).toLowerCase().startsWith(normalized)) {
+    if (normalizeTypeaheadText(getDropdownItemText(item)).startsWith(normalized)) {
       return index;
     }
   }
@@ -69,6 +88,7 @@ export function Dropdown({ label, triggerAriaLabel, items, open, defaultOpen, on
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const itemRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
+  const typeaheadStateRef = React.useRef<{ query: string; timestamp: number }>({ query: "", timestamp: 0 });
   const triggerId = React.useId();
   const menuId = React.useId();
 
@@ -88,6 +108,7 @@ export function Dropdown({ label, triggerAriaLabel, items, open, defaultOpen, on
   React.useEffect(() => {
     if (!isOpen) {
       setActiveIndex(-1);
+      typeaheadStateRef.current = { query: "", timestamp: 0 };
       return;
     }
 
@@ -194,7 +215,24 @@ export function Dropdown({ label, triggerAriaLabel, items, open, defaultOpen, on
               }
 
               if (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey) {
-                const nextIndex = getTypeaheadIndex(items, activeIndex < 0 ? -1 : activeIndex, event.key);
+                const normalizedKey = normalizeTypeaheadText(event.key);
+                if (normalizedKey.length === 0) {
+                  return;
+                }
+
+                const now = Date.now();
+                const elapsed = now - typeaheadStateRef.current.timestamp;
+                const nextQuery = getNextTypeaheadQuery(typeaheadStateRef.current.query, normalizedKey, elapsed);
+                typeaheadStateRef.current = { query: nextQuery, timestamp: now };
+
+                let nextIndex = getTypeaheadIndex(items, activeIndex < 0 ? -1 : activeIndex, nextQuery);
+                if (nextIndex < 0 && nextQuery.length > 1) {
+                  nextIndex = getTypeaheadIndex(items, activeIndex < 0 ? -1 : activeIndex, normalizedKey);
+                  if (nextIndex >= 0) {
+                    typeaheadStateRef.current = { query: normalizedKey, timestamp: now };
+                  }
+                }
+
                 if (nextIndex >= 0) {
                   event.preventDefault();
                   setActiveIndex(nextIndex);
