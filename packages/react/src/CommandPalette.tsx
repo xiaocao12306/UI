@@ -17,7 +17,12 @@ export type CommandPaletteProps = {
   placeholder?: string;
   emptyMessage?: React.ReactNode;
   onQueryChange?: (query: string) => void;
-  getResultsStatusText?: (params: { query: string; visibleCount: number; totalCount: number }) => string;
+  getResultsStatusText?: (params: {
+    query: string;
+    visibleCount: number;
+    enabledCount: number;
+    totalCount: number;
+  }) => string;
 };
 
 export function CommandPalette({
@@ -55,15 +60,20 @@ export function CommandPalette({
       return haystack.includes(normalized);
     });
   }, [commands, query]);
+  const enabledCount = React.useMemo(
+    () => filtered.reduce((count, command) => (command.disabled ? count : count + 1), 0),
+    [filtered]
+  );
 
   const resultsStatusText = React.useMemo(
     () =>
       getResultsStatusText({
         query,
         visibleCount: filtered.length,
+        enabledCount,
         totalCount: commands.length
       }),
-    [commands.length, filtered.length, getResultsStatusText, query]
+    [commands.length, enabledCount, filtered.length, getResultsStatusText, query]
   );
 
   const firstEnabledIndex = React.useMemo(() => filtered.findIndex((command) => !command.disabled), [filtered]);
@@ -248,19 +258,33 @@ export function CommandPalette({
 function defaultGetResultsStatusText({
   query,
   visibleCount,
+  enabledCount,
   totalCount
 }: {
   query: string;
   visibleCount: number;
+  enabledCount: number;
   totalCount: number;
 }) {
   const normalized = query.trim();
   if (normalized.length === 0) {
+    if (enabledCount !== totalCount) {
+      return `${enabledCount} of ${totalCount} command${totalCount === 1 ? "" : "s"} available.`;
+    }
+
     return `${totalCount} command${totalCount === 1 ? "" : "s"} available.`;
   }
 
   if (visibleCount === 0) {
     return `No commands match "${normalized}".`;
+  }
+
+  if (enabledCount === 0) {
+    return `No enabled commands match "${normalized}".`;
+  }
+
+  if (enabledCount !== visibleCount) {
+    return `${enabledCount} of ${visibleCount} matching command${enabledCount === 1 ? "" : "s"} available for "${normalized}".`;
   }
 
   return `${visibleCount} command${visibleCount === 1 ? "" : "s"} found for "${normalized}".`;

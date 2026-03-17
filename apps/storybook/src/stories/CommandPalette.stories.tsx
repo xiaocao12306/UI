@@ -79,13 +79,29 @@ function QueryTelemetryPalette() {
         commands={[{ key: "open-changelog", label: "Open Changelog", keywords: ["release", "notes"] }]}
         emptyMessage="No matching AI workflow command."
         onQueryChange={setQuery}
-        getResultsStatusText={({ query: nextQuery, visibleCount }) =>
+        getResultsStatusText={({ query: nextQuery, visibleCount, enabledCount }) =>
           nextQuery.trim().length === 0
             ? "Command search ready."
-            : `${visibleCount} AI workflow match${visibleCount === 1 ? "" : "es"} for ${nextQuery}`
+            : `${enabledCount}/${visibleCount} actionable AI workflow match${visibleCount === 1 ? "" : "es"} for ${nextQuery}`
         }
       />
     </div>
+  );
+}
+
+function DisabledOnlyResultsPalette() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <CommandPalette
+      open={open}
+      onOpenChange={setOpen}
+      commands={[
+        { key: "publish-release", label: "Publish Release", keywords: ["release"], disabled: true },
+        { key: "open-settings", label: "Open Settings", keywords: ["settings"] }
+      ]}
+      placeholder="Try searching release..."
+    />
   );
 }
 
@@ -120,5 +136,17 @@ export const QueryTelemetry: Story = {
 
     await userEvent.keyboard("{ArrowDown}{Enter}");
     await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
+  }
+};
+
+export const DisabledOnlyResults: Story = {
+  render: () => <DisabledOnlyResultsPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "release");
+    await expect(canvas.getByRole("status")).toHaveTextContent('No enabled commands match "release".');
   }
 };

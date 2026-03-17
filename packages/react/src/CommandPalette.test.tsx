@@ -208,14 +208,34 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("status")).toHaveTextContent('1 command found for "release".');
   });
 
+  it("announces when only disabled commands match query", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "publish-release", label: "Publish Release", keywords: ["release"], disabled: true },
+          { key: "open-settings", label: "Open Settings", keywords: ["settings"] }
+        ]}
+      />
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "release" }
+    });
+    expect(screen.getByRole("status")).toHaveTextContent('No enabled commands match "release".');
+  });
+
   it("supports custom result status narration", () => {
     render(
       <CommandPalette
         open
         onOpenChange={() => {}}
         commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
-        getResultsStatusText={({ query, visibleCount }) =>
-          query.trim().length === 0 ? "Ready for command search." : `${visibleCount} match(es) for ${query}`
+        getResultsStatusText={({ query, visibleCount, enabledCount }) =>
+          query.trim().length === 0
+            ? "Ready for command search."
+            : `${enabledCount}/${visibleCount} actionable match(es) for ${query}`
         }
       />
     );
@@ -224,7 +244,7 @@ describe("CommandPalette", () => {
     fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
       target: { value: "settings" }
     });
-    expect(screen.getByRole("status")).toHaveTextContent("1 match(es) for settings");
+    expect(screen.getByRole("status")).toHaveTextContent("1/1 actionable match(es) for settings");
   });
 
   it("keeps selection unset when all commands are disabled", () => {
