@@ -34,6 +34,8 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+# or run all in one:
+pnpm verify
 ```
 
 ## Run Demo

@@ -9,6 +9,7 @@
     "demo:dev": "pnpm --filter @aurora-ui/demo dev",
     "demo:build": "pnpm --filter @aurora-ui/demo build",
     "demo:preview": "pnpm --filter @aurora-ui/demo preview",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
