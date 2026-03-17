@@ -1,5 +1,5 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as s,T as c,S as i,D as t}from"./index-TS7DMed8.js";import"./index-BWu4c2F4.js";import"./iframe-BdvkYupF.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(o){const n={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...o.components};return e.jsxs(e.Fragment,{children:[e.jsx(s,{title:"Docs/Component Catalog"}),`
-`,e.jsx(c,{}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as c,T as s,S as i,D as t}from"./index-CVsZhE10.js";import"./index-BWu4c2F4.js";import"./iframe-Dt19UH_s.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(o){const n={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...o.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{title:"Docs/Component Catalog"}),`
+`,e.jsx(s,{}),`
 `,e.jsx(i,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(t,{children:e.jsx(n.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
 Use it as the first stop before extending APIs or adding new stories.`})}),`
@@ -22,8 +22,8 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 | Tabs | `,e.jsx(n.code,{children:"Tabs"})," | ",e.jsx(n.code,{children:"Data/Tabs"})," + ",e.jsx(n.code,{children:"KeyboardNavigationGuide"}),` | yes |
 | Table | `,e.jsx(n.code,{children:"Table"})," | ",e.jsx(n.code,{children:"Data/Table"})," + ",e.jsx(n.code,{children:"SortTelemetry"}),` | yes |
 | Pagination | `,e.jsx(n.code,{children:"Pagination"})," | ",e.jsx(n.code,{children:"Data/Pagination"})," + ",e.jsx(n.code,{children:"KeyboardShortcuts"}),` | yes |
-| Tag | `,e.jsx(n.code,{children:"Tag"})," | used in ",e.jsx(n.code,{children:"Core/Button"}),` story | - |
-| Badge | `,e.jsx(n.code,{children:"Badge"})," | used in multiple stories | - |"]}),`
+| Tag | `,e.jsx(n.code,{children:"Tag"})," | ",e.jsx(n.code,{children:"Core/Tag"}),` | yes |
+| Badge | `,e.jsx(n.code,{children:"Badge"})," | ",e.jsx(n.code,{children:"Core/Badge"})," | yes |"]}),`
 `,e.jsx(n.h2,{id:"feedback-and-state",children:"Feedback and State"}),`
 `,e.jsxs(n.p,{children:[`| Component | Export | Storybook | Unit Test |
 | --- | --- | --- | --- |
