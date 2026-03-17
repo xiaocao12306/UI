@@ -12,6 +12,7 @@ export type TabsProps = {
   value?: string;
   defaultValue?: string;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
   orientation?: "horizontal" | "vertical";
   activationMode?: "automatic" | "manual";
   onValueChange?: (value: string) => void;
@@ -38,6 +39,7 @@ export function Tabs({
   value,
   defaultValue,
   ariaLabel = "Tabs",
+  ariaLabelledBy,
   orientation = "horizontal",
   activationMode = "automatic",
   onValueChange
@@ -81,7 +83,8 @@ export function Tabs({
     <div style={{ display: "grid", gap: 10 }}>
       <div
         role="tablist"
-        aria-label={ariaLabel}
+        aria-label={ariaLabelledBy ? undefined : ariaLabel}
+        aria-labelledby={ariaLabelledBy}
         aria-orientation={orientation}
         style={{
           display: "flex",

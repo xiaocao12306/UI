@@ -202,4 +202,23 @@ describe("Tabs", () => {
 
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
+
+  it("supports tablist naming through aria-labelledby", () => {
+    render(
+      <div>
+        <h2 id="release-stages">Release stages</h2>
+        <Tabs
+          ariaLabelledBy="release-stages"
+          items={[
+            { key: "one", label: "One", content: <div>Panel One</div> },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />
+      </div>
+    );
+
+    const tablist = screen.getByRole("tablist", { name: "Release stages" });
+    expect(tablist).toHaveAttribute("aria-labelledby", "release-stages");
+    expect(tablist).not.toHaveAttribute("aria-label");
+  });
 });

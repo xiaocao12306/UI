@@ -123,6 +123,27 @@ export const KeyboardNavigationGuide: Story = {
   )
 };
 
+function LabelledByHeadingDemo() {
+  const headingId = React.useId();
+
+  return (
+    <div style={{ width: 620, display: "grid", gap: 10 }}>
+      <h3 id={headingId} style={{ margin: 0 }}>
+        Release Stages
+      </h3>
+      <Tabs ariaLabelledBy={headingId} items={productTabs} defaultValue="spec" />
+    </div>
+  );
+}
+
+export const LabelledByHeading: Story = {
+  render: () => <LabelledByHeadingDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist", { name: "Release Stages" })).toBeInTheDocument();
+  }
+};
+
 export const Vertical: Story = {
   render: () => (
     <div style={{ width: 620 }}>

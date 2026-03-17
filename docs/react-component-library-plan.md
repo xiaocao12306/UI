@@ -209,6 +209,7 @@
   - Toast 堆叠顺序语义收口（Escape 仅作用于最新/顶层 toast，避免误关历史通知）
   - Toast 交互优先级收口（focus/hover 的 toast 提升为栈顶，Escape 优先关闭当前操作通知）
   - CommandPalette 批量执行收口（`closeOnSelect=false` 支持连续执行命令，避免重复打开面板）
+  - Tabs 命名语义收口（`ariaLabelledBy` 支持外部标题命名 tablist，减少泛化标签）
   - Overlay 焦点策略收口（Popover/Dropdown 仅在键盘关闭时回焦 trigger，外部点击关闭保留指针目标焦点）
   - DismissableLayer 栈语义收口（嵌套 overlay 时仅顶层响应 Escape/外部点击，避免单次事件联动关闭多层）
   - Dialog 嵌套 overlay 验收补齐（Dropdown in Dialog 的 Escape 分层关闭单测 + Storybook 交互场景）
