@@ -213,6 +213,7 @@
   - Demo 阻塞式命令面板模式（可切换 `closeOnEscape/closeOnOutsidePointer`）与 Playwright 外部点击/Escape 回归用例
   - Demo 命令面板连续执行模式（`closeOnSelect=false`）与 Playwright 选择后保持打开回归
   - Demo 阻塞式 Toast 通知（`closeOnEscape={false}`）与 Playwright 显式关闭路径回归
+  - Demo Toast 堆叠顺序场景（top-most 优先）与 Playwright Escape 逐层关闭回归
   - Demo 手动激活 Tabs 场景（`activationMode="manual"`）与 Playwright 键盘焦点/激活分离回归
   - Demo Table loading 验收场景（`aria-busy` + 禁用排序 + 抑制旧数据）与 Playwright 回归
   - Demo Table empty 验收场景（`emptyContent` + 禁用排序）与 Playwright 回归

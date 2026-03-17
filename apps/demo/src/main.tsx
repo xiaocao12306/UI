@@ -116,6 +116,7 @@ function App() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [toastOpen, setToastOpen] = React.useState(false);
   const [blockingToastOpen, setBlockingToastOpen] = React.useState(false);
+  const [stackedToastOpen, setStackedToastOpen] = React.useState({ first: false, second: false });
   const [paletteOpen, setPaletteOpen] = React.useState(false);
   const [paletteBlocking, setPaletteBlocking] = React.useState(false);
   const [palettePersistent, setPalettePersistent] = React.useState(false);
@@ -387,6 +388,12 @@ function App() {
             <Button variant="outline" onClick={() => setBlockingToastOpen(true)}>
               Trigger blocking toast
             </Button>
+            <Button
+              variant="outline"
+              onClick={() => setStackedToastOpen({ first: true, second: true })}
+            >
+              Trigger stacked toasts
+            </Button>
           </div>
           <Progress value={62} />
           <div style={{ display: "grid", gap: 8, maxWidth: 320 }}>
@@ -566,6 +573,23 @@ function App() {
           closeLabel="Dismiss blocking notice"
           ariaLabel="Release approval required notification"
           position="top-right"
+        />
+        <Toast
+          open={stackedToastOpen.first}
+          onClose={() => setStackedToastOpen((current) => ({ ...current, first: false }))}
+          title="Sync started"
+          description="Baseline snapshot sync is queued."
+          duration={0}
+          position="top-left"
+        />
+        <Toast
+          open={stackedToastOpen.second}
+          onClose={() => setStackedToastOpen((current) => ({ ...current, second: false }))}
+          title="Sync completed"
+          description="All artifacts are available for review."
+          tone="success"
+          duration={0}
+          position="top-left"
         />
       </main>
     </AuroraProvider>

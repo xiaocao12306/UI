@@ -294,6 +294,24 @@ test("dismisses toast with escape key", async ({ page }) => {
   await expect(toast).toBeHidden();
 });
 
+test("dismisses stacked toasts from top-most to oldest on Escape", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Trigger stacked toasts" }).click();
+
+  const firstToast = page.getByRole("status", { name: "Sync started" });
+  const secondToast = page.getByRole("status", { name: "Sync completed" });
+  await expect(firstToast).toBeVisible();
+  await expect(secondToast).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(secondToast).toBeHidden();
+  await expect(firstToast).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(firstToast).toBeHidden();
+});
+
 test("keeps blocking toast open on Escape until explicit dismiss", async ({ page }) => {
   await page.goto("/");
 
