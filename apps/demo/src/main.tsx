@@ -337,6 +337,22 @@ function App() {
               ]}
             />
           </div>
+          <div style={{ display: "grid", gap: 8 }}>
+            <h3 style={{ margin: 0, fontSize: 16 }}>Vertical Orientation Tabs</h3>
+            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+              ArrowUp and ArrowDown drive focus + activation flow in vertical tablists.
+            </p>
+            <Tabs
+              ariaLabel="Vertical release stage tabs"
+              orientation="vertical"
+              defaultValue="backlog"
+              items={[
+                { key: "backlog", label: "Backlog", content: <p style={{ margin: 0 }}>Backlog scope and release intent.</p> },
+                { key: "in-progress", label: "In Progress", content: <p style={{ margin: 0 }}>Implementation and QA checkpoints.</p> },
+                { key: "completed", label: "Completed", content: <p style={{ margin: 0 }}>Ready for release notes and rollout.</p> }
+              ]}
+            />
+          </div>
           <Table
             caption="Component readiness metrics"
             defaultSortKey="component"

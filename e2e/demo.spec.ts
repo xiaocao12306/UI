@@ -222,6 +222,27 @@ test("keeps manual tabs panel stable until Enter activation", async ({ page }) =
   await expect(reviewPanel).not.toHaveAttribute("hidden");
 });
 
+test("navigates vertical tabs with ArrowDown and ArrowUp", async ({ page }) => {
+  await page.goto("/");
+
+  const verticalTablist = page.getByRole("tablist", { name: "Vertical release stage tabs" });
+  const backlogTab = verticalTablist.getByRole("tab", { name: "Backlog" });
+  const inProgressTab = verticalTablist.getByRole("tab", { name: "In Progress" });
+  const backlogPanel = page.locator(`#${await backlogTab.getAttribute("aria-controls")}`);
+  const inProgressPanel = page.locator(`#${await inProgressTab.getAttribute("aria-controls")}`);
+
+  await backlogTab.focus();
+  await backlogTab.press("ArrowDown");
+  await expect(inProgressTab).toBeFocused();
+  await expect(inProgressPanel).toContainText("Implementation and QA checkpoints.");
+  await expect(inProgressPanel).not.toHaveAttribute("hidden");
+
+  await inProgressTab.press("ArrowUp");
+  await expect(backlogTab).toBeFocused();
+  await expect(backlogPanel).toContainText("Backlog scope and release intent.");
+  await expect(backlogPanel).not.toHaveAttribute("hidden");
+});
+
 test("paginates release activity feed", async ({ page }) => {
   await page.goto("/");
 

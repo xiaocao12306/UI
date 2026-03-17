@@ -215,6 +215,7 @@
   - Demo 阻塞式 Toast 通知（`closeOnEscape={false}`）与 Playwright 显式关闭路径回归
   - Demo Toast 堆叠顺序场景（top-most 优先）与 Playwright Escape 逐层关闭回归
   - Demo 手动激活 Tabs 场景（`activationMode="manual"`）与 Playwright 键盘焦点/激活分离回归
+  - Demo 纵向 Tabs 场景（`orientation="vertical"`）与 Playwright ArrowUp/ArrowDown 回归
   - Demo Table loading 验收场景（`aria-busy` + 禁用排序 + 抑制旧数据）与 Playwright 回归
   - Demo Table empty 验收场景（`emptyContent` + 禁用排序）与 Playwright 回归
   - Tabs manual 模式键盘边界补强（`Home/End` 仅移动焦点，`Enter/Space` 才激活）并补单测 + Storybook 交互断言
