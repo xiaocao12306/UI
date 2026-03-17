@@ -86,6 +86,7 @@ function ActionRequiredToastDemo() {
         onOpenChange={setOpen}
         closeOnEscape={false}
         duration={0}
+        closeLabel="Close blocking notice"
         title="Publish blocked"
         description="Set CHROMATIC_PROJECT_TOKEN before release. This toast stays until explicit action."
         tone="warning"
@@ -105,7 +106,7 @@ export const ActionRequired: Story = {
     const canvas = within(canvasElement);
 
     await expect(canvas.getByRole("status")).toBeInTheDocument();
-    await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Close blocking notice" }));
     await expect(canvas.queryByRole("status")).not.toBeInTheDocument();
     await userEvent.click(canvas.getByRole("button", { name: "Reopen" }));
     await expect(canvas.getByRole("status")).toBeInTheDocument();

@@ -16,6 +16,11 @@ describe("Toast", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
+  it("supports custom close button label", () => {
+    render(<Toast open title="Saved" closeLabel="Dismiss notification" />);
+    expect(screen.getByRole("button", { name: "Dismiss notification" })).toBeInTheDocument();
+  });
+
   it("uses alert role for danger tone", () => {
     render(<Toast open tone="danger" title="Failed" />);
     expect(screen.getByRole("alert")).toHaveAttribute("aria-live", "assertive");

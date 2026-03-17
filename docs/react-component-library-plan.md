@@ -126,6 +126,7 @@
   - 横向收口（CommandPalette：Home/End 键盘分支、禁用项跳过、Query Telemetry 示例）
   - CommandPalette 焦点模型补强（`tabIndex=-1` option + pointer 选择保持 combobox 焦点）
   - 横向收口（Toast：auto-dismiss/pauseOnHover/closeOnEscape=false 测试分支、ActionRequired 示例）
+  - Toast i18n 可访问性补充（`closeLabel` 自定义关闭按钮文案）
   - 横向收口（Tabs/Table：Home/End 焦点流、`aria-sort` 与排序切换断言、排序 telemetry 示例）
   - Table 语义边界修复（`defaultSortKey` 指向非 sortable 列时忽略初始排序，保持 `aria-sort` 正确）
   - Table Storybook 边界示例补齐（`InvalidDefaultSortKeyFallback` 覆盖无效默认排序键）

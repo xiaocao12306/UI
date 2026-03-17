@@ -12,6 +12,7 @@ export type ToastProps = {
   duration?: number;
   pauseOnHover?: boolean;
   closeOnEscape?: boolean;
+  closeLabel?: string;
   position?: ToastPosition;
   onClose?: () => void;
   onOpenChange?: (open: boolean) => void;
@@ -56,6 +57,7 @@ export function Toast({
   duration = 4000,
   pauseOnHover = true,
   closeOnEscape = true,
+  closeLabel = "Close toast",
   position = "bottom-right",
   onClose,
   onOpenChange
@@ -146,7 +148,7 @@ export function Toast({
         <button
           type="button"
           onClick={close}
-          aria-label="Close toast"
+          aria-label={closeLabel}
           style={{
             borderRadius: "var(--aurora-radius-sm)",
             border: "1px solid var(--aurora-border-default)",
