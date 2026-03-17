@@ -4,8 +4,14 @@ import { Badge, Button, Tag } from "@aurora-ui/react";
 const meta = {
   title: "Core/Button",
   component: Button,
+  tags: ["autodocs"],
   parameters: {
-    layout: "centered"
+    layout: "centered",
+    docs: {
+      description: {
+        component: "Button variant and size are fully token-driven; switch theme from toolbar to verify semantic mapping."
+      }
+    }
   },
   args: {
     children: "Generate Response"

@@ -4,8 +4,14 @@ import { Button, Input } from "@aurora-ui/react";
 const meta = {
   title: "Form/Input",
   component: Input,
+  tags: ["autodocs"],
   parameters: {
-    layout: "centered"
+    layout: "centered",
+    docs: {
+      description: {
+        component: "Input uses shared field tokens and is suitable for search, filters, and AI prompt prefill interactions."
+      }
+    }
   },
   args: {
     placeholder: "Search release notes..."

@@ -5,8 +5,14 @@ import { Button, Dialog, Input, Textarea } from "@aurora-ui/react";
 const meta = {
   title: "Overlay/Dialog",
   component: Dialog,
+  tags: ["autodocs"],
   parameters: {
-    layout: "centered"
+    layout: "centered",
+    docs: {
+      description: {
+        component: "Dialog is built on FocusScope + DismissableLayer and supports Escape/outside-pointer dismissal by default."
+      }
+    }
   },
   args: {
     open: false,

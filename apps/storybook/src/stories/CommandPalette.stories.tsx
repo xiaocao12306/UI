@@ -12,8 +12,14 @@ const commands: CommandItem[] = [
 const meta = {
   title: "AI/CommandPalette",
   component: CommandPalette,
+  tags: ["autodocs"],
   parameters: {
-    layout: "fullscreen"
+    layout: "fullscreen",
+    docs: {
+      description: {
+        component: "CommandPalette is optimized for AI workflow shortcuts with keyword filtering and action callbacks."
+      }
+    }
   },
   args: {
     open: false,
