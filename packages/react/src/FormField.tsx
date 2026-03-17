@@ -10,8 +10,21 @@ export type FormFieldProps = {
 };
 
 export function FormField({ label, htmlFor, description, error, required, children }: FormFieldProps) {
+  const generatedInputId = React.useId();
   const describedById = React.useId();
   const errorId = React.useId();
+  const controlId = htmlFor ?? generatedInputId;
+
+  const describedBy = [description ? describedById : null, error ? errorId : null].filter(Boolean).join(" ");
+
+  const control =
+    React.isValidElement(children) && typeof children.type !== "symbol"
+      ? React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+          id: controlId,
+          "aria-describedby": describedBy || undefined,
+          "aria-invalid": error ? true : undefined
+        })
+      : children;
 
   return (
     <div style={{ display: "grid", gap: 6 }}>
@@ -30,9 +43,7 @@ export function FormField({ label, htmlFor, description, error, required, childr
         {required ? <span style={{ color: "var(--aurora-color-red-500)" }}>*</span> : null}
       </label>
 
-      <div aria-describedby={description ? describedById : undefined} aria-errormessage={error ? errorId : undefined}>
-        {children}
-      </div>
+      <div>{control}</div>
 
       {description ? (
         <small id={describedById} style={{ color: "var(--aurora-text-secondary)" }}>

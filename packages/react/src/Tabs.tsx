@@ -14,6 +14,7 @@ export type TabsProps = {
 };
 
 export function Tabs({ items, value, defaultValue, onValueChange }: TabsProps) {
+  const baseId = React.useId();
   const firstKey = items[0]?.key;
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstKey);
   const currentValue = value ?? internalValue;
@@ -30,13 +31,41 @@ export function Tabs({ items, value, defaultValue, onValueChange }: TabsProps) {
       <div role="tablist" aria-orientation="horizontal" style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
         {items.map((item) => {
           const selected = item.key === currentValue;
+          const itemIndex = items.findIndex((candidate) => candidate.key === item.key);
           return (
             <button
               key={item.key}
+              id={`${baseId}-tab-${item.key}`}
               type="button"
               role="tab"
               aria-selected={selected}
+              aria-controls={`${baseId}-panel-${item.key}`}
+              tabIndex={selected ? 0 : -1}
               onClick={() => select(item.key)}
+              onKeyDown={(event) => {
+                if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+                  return;
+                }
+
+                event.preventDefault();
+
+                if (event.key === "Home") {
+                  select(items[0]?.key ?? item.key);
+                  return;
+                }
+
+                if (event.key === "End") {
+                  select(items[items.length - 1]?.key ?? item.key);
+                  return;
+                }
+
+                const nextIndex =
+                  event.key === "ArrowRight"
+                    ? (itemIndex + 1) % items.length
+                    : (itemIndex - 1 + items.length) % items.length;
+
+                select(items[nextIndex]?.key ?? item.key);
+              }}
               style={{
                 height: 34,
                 borderRadius: "var(--aurora-radius-md)",
@@ -56,7 +85,9 @@ export function Tabs({ items, value, defaultValue, onValueChange }: TabsProps) {
         item.key === currentValue ? (
           <div
             key={item.key}
+            id={`${baseId}-panel-${item.key}`}
             role="tabpanel"
+            aria-labelledby={`${baseId}-tab-${item.key}`}
             style={{
               border: "1px solid var(--aurora-border-default)",
               borderRadius: "var(--aurora-radius-md)",
