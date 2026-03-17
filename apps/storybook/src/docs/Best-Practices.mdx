@@ -1,4 +1,9 @@
-import { Meta, Title, Subtitle, Description } from '@storybook/blocks';
+import { Meta, Title, Subtitle, Description, Canvas } from '@storybook/blocks';
+import * as ButtonStories from '../stories/Button.stories';
+import * as DialogStories from '../stories/Dialog.stories';
+import * as CommandPaletteStories from '../stories/CommandPalette.stories';
+import * as PromptInputStories from '../stories/PromptInput.stories';
+import * as TableStories from '../stories/Table.stories';
 
 <Meta title="Docs/Best Practices" />
 
@@ -14,6 +19,8 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Prefer controlled APIs for overlays (`open`, `onOpenChange`).
 - Expose semantic variants (`solid`, `outline`) instead of hardcoded colors.
 
+<Canvas of={ButtonStories.VariantMatrix} />
+
 ## Theming
 
 - Do not hardcode color values inside component internals.
@@ -26,8 +33,27 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep visible labels or accessible names for form controls.
 - Avoid `autoFocus`; use intentional focus management when opening overlays.
 
+<Canvas of={DialogStories.Interactive} />
+
 ## Testing
 
 - Add unit tests for any new interaction branch.
 - Add/extend Playwright smoke tests when user-facing flows change.
 - Keep Storybook stories deterministic so visual regression remains stable.
+
+## AI Interaction Patterns
+
+- Always expose pending/loading states for AI request actions.
+- Keep command labels explicit and searchable.
+- Provide empty-state guidance when no command matches the query.
+
+<Canvas of={PromptInputStories.WithAiRequestState} />
+<Canvas of={CommandPaletteStories.AiInteractionFlow} />
+
+## Data Presentation Patterns
+
+- Use typed columns and stable row keys in data tables.
+- Surface status semantics with tokens instead of custom ad-hoc colors.
+- Keep row actions predictable and keyboard reachable.
+
+<Canvas of={TableStories.ReleaseChecklist} />
