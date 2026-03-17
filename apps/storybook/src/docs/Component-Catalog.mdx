@@ -1,0 +1,71 @@
+import { Meta, Title, Subtitle, Description } from '@storybook/blocks';
+
+<Meta title="Docs/Component Catalog" />
+
+<Title />
+<Subtitle>Components, Coverage, and Entry Points</Subtitle>
+<Description>
+This index tracks Aurora UI component groups with implementation and quality signals.
+Use it as the first stop before extending APIs or adding new stories.
+</Description>
+
+## Core and Form
+
+| Component | Export | Storybook | Unit Test |
+| --- | --- | --- | --- |
+| Button | `Button` | `Core/Button` | yes |
+| Input | `Input` | `Form/Input` | covered via FormField |
+| Textarea | `Textarea` | used in `Overlay/Dialog` and `AI/PromptInput` stories | indirect |
+| Select | `Select` | demo coverage | - |
+| Checkbox | `Checkbox` | demo coverage | - |
+| RadioGroup | `RadioGroup` | demo coverage | - |
+| Switch | `Switch` | demo coverage | - |
+| FormField | `FormField` | demo coverage | yes |
+
+## Data and Navigation
+
+| Component | Export | Storybook | Unit Test |
+| --- | --- | --- | --- |
+| Tabs | `Tabs` | `Data/Tabs` | yes |
+| Table | `Table` | `Data/Table` | yes |
+| Tag | `Tag` | used in `Core/Button` story | - |
+| Badge | `Badge` | used in multiple stories | - |
+
+## Feedback and State
+
+| Component | Export | Storybook | Unit Test |
+| --- | --- | --- | --- |
+| Alert | `Alert` | demo coverage | - |
+| Toast | `Toast` | demo coverage | yes |
+| Progress | `Progress` | demo coverage | - |
+| Skeleton | `Skeleton` | demo coverage | - |
+| Empty | `Empty` | demo coverage | - |
+| LoadingDots | `LoadingDots` | demo coverage | - |
+| StreamingText | `StreamingText` | demo coverage | - |
+
+## Overlay
+
+| Component | Export | Storybook | Unit Test |
+| --- | --- | --- | --- |
+| Tooltip | `Tooltip` | demo coverage | - |
+| Popover | `Popover` | demo coverage | yes |
+| Dialog | `Dialog` | `Overlay/Dialog` | yes |
+| Drawer | `Drawer` | demo coverage | yes |
+| Dropdown | `Dropdown` | demo coverage | yes |
+| CommandPalette | `CommandPalette` | `AI/CommandPalette` | yes |
+
+## AI Components
+
+| Component | Export | Storybook | Unit Test |
+| --- | --- | --- | --- |
+| PromptInput | `PromptInput` | `AI/PromptInput` | yes |
+| MessageBubble | `MessageBubble` | demo coverage | - |
+| ReasoningPanel | `ReasoningPanel` | demo coverage | - |
+| StreamingCodeBlock | `StreamingCodeBlock` | demo coverage | - |
+
+## Extension Checklist
+
+1. Add or update story with deterministic state.
+2. Add interaction/unit test for new behavior branch.
+3. Verify all theme packs from Storybook toolbar.
+4. Update `docs/component-status.md` and this catalog when coverage changes.

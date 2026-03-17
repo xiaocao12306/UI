@@ -32,6 +32,7 @@ pnpm --filter @aurora-ui/storybook-app build-storybook
 - `AI/PromptInput`
 - `Docs/Getting Started`
 - `Docs/Component API`
+- `Docs/Component Catalog`
 - `Docs/Best Practices`
 
 说明：预览层通过 toolbar 全局切换 `core-light/core-dark/glass/neo-brutal`，用于验证 token 与主题一致性。
