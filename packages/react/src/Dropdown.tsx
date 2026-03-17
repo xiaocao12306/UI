@@ -5,6 +5,7 @@ import { Button } from "./Button";
 export type DropdownItem = {
   key: string;
   label: React.ReactNode;
+  textValue?: string;
   disabled?: boolean;
   onSelect?: () => void;
 };
@@ -27,6 +28,35 @@ function getNextEnabledIndex(items: DropdownItem[], currentIndex: number, direct
   for (let i = 0; i < items.length; i += 1) {
     index = (index + direction + items.length) % items.length;
     if (!items[index]?.disabled) {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function getDropdownItemText(item: DropdownItem) {
+  if (typeof item.textValue === "string") {
+    return item.textValue.trim();
+  }
+
+  return typeof item.label === "string" ? item.label.trim() : "";
+}
+
+function getTypeaheadIndex(items: DropdownItem[], currentIndex: number, query: string) {
+  if (items.length === 0 || query.length === 0) {
+    return -1;
+  }
+
+  const normalized = query.toLowerCase();
+  for (let offset = 1; offset <= items.length; offset += 1) {
+    const index = (currentIndex + offset + items.length) % items.length;
+    const item = items[index];
+    if (!item || item.disabled) {
+      continue;
+    }
+
+    if (getDropdownItemText(item).toLowerCase().startsWith(normalized)) {
       return index;
     }
   }
@@ -160,6 +190,15 @@ export function Dropdown({ label, triggerAriaLabel, items, open, defaultOpen, on
 
               if (event.key === "Tab") {
                 setOpen(false);
+                return;
+              }
+
+              if (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey) {
+                const nextIndex = getTypeaheadIndex(items, activeIndex < 0 ? -1 : activeIndex, event.key);
+                if (nextIndex >= 0) {
+                  event.preventDefault();
+                  setActiveIndex(nextIndex);
+                }
               }
             }}
           >

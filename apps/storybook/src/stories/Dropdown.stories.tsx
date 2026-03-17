@@ -99,3 +99,27 @@ export const SelectionTelemetry: Story = {
     await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
   }
 };
+
+export const TypeaheadNavigation: Story = {
+  args: {
+    label: "Quick Actions",
+    items: [
+      { key: "duplicate", label: "Duplicate" },
+      { key: "archive", label: "Archive", disabled: true },
+      { key: "add-note", label: "Add note" },
+      { key: "rename", label: "Rename" }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Quick Actions" });
+
+    await userEvent.click(trigger);
+    const menu = canvas.getByRole("menu");
+    await userEvent.keyboard("a");
+    await expect(canvas.getByRole("menuitem", { name: "Add note" })).toHaveFocus();
+    await userEvent.keyboard("r");
+    await expect(canvas.getByRole("menuitem", { name: "Rename" })).toHaveFocus();
+    await expect(menu).toBeInTheDocument();
+  }
+};

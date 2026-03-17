@@ -53,6 +53,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Popover and Dropdown should return focus to trigger on close to avoid keyboard dead-ends.
 - Dropdown menus should expose an accessible name via trigger-linked `aria-labelledby`.
 - Keep trigger `aria-controls` conditional on open state for popover/menu patterns to avoid stale ID references.
+- For dropdown typeahead, set `textValue` when item labels are non-string or need locale-friendly matching aliases.
 - For icon-only popover/dropdown triggers, always provide `triggerAriaLabel` to preserve an explicit control name.
 - Command palette and combobox-style overlays should keep text input as the primary focus anchor for navigation.
 

@@ -77,6 +77,7 @@
 - Tabs 引用语义收口：所有 `tabpanel` 持续挂载并使用 `hidden` 切换，保证每个 tab 的 `aria-controls` 都有有效目标。
 - 表单 invalid token 收口：`aria-invalid="grammar|spelling"` 现在按错误态处理，统一辅助语义与样式分支。
 - Dropdown 命名语义收口：`menu` 通过 trigger `aria-labelledby` 暴露可访问名称，并补齐单测分支。
+- Dropdown typeahead 收口：新增字母键跳转与禁用项跳过，支持 `textValue` 为非字符串标签提供匹配文本。
 - Overlay 引用语义收口：Popover/Dropdown 触发器在关闭时不再保留 `aria-controls`，打开时再建立关联并补齐单测。
 - Storybook 类型门禁修复：`FormField` story 增补默认 `args`，恢复 `pnpm --filter @aurora-ui/storybook-app typecheck` 全绿。
 - Overlay icon 触发器语义补齐：Popover/Dropdown 增加 `triggerAriaLabel` 并补单测 + Storybook 示例。

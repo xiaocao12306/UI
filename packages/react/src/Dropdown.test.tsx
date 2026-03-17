@@ -76,6 +76,29 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Two" })).toHaveFocus();
   });
 
+  it("supports typeahead navigation and skips disabled matches", () => {
+    render(
+      <Dropdown
+        label="Typeahead"
+        items={[
+          { key: "duplicate", label: "Duplicate" },
+          { key: "archive", label: "Archive", disabled: true },
+          { key: "add-note", label: "Add note" },
+          { key: "rename", label: "Rename" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Typeahead" }));
+    const menu = screen.getByRole("menu");
+
+    fireEvent.keyDown(menu, { key: "a" });
+    expect(screen.getByRole("menuitem", { name: "Add note" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "r" });
+    expect(screen.getByRole("menuitem", { name: "Rename" })).toHaveFocus();
+  });
+
   it("does not trigger selection for disabled item", () => {
     const onSelect = vi.fn();
     render(
