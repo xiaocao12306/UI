@@ -1,4 +1,5 @@
 import * as React from "react";
+import { resolveInvalidState } from "./a11y";
 
 export type FormFieldProps = {
   label: React.ReactNode;
@@ -14,25 +15,33 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const generatedInputId = React.useId();
   const describedById = React.useId();
   const errorId = React.useId();
-  const childControlId =
+  const childProps =
     React.isValidElement(children) && typeof children.type !== "symbol"
-      ? ((children.props as Record<string, unknown>).id as string | undefined)
+      ? (children.props as Record<string, unknown>)
       : undefined;
+  const childControlId =
+    React.isValidElement(children) && typeof children.type !== "symbol" ? (childProps?.id as string | undefined) : undefined;
   const controlId = htmlFor ?? childControlId ?? generatedInputId;
   const isInvalid = Boolean(error);
+  const childDescribedBy = childProps?.["aria-describedby"] as string | undefined;
+  const childErrorMessage = childProps?.["aria-errormessage"] as string | undefined;
+  const childInvalid = childProps?.["aria-invalid"] as React.AriaAttributes["aria-invalid"] | undefined;
+  const childRequired = Boolean(childProps?.required || childProps?.["aria-required"]);
+  const mergedRequired = Boolean(required || childRequired);
+  const mergedInvalid = isInvalid || resolveInvalidState(undefined, childInvalid);
 
-  const describedBy = [description ? describedById : null, error ? errorId : null].filter(Boolean).join(" ");
+  const describedBy = [childDescribedBy, description ? describedById : null, error ? errorId : null].filter(Boolean).join(" ");
 
   const control =
     React.isValidElement(children) && typeof children.type !== "symbol"
       ? React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
           id: controlId,
           "aria-describedby": describedBy || undefined,
-          "aria-errormessage": error ? errorId : undefined,
-          "aria-invalid": isInvalid ? true : undefined,
-          "aria-required": required || undefined,
-          required: required || undefined,
-          disabled: disabled || (children.props as Record<string, unknown>).disabled
+          "aria-errormessage": error ? errorId : childErrorMessage,
+          "aria-invalid": mergedInvalid || undefined,
+          "aria-required": mergedRequired || undefined,
+          required: mergedRequired || undefined,
+          disabled: disabled || childProps?.disabled
         })
       : children;
 

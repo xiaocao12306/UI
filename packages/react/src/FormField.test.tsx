@@ -55,4 +55,41 @@ describe("FormField", () => {
 
     expect(screen.getByRole("textbox", { name: "Disabled field" })).toBeDisabled();
   });
+
+  it("preserves child invalid semantics when no field error exists", () => {
+    render(
+      <FormField label="Existing invalid">
+        <Input invalid />
+      </FormField>
+    );
+
+    expect(screen.getByRole("textbox", { name: "Existing invalid" })).toHaveAttribute("aria-invalid", "true");
+  });
+
+  it("merges child aria-describedby with field hints", () => {
+    render(
+      <FormField label="Deployment window" description="Use local timezone.">
+        <Input aria-describedby="custom-hint" />
+      </FormField>
+    );
+
+    const input = screen.getByRole("textbox", { name: "Deployment window" });
+    const describedBy = input.getAttribute("aria-describedby") ?? "";
+    expect(describedBy).toContain("custom-hint");
+
+    const ids = describedBy.split(" ").filter(Boolean);
+    expect(ids.length).toBe(2);
+  });
+
+  it("preserves child required semantics", () => {
+    render(
+      <FormField label="API key">
+        <Input required />
+      </FormField>
+    );
+
+    const input = screen.getByRole("textbox", { name: "API key" });
+    expect(input).toHaveAttribute("required");
+    expect(input).toHaveAttribute("aria-required", "true");
+  });
 });
