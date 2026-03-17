@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as o,T as l,S as a,D as c,C as s}from"./index-B7a1ndx8.js";import{VariantMatrix as d}from"./Button.stories-Dz8gZM-U.js";import{Interactive as h}from"./Dialog.stories-COFPWakp.js";import{AiInteractionFlow as m}from"./CommandPalette.stories-BDvqWlKs.js";import{WithAiRequestState as x}from"./PromptInput.stories-BlHC-L1j.js";import{ReleaseChecklist as p}from"./Table.stories-atgih7JM.js";import"./index-BWu4c2F4.js";import"./iframe-BzQbmAoN.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Badge-Dkm8CRgf.js";import"./Input-vIzakoOT.js";import"./FieldStyles-CQy9UjBZ.js";import"./Textarea-CxXKxDMd.js";import"./Dialog-BvM6Q8hr.js";import"./DismissableLayer-0Dn_Gr2D.js";function t(i){const n={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...r(),...i.components};return e.jsxs(e.Fragment,{children:[e.jsx(o,{title:"Docs/Best Practices"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as o}from"./index-CHKtz2QT.js";import{M as t,T as l,S as a,D as c,C as i}from"./index-DE_1x34N.js";import{VariantMatrix as d}from"./Button.stories-Dz8gZM-U.js";import{Interactive as h}from"./Dialog.stories-COFPWakp.js";import{AiInteractionFlow as x,QueryTelemetry as m}from"./CommandPalette.stories-BDvqWlKs.js";import{WithAiRequestState as p}from"./PromptInput.stories-BlHC-L1j.js";import{ActionRequired as j}from"./Toast.stories-BwaBpuxM.js";import{KeyboardNavigationGuide as u}from"./Tabs.stories-DqRvlT9f.js";import{ReleaseChecklist as f,SortTelemetry as b}from"./Table.stories-atgih7JM.js";import"./index-BWu4c2F4.js";import"./iframe-Bnw4eUdk.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Badge-Dkm8CRgf.js";import"./Input-vIzakoOT.js";import"./FieldStyles-CQy9UjBZ.js";import"./Textarea-CxXKxDMd.js";import"./Dialog-BvM6Q8hr.js";import"./DismissableLayer-0Dn_Gr2D.js";function r(s){const n={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...o(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Best Practices"}),`
 `,e.jsx(l,{}),`
 `,e.jsx(a,{children:"Design + Engineering Checklist"}),`
 `,e.jsx(c,{children:e.jsx(n.p,{children:"Use these rules to keep components consistent with the Aurora plan and avoid regressions in accessibility or theming."})}),`
@@ -8,7 +8,7 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `,e.jsxs(n.li,{children:["Prefer controlled APIs for overlays (",e.jsx(n.code,{children:"open"}),", ",e.jsx(n.code,{children:"onOpenChange"}),")."]}),`
 `,e.jsxs(n.li,{children:["Expose semantic variants (",e.jsx(n.code,{children:"solid"}),", ",e.jsx(n.code,{children:"outline"}),") instead of hardcoded colors."]}),`
 `]}),`
-`,e.jsx(s,{of:d}),`
+`,e.jsx(i,{of:d}),`
 `,e.jsx(n.h2,{id:"theming",children:"Theming"}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsx(n.li,{children:"Do not hardcode color values inside component internals."}),`
@@ -21,7 +21,7 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `,e.jsx(n.li,{children:"Keep visible labels or accessible names for form controls."}),`
 `,e.jsxs(n.li,{children:["Avoid ",e.jsx(n.code,{children:"autoFocus"}),"; use intentional focus management when opening overlays."]}),`
 `]}),`
-`,e.jsx(s,{of:h}),`
+`,e.jsx(i,{of:h}),`
 `,e.jsx(n.h2,{id:"testing",children:"Testing"}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsx(n.li,{children:"Add unit tests for any new interaction branch."}),`
@@ -33,13 +33,26 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `,e.jsx(n.li,{children:"Always expose pending/loading states for AI request actions."}),`
 `,e.jsx(n.li,{children:"Keep command labels explicit and searchable."}),`
 `,e.jsx(n.li,{children:"Provide empty-state guidance when no command matches the query."}),`
+`,e.jsxs(n.li,{children:["Track user query updates with ",e.jsx(n.code,{children:"onQueryChange"})," for downstream telemetry."]}),`
 `]}),`
-`,e.jsx(s,{of:x}),`
-`,e.jsx(s,{of:m}),`
+`,e.jsx(i,{of:p}),`
+`,e.jsx(i,{of:x}),`
+`,e.jsx(i,{of:m}),`
+`,e.jsx(n.h2,{id:"notification-behavior",children:"Notification Behavior"}),`
+`,e.jsxs(n.ul,{children:[`
+`,e.jsxs(n.li,{children:["Use ",e.jsx(n.code,{children:"duration={0}"})," for blocking notifications that require explicit user action."]}),`
+`,e.jsxs(n.li,{children:["Keep ",e.jsx(n.code,{children:"closeOnEscape"})," aligned with task criticality; disable Escape only for must-read states."]}),`
+`,e.jsxs(n.li,{children:["Verify hover pause behavior when ",e.jsx(n.code,{children:"pauseOnHover"})," is enabled."]}),`
+`]}),`
+`,e.jsx(i,{of:j}),`
 `,e.jsx(n.h2,{id:"data-presentation-patterns",children:"Data Presentation Patterns"}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsx(n.li,{children:"Use typed columns and stable row keys in data tables."}),`
+`,e.jsxs(n.li,{children:["Prefer sortable columns with explicit ",e.jsx(n.code,{children:"aria-sort"})," state for keyboard and screen-reader parity."]}),`
 `,e.jsx(n.li,{children:"Surface status semantics with tokens instead of custom ad-hoc colors."}),`
 `,e.jsx(n.li,{children:"Keep row actions predictable and keyboard reachable."}),`
+`,e.jsx(n.li,{children:"Ensure tabs support Arrow/Home/End and skip disabled entries."}),`
 `]}),`
-`,e.jsx(s,{of:p})]})}function q(i={}){const{wrapper:n}={...r(),...i.components};return n?e.jsx(n,{...i,children:e.jsx(t,{...i})}):t(i)}export{q as default};
+`,e.jsx(i,{of:u}),`
+`,e.jsx(i,{of:f}),`
+`,e.jsx(i,{of:b})]})}function B(s={}){const{wrapper:n}={...o(),...s.components};return n?e.jsx(n,{...s,children:e.jsx(r,{...s})}):r(s)}export{B as default};

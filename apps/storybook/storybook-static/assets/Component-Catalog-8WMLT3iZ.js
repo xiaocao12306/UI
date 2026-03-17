@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as c,S as s,D as i}from"./index-B7a1ndx8.js";import"./index-BWu4c2F4.js";import"./iframe-BzQbmAoN.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as c,S as s,D as i}from"./index-DE_1x34N.js";import"./index-BWu4c2F4.js";import"./iframe-Bnw4eUdk.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
 `,e.jsx(c,{}),`
 `,e.jsx(s,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(i,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
@@ -7,7 +7,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsxs(o.p,{children:[`| Component | Export | Storybook | Unit Test |
 | --- | --- | --- | --- |
 | Button | `,e.jsx(o.code,{children:"Button"})," | ",e.jsx(o.code,{children:"Core/Button"}),` | yes |
-| Input | `,e.jsx(o.code,{children:"Input"})," | ",e.jsx(o.code,{children:"Form/Input"}),` | covered via FormField |
+| Input | `,e.jsx(o.code,{children:"Input"})," | ",e.jsx(o.code,{children:"Form/Input"}),` | yes |
 | Textarea | `,e.jsx(o.code,{children:"Textarea"})," | used in ",e.jsx(o.code,{children:"Overlay/Dialog"})," and ",e.jsx(o.code,{children:"AI/PromptInput"}),` stories | indirect |
 | Select | `,e.jsx(o.code,{children:"Select"}),` | demo coverage | - |
 | Checkbox | `,e.jsx(o.code,{children:"Checkbox"}),` | demo coverage | - |
@@ -17,8 +17,8 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsx(o.h2,{id:"data-and-navigation",children:"Data and Navigation"}),`
 `,e.jsxs(o.p,{children:[`| Component | Export | Storybook | Unit Test |
 | --- | --- | --- | --- |
-| Tabs | `,e.jsx(o.code,{children:"Tabs"})," | ",e.jsx(o.code,{children:"Data/Tabs"}),` | yes |
-| Table | `,e.jsx(o.code,{children:"Table"})," | ",e.jsx(o.code,{children:"Data/Table"}),` | yes |
+| Tabs | `,e.jsx(o.code,{children:"Tabs"})," | ",e.jsx(o.code,{children:"Data/Tabs"})," + ",e.jsx(o.code,{children:"KeyboardNavigationGuide"}),` | yes |
+| Table | `,e.jsx(o.code,{children:"Table"})," | ",e.jsx(o.code,{children:"Data/Table"})," + ",e.jsx(o.code,{children:"SortTelemetry"}),` | yes |
 | Tag | `,e.jsx(o.code,{children:"Tag"})," | used in ",e.jsx(o.code,{children:"Core/Button"}),` story | - |
 | Badge | `,e.jsx(o.code,{children:"Badge"})," | used in multiple stories | - |"]}),`
 `,e.jsx(o.h2,{id:"feedback-and-state",children:"Feedback and State"}),`
@@ -39,7 +39,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 | Dialog | `,e.jsx(o.code,{children:"Dialog"})," | ",e.jsx(o.code,{children:"Overlay/Dialog"}),` | yes |
 | Drawer | `,e.jsx(o.code,{children:"Drawer"}),` | demo coverage | yes |
 | Dropdown | `,e.jsx(o.code,{children:"Dropdown"})," | ",e.jsx(o.code,{children:"Overlay/Dropdown"}),` | yes |
-| CommandPalette | `,e.jsx(o.code,{children:"CommandPalette"})," | ",e.jsx(o.code,{children:"AI/CommandPalette"})," | yes |"]}),`
+| CommandPalette | `,e.jsx(o.code,{children:"CommandPalette"})," | ",e.jsx(o.code,{children:"AI/CommandPalette"})," + ",e.jsx(o.code,{children:"QueryTelemetry"})," | yes |"]}),`
 `,e.jsx(o.h2,{id:"ai-components",children:"AI Components"}),`
 `,e.jsxs(o.p,{children:[`| Component | Export | Storybook | Unit Test |
 | --- | --- | --- | --- |
