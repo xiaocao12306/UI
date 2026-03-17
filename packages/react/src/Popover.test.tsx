@@ -58,4 +58,32 @@ describe("Popover", () => {
     fireEvent.click(screen.getByRole("button", { name: "More info" }));
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   });
+
+  it("supports configurable dismiss policies and event hooks", () => {
+    const onEscapeKeyDown = vi.fn();
+    const onPointerDownOutside = vi.fn();
+
+    render(
+      <Popover
+        triggerLabel="Policy"
+        closeOnEscape={false}
+        closeOnOutsidePointer={false}
+        onEscapeKeyDown={onEscapeKeyDown}
+        onPointerDownOutside={onPointerDownOutside}
+      >
+        <p>Policy content</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Policy" }));
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    fireEvent.pointerDown(document.body);
+    expect(onPointerDownOutside).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  });
 });

@@ -53,6 +53,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep `restoreFocus` enabled for dialogs unless product flow intentionally redirects focus after close.
 - Keep `restoreFocus` enabled for drawers unless closing should intentionally hand focus to a different target.
 - Popover and Dropdown should restore focus to trigger on keyboard dismissal (Escape), but keep pointer target focus on outside-click dismissal.
+- For blocking confirmation/action menus, set `closeOnEscape={false}` + `closeOnOutsidePointer={false}` and provide an explicit close/confirm path.
 - Dropdown menus should expose an accessible name via trigger-linked `aria-labelledby`.
 - For nested overlays, dismiss policy should resolve top-layer first so one Escape/outside click does not collapse the full stack.
 - Keep trigger `aria-controls` conditional on open state for popover/menu patterns to avoid stale ID references.

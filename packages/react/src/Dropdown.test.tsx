@@ -210,4 +210,34 @@ describe("Dropdown", () => {
     fireEvent.click(screen.getByRole("button", { name: "More deployment actions" }));
     expect(screen.getByRole("menu", { name: "More deployment actions" })).toBeInTheDocument();
   });
+
+  it("supports configurable dismiss policies and event hooks", () => {
+    const onEscapeKeyDown = vi.fn();
+    const onPointerDownOutside = vi.fn();
+
+    render(
+      <Dropdown
+        label="Policy"
+        closeOnEscape={false}
+        closeOnOutsidePointer={false}
+        onEscapeKeyDown={onEscapeKeyDown}
+        onPointerDownOutside={onPointerDownOutside}
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Policy" }));
+    expect(screen.getByRole("menu", { name: "Policy" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("menu", { name: "Policy" })).toBeInTheDocument();
+
+    fireEvent.pointerDown(document.body);
+    expect(onPointerDownOutside).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("menu", { name: "Policy" })).toBeInTheDocument();
+  });
 });

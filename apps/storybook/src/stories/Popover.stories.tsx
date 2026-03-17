@@ -72,6 +72,34 @@ export const IconTrigger: Story = {
   }
 };
 
+export const NonDismissible: Story = {
+  args: {
+    triggerLabel: "Review policy",
+    closeOnEscape: false,
+    closeOnOutsidePointer: false,
+    children: <p style={{ margin: 0 }}>This popover must be closed via trigger toggle.</p>
+  },
+  render: (args) => (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <Popover {...args} />
+      <button type="button">Outside target</button>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Review policy" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Outside target" }));
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  }
+};
+
 export const OutsideDismissFocusTransfer: Story = {
   args: {
     triggerLabel: "Focus Policy",

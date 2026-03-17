@@ -17,6 +17,10 @@ export type DropdownProps = {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  closeOnEscape?: boolean;
+  closeOnOutsidePointer?: boolean;
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
+  onPointerDownOutside?: (event: PointerEvent) => void;
 };
 
 function getNextEnabledIndex(items: DropdownItem[], currentIndex: number, direction: 1 | -1) {
@@ -83,7 +87,18 @@ function getTypeaheadIndex(items: DropdownItem[], currentIndex: number, query: s
   return -1;
 }
 
-export function Dropdown({ label, triggerAriaLabel, items, open, defaultOpen, onOpenChange }: DropdownProps) {
+export function Dropdown({
+  label,
+  triggerAriaLabel,
+  items,
+  open,
+  defaultOpen,
+  onOpenChange,
+  closeOnEscape = true,
+  closeOnOutsidePointer = true,
+  onEscapeKeyDown,
+  onPointerDownOutside
+}: DropdownProps) {
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false);
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
@@ -154,7 +169,9 @@ export function Dropdown({ label, triggerAriaLabel, items, open, defaultOpen, on
       {isOpen ? (
         <DismissableLayer
           onEscapeKeyDown={(event) => {
-            if (event.defaultPrevented) {
+            onEscapeKeyDown?.(event);
+            if (event.defaultPrevented || !closeOnEscape) {
+              event.preventDefault();
               return;
             }
 
@@ -163,7 +180,9 @@ export function Dropdown({ label, triggerAriaLabel, items, open, defaultOpen, on
             triggerRef.current?.focus();
           }}
           onPointerDownOutside={(event) => {
-            if (event.defaultPrevented) {
+            onPointerDownOutside?.(event);
+            if (event.defaultPrevented || !closeOnOutsidePointer) {
+              event.preventDefault();
               return;
             }
 
@@ -190,13 +209,6 @@ export function Dropdown({ label, triggerAriaLabel, items, open, defaultOpen, on
               zIndex: "var(--aurora-z-overlay)"
             }}
             onKeyDown={(event) => {
-              if (event.key === "Escape") {
-                event.preventDefault();
-                setOpen(false);
-                triggerRef.current?.focus();
-                return;
-              }
-
               if (event.key === "ArrowDown") {
                 event.preventDefault();
                 setActiveIndex((current) => getNextEnabledIndex(items, current < 0 ? -1 : current, 1));

@@ -60,6 +60,33 @@ export const IconTrigger: Story = {
   }
 };
 
+export const NonDismissible: Story = {
+  args: {
+    label: "Blocking actions",
+    closeOnEscape: false,
+    closeOnOutsidePointer: false,
+    items
+  },
+  render: (args) => (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <Dropdown {...args} />
+      <button type="button">Outside target</button>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Blocking actions" });
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Blocking actions" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("menu", { name: "Blocking actions" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Outside target" }));
+    await expect(canvas.getByRole("menu", { name: "Blocking actions" })).toBeInTheDocument();
+  }
+};
+
 function SelectionTelemetryDropdown() {
   const [selected, setSelected] = React.useState("none");
 

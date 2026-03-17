@@ -11,6 +11,10 @@ export type PopoverProps = {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  closeOnEscape?: boolean;
+  closeOnOutsidePointer?: boolean;
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
+  onPointerDownOutside?: (event: PointerEvent) => void;
   align?: PopoverAlign;
   sideOffset?: number;
   contentLabel?: string;
@@ -23,6 +27,10 @@ export function Popover({
   open,
   defaultOpen,
   onOpenChange,
+  closeOnEscape = true,
+  closeOnOutsidePointer = true,
+  onEscapeKeyDown,
+  onPointerDownOutside,
   align = "start",
   sideOffset = 8,
   contentLabel = "Popover content"
@@ -89,7 +97,9 @@ export function Popover({
           aria-label={contentLabel}
           tabIndex={-1}
           onEscapeKeyDown={(event) => {
-            if (event.defaultPrevented) {
+            onEscapeKeyDown?.(event);
+            if (event.defaultPrevented || !closeOnEscape) {
+              event.preventDefault();
               return;
             }
 
@@ -98,7 +108,9 @@ export function Popover({
             triggerRef.current?.focus();
           }}
           onPointerDownOutside={(event) => {
-            if (event.defaultPrevented) {
+            onPointerDownOutside?.(event);
+            if (event.defaultPrevented || !closeOnOutsidePointer) {
+              event.preventDefault();
               return;
             }
 
