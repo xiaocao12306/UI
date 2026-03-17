@@ -45,4 +45,49 @@ describe("CommandPalette", () => {
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
+
+  it("shows empty-state copy when query has no match", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText("Search commands"), { target: { value: "no-match" } });
+    expect(screen.getByText("No commands found.")).toBeInTheDocument();
+  });
+
+  it("resets search query after palette closes", () => {
+    const onOpenChange = vi.fn();
+    const { rerender } = render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText("Search commands"), { target: { value: "settings" } });
+    expect((screen.getByLabelText("Search commands") as HTMLInputElement).value).toBe("settings");
+
+    rerender(
+      <CommandPalette
+        open={false}
+        onOpenChange={onOpenChange}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    rerender(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    expect((screen.getByLabelText("Search commands") as HTMLInputElement).value).toBe("");
+  });
 });
