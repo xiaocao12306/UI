@@ -1,6 +1,7 @@
 import { Meta, Title, Subtitle, Description, Canvas, Controls } from '@storybook/blocks';
 import * as ButtonStories from '../stories/Button.stories';
 import * as InputStories from '../stories/Input.stories';
+import * as CheckboxStories from '../stories/Checkbox.stories';
 import * as SelectStories from '../stories/Select.stories';
 import * as ComboboxStories from '../stories/Combobox.stories';
 import * as DatePickerStories from '../stories/DatePicker.stories';
@@ -40,6 +41,20 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 <Canvas of={InputStories.Default} />
 <Controls of={InputStories.Default} />
+
+### Checkbox
+
+<Canvas of={CheckboxStories.Controlled} />
+<Controls of={CheckboxStories.Indeterminate} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `checked` / `defaultChecked` | `boolean` | Native checkbox controlled/uncontrolled behavior. |
+| `indeterminate` | `boolean` | Sets mixed state semantics (`aria-checked="mixed"`). |
+| `description` | `ReactNode` | Automatically wires helper text into `aria-describedby`. |
+| `invalid` | `boolean` | Applies invalid state with `aria-invalid`. |
+
+<Canvas of={CheckboxStories.InvalidAndDisabled} />
 
 ### Select
 
