@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as c,S as i,D as s}from"./index-CFDx51JO.js";import"./index-BWu4c2F4.js";import"./iframe-CHGN_DmR.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as c,S as i,D as s}from"./index-jPZe-Yja.js";import"./index-BWu4c2F4.js";import"./iframe-lJj9FViC.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
 `,e.jsx(c,{}),`
 `,e.jsx(i,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(s,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
@@ -8,6 +8,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 | --- | --- | --- | --- |
 | Button | `,e.jsx(o.code,{children:"Button"})," | ",e.jsx(o.code,{children:"Core/Button"}),` | yes |
 | Input | `,e.jsx(o.code,{children:"Input"})," | ",e.jsx(o.code,{children:"Form/Input"}),` | yes |
+| Combobox | `,e.jsx(o.code,{children:"Combobox"})," | ",e.jsx(o.code,{children:"Form/Combobox"}),` | yes |
 | Textarea | `,e.jsx(o.code,{children:"Textarea"})," | used in ",e.jsx(o.code,{children:"Overlay/Dialog"})," and ",e.jsx(o.code,{children:"AI/PromptInput"}),` stories | indirect |
 | Select | `,e.jsx(o.code,{children:"Select"}),` | demo coverage | - |
 | Checkbox | `,e.jsx(o.code,{children:"Checkbox"}),` | demo coverage | - |
