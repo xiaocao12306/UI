@@ -43,3 +43,46 @@ export const VariantMatrix: Story = {
     </div>
   )
 };
+
+export const StateMatrix: Story = {
+  render: () => (
+    <div style={{ width: 780, display: "grid", gap: 16 }}>
+      <div style={{ display: "grid", gap: 8 }}>
+        <strong>Default + Disabled</strong>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          <Button variant="solid">Solid</Button>
+          <Button variant="outline">Outline</Button>
+          <Button variant="ghost">Ghost</Button>
+          <Button variant="solid" disabled>
+            Solid Disabled
+          </Button>
+          <Button variant="outline" disabled>
+            Outline Disabled
+          </Button>
+          <Button variant="ghost" disabled>
+            Ghost Disabled
+          </Button>
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gap: 8 }}>
+        <strong>Loading + Size</strong>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
+          <Button size="sm" loading loadingText="Loading">
+            Save
+          </Button>
+          <Button size="md" loading>
+            Generate Response
+          </Button>
+          <Button size="lg" variant="outline" loading loadingText="Publishing">
+            Publish
+          </Button>
+        </div>
+      </div>
+
+      <small style={{ color: "var(--aurora-text-secondary)" }}>
+        Keyboard focus and pressed states are interactive in canvas: use Tab / Enter / Space to validate.
+      </small>
+    </div>
+  )
+};

@@ -7,6 +7,10 @@ export function GlobalStyles() {
         0% { background-position: 100% 0; }
         100% { background-position: -100% 0; }
       }
+      @keyframes aurora-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
       * { box-sizing: border-box; }
       body { margin: 0; }
       `}
