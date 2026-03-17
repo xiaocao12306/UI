@@ -34,6 +34,37 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
+  it("keeps tabpanel elements mounted so aria-controls always points to an existing panel", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+
+    const onePanelId = oneTab.getAttribute("aria-controls");
+    const twoPanelId = twoTab.getAttribute("aria-controls");
+    expect(onePanelId).toBeTruthy();
+    expect(twoPanelId).toBeTruthy();
+
+    const onePanel = document.getElementById(onePanelId!);
+    const twoPanel = document.getElementById(twoPanelId!);
+    expect(onePanel).not.toBeNull();
+    expect(twoPanel).not.toBeNull();
+    expect(onePanel).not.toHaveAttribute("hidden");
+    expect(twoPanel).toHaveAttribute("hidden");
+
+    fireEvent.click(twoTab);
+    expect(onePanel).toHaveAttribute("hidden");
+    expect(twoPanel).not.toHaveAttribute("hidden");
+  });
+
   it("skips disabled tabs during keyboard navigation", () => {
     render(
       <Tabs

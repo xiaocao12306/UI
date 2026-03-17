@@ -164,3 +164,25 @@ export const ChangeTelemetry: Story = {
     await expect(counter).toHaveTextContent("1");
   }
 };
+
+export const ControlsReferenceMountedPanels: Story = {
+  render: () => <Tabs items={productTabs} defaultValue="spec" />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const releaseTab = canvas.getByRole("tab", { name: "Release" });
+
+    const specPanelId = specTab.getAttribute("aria-controls");
+    const releasePanelId = releaseTab.getAttribute("aria-controls");
+    await expect(specPanelId).toBeTruthy();
+    await expect(releasePanelId).toBeTruthy();
+    await expect(document.getElementById(specPanelId!)).not.toBeNull();
+    await expect(document.getElementById(releasePanelId!)).not.toBeNull();
+
+    const releasePanel = document.getElementById(releasePanelId!);
+    await expect(releasePanel).toHaveAttribute("hidden");
+
+    await userEvent.click(releaseTab);
+    await expect(releasePanel).not.toHaveAttribute("hidden");
+  }
+};

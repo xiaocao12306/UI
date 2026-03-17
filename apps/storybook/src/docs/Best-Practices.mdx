@@ -95,6 +95,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Surface status semantics with tokens instead of custom ad-hoc colors.
 - Keep row actions predictable and keyboard reachable.
 - Ensure tabs support Arrow/Home/End and skip disabled entries.
+- Keep tab panels mounted and toggle `hidden` so tab `aria-controls` always points to a real panel.
 - Avoid duplicate telemetry from tabs by emitting `onValueChange` only on actual key transitions.
 
 <Canvas of={TabsStories.KeyboardNavigationGuide} />

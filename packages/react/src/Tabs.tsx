@@ -142,14 +142,18 @@ export function Tabs({ items, value, defaultValue, ariaLabel = "Tabs", onValueCh
         })}
       </div>
 
-      {items.map((item) =>
-        item.key === currentValue ? (
+      {items.map((item) => {
+        const selected = item.key === currentValue;
+
+        return (
           <div
             key={item.key}
             id={`${baseId}-panel-${item.key}`}
             role="tabpanel"
             aria-labelledby={`${baseId}-tab-${item.key}`}
+            hidden={!selected}
             style={{
+              display: selected ? undefined : "none",
               border: "1px solid var(--aurora-border-default)",
               borderRadius: "var(--aurora-radius-md)",
               padding: 12,
@@ -158,8 +162,8 @@ export function Tabs({ items, value, defaultValue, ariaLabel = "Tabs", onValueCh
           >
             {item.content}
           </div>
-        ) : null
-      )}
+        );
+      })}
     </div>
   );
 }
