@@ -68,7 +68,13 @@ pnpm demo:e2e
 ```bash
 pnpm storybook:dev
 pnpm storybook:build
+pnpm chromatic
 ```
+
+## Release Workflow
+- automated workflow: `.github/workflows/release.yml`
+- release PR generation uses Changesets on `main`
+- npm publish runs only when `NPM_TOKEN` is configured
 
 ## Demo External Link
 - GitHub Pages workflow: `.github/workflows/demo-pages.yml`

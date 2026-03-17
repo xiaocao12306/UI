@@ -34,7 +34,8 @@
 - Overlay/navigation: covered
 - AI flow and reasoning panel: covered
 - Data components (`Tabs`, `Table`): covered
+- Theme persistence and section anchor navigation: covered
 
 ## Planned Next (v0.2)
 - `DatePicker` / `Combobox` / `Pagination`
-- Storybook visual regression baseline (Chromatic/CI)
+- Storybook interaction test runner expansion
