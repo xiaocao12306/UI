@@ -113,6 +113,45 @@ export const ActionRequired: Story = {
   }
 };
 
+function EscapeStackOrderDemo() {
+  const [openState, setOpenState] = React.useState({ first: true, second: true });
+
+  return (
+    <div style={{ minHeight: 260, padding: 16 }}>
+      <Button variant="outline" onClick={() => setOpenState({ first: true, second: true })}>
+        Reopen Stack
+      </Button>
+
+      <Toast
+        open={openState.first}
+        onOpenChange={(open) => {
+          setOpenState((current) => ({ ...current, first: open }));
+        }}
+        title="First notice"
+        description="Earlier notification in stack order."
+        tone="info"
+        duration={0}
+        position="bottom-left"
+      />
+      <Toast
+        open={openState.second}
+        onOpenChange={(open) => {
+          setOpenState((current) => ({ ...current, second: open }));
+        }}
+        title="Second notice"
+        description="Latest notification should close first on Escape."
+        tone="success"
+        duration={0}
+        position="bottom-right"
+      />
+    </div>
+  );
+}
+
+export const EscapeStackOrder: Story = {
+  render: () => <EscapeStackOrderDemo />
+};
+
 export const AriaLabelOverride: Story = {
   args: {
     title: <span aria-hidden>✅</span>,

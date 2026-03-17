@@ -1,3 +1,4 @@
+import * as React from "react";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Toast } from "./Toast";
@@ -165,23 +166,30 @@ describe("Toast", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
-  it("closes only one toast per Escape press when multiple are open", () => {
-    const firstOnOpenChange = vi.fn();
-    const secondOnOpenChange = vi.fn();
+  it("closes stacked toasts from top-most to oldest on Escape", () => {
+    function StackedToasts() {
+      const [firstOpen, setFirstOpen] = React.useState(true);
+      const [secondOpen, setSecondOpen] = React.useState(true);
 
-    render(
-      <>
-        <Toast open title="First" onOpenChange={firstOnOpenChange} />
-        <Toast open title="Second" onOpenChange={secondOnOpenChange} />
-      </>
-    );
+      return (
+        <>
+          <Toast open={firstOpen} title="First" onOpenChange={setFirstOpen} />
+          <Toast open={secondOpen} title="Second" onOpenChange={setSecondOpen} />
+        </>
+      );
+    }
+
+    render(<StackedToasts />);
+
+    expect(screen.getByRole("status", { name: "First" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "Second" })).toBeInTheDocument();
 
     fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.getByRole("status", { name: "First" })).toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: "Second" })).toBeNull();
 
-    const closedCount =
-      firstOnOpenChange.mock.calls.filter(([open]) => open === false).length +
-      secondOnOpenChange.mock.calls.filter(([open]) => open === false).length;
-    expect(closedCount).toBe(1);
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("status", { name: "First" })).toBeNull();
   });
 
   it("resets paused state after close and reopen", () => {

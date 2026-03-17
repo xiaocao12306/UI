@@ -49,6 +49,27 @@ const positionStyleMap: Record<ToastPosition, React.CSSProperties> = {
   "top-left": { left: 16, top: 16 }
 };
 
+const toastEscapeStack: HTMLElement[] = [];
+
+function pushToastToStack(element: HTMLElement) {
+  const existingIndex = toastEscapeStack.lastIndexOf(element);
+  if (existingIndex >= 0) {
+    toastEscapeStack.splice(existingIndex, 1);
+  }
+  toastEscapeStack.push(element);
+}
+
+function removeToastFromStack(element: HTMLElement) {
+  const existingIndex = toastEscapeStack.lastIndexOf(element);
+  if (existingIndex >= 0) {
+    toastEscapeStack.splice(existingIndex, 1);
+  }
+}
+
+function isTopToast(element: HTMLElement) {
+  return toastEscapeStack[toastEscapeStack.length - 1] === element;
+}
+
 export function Toast({
   open,
   title,
@@ -64,10 +85,23 @@ export function Toast({
   onClose,
   onOpenChange
 }: ToastProps) {
+  const rootRef = React.useRef<HTMLDivElement>(null);
   const [pauseState, setPauseState] = React.useState({ hover: false, focus: false });
   const paused = pauseOnHover && (pauseState.hover || pauseState.focus);
   const titleId = React.useId();
   const descriptionId = React.useId();
+
+  React.useEffect(() => {
+    const element = rootRef.current;
+    if (!open || !element) {
+      return;
+    }
+
+    pushToastToStack(element);
+    return () => {
+      removeToastFromStack(element);
+    };
+  }, [open]);
 
   React.useEffect(() => {
     if (!open) {
@@ -100,10 +134,17 @@ export function Toast({
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !event.defaultPrevented) {
-        event.preventDefault();
-        close();
+      if (event.key !== "Escape" || event.defaultPrevented) {
+        return;
       }
+
+      const element = rootRef.current;
+      if (!element || !isTopToast(element)) {
+        return;
+      }
+
+      event.preventDefault();
+      close();
     };
 
     document.addEventListener("keydown", onKeyDown);
@@ -121,6 +162,7 @@ export function Toast({
 
   return (
     <div
+      ref={rootRef}
       role={role}
       aria-live={ariaLive}
       aria-atomic="true"
