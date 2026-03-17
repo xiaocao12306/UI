@@ -57,7 +57,7 @@ export function Drawer({
           inset: 0,
           background: "var(--aurora-overlay-bg)",
           backdropFilter: "blur(var(--aurora-overlay-blur))",
-          zIndex: 1300
+          zIndex: "var(--aurora-z-modal)"
         }}
       >
         <DismissableLayer

@@ -67,7 +67,7 @@ export function Dialog({
           backdropFilter: "blur(var(--aurora-overlay-blur))",
           display: "grid",
           placeItems: "center",
-          zIndex: 1300
+          zIndex: "var(--aurora-z-modal)"
         }}
       >
         <DismissableLayer

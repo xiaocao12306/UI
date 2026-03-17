@@ -30,6 +30,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 
 - Do not hardcode color values inside component internals.
 - Resolve styling via Aurora CSS variables only.
+- Keep layering (`z-index`) tokenized (`--aurora-z-overlay` / `--aurora-z-modal` / `--aurora-z-toast`), not magic numbers.
 - Validate stories under all four theme packs before merge.
 
 ## Accessibility

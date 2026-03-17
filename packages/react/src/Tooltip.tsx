@@ -199,7 +199,7 @@ export function Tooltip({
             fontSize: 12,
             whiteSpace: "normal",
             maxWidth,
-            zIndex: 1200
+            zIndex: "var(--aurora-z-overlay)"
           }}
         >
           {content}

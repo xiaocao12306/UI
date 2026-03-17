@@ -119,7 +119,7 @@ export function Dropdown({ label, items, open, defaultOpen, onOpenChange }: Drop
               border: "1px solid var(--aurora-border-default)",
               background: "var(--aurora-surface-overlay)",
               boxShadow: "var(--aurora-shadow-md)",
-              zIndex: 1200
+              zIndex: "var(--aurora-z-overlay)"
             }}
             onKeyDown={(event) => {
               if (event.key === "Escape") {

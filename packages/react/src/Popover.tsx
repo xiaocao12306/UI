@@ -98,7 +98,7 @@ export function Popover({
             background: "var(--aurora-surface-overlay)",
             boxShadow: "var(--aurora-shadow-md)",
             padding: 10,
-            zIndex: 1200,
+            zIndex: "var(--aurora-z-overlay)",
             ...horizontalPosition
           }}
         >
