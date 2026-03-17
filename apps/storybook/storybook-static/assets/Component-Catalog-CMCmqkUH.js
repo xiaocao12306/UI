@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as c,S as s,D as i}from"./index-BN6b32Fj.js";import"./index-BWu4c2F4.js";import"./iframe-BgGjVwUV.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as d}from"./index-CHKtz2QT.js";import{M as t,T as c,S as s,D as i}from"./index-DoRs_BHx.js";import"./index-BWu4c2F4.js";import"./iframe-DUUIL-zI.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function r(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
 `,e.jsx(c,{}),`
 `,e.jsx(s,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(i,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
@@ -35,10 +35,10 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsxs(o.p,{children:[`| Component | Export | Storybook | Unit Test |
 | --- | --- | --- | --- |
 | Tooltip | `,e.jsx(o.code,{children:"Tooltip"}),` | demo coverage | - |
-| Popover | `,e.jsx(o.code,{children:"Popover"}),` | demo coverage | yes |
+| Popover | `,e.jsx(o.code,{children:"Popover"})," | ",e.jsx(o.code,{children:"Overlay/Popover"}),` | yes |
 | Dialog | `,e.jsx(o.code,{children:"Dialog"})," | ",e.jsx(o.code,{children:"Overlay/Dialog"}),` | yes |
 | Drawer | `,e.jsx(o.code,{children:"Drawer"}),` | demo coverage | yes |
-| Dropdown | `,e.jsx(o.code,{children:"Dropdown"}),` | demo coverage | yes |
+| Dropdown | `,e.jsx(o.code,{children:"Dropdown"})," | ",e.jsx(o.code,{children:"Overlay/Dropdown"}),` | yes |
 | CommandPalette | `,e.jsx(o.code,{children:"CommandPalette"})," | ",e.jsx(o.code,{children:"AI/CommandPalette"})," | yes |"]}),`
 `,e.jsx(o.h2,{id:"ai-components",children:"AI Components"}),`
 `,e.jsxs(o.p,{children:[`| Component | Export | Storybook | Unit Test |
@@ -53,4 +53,4 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsx(o.li,{children:"Add interaction/unit test for new behavior branch."}),`
 `,e.jsx(o.li,{children:"Verify all theme packs from Storybook toolbar."}),`
 `,e.jsxs(o.li,{children:["Update ",e.jsx(o.code,{children:"docs/component-status.md"})," and this catalog when coverage changes."]}),`
-`]})]})}function u(n={}){const{wrapper:o}={...r(),...n.components};return o?e.jsx(o,{...n,children:e.jsx(d,{...n})}):d(n)}export{u as default};
+`]})]})}function u(n={}){const{wrapper:o}={...d(),...n.components};return o?e.jsx(o,{...n,children:e.jsx(r,{...n})}):r(n)}export{u as default};

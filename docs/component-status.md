@@ -24,7 +24,10 @@
 - Feedback/State
   - `Alert`, `Toast`, `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
 - Overlay
-  - `Tooltip`, `Popover`, `Dialog`, `Drawer`, `Dropdown`, `CommandPalette`: done
+  - `Tooltip`, `Drawer`: done
+  - `Dialog`: production-refined
+  - `Popover`, `Dropdown`: production-refining
+  - `CommandPalette`: done
 - AI Components
   - `PromptInput`, `MessageBubble`, `ReasoningPanel`, `StreamingCodeBlock`: done
 
@@ -39,3 +42,4 @@
 ## Planned Next (v0.2)
 - `DatePicker` / `Combobox` / `Pagination`
 - Storybook interaction test runner expansion
+- Remaining production refinements: `CommandPalette`, `Toast`, `Tabs`, `Table`

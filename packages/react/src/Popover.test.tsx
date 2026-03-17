@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Popover } from "./Popover";
 
 describe("Popover", () => {
@@ -23,5 +23,19 @@ describe("Popover", () => {
 
     fireEvent.pointerDown(document.body);
     expect(screen.queryByText("Popover content")).toBeNull();
+  });
+
+  it("supports controlled mode", () => {
+    const onOpenChange = vi.fn();
+
+    render(
+      <Popover triggerLabel="Open popover" open onOpenChange={onOpenChange}>
+        <p>Controlled content</p>
+      </Popover>
+    );
+
+    expect(screen.getByText("Controlled content")).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 });

@@ -2,6 +2,8 @@ import { Meta, Title, Subtitle, Description, Canvas, Controls } from '@storybook
 import * as ButtonStories from '../stories/Button.stories';
 import * as InputStories from '../stories/Input.stories';
 import * as DialogStories from '../stories/Dialog.stories';
+import * as PopoverStories from '../stories/Popover.stories';
+import * as DropdownStories from '../stories/Dropdown.stories';
 import * as CommandPaletteStories from '../stories/CommandPalette.stories';
 import * as TabsStories from '../stories/Tabs.stories';
 import * as TableStories from '../stories/Table.stories';
@@ -36,6 +38,16 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 <Canvas of={DialogStories.Interactive} />
 <Controls of={DialogStories.Interactive} />
+
+### Popover
+
+<Canvas of={PopoverStories.WithInteractiveContent} />
+<Controls of={PopoverStories.Default} />
+
+### Dropdown
+
+<Canvas of={DropdownStories.Default} />
+<Controls of={DropdownStories.Default} />
 
 ## Data
 

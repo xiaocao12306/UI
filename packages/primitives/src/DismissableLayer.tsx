@@ -6,14 +6,11 @@ export type DismissableLayerProps = React.ComponentPropsWithoutRef<"div"> & {
   onDismiss?: () => void;
 };
 
-export function DismissableLayer({
-  children,
-  onEscapeKeyDown,
-  onPointerDownOutside,
-  onDismiss,
-  ...props
-}: DismissableLayerProps) {
-  const ref = React.useRef<HTMLDivElement>(null);
+export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLayerProps>(function DismissableLayer(
+  { children, onEscapeKeyDown, onPointerDownOutside, onDismiss, ...props },
+  forwardedRef
+) {
+  const localRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -28,7 +25,7 @@ export function DismissableLayer({
     };
 
     const onPointerDown = (event: PointerEvent) => {
-      const element = ref.current;
+      const element = localRef.current;
       if (!element) {
         return;
       }
@@ -54,8 +51,18 @@ export function DismissableLayer({
   }, [onDismiss, onEscapeKeyDown, onPointerDownOutside]);
 
   return (
-    <div ref={ref} {...props}>
+    <div
+      ref={(node) => {
+        localRef.current = node;
+        if (typeof forwardedRef === "function") {
+          forwardedRef(node);
+        } else if (forwardedRef) {
+          forwardedRef.current = node;
+        }
+      }}
+      {...props}
+    >
       {children}
     </div>
   );
-}
+});

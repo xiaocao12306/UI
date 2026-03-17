@@ -67,6 +67,8 @@
   - Storybook 示例
   - 单元测试 + a11y 检查
   - Token 依赖声明
+  - 生产级状态矩阵（hover/active/focus/disabled/loading/error/empty）
+  - 键盘交互与边界行为（Escape / outside / roving focus / close policy）
 
 ## 8. 实施里程碑
 - M0（第 1 周）
@@ -112,6 +114,8 @@
   - Storybook 静态站公网预览（`apps/storybook/storybook-static`）与可访问外链
   - Secrets 配置文档（`docs/secrets.md`）及 README 引导
   - 发布 dry-run 验证（`changeset version` + `npm publish --dry-run`）
+  - 生产级返工（Button、Input/FormField、Dialog）
 - 进行中
+  - 生产级返工（Popover、Dropdown、CommandPalette、Toast、Tabs、Table）
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

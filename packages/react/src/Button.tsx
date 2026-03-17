@@ -78,25 +78,28 @@ const variantStyleMap: Record<ButtonVariant, VariantStateStyles> = {
   }
 };
 
-export function Button({
-  variant = "solid",
-  size = "md",
-  loading = false,
-  loadingText,
-  style,
-  disabled,
-  type,
-  onMouseEnter,
-  onMouseLeave,
-  onMouseDown,
-  onMouseUp,
-  onFocus,
-  onBlur,
-  onKeyDown,
-  onKeyUp,
-  children,
-  ...props
-}: ButtonProps) {
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  {
+    variant = "solid",
+    size = "md",
+    loading = false,
+    loadingText,
+    style,
+    disabled,
+    type,
+    onMouseEnter,
+    onMouseLeave,
+    onMouseDown,
+    onMouseUp,
+    onFocus,
+    onBlur,
+    onKeyDown,
+    onKeyUp,
+    children,
+    ...props
+  },
+  ref
+) {
   const [hovered, setHovered] = React.useState(false);
   const [pressed, setPressed] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
@@ -106,6 +109,7 @@ export function Button({
 
   return (
     <button
+      ref={ref}
       type={type ?? "button"}
       disabled={interactionDisabled}
       aria-busy={loading || undefined}
@@ -193,4 +197,4 @@ export function Button({
       )}
     </button>
   );
-}
+});
