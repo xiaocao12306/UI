@@ -38,4 +38,18 @@ describe("DatePicker", () => {
     expect(input).toHaveAttribute("aria-invalid", "true");
     expect(input).toBeDisabled();
   });
+
+  it("wires invalid helper description through aria-describedby", () => {
+    render(
+      <DatePicker
+        aria-label="Release date"
+        invalid
+        aria-describedby="release-hint"
+        errorMessageId="release-error"
+        onValueChange={() => {}}
+      />
+    );
+
+    expect(screen.getByLabelText("Release date")).toHaveAttribute("aria-describedby", "release-hint release-error");
+  });
 });

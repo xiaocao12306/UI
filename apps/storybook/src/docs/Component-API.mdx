@@ -65,6 +65,9 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onValueChange` | `(value: string) => void` | Emits selected date string from native date input. |
 | `min` / `max` | `string` | Native date range constraints. |
 | `invalid` | `boolean` | Adds `aria-invalid` to communicate validation state. |
+| `errorMessageId` | `string` | Appends error helper ID into `aria-describedby` when `invalid` is true. |
+
+<Canvas of={DatePickerStories.InvalidWithHelper} />
 
 ## Overlay
 

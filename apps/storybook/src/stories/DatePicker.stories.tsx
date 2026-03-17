@@ -62,3 +62,24 @@ export const InvalidState: Story = {
     invalid: true
   }
 };
+
+export const InvalidWithHelper: Story = {
+  render: () => (
+    <div style={{ width: 360, display: "grid", gap: 8 }}>
+      <DatePicker
+        aria-label="Release date"
+        defaultValue="2026-02-10"
+        invalid
+        aria-describedby="release-date-help"
+        errorMessageId="release-date-error"
+        onValueChange={() => {}}
+      />
+      <p id="release-date-help" style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        Choose a date between February and December.
+      </p>
+      <p id="release-date-error" style={{ margin: 0, color: "var(--aurora-color-red-500)", fontSize: 13 }}>
+        Release date must be in the approved launch window.
+      </p>
+    </div>
+  )
+};
