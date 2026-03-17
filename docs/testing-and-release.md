@@ -53,7 +53,12 @@ Expected behavior:
 
 Latest dry-run record:
 - date: 2026-03-17
-- result: all three packages completed `npm publish --dry-run` successfully
+- result:
+  - `changeset version`: `No unreleased changesets found, exiting.`
+  - `@aurora-ui/tokens`: dry-run tarball size ~3.0 kB
+  - `@aurora-ui/primitives`: dry-run tarball size ~13.5 kB
+  - `@aurora-ui/react`: dry-run tarball size ~29.6 kB
+  - npm prints login warning in dry-run mode, but command exits successfully
 
 ## GitHub Release Automation
 Workflow: `.github/workflows/release.yml`

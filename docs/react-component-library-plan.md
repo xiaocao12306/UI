@@ -114,6 +114,7 @@
   - Storybook 静态站公网预览（`apps/storybook/storybook-static`）与可访问外链
   - Secrets 配置文档（`docs/secrets.md`）及 README 引导
   - 发布 dry-run 验证（`changeset version` + `npm publish --dry-run`）
+  - 发布 dry-run 复验（生产级返工后再次验证 3 个包 tarball 清单与体积）
   - 生产级返工（Button、Input/FormField、Dialog）
   - 生产级返工（Popover、Dropdown、CommandPalette）
   - 生产级返工（Toast）
