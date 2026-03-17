@@ -140,6 +140,7 @@
   - AI 组件补齐（MessageBubble/ReasoningPanel/StreamingCodeBlock 的单测 + Storybook + 交互验证）
   - Storybook 文档补齐（Component API / Component Catalog / Best Practices 增补 AI 组件章节）
   - Demo E2E 扩展（AI 区域 PromptInput 提交 + ReasoningPanel 展开 + StreamingCodeBlock 完成态）
+  - Combobox 生产级补齐（Escape/blur 关闭策略、`aria-selected` 语义修正、状态 Storybook 场景）
   - Pagination 细节打磨（禁用态视觉与 `showFirstLast=false` 分支测试）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）

@@ -37,6 +37,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Ensure keyboard dismissal paths for overlay components.
 - Keep visible labels or accessible names for form controls.
 - Avoid `autoFocus`; use intentional focus management when opening overlays.
+- For combobox/listbox patterns, map `aria-selected` to the committed value, not temporary active focus.
 
 <Canvas of={DialogStories.Interactive} />
 

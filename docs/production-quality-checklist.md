@@ -14,6 +14,7 @@
 | --- | --- | --- | --- |
 | Button | production-refined | `Core/Button` | `Button.test.tsx` |
 | Input / FormField | production-refined | `Form/Input` | `Input.test.tsx`, `FormField.test.tsx` |
+| Combobox | production-refined | `Form/Combobox` | `Combobox.test.tsx` |
 | Dialog | production-refined | `Overlay/Dialog` | `Dialog.test.tsx` |
 | Tooltip | production-refined | `Overlay/Tooltip` | `Tooltip.test.tsx` |
 | Popover | production-refined | `Overlay/Popover` | `Popover.test.tsx` |
@@ -46,3 +47,4 @@
 - Pagination polish: added disabled visual semantics and `showFirstLast={false}` branch coverage.
 - Storybook play coverage expansion: added deterministic interaction assertions for `CommandPalette`, `Toast`, `Tabs`, and `Table`.
 - AI component quality pass: added `MessageBubble`/`ReasoningPanel`/`StreamingCodeBlock` tests and Storybook stories, plus `PromptInput` submit/disabled/multi-feedback interaction coverage.
+- Combobox production hardening: added `Escape` + blur dismiss paths, corrected `aria-selected` semantics to track selected value, and added Storybook state stories (`KeyboardDismissPaths`, disabled state).

@@ -126,14 +126,21 @@ export function Combobox({
         id={id}
         role="combobox"
         aria-autocomplete="list"
+        aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
         aria-activedescendant={open && activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
         aria-label={ariaLabel}
+        autoComplete="off"
         value={query}
         disabled={disabled}
         placeholder={placeholder}
         onFocus={() => setOpen(true)}
+        onBlur={(event) => {
+          if (!rootRef.current?.contains(event.relatedTarget as Node | null)) {
+            setOpen(false);
+          }
+        }}
         onChange={(event) => {
           setQuery(event.target.value);
           setOpen(true);
@@ -204,13 +211,14 @@ export function Combobox({
           {filtered.length > 0 ? (
             filtered.map((item, index) => {
               const active = index === activeIndex;
+              const selected = item.value === currentValue;
               return (
                 <button
                   key={item.value}
                   id={`${listId}-option-${index}`}
                   type="button"
                   role="option"
-                  aria-selected={active}
+                  aria-selected={selected}
                   aria-disabled={item.disabled || undefined}
                   disabled={item.disabled}
                   onMouseEnter={() => {

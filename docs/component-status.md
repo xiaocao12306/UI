@@ -17,7 +17,8 @@
 ## React Components
 - Form/Input
   - `Button`, `Input`, `FormField`: production-refined
-  - `Textarea`, `Select`, `Combobox`, `DatePicker`: done
+  - `Combobox`: production-refined
+  - `Textarea`, `Select`, `DatePicker`: done
   - `Checkbox`, `RadioGroup`, `Switch`: done
 - Data/Navigation
   - `Tabs`: production-refined

@@ -67,3 +67,16 @@ export const WithCustomEmptyMessage: Story = {
     emptyMessage: "No framework match."
   }
 };
+
+export const KeyboardDismissPaths: Story = {
+  args: {
+    ariaLabel: "Framework dismiss demo"
+  }
+};
+
+export const DisabledState: Story = {
+  args: {
+    ariaLabel: "Framework disabled",
+    disabled: true
+  }
+};
