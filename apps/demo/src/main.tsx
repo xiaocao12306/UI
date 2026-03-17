@@ -262,10 +262,12 @@ function App() {
             ]}
           />
           <Table
+            caption="Component readiness metrics"
+            defaultSortKey="component"
             columns={[
-              { key: "component", header: "Component" },
-              { key: "status", header: "Status" },
-              { key: "coverage", header: "Coverage", render: (row) => `${row.coverage}%` }
+              { key: "component", header: "Component", sortable: true },
+              { key: "status", header: "Status", sortable: true },
+              { key: "coverage", header: "Coverage", sortable: true, render: (row) => `${row.coverage}%` }
             ]}
             data={[
               { component: "Button", status: "Stable", coverage: 92 },

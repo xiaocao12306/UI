@@ -68,6 +68,38 @@ test("highlights active section in anchor nav", async ({ page }) => {
   await expect(statesLink).toHaveAttribute("aria-current", "location");
 });
 
+test("navigates data tabs with Home/End keys", async ({ page }) => {
+  await page.goto("/");
+
+  const overviewTab = page.getByRole("tab", { name: "Overview" });
+  await overviewTab.focus();
+  await overviewTab.press("End");
+
+  const settingsTab = page.getByRole("tab", { name: "Settings" });
+  await expect(settingsTab).toBeFocused();
+  await expect(page.getByRole("tabpanel")).toContainText("Theme, access control, and preferences.");
+
+  await settingsTab.press("Home");
+  await expect(page.getByRole("tab", { name: "Overview" })).toBeFocused();
+  await expect(page.getByRole("tabpanel")).toContainText("Project health and adoption summary.");
+});
+
+test("sorts demo table from column headers", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table");
+  const componentColumn = table.getByRole("columnheader", { name: /Component/ });
+  const componentSortButton = table.getByRole("button", { name: /Component/ });
+  const firstRow = table.locator("tbody tr").first();
+
+  await expect(componentColumn).toHaveAttribute("aria-sort", "ascending");
+  await expect(firstRow).toContainText("Button");
+
+  await componentSortButton.click();
+  await expect(componentColumn).toHaveAttribute("aria-sort", "descending");
+  await expect(firstRow).toContainText("StreamingCodeBlock");
+});
+
 test("opens dropdown using keyboard", async ({ page }) => {
   await page.goto("/");
 
