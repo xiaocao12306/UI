@@ -2,6 +2,15 @@
   "name": "react-ui-library-workspace",
   "private": true,
   "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaocao12306/UI.git"
+  },
+  "homepage": "https://github.com/xiaocao12306/UI",
+  "bugs": {
+    "url": "https://github.com/xiaocao12306/UI/issues"
+  },
   "packageManager": "pnpm@10.8.1",
   "scripts": {
     "build": "turbo run build",

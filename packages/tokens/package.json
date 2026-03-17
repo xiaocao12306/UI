@@ -2,6 +2,16 @@
   "name": "@aurora-ui/tokens",
   "version": "0.1.0",
   "private": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaocao12306/UI.git",
+    "directory": "packages/tokens"
+  },
+  "homepage": "https://github.com/xiaocao12306/UI/tree/main/packages/tokens",
+  "bugs": {
+    "url": "https://github.com/xiaocao12306/UI/issues"
+  },
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -14,6 +24,10 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
