@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import type * as React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { Tooltip } from "./Tooltip";
 
@@ -96,6 +97,27 @@ describe("Tooltip", () => {
     );
 
     expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(screen.queryByRole("tooltip")).toBeNull();
+  });
+
+  it("respects preventDefault from trigger handlers", () => {
+    const onMouseEnter = vi.fn((event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault());
+    const onFocus = vi.fn((event: React.FocusEvent<HTMLButtonElement>) => event.preventDefault());
+
+    render(
+      <Tooltip content="Tooltip content" delayDuration={0} closeDelay={0}>
+        <button type="button" onMouseEnter={onMouseEnter} onFocus={onFocus}>
+          Guarded trigger
+        </button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Guarded trigger" });
+    fireEvent.mouseEnter(trigger);
+    fireEvent.focus(trigger);
+
+    expect(onMouseEnter).toHaveBeenCalledTimes(1);
+    expect(onFocus).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole("tooltip")).toBeNull();
   });
 });
