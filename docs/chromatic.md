@@ -27,6 +27,7 @@ pnpm chromatic
 ## 仓库配置步骤
 1. 在 Chromatic 创建项目，获取 project token。
 2. 在 GitHub 仓库 Secrets 添加 `CHROMATIC_PROJECT_TOKEN`。
+   - 详细步骤见：`docs/secrets.md`
 3. 发起 PR，确认 `Chromatic Visual Tests` workflow 成功并生成 build 链接。
 
 ## 基线策略建议

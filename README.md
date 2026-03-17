@@ -32,6 +32,7 @@ Aurora UI is a token-first React component library monorepo with accessibility-f
 - `docs/testing-and-release.md`: quality and release workflow
 - `docs/storybook.md`: Storybook runbook and blocker log
 - `docs/chromatic.md`: visual regression setup and workflow guide
+- `docs/secrets.md`: CHROMATIC/NPM token setup instructions
 - `docs/component-recipes.md`: copy-ready integration snippets
 - `docs/overlay-behavior.md`: overlay dismiss/keyboard behavior guide
 - `docs/ai-components-guide.md`: AI component composition guide
@@ -71,10 +72,18 @@ pnpm storybook:build
 pnpm chromatic
 ```
 
+## Storybook External Link
+- Immediate static preview:
+  - `https://rawcdn.githack.com/xiaocao12306/UI/main/apps/storybook/storybook-static/index.html`
+- To refresh this link after Storybook changes:
+  - `pnpm storybook:build`
+  - `git add apps/storybook/storybook-static && git commit -m "build(storybook): refresh static bundle" && git push`
+
 ## Release Workflow
 - automated workflow: `.github/workflows/release.yml`
 - release PR generation uses Changesets on `main`
 - npm publish runs only when `NPM_TOKEN` is configured
+- secrets setup guide: `docs/secrets.md`
 
 ## Demo External Link
 - GitHub Pages workflow: `.github/workflows/demo-pages.yml`

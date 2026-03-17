@@ -37,6 +37,24 @@ pnpm version-packages
 pnpm release
 ```
 
+## Publish Dry-Run (Recommended Before Real Release)
+Run from repo root:
+
+```bash
+pnpm changeset version
+pnpm --filter @aurora-ui/tokens exec npm publish --dry-run --access public
+pnpm --filter @aurora-ui/primitives exec npm publish --dry-run --access public
+pnpm --filter @aurora-ui/react exec npm publish --dry-run --access public
+```
+
+Expected behavior:
+- when no pending changesets: `No unreleased changesets found, exiting.`
+- `npm publish --dry-run` prints tarball manifest/size and ends without real publish
+
+Latest dry-run record:
+- date: 2026-03-17
+- result: all three packages completed `npm publish --dry-run` successfully
+
 ## GitHub Release Automation
 Workflow: `.github/workflows/release.yml`
 
@@ -48,6 +66,7 @@ Behavior:
 Required repository secrets:
 - `NPM_TOKEN` (for npm publish)
 - `CHROMATIC_PROJECT_TOKEN` (optional, visual regression upload)
+- setup reference: `docs/secrets.md`
 
 ## CI
 GitHub Actions workflow runs:

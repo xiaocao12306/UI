@@ -109,6 +109,9 @@
   - Data 与 AI 组件故事补齐（Tabs/Table/PromptInput）
   - 组件可访问性补强（Dialog `aria-labelledby`、CommandPalette listbox 语义、Toast live region）
   - Demo 体验增强（主题持久化、分区导航活跃态）与 E2E 回归补齐
+  - Storybook 静态站公网预览（`apps/storybook/storybook-static`）与可访问外链
+  - Secrets 配置文档（`docs/secrets.md`）及 README 引导
+  - 发布 dry-run 验证（`changeset version` + `npm publish --dry-run`）
 - 进行中
-  - Storybook 视觉回归基线（待配置仓库 token 后启用快照对比）
-  - Release 发布实链验证（待配置 NPM token 后执行 npm publish）
+  - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
+  - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
