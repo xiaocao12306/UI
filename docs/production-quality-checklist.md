@@ -1,4 +1,4 @@
-# Production Quality Checklist (Core Components)
+# Production Quality Checklist (Core + AI Components)
 
 ## Quality Gate (Must Pass)
 - Interaction states: hover / active / focus / disabled / loading / error / empty (as applicable)
@@ -15,9 +15,14 @@
 | Button | production-refined | `Core/Button` | `Button.test.tsx` |
 | Input / FormField | production-refined | `Form/Input` | `Input.test.tsx`, `FormField.test.tsx` |
 | Dialog | production-refined | `Overlay/Dialog` | `Dialog.test.tsx` |
+| Tooltip | production-refined | `Overlay/Tooltip` | `Tooltip.test.tsx` |
 | Popover | production-refined | `Overlay/Popover` | `Popover.test.tsx` |
 | Dropdown | production-refined | `Overlay/Dropdown` | `Dropdown.test.tsx` |
 | CommandPalette | production-refined | `AI/CommandPalette` | `CommandPalette.test.tsx` |
+| PromptInput | production-refined | `AI/PromptInput` | `PromptInput.test.tsx` |
+| MessageBubble | production-refined | `AI/MessageBubble` | `MessageBubble.test.tsx` |
+| ReasoningPanel | production-refined | `AI/ReasoningPanel` | `ReasoningPanel.test.tsx` |
+| StreamingCodeBlock | production-refined | `AI/StreamingCodeBlock` | `StreamingCodeBlock.test.tsx` |
 | Toast | production-refined | `Feedback/Toast` | `Toast.test.tsx` |
 | Tabs | production-refined | `Data/Tabs` | `Tabs.test.tsx` |
 | Table | production-refined | `Data/Table` | `Table.test.tsx` |
@@ -40,3 +45,4 @@
 - Storybook interaction runner: added `play`-based interaction checks and static-site test-runner execution (`storybook:test:ci`).
 - Pagination polish: added disabled visual semantics and `showFirstLast={false}` branch coverage.
 - Storybook play coverage expansion: added deterministic interaction assertions for `CommandPalette`, `Toast`, `Tabs`, and `Table`.
+- AI component quality pass: added `MessageBubble`/`ReasoningPanel`/`StreamingCodeBlock` tests and Storybook stories, plus `PromptInput` submit/disabled/multi-feedback interaction coverage.
