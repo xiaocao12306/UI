@@ -168,6 +168,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled modes are both available. |
 | `onValueChange` | `(value: string) => void` | Fires when user confirms option by click or Enter. |
 | `emptyMessage` | `ReactNode` | Custom no-result content for search miss scenarios. |
+| trigger relation | conditional `aria-controls` | Input references listbox ID only while popup is open. |
 | dismiss policy | `Escape` / blur outside | Keeps list open when focus moves into option elements; closes on blur outside root. |
 
 <Canvas of={ComboboxStories.KeyboardDismissPaths} />

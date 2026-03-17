@@ -135,7 +135,7 @@ export function Combobox({
         aria-autocomplete="list"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-controls={listId}
+        aria-controls={open ? listId : undefined}
         aria-activedescendant={open && activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
         aria-label={ariaLabel}
         autoComplete="off"

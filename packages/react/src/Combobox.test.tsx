@@ -147,4 +147,18 @@ describe("Combobox", () => {
 
     expect(screen.queryByRole("listbox")).toBeNull();
   });
+
+  it("only exposes aria-controls while popup is open", () => {
+    render(<Combobox options={options} onValueChange={() => {}} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    expect(input).not.toHaveAttribute("aria-controls");
+
+    fireEvent.focus(input);
+    const listbox = screen.getByRole("listbox", { name: "Combobox options" });
+    expect(input).toHaveAttribute("aria-controls", listbox.id);
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(input).not.toHaveAttribute("aria-controls");
+  });
 });

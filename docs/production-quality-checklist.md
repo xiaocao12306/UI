@@ -76,6 +76,7 @@
 - Overlay 引用语义收口：Popover/Dropdown 触发器在关闭时不再保留 `aria-controls`，打开时再建立关联并补齐单测。
 - Storybook 类型门禁修复：`FormField` story 增补默认 `args`，恢复 `pnpm --filter @aurora-ui/storybook-app typecheck` 全绿。
 - Overlay icon 触发器语义补齐：Popover/Dropdown 增加 `triggerAriaLabel` 并补单测 + Storybook 示例。
+- Combobox 引用语义收口：关闭态不再保留 `aria-controls`，并补齐单测与 Storybook `KeyboardDismissPaths` 断言。
 - Toast: added timer-path tests (`duration`, `pauseOnHover`) and `closeOnEscape={false}` branch, then fixed paused-state reset on close/reopen; Storybook now includes action-required persistent notification example.
 - Tabs: validated `Home/End` focus + selection behavior with disabled tabs in keyboard flow tests.
 - Table: validated `aria-sort` transitions and ascending/descending row-order toggling assertions; sortable headers now expose next-direction `aria-label` and `scope="col"`.

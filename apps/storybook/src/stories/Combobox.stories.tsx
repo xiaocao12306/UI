@@ -71,6 +71,19 @@ export const WithCustomEmptyMessage: Story = {
 export const KeyboardDismissPaths: Story = {
   args: {
     ariaLabel: "Framework dismiss demo"
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Framework dismiss demo" });
+
+    await expect(input).not.toHaveAttribute("aria-controls");
+    await userEvent.click(input);
+    const listbox = canvas.getByRole("listbox", { name: "Framework dismiss demo options" });
+    await expect(input).toHaveAttribute("aria-controls", listbox.id);
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("listbox")).not.toBeInTheDocument();
+    await expect(input).not.toHaveAttribute("aria-controls");
   }
 };
 
