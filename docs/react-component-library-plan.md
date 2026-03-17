@@ -102,6 +102,7 @@
   - 浮层组件交互测试（Escape / outside pointer / command filter）
   - Demo 命令面板快捷键（Ctrl/Cmd + K）与动作示例
   - Playwright Demo 冒烟测试与 CI 集成
+  - Storybook Playground（Button/Input/Dialog/CommandPalette）与主题切换
 - 进行中
-  - 文档体系细化（组件 API、示例最佳实践，AI/Overlay 专项指南）
-  - Storybook 与视觉回归基线
+  - 文档体系细化（组件 API、示例最佳实践，AI/Overlay/Storybook 指南）
+  - Storybook 视觉回归基线（Chromatic）

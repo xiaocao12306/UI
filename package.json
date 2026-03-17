@@ -10,6 +10,8 @@
     "demo:build": "pnpm --filter @aurora-ui/demo build",
     "demo:preview": "pnpm --filter @aurora-ui/demo preview",
     "demo:e2e": "playwright test",
+    "storybook:dev": "pnpm --filter @aurora-ui/storybook-app storybook",
+    "storybook:build": "pnpm --filter @aurora-ui/storybook-app build-storybook",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "lint": "turbo run lint",
     "test": "turbo run test",

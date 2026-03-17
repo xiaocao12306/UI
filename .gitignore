@@ -12,3 +12,5 @@ storybook-static
 !apps/demo/dist/**
 playwright-report
 test-results
+
+*storybook.log

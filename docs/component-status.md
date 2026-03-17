@@ -37,4 +37,4 @@
 
 ## Planned Next (v0.2)
 - `DatePicker` / `Combobox` / `Pagination`
-- Storybook app and visual regression baseline
+- Storybook visual regression baseline (Chromatic/CI)

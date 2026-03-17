@@ -26,9 +26,11 @@ Aurora UI is a token-first React component library monorepo with accessibility-f
 - `packages/primitives`: headless building blocks
 - `packages/react`: business-ready UI components
 - `apps/demo`: end-to-end showcase site
+- `apps/storybook`: component playground and docs canvas
 - `docs/react-component-library-plan.md`: source blueprint
 - `docs/component-status.md`: component implementation matrix
 - `docs/testing-and-release.md`: quality and release workflow
+- `docs/storybook.md`: Storybook runbook and blocker log
 - `docs/overlay-behavior.md`: overlay dismiss/keyboard behavior guide
 - `docs/ai-components-guide.md`: AI component composition guide
 
@@ -58,6 +60,12 @@ Run demo smoke E2E:
 ```bash
 pnpm exec playwright install chromium
 pnpm demo:e2e
+```
+
+## Run Storybook
+```bash
+pnpm storybook:dev
+pnpm storybook:build
 ```
 
 ## Demo External Link
