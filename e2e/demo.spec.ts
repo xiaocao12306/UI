@@ -147,6 +147,27 @@ test("sorts demo table from column headers", async ({ page }) => {
   await expect(firstRow).toContainText("StreamingCodeBlock");
 });
 
+test("keeps manual tabs panel stable until Enter activation", async ({ page }) => {
+  await page.goto("/");
+
+  const manualTablist = page.getByRole("tablist", { name: "Manual release workflow tabs" });
+  const draftTab = manualTablist.getByRole("tab", { name: "Draft" });
+  const reviewTab = manualTablist.getByRole("tab", { name: "Review" });
+  const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
+  const reviewPanel = page.locator(`#${await reviewTab.getAttribute("aria-controls")}`);
+
+  await draftTab.focus();
+  await draftTab.press("ArrowRight");
+  await expect(reviewTab).toBeFocused();
+  await expect(draftPanel).toContainText("Draft checklist and scoped API notes.");
+  await expect(draftPanel).not.toHaveAttribute("hidden");
+  await expect(reviewPanel).toHaveAttribute("hidden");
+
+  await reviewTab.press("Enter");
+  await expect(reviewPanel).toContainText("Cross-team review and accessibility signoff.");
+  await expect(reviewPanel).not.toHaveAttribute("hidden");
+});
+
 test("paginates release activity feed", async ({ page }) => {
   await page.goto("/");
 

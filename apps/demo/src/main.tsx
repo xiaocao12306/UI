@@ -311,6 +311,22 @@ function App() {
               { key: "settings", label: "Settings", content: <p style={{ margin: 0 }}>Theme, access control, and preferences.</p> }
             ]}
           />
+          <div style={{ display: "grid", gap: 8 }}>
+            <h3 style={{ margin: 0, fontSize: 16 }}>Manual Activation Tabs</h3>
+            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+              Arrow keys move focus only; press Enter or Space to activate and render the target panel.
+            </p>
+            <Tabs
+              ariaLabel="Manual release workflow tabs"
+              activationMode="manual"
+              defaultValue="draft"
+              items={[
+                { key: "draft", label: "Draft", content: <p style={{ margin: 0 }}>Draft checklist and scoped API notes.</p> },
+                { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-team review and accessibility signoff.</p> },
+                { key: "ship", label: "Ship", content: <p style={{ margin: 0 }}>Tag release, publish packages, and announce changelog.</p> }
+              ]}
+            />
+          </div>
           <Table
             caption="Component readiness metrics"
             defaultSortKey="component"

@@ -212,6 +212,7 @@
   - CommandPalette 关闭策略收口（`closeOnEscape`/`closeOnOutsidePointer` 支持阻塞式审批流，避免误关闭）
   - Demo 阻塞式命令面板模式（可切换 `closeOnEscape/closeOnOutsidePointer`）与 Playwright 外部点击/Escape 回归用例
   - Demo 阻塞式 Toast 通知（`closeOnEscape={false}`）与 Playwright 显式关闭路径回归
+  - Demo 手动激活 Tabs 场景（`activationMode="manual"`）与 Playwright 键盘焦点/激活分离回归
   - Tabs 命名语义收口（`ariaLabelledBy` 支持外部标题命名 tablist，减少泛化标签）
   - Popover/Dropdown 关闭策略收口（`closeOnEscape`/`closeOnOutsidePointer` + dismiss 事件钩子，覆盖阻塞式流程）
   - Overlay 焦点策略收口（Popover/Dropdown 仅在键盘关闭时回焦 trigger，外部点击关闭保留指针目标焦点）
