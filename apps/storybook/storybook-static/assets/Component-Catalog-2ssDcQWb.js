@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as c,T as s,S as i,D as t}from"./index-wukzsdVc.js";import"./index-BWu4c2F4.js";import"./iframe-DHn0DWZH.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{title:"Docs/Component Catalog"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as c,T as s,S as i,D as t}from"./index-DcNQNFcr.js";import"./index-BWu4c2F4.js";import"./iframe-SlHfa67e.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{title:"Docs/Component Catalog"}),`
 `,e.jsx(s,{}),`
 `,e.jsx(i,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(t,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
@@ -9,7 +9,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 | Button | `,e.jsx(o.code,{children:"Button"})," | ",e.jsx(o.code,{children:"Core/Button"}),` | yes |
 | Input | `,e.jsx(o.code,{children:"Input"})," | ",e.jsx(o.code,{children:"Form/Input"}),` | yes |
 | Combobox | `,e.jsx(o.code,{children:"Combobox"})," | ",e.jsx(o.code,{children:"Form/Combobox"})," + ",e.jsx(o.code,{children:"KeyboardDismissPaths"}),` | yes |
-| DatePicker | `,e.jsx(o.code,{children:"DatePicker"})," | ",e.jsx(o.code,{children:"Form/DatePicker"}),` | yes |
+| DatePicker | `,e.jsx(o.code,{children:"DatePicker"})," | ",e.jsx(o.code,{children:"Form/DatePicker"})," + ",e.jsx(o.code,{children:"StateMatrix"}),` | yes |
 | Textarea | `,e.jsx(o.code,{children:"Textarea"})," | ",e.jsx(o.code,{children:"Form/Textarea"}),` | yes |
 | Select | `,e.jsx(o.code,{children:"Select"})," | ",e.jsx(o.code,{children:"Form/Select"}),` | yes |
 | Checkbox | `,e.jsx(o.code,{children:"Checkbox"})," | ",e.jsx(o.code,{children:"Form/Checkbox"}),` | yes |
