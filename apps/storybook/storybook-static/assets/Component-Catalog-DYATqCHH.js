@@ -1,5 +1,5 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as c,T as s,S as i,D as t}from"./index-BYPsVmVO.js";import"./index-BWu4c2F4.js";import"./iframe-jdW-c2PM.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{title:"Docs/Component Catalog"}),`
-`,e.jsx(s,{}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as s,T as c,S as i,D as t}from"./index-C7szGHiT.js";import"./index-BWu4c2F4.js";import"./iframe-CZNZjjet.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(s,{title:"Docs/Component Catalog"}),`
+`,e.jsx(c,{}),`
 `,e.jsx(i,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(t,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
 Use it as the first stop before extending APIs or adding new stories.`})}),`
@@ -13,7 +13,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 | Textarea | `,e.jsx(o.code,{children:"Textarea"})," | ",e.jsx(o.code,{children:"Form/Textarea"}),` | yes |
 | Select | `,e.jsx(o.code,{children:"Select"})," | ",e.jsx(o.code,{children:"Form/Select"}),` | yes |
 | Checkbox | `,e.jsx(o.code,{children:"Checkbox"})," | ",e.jsx(o.code,{children:"Form/Checkbox"}),` | yes |
-| RadioGroup | `,e.jsx(o.code,{children:"RadioGroup"}),` | demo coverage | - |
+| RadioGroup | `,e.jsx(o.code,{children:"RadioGroup"})," | ",e.jsx(o.code,{children:"Form/RadioGroup"}),` | yes |
 | Switch | `,e.jsx(o.code,{children:"Switch"}),` | demo coverage | - |
 | FormField | `,e.jsx(o.code,{children:"FormField"})," | demo coverage | yes |"]}),`
 `,e.jsx(o.h2,{id:"data-and-navigation",children:"Data and Navigation"}),`
@@ -56,4 +56,4 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsx(o.li,{children:"Add interaction/unit test for new behavior branch."}),`
 `,e.jsx(o.li,{children:"Verify all theme packs from Storybook toolbar."}),`
 `,e.jsxs(o.li,{children:["Update ",e.jsx(o.code,{children:"docs/component-status.md"})," and this catalog when coverage changes."]}),`
-`]})]})}function y(n={}){const{wrapper:o}={...r(),...n.components};return o?e.jsx(o,{...n,children:e.jsx(d,{...n})}):d(n)}export{y as default};
+`]})]})}function g(n={}){const{wrapper:o}={...r(),...n.components};return o?e.jsx(o,{...n,children:e.jsx(d,{...n})}):d(n)}export{g as default};
