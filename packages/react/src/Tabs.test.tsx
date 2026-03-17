@@ -34,6 +34,29 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
+  it("supports vertical keyboard navigation with ArrowUp and ArrowDown", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        orientation="vertical"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div>, disabled: true },
+          { key: "three", label: "Three", content: <div>Panel Three</div> }
+        ]}
+      />
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    fireEvent.keyDown(oneTab, { key: "ArrowDown" });
+    expect(screen.getByText("Panel Three")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Three" })).toHaveFocus();
+
+    fireEvent.keyDown(screen.getByRole("tab", { name: "Three" }), { key: "ArrowUp" });
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "One" })).toHaveFocus();
+  });
+
   it("keeps tabpanel elements mounted so aria-controls always points to an existing panel", () => {
     render(
       <Tabs

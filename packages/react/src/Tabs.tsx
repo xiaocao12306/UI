@@ -12,6 +12,7 @@ export type TabsProps = {
   value?: string;
   defaultValue?: string;
   ariaLabel?: string;
+  orientation?: "horizontal" | "vertical";
   onValueChange?: (value: string) => void;
 };
 
@@ -31,7 +32,14 @@ function getNextEnabledIndex(items: TabItem[], startIndex: number, direction: 1 
   return -1;
 }
 
-export function Tabs({ items, value, defaultValue, ariaLabel = "Tabs", onValueChange }: TabsProps) {
+export function Tabs({
+  items,
+  value,
+  defaultValue,
+  ariaLabel = "Tabs",
+  orientation = "horizontal",
+  onValueChange
+}: TabsProps) {
   const baseId = React.useId();
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const firstEnabledKey = items.find((item) => !item.disabled)?.key;
@@ -66,8 +74,13 @@ export function Tabs({ items, value, defaultValue, ariaLabel = "Tabs", onValueCh
       <div
         role="tablist"
         aria-label={ariaLabel}
-        aria-orientation="horizontal"
-        style={{ display: "flex", gap: 6, flexWrap: "wrap" }}
+        aria-orientation={orientation}
+        style={{
+          display: "flex",
+          gap: 6,
+          flexWrap: orientation === "horizontal" ? "wrap" : "nowrap",
+          flexDirection: orientation === "vertical" ? "column" : "row"
+        }}
       >
         {items.map((item, index) => {
           const selected = item.key === currentValue;
@@ -89,13 +102,8 @@ export function Tabs({ items, value, defaultValue, ariaLabel = "Tabs", onValueCh
               disabled={disabled}
               onClick={() => select(item.key)}
               onKeyDown={(event) => {
-                if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
-                  return;
-                }
-
-                event.preventDefault();
-
                 if (event.key === "Home") {
+                  event.preventDefault();
                   const firstIndex = getNextEnabledIndex(items, -1, 1);
                   const firstKey = items[firstIndex]?.key;
                   if (firstKey) {
@@ -106,6 +114,7 @@ export function Tabs({ items, value, defaultValue, ariaLabel = "Tabs", onValueCh
                 }
 
                 if (event.key === "End") {
+                  event.preventDefault();
                   const lastIndex = getNextEnabledIndex(items, 0, -1);
                   const lastKey = items[lastIndex]?.key;
                   if (lastKey) {
@@ -115,7 +124,18 @@ export function Tabs({ items, value, defaultValue, ariaLabel = "Tabs", onValueCh
                   return;
                 }
 
-                const nextIndex = getNextEnabledIndex(items, index, event.key === "ArrowRight" ? 1 : -1);
+                const nextKeyToDirection =
+                  orientation === "horizontal"
+                    ? { ArrowRight: 1 as const, ArrowLeft: -1 as const }
+                    : { ArrowDown: 1 as const, ArrowUp: -1 as const };
+                const direction = nextKeyToDirection[event.key as keyof typeof nextKeyToDirection];
+                if (!direction) {
+                  return;
+                }
+
+                event.preventDefault();
+
+                const nextIndex = getNextEnabledIndex(items, index, direction);
                 const nextKey = items[nextIndex]?.key;
                 if (nextKey) {
                   select(nextKey);

@@ -30,7 +30,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Tabs support keyboard navigation (Arrow/Home/End) and theme-aware state styling for data-heavy dashboards."
+          "Tabs support horizontal/vertical keyboard navigation (Arrow/Home/End) and theme-aware state styling for data-heavy dashboards."
       }
     }
   },
@@ -106,7 +106,8 @@ export const KeyboardNavigationGuide: Story = {
   render: () => (
     <div style={{ width: 620, display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        Keyboard: use ArrowLeft/ArrowRight to move, Home to jump first enabled tab, End to jump last enabled tab.
+        Keyboard: horizontal tabs use ArrowLeft/ArrowRight, vertical tabs use ArrowUp/ArrowDown. Home jumps to first
+        enabled tab, End jumps to last enabled tab.
       </p>
       <Tabs
         ariaLabel="Keyboard guide tabs"
@@ -120,6 +121,33 @@ export const KeyboardNavigationGuide: Story = {
       />
     </div>
   )
+};
+
+export const Vertical: Story = {
+  render: () => (
+    <div style={{ width: 620 }}>
+      <Tabs
+        ariaLabel="Vertical workflow tabs"
+        orientation="vertical"
+        defaultValue="spec"
+        items={[
+          { key: "spec", label: "Spec", content: "Specification stage." },
+          { key: "review", label: "Review", content: "Review stage.", disabled: true },
+          { key: "release", label: "Release", content: "Release stage." }
+        ]}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const tabList = canvas.getByRole("tablist", { name: "Vertical workflow tabs" });
+    await expect(tabList).toHaveAttribute("aria-orientation", "vertical");
+
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    await userEvent.click(specTab);
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(canvas.getByRole("tab", { name: "Release" })).toHaveAttribute("aria-selected", "true");
+  }
 };
 
 function ChangeTelemetryDemo() {

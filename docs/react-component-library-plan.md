@@ -125,6 +125,7 @@
   - Dropdown 键盘 typeahead 收口（字母键快速定位菜单项，禁用项跳过，支持 `textValue` 文本匹配）
   - CommandPalette 结果播报收口（live region 新增 enabledCount 语义，禁用项命中时播报不可执行结果）
   - Toast 命名语义收口（`aria-labelledby/aria-describedby` + `ariaLabel` 覆盖 icon-only 标题）
+  - Tabs 方向语义收口（`orientation` API + `ArrowUp/ArrowDown` 纵向键盘流）
   - Popover/Dropdown 图标触发器可访问性补齐（`triggerAriaLabel`，覆盖 icon-only 交互）
   - 生产级返工（Toast）
   - 生产级返工（Tabs）
