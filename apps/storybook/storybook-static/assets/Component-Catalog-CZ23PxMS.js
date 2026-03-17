@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as s,T as c,S as i,D as t}from"./index-C7szGHiT.js";import"./index-BWu4c2F4.js";import"./iframe-CZNZjjet.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(s,{title:"Docs/Component Catalog"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as s,T as c,S as i,D as t}from"./index-DsvnMJdw.js";import"./index-BWu4c2F4.js";import"./iframe-BiTc4VUI.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(s,{title:"Docs/Component Catalog"}),`
 `,e.jsx(c,{}),`
 `,e.jsx(i,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(t,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
@@ -14,7 +14,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 | Select | `,e.jsx(o.code,{children:"Select"})," | ",e.jsx(o.code,{children:"Form/Select"}),` | yes |
 | Checkbox | `,e.jsx(o.code,{children:"Checkbox"})," | ",e.jsx(o.code,{children:"Form/Checkbox"}),` | yes |
 | RadioGroup | `,e.jsx(o.code,{children:"RadioGroup"})," | ",e.jsx(o.code,{children:"Form/RadioGroup"}),` | yes |
-| Switch | `,e.jsx(o.code,{children:"Switch"}),` | demo coverage | - |
+| Switch | `,e.jsx(o.code,{children:"Switch"})," | ",e.jsx(o.code,{children:"Form/Switch"}),` | yes |
 | FormField | `,e.jsx(o.code,{children:"FormField"})," | demo coverage | yes |"]}),`
 `,e.jsx(o.h2,{id:"data-and-navigation",children:"Data and Navigation"}),`
 `,e.jsxs(o.p,{children:[`| Component | Export | Storybook | Unit Test |
