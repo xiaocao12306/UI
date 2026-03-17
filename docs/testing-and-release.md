@@ -37,6 +37,18 @@ pnpm version-packages
 pnpm release
 ```
 
+## GitHub Release Automation
+Workflow: `.github/workflows/release.yml`
+
+Behavior:
+- always runs Changesets version PR automation on `main`
+- publishes npm packages only when `NPM_TOKEN` is configured
+- uses npm provenance (`id-token: write`) during publish
+
+Required repository secrets:
+- `NPM_TOKEN` (for npm publish)
+- `CHROMATIC_PROJECT_TOKEN` (optional, visual regression upload)
+
 ## CI
 GitHub Actions workflow runs:
 - install
@@ -47,6 +59,7 @@ GitHub Actions workflow runs:
 - demo e2e smoke test
 - storybook static build
 - chromatic visual regression upload (when token configured)
+- changesets release PR + npm publish (when `NPM_TOKEN` configured)
 
 ## Release Readiness Checklist
 - all quality gates green
