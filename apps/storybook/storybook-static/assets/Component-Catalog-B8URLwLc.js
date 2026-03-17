@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as s,T as c,S as i,D as t}from"./index-DabJ5LXF.js";import"./index-BWu4c2F4.js";import"./iframe-DSzl4zHH.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(s,{title:"Docs/Component Catalog"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as s,T as c,S as i,D as t}from"./index-CzsfsqgU.js";import"./index-BWu4c2F4.js";import"./iframe-VigIkPsy.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(s,{title:"Docs/Component Catalog"}),`
 `,e.jsx(c,{}),`
 `,e.jsx(i,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(t,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
@@ -31,7 +31,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 | Toast | `,e.jsx(o.code,{children:"Toast"})," | ",e.jsx(o.code,{children:"Feedback/Toast"}),` | yes |
 | Progress | `,e.jsx(o.code,{children:"Progress"})," | ",e.jsx(o.code,{children:"Feedback/Progress"}),` | yes |
 | Skeleton | `,e.jsx(o.code,{children:"Skeleton"}),` | demo coverage | - |
-| Empty | `,e.jsx(o.code,{children:"Empty"}),` | demo coverage | - |
+| Empty | `,e.jsx(o.code,{children:"Empty"})," | ",e.jsx(o.code,{children:"Feedback/Empty"}),` | yes |
 | LoadingDots | `,e.jsx(o.code,{children:"LoadingDots"}),` | demo coverage | - |
 | StreamingText | `,e.jsx(o.code,{children:"StreamingText"})," | demo coverage | - |"]}),`
 `,e.jsx(o.h2,{id:"overlay",children:"Overlay"}),`
