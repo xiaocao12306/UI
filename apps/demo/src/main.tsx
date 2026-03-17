@@ -18,6 +18,7 @@ import {
   LoadingDots,
   MessageBubble,
   Popover,
+  Pagination,
   Progress,
   PromptInput,
   RadioGroup,
@@ -44,6 +45,15 @@ const sectionLinks = [
 ];
 const availableThemes: ThemeName[] = ["core-light", "core-dark", "glass", "neo-brutal"];
 const themeStorageKey = "aurora-ui-demo-theme";
+const releaseFeed = [
+  "v0.1.0: Button interaction states promoted to production grade.",
+  "v0.1.0: Dialog close policy docs updated for a11y consistency.",
+  "v0.1.0: CommandPalette keyboard map expanded with Home/End.",
+  "v0.1.0: Toast timer path stabilized for hover pause lifecycle.",
+  "v0.1.0: Tabs and Table data keyboard regression suite added.",
+  "v0.1.0: Storybook component API docs expanded with edge recipes.",
+  "v0.1.0: Release dry-run evidence recorded for all npm packages."
+];
 
 function Section({
   id,
@@ -95,6 +105,10 @@ function App() {
   const [paletteOpen, setPaletteOpen] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
+  const [feedPage, setFeedPage] = React.useState(1);
+  const feedPageSize = 3;
+  const feedPageCount = Math.ceil(releaseFeed.length / feedPageSize);
+  const visibleFeed = releaseFeed.slice((feedPage - 1) * feedPageSize, feedPage * feedPageSize);
 
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -275,6 +289,22 @@ function App() {
               { component: "StreamingCodeBlock", status: "Beta", coverage: 73 }
             ]}
           />
+          <div style={{ display: "grid", gap: 10 }}>
+            <h3 style={{ margin: 0, fontSize: 16 }}>Release Activity Feed</h3>
+            <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 6 }}>
+              {visibleFeed.map((entry) => (
+                <li key={entry} style={{ color: "var(--aurora-text-secondary)" }}>
+                  {entry}
+                </li>
+              ))}
+            </ul>
+            <Pagination
+              ariaLabel="Release feed pagination"
+              page={feedPage}
+              pageCount={feedPageCount}
+              onPageChange={setFeedPage}
+            />
+          </div>
         </Section>
 
         <Section

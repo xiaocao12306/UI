@@ -22,6 +22,7 @@
 - Data/Navigation
   - `Tabs`: production-refined
   - `Table`: production-refined
+  - `Pagination`: done
 - Feedback/State
   - `Alert`, `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
   - `Toast`: production-refined
@@ -38,9 +39,11 @@
 - Overlay/navigation: covered
 - AI flow and reasoning panel: covered
 - Data components (`Tabs`, `Table`): covered
+- Data pagination (`Pagination`): covered
 - Theme persistence and section anchor navigation: covered
 - Data keyboard/sort E2E (`Tabs Home/End`, `Table` sorting): covered
+- Data pagination E2E (`Release feed` page switching): covered
 
 ## Planned Next (v0.2)
-- `DatePicker` / `Combobox` / `Pagination`
+- `DatePicker` / `Combobox`
 - Storybook interaction test runner expansion

@@ -100,6 +100,17 @@ test("sorts demo table from column headers", async ({ page }) => {
   await expect(firstRow).toContainText("StreamingCodeBlock");
 });
 
+test("paginates release activity feed", async ({ page }) => {
+  await page.goto("/");
+
+  const paginationNav = page.getByRole("navigation", { name: "Release feed pagination" });
+  await expect(page.getByText("v0.1.0: Button interaction states promoted to production grade.")).toBeVisible();
+
+  await paginationNav.getByRole("button", { name: "Go to page 2" }).click();
+  await expect(page.getByText("v0.1.0: Toast timer path stabilized for hover pause lifecycle.")).toBeVisible();
+  await expect(page.getByText("v0.1.0: Button interaction states promoted to production grade.")).toBeHidden();
+});
+
 test("opens dropdown using keyboard", async ({ page }) => {
   await page.goto("/");
 
