@@ -141,6 +141,7 @@
   - CommandPalette 结果播报增强（`getResultsStatusText` + live region 语义收口 + 回归测试）
   - Core Storybook 交互收口（Tag/Badge 增补 `play` 断言，纳入自动回归）
   - FormField 文档入口补齐（Storybook `Form/FormField` + API/Catalog/Best Practices 同步）
+  - Storybook typecheck 基线修复（`FormField` story 补默认 args，消除 `Meta<typeof FormField>` 必填约束告警）
   - 横向收口（Tabs/Table：Home/End 焦点流、`aria-sort` 与排序切换断言、排序 telemetry 示例）
   - Table 语义边界修复（`defaultSortKey` 指向非 sortable 列时忽略初始排序，保持 `aria-sort` 正确）
   - Table Storybook 边界示例补齐（`InvalidDefaultSortKeyFallback` 覆盖无效默认排序键）

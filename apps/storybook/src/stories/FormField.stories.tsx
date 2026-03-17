@@ -6,6 +6,10 @@ const meta = {
   title: "Form/FormField",
   component: FormField,
   tags: ["autodocs"],
+  args: {
+    label: "Field label",
+    children: <Input aria-label="Field input" />
+  },
   parameters: {
     layout: "centered",
     docs: {
