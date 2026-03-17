@@ -29,7 +29,8 @@
   - `Table`: production-refined
   - `Pagination`: production-refined
 - Feedback/State
-  - `Alert`, `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
+  - `Alert`: production-refined
+  - `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
   - `Toast`: production-refined
 - Overlay
   - `Tooltip`: done

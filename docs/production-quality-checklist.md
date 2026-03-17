@@ -32,6 +32,7 @@
 | ReasoningPanel | production-refined | `AI/ReasoningPanel` | `ReasoningPanel.test.tsx` |
 | StreamingCodeBlock | production-refined | `AI/StreamingCodeBlock` | `StreamingCodeBlock.test.tsx` |
 | Toast | production-refined | `Feedback/Toast` | `Toast.test.tsx` |
+| Alert | production-refined | `Feedback/Alert` | `Alert.test.tsx` |
 | Tabs | production-refined | `Data/Tabs` | `Tabs.test.tsx` |
 | Table | production-refined | `Data/Table` | `Table.test.tsx` |
 | Pagination | production-refined | `Data/Pagination` | `Pagination.test.tsx` |
@@ -64,3 +65,4 @@
 - Drawer production hardening: aligned with dialog-level aria semantics, configurable dismiss policy, and dedicated Storybook overlay scenarios.
 - Pagination production hardening: added keyboard shortcuts (`Home/End/Arrow`), redundant-change guards, and customizable aria label generation for i18n.
 - DatePicker production hardening: aligned invalid inference with `aria-invalid`, exposed native `onChange` hook, and expanded state-matrix Storybook coverage.
+- Alert production hardening: added tone-based live-region semantics, dismiss action branch, and dedicated Storybook + unit coverage.
