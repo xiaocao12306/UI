@@ -26,6 +26,8 @@ Aurora UI is a token-first React component library monorepo with accessibility-f
 - `docs/react-component-library-plan.md`: source blueprint
 - `docs/component-status.md`: component implementation matrix
 - `docs/testing-and-release.md`: quality and release workflow
+- `docs/overlay-behavior.md`: overlay dismiss/keyboard behavior guide
+- `docs/ai-components-guide.md`: AI component composition guide
 
 ## Quick Start
 ```bash

@@ -99,6 +99,8 @@
   - 基础组件、反馈组件、浮层组件、AI 组件
   - Demo 网站与多场景展示
   - 单元测试基线与 CI 质量门禁
+  - 浮层组件交互测试（Escape / outside pointer / command filter）
+  - Demo 命令面板快捷键（Ctrl/Cmd + K）与动作示例
 - 进行中
-  - 文档体系细化（组件 API、示例最佳实践）
+  - 文档体系细化（组件 API、示例最佳实践，AI/Overlay 专项指南）
   - Storybook 与视觉回归基线
