@@ -152,6 +152,32 @@ function PersistentSelectionPalette() {
   );
 }
 
+function NonDismissiblePalette() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Palette stays open until action selection or explicit toggle.
+      </p>
+      <button type="button" onClick={() => setOpen((value) => !value)}>
+        {open ? "Close blocking palette" : "Open blocking palette"}
+      </button>
+      <button type="button">Outside target</button>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        closeOnEscape={false}
+        closeOnOutsidePointer={false}
+        commands={[
+          { key: "approve", label: "Approve release" },
+          { key: "reject", label: "Reject release" }
+        ]}
+      />
+    </div>
+  );
+}
+
 export const SearchCommands: Story = {
   render: () => <OpenPalette />,
   play: async ({ canvasElement }) => {
@@ -219,6 +245,21 @@ export const PersistentSelection: Story = {
 
     await userEvent.click(runLint);
     await expect(canvas.getByTestId("selection-count")).toHaveTextContent("1");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  }
+};
+
+export const NonDismissible: Story = {
+  render: () => <NonDismissiblePalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await userEvent.click(await canvas.findByRole("button", { name: "Open blocking palette" }));
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Outside target" }));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   }
 };

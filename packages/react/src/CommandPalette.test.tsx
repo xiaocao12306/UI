@@ -91,6 +91,28 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("supports non-dismissible escape and outside pointer policies", () => {
+    const onOpenChange = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        closeOnEscape={false}
+        closeOnOutsidePointer={false}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+    fireEvent.pointerDown(document.body);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  });
+
   it("shows empty-state copy when query has no match", () => {
     render(
       <CommandPalette

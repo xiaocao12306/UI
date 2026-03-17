@@ -16,6 +16,8 @@ export type CommandPaletteProps = {
   onOpenChange: (open: boolean) => void;
   commands: CommandItem[];
   closeOnSelect?: boolean;
+  closeOnEscape?: boolean;
+  closeOnOutsidePointer?: boolean;
   placeholder?: string;
   emptyMessage?: React.ReactNode;
   onQueryChange?: (query: string) => void;
@@ -32,6 +34,8 @@ export function CommandPalette({
   onOpenChange,
   commands,
   closeOnSelect = true,
+  closeOnEscape = true,
+  closeOnOutsidePointer = true,
   placeholder = "Search commands...",
   emptyMessage = "No commands found.",
   onQueryChange,
@@ -138,6 +142,8 @@ export function CommandPalette({
       title="Command Palette"
       description="Quickly search and execute workspace actions."
       size="md"
+      closeOnEscape={closeOnEscape}
+      closeOnOutsidePointer={closeOnOutsidePointer}
     >
       <div style={{ display: "grid", gap: 10 }}>
         <Input

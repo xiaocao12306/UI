@@ -76,6 +76,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Track user query updates with `onQueryChange` for downstream telemetry.
 - Keep live-region narration aligned with actionable commands (enabled matches), not just visible results.
 - For batched command execution, set `closeOnSelect={false}` so users can run multiple actions without reopening the palette.
+- For blocking approvals, set `closeOnEscape={false}` and `closeOnOutsidePointer={false}` so command confirmation cannot be dismissed accidentally.
 - Guard Ctrl/Cmd + Enter submission against active IME composition to avoid accidental sends for CJK input.
 - Show reasoning disclosure with explicit user intent (default collapsed).
 - Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
