@@ -1,1 +1,0 @@
-function n(t,e){return typeof t=="boolean"?t:e===!0||e==="true"}function o(t,e){return typeof t=="boolean"?t:e===!0||e==="true"}function f(...t){const e=t.flatMap(r=>typeof r=="string"?r.split(/\s+/):[]).map(r=>r.trim()).filter(Boolean);if(e.length!==0)return[...new Set(e)].join(" ")}export{n as a,f as m,o as r};
