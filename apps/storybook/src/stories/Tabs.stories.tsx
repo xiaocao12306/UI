@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Tabs, type TabItem } from "@aurora-ui/react";
+import { expect, userEvent, within } from "@storybook/test";
 
 const productTabs: TabItem[] = [
   {
@@ -59,7 +60,19 @@ function ControlledTabsDemo() {
 }
 
 export const Controlled: Story = {
-  render: () => <ControlledTabsDemo />
+  render: () => <ControlledTabsDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const releaseTab = canvas.getByRole("tab", { name: "Release" });
+
+    await userEvent.click(releaseTab);
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Publish with changesets");
+
+    const tabList = canvas.getByRole("tablist", { name: "Tabs" });
+    tabList.focus();
+    await userEvent.keyboard("{Home}");
+    await expect(canvas.getByRole("tab", { name: "Spec" })).toHaveAttribute("aria-selected", "true");
+  }
 };
 
 export const WithDisabledTab: Story = {

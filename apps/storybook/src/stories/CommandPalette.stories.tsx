@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { CommandPalette, type CommandItem } from "@aurora-ui/react";
+import { expect, userEvent, within } from "@storybook/test";
 
 const commands: CommandItem[] = [
   { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
@@ -84,7 +85,17 @@ function QueryTelemetryPalette() {
 }
 
 export const SearchCommands: Story = {
-  render: () => <OpenPalette />
+  render: () => <OpenPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = canvas.getByRole("combobox", { name: "Search commands" });
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "publish");
+
+    const disabledOption = canvas.getByRole("option", { name: "Publish Release" });
+    await expect(disabledOption).toHaveAttribute("aria-disabled", "true");
+  }
 };
 
 export const AiInteractionFlow: Story = {
@@ -92,5 +103,16 @@ export const AiInteractionFlow: Story = {
 };
 
 export const QueryTelemetry: Story = {
-  render: () => <QueryTelemetryPalette />
+  render: () => <QueryTelemetryPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = canvas.getByRole("combobox", { name: "Search commands" });
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "release");
+    await expect(canvas.getByText("release")).toBeInTheDocument();
+
+    await userEvent.keyboard("{ArrowDown}{Enter}");
+    await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
+  }
 };

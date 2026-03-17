@@ -39,3 +39,4 @@
 - DatePicker: added controlled date input wrapper, range/invalid coverage, and demo interaction regression.
 - Storybook interaction runner: added `play`-based interaction checks and static-site test-runner execution (`storybook:test:ci`).
 - Pagination polish: added disabled visual semantics and `showFirstLast={false}` branch coverage.
+- Storybook play coverage expansion: added deterministic interaction assertions for `CommandPalette`, `Toast`, `Tabs`, and `Table`.

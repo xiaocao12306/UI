@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Table, type TableColumn } from "@aurora-ui/react";
 import * as React from "react";
+import { expect, userEvent, within } from "@storybook/test";
 
 type ReleaseRow = {
   id: string;
@@ -108,5 +109,16 @@ function SortTelemetryDemo() {
 }
 
 export const SortTelemetry: Story = {
-  render: () => <SortTelemetryDemo />
+  render: () => <SortTelemetryDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const issueSort = canvas.getByRole("button", { name: "Issue sort descending" });
+
+    await userEvent.click(issueSort);
+    await expect(canvas.getByText("id desc")).toBeInTheDocument();
+    await expect(canvas.getByRole("columnheader", { name: "Issue sort ascending" })).toHaveAttribute(
+      "aria-sort",
+      "descending"
+    );
+  }
 };

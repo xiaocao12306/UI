@@ -33,8 +33,11 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `storybook:test:ci`：在本地静态产物（`storybook-static`）上启动临时服务并运行测试
 - 当前已覆盖 play 场景：
   - `Form/Combobox` 选择流程
-  - `Form/DatePicker` 日期更新流程
   - `Data/Pagination` 翻页流程
+  - `AI/CommandPalette` 搜索/禁用项/回车关闭流程
+  - `Feedback/Toast` 关闭与重开流程
+  - `Data/Tabs` 点击切换 + Home 键回到首个可用标签
+  - `Data/Table` 排序切换与 `aria-sort` 状态同步
 
 ## 当前已覆盖故事
 - `Core/Button`

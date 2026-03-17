@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Toast } from "@aurora-ui/react";
+import { expect, userEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Feedback/Toast",
@@ -99,5 +100,14 @@ function ActionRequiredToastDemo() {
 }
 
 export const ActionRequired: Story = {
-  render: () => <ActionRequiredToastDemo />
+  render: () => <ActionRequiredToastDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(canvas.getByRole("status")).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));
+    await expect(canvas.queryByRole("status")).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Reopen" }));
+    await expect(canvas.getByRole("status")).toBeInTheDocument();
+  }
 };
