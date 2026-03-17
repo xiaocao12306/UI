@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as j}from"./index-CHKtz2QT.js";import{M as m,T as p,S as u,D as f,C as o,a as r}from"./index-jPZe-Yja.js";import{Primary as d}from"./Button.stories-Dz8gZM-U.js";import{Default as i}from"./Input.stories-CrRnlnWh.js";import{Controlled as b,WithCustomEmptyMessage as g}from"./Combobox.stories-BXWtt-ps.js";import{Interactive as t}from"./Dialog.stories-COFPWakp.js";import{WithInteractiveContent as C,Default as y}from"./Popover.stories-Bje6pfYw.js";import{Default as c}from"./Dropdown.stories-2UloqA8h.js";import{SearchCommands as l,QueryTelemetry as v}from"./CommandPalette.stories-D7zky3qJ.js";import{Default as a,ActionRequired as D}from"./Toast.stories-BC3VoaY2.js";import{Default as h,KeyboardNavigationGuide as T}from"./Tabs.stories-DqRvlT9f.js";import{ReleaseChecklist as P,SortTelemetry as I}from"./Table.stories-BL2_JP-j.js";import{Controlled as S,CompactRange as k}from"./Pagination.stories-CUlwZWC4.js";import{WithAiRequestState as A,Default as M}from"./PromptInput.stories-BlHC-L1j.js";import"./index-BWu4c2F4.js";import"./iframe-lJj9FViC.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Badge-Dkm8CRgf.js";import"./Input-vIzakoOT.js";import"./FieldStyles-CQy9UjBZ.js";import"./Textarea-CxXKxDMd.js";import"./Dialog-BvM6Q8hr.js";import"./DismissableLayer-0Dn_Gr2D.js";function x(s){const n={code:"code",h2:"h2",h3:"h3",p:"p",...j(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(m,{title:"Docs/Component API"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as j}from"./index-CHKtz2QT.js";import{M as m,T as p,S as u,D as f,C as o,a as r}from"./index-B6rEDU2m.js";import{Primary as d}from"./Button.stories-Dz8gZM-U.js";import{Default as i}from"./Input.stories-CrRnlnWh.js";import{Controlled as b,WithCustomEmptyMessage as g}from"./Combobox.stories-BXWtt-ps.js";import{Controlled as C,InvalidState as v}from"./DatePicker.stories-C2cPuGXk.js";import{Interactive as t}from"./Dialog.stories-COFPWakp.js";import{WithInteractiveContent as y,Default as D}from"./Popover.stories-Bje6pfYw.js";import{Default as c}from"./Dropdown.stories-2UloqA8h.js";import{SearchCommands as l,QueryTelemetry as T}from"./CommandPalette.stories-D7zky3qJ.js";import{Default as a,ActionRequired as P}from"./Toast.stories-BC3VoaY2.js";import{Default as h,KeyboardNavigationGuide as I}from"./Tabs.stories-DqRvlT9f.js";import{ReleaseChecklist as S,SortTelemetry as k}from"./Table.stories-BL2_JP-j.js";import{Controlled as A,CompactRange as M}from"./Pagination.stories-CUlwZWC4.js";import{WithAiRequestState as N,Default as R}from"./PromptInput.stories-BlHC-L1j.js";import"./index-BWu4c2F4.js";import"./iframe-BeVkWSGk.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Badge-Dkm8CRgf.js";import"./Input-vIzakoOT.js";import"./FieldStyles-CQy9UjBZ.js";import"./Textarea-CxXKxDMd.js";import"./Dialog-BvM6Q8hr.js";import"./DismissableLayer-0Dn_Gr2D.js";function x(s){const n={code:"code",h2:"h2",h3:"h3",p:"p",...j(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(m,{title:"Docs/Component API"}),`
 `,e.jsx(p,{}),`
 `,e.jsx(u,{children:"Primary API Reference"}),`
 `,e.jsx(f,{children:e.jsx(n.p,{children:`This page links the most-used Aurora UI components to executable stories and prop controls.
@@ -20,13 +20,22 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"value"})," / ",e.jsx(n.code,{children:"defaultValue"})," | ",e.jsx(n.code,{children:"string"}),` | Controlled and uncontrolled modes are both available. |
 | `,e.jsx(n.code,{children:"onValueChange"})," | ",e.jsx(n.code,{children:"(value: string) => void"}),` | Fires when user confirms option by click or Enter. |
 | `,e.jsx(n.code,{children:"emptyMessage"})," | ",e.jsx(n.code,{children:"ReactNode"})," | Custom no-result content for search miss scenarios. |"]}),`
+`,e.jsx(n.h3,{id:"datepicker",children:"DatePicker"}),`
+`,e.jsx(o,{of:C}),`
+`,e.jsx(r,{of:v}),`
+`,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
+| --- | --- | --- |
+| `,e.jsx(n.code,{children:"value"})," / ",e.jsx(n.code,{children:"defaultValue"})," | ",e.jsx(n.code,{children:"string"})," | Uses native ",e.jsx(n.code,{children:"YYYY-MM-DD"}),` value format. |
+| `,e.jsx(n.code,{children:"onValueChange"})," | ",e.jsx(n.code,{children:"(value: string) => void"}),` | Emits selected date string from native date input. |
+| `,e.jsx(n.code,{children:"min"})," / ",e.jsx(n.code,{children:"max"})," | ",e.jsx(n.code,{children:"string"}),` | Native date range constraints. |
+| `,e.jsx(n.code,{children:"invalid"})," | ",e.jsx(n.code,{children:"boolean"})," | Adds ",e.jsx(n.code,{children:"aria-invalid"})," to communicate validation state. |"]}),`
 `,e.jsx(n.h2,{id:"overlay",children:"Overlay"}),`
 `,e.jsx(n.h3,{id:"dialog",children:"Dialog"}),`
 `,e.jsx(o,{of:t}),`
 `,e.jsx(r,{of:t}),`
 `,e.jsx(n.h3,{id:"popover",children:"Popover"}),`
-`,e.jsx(o,{of:C}),`
-`,e.jsx(r,{of:y}),`
+`,e.jsx(o,{of:y}),`
+`,e.jsx(r,{of:D}),`
 `,e.jsx(n.h3,{id:"dropdown",children:"Dropdown"}),`
 `,e.jsx(o,{of:c}),`
 `,e.jsx(r,{of:c}),`
@@ -39,19 +48,19 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"items"})," | ",e.jsx(n.code,{children:"TabItem[]"})," | Include ",e.jsx(n.code,{children:"disabled"}),` for unavailable states. |
 | `,e.jsx(n.code,{children:"value"})," / ",e.jsx(n.code,{children:"defaultValue"})," | ",e.jsx(n.code,{children:"string"}),` | Controlled and uncontrolled modes are both supported. |
 | `,e.jsx(n.code,{children:"onValueChange"})," | ",e.jsx(n.code,{children:"(value: string) => void"})," | Fires only for enabled tabs. |"]}),`
-`,e.jsx(o,{of:T}),`
+`,e.jsx(o,{of:I}),`
 `,e.jsx(n.h3,{id:"table",children:"Table"}),`
-`,e.jsx(o,{of:P}),`
+`,e.jsx(o,{of:S}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"columns"})," | ",e.jsx(n.code,{children:"TableColumn<T>[]"})," | ",e.jsx(n.code,{children:"sortable"})," + optional ",e.jsx(n.code,{children:"sortAccessor"}),` for stable sorting behavior. |
 | `,e.jsx(n.code,{children:"data"})," | ",e.jsx(n.code,{children:"T[]"})," | Empty arrays render ",e.jsx(n.code,{children:"emptyContent"}),`. |
 | `,e.jsx(n.code,{children:"defaultSortKey"})," / ",e.jsx(n.code,{children:"defaultSortDirection"})," | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"'asc' \\| 'desc'"})," | Sets initial ",e.jsx(n.code,{children:"aria-sort"}),` and data order. |
 | `,e.jsx(n.code,{children:"onSortChange"})," | ",e.jsx(n.code,{children:"(key, direction) => void"})," | Useful for telemetry and analytics. |"]}),`
-`,e.jsx(o,{of:I}),`
+`,e.jsx(o,{of:k}),`
 `,e.jsx(n.h3,{id:"pagination",children:"Pagination"}),`
-`,e.jsx(o,{of:S}),`
-`,e.jsx(r,{of:k}),`
+`,e.jsx(o,{of:A}),`
+`,e.jsx(r,{of:M}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"page"})," | ",e.jsx(n.code,{children:"number"}),` | Current page index (1-based). |
@@ -69,7 +78,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"duration"})," | ",e.jsx(n.code,{children:"number"})," | Auto-dismiss delay in ms; ",e.jsx(n.code,{children:"0"}),` disables timer. |
 | `,e.jsx(n.code,{children:"pauseOnHover"})," | ",e.jsx(n.code,{children:"boolean"}),` | Suspends timer while hovered. |
 | `,e.jsx(n.code,{children:"closeOnEscape"})," | ",e.jsx(n.code,{children:"boolean"})," | Optional keyboard dismiss path. |"]}),`
-`,e.jsx(o,{of:D}),`
+`,e.jsx(o,{of:P}),`
 `,e.jsx(n.h2,{id:"ai",children:"AI"}),`
 `,e.jsx(n.h3,{id:"commandpalette",children:"CommandPalette"}),`
 `,e.jsx(o,{of:l}),`
@@ -80,7 +89,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"emptyMessage"})," | ",e.jsx(n.code,{children:"ReactNode"}),` | Custom empty-state guidance for no-match queries. |
 | `,e.jsx(n.code,{children:"onQueryChange"})," | ",e.jsx(n.code,{children:"(query: string) => void"}),` | Use for analytics and AI telemetry pipelines. |
 | `,e.jsx(n.code,{children:"onOpenChange"})," | ",e.jsx(n.code,{children:"(open: boolean) => void"})," | Required controlled dialog state. |"]}),`
-`,e.jsx(o,{of:v}),`
+`,e.jsx(o,{of:T}),`
 `,e.jsx(n.h3,{id:"promptinput",children:"PromptInput"}),`
-`,e.jsx(o,{of:A}),`
-`,e.jsx(r,{of:M})]})}function se(s={}){const{wrapper:n}={...j(),...s.components};return n?e.jsx(n,{...s,children:e.jsx(x,{...s})}):x(s)}export{se as default};
+`,e.jsx(o,{of:N}),`
+`,e.jsx(r,{of:R})]})}function te(s={}){const{wrapper:n}={...j(),...s.components};return n?e.jsx(n,{...s,children:e.jsx(x,{...s})}):x(s)}export{te as default};
