@@ -165,6 +165,25 @@ describe("Toast", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("closes only one toast per Escape press when multiple are open", () => {
+    const firstOnOpenChange = vi.fn();
+    const secondOnOpenChange = vi.fn();
+
+    render(
+      <>
+        <Toast open title="First" onOpenChange={firstOnOpenChange} />
+        <Toast open title="Second" onOpenChange={secondOnOpenChange} />
+      </>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    const closedCount =
+      firstOnOpenChange.mock.calls.filter(([open]) => open === false).length +
+      secondOnOpenChange.mock.calls.filter(([open]) => open === false).length;
+    expect(closedCount).toBe(1);
+  });
+
   it("resets paused state after close and reopen", () => {
     vi.useFakeTimers();
     const onOpenChange = vi.fn();
