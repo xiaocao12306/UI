@@ -128,6 +128,7 @@
   - 横向收口（Toast：auto-dismiss/pauseOnHover/closeOnEscape=false 测试分支、ActionRequired 示例）
   - 横向收口（Tabs/Table：Home/End 焦点流、`aria-sort` 与排序切换断言、排序 telemetry 示例）
   - Table 语义边界修复（`defaultSortKey` 指向非 sortable 列时忽略初始排序，保持 `aria-sort` 正确）
+  - Table Storybook 边界示例补齐（`InvalidDefaultSortKeyFallback` 覆盖无效默认排序键）
   - CommandPalette 语义补强（`aria-disabled` option 语义与全禁用状态测试）
   - Toast 生命周期补丁（hover pause 状态在 close/reopen 后复位）
   - Table 可访问性增强（sortable header `aria-label` 下一步排序提示、`scope="col"`）

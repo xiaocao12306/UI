@@ -121,3 +121,28 @@ export const SortTelemetry: Story = {
     await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
   }
 };
+
+export const InvalidDefaultSortKeyFallback: Story = {
+  render: () => {
+    const nonSortableStatusColumns: Array<TableColumn<ReleaseRow>> = [
+      { key: "component", header: "Component", sortable: true },
+      { key: "status", header: "Status", width: 140 }
+    ];
+
+    return (
+      <div style={{ width: 620 }}>
+        <Table columns={nonSortableStatusColumns} data={rows} defaultSortKey="status" />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const componentHeader = canvas.getByRole("columnheader", { name: "Component" });
+    const statusHeader = canvas.getByRole("columnheader", { name: "Status" });
+
+    await expect(componentHeader).toHaveAttribute("aria-sort", "none");
+    await expect(statusHeader).toHaveAttribute("aria-sort", "none");
+    await expect(canvas.queryByRole("button", { name: /Status sort/ })).not.toBeInTheDocument();
+    await expect(canvas.getAllByRole("cell")[0]).toHaveTextContent("Button");
+  }
+};
