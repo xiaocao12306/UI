@@ -147,6 +147,24 @@ test("sorts demo table from column headers", async ({ page }) => {
   await expect(firstRow).toContainText("StreamingCodeBlock");
 });
 
+test("toggles table loading state and disables sort controls", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
+  const loadingToggle = page.getByRole("button", { name: "Toggle table loading" });
+
+  await loadingToggle.click();
+  await expect(table).toHaveAttribute("aria-busy", "true");
+  await expect(page.getByText("Syncing component readiness metrics...")).toBeVisible();
+  await expect(table.getByRole("button", { name: "Component sort descending" })).toBeDisabled();
+  await expect(table.getByRole("cell", { name: "Button" })).toHaveCount(0);
+
+  await loadingToggle.click();
+  await expect(table).not.toHaveAttribute("aria-busy");
+  await expect(table.getByRole("button", { name: "Component sort descending" })).toBeEnabled();
+  await expect(table.getByRole("cell", { name: "Button" })).toBeVisible();
+});
+
 test("keeps manual tabs panel stable until Enter activation", async ({ page }) => {
   await page.goto("/");
 

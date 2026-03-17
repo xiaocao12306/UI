@@ -118,6 +118,7 @@ function App() {
   const [framework, setFramework] = React.useState("react");
   const [releaseDate, setReleaseDate] = React.useState("2026-03-17");
   const [feedPage, setFeedPage] = React.useState(1);
+  const [tableLoading, setTableLoading] = React.useState(false);
   const feedPageSize = 3;
   const feedPageCount = Math.ceil(releaseFeed.length / feedPageSize);
   const visibleFeed = releaseFeed.slice((feedPage - 1) * feedPageSize, feedPage * feedPageSize);
@@ -330,6 +331,8 @@ function App() {
           <Table
             caption="Component readiness metrics"
             defaultSortKey="component"
+            loading={tableLoading}
+            loadingContent="Syncing component readiness metrics..."
             columns={[
               { key: "component", header: "Component", sortable: true },
               { key: "status", header: "Status", sortable: true },
@@ -341,6 +344,11 @@ function App() {
               { component: "StreamingCodeBlock", status: "Beta", coverage: 73 }
             ]}
           />
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Button variant="outline" onClick={() => setTableLoading((value) => !value)}>
+              Toggle table loading
+            </Button>
+          </div>
           <div style={{ display: "grid", gap: 10 }}>
             <h3 style={{ margin: 0, fontSize: 16 }}>Release Activity Feed</h3>
             <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 6 }}>
