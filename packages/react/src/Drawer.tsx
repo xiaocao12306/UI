@@ -7,6 +7,7 @@ export type DrawerProps = {
   title: React.ReactNode;
   description?: React.ReactNode;
   children: React.ReactNode;
+  restoreFocus?: boolean;
   closeOnEscape?: boolean;
   closeOnOutsidePointer?: boolean;
   showCloseButton?: boolean;
@@ -22,6 +23,7 @@ export function Drawer({
   title,
   description,
   children,
+  restoreFocus = true,
   closeOnEscape = true,
   closeOnOutsidePointer = true,
   showCloseButton = true,
@@ -75,7 +77,7 @@ export function Drawer({
           }}
           onDismiss={() => onOpenChange(false)}
         >
-          <FocusScope>
+          <FocusScope restoreFocus={restoreFocus}>
             <aside
               role="dialog"
               aria-modal="true"

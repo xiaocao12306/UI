@@ -84,4 +84,60 @@ describe("Drawer", () => {
     fireEvent.keyDown(document, { key: "Escape" });
     expect(screen.queryByRole("dialog", { name: "Nested overlay drawer" })).toBeNull();
   });
+
+  it("restores focus to trigger by default after close", () => {
+    function FocusRestoreFixture() {
+      const [open, setOpen] = React.useState(false);
+
+      return (
+        <div>
+          <button type="button" onClick={() => setOpen(true)}>
+            Open drawer
+          </button>
+          <Drawer open={open} onOpenChange={setOpen} title="Focus restore drawer">
+            <p>Drawer content</p>
+          </Drawer>
+        </div>
+      );
+    }
+
+    render(<FocusRestoreFixture />);
+
+    const trigger = screen.getByRole("button", { name: "Open drawer" });
+    trigger.focus();
+    expect(trigger).toHaveFocus();
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: "Focus restore drawer" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Close drawer" }));
+    expect(trigger).toHaveFocus();
+  });
+
+  it("supports disabling focus restore after close", () => {
+    function NoFocusRestoreFixture() {
+      const [open, setOpen] = React.useState(false);
+
+      return (
+        <div>
+          <button type="button" onClick={() => setOpen(true)}>
+            Open no-restore drawer
+          </button>
+          <Drawer open={open} onOpenChange={setOpen} title="No focus restore drawer" restoreFocus={false}>
+            <p>Drawer content</p>
+          </Drawer>
+        </div>
+      );
+    }
+
+    render(<NoFocusRestoreFixture />);
+
+    const trigger = screen.getByRole("button", { name: "Open no-restore drawer" });
+    trigger.focus();
+    expect(trigger).toHaveFocus();
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: "No focus restore drawer" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Close drawer" }));
+    expect(trigger).not.toHaveFocus();
+  });
 });

@@ -130,6 +130,7 @@
   - Dropdown typeahead 深化（多字符缓冲、重复按键循环、`textValue` 重音归一匹配）
   - 发布/视觉回归工作流可观测性增强（缺失 token 时写入 `GITHUB_STEP_SUMMARY` 指引）
   - Dialog 焦点回收收口（默认关闭后恢复原焦点，支持 `restoreFocus=false` 关闭）
+  - Drawer 焦点回收收口（默认关闭后恢复原焦点，支持 `restoreFocus=false` 关闭）
   - Popover/Dropdown 图标触发器可访问性补齐（`triggerAriaLabel`，覆盖 icon-only 交互）
   - 生产级返工（Toast）
   - 生产级返工（Tabs）
