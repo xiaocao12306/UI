@@ -127,6 +127,31 @@ function TextValueAndAccentSearchPalette() {
   );
 }
 
+function PersistentSelectionPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [selectedCount, setSelectedCount] = React.useState(0);
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Batch actions selected:{" "}
+        <strong data-testid="selection-count" style={{ color: "var(--aurora-text-primary)" }}>
+          {selectedCount}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        closeOnSelect={false}
+        commands={[
+          { key: "run-lint", label: "Run Lint", onSelect: () => setSelectedCount((count) => count + 1) },
+          { key: "run-tests", label: "Run Tests", onSelect: () => setSelectedCount((count) => count + 1) }
+        ]}
+      />
+    </div>
+  );
+}
+
 export const SearchCommands: Story = {
   render: () => <OpenPalette />,
   play: async ({ canvasElement }) => {
@@ -183,5 +208,17 @@ export const TextValueAndAccentSearch: Story = {
     await userEvent.type(input, "cafe");
     await expect(canvas.getByRole("option", { name: "Café Settings" })).toBeInTheDocument();
     await expect(canvas.queryByRole("option", { name: "Open Reports" })).not.toBeInTheDocument();
+  }
+};
+
+export const PersistentSelection: Story = {
+  render: () => <PersistentSelectionPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const runLint = await canvas.findByRole("option", { name: "Run Lint" });
+
+    await userEvent.click(runLint);
+    await expect(canvas.getByTestId("selection-count")).toHaveTextContent("1");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   }
 };

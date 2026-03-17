@@ -15,6 +15,7 @@ export type CommandPaletteProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   commands: CommandItem[];
+  closeOnSelect?: boolean;
   placeholder?: string;
   emptyMessage?: React.ReactNode;
   onQueryChange?: (query: string) => void;
@@ -30,6 +31,7 @@ export function CommandPalette({
   open,
   onOpenChange,
   commands,
+  closeOnSelect = true,
   placeholder = "Search commands...",
   emptyMessage = "No commands found.",
   onQueryChange,
@@ -107,9 +109,11 @@ export function CommandPalette({
       }
 
       item.onSelect?.();
-      onOpenChange(false);
+      if (closeOnSelect) {
+        onOpenChange(false);
+      }
     },
-    [filtered, onOpenChange]
+    [closeOnSelect, filtered, onOpenChange]
   );
 
   const moveActiveIndex = (direction: 1 | -1) => {

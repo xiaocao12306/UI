@@ -74,6 +74,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Provide empty-state guidance when no command matches the query.
 - Track user query updates with `onQueryChange` for downstream telemetry.
 - Keep live-region narration aligned with actionable commands (enabled matches), not just visible results.
+- For batched command execution, set `closeOnSelect={false}` so users can run multiple actions without reopening the palette.
 - Guard Ctrl/Cmd + Enter submission against active IME composition to avoid accidental sends for CJK input.
 - Show reasoning disclosure with explicit user intent (default collapsed).
 - Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
@@ -85,6 +86,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={CommandPaletteStories.AiInteractionFlow} />
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
 <Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />
+<Canvas of={CommandPaletteStories.PersistentSelection} />
 
 ## Notification Behavior
 

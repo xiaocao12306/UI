@@ -145,6 +145,29 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("keeps palette open after selection when closeOnSelect is false", () => {
+    const onOpenChange = vi.fn();
+    const onCreate = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        closeOnSelect={false}
+        onOpenChange={onOpenChange}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "create-project", label: "Create Project", onSelect: onCreate }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("option", { name: "Create Project" }));
+
+    expect(onCreate).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  });
+
   it("resets search query after palette closes", () => {
     const onOpenChange = vi.fn();
     const { rerender } = render(
