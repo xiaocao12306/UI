@@ -45,6 +45,7 @@ pnpm chromatic
 
 未配置时的预期行为：
 - `Release` workflow 仍会执行 Changesets 版本 PR 自动化，但会显示 `Release Publish Skipped` warning，并提示配置路径。
+- `Release` 与 `Chromatic` workflow 都会在 `GITHUB_STEP_SUMMARY` 输出可读的 skip 原因与修复步骤。
 
 安全建议：
 - 仅在仓库级 secret 保存 token，避免写入代码或文档示例中的真实值。

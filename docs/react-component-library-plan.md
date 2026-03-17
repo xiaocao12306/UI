@@ -128,6 +128,7 @@
   - Tabs 方向语义收口（`orientation` API + `ArrowUp/ArrowDown` 纵向键盘流）
   - Table 行标识收口（无 `rowKey` 时改为源索引稳定 key，避免排序后行节点抖动）
   - Dropdown typeahead 深化（多字符缓冲、重复按键循环、`textValue` 重音归一匹配）
+  - 发布/视觉回归工作流可观测性增强（缺失 token 时写入 `GITHUB_STEP_SUMMARY` 指引）
   - Popover/Dropdown 图标触发器可访问性补齐（`triggerAriaLabel`，覆盖 icon-only 交互）
   - 生产级返工（Toast）
   - 生产级返工（Tabs）

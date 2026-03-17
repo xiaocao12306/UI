@@ -57,3 +57,11 @@ jobs:
           echo "Configure secret path: GitHub -> Settings -> Secrets and variables -> Actions -> New repository secret"
           echo "Secret name: CHROMATIC_PROJECT_TOKEN"
           echo "Reference: docs/secrets.md"
+          {
+            echo "## Chromatic Upload Skipped"
+            echo
+            echo "- reason: \`CHROMATIC_PROJECT_TOKEN\` is not configured."
+            echo "- effect: Storybook visual regression baseline/upload is skipped for this run."
+            echo "- fix: add repository secret \`CHROMATIC_PROJECT_TOKEN\`."
+            echo "- guide: \`docs/secrets.md\`"
+          } >> "$GITHUB_STEP_SUMMARY"

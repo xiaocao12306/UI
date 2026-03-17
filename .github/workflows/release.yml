@@ -64,3 +64,11 @@ jobs:
           echo "Configure secret path: GitHub -> Settings -> Secrets and variables -> Actions -> New repository secret"
           echo "Secret name: NPM_TOKEN"
           echo "Reference: docs/secrets.md"
+          {
+            echo "## npm Publish Skipped"
+            echo
+            echo "- reason: \`NPM_TOKEN\` is not configured."
+            echo "- effect: release PR automation runs, but package publish step is skipped."
+            echo "- fix: add repository secret \`NPM_TOKEN\`."
+            echo "- guide: \`docs/secrets.md\`"
+          } >> "$GITHUB_STEP_SUMMARY"
