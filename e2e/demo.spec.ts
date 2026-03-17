@@ -219,6 +219,20 @@ test("dismisses toast with escape key", async ({ page }) => {
   await expect(toast).toBeHidden();
 });
 
+test("keeps blocking toast open on Escape until explicit dismiss", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Trigger blocking toast" }).click();
+  const toast = page.getByRole("status", { name: "Release approval required notification" });
+  await expect(toast).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(toast).toBeVisible();
+
+  await page.getByRole("button", { name: "Dismiss blocking notice" }).click();
+  await expect(toast).toBeHidden();
+});
+
 test("updates ai section prompt and reasoning trace", async ({ page }) => {
   await page.goto("/");
 

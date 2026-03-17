@@ -71,6 +71,7 @@
 - Popover/Dropdown dismiss-policy hardening: both overlays now expose `closeOnEscape` / `closeOnOutsidePointer` and low-level dismiss event hooks for blocking confirmation flows.
 - CommandPalette dismiss-policy hardening: palette now supports `closeOnEscape` / `closeOnOutsidePointer` toggles for approval flows that must stay open until explicit action.
 - Demo CommandPalette blocking-mode coverage: added UI toggle for dismiss policy (`closeOnEscape/closeOnOutsidePointer`) and Playwright regression asserting Escape/outside click do not close when blocking mode is enabled.
+- Demo Toast blocking-mode coverage: added `closeOnEscape={false}` notification path and Playwright regression asserting Escape is ignored until explicit close action.
 - Tabs interaction hardening: `activationMode="manual"` decouples arrow-key focus movement from activation and supports Enter/Space commit.
 - Toast escape hardening: Escape now respects `defaultPrevented` so stacked notifications close one at a time.
 - Overlay focus-policy hardening: Popover/Dropdown now restore trigger focus on Escape while preserving outside pointer target focus on pointer dismiss.

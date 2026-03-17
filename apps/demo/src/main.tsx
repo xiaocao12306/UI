@@ -110,6 +110,7 @@ function App() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [toastOpen, setToastOpen] = React.useState(false);
+  const [blockingToastOpen, setBlockingToastOpen] = React.useState(false);
   const [paletteOpen, setPaletteOpen] = React.useState(false);
   const [paletteBlocking, setPaletteBlocking] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
@@ -350,6 +351,11 @@ function App() {
           <Alert title="Network recovered" tone="success">
             All queued jobs were synchronized.
           </Alert>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <Button variant="outline" onClick={() => setBlockingToastOpen(true)}>
+              Trigger blocking toast
+            </Button>
+          </div>
           <Progress value={62} />
           <div style={{ display: "grid", gap: 8, maxWidth: 320 }}>
             <Skeleton height={14} />
@@ -509,6 +515,18 @@ function App() {
           onClose={() => setToastOpen(false)}
           title="Prompt submitted"
           description="Your AI request is now in the queue."
+        />
+        <Toast
+          open={blockingToastOpen}
+          onClose={() => setBlockingToastOpen(false)}
+          title="Release approval required"
+          description="Escalate to owner before publishing. Escape is disabled in this toast."
+          tone="warning"
+          duration={0}
+          closeOnEscape={false}
+          closeLabel="Dismiss blocking notice"
+          ariaLabel="Release approval required notification"
+          position="top-right"
         />
       </main>
     </AuroraProvider>
