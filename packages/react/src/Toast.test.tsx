@@ -166,6 +166,18 @@ describe("Toast", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("does not close when Escape event is already default prevented", () => {
+    const onOpenChange = vi.fn();
+
+    render(<Toast open title="Sticky" onOpenChange={onOpenChange} />);
+
+    const event = new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true });
+    event.preventDefault();
+    document.dispatchEvent(event);
+
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
   it("closes stacked toasts from top-most to oldest on Escape", () => {
     function StackedToasts() {
       const [firstOpen, setFirstOpen] = React.useState(true);

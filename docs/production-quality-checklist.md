@@ -75,6 +75,7 @@
 - Demo Tabs manual-activation coverage: added `activationMode="manual"` data-workflow example and Playwright regression locking focus-move vs Enter-activation split.
 - Demo Table loading coverage: added runtime loading toggle and Playwright regression for `aria-busy`, disabled sort controls, and stale-row suppression.
 - Tabs manual keyboard coverage: `Home/End` now has explicit unit + Storybook play assertions confirming focus movement does not activate panel until `Enter/Space`.
+- Toast escape-priority coverage: added explicit `defaultPrevented` unit branch to ensure global/higher-priority Escape handlers can preempt toast dismissal.
 - Tabs interaction hardening: `activationMode="manual"` decouples arrow-key focus movement from activation and supports Enter/Space commit.
 - Toast escape hardening: Escape now respects `defaultPrevented` so stacked notifications close one at a time.
 - Overlay focus-policy hardening: Popover/Dropdown now restore trigger focus on Escape while preserving outside pointer target focus on pointer dismiss.
