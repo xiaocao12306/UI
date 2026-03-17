@@ -25,7 +25,7 @@ export function Tooltip({ content, children }: TooltipProps) {
             top: "calc(100% + 8px)",
             left: "50%",
             transform: "translateX(-50%)",
-            background: "var(--aurora-slate-900, #0f172a)",
+            background: "var(--aurora-color-slate-900)",
             color: "white",
             padding: "6px 8px",
             borderRadius: 6,

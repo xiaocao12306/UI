@@ -11,6 +11,7 @@ import {
   Drawer,
   Dropdown,
   Empty,
+  FormField,
   GlobalStyles,
   Input,
   LoadingDots,
@@ -25,7 +26,9 @@ import {
   StreamingCodeBlock,
   StreamingText,
   Switch,
+  Table,
   Tag,
+  Tabs,
   Textarea,
   Toast,
   Tooltip
@@ -79,14 +82,20 @@ function App() {
             <Badge tone="success">Stable</Badge>
             <Badge tone="danger">Breaking</Badge>
           </div>
-          <div style={{ display: "grid", gap: 10, maxWidth: 420 }}>
-            <Input placeholder="Email" />
-            <Textarea placeholder="Message" />
-            <Select defaultValue="react">
-              <option value="react">React</option>
-              <option value="vue">Vue</option>
-              <option value="svelte">Svelte</option>
-            </Select>
+          <div style={{ display: "grid", gap: 12, maxWidth: 420 }}>
+            <FormField label="Email" htmlFor="email" required description="Used for release notifications.">
+              <Input id="email" placeholder="name@company.com" />
+            </FormField>
+            <FormField label="Message" htmlFor="message">
+              <Textarea id="message" placeholder="Share your feedback..." />
+            </FormField>
+            <FormField label="Framework" htmlFor="framework">
+              <Select id="framework" defaultValue="react">
+                <option value="react">React</option>
+                <option value="vue">Vue</option>
+                <option value="svelte">Svelte</option>
+              </Select>
+            </FormField>
             <Checkbox label="Enable analytics" defaultChecked />
             <RadioGroup
               name="size"
@@ -99,6 +108,29 @@ function App() {
             />
             <Switch checked={switchChecked} onCheckedChange={setSwitchChecked} label="Live updates" />
           </div>
+        </Section>
+
+        <Section title="Data & Navigation">
+          <Tabs
+            defaultValue="overview"
+            items={[
+              { key: "overview", label: "Overview", content: <p style={{ margin: 0 }}>Project health and adoption summary.</p> },
+              { key: "activity", label: "Activity", content: <p style={{ margin: 0 }}>Recent events, deploys, and alerts.</p> },
+              { key: "settings", label: "Settings", content: <p style={{ margin: 0 }}>Theme, access control, and preferences.</p> }
+            ]}
+          />
+          <Table
+            columns={[
+              { key: "component", header: "Component" },
+              { key: "status", header: "Status" },
+              { key: "coverage", header: "Coverage", render: (row) => `${row.coverage}%` }
+            ]}
+            data={[
+              { component: "Button", status: "Stable", coverage: 92 },
+              { component: "Dialog", status: "Stable", coverage: 88 },
+              { component: "StreamingCodeBlock", status: "Beta", coverage: 73 }
+            ]}
+          />
         </Section>
 
         <Section title="Feedback & States">

@@ -12,6 +12,15 @@ export type { TextareaProps } from "./Textarea";
 export { Select } from "./Select";
 export type { SelectProps } from "./Select";
 
+export { FormField } from "./FormField";
+export type { FormFieldProps } from "./FormField";
+
+export { Tabs } from "./Tabs";
+export type { TabItem, TabsProps } from "./Tabs";
+
+export { Table } from "./Table";
+export type { TableColumn, TableProps } from "./Table";
+
 export { Checkbox } from "./Checkbox";
 export type { CheckboxProps } from "./Checkbox";
 
