@@ -127,3 +127,24 @@ export const TypeaheadNavigation: Story = {
     await expect(menu).toBeInTheDocument();
   }
 };
+
+export const OutsideDismissFocusTransfer: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <Dropdown label="Focus Policy" items={items} />
+      <button type="button">Next Focus Target</button>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Focus Policy" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Focus Policy" })).toBeInTheDocument();
+
+    const outsideTarget = canvas.getByRole("button", { name: "Next Focus Target" });
+    await userEvent.click(outsideTarget);
+    await expect(canvas.queryByRole("menu", { name: "Focus Policy" })).not.toBeInTheDocument();
+    await expect(outsideTarget).toHaveFocus();
+  }
+};

@@ -153,9 +153,21 @@ export function Dropdown({ label, triggerAriaLabel, items, open, defaultOpen, on
       </Button>
       {isOpen ? (
         <DismissableLayer
-          onDismiss={() => {
+          onEscapeKeyDown={(event) => {
+            if (event.defaultPrevented) {
+              return;
+            }
+
+            event.preventDefault();
             setOpen(false);
             triggerRef.current?.focus();
+          }}
+          onPointerDownOutside={(event) => {
+            if (event.defaultPrevented) {
+              return;
+            }
+
+            setOpen(false);
           }}
         >
           <ul

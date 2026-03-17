@@ -51,7 +51,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 
 - Dialog/Drawer should explicitly define dismiss policy (`closeOnEscape`, `closeOnOutsidePointer`) for critical workflows.
 - Keep `restoreFocus` enabled for dialogs unless product flow intentionally redirects focus after close.
-- Popover and Dropdown should return focus to trigger on close to avoid keyboard dead-ends.
+- Popover and Dropdown should restore focus to trigger on keyboard dismissal (Escape), but keep pointer target focus on outside-click dismissal.
 - Dropdown menus should expose an accessible name via trigger-linked `aria-labelledby`.
 - Keep trigger `aria-controls` conditional on open state for popover/menu patterns to avoid stale ID references.
 - For dropdown typeahead, set `textValue` when item labels are non-string or need locale/accent-friendly buffered matching aliases.

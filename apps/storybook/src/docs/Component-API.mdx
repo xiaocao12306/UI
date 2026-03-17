@@ -260,6 +260,9 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `align` / `sideOffset` | `'start' \| 'end'` / `number` | Horizontal alignment and vertical spacing from trigger. |
 | `contentLabel` | `string` | Accessible name for popover dialog content region. |
 | trigger relation | conditional `aria-controls` | Trigger references content ID only while open to avoid dangling ARIA links. |
+| dismiss focus policy | Escape restores trigger focus; outside pointer keeps target focus | Prevents keyboard dead-ends without stealing pointer intent. |
+
+<Canvas of={PopoverStories.OutsideDismissFocusTransfer} />
 
 ### Dropdown
 
@@ -274,7 +277,10 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Works in both controlled and uncontrolled menu flows. |
 | menu naming | trigger-linked `aria-labelledby` | Menu inherits an accessible name from trigger content for screen-reader context. |
 | trigger relation | conditional `aria-controls` | Trigger points to menu ID only when expanded. |
-| keyboard behavior | Arrow / Home / End / Escape / Tab / Typeahead | Roving-focus menu navigation with deterministic close policy, buffered multi-character typeahead, and repeated-key cycling. |
+| keyboard behavior | Arrow / Home / End / Escape / Tab / Typeahead | Roving-focus menu navigation with deterministic close policy, buffered multi-character typeahead, repeated-key cycling, and trigger focus restore on Escape. |
+| pointer dismiss focus | outside pointer keeps target focus | Outside pointer dismissal closes menu without forcing focus back to trigger. |
+
+<Canvas of={DropdownStories.OutsideDismissFocusTransfer} />
 
 ## Data
 

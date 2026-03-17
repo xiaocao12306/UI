@@ -18,16 +18,20 @@ describe("Popover", () => {
     const dialog = screen.getByRole("dialog", { name: "Popover content" });
     expect(trigger).toHaveAttribute("aria-controls", dialog.id);
     expect(screen.getByText("Popover content")).toBeInTheDocument();
+    expect(trigger).not.toHaveFocus();
 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(trigger).not.toHaveAttribute("aria-controls");
     expect(screen.queryByText("Popover content")).toBeNull();
+    expect(trigger).toHaveFocus();
 
     fireEvent.click(trigger);
     expect(screen.getByText("Popover content")).toBeInTheDocument();
+    expect(trigger).not.toHaveFocus();
 
     fireEvent.pointerDown(document.body);
     expect(screen.queryByText("Popover content")).toBeNull();
+    expect(trigger).not.toHaveFocus();
   });
 
   it("supports controlled mode", () => {

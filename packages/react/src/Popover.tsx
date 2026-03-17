@@ -88,9 +88,21 @@ export function Popover({
           role="dialog"
           aria-label={contentLabel}
           tabIndex={-1}
-          onDismiss={() => {
+          onEscapeKeyDown={(event) => {
+            if (event.defaultPrevented) {
+              return;
+            }
+
+            event.preventDefault();
             setOpen(false);
             triggerRef.current?.focus();
+          }}
+          onPointerDownOutside={(event) => {
+            if (event.defaultPrevented) {
+              return;
+            }
+
+            setOpen(false);
           }}
           style={{
             position: "absolute",

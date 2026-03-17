@@ -42,14 +42,18 @@ describe("Dropdown", () => {
     fireEvent.click(screen.getByRole("button", { name: "Options" }));
     expect(screen.getByRole("menu")).toBeInTheDocument();
 
+    const trigger = screen.getByRole("button", { name: "Options" });
     fireEvent.keyDown(document, { key: "Escape" });
     expect(screen.queryByRole("menu")).toBeNull();
+    expect(trigger).toHaveFocus();
 
-    fireEvent.click(screen.getByRole("button", { name: "Options" }));
+    fireEvent.click(trigger);
     expect(screen.getByRole("menu")).toBeInTheDocument();
 
+    expect(trigger).not.toHaveFocus();
     fireEvent.pointerDown(document.body);
     expect(screen.queryByRole("menu")).toBeNull();
+    expect(trigger).not.toHaveFocus();
   });
 
   it("supports keyboard open and item navigation", () => {

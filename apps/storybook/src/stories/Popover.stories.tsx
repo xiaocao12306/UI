@@ -71,3 +71,30 @@ export const IconTrigger: Story = {
     await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   }
 };
+
+export const OutsideDismissFocusTransfer: Story = {
+  args: {
+    triggerLabel: "Focus Policy",
+    children: <p style={{ margin: 0 }}>Dismiss me by clicking outside.</p>
+  },
+  render: () => (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <Popover triggerLabel="Focus Policy">
+        <p style={{ margin: 0 }}>Dismiss me by clicking outside.</p>
+      </Popover>
+      <button type="button">Popover Next Focus Target</button>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Focus Policy" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    const outsideTarget = canvas.getByRole("button", { name: "Popover Next Focus Target" });
+    await userEvent.click(outsideTarget);
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(outsideTarget).toHaveFocus();
+  }
+};
