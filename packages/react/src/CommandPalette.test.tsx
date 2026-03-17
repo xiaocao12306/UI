@@ -187,4 +187,32 @@ describe("CommandPalette", () => {
     expect(onQueryChange).toHaveBeenCalledWith("no-hit");
     expect(screen.getByRole("status")).toHaveTextContent("No workflow commands yet.");
   });
+
+  it("keeps selection unset when all commands are disabled", () => {
+    const onOpenChange = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        commands={[
+          { key: "sync", label: "Sync", disabled: true },
+          { key: "deploy", label: "Deploy", disabled: true }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    const disabledOptions = screen.getAllByRole("option");
+
+    expect(input).not.toHaveAttribute("aria-activedescendant");
+    expect(disabledOptions).toHaveLength(2);
+    disabledOptions.forEach((option) => {
+      expect(option).toHaveAttribute("aria-disabled", "true");
+    });
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
 });

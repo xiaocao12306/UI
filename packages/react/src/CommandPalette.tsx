@@ -173,6 +173,7 @@ export function CommandPalette({
                   type="button"
                   role="option"
                   aria-selected={active}
+                  aria-disabled={item.disabled || undefined}
                   disabled={item.disabled}
                   onMouseEnter={() => {
                     if (!item.disabled) {
