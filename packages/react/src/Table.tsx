@@ -242,7 +242,7 @@ export function Table<T>({
 
               return (
                 <tr
-                  key={rowKey ? rowKey(row, index) : fallbackKey}
+                  key={rowKey ? rowKey(row, entry.sourceIndex) : fallbackKey}
                   style={{ background: index % 2 === 0 ? "transparent" : "var(--aurora-surface-elevated)" }}
                 >
                 {columns.map((column) => (

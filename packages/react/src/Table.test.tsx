@@ -290,4 +290,31 @@ describe("Table", () => {
 
     expect(alphaCellAfter).toBe(alphaCellBefore);
   });
+
+  it("passes source row index to rowKey so sorting does not churn index-based keys", () => {
+    const rowKey = vi.fn((row: { name: string }, rowIndex: number) => `${rowIndex}-${row.name}`);
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Alpha", score: 1 },
+          { name: "Beta", score: 2 },
+          { name: "Gamma", score: 3 }
+        ]}
+        rowKey={rowKey}
+        defaultSortKey="score"
+      />
+    );
+
+    rowKey.mockClear();
+    fireEvent.click(screen.getByRole("button", { name: "Score sort descending" }));
+
+    expect(rowKey).toHaveBeenCalledWith({ name: "Gamma", score: 3 }, 2);
+    expect(rowKey).toHaveBeenCalledWith({ name: "Beta", score: 2 }, 1);
+    expect(rowKey).toHaveBeenCalledWith({ name: "Alpha", score: 1 }, 0);
+  });
 });

@@ -249,3 +249,19 @@ export const FallbackRowKeyStability: Story = {
     await expect(canvas.getByRole("textbox", { name: "BTN-102 note" })).toHaveValue("persist me");
   }
 };
+
+export const SourceIndexRowKeyStability: Story = {
+  render: () => (
+    <div style={{ width: 720 }}>
+      <Table columns={statefulColumns} data={statefulRows} defaultSortKey="component" rowKey={(row, rowIndex) => `${rowIndex}-${row.id}`} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const alphaInput = canvas.getByRole("textbox", { name: "BTN-102 note" });
+
+    await userEvent.type(alphaInput, "persist me");
+    await userEvent.click(canvas.getByRole("button", { name: "Component sort descending" }));
+    await expect(canvas.getByRole("textbox", { name: "BTN-102 note" })).toHaveValue("persist me");
+  }
+};
