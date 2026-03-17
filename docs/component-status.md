@@ -18,8 +18,9 @@
 - Form/Input
   - `Button`, `Input`, `FormField`: production-refined
   - `Combobox`: production-refined
+  - `Select`: production-refined
   - `Textarea`: production-refined
-  - `Select`, `DatePicker`: done
+  - `DatePicker`: done
   - `Checkbox`, `RadioGroup`, `Switch`: done
 - Data/Navigation
   - `Tabs`: production-refined

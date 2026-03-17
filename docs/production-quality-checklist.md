@@ -14,6 +14,7 @@
 | --- | --- | --- | --- |
 | Button | production-refined | `Core/Button` | `Button.test.tsx` |
 | Input / FormField | production-refined | `Form/Input` | `Input.test.tsx`, `FormField.test.tsx` |
+| Select | production-refined | `Form/Select` | `Select.test.tsx` |
 | Textarea | production-refined | `Form/Textarea` | `Textarea.test.tsx` |
 | Combobox | production-refined | `Form/Combobox` | `Combobox.test.tsx` |
 | Dialog | production-refined | `Overlay/Dialog` | `Dialog.test.tsx` |
@@ -50,3 +51,4 @@
 - AI component quality pass: added `MessageBubble`/`ReasoningPanel`/`StreamingCodeBlock` tests and Storybook stories, plus `PromptInput` submit/disabled/multi-feedback interaction coverage.
 - Combobox production hardening: added `Escape` + blur dismiss paths, corrected `aria-selected` semantics to track selected value, and added disabled non-open guard coverage in unit + Storybook interaction checks.
 - Textarea production hardening: aligned invalid/focus/hover/disabled/readOnly visual states with Input tokens, and added dedicated unit + Storybook coverage.
+- Select production hardening: aligned invalid/focus/hover/disabled state semantics with Input tokens, and added dedicated unit + Storybook coverage.

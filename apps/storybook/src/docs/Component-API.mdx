@@ -1,6 +1,7 @@
 import { Meta, Title, Subtitle, Description, Canvas, Controls } from '@storybook/blocks';
 import * as ButtonStories from '../stories/Button.stories';
 import * as InputStories from '../stories/Input.stories';
+import * as SelectStories from '../stories/Select.stories';
 import * as ComboboxStories from '../stories/Combobox.stories';
 import * as DatePickerStories from '../stories/DatePicker.stories';
 import * as TextareaStories from '../stories/Textarea.stories';
@@ -39,6 +40,19 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 <Canvas of={InputStories.Default} />
 <Controls of={InputStories.Default} />
+
+### Select
+
+<Canvas of={SelectStories.Controlled} />
+<Controls of={SelectStories.DisabledState} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `value` / `defaultValue` | `string` | Supports controlled and uncontrolled native select flows. |
+| `invalid` | `boolean` | Adds `aria-invalid` and error-token border/ring semantics. |
+| `disabled` | `boolean` | Applies disabled semantics and visual de-emphasis. |
+
+<Canvas of={SelectStories.InvalidState} />
 
 ### Combobox
 
