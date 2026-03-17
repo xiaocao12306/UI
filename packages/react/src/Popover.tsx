@@ -6,6 +6,7 @@ export type PopoverAlign = "start" | "end";
 
 export type PopoverProps = {
   triggerLabel: React.ReactNode;
+  triggerAriaLabel?: string;
   children: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
@@ -17,6 +18,7 @@ export type PopoverProps = {
 
 export function Popover({
   triggerLabel,
+  triggerAriaLabel,
   children,
   open,
   defaultOpen,
@@ -65,6 +67,7 @@ export function Popover({
       <Button
         ref={triggerRef}
         variant="outline"
+        aria-label={triggerAriaLabel}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         aria-controls={isOpen ? contentId : undefined}

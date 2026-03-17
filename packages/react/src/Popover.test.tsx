@@ -43,4 +43,15 @@ describe("Popover", () => {
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
+
+  it("supports icon trigger naming via triggerAriaLabel", () => {
+    render(
+      <Popover triggerLabel="⋯" triggerAriaLabel="More info">
+        <p>Popover content</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "More info" }));
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  });
 });

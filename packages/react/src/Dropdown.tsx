@@ -11,6 +11,7 @@ export type DropdownItem = {
 
 export type DropdownProps = {
   label: React.ReactNode;
+  triggerAriaLabel?: string;
   items: DropdownItem[];
   open?: boolean;
   defaultOpen?: boolean;
@@ -33,7 +34,7 @@ function getNextEnabledIndex(items: DropdownItem[], currentIndex: number, direct
   return -1;
 }
 
-export function Dropdown({ label, items, open, defaultOpen, onOpenChange }: DropdownProps) {
+export function Dropdown({ label, triggerAriaLabel, items, open, defaultOpen, onOpenChange }: DropdownProps) {
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false);
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
@@ -78,6 +79,7 @@ export function Dropdown({ label, items, open, defaultOpen, onOpenChange }: Drop
         id={triggerId}
         ref={triggerRef}
         variant="outline"
+        aria-label={triggerAriaLabel}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}

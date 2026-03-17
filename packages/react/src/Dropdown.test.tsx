@@ -111,4 +111,20 @@ describe("Dropdown", () => {
     fireEvent.click(screen.getByRole("button", { name: "Deployment actions" }));
     expect(screen.getByRole("menu", { name: "Deployment actions" })).toBeInTheDocument();
   });
+
+  it("supports icon trigger naming via triggerAriaLabel", () => {
+    render(
+      <Dropdown
+        label="⋯"
+        triggerAriaLabel="More deployment actions"
+        items={[
+          { key: "ship", label: "Ship" },
+          { key: "rollback", label: "Rollback" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "More deployment actions" }));
+    expect(screen.getByRole("menu", { name: "More deployment actions" })).toBeInTheDocument();
+  });
 });

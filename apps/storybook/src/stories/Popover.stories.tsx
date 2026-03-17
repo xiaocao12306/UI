@@ -57,3 +57,17 @@ export const WithInteractiveContent: Story = {
     )
   }
 };
+
+export const IconTrigger: Story = {
+  args: {
+    triggerLabel: "⋯",
+    triggerAriaLabel: "More context actions",
+    children: <p style={{ margin: 0 }}>Quick context actions from icon trigger.</p>
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "More context actions" });
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  }
+};

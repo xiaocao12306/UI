@@ -47,6 +47,19 @@ export const DenseActions: Story = {
   }
 };
 
+export const IconTrigger: Story = {
+  args: {
+    label: "⋯",
+    triggerAriaLabel: "More actions",
+    items
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole("button", { name: "More actions" }));
+    await expect(canvas.getByRole("menu", { name: "More actions" })).toBeInTheDocument();
+  }
+};
+
 function SelectionTelemetryDropdown() {
   const [selected, setSelected] = React.useState("none");
 
