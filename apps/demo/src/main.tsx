@@ -53,6 +53,23 @@ function App() {
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
 
+  React.useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const isPaletteShortcut = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k";
+      if (!isPaletteShortcut) {
+        return;
+      }
+
+      event.preventDefault();
+      setPaletteOpen(true);
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, []);
+
   return (
     <AuroraProvider theme={theme}>
       <GlobalStyles />
@@ -192,6 +209,9 @@ function App() {
               Command Palette
             </Button>
           </div>
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            Keyboard shortcut: press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>K</kbd> to open Command Palette.
+          </p>
         </Section>
 
         <Section title="AI Components">
@@ -235,9 +255,26 @@ function App() {
           open={paletteOpen}
           onOpenChange={setPaletteOpen}
           commands={[
-            { key: "open-settings", label: "Open Settings" },
-            { key: "create-project", label: "Create Project" },
-            { key: "run-tests", label: "Run Tests" }
+            { key: "open-settings", label: "Open Settings", keywords: ["preferences", "config"] },
+            {
+              key: "open-dialog",
+              label: "Open Dialog",
+              keywords: ["modal", "overlay"],
+              onSelect: () => setDialogOpen(true)
+            },
+            {
+              key: "open-drawer",
+              label: "Open Drawer",
+              keywords: ["panel", "sidebar"],
+              onSelect: () => setDrawerOpen(true)
+            },
+            {
+              key: "create-project",
+              label: "Create Project",
+              keywords: ["new", "workspace"],
+              onSelect: () => setToastOpen(true)
+            },
+            { key: "run-tests", label: "Run Tests", keywords: ["ci", "quality"] }
           ]}
         />
 
