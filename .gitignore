@@ -10,6 +10,8 @@ storybook-static
 !.env.example
 !apps/demo/dist/
 !apps/demo/dist/**
+!apps/storybook/storybook-static/
+!apps/storybook/storybook-static/**
 playwright-report
 test-results
 

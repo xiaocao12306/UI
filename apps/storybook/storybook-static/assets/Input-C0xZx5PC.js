@@ -1,0 +1,1 @@
+import{j as s}from"./jsx-runtime-BjG_zV1W.js";import{r as e}from"./index-BWu4c2F4.js";import{f as n}from"./FieldStyles-CQy9UjBZ.js";const p=e.forwardRef(function({style:t,...o},r){return s.jsx("input",{ref:r,style:{...n,...t},...o})});p.__docgenInfo={description:"",methods:[],displayName:"Input"};export{p as I};
