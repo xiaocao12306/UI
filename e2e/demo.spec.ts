@@ -14,6 +14,15 @@ test("switches theme from selector", async ({ page }) => {
   await expect(page.getByText("Current theme: core-dark")).toBeVisible();
 });
 
+test("persists selected theme after reload", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByLabel("Theme").selectOption("glass");
+  await page.reload();
+
+  await expect(page.getByText("Current theme: glass")).toBeVisible();
+});
+
 test("opens command palette with keyboard shortcut", async ({ page }) => {
   await page.goto("/");
 
@@ -45,8 +54,16 @@ test("filters command palette and triggers drawer action", async ({ page }) => {
   await expect(palette).toBeVisible();
 
   await palette.getByPlaceholder("Search commands...").fill("drawer");
-  await palette.getByRole("button", { name: "Open Drawer" }).click();
+  await palette.getByRole("option", { name: "Open Drawer" }).click();
 
   await expect(palette).toBeHidden();
   await expect(page.getByRole("dialog").filter({ hasText: "Drawer Example" })).toBeVisible();
+});
+
+test("highlights active section in anchor nav", async ({ page }) => {
+  await page.goto("/");
+
+  const statesLink = page.getByRole("link", { name: "States" });
+  await statesLink.click();
+  await expect(statesLink).toHaveAttribute("aria-current", "location");
 });

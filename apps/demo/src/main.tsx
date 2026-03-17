@@ -42,6 +42,8 @@ const sectionLinks = [
   { id: "overlays-navigation", label: "Overlays" },
   { id: "ai-components", label: "AI" }
 ];
+const availableThemes: ThemeName[] = ["core-light", "core-dark", "glass", "neo-brutal"];
+const themeStorageKey = "aurora-ui-demo-theme";
 
 function Section({
   id,
@@ -78,7 +80,15 @@ function Section({
 }
 
 function App() {
-  const [theme, setTheme] = React.useState<ThemeName>("core-light");
+  const [theme, setTheme] = React.useState<ThemeName>(() => {
+    if (typeof window === "undefined") {
+      return "core-light";
+    }
+
+    const storedTheme = window.localStorage.getItem(themeStorageKey) as ThemeName | null;
+    return storedTheme && availableThemes.includes(storedTheme) ? storedTheme : "core-light";
+  });
+  const [activeSection, setActiveSection] = React.useState(sectionLinks[0].id);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [toastOpen, setToastOpen] = React.useState(false);
@@ -100,6 +110,24 @@ function App() {
     document.addEventListener("keydown", onKeyDown);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    window.localStorage.setItem(themeStorageKey, theme);
+  }, [theme]);
+
+  React.useEffect(() => {
+    const syncActiveSection = () => {
+      const hash = window.location.hash.replace("#", "");
+      const match = sectionLinks.find((item) => item.id === hash);
+      setActiveSection(match?.id ?? sectionLinks[0].id);
+    };
+
+    syncActiveSection();
+    window.addEventListener("hashchange", syncActiveSection);
+    return () => {
+      window.removeEventListener("hashchange", syncActiveSection);
     };
   }, []);
 
@@ -156,11 +184,18 @@ function App() {
               <a
                 key={item.id}
                 href={`#${item.id}`}
+                aria-current={activeSection === item.id ? "location" : undefined}
+                onClick={() => setActiveSection(item.id)}
                 style={{
                   color: "var(--aurora-text-primary)",
                   textDecoration: "none",
                   fontWeight: "var(--aurora-font-weight-medium)",
-                  border: "1px solid var(--aurora-border-default)",
+                  border:
+                    activeSection === item.id
+                      ? "1px solid var(--aurora-accent-default)"
+                      : "1px solid var(--aurora-border-default)",
+                  background:
+                    activeSection === item.id ? "color-mix(in srgb, var(--aurora-accent-default) 12%, transparent)" : "transparent",
                   borderRadius: 999,
                   padding: "4px 10px"
                 }}
