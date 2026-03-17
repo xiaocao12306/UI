@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Input, Popover } from "@aurora-ui/react";
+import { expect, userEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Overlay/Popover",
@@ -25,6 +26,20 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: <p style={{ margin: 0 }}>Popover content for quick context editing.</p>
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Open Popover" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+
+    trigger.focus();
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   }
 };
 

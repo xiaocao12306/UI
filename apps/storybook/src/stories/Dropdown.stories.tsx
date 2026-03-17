@@ -1,5 +1,7 @@
+import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Dropdown, type DropdownItem } from "@aurora-ui/react";
+import { expect, userEvent, within } from "@storybook/test";
 
 const items: DropdownItem[] = [
   { key: "duplicate", label: "Duplicate" },
@@ -42,5 +44,45 @@ export const DenseActions: Story = {
       { key: "export", label: "Export JSON" },
       { key: "remove", label: "Remove", disabled: true }
     ]
+  }
+};
+
+function SelectionTelemetryDropdown() {
+  const [selected, setSelected] = React.useState("none");
+
+  const telemetryItems: DropdownItem[] = [
+    { key: "duplicate", label: "Duplicate", onSelect: () => setSelected("Duplicate") },
+    { key: "rename", label: "Rename", onSelect: () => setSelected("Rename") },
+    { key: "archive", label: "Archive", disabled: true },
+    { key: "delete", label: "Delete", onSelect: () => setSelected("Delete") }
+  ];
+
+  return (
+    <div style={{ display: "grid", gap: 8 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Selected action: <strong>{selected}</strong>
+      </p>
+      <Dropdown label="Release Actions" items={telemetryItems} />
+    </div>
+  );
+}
+
+export const SelectionTelemetry: Story = {
+  render: () => <SelectionTelemetryDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Release Actions" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu")).toBeInTheDocument();
+    await userEvent.keyboard("{End}");
+    await expect(canvas.getByRole("menuitem", { name: "Delete" })).toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.queryByRole("menu")).not.toBeInTheDocument();
+    await expect(canvas.getByText("Delete")).toBeInTheDocument();
+
+    trigger.focus();
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
   }
 };
