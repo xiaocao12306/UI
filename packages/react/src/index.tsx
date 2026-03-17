@@ -15,6 +15,9 @@ export type { SelectProps } from "./Select";
 export { Combobox } from "./Combobox";
 export type { ComboboxOption, ComboboxProps } from "./Combobox";
 
+export { DatePicker } from "./DatePicker";
+export type { DatePickerProps } from "./DatePicker";
+
 export { FormField } from "./FormField";
 export type { FormFieldProps } from "./FormField";
 
