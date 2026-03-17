@@ -67,3 +67,28 @@ test("highlights active section in anchor nav", async ({ page }) => {
   await statesLink.click();
   await expect(statesLink).toHaveAttribute("aria-current", "location");
 });
+
+test("opens dropdown using keyboard", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  await trigger.focus();
+  await trigger.press("ArrowDown");
+
+  await expect(page.getByRole("menu")).toBeVisible();
+  await expect(page.getByRole("menuitem", { name: "Duplicate" })).toBeVisible();
+});
+
+test("dismisses toast with escape key", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await palette.getByRole("option", { name: "Create Project" }).click();
+
+  const toast = page.getByRole("status").filter({ hasText: "Prompt submitted" });
+  await expect(toast).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(toast).toBeHidden();
+});

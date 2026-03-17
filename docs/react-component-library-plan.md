@@ -120,6 +120,7 @@
   - 生产级返工（Tabs）
   - 生产级返工（Table）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
+  - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
