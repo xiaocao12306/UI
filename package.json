@@ -6,6 +6,9 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
+    "demo:dev": "pnpm --filter @aurora-ui/demo dev",
+    "demo:build": "pnpm --filter @aurora-ui/demo build",
+    "demo:preview": "pnpm --filter @aurora-ui/demo preview",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",

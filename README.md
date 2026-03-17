@@ -46,6 +46,11 @@ Build demo output:
 pnpm --filter @aurora-ui/demo build
 ```
 
+## Demo External Link
+- GitHub Pages workflow: `.github/workflows/demo-pages.yml`
+- Expected URL after Pages is enabled in repo settings:
+  - `https://xiaocao12306.github.io/UI/`
+
 ## Package Usage (Example)
 ```tsx
 import { AuroraProvider, Button, Input, Dialog } from "@aurora-ui/react";

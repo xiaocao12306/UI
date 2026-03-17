@@ -20,3 +20,8 @@ The demo showcases:
 - Overlay/navigation patterns
 - AI interaction components (prompt/reasoning/streaming)
 - Data-oriented widgets (`Tabs`, `Table`)
+
+## Hosting
+- CI workflow: `.github/workflows/demo-pages.yml`
+- After enabling GitHub Pages, the demo is published to:
+  - `https://xiaocao12306.github.io/UI/`
