@@ -112,3 +112,15 @@ export const ActionRequired: Story = {
     await expect(canvas.getByRole("status")).toBeInTheDocument();
   }
 };
+
+export const AriaLabelOverride: Story = {
+  args: {
+    title: <span aria-hidden>✅</span>,
+    description: "Build artifact is ready.",
+    ariaLabel: "Build artifact ready notification"
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await expect(canvas.getByRole("status", { name: "Build artifact ready notification" })).toBeInTheDocument();
+  }
+};

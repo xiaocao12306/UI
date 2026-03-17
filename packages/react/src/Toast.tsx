@@ -13,6 +13,7 @@ export type ToastProps = {
   pauseOnHover?: boolean;
   closeOnEscape?: boolean;
   closeLabel?: string;
+  ariaLabel?: string;
   position?: ToastPosition;
   onClose?: () => void;
   onOpenChange?: (open: boolean) => void;
@@ -58,12 +59,15 @@ export function Toast({
   pauseOnHover = true,
   closeOnEscape = true,
   closeLabel = "Close toast",
+  ariaLabel,
   position = "bottom-right",
   onClose,
   onOpenChange
 }: ToastProps) {
   const [pauseState, setPauseState] = React.useState({ hover: false, focus: false });
   const paused = pauseOnHover && (pauseState.hover || pauseState.focus);
+  const titleId = React.useId();
+  const descriptionId = React.useId();
 
   React.useEffect(() => {
     if (!open) {
@@ -119,6 +123,9 @@ export function Toast({
       role={role}
       aria-live={ariaLive}
       aria-atomic="true"
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabel ? undefined : titleId}
+      aria-describedby={description ? descriptionId : undefined}
       onMouseEnter={() => {
         if (pauseOnHover) {
           setPauseState((current) => ({ ...current, hover: true }));
@@ -155,7 +162,9 @@ export function Toast({
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "start" }}>
-        <strong style={{ color: "var(--aurora-text-primary)" }}>{title}</strong>
+        <strong id={titleId} style={{ color: "var(--aurora-text-primary)" }}>
+          {title}
+        </strong>
         <button
           type="button"
           onClick={close}
@@ -173,7 +182,11 @@ export function Toast({
           ×
         </button>
       </div>
-      {description ? <div style={{ color: "var(--aurora-text-secondary)" }}>{description}</div> : null}
+      {description ? (
+        <div id={descriptionId} style={{ color: "var(--aurora-text-secondary)" }}>
+          {description}
+        </div>
+      ) : null}
       {action ? <div>{action}</div> : null}
     </div>
   );

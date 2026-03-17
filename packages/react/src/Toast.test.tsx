@@ -11,9 +11,19 @@ describe("Toast", () => {
     const toast = screen.getByRole("status");
     expect(toast).toHaveAttribute("aria-live", "polite");
     expect(toast).toHaveAttribute("aria-atomic", "true");
+    expect(toast).toHaveAttribute("aria-labelledby");
+    expect(toast).toHaveAttribute("aria-describedby");
 
     fireEvent.click(screen.getByRole("button", { name: "Close toast" }));
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("supports explicit live-region label override", () => {
+    render(<Toast open title={<span aria-hidden>✅</span>} ariaLabel="Sync completed notification" />);
+
+    const toast = screen.getByRole("status", { name: "Sync completed notification" });
+    expect(toast).toHaveAttribute("aria-label", "Sync completed notification");
+    expect(toast).not.toHaveAttribute("aria-labelledby");
   });
 
   it("supports custom close button label", () => {
