@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { CommandPalette } from "./CommandPalette";
 
@@ -214,5 +214,30 @@ describe("CommandPalette", () => {
     fireEvent.keyDown(input, { key: "ArrowDown" });
     fireEvent.keyDown(input, { key: "Enter" });
     expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it("keeps options outside tab order and preserves combobox focus on pointer selection", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "create-project", label: "Create Project" }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    act(() => {
+      input.focus();
+    });
+    expect(input).toHaveFocus();
+
+    const firstOption = screen.getByRole("option", { name: "Open Settings" });
+    expect(firstOption).toHaveAttribute("tabindex", "-1");
+
+    fireEvent.mouseDown(firstOption);
+    expect(input).toHaveFocus();
   });
 });

@@ -174,7 +174,12 @@ export function CommandPalette({
                   role="option"
                   aria-selected={active}
                   aria-disabled={item.disabled || undefined}
+                  tabIndex={-1}
                   disabled={item.disabled}
+                  onMouseDown={(event) => {
+                    // Keep combobox input focus while selecting listbox options.
+                    event.preventDefault();
+                  }}
                   onMouseEnter={() => {
                     if (!item.disabled) {
                       setActiveIndex(index);

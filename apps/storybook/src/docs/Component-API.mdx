@@ -351,6 +351,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `emptyMessage` | `ReactNode` | Custom empty-state guidance for no-match queries. |
 | `onQueryChange` | `(query: string) => void` | Use for analytics and AI telemetry pipelines. |
 | `onOpenChange` | `(open: boolean) => void` | Required controlled dialog state. |
+| focus model | combobox + `aria-activedescendant` | Options stay outside tab order to keep keyboard flow anchored on the search input. |
 
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
 

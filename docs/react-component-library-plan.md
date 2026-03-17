@@ -123,6 +123,7 @@
   - 生产级返工（Tabs）
   - 生产级返工（Table）
   - 横向收口（CommandPalette：Home/End 键盘分支、禁用项跳过、Query Telemetry 示例）
+  - CommandPalette 焦点模型补强（`tabIndex=-1` option + pointer 选择保持 combobox 焦点）
   - 横向收口（Toast：auto-dismiss/pauseOnHover/closeOnEscape=false 测试分支、ActionRequired 示例）
   - 横向收口（Tabs/Table：Home/End 焦点流、`aria-sort` 与排序切换断言、排序 telemetry 示例）
   - CommandPalette 语义补强（`aria-disabled` option 语义与全禁用状态测试）

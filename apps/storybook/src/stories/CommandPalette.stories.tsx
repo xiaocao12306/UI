@@ -95,6 +95,7 @@ export const SearchCommands: Story = {
 
     const disabledOption = canvas.getByRole("option", { name: "Publish Release" });
     await expect(disabledOption).toHaveAttribute("aria-disabled", "true");
+    await expect(disabledOption).toHaveAttribute("tabindex", "-1");
   }
 };
 
