@@ -90,6 +90,23 @@ export const EmptyState: Story = {
   )
 };
 
+export const LoadingState: Story = {
+  render: () => (
+    <div style={{ width: 780 }}>
+      <Table columns={columns} data={rows} loading loadingContent="Syncing release feed..." defaultSortKey="id" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole("table", { name: "Data table" });
+
+    await expect(table).toHaveAttribute("aria-busy", "true");
+    await expect(canvas.getByText("Syncing release feed...")).toBeInTheDocument();
+    await expect(canvas.queryByRole("cell", { name: "BTN-102" })).not.toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Issue sort descending" })).toBeDisabled();
+  }
+};
+
 export const AccessibleNameWithoutCaption: Story = {
   render: () => (
     <div style={{ width: 780 }}>

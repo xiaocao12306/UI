@@ -61,6 +61,7 @@
 - CommandPalette focus model hardening: option nodes now stay out of tab order (`tabIndex=-1`) and preserve combobox focus on pointer selection for `aria-activedescendant` parity.
 - CommandPalette search hardening: `commands[].textValue` now supports non-string labels, and matching is accent-insensitive (`cafe` matches `Café`).
 - Table i18n hardening: `getSortAriaLabel` now enables localized sortable-header narration while preserving `aria-sort` behavior.
+- Table loading hardening: `loading/loadingContent` now sets `aria-busy`, suppresses stale rows/empty-state rendering, and disables sort controls during refresh windows.
 - Tabs interaction hardening: `activationMode="manual"` decouples arrow-key focus movement from activation and supports Enter/Space commit.
 - Toast escape hardening: Escape now respects `defaultPrevented` so stacked notifications close one at a time.
 - Storybook API 文档补齐：新增 Button/Input/Dialog/Popover/Dropdown 的 prop 契约与键盘/关闭策略说明，减少集成歧义。

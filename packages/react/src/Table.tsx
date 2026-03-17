@@ -19,6 +19,8 @@ export type TableProps<T> = {
   rowKey?: (row: T, rowIndex: number) => string;
   caption?: React.ReactNode;
   ariaLabel?: string;
+  loading?: boolean;
+  loadingContent?: React.ReactNode;
   emptyContent?: React.ReactNode;
   defaultSortKey?: string;
   defaultSortDirection?: TableSortDirection;
@@ -56,6 +58,8 @@ export function Table<T>({
   rowKey,
   caption,
   ariaLabel,
+  loading = false,
+  loadingContent = "Loading data...",
   emptyContent = "No data available.",
   defaultSortKey,
   defaultSortDirection = "asc",
@@ -122,7 +126,11 @@ export function Table<T>({
         overflow: "auto"
       }}
     >
-      <table aria-label={resolvedAriaLabel} style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}>
+      <table
+        aria-label={resolvedAriaLabel}
+        aria-busy={loading || undefined}
+        style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}
+      >
         {caption ? (
           <caption
             style={{
@@ -166,7 +174,11 @@ export function Table<T>({
                     <button
                       type="button"
                       aria-label={sortAriaLabel}
+                      disabled={loading}
                       onClick={() => {
+                        if (loading) {
+                          return;
+                        }
                         setSortState({ key, direction: nextDirection });
                         onSortChange?.(key, nextDirection);
                       }}
@@ -175,11 +187,12 @@ export function Table<T>({
                         background: "transparent",
                         color: "inherit",
                         font: "inherit",
-                        cursor: "pointer",
+                        cursor: loading ? "not-allowed" : "pointer",
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 6,
-                        padding: 0
+                        padding: 0,
+                        opacity: loading ? 0.64 : 1
                       }}
                     >
                       {column.header}
@@ -194,7 +207,22 @@ export function Table<T>({
           </tr>
         </thead>
         <tbody>
-          {sortedEntries.length === 0 ? (
+          {loading ? (
+            <tr>
+              <td
+                colSpan={columns.length}
+                style={{
+                  padding: "16px 12px",
+                  color: "var(--aurora-text-secondary)",
+                  textAlign: "center"
+                }}
+              >
+                <span role="status" aria-live="polite">
+                  {loadingContent}
+                </span>
+              </td>
+            </tr>
+          ) : sortedEntries.length === 0 ? (
             <tr>
               <td
                 colSpan={columns.length}

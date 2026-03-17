@@ -54,6 +54,27 @@ describe("Table", () => {
     expect(screen.getByText("No components")).toBeInTheDocument();
   });
 
+  it("renders loading state with aria-busy and suppresses table rows", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+        loading
+        loadingContent="Syncing release feed..."
+      />
+    );
+
+    expect(screen.getByRole("table", { name: "Data table" })).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByText("Syncing release feed...")).toBeInTheDocument();
+    expect(screen.queryByRole("cell", { name: "Button" })).toBeNull();
+  });
+
   it("accepts ariaLabel to provide an explicit table name without caption", () => {
     render(
       <Table
@@ -134,6 +155,31 @@ describe("Table", () => {
     const sortButton = screen.getByRole("button", { name: "按降序排序：Name" });
     fireEvent.click(sortButton);
     expect(screen.getByRole("button", { name: "按升序排序：Name" })).toBeInTheDocument();
+  });
+
+  it("disables sortable header controls while loading", () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score" }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        loading
+        onSortChange={onSortChange}
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    expect(sortButton).toBeDisabled();
+    fireEvent.click(sortButton);
+    expect(onSortChange).not.toHaveBeenCalled();
   });
 
   it("updates aria-sort state and row order as sort toggles", () => {
