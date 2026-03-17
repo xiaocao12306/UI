@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as l,S as a,D as c,C as n}from"./index-DAhSNUeh.js";import{VariantMatrix as d}from"./Button.stories-BXebMVGm.js";import{WithInputControl as h}from"./FormField.stories-C0jO5C5_.js";import{Interactive as x}from"./Dialog.stories-CZ2XlYDD.js";import{AiInteractionFlow as p,QueryTelemetry as m,TextValueAndAccentSearch as j}from"./CommandPalette.stories-V7Q_sk3b.js";import{WithAiRequestState as u}from"./PromptInput.stories-10Pu4-2r.js";import{Conversation as f}from"./MessageBubble.stories-wEP5cOKd.js";import{Default as b}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as g}from"./StreamingCodeBlock.stories-Jd4VPz8N.js";import{ActionRequired as y}from"./Toast.stories-BUOgHkKQ.js";import{KeyboardNavigationGuide as v,ManualActivation as w}from"./Tabs.stories-C113NhrA.js";import{ReleaseChecklist as k,SortTelemetry as D,LocalizedSortLabels as A}from"./Table.stories-DMDR4kmn.js";import"./index-BWu4c2F4.js";import"./iframe-CIVKh35B.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-Dkm8CRgf.js";import"./index-DgAF9SIF.js";import"./Input-CY7BO4jw.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-A0m7L4y_.js";import"./FormField-CWhxX9un.js";import"./Textarea-Br71u4Ao.js";import"./Dialog-DCFtyuzV.js";import"./FocusScope-Db3t2k9z.js";import"./DismissableLayer-0Dn_Gr2D.js";function o(s){const i={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...r(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Best Practices"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as l,S as a,D as c,C as n}from"./index-DO-7mDjM.js";import{VariantMatrix as d}from"./Button.stories-BXebMVGm.js";import{WithInputControl as h}from"./FormField.stories-C0jO5C5_.js";import{Interactive as x}from"./Dialog.stories-CZ2XlYDD.js";import{AiInteractionFlow as p,QueryTelemetry as j,TextValueAndAccentSearch as m}from"./CommandPalette.stories-V7Q_sk3b.js";import{WithAiRequestState as u}from"./PromptInput.stories-10Pu4-2r.js";import{Conversation as f}from"./MessageBubble.stories-wEP5cOKd.js";import{Default as b}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as y}from"./StreamingCodeBlock.stories-Jd4VPz8N.js";import{ActionRequired as g}from"./Toast.stories-BUOgHkKQ.js";import{KeyboardNavigationGuide as v,ManualActivation as w}from"./Tabs.stories-C113NhrA.js";import{ReleaseChecklist as k,SortTelemetry as D,LocalizedSortLabels as A}from"./Table.stories-Cqh3SLl-.js";import"./index-BWu4c2F4.js";import"./iframe-Dixwo56G.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-Dkm8CRgf.js";import"./index-DgAF9SIF.js";import"./Input-CY7BO4jw.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-A0m7L4y_.js";import"./FormField-CWhxX9un.js";import"./Textarea-Br71u4Ao.js";import"./Dialog-DCFtyuzV.js";import"./FocusScope-Db3t2k9z.js";import"./DismissableLayer-0Dn_Gr2D.js";function o(s){const i={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...r(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Best Practices"}),`
 `,e.jsx(l,{}),`
 `,e.jsx(a,{children:"Design + Engineering Checklist"}),`
 `,e.jsx(c,{children:e.jsx(i.p,{children:"Use these rules to keep components consistent with the Aurora plan and avoid regressions in accessibility or theming."})}),`
@@ -60,10 +60,10 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `,e.jsx(n,{of:u}),`
 `,e.jsx(n,{of:f}),`
 `,e.jsx(n,{of:b}),`
-`,e.jsx(n,{of:g}),`
+`,e.jsx(n,{of:y}),`
 `,e.jsx(n,{of:p}),`
-`,e.jsx(n,{of:m}),`
 `,e.jsx(n,{of:j}),`
+`,e.jsx(n,{of:m}),`
 `,e.jsx(i.h2,{id:"notification-behavior",children:"Notification Behavior"}),`
 `,e.jsxs(i.ul,{children:[`
 `,e.jsxs(i.li,{children:["Use ",e.jsx(i.code,{children:"duration={0}"})," for blocking notifications that require explicit user action."]}),`
@@ -72,10 +72,11 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `,e.jsxs(i.li,{children:["Verify timer pause behavior for both pointer hover and keyboard focus when ",e.jsx(i.code,{children:"pauseOnHover"})," is enabled."]}),`
 `,e.jsxs(i.li,{children:["Provide ",e.jsx(i.code,{children:"ariaLabel"})," when toast title is icon-only or otherwise not plain text."]}),`
 `]}),`
-`,e.jsx(n,{of:y}),`
+`,e.jsx(n,{of:g}),`
 `,e.jsx(i.h2,{id:"data-presentation-patterns",children:"Data Presentation Patterns"}),`
 `,e.jsxs(i.ul,{children:[`
 `,e.jsxs(i.li,{children:["Use typed columns and stable row keys in data tables; fallback source-index keys exist for safety but explicit ",e.jsx(i.code,{children:"rowKey"})," is preferred."]}),`
+`,e.jsxs(i.li,{children:["If ",e.jsx(i.code,{children:"rowKey"})," uses ",e.jsx(i.code,{children:"rowIndex"}),", treat it as source-data index; avoid deriving keys from sorted visual position."]}),`
 `,e.jsxs(i.li,{children:["Ensure each table has an accessible name through ",e.jsx(i.code,{children:"caption"})," or ",e.jsx(i.code,{children:"ariaLabel"}),"; fallback ",e.jsx(i.code,{children:"Data table"})," naming exists but should be treated as a safety net."]}),`
 `,e.jsxs(i.li,{children:["Prefer sortable columns with explicit ",e.jsx(i.code,{children:"aria-sort"})," state for keyboard and screen-reader parity."]}),`
 `,e.jsxs(i.li,{children:["Localize sortable header narration with ",e.jsx(i.code,{children:"getSortAriaLabel"})," instead of hardcoding translated text into column titles."]}),`
