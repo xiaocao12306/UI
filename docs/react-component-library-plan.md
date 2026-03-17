@@ -117,6 +117,7 @@
   - 发布 dry-run 复验（生产级返工后再次验证 3 个包 tarball 清单与体积）
   - 发布前置校验脚本（`pnpm release:preflight` 检查 Chromatic/NPM token 并输出缺失提示）
   - 发布 dry-run 自动化（`pnpm release:dry-run` 脚本 + `.github/workflows/release-dry-run.yml`）
+  - Release 工作流缺失 `NPM_TOKEN` 提示增强（GitHub warning + secret 配置路径）
   - 生产级返工（Button、Input/FormField、Dialog）
   - 生产级返工（Popover、Dropdown、CommandPalette）
   - 生产级返工（Toast）

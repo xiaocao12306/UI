@@ -86,6 +86,7 @@ Behavior:
 - always runs Changesets version PR automation on `main`
 - publishes npm packages only when `NPM_TOKEN` is configured
 - uses npm provenance (`id-token: write`) during publish
+- when `NPM_TOKEN` is missing, workflow emits explicit warning annotation and setup path (`docs/secrets.md`)
 
 Dry-run workflow: `.github/workflows/release-dry-run.yml`
 - runs `pnpm release:dry-run` on PRs that touch package/release related files

@@ -43,6 +43,9 @@ pnpm chromatic
    - Value: `<your npm automation token>`
 5. 推送到 `main` 或手动触发 `Release` workflow，确认 publish 步骤执行。
 
+未配置时的预期行为：
+- `Release` workflow 仍会执行 Changesets 版本 PR 自动化，但会显示 `Release Publish Skipped` warning，并提示配置路径。
+
 安全建议：
 - 仅在仓库级 secret 保存 token，避免写入代码或文档示例中的真实值。
 - token 泄露后立即在 Chromatic / npm 后台撤销并重建。
