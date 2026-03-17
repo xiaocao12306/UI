@@ -9,18 +9,16 @@ export type PopoverProps = {
 
 export function Popover({ triggerLabel, children }: PopoverProps) {
   const [open, setOpen] = React.useState(false);
-  const triggerRef = React.useRef<HTMLButtonElement>(null);
   const contentId = React.useId();
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
       <Button
-        ref={triggerRef}
         variant="outline"
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={contentId}
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() => setOpen(!open)}
       >
         {triggerLabel}
       </Button>
@@ -28,12 +26,6 @@ export function Popover({ triggerLabel, children }: PopoverProps) {
         <DismissableLayer
           id={contentId}
           role="dialog"
-          onPointerDownOutside={(event) => {
-            const target = event.target as Node | null;
-            if (target && triggerRef.current?.contains(target)) {
-              event.preventDefault();
-            }
-          }}
           onDismiss={() => setOpen(false)}
           style={{
             position: "absolute",

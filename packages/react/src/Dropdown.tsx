@@ -15,29 +15,19 @@ export type DropdownProps = {
 
 export function Dropdown({ label, items }: DropdownProps) {
   const [open, setOpen] = React.useState(false);
-  const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
       <Button
-        ref={triggerRef}
         variant="outline"
         aria-haspopup="menu"
         aria-expanded={open}
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() => setOpen(!open)}
       >
         {label}
       </Button>
       {open ? (
-        <DismissableLayer
-          onPointerDownOutside={(event) => {
-            const target = event.target as Node | null;
-            if (target && triggerRef.current?.contains(target)) {
-              event.preventDefault();
-            }
-          }}
-          onDismiss={() => setOpen(false)}
-        >
+        <DismissableLayer onDismiss={() => setOpen(false)}>
           <ul
             role="menu"
           style={{
