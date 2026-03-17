@@ -30,7 +30,8 @@
   - `Pagination`: production-refined
 - Feedback/State
   - `Alert`: production-refined
-  - `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
+  - `Progress`: production-refined
+  - `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
   - `Toast`: production-refined
 - Overlay
   - `Tooltip`: production-refined
