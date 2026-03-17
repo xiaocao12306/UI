@@ -54,15 +54,25 @@ export function CommandPalette({
     });
   }, [commands, query]);
 
+  const firstEnabledIndex = React.useMemo(() => filtered.findIndex((command) => !command.disabled), [filtered]);
+  const lastEnabledIndex = React.useMemo(() => {
+    for (let index = filtered.length - 1; index >= 0; index -= 1) {
+      if (!filtered[index]?.disabled) {
+        return index;
+      }
+    }
+
+    return -1;
+  }, [filtered]);
+
   React.useEffect(() => {
     if (filtered.length === 0) {
       setActiveIndex(-1);
       return;
     }
 
-    const firstEnabledIndex = filtered.findIndex((command) => !command.disabled);
     setActiveIndex(firstEnabledIndex);
-  }, [filtered]);
+  }, [filtered, firstEnabledIndex]);
 
   const selectItem = React.useCallback(
     (index: number) => {
@@ -105,6 +115,8 @@ export function CommandPalette({
           ref={inputRef}
           role="combobox"
           aria-expanded={open}
+          aria-haspopup="listbox"
+          aria-autocomplete="list"
           aria-controls={listId}
           aria-activedescendant={activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
           placeholder={placeholder}
@@ -123,6 +135,18 @@ export function CommandPalette({
             if (event.key === "ArrowUp") {
               event.preventDefault();
               moveActiveIndex(-1);
+              return;
+            }
+
+            if (event.key === "Home") {
+              event.preventDefault();
+              setActiveIndex(firstEnabledIndex);
+              return;
+            }
+
+            if (event.key === "End") {
+              event.preventDefault();
+              setActiveIndex(lastEnabledIndex);
               return;
             }
 

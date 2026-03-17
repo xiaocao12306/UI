@@ -63,10 +63,34 @@ function AiFlowPalette() {
   );
 }
 
+function QueryTelemetryPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [query, setQuery] = React.useState("");
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Latest query telemetry: <strong style={{ color: "var(--aurora-text-primary)" }}>{query || "N/A"}</strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        commands={[{ key: "open-changelog", label: "Open Changelog", keywords: ["release", "notes"] }]}
+        emptyMessage="No matching AI workflow command."
+        onQueryChange={setQuery}
+      />
+    </div>
+  );
+}
+
 export const SearchCommands: Story = {
   render: () => <OpenPalette />
 };
 
 export const AiInteractionFlow: Story = {
   render: () => <AiFlowPalette />
+};
+
+export const QueryTelemetry: Story = {
+  render: () => <QueryTelemetryPalette />
 };
