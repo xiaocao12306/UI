@@ -109,7 +109,7 @@ export function Pagination({
               disabled={!canGoPrevious}
               onClick={() => goToPage(1)}
               aria-label="Go to first page"
-              style={buttonStyle(false)}
+              style={buttonStyle(false, !canGoPrevious)}
             >
               «
             </button>
@@ -121,7 +121,7 @@ export function Pagination({
             disabled={!canGoPrevious}
             onClick={() => goToPage(currentPage - 1)}
             aria-label="Go to previous page"
-            style={buttonStyle(false)}
+            style={buttonStyle(false, !canGoPrevious)}
           >
             ‹
           </button>
@@ -144,7 +144,7 @@ export function Pagination({
                 disabled={disabled}
                 aria-current={selected ? "page" : undefined}
                 aria-label={selected ? `Current page, ${token}` : `Go to page ${token}`}
-                style={buttonStyle(selected)}
+                style={buttonStyle(selected, disabled)}
               >
                 {token}
               </button>
@@ -157,7 +157,7 @@ export function Pagination({
             disabled={!canGoNext}
             onClick={() => goToPage(currentPage + 1)}
             aria-label="Go to next page"
-            style={buttonStyle(false)}
+            style={buttonStyle(false, !canGoNext)}
           >
             ›
           </button>
@@ -169,7 +169,7 @@ export function Pagination({
               disabled={!canGoNext}
               onClick={() => goToPage(pageCount)}
               aria-label="Go to last page"
-              style={buttonStyle(false)}
+              style={buttonStyle(false, !canGoNext)}
             >
               »
             </button>
@@ -180,7 +180,7 @@ export function Pagination({
   );
 }
 
-function buttonStyle(selected: boolean): React.CSSProperties {
+function buttonStyle(selected: boolean, disabled: boolean): React.CSSProperties {
   return {
     minWidth: 32,
     height: 32,
@@ -190,8 +190,8 @@ function buttonStyle(selected: boolean): React.CSSProperties {
     background: selected
       ? "color-mix(in srgb, var(--aurora-accent-default) 12%, var(--aurora-surface-default))"
       : "var(--aurora-surface-default)",
-    color: "var(--aurora-text-primary)",
-    cursor: "pointer",
+    color: disabled ? "color-mix(in srgb, var(--aurora-text-secondary) 65%, transparent)" : "var(--aurora-text-primary)",
+    cursor: disabled ? "not-allowed" : "pointer",
     font: "inherit"
   };
 }

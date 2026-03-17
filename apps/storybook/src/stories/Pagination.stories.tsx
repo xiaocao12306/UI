@@ -65,3 +65,12 @@ export const WithoutFirstLast: Story = {
     onPageChange: () => {}
   }
 };
+
+export const DisabledPagination: Story = {
+  args: {
+    page: 4,
+    pageCount: 12,
+    disabled: true,
+    onPageChange: () => {}
+  }
+};

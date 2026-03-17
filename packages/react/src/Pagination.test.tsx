@@ -57,4 +57,13 @@ describe("Pagination", () => {
 
     expect(onPageChange).not.toHaveBeenCalled();
   });
+
+  it("hides first and last controls when showFirstLast is disabled", () => {
+    render(<Pagination page={4} pageCount={10} onPageChange={() => {}} showFirstLast={false} />);
+
+    expect(screen.queryByRole("button", { name: "Go to first page" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Go to last page" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Go to previous page" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Go to next page" })).toBeInTheDocument();
+  });
 });
