@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Table, type TableColumn } from "@aurora-ui/react";
+import * as React from "react";
 
 type ReleaseRow = {
   id: string;
@@ -86,4 +87,26 @@ export const EmptyState: Story = {
       <Table columns={columns} data={[]} emptyContent="No release items yet." />
     </div>
   )
+};
+
+function SortTelemetryDemo() {
+  const [sortState, setSortState] = React.useState("id asc");
+
+  return (
+    <div style={{ width: 780, display: "grid", gap: 8 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Active sort: <strong style={{ color: "var(--aurora-text-primary)" }}>{sortState}</strong>
+      </p>
+      <Table
+        columns={columns}
+        data={rows}
+        defaultSortKey="id"
+        onSortChange={(key, direction) => setSortState(`${key} ${direction}`)}
+      />
+    </div>
+  );
+}
+
+export const SortTelemetry: Story = {
+  render: () => <SortTelemetryDemo />
 };

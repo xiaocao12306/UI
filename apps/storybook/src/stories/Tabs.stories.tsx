@@ -88,3 +88,23 @@ export const WithDisabledTab: Story = {
     />
   )
 };
+
+export const KeyboardNavigationGuide: Story = {
+  render: () => (
+    <div style={{ width: 620, display: "grid", gap: 12 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Keyboard: use ArrowLeft/ArrowRight to move, Home to jump first enabled tab, End to jump last enabled tab.
+      </p>
+      <Tabs
+        ariaLabel="Keyboard guide tabs"
+        defaultValue="spec"
+        items={[
+          { key: "blocked", label: "Blocked", content: "Blocked tab", disabled: true },
+          { key: "spec", label: "Spec", content: "Specification stage." },
+          { key: "review", label: "Review", content: "Review stage.", disabled: true },
+          { key: "release", label: "Release", content: "Release stage." }
+        ]}
+      />
+    </div>
+  )
+};

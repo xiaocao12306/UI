@@ -66,4 +66,28 @@ describe("Tabs", () => {
     fireEvent.click(screen.getByRole("tab", { name: "Two" }));
     expect(onValueChange).toHaveBeenCalledWith("two");
   });
+
+  it("supports Home and End keyboard navigation while skipping disabled tabs", () => {
+    render(
+      <Tabs
+        defaultValue="build"
+        items={[
+          { key: "spec", label: "Spec", content: <div>Panel Spec</div>, disabled: true },
+          { key: "build", label: "Build", content: <div>Panel Build</div> },
+          { key: "review", label: "Review", content: <div>Panel Review</div>, disabled: true },
+          { key: "release", label: "Release", content: <div>Panel Release</div> }
+        ]}
+      />
+    );
+
+    const buildTab = screen.getByRole("tab", { name: "Build" });
+    fireEvent.keyDown(buildTab, { key: "End" });
+    expect(screen.getByText("Panel Release")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Release" })).toHaveFocus();
+
+    const releaseTab = screen.getByRole("tab", { name: "Release" });
+    fireEvent.keyDown(releaseTab, { key: "Home" });
+    expect(screen.getByText("Panel Build")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Build" })).toHaveFocus();
+  });
 });
