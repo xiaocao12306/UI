@@ -1,4 +1,5 @@
 import * as React from "react";
+import { DismissableLayer } from "@aurora-ui/primitives";
 import { Button } from "./Button";
 
 export type DropdownItem = {
@@ -14,15 +15,31 @@ export type DropdownProps = {
 
 export function Dropdown({ label, items }: DropdownProps) {
   const [open, setOpen] = React.useState(false);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
-      <Button variant="outline" onClick={() => setOpen((prev) => !prev)}>
+      <Button
+        ref={triggerRef}
+        variant="outline"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((prev) => !prev)}
+      >
         {label}
       </Button>
       {open ? (
-        <ul
-          role="menu"
+        <DismissableLayer
+          onPointerDownOutside={(event) => {
+            const target = event.target as Node | null;
+            if (target && triggerRef.current?.contains(target)) {
+              event.preventDefault();
+            }
+          }}
+          onDismiss={() => setOpen(false)}
+        >
+          <ul
+            role="menu"
           style={{
             position: "absolute",
             top: "calc(100% + 6px)",
@@ -41,6 +58,7 @@ export function Dropdown({ label, items }: DropdownProps) {
           {items.map((item) => (
             <li key={item.key}>
               <button
+                role="menuitem"
                 type="button"
                 onClick={() => {
                   item.onSelect?.();
@@ -61,7 +79,8 @@ export function Dropdown({ label, items }: DropdownProps) {
               </button>
             </li>
           ))}
-        </ul>
+          </ul>
+        </DismissableLayer>
       ) : null}
     </div>
   );
