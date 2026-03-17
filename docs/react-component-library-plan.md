@@ -205,6 +205,7 @@
   - Tabs 激活模式收口（`activationMode` 支持 manual/automatic，键盘焦点与激活解耦）
   - Toast Escape 语义收口（堆叠通知场景下一次按键仅关闭一个 toast）
   - Overlay 焦点策略收口（Popover/Dropdown 仅在键盘关闭时回焦 trigger，外部点击关闭保留指针目标焦点）
+  - DismissableLayer 栈语义收口（嵌套 overlay 时仅顶层响应 Escape/外部点击，避免单次事件联动关闭多层）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Dropdown, type DropdownItem } from "@aurora-ui/react";
+import { Dropdown, Popover, type DropdownItem } from "@aurora-ui/react";
 import { expect, userEvent, within } from "@storybook/test";
 
 const items: DropdownItem[] = [
@@ -146,5 +146,36 @@ export const OutsideDismissFocusTransfer: Story = {
     await userEvent.click(outsideTarget);
     await expect(canvas.queryByRole("menu", { name: "Focus Policy" })).not.toBeInTheDocument();
     await expect(outsideTarget).toHaveFocus();
+  }
+};
+
+export const NestedDismissOrder: Story = {
+  render: () => (
+    <Popover triggerLabel="Open container">
+      <div style={{ display: "grid", gap: 8 }}>
+        <p style={{ margin: 0 }}>Popover shell</p>
+        <Dropdown
+          label="Inner actions"
+          items={[
+            { key: "duplicate", label: "Duplicate" },
+            { key: "archive", label: "Archive" }
+          ]}
+        />
+      </div>
+    </Popover>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole("button", { name: "Open container" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Inner actions" }));
+    await expect(canvas.getByRole("menu", { name: "Inner actions" })).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("menu", { name: "Inner actions" })).not.toBeInTheDocument();
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
   }
 };

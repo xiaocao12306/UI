@@ -6,6 +6,27 @@ export type DismissableLayerProps = React.ComponentPropsWithoutRef<"div"> & {
   onDismiss?: () => void;
 };
 
+const dismissableLayerStack: HTMLElement[] = [];
+
+function pushLayer(element: HTMLElement) {
+  const existingIndex = dismissableLayerStack.lastIndexOf(element);
+  if (existingIndex >= 0) {
+    dismissableLayerStack.splice(existingIndex, 1);
+  }
+  dismissableLayerStack.push(element);
+}
+
+function removeLayer(element: HTMLElement) {
+  const existingIndex = dismissableLayerStack.lastIndexOf(element);
+  if (existingIndex >= 0) {
+    dismissableLayerStack.splice(existingIndex, 1);
+  }
+}
+
+function isTopLayer(element: HTMLElement) {
+  return dismissableLayerStack[dismissableLayerStack.length - 1] === element;
+}
+
 export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLayerProps>(function DismissableLayer(
   { children, onEscapeKeyDown, onPointerDownOutside, onDismiss, ...props },
   forwardedRef
@@ -13,8 +34,25 @@ export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLaye
   const localRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
+    const element = localRef.current;
+    if (!element) {
+      return;
+    }
+
+    pushLayer(element);
+    return () => {
+      removeLayer(element);
+    };
+  }, []);
+
+  React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") {
+        return;
+      }
+
+      const element = localRef.current;
+      if (!element || !isTopLayer(element)) {
         return;
       }
 
@@ -26,7 +64,7 @@ export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLaye
 
     const onPointerDown = (event: PointerEvent) => {
       const element = localRef.current;
-      if (!element) {
+      if (!element || !isTopLayer(element)) {
         return;
       }
 
