@@ -16,9 +16,9 @@
 
 ## React Components
 - Form/Input
-  - `Button`, `Input`, `Textarea`, `Select`: done
+  - `Button`, `Input`, `FormField`: production-refined
+  - `Textarea`, `Select`: done
   - `Checkbox`, `RadioGroup`, `Switch`: done
-  - `FormField`: done
 - Data/Navigation
   - `Tabs`: production-refined
   - `Table`: production-refined
