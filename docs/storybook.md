@@ -34,6 +34,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - 当前已覆盖 play 场景：
   - `Core/Button` 键盘激活 + loading 禁用分支
   - `Form/Input` blur 校验 + 输入计数 + 提交禁用分支
+  - `Form/Textarea` 多行输入提交与 invalid/readOnly/disabled 展示路径
   - `Form/Combobox` 选择流程 + Escape/blur 关闭路径
   - `Form/DatePicker` 受控日期更新流程
   - `Data/Pagination` 翻页流程
@@ -52,6 +53,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 ## 当前已覆盖故事
 - `Core/Button`
 - `Form/Input`
+- `Form/Textarea`
 - `Form/Combobox`
 - `Form/DatePicker`
 - `Overlay/Dialog`
