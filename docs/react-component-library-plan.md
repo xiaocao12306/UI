@@ -103,6 +103,7 @@
   - Demo 命令面板快捷键（Ctrl/Cmd + K）与动作示例
   - Playwright Demo 冒烟测试与 CI 集成
   - Storybook Playground（Button/Input/Dialog/CommandPalette）与主题切换
+  - Chromatic 视觉回归工作流（支持 token 缺失时优雅跳过）
 - 进行中
   - 文档体系细化（组件 API、示例最佳实践，AI/Overlay/Storybook 指南）
-  - Storybook 视觉回归基线（Chromatic）
+  - Storybook 视觉回归基线（待配置仓库 token 后启用快照对比）

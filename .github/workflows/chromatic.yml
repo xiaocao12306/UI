@@ -1,0 +1,55 @@
+name: Chromatic Visual Tests
+
+on:
+  pull_request:
+    paths:
+      - "apps/storybook/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/chromatic.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chromatic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.8.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - id: token
+        name: Check Chromatic Token
+        run: |
+          if [ -n "${{ secrets.CHROMATIC_PROJECT_TOKEN }}" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build Storybook
+        if: steps.token.outputs.enabled == 'true'
+        run: pnpm storybook:build
+
+      - name: Publish to Chromatic
+        if: steps.token.outputs.enabled == 'true'
+        uses: chromaui/action@v11
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: apps/storybook
+          storybookBuildDir: storybook-static
+          exitOnceUploaded: true
+          autoAcceptChanges: main
+
+      - name: Skip Chromatic
+        if: steps.token.outputs.enabled != 'true'
+        run: echo "CHROMATIC_PROJECT_TOKEN is not configured; skipping visual regression upload."

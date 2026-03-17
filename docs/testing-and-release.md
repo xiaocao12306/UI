@@ -46,6 +46,7 @@ GitHub Actions workflow runs:
 - build
 - demo e2e smoke test
 - storybook static build
+- chromatic visual regression upload (when token configured)
 
 ## Release Readiness Checklist
 - all quality gates green

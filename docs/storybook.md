@@ -33,10 +33,10 @@ pnpm --filter @aurora-ui/storybook-app build-storybook
 
 说明：预览层通过 toolbar 全局切换 `core-light/core-dark/glass/neo-brutal`，用于验证 token 与主题一致性。
 
-## Chromatic（TODO）
-- [ ] 在仓库创建 Chromatic project token
-- [ ] 新增 GitHub Actions workflow：构建并上传 Storybook
-- [ ] PR 触发视觉回归门禁
+## Chromatic
+- 工作流：`.github/workflows/chromatic.yml`
+- 接入文档：`docs/chromatic.md`
+- 若仓库未配置 `CHROMATIC_PROJECT_TOKEN`，工作流会自动跳过上传并提示配置方式
 
 ## Blocker Log
 - 日期：2026-03-17
