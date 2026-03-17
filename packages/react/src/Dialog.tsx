@@ -9,6 +9,8 @@ export type DialogProps = {
 };
 
 export function Dialog({ open, title, children, onOpenChange }: DialogProps) {
+  const titleId = React.useId();
+
   if (!open) {
     return null;
   }
@@ -31,6 +33,7 @@ export function Dialog({ open, title, children, onOpenChange }: DialogProps) {
             <section
               role="dialog"
               aria-modal="true"
+              aria-labelledby={titleId}
               style={{
                 width: "min(560px, calc(100vw - 32px))",
                 borderRadius: "var(--aurora-radius-lg)",
@@ -43,7 +46,9 @@ export function Dialog({ open, title, children, onOpenChange }: DialogProps) {
               }}
             >
               <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
-                <strong style={{ color: "var(--aurora-text-primary)" }}>{title}</strong>
+                <strong id={titleId} style={{ color: "var(--aurora-text-primary)" }}>
+                  {title}
+                </strong>
                 <button type="button" onClick={() => onOpenChange(false)} aria-label="Close dialog">
                   ×
                 </button>

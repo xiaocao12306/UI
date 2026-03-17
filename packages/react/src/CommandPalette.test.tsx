@@ -22,10 +22,10 @@ describe("CommandPalette", () => {
       target: { value: "project" }
     });
 
-    expect(screen.getByRole("button", { name: "Create Project" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Open Settings" })).toBeNull();
+    expect(screen.getByRole("option", { name: "Create Project" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
 
-    fireEvent.click(screen.getByRole("button", { name: "Create Project" }));
+    fireEvent.click(screen.getByRole("option", { name: "Create Project" }));
 
     expect(onCreateProject).toHaveBeenCalledTimes(1);
     expect(onOpenChange).toHaveBeenCalledWith(false);
@@ -56,7 +56,24 @@ describe("CommandPalette", () => {
     );
 
     fireEvent.change(screen.getByLabelText("Search commands"), { target: { value: "no-match" } });
-    expect(screen.getByText("No commands found.")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("No commands found.");
+  });
+
+  it("renders filtered results as listbox options", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings", keywords: ["settings"] },
+          { key: "create-project", label: "Create Project", keywords: ["project"] }
+        ]}
+      />
+    );
+
+    const listbox = screen.getByRole("listbox", { name: "Command results" });
+    expect(listbox).toBeInTheDocument();
+    expect(screen.getAllByRole("option")).toHaveLength(2);
   });
 
   it("resets search query after palette closes", () => {

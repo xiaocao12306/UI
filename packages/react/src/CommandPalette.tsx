@@ -50,12 +50,18 @@ export function CommandPalette({ open, onOpenChange, commands }: CommandPaletteP
           onChange={(event) => setQuery(event.target.value)}
           aria-label="Search commands"
         />
-        <div style={{ maxHeight: 280, overflow: "auto", display: "grid", gap: 4 }}>
+        <div
+          role="listbox"
+          aria-label="Command results"
+          style={{ maxHeight: 280, overflow: "auto", display: "grid", gap: 4 }}
+        >
           {filtered.length > 0 ? (
             filtered.map((item) => (
               <button
                 key={item.key}
                 type="button"
+                role="option"
+                aria-selected="false"
                 onClick={() => {
                   item.onSelect?.();
                   onOpenChange(false);
@@ -74,7 +80,9 @@ export function CommandPalette({ open, onOpenChange, commands }: CommandPaletteP
               </button>
             ))
           ) : (
-            <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>No commands found.</p>
+            <p role="status" aria-live="polite" style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+              No commands found.
+            </p>
           )}
         </div>
       </div>

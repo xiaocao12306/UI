@@ -16,6 +16,8 @@ export function Toast({ open, title, description, action, onClose }: ToastProps)
   return (
     <div
       role="status"
+      aria-live="polite"
+      aria-atomic="true"
       style={{
         position: "fixed",
         right: 16,
