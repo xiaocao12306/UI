@@ -16,6 +16,7 @@ import * as DropdownStories from '../stories/Dropdown.stories';
 import * as CommandPaletteStories from '../stories/CommandPalette.stories';
 import * as EmptyStories from '../stories/Empty.stories';
 import * as SkeletonStories from '../stories/Skeleton.stories';
+import * as LoadingDotsStories from '../stories/LoadingDots.stories';
 import * as ProgressStories from '../stories/Progress.stories';
 import * as AlertStories from '../stories/Alert.stories';
 import * as ToastStories from '../stories/Toast.stories';
@@ -267,6 +268,19 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `width` / `height` / `radius` | `number \| string` | Explicit geometry control for layout matching. |
 
 <Canvas of={SkeletonStories.ProfileCard} />
+
+### LoadingDots
+
+<Canvas of={LoadingDotsStories.Default} />
+<Controls of={LoadingDotsStories.SlowPulse} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `running` | `boolean` | Pause/resume the animated dots. |
+| `interval` / `dotCount` | `number` | Controls animation rhythm and max visible dots. |
+| `label` / `live` | `string` / `'polite' \| 'assertive' \| 'off'` | Screen-reader narration and live-region urgency. |
+
+<Canvas of={LoadingDotsStories.Paused} />
 
 ### Progress
 

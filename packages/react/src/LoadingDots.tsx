@@ -1,26 +1,61 @@
 import * as React from "react";
 
-export type LoadingDotsProps = {
+export type LoadingDotsProps = React.ComponentPropsWithoutRef<"span"> & {
   label?: string;
+  interval?: number;
+  dotCount?: number;
+  running?: boolean;
+  live?: "polite" | "assertive" | "off";
 };
 
-export function LoadingDots({ label = "Loading" }: LoadingDotsProps) {
+function clampDotCount(dotCount: number) {
+  return Math.min(Math.max(dotCount, 2), 6);
+}
+
+export function LoadingDots({
+  label = "Loading",
+  interval = 280,
+  dotCount = 3,
+  running = true,
+  live,
+  style,
+  ...props
+}: LoadingDotsProps) {
+  const safeDotCount = clampDotCount(dotCount);
   const [index, setIndex] = React.useState(0);
 
   React.useEffect(() => {
+    setIndex(0);
+  }, [safeDotCount, running]);
+
+  React.useEffect(() => {
+    if (!running) {
+      return;
+    }
+
     const id = window.setInterval(() => {
-      setIndex((prev) => (prev + 1) % 3);
-    }, 280);
+      setIndex((prev) => (prev + 1) % safeDotCount);
+    }, Math.max(80, interval));
 
     return () => {
       window.clearInterval(id);
     };
-  }, []);
+  }, [interval, running, safeDotCount]);
+
+  const visibleLength = running ? index + 1 : safeDotCount;
+  const dotText = ".".repeat(visibleLength).padEnd(safeDotCount, " ");
+  const ariaLive = live ?? (running ? "polite" : "off");
 
   return (
-    <span aria-label={label} style={{ color: "var(--aurora-text-secondary)", fontFamily: "var(--aurora-font-family-mono)" }}>
-      {".".repeat(index + 1)}
-      {"\u00a0".repeat(2 - index)}
+    <span
+      role="status"
+      aria-label={label}
+      aria-live={ariaLive}
+      aria-busy={running}
+      style={{ color: "var(--aurora-text-secondary)", fontFamily: "var(--aurora-font-family-mono)", whiteSpace: "pre", ...style }}
+      {...props}
+    >
+      {dotText}
     </span>
   );
 }

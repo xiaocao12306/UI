@@ -151,6 +151,7 @@
   - Progress 生产级返工（determinate/indeterminate 语义、tone/size/valueText API、单测 + Storybook `Feedback/Progress`）
   - Empty 生产级返工（status 语义、tone/align/action/icon 场景、单测 + Storybook `Feedback/Empty`）
   - Skeleton 生产级返工（装饰/叙述双语义、variant 形态与动画分支、单测 + Storybook `Feedback/Skeleton`）
+  - LoadingDots 生产级返工（pause/resume 与 live region 语义、interval/dotCount API、单测 + Storybook `Feedback/LoadingDots`）
   - Pagination 细节打磨（禁用态视觉与 `showFirstLast=false` 分支测试）
   - Pagination 生产级返工（Home/End/Arrow 键盘快捷翻页、重复回调防抖、可定制 aria label、单测 + Storybook `Data/Pagination`）
   - DatePicker 生产级返工（`aria-invalid` 推断、`onChange` + `onValueChange` 双回调、状态矩阵 Storybook 与单测补齐）

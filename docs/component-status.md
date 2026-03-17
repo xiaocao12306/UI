@@ -33,7 +33,8 @@
   - `Progress`: production-refined
   - `Empty`: production-refined
   - `Skeleton`: production-refined
-  - `LoadingDots`, `StreamingText`: done
+  - `LoadingDots`: production-refined
+  - `StreamingText`: done
   - `Toast`: production-refined
 - Overlay
   - `Tooltip`: production-refined
