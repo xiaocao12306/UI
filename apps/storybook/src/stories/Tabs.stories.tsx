@@ -61,3 +61,30 @@ function ControlledTabsDemo() {
 export const Controlled: Story = {
   render: () => <ControlledTabsDemo />
 };
+
+export const WithDisabledTab: Story = {
+  render: () => (
+    <Tabs
+      ariaLabel="Release stages"
+      defaultValue="spec"
+      items={[
+        {
+          key: "spec",
+          label: "Spec",
+          content: "Specification stage is active."
+        },
+        {
+          key: "security",
+          label: "Security Review",
+          content: "Security review is pending.",
+          disabled: true
+        },
+        {
+          key: "release",
+          label: "Release",
+          content: "Release checklist is ready."
+        }
+      ]}
+    />
+  )
+};

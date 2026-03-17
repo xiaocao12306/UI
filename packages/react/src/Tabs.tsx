@@ -4,43 +4,89 @@ export type TabItem = {
   key: string;
   label: React.ReactNode;
   content: React.ReactNode;
+  disabled?: boolean;
 };
 
 export type TabsProps = {
   items: TabItem[];
   value?: string;
   defaultValue?: string;
+  ariaLabel?: string;
   onValueChange?: (value: string) => void;
 };
 
-export function Tabs({ items, value, defaultValue, onValueChange }: TabsProps) {
-  const baseId = React.useId();
-  const firstKey = items[0]?.key;
-  const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstKey);
-  const currentValue = value ?? internalValue;
+function getNextEnabledIndex(items: TabItem[], startIndex: number, direction: 1 | -1) {
+  if (items.length === 0) {
+    return -1;
+  }
 
-  const select = (nextValue: string) => {
-    if (value === undefined) {
-      setInternalValue(nextValue);
+  let index = startIndex;
+  for (let i = 0; i < items.length; i += 1) {
+    index = (index + direction + items.length) % items.length;
+    if (!items[index]?.disabled) {
+      return index;
     }
-    onValueChange?.(nextValue);
-  };
+  }
+
+  return -1;
+}
+
+export function Tabs({ items, value, defaultValue, ariaLabel = "Tabs", onValueChange }: TabsProps) {
+  const baseId = React.useId();
+  const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
+  const firstEnabledKey = items.find((item) => !item.disabled)?.key;
+  const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
+
+  const currentRawValue = value ?? internalValue;
+  const currentValue = items.some((item) => item.key === currentRawValue && !item.disabled) ? currentRawValue : firstEnabledKey;
+
+  React.useEffect(() => {
+    if (value === undefined && currentValue !== internalValue) {
+      setInternalValue(currentValue);
+    }
+  }, [currentValue, internalValue, value]);
+
+  const select = React.useCallback(
+    (nextValue: string) => {
+      const target = items.find((item) => item.key === nextValue);
+      if (!target || target.disabled) {
+        return;
+      }
+
+      if (value === undefined) {
+        setInternalValue(nextValue);
+      }
+      onValueChange?.(nextValue);
+    },
+    [items, onValueChange, value]
+  );
 
   return (
     <div style={{ display: "grid", gap: 10 }}>
-      <div role="tablist" aria-orientation="horizontal" style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-        {items.map((item) => {
+      <div
+        role="tablist"
+        aria-label={ariaLabel}
+        aria-orientation="horizontal"
+        style={{ display: "flex", gap: 6, flexWrap: "wrap" }}
+      >
+        {items.map((item, index) => {
           const selected = item.key === currentValue;
-          const itemIndex = items.findIndex((candidate) => candidate.key === item.key);
+          const disabled = Boolean(item.disabled);
+
           return (
             <button
               key={item.key}
+              ref={(node) => {
+                tabRefs.current[index] = node;
+              }}
               id={`${baseId}-tab-${item.key}`}
               type="button"
               role="tab"
               aria-selected={selected}
               aria-controls={`${baseId}-panel-${item.key}`}
+              aria-disabled={disabled || undefined}
               tabIndex={selected ? 0 : -1}
+              disabled={disabled}
               onClick={() => select(item.key)}
               onKeyDown={(event) => {
                 if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
@@ -50,29 +96,44 @@ export function Tabs({ items, value, defaultValue, onValueChange }: TabsProps) {
                 event.preventDefault();
 
                 if (event.key === "Home") {
-                  select(items[0]?.key ?? item.key);
+                  const firstIndex = getNextEnabledIndex(items, -1, 1);
+                  const firstKey = items[firstIndex]?.key;
+                  if (firstKey) {
+                    select(firstKey);
+                    tabRefs.current[firstIndex]?.focus();
+                  }
                   return;
                 }
 
                 if (event.key === "End") {
-                  select(items[items.length - 1]?.key ?? item.key);
+                  const lastIndex = getNextEnabledIndex(items, 0, -1);
+                  const lastKey = items[lastIndex]?.key;
+                  if (lastKey) {
+                    select(lastKey);
+                    tabRefs.current[lastIndex]?.focus();
+                  }
                   return;
                 }
 
-                const nextIndex =
-                  event.key === "ArrowRight"
-                    ? (itemIndex + 1) % items.length
-                    : (itemIndex - 1 + items.length) % items.length;
-
-                select(items[nextIndex]?.key ?? item.key);
+                const nextIndex = getNextEnabledIndex(items, index, event.key === "ArrowRight" ? 1 : -1);
+                const nextKey = items[nextIndex]?.key;
+                if (nextKey) {
+                  select(nextKey);
+                  tabRefs.current[nextIndex]?.focus();
+                }
               }}
               style={{
                 height: 34,
                 borderRadius: "var(--aurora-radius-md)",
                 border: selected ? "1px solid var(--aurora-accent-default)" : "1px solid var(--aurora-border-default)",
-                background: selected ? "rgba(29, 78, 216, 0.1)" : "transparent",
-                color: "var(--aurora-text-primary)",
-                padding: "0 12px"
+                background: selected
+                  ? "color-mix(in srgb, var(--aurora-accent-default) 14%, transparent)"
+                  : "var(--aurora-surface-default)",
+                color: disabled
+                  ? "color-mix(in srgb, var(--aurora-text-secondary) 64%, transparent)"
+                  : "var(--aurora-text-primary)",
+                padding: "0 12px",
+                cursor: disabled ? "not-allowed" : "pointer"
               }}
             >
               {item.label}

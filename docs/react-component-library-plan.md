@@ -117,7 +117,8 @@
   - 生产级返工（Button、Input/FormField、Dialog）
   - 生产级返工（Popover、Dropdown、CommandPalette）
   - 生产级返工（Toast）
+  - 生产级返工（Tabs）
 - 进行中
-  - 生产级返工（Tabs、Table）
+  - 生产级返工（Table）
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

@@ -20,7 +20,8 @@
   - `Checkbox`, `RadioGroup`, `Switch`: done
   - `FormField`: done
 - Data/Navigation
-  - `Tabs`, `Table`: done
+  - `Tabs`: production-refined
+  - `Table`: done
 - Feedback/State
   - `Alert`, `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
   - `Toast`: production-refined
@@ -42,4 +43,4 @@
 ## Planned Next (v0.2)
 - `DatePicker` / `Combobox` / `Pagination`
 - Storybook interaction test runner expansion
-- Remaining production refinements: `Tabs`, `Table`
+- Remaining production refinements: `Table`
