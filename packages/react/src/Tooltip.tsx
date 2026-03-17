@@ -16,18 +16,6 @@ export type TooltipProps = {
   maxWidth?: number | string;
 };
 
-function composeEventHandlers<EventType extends { defaultPrevented?: boolean }>(
-  userHandler: ((event: EventType) => void) | undefined,
-  internalHandler: (event: EventType) => void
-) {
-  return (event: EventType) => {
-    userHandler?.(event);
-    if (!event.defaultPrevented) {
-      internalHandler(event);
-    }
-  };
-}
-
 function getPositionStyle(side: TooltipSide, sideOffset: number): React.CSSProperties {
   switch (side) {
     case "top":
@@ -153,36 +141,44 @@ export function Tooltip({
   const child = React.Children.only(children) as React.ReactElement<Record<string, unknown>>;
   const childProps = child.props;
   const mergedDescribedBy = [childProps["aria-describedby"], visible ? tooltipId : undefined].filter(Boolean).join(" ") || undefined;
+  // eslint-disable-next-line react-hooks/refs -- timer refs are read only inside DOM event callbacks.
+  const trigger = React.cloneElement(child, {
+    "aria-describedby": mergedDescribedBy,
+    onMouseEnter: (event: React.MouseEvent<HTMLElement>) => {
+      (childProps.onMouseEnter as ((value: React.MouseEvent<HTMLElement>) => void) | undefined)?.(event);
+      if (!event.defaultPrevented) {
+        scheduleOpen();
+      }
+    },
+    onMouseLeave: (event: React.MouseEvent<HTMLElement>) => {
+      (childProps.onMouseLeave as ((value: React.MouseEvent<HTMLElement>) => void) | undefined)?.(event);
+      if (!event.defaultPrevented) {
+        scheduleClose();
+      }
+    },
+    onFocus: (event: React.FocusEvent<HTMLElement>) => {
+      (childProps.onFocus as ((value: React.FocusEvent<HTMLElement>) => void) | undefined)?.(event);
+      if (!event.defaultPrevented) {
+        openImmediately();
+      }
+    },
+    onBlur: (event: React.FocusEvent<HTMLElement>) => {
+      (childProps.onBlur as ((value: React.FocusEvent<HTMLElement>) => void) | undefined)?.(event);
+      if (!event.defaultPrevented) {
+        closeImmediately();
+      }
+    },
+    onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
+      (childProps.onKeyDown as ((value: React.KeyboardEvent<HTMLElement>) => void) | undefined)?.(event);
+      if (!event.defaultPrevented && event.key === "Escape") {
+        closeImmediately();
+      }
+    }
+  });
 
   return (
     <span style={{ position: "relative", display: "inline-flex", maxWidth: "100%" }}>
-      {React.cloneElement(child, {
-        "aria-describedby": mergedDescribedBy,
-        onMouseEnter: composeEventHandlers(
-          childProps.onMouseEnter as ((event: React.MouseEvent<HTMLElement>) => void) | undefined,
-          () => scheduleOpen()
-        ),
-        onMouseLeave: composeEventHandlers(
-          childProps.onMouseLeave as ((event: React.MouseEvent<HTMLElement>) => void) | undefined,
-          () => scheduleClose()
-        ),
-        onFocus: composeEventHandlers(
-          childProps.onFocus as ((event: React.FocusEvent<HTMLElement>) => void) | undefined,
-          () => openImmediately()
-        ),
-        onBlur: composeEventHandlers(
-          childProps.onBlur as ((event: React.FocusEvent<HTMLElement>) => void) | undefined,
-          () => closeImmediately()
-        ),
-        onKeyDown: composeEventHandlers(
-          childProps.onKeyDown as ((event: React.KeyboardEvent<HTMLElement>) => void) | undefined,
-          (event: React.KeyboardEvent<HTMLElement>) => {
-            if (event.key === "Escape") {
-              closeImmediately();
-            }
-          }
-        )
-      })}
+      {trigger}
       {visible ? (
         <span
           id={tooltipId}

@@ -70,11 +70,11 @@ describe("Pagination", () => {
     const onPageChange = vi.fn();
     render(<Pagination page={4} pageCount={10} onPageChange={onPageChange} />);
 
-    const nav = screen.getByRole("navigation", { name: "Pagination" });
-    fireEvent.keyDown(nav, { key: "Home" });
-    fireEvent.keyDown(nav, { key: "End" });
-    fireEvent.keyDown(nav, { key: "ArrowLeft" });
-    fireEvent.keyDown(nav, { key: "ArrowRight" });
+    const activeButton = screen.getByRole("button", { name: "Current page, 4" });
+    fireEvent.keyDown(activeButton, { key: "Home" });
+    fireEvent.keyDown(activeButton, { key: "End" });
+    fireEvent.keyDown(activeButton, { key: "ArrowLeft" });
+    fireEvent.keyDown(activeButton, { key: "ArrowRight" });
 
     expect(onPageChange).toHaveBeenNthCalledWith(1, 1);
     expect(onPageChange).toHaveBeenNthCalledWith(2, 10);

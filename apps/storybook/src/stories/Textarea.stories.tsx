@@ -59,18 +59,18 @@ export const InvalidWithHelper: Story = {
 export const DisabledAndReadOnly: Story = {
   render: () => (
     <div style={{ width: 360, display: "grid", gap: 12 }}>
-      <label style={{ display: "grid", gap: 6 }}>
+      <div style={{ display: "grid", gap: 6 }}>
         <span style={{ color: "var(--aurora-text-secondary)", fontSize: 13 }}>Read-only template</span>
         <Textarea
           aria-label="Read-only template"
           readOnly
           defaultValue={"Release owner: Platform Team\nRollback: feature flag"}
         />
-      </label>
-      <label style={{ display: "grid", gap: 6 }}>
+      </div>
+      <div style={{ display: "grid", gap: 6 }}>
         <span style={{ color: "var(--aurora-text-secondary)", fontSize: 13 }}>Disabled while syncing</span>
         <Textarea aria-label="Disabled while syncing" disabled defaultValue="Synchronizing from source of truth..." />
-      </label>
+      </div>
     </div>
   )
 };

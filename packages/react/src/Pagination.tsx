@@ -98,28 +98,27 @@ export function Pagination({
     onPageChange(resolvedPage);
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (disabled) {
+      return;
+    }
+    if (event.key === "Home") {
+      event.preventDefault();
+      goToPage(1);
+    } else if (event.key === "End") {
+      event.preventDefault();
+      goToPage(pageCount);
+    } else if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      goToPage(currentPage - 1);
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      goToPage(currentPage + 1);
+    }
+  };
+
   return (
-    <nav
-      aria-label={ariaLabel}
-      onKeyDown={(event) => {
-        if (disabled) {
-          return;
-        }
-        if (event.key === "Home") {
-          event.preventDefault();
-          goToPage(1);
-        } else if (event.key === "End") {
-          event.preventDefault();
-          goToPage(pageCount);
-        } else if (event.key === "ArrowLeft") {
-          event.preventDefault();
-          goToPage(currentPage - 1);
-        } else if (event.key === "ArrowRight") {
-          event.preventDefault();
-          goToPage(currentPage + 1);
-        }
-      }}
-    >
+    <nav aria-label={ariaLabel}>
       <ul
         style={{
           listStyle: "none",
@@ -137,6 +136,7 @@ export function Pagination({
               type="button"
               disabled={!canGoPrevious}
               onClick={() => goToPage(1)}
+              onKeyDown={handleKeyDown}
               aria-label={getItemAriaLabel("first", 1)}
               style={buttonStyle(false, !canGoPrevious)}
             >
@@ -149,6 +149,7 @@ export function Pagination({
             type="button"
             disabled={!canGoPrevious}
             onClick={() => goToPage(currentPage - 1)}
+            onKeyDown={handleKeyDown}
             aria-label={getItemAriaLabel("previous", currentPage - 1)}
             style={buttonStyle(false, !canGoPrevious)}
           >
@@ -171,6 +172,7 @@ export function Pagination({
                 type="button"
                 onClick={() => goToPage(token)}
                 disabled={disabled}
+                onKeyDown={handleKeyDown}
                 aria-current={selected ? "page" : undefined}
                 aria-label={selected ? getItemAriaLabel("current", token) : getItemAriaLabel("page", token)}
                 style={buttonStyle(selected, disabled)}
@@ -185,6 +187,7 @@ export function Pagination({
             type="button"
             disabled={!canGoNext}
             onClick={() => goToPage(currentPage + 1)}
+            onKeyDown={handleKeyDown}
             aria-label={getItemAriaLabel("next", currentPage + 1)}
             style={buttonStyle(false, !canGoNext)}
           >
@@ -197,6 +200,7 @@ export function Pagination({
               type="button"
               disabled={!canGoNext}
               onClick={() => goToPage(pageCount)}
+              onKeyDown={handleKeyDown}
               aria-label={getItemAriaLabel("last", pageCount)}
               style={buttonStyle(false, !canGoNext)}
             >

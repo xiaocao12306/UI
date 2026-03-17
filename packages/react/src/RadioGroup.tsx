@@ -77,7 +77,6 @@ export function RadioGroup({
             value={option.value}
             checked={currentValue === option.value}
             disabled={disabled || option.disabled}
-            aria-invalid={isInvalid || undefined}
             onChange={() => handleChange(option.value, option.disabled)}
             style={{
               marginTop: 2,

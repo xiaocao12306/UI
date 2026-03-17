@@ -97,7 +97,7 @@ export const Controlled: Story = {
     content: "Controlled tooltip content",
     children: <Button variant="outline">Controlled target</Button>
   },
-  render: (args) => <ControlledTooltipStory content={args.content} children={args.children} />,
+  render: (args) => <ControlledTooltipStory content={args.content}>{args.children}</ControlledTooltipStory>,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const toggleButton = await canvas.findByRole("button", { name: "Show tooltip" });

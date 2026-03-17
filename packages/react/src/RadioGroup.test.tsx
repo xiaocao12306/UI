@@ -50,16 +50,14 @@ describe("RadioGroup", () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  it("wires invalid semantics to group and options", () => {
+  it("wires invalid semantics to the radiogroup container", () => {
     render(<RadioGroup name="Invalid group" invalid options={baseOptions} />);
     expect(screen.getByRole("radiogroup", { name: "Invalid group" })).toHaveAttribute("aria-invalid", "true");
-    expect(screen.getByRole("radio", { name: "Small" })).toHaveAttribute("aria-invalid", "true");
   });
 
-  it("accepts invalid semantics from aria-invalid", () => {
+  it("accepts invalid semantics from aria-invalid on the group", () => {
     render(<RadioGroup name="Aria group" aria-invalid="true" options={baseOptions} />);
     expect(screen.getByRole("radiogroup", { name: "Aria group" })).toHaveAttribute("aria-invalid", "true");
-    expect(screen.getByRole("radio", { name: "Small" })).toHaveAttribute("aria-invalid", "true");
   });
 
   it("treats aria-invalid=false as valid", () => {

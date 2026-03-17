@@ -133,6 +133,7 @@
   - FormField 语义合并修复（子控件 `aria-describedby/aria-invalid/required` 与字段提示正确叠加）
   - FormField required/error 语义收口（`aria-required=\"false\"` 不误判、`aria-errormessage` 与字段错误 ID 合并）
   - Tag/Badge 覆盖补齐（单测 + Storybook `Core/Tag`、`Core/Badge`）
+  - Verify 门禁修复（Pagination 键盘事件语义、RadioGroup invalid 语义、Tooltip/Textarea Storybook lint 合规）
   - 横向收口（Tabs/Table：Home/End 焦点流、`aria-sort` 与排序切换断言、排序 telemetry 示例）
   - Table 语义边界修复（`defaultSortKey` 指向非 sortable 列时忽略初始排序，保持 `aria-sort` 正确）
   - Table Storybook 边界示例补齐（`InvalidDefaultSortKeyFallback` 覆盖无效默认排序键）
