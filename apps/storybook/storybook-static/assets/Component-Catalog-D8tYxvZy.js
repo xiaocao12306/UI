@@ -1,5 +1,5 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as s,T as c,S as i,D as t}from"./index-BtFEhwpS.js";import"./index-BWu4c2F4.js";import"./iframe-B16v0xn8.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(s,{title:"Docs/Component Catalog"}),`
-`,e.jsx(c,{}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as c,T as s,S as i,D as t}from"./index-wukzsdVc.js";import"./index-BWu4c2F4.js";import"./iframe-DHn0DWZH.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{title:"Docs/Component Catalog"}),`
+`,e.jsx(s,{}),`
 `,e.jsx(i,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(t,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
 Use it as the first stop before extending APIs or adding new stories.`})}),`
@@ -21,7 +21,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 | --- | --- | --- | --- |
 | Tabs | `,e.jsx(o.code,{children:"Tabs"})," | ",e.jsx(o.code,{children:"Data/Tabs"})," + ",e.jsx(o.code,{children:"KeyboardNavigationGuide"}),` | yes |
 | Table | `,e.jsx(o.code,{children:"Table"})," | ",e.jsx(o.code,{children:"Data/Table"})," + ",e.jsx(o.code,{children:"SortTelemetry"}),` | yes |
-| Pagination | `,e.jsx(o.code,{children:"Pagination"})," | ",e.jsx(o.code,{children:"Data/Pagination"}),` | yes |
+| Pagination | `,e.jsx(o.code,{children:"Pagination"})," | ",e.jsx(o.code,{children:"Data/Pagination"})," + ",e.jsx(o.code,{children:"KeyboardShortcuts"}),` | yes |
 | Tag | `,e.jsx(o.code,{children:"Tag"})," | used in ",e.jsx(o.code,{children:"Core/Button"}),` story | - |
 | Badge | `,e.jsx(o.code,{children:"Badge"})," | used in multiple stories | - |"]}),`
 `,e.jsx(o.h2,{id:"feedback-and-state",children:"Feedback and State"}),`
