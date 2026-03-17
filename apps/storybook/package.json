@@ -11,6 +11,7 @@
     "test": "pnpm run typecheck",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "storybook": "storybook dev -p 6006",
+    "storybook:smoke": "storybook dev -p 6006 --smoke-test --ci",
     "build-storybook": "storybook build"
   },
   "dependencies": {

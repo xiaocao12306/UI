@@ -10,6 +10,7 @@
 
 ```bash
 pnpm storybook:dev
+pnpm storybook:smoke
 pnpm storybook:build
 ```
 
@@ -17,6 +18,7 @@ pnpm storybook:build
 
 ```bash
 pnpm --filter @aurora-ui/storybook-app storybook
+pnpm --filter @aurora-ui/storybook-app storybook:smoke
 pnpm --filter @aurora-ui/storybook-app build-storybook
 ```
 

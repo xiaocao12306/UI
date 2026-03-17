@@ -17,6 +17,7 @@ Examples:
 pnpm --filter @aurora-ui/react test
 pnpm --filter @aurora-ui/demo build
 pnpm demo:e2e
+pnpm storybook:build
 ```
 
 ## E2E (Playwright)
@@ -44,6 +45,7 @@ GitHub Actions workflow runs:
 - test
 - build
 - demo e2e smoke test
+- storybook static build
 
 ## Release Readiness Checklist
 - all quality gates green
