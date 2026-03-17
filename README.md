@@ -87,6 +87,7 @@ pnpm chromatic
 - release PR generation uses Changesets on `main`
 - npm publish runs only when `NPM_TOKEN` is configured
 - secrets setup guide: `docs/secrets.md`
+- local preflight: `pnpm release:preflight` (checks `CHROMATIC_PROJECT_TOKEN` + `NPM_TOKEN`)
 
 ## Demo External Link
 - GitHub Pages workflow: `.github/workflows/demo-pages.yml`

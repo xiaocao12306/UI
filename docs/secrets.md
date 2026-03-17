@@ -4,6 +4,12 @@
 - `CHROMATIC_PROJECT_TOKEN`：Storybook 视觉回归上传
 - `NPM_TOKEN`：Changesets 自动发布到 npm
 
+建议先执行一次本地预检：
+
+```bash
+pnpm release:preflight
+```
+
 ## CHROMATIC_PROJECT_TOKEN
 
 用途：启用 `.github/workflows/chromatic.yml` 的快照上传。

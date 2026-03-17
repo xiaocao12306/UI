@@ -29,6 +29,17 @@ pnpm exec playwright install chromium
 pnpm demo:e2e
 ```
 
+## Release Secrets Preflight
+Run this before Chromatic upload or npm publish:
+
+```bash
+pnpm release:preflight
+```
+
+Expected behavior:
+- both `CHROMATIC_PROJECT_TOKEN` and `NPM_TOKEN` exist: command exits with code `0`
+- any missing token: command prints `MISSING` line(s), points to `docs/secrets.md`, and exits with code `1`
+
 ## Versioning
 Use Changesets:
 

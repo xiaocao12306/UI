@@ -33,6 +33,7 @@
     "check-format": "prettier --check .",
     "changeset": "changeset",
     "version-packages": "changeset version",
+    "release:preflight": "node scripts/release-preflight.mjs",
     "release": "changeset publish"
   },
   "devDependencies": {

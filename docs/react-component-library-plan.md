@@ -115,6 +115,7 @@
   - Secrets 配置文档（`docs/secrets.md`）及 README 引导
   - 发布 dry-run 验证（`changeset version` + `npm publish --dry-run`）
   - 发布 dry-run 复验（生产级返工后再次验证 3 个包 tarball 清单与体积）
+  - 发布前置校验脚本（`pnpm release:preflight` 检查 Chromatic/NPM token 并输出缺失提示）
   - 生产级返工（Button、Input/FormField、Dialog）
   - 生产级返工（Popover、Dropdown、CommandPalette）
   - 生产级返工（Toast）
