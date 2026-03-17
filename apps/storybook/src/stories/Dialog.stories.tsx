@@ -59,3 +59,33 @@ export const Interactive: Story = {
 export const OpenByDefault: Story = {
   render: () => <InitiallyOpenDialog />
 };
+
+function NonDismissableDialog() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+      title="Critical Confirmation"
+      description="This dialog requires an explicit action and ignores Escape / outside clicks."
+      closeOnEscape={false}
+      closeOnOutsidePointer={false}
+      size="lg"
+    >
+      <div style={{ display: "grid", gap: 12 }}>
+        <p style={{ margin: 0 }}>Review the migration plan before confirming release.</p>
+        <div style={{ display: "flex", gap: 8, justifyContent: "end" }}>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={() => setOpen(false)}>Confirm</Button>
+        </div>
+      </div>
+    </Dialog>
+  );
+}
+
+export const NonDismissable: Story = {
+  render: () => <NonDismissableDialog />
+};

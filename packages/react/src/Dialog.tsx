@@ -1,15 +1,57 @@
 import * as React from "react";
 import { DismissableLayer, FocusScope, Portal } from "@aurora-ui/primitives";
 
+export type DialogSize = "sm" | "md" | "lg";
+
 export type DialogProps = {
   open: boolean;
   title: React.ReactNode;
+  description?: React.ReactNode;
   children: React.ReactNode;
+  size?: DialogSize;
+  closeOnEscape?: boolean;
+  closeOnOutsidePointer?: boolean;
+  showCloseButton?: boolean;
+  closeLabel?: string;
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
+  onPointerDownOutside?: (event: PointerEvent) => void;
   onOpenChange: (open: boolean) => void;
 };
 
-export function Dialog({ open, title, children, onOpenChange }: DialogProps) {
+const dialogSizeMap: Record<DialogSize, string> = {
+  sm: "min(420px, calc(100vw - 32px))",
+  md: "min(560px, calc(100vw - 32px))",
+  lg: "min(760px, calc(100vw - 32px))"
+};
+
+export function Dialog({
+  open,
+  title,
+  description,
+  children,
+  size = "md",
+  closeOnEscape = true,
+  closeOnOutsidePointer = true,
+  showCloseButton = true,
+  closeLabel = "Close dialog",
+  onEscapeKeyDown,
+  onPointerDownOutside,
+  onOpenChange
+}: DialogProps) {
   const titleId = React.useId();
+  const descriptionId = React.useId();
+
+  React.useEffect(() => {
+    if (!open || typeof document === "undefined") {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
 
   if (!open) {
     return null;
@@ -28,14 +70,30 @@ export function Dialog({ open, title, children, onOpenChange }: DialogProps) {
           zIndex: 1300
         }}
       >
-        <DismissableLayer onDismiss={() => onOpenChange(false)}>
+        <DismissableLayer
+          onEscapeKeyDown={(event) => {
+            onEscapeKeyDown?.(event);
+            if (!closeOnEscape) {
+              event.preventDefault();
+            }
+          }}
+          onPointerDownOutside={(event) => {
+            onPointerDownOutside?.(event);
+            if (!closeOnOutsidePointer) {
+              event.preventDefault();
+            }
+          }}
+          onDismiss={() => onOpenChange(false)}
+        >
           <FocusScope>
             <section
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
+              aria-describedby={description ? descriptionId : undefined}
+              data-state="open"
               style={{
-                width: "min(560px, calc(100vw - 32px))",
+                width: dialogSizeMap[size],
                 borderRadius: "var(--aurora-radius-lg)",
                 border: "1px solid var(--aurora-panel-border)",
                 background: "var(--aurora-panel-bg)",
@@ -45,13 +103,35 @@ export function Dialog({ open, title, children, onOpenChange }: DialogProps) {
                 gap: 12
               }}
             >
-              <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
-                <strong id={titleId} style={{ color: "var(--aurora-text-primary)" }}>
-                  {title}
-                </strong>
-                <button type="button" onClick={() => onOpenChange(false)} aria-label="Close dialog">
-                  ×
-                </button>
+              <header style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: 8 }}>
+                <div style={{ display: "grid", gap: 4 }}>
+                  <h2 id={titleId} style={{ margin: 0, color: "var(--aurora-text-primary)", fontSize: "var(--aurora-font-size-lg)" }}>
+                    {title}
+                  </h2>
+                  {description ? (
+                    <p id={descriptionId} style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+                      {description}
+                    </p>
+                  ) : null}
+                </div>
+                {showCloseButton ? (
+                  <button
+                    type="button"
+                    onClick={() => onOpenChange(false)}
+                    aria-label={closeLabel}
+                    style={{
+                      borderRadius: "var(--aurora-radius-sm)",
+                      border: "1px solid var(--aurora-border-default)",
+                      background: "var(--aurora-surface-elevated)",
+                      color: "var(--aurora-text-secondary)",
+                      width: 30,
+                      height: 30,
+                      cursor: "pointer"
+                    }}
+                  >
+                    ×
+                  </button>
+                ) : null}
               </header>
               <div>{children}</div>
             </section>
