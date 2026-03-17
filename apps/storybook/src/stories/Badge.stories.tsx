@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge } from "@aurora-ui/react";
+import { expect, within } from "@storybook/test";
 
 const meta = {
   title: "Core/Badge",
@@ -49,5 +50,11 @@ export const AiInteractionStatus: Story = {
         <span style={{ color: "var(--aurora-text-secondary)" }}>Low-confidence branch detected.</span>
       </div>
     </div>
-  )
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("Queued")).toBeInTheDocument();
+    await expect(canvas.getByText("Grounded")).toBeInTheDocument();
+    await expect(canvas.getByText("Needs review")).toBeInTheDocument();
+  }
 };

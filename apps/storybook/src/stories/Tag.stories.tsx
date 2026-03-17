@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Tag } from "@aurora-ui/react";
+import { expect, within } from "@storybook/test";
 
 const meta = {
   title: "Core/Tag",
@@ -46,5 +47,12 @@ export const AiContextMarkers: Story = {
         <Tag style={{ borderColor: "var(--aurora-color-red-500)", color: "var(--aurora-color-red-500)" }}>awaiting approval</Tag>
       </div>
     </div>
-  )
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("conversation-id: 1438")).toBeInTheDocument();
+    await expect(canvas.getByText("scope: docs")).toBeInTheDocument();
+    await expect(canvas.getByText("memory synced")).toBeInTheDocument();
+    await expect(canvas.getByText("awaiting approval")).toBeInTheDocument();
+  }
 };
