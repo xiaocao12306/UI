@@ -10,3 +10,5 @@ storybook-static
 !.env.example
 !apps/demo/dist/
 !apps/demo/dist/**
+playwright-report
+test-results
