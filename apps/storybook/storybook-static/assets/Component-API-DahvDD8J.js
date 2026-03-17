@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as b}from"./index-CHKtz2QT.js";import{M as g,T as v,S as y,D as C,C as o,a as d}from"./index-DcNQNFcr.js";import{Primary as s}from"./Button.stories-CioKYm6d.js";import{Default as r}from"./Input.stories-CNc38CLD.js";import{Controlled as D,Indeterminate as k,InvalidAndDisabled as T}from"./Checkbox.stories-DO8wLwZ0.js";import{Controlled as P,DisabledOption as I,InvalidState as N}from"./RadioGroup.stories-ty_C2RLB.js";import{Controlled as w,KeyboardToggle as A,InvalidAndDisabled as S}from"./Switch.stories-Dj78JnZs.js";import{Controlled as $,DisabledState as M,InvalidState as O}from"./Select.stories-BHBHrYk5.js";import{Controlled as R,WithCustomEmptyMessage as E,KeyboardDismissPaths as V}from"./Combobox.stories-DBVLRVsc.js";import{Controlled as W,StateMatrix as c,InvalidWithHelper as F}from"./DatePicker.stories-CVUcx3zM.js";import{Default as l,InvalidWithHelper as q}from"./Textarea.stories-Bq7SRWAe.js";import{Interactive as t}from"./Dialog.stories-8rOsPSXQ.js";import{Interactive as K,NonDismissible as H}from"./Drawer.stories-JJeHFmoV.js";import{WithInteractiveContent as L,Default as U}from"./Popover.stories-CJvtCsuZ.js";import{Default as a}from"./Dropdown.stories-DXUk1DR7.js";import{SearchCommands as h,QueryTelemetry as B}from"./CommandPalette.stories-BNE0ITqD.js";import{Default as x,ActionRequired as Y}from"./Toast.stories-85nlmZPq.js";import{Default as j,KeyboardNavigationGuide as X}from"./Tabs.stories-Cy2LOKSd.js";import{ReleaseChecklist as z,SortTelemetry as G}from"./Table.stories-COdgi_cR.js";import{Controlled as Q,KeyboardShortcuts as p}from"./Pagination.stories-C0D8KC4D.js";import{WithAiRequestState as _,Default as J}from"./PromptInput.stories-dhUe7XyJ.js";import{Conversation as Z,Default as ee}from"./MessageBubble.stories-wEP5cOKd.js";import{Default as m}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as u}from"./StreamingCodeBlock.stories-Jd4VPz8N.js";import"./index-BWu4c2F4.js";import"./iframe-SlHfa67e.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Badge-Dkm8CRgf.js";import"./index-DgAF9SIF.js";import"./Input-vIzakoOT.js";import"./FieldStyles-CQy9UjBZ.js";import"./Textarea-D83jYE7Q.js";import"./Dialog-BEnLK-UC.js";import"./FocusScope-Db3t2k9z.js";import"./DismissableLayer-0Dn_Gr2D.js";function f(i){const n={code:"code",h2:"h2",h3:"h3",p:"p",...b(),...i.components};return e.jsxs(e.Fragment,{children:[e.jsx(g,{title:"Docs/Component API"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as b}from"./index-CHKtz2QT.js";import{M as g,T as v,S as y,D as C,C as o,a as d}from"./index-BZwjWvyg.js";import{Primary as s}from"./Button.stories-CioKYm6d.js";import{Default as r}from"./Input.stories-CNc38CLD.js";import{Controlled as D,Indeterminate as T,InvalidAndDisabled as k}from"./Checkbox.stories-DO8wLwZ0.js";import{Controlled as P,DisabledOption as I,InvalidState as N}from"./RadioGroup.stories-ty_C2RLB.js";import{Controlled as w,KeyboardToggle as A,InvalidAndDisabled as S}from"./Switch.stories-Dj78JnZs.js";import{Controlled as $,DisabledState as M,InvalidState as O}from"./Select.stories-BHBHrYk5.js";import{Controlled as R,WithCustomEmptyMessage as E,KeyboardDismissPaths as V}from"./Combobox.stories-DBVLRVsc.js";import{Controlled as W,StateMatrix as c,InvalidWithHelper as F}from"./DatePicker.stories-CVUcx3zM.js";import{Default as l,InvalidWithHelper as q}from"./Textarea.stories-Bq7SRWAe.js";import{Interactive as t}from"./Dialog.stories-8rOsPSXQ.js";import{Interactive as K,NonDismissible as H}from"./Drawer.stories-JJeHFmoV.js";import{WithInteractiveContent as L,Default as U}from"./Popover.stories-CJvtCsuZ.js";import{Default as a}from"./Dropdown.stories-DXUk1DR7.js";import{SearchCommands as h,QueryTelemetry as B}from"./CommandPalette.stories-BNE0ITqD.js";import{Default as Y,Dismissible as X}from"./Alert.stories-CkQEb2Ws.js";import{Default as x,ActionRequired as z}from"./Toast.stories-85nlmZPq.js";import{Default as j,KeyboardNavigationGuide as G}from"./Tabs.stories-Cy2LOKSd.js";import{ReleaseChecklist as Q,SortTelemetry as _}from"./Table.stories-COdgi_cR.js";import{Controlled as J,KeyboardShortcuts as p}from"./Pagination.stories-C0D8KC4D.js";import{WithAiRequestState as Z,Default as ee}from"./PromptInput.stories-dhUe7XyJ.js";import{Conversation as ne,Default as oe}from"./MessageBubble.stories-wEP5cOKd.js";import{Default as m}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as u}from"./StreamingCodeBlock.stories-Jd4VPz8N.js";import"./index-BWu4c2F4.js";import"./iframe-Brwa-9-t.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Badge-Dkm8CRgf.js";import"./index-DgAF9SIF.js";import"./Input-vIzakoOT.js";import"./FieldStyles-CQy9UjBZ.js";import"./Textarea-D83jYE7Q.js";import"./Dialog-BEnLK-UC.js";import"./FocusScope-Db3t2k9z.js";import"./DismissableLayer-0Dn_Gr2D.js";function f(i){const n={code:"code",h2:"h2",h3:"h3",p:"p",...b(),...i.components};return e.jsxs(e.Fragment,{children:[e.jsx(g,{title:"Docs/Component API"}),`
 `,e.jsx(v,{}),`
 `,e.jsx(y,{children:"Primary API Reference"}),`
 `,e.jsx(C,{children:e.jsx(n.p,{children:`This page links the most-used Aurora UI components to executable stories and prop controls.
@@ -13,14 +13,14 @@ When controls are available, Storybook reflects the runtime API contract directl
 `,e.jsx(d,{of:r}),`
 `,e.jsx(n.h3,{id:"checkbox",children:"Checkbox"}),`
 `,e.jsx(o,{of:D}),`
-`,e.jsx(d,{of:k}),`
+`,e.jsx(d,{of:T}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"checked"})," / ",e.jsx(n.code,{children:"defaultChecked"})," | ",e.jsx(n.code,{children:"boolean"}),` | Native checkbox controlled/uncontrolled behavior. |
 | `,e.jsx(n.code,{children:"indeterminate"})," | ",e.jsx(n.code,{children:"boolean"})," | Sets mixed state semantics (",e.jsx(n.code,{children:'aria-checked="mixed"'}),`). |
 | `,e.jsx(n.code,{children:"description"})," | ",e.jsx(n.code,{children:"ReactNode"})," | Automatically wires helper text into ",e.jsx(n.code,{children:"aria-describedby"}),`. |
 | `,e.jsx(n.code,{children:"invalid"})," | ",e.jsx(n.code,{children:"boolean"})," | Applies invalid state with ",e.jsx(n.code,{children:"aria-invalid"}),". |"]}),`
-`,e.jsx(o,{of:T}),`
+`,e.jsx(o,{of:k}),`
 `,e.jsx(n.h3,{id:"radiogroup",children:"RadioGroup"}),`
 `,e.jsx(o,{of:P}),`
 `,e.jsx(d,{of:I}),`
@@ -111,18 +111,18 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"items"})," | ",e.jsx(n.code,{children:"TabItem[]"})," | Include ",e.jsx(n.code,{children:"disabled"}),` for unavailable states. |
 | `,e.jsx(n.code,{children:"value"})," / ",e.jsx(n.code,{children:"defaultValue"})," | ",e.jsx(n.code,{children:"string"}),` | Controlled and uncontrolled modes are both supported. |
 | `,e.jsx(n.code,{children:"onValueChange"})," | ",e.jsx(n.code,{children:"(value: string) => void"})," | Fires only for enabled tabs. |"]}),`
-`,e.jsx(o,{of:X}),`
+`,e.jsx(o,{of:G}),`
 `,e.jsx(n.h3,{id:"table",children:"Table"}),`
-`,e.jsx(o,{of:z}),`
+`,e.jsx(o,{of:Q}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"columns"})," | ",e.jsx(n.code,{children:"TableColumn<T>[]"})," | ",e.jsx(n.code,{children:"sortable"})," + optional ",e.jsx(n.code,{children:"sortAccessor"}),` for stable sorting behavior. |
 | `,e.jsx(n.code,{children:"data"})," | ",e.jsx(n.code,{children:"T[]"})," | Empty arrays render ",e.jsx(n.code,{children:"emptyContent"}),`. |
 | `,e.jsx(n.code,{children:"defaultSortKey"})," / ",e.jsx(n.code,{children:"defaultSortDirection"})," | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"'asc' \\| 'desc'"})," | Sets initial ",e.jsx(n.code,{children:"aria-sort"}),` and data order. |
 | `,e.jsx(n.code,{children:"onSortChange"})," | ",e.jsx(n.code,{children:"(key, direction) => void"})," | Useful for telemetry and analytics. |"]}),`
-`,e.jsx(o,{of:G}),`
+`,e.jsx(o,{of:_}),`
 `,e.jsx(n.h3,{id:"pagination",children:"Pagination"}),`
-`,e.jsx(o,{of:Q}),`
+`,e.jsx(o,{of:J}),`
 `,e.jsx(d,{of:p}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
@@ -134,6 +134,15 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"getItemAriaLabel"})," | ",e.jsx(n.code,{children:"(type, page) => string"})," | Customize pagination control narration for i18n. |"]}),`
 `,e.jsx(o,{of:p}),`
 `,e.jsx(n.h2,{id:"feedback",children:"Feedback"}),`
+`,e.jsx(n.h3,{id:"alert",children:"Alert"}),`
+`,e.jsx(o,{of:Y}),`
+`,e.jsx(d,{of:X}),`
+`,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
+| --- | --- | --- |
+| `,e.jsx(n.code,{children:"tone"})," | ",e.jsx(n.code,{children:"'info' \\| 'success' \\| 'warning' \\| 'danger'"}),` | Controls visual emphasis and live-region urgency. |
+| `,e.jsx(n.code,{children:"description"})," | ",e.jsx(n.code,{children:"ReactNode"}),` | Main alert body copy under title. |
+| `,e.jsx(n.code,{children:"onClose"})," | ",e.jsx(n.code,{children:"() => void"}),` | Enables dismiss button branch for actionable notices. |
+| `,e.jsx(n.code,{children:"live"})," | ",e.jsx(n.code,{children:"'polite' \\| 'assertive' \\| 'off'"})," | Overrides default aria-live behavior. |"]}),`
 `,e.jsx(n.h3,{id:"toast",children:"Toast"}),`
 `,e.jsx(o,{of:x}),`
 `,e.jsx(d,{of:x}),`
@@ -143,7 +152,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"duration"})," | ",e.jsx(n.code,{children:"number"})," | Auto-dismiss delay in ms; ",e.jsx(n.code,{children:"0"}),` disables timer. |
 | `,e.jsx(n.code,{children:"pauseOnHover"})," | ",e.jsx(n.code,{children:"boolean"}),` | Suspends timer while hovered. |
 | `,e.jsx(n.code,{children:"closeOnEscape"})," | ",e.jsx(n.code,{children:"boolean"})," | Optional keyboard dismiss path. |"]}),`
-`,e.jsx(o,{of:Y}),`
+`,e.jsx(o,{of:z}),`
 `,e.jsx(n.h2,{id:"ai",children:"AI"}),`
 `,e.jsx(n.h3,{id:"commandpalette",children:"CommandPalette"}),`
 `,e.jsx(o,{of:h}),`
@@ -156,16 +165,16 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"onOpenChange"})," | ",e.jsx(n.code,{children:"(open: boolean) => void"})," | Required controlled dialog state. |"]}),`
 `,e.jsx(o,{of:B}),`
 `,e.jsx(n.h3,{id:"promptinput",children:"PromptInput"}),`
-`,e.jsx(o,{of:_}),`
-`,e.jsx(d,{of:J}),`
+`,e.jsx(o,{of:Z}),`
+`,e.jsx(d,{of:ee}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"onSubmit"})," | ",e.jsx(n.code,{children:"(prompt: string) => void"}),` | Triggered by send button or Ctrl/Cmd + Enter shortcut. |
 | `,e.jsx(n.code,{children:"submitting"})," | ",e.jsx(n.code,{children:"boolean"}),` | Locks input + button and updates live hint during AI request execution. |
 | `,e.jsx(n.code,{children:"placeholder"})," | ",e.jsx(n.code,{children:"string"})," | Optional prompt guidance text. |"]}),`
 `,e.jsx(n.h3,{id:"messagebubble",children:"MessageBubble"}),`
-`,e.jsx(o,{of:Z}),`
-`,e.jsx(d,{of:ee}),`
+`,e.jsx(o,{of:ne}),`
+`,e.jsx(d,{of:oe}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"speaker"})," | ",e.jsx(n.code,{children:"'user' \\| 'assistant' \\| 'system'"})," | Applies alignment and semantic labeling (",e.jsx(n.code,{children:"aria-label"}),`). |
@@ -185,4 +194,4 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"code"})," | ",e.jsx(n.code,{children:"string"}),` | Source content to progressively reveal. |
 | `,e.jsx(n.code,{children:"language"})," | ",e.jsx(n.code,{children:"string"}),` | Header hint for syntax context. |
-| `,e.jsx(n.code,{children:"speed"})," | ",e.jsx(n.code,{children:"number"})," | Milliseconds per character; ",e.jsx(n.code,{children:"0"})," renders immediately. |"]})]})}function qe(i={}){const{wrapper:n}={...b(),...i.components};return n?e.jsx(n,{...i,children:e.jsx(f,{...i})}):f(i)}export{qe as default};
+| `,e.jsx(n.code,{children:"speed"})," | ",e.jsx(n.code,{children:"number"})," | Milliseconds per character; ",e.jsx(n.code,{children:"0"})," renders immediately. |"]})]})}function Le(i={}){const{wrapper:n}={...b(),...i.components};return n?e.jsx(n,{...i,children:e.jsx(f,{...i})}):f(i)}export{Le as default};
