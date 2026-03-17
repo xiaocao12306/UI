@@ -32,6 +32,8 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `storybook:test`：针对已运行的 Storybook URL 执行交互测试
   - `storybook:test:ci`：在本地静态产物（`storybook-static`）上启动临时服务并运行测试
 - 当前已覆盖 play 场景：
+  - `Core/Button` 键盘激活 + loading 禁用分支
+  - `Form/Input` blur 校验 + 输入计数 + 提交禁用分支
   - `Form/Combobox` 选择流程
   - `Form/DatePicker` 受控日期更新流程
   - `Data/Pagination` 翻页流程

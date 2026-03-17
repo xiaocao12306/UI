@@ -45,4 +45,4 @@
 - Data pagination E2E (`Release feed` page switching): covered
 
 ## Planned Next (v0.2)
-- Storybook interaction coverage expansion（下一步补齐 `Core/Button`、`Form/Input` 键盘/状态交互路径）
+- Storybook interaction coverage expansion（下一步补齐 `Overlay/Popover`、`Overlay/Dropdown` 边界交互分支）

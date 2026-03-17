@@ -1,5 +1,7 @@
+import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Tag } from "@aurora-ui/react";
+import { expect, userEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Core/Button",
@@ -85,4 +87,48 @@ export const StateMatrix: Story = {
       </small>
     </div>
   )
+};
+
+function KeyboardActivationDemo() {
+  const [count, setCount] = React.useState(0);
+  const [loading, setLoading] = React.useState(true);
+
+  return (
+    <div style={{ width: 520, display: "grid", gap: 12 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Activation count: <strong data-testid="activation-count">{count}</strong>
+      </p>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        <Button onClick={() => setCount((value) => value + 1)}>Run Action</Button>
+        <Button loading={loading} onClick={() => setCount((value) => value + 10)}>
+          Background Task
+        </Button>
+        <Button variant="outline" onClick={() => setLoading((value) => !value)}>
+          {loading ? "Enable Background Task" : "Disable Background Task"}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export const KeyboardActivation: Story = {
+  render: () => <KeyboardActivationDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const runAction = await canvas.findByRole("button", { name: "Run Action" });
+
+    runAction.focus();
+    await userEvent.keyboard("{Enter}");
+    await userEvent.keyboard(" ");
+    await expect(canvas.getByTestId("activation-count")).toHaveTextContent("2");
+
+    const loadingButton = canvas.getByRole("button", { name: "Background Task" });
+    await expect(loadingButton).toBeDisabled();
+    await expect(loadingButton).toHaveAttribute("aria-busy", "true");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Enable Background Task" }));
+    await expect(loadingButton).not.toBeDisabled();
+    await userEvent.click(loadingButton);
+    await expect(canvas.getByTestId("activation-count")).toHaveTextContent("12");
+  }
 };
