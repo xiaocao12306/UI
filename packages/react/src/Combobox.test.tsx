@@ -137,4 +137,14 @@ describe("Combobox", () => {
     expect(screen.getByRole("option", { name: "React" })).toHaveAttribute("aria-selected", "true");
     expect(screen.getByRole("option", { name: "Vue" })).toHaveAttribute("aria-selected", "false");
   });
+
+  it("does not open option list when combobox is disabled", () => {
+    render(<Combobox options={options} disabled onValueChange={() => {}} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+
+    expect(screen.queryByRole("listbox")).toBeNull();
+  });
 });

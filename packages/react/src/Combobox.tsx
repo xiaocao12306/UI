@@ -64,6 +64,13 @@ export function Combobox({
   }, [open, selectedOption]);
 
   React.useEffect(() => {
+    if (disabled) {
+      setOpen(false);
+      setActiveIndex(-1);
+    }
+  }, [disabled]);
+
+  React.useEffect(() => {
     if (!open) {
       return;
     }
@@ -135,17 +142,29 @@ export function Combobox({
         value={query}
         disabled={disabled}
         placeholder={placeholder}
-        onFocus={() => setOpen(true)}
+        onFocus={() => {
+          if (disabled) {
+            return;
+          }
+          setOpen(true);
+        }}
         onBlur={(event) => {
           if (!rootRef.current?.contains(event.relatedTarget as Node | null)) {
             setOpen(false);
           }
         }}
         onChange={(event) => {
+          if (disabled) {
+            return;
+          }
           setQuery(event.target.value);
           setOpen(true);
         }}
         onKeyDown={(event) => {
+          if (disabled) {
+            return;
+          }
+
           if (event.key === "Escape") {
             setOpen(false);
             return;

@@ -78,5 +78,12 @@ export const DisabledState: Story = {
   args: {
     ariaLabel: "Framework disabled",
     disabled: true
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Framework disabled" });
+
+    await userEvent.click(input);
+    await expect(canvas.queryByRole("listbox")).toBeNull();
   }
 };
