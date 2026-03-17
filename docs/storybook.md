@@ -51,6 +51,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `AI/PromptInput` 提交/禁用边界与多动作反馈路径
   - `AI/ReasoningPanel` 展开/折叠可访问性路径
   - `AI/StreamingCodeBlock` streaming 完成与 busy 状态路径
+  - `Feedback/Empty` action CTA 与状态语义路径
   - `Feedback/Progress` determinate/indeterminate 语义路径
   - `Feedback/Alert` dismiss 分支与 live region 语义路径
   - `Feedback/Toast` 关闭与重开流程
@@ -76,6 +77,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - `Data/Table`
 - `Data/Pagination`
 - `Data/Pagination/KeyboardShortcuts`
+- `Feedback/Empty`
 - `Feedback/Progress`
 - `Feedback/Toast`
 - `Feedback/Alert`

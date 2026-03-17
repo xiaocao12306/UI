@@ -31,7 +31,8 @@
 - Feedback/State
   - `Alert`: production-refined
   - `Progress`: production-refined
-  - `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
+  - `Empty`: production-refined
+  - `Skeleton`, `LoadingDots`, `StreamingText`: done
   - `Toast`: production-refined
 - Overlay
   - `Tooltip`: production-refined

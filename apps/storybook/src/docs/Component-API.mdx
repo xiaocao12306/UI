@@ -14,6 +14,7 @@ import * as TooltipStories from '../stories/Tooltip.stories';
 import * as PopoverStories from '../stories/Popover.stories';
 import * as DropdownStories from '../stories/Dropdown.stories';
 import * as CommandPaletteStories from '../stories/CommandPalette.stories';
+import * as EmptyStories from '../stories/Empty.stories';
 import * as ProgressStories from '../stories/Progress.stories';
 import * as AlertStories from '../stories/Alert.stories';
 import * as ToastStories from '../stories/Toast.stories';
@@ -237,6 +238,20 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={PaginationStories.KeyboardShortcuts} />
 
 ## Feedback
+
+### Empty
+
+<Canvas of={EmptyStories.Default} />
+<Controls of={EmptyStories.WithAction} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `title` / `description` | `ReactNode` | Empty-state headline and helper explanation text. |
+| `icon` / `action` | `ReactNode` | Optional visual cue and primary call-to-action slot. |
+| `tone` | `'default' \| 'info' \| 'warning' \| 'danger'` | Semantic emphasis for empty-state severity context. |
+| `align` / `titleAs` | `'center' \| 'left'` / heading element | Control content layout and heading semantics. |
+
+<Canvas of={EmptyStories.ToneMatrix} />
 
 ### Progress
 
