@@ -265,3 +265,40 @@ export const SourceIndexRowKeyStability: Story = {
     await expect(canvas.getByRole("textbox", { name: "BTN-102 note" })).toHaveValue("persist me");
   }
 };
+
+type IndexSemanticsRow = { key: string; score: number };
+
+const indexSemanticsRows: IndexSemanticsRow[] = [
+  { key: "Alpha", score: 1 },
+  { key: "Beta", score: 2 },
+  { key: "Gamma", score: 3 }
+];
+
+export const RenderIndexSemantics: Story = {
+  render: () => (
+    <div style={{ width: 720, display: "grid", gap: 8 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        `render(row, rowIndex, sourceIndex)` exposes both sorted row position and source-data position.
+      </p>
+      <Table
+        columns={[
+          {
+            key: "key",
+            header: "Item",
+            sortable: true,
+            render: (row, rowIndex, sourceIndex) => `${row.key} (visual:${rowIndex}, source:${sourceIndex})`
+          },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={indexSemanticsRows}
+        defaultSortKey="score"
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Score sort descending" }));
+    await expect(canvas.getByRole("cell", { name: "Gamma (visual:0, source:2)" })).toBeInTheDocument();
+    await expect(canvas.getByRole("cell", { name: "Alpha (visual:2, source:0)" })).toBeInTheDocument();
+  }
+};

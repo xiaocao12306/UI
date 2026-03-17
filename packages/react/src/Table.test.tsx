@@ -317,4 +317,30 @@ describe("Table", () => {
     expect(rowKey).toHaveBeenCalledWith({ name: "Beta", score: 2 }, 1);
     expect(rowKey).toHaveBeenCalledWith({ name: "Alpha", score: 1 }, 0);
   });
+
+  it("passes both visual row index and source row index to column render callbacks", () => {
+    const indexRenderer = vi.fn((row: { name: string }, rowIndex: number, sourceIndex: number) => `${row.name}-${rowIndex}-${sourceIndex}`);
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true, render: indexRenderer },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Alpha", score: 1 },
+          { name: "Beta", score: 2 },
+          { name: "Gamma", score: 3 }
+        ]}
+        defaultSortKey="score"
+      />
+    );
+
+    indexRenderer.mockClear();
+    fireEvent.click(screen.getByRole("button", { name: "Score sort descending" }));
+
+    expect(indexRenderer).toHaveBeenCalledWith({ name: "Gamma", score: 3 }, 0, 2);
+    expect(indexRenderer).toHaveBeenCalledWith({ name: "Beta", score: 2 }, 1, 1);
+    expect(indexRenderer).toHaveBeenCalledWith({ name: "Alpha", score: 1 }, 2, 0);
+  });
 });

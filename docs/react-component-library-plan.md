@@ -203,6 +203,7 @@
   - Table i18n 语义收口（`getSortAriaLabel` 支持排序按钮 aria-label 本地化）
   - Table loading 语义收口（`loading/loadingContent` + `aria-busy` + 加载期间禁用排序交互）
   - Table rowKey 索引语义收口（`rowKey` 第二参数改为 source index，排序切换不再导致索引型 key 抖动）
+  - Table cell render 索引语义收口（`columns[].render(row, rowIndex, sourceIndex)` 同时暴露视觉索引与源索引，降低排序后埋点/跳转歧义）
   - Tabs 激活模式收口（`activationMode` 支持 manual/automatic，键盘焦点与激活解耦）
   - Toast Escape 语义收口（堆叠通知场景下一次按键仅关闭一个 toast）
   - Overlay 焦点策略收口（Popover/Dropdown 仅在键盘关闭时回焦 trigger，外部点击关闭保留指针目标焦点）

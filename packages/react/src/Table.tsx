@@ -8,7 +8,7 @@ export type TableColumn<T> = {
   header: React.ReactNode;
   width?: number | string;
   align?: TableAlign;
-  render?: (row: T, rowIndex: number) => React.ReactNode;
+  render?: (row: T, rowIndex: number, sourceIndex: number) => React.ReactNode;
   sortable?: boolean;
   sortAccessor?: (row: T) => string | number | Date;
 };
@@ -256,7 +256,9 @@ export function Table<T>({
                       textAlign: column.align ?? "left"
                     }}
                   >
-                    {column.render ? column.render(row, index) : String((row as Record<string, unknown>)[String(column.key)] ?? "")}
+                    {column.render
+                      ? column.render(row, index, entry.sourceIndex)
+                      : String((row as Record<string, unknown>)[String(column.key)] ?? "")}
                   </td>
                 ))}
                 </tr>
