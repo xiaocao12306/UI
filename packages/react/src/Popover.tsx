@@ -67,7 +67,7 @@ export function Popover({
         variant="outline"
         aria-haspopup="dialog"
         aria-expanded={isOpen}
-        aria-controls={contentId}
+        aria-controls={isOpen ? contentId : undefined}
         onClick={() => setOpen(!isOpen)}
         onKeyDown={(event) => {
           if (event.key === "ArrowDown" && !isOpen) {

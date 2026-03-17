@@ -10,15 +10,20 @@ describe("Popover", () => {
       </Popover>
     );
 
+    const trigger = screen.getByRole("button", { name: "Open popover" });
+    expect(trigger).not.toHaveAttribute("aria-controls");
     expect(screen.queryByText("Popover content")).toBeNull();
 
-    fireEvent.click(screen.getByRole("button", { name: "Open popover" }));
+    fireEvent.click(trigger);
+    const dialog = screen.getByRole("dialog", { name: "Popover content" });
+    expect(trigger).toHaveAttribute("aria-controls", dialog.id);
     expect(screen.getByText("Popover content")).toBeInTheDocument();
 
     fireEvent.keyDown(document, { key: "Escape" });
+    expect(trigger).not.toHaveAttribute("aria-controls");
     expect(screen.queryByText("Popover content")).toBeNull();
 
-    fireEvent.click(screen.getByRole("button", { name: "Open popover" }));
+    fireEvent.click(trigger);
     expect(screen.getByText("Popover content")).toBeInTheDocument();
 
     fireEvent.pointerDown(document.body);

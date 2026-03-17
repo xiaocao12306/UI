@@ -256,6 +256,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Supports both managed and unmanaged overlay state. |
 | `align` / `sideOffset` | `'start' \| 'end'` / `number` | Horizontal alignment and vertical spacing from trigger. |
 | `contentLabel` | `string` | Accessible name for popover dialog content region. |
+| trigger relation | conditional `aria-controls` | Trigger references content ID only while open to avoid dangling ARIA links. |
 
 ### Dropdown
 
@@ -267,6 +268,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `items` | `DropdownItem[]` | Each item supports `disabled` and `onSelect`. |
 | `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Works in both controlled and uncontrolled menu flows. |
 | menu naming | trigger-linked `aria-labelledby` | Menu inherits an accessible name from trigger content for screen-reader context. |
+| trigger relation | conditional `aria-controls` | Trigger points to menu ID only when expanded. |
 | keyboard behavior | Arrow / Home / End / Escape / Tab | Roving-focus menu navigation with deterministic close policy. |
 
 ## Data

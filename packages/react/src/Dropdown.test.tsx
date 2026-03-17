@@ -16,7 +16,12 @@ describe("Dropdown", () => {
       />
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Actions" }));
+    const trigger = screen.getByRole("button", { name: "Actions" });
+    expect(trigger).not.toHaveAttribute("aria-controls");
+
+    fireEvent.click(trigger);
+    const menu = screen.getByRole("menu", { name: "Actions" });
+    expect(trigger).toHaveAttribute("aria-controls", menu.id);
     fireEvent.click(screen.getByRole("menuitem", { name: "Duplicate" }));
 
     expect(onSelect).toHaveBeenCalledTimes(1);

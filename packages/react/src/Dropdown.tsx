@@ -80,7 +80,7 @@ export function Dropdown({ label, items, open, defaultOpen, onOpenChange }: Drop
         variant="outline"
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        aria-controls={menuId}
+        aria-controls={isOpen ? menuId : undefined}
         onClick={() => setOpen(!isOpen)}
         onKeyDown={(event) => {
           if (event.key !== "ArrowDown" && event.key !== "ArrowUp") {

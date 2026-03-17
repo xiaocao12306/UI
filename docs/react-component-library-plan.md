@@ -121,6 +121,7 @@
   - 生产级返工（Button、Input/FormField、Dialog）
   - 生产级返工（Popover、Dropdown、CommandPalette）
   - Dropdown 菜单命名语义补齐（`role="menu"` 通过 trigger `aria-labelledby` 获取可访问名称）
+  - Popover/Dropdown 触发器语义收口（仅在展开态设置 `aria-controls`，避免关闭态悬空引用）
   - 生产级返工（Toast）
   - 生产级返工（Tabs）
   - Tabs 交互语义收口（重复选择当前 tab 不再触发 `onValueChange`，降低遥测噪音）
