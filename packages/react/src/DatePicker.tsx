@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Input } from "./Input";
+import { resolveInvalidState } from "./a11y";
 
 export type DatePickerProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -22,7 +23,7 @@ export function DatePicker({
   errorMessageId,
   ...restProps
 }: DatePickerProps) {
-  const isInvalid = Boolean(invalid ?? restProps["aria-invalid"]);
+  const isInvalid = resolveInvalidState(invalid, restProps["aria-invalid"]);
   const describedBy = [restProps["aria-describedby"], isInvalid ? errorMessageId : undefined].filter(Boolean).join(" ") || undefined;
 
   return (

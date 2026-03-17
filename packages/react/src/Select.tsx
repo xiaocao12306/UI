@@ -1,17 +1,18 @@
 import * as React from "react";
 import { fieldBaseStyle } from "./FieldStyles";
+import { resolveInvalidState } from "./a11y";
 
 export type SelectProps = React.ComponentPropsWithoutRef<"select"> & {
   invalid?: boolean;
 };
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function Select(
-  { style, invalid, disabled, onFocus, onBlur, onMouseEnter, onMouseLeave, ...props },
+  { style, invalid, disabled, onFocus, onBlur, onMouseEnter, onMouseLeave, "aria-invalid": ariaInvalid, ...props },
   ref
 ) {
   const [focused, setFocused] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
-  const isInvalid = Boolean(invalid ?? props["aria-invalid"]);
+  const isInvalid = resolveInvalidState(invalid, ariaInvalid);
 
   return (
     <select

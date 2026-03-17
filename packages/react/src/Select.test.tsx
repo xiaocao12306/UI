@@ -26,6 +26,18 @@ describe("Select", () => {
     expect(select).toHaveAttribute("data-invalid", "true");
   });
 
+  it("treats aria-invalid=false as valid", () => {
+    render(
+      <Select aria-label="Channel" aria-invalid="false">
+        <option value="stable">Stable</option>
+      </Select>
+    );
+
+    const select = screen.getByRole("combobox", { name: "Channel" });
+    expect(select).not.toHaveAttribute("aria-invalid");
+    expect(select).not.toHaveAttribute("data-invalid");
+  });
+
   it("tracks focus state for visual feedback", () => {
     render(
       <Select aria-label="Focus state">

@@ -1,17 +1,29 @@
 import * as React from "react";
 import { fieldBaseStyle } from "./FieldStyles";
+import { resolveInvalidState } from "./a11y";
 
 export type InputProps = React.ComponentPropsWithoutRef<"input"> & {
   invalid?: boolean;
 };
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
-  { style, invalid, disabled, readOnly, onFocus, onBlur, onMouseEnter, onMouseLeave, ...props },
+  {
+    style,
+    invalid,
+    disabled,
+    readOnly,
+    onFocus,
+    onBlur,
+    onMouseEnter,
+    onMouseLeave,
+    "aria-invalid": ariaInvalid,
+    ...props
+  },
   ref
 ) {
   const [focused, setFocused] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
-  const isInvalid = Boolean(invalid ?? props["aria-invalid"]);
+  const isInvalid = resolveInvalidState(invalid, ariaInvalid);
 
   return (
     <input

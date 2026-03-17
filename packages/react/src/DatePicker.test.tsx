@@ -73,4 +73,12 @@ describe("DatePicker", () => {
 
     expect(screen.getByLabelText("Release date")).toHaveAttribute("aria-invalid", "true");
   });
+
+  it("treats aria-invalid=false as valid", () => {
+    render(<DatePicker aria-label="Release date" aria-invalid="false" onValueChange={() => {}} />);
+
+    const input = screen.getByLabelText("Release date");
+    expect(input).not.toHaveAttribute("aria-invalid");
+    expect(input).not.toHaveAttribute("data-invalid");
+  });
 });

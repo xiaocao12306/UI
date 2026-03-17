@@ -16,6 +16,14 @@ describe("Textarea", () => {
     expect(textarea).toHaveAttribute("data-invalid", "true");
   });
 
+  it("treats aria-invalid=false as valid", () => {
+    render(<Textarea aria-label="Comment" aria-invalid="false" />);
+    const textarea = screen.getByRole("textbox", { name: "Comment" });
+
+    expect(textarea).not.toHaveAttribute("aria-invalid");
+    expect(textarea).not.toHaveAttribute("data-invalid");
+  });
+
   it("tracks focus state for visual feedback", () => {
     render(<Textarea aria-label="Description" />);
     const textarea = screen.getByRole("textbox", { name: "Description" });

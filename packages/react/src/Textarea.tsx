@@ -1,17 +1,29 @@
 import * as React from "react";
 import { fieldBaseStyle } from "./FieldStyles";
+import { resolveInvalidState } from "./a11y";
 
 export type TextareaProps = React.ComponentPropsWithoutRef<"textarea"> & {
   invalid?: boolean;
 };
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-  { style, invalid, disabled, readOnly, onFocus, onBlur, onMouseEnter, onMouseLeave, ...props },
+  {
+    style,
+    invalid,
+    disabled,
+    readOnly,
+    onFocus,
+    onBlur,
+    onMouseEnter,
+    onMouseLeave,
+    "aria-invalid": ariaInvalid,
+    ...props
+  },
   ref
 ) {
   const [focused, setFocused] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
-  const isInvalid = Boolean(invalid ?? props["aria-invalid"]);
+  const isInvalid = resolveInvalidState(invalid, ariaInvalid);
 
   return (
     <textarea

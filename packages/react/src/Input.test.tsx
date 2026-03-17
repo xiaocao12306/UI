@@ -16,6 +16,14 @@ describe("Input", () => {
     expect(input).toHaveAttribute("data-invalid", "true");
   });
 
+  it("treats aria-invalid=false as valid", () => {
+    render(<Input aria-label="Username" aria-invalid="false" />);
+    const input = screen.getByRole("textbox", { name: "Username" });
+
+    expect(input).not.toHaveAttribute("aria-invalid");
+    expect(input).not.toHaveAttribute("data-invalid");
+  });
+
   it("tracks focus state for visual feedback", () => {
     render(<Input aria-label="Query" />);
     const input = screen.getByRole("textbox", { name: "Query" });
