@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as o}from"./index-CHKtz2QT.js";import{M as t,T as l,S as a,D as c,C as i}from"./index-BO_ech6s.js";import{VariantMatrix as d}from"./Button.stories-CioKYm6d.js";import{Interactive as h}from"./Dialog.stories-DFUfgTLN.js";import{AiInteractionFlow as x,QueryTelemetry as m}from"./CommandPalette.stories-CFPoeC3V.js";import{WithAiRequestState as p}from"./PromptInput.stories-DqD8As62.js";import{ActionRequired as j}from"./Toast.stories-85nlmZPq.js";import{KeyboardNavigationGuide as u}from"./Tabs.stories-Cy2LOKSd.js";import{ReleaseChecklist as f,SortTelemetry as b}from"./Table.stories-COdgi_cR.js";import"./index-BWu4c2F4.js";import"./iframe-5Ih7D5Gl.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Badge-Dkm8CRgf.js";import"./index-DgAF9SIF.js";import"./Input-vIzakoOT.js";import"./FieldStyles-CQy9UjBZ.js";import"./Textarea-CxXKxDMd.js";import"./Dialog-BvM6Q8hr.js";import"./DismissableLayer-0Dn_Gr2D.js";function r(s){const n={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...o(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Best Practices"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as o}from"./index-CHKtz2QT.js";import{M as t,T as l,S as a,D as c,C as i}from"./index-TUPM37VB.js";import{VariantMatrix as d}from"./Button.stories-CioKYm6d.js";import{Interactive as h}from"./Dialog.stories-DFUfgTLN.js";import{AiInteractionFlow as m,QueryTelemetry as x}from"./CommandPalette.stories-CFPoeC3V.js";import{WithAiRequestState as p}from"./PromptInput.stories-DqD8As62.js";import{Conversation as j}from"./MessageBubble.stories-wEP5cOKd.js";import{Default as u}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as f}from"./StreamingCodeBlock.stories-Jd4VPz8N.js";import{ActionRequired as b}from"./Toast.stories-85nlmZPq.js";import{KeyboardNavigationGuide as y}from"./Tabs.stories-Cy2LOKSd.js";import{ReleaseChecklist as g,SortTelemetry as v}from"./Table.stories-COdgi_cR.js";import"./index-BWu4c2F4.js";import"./iframe-BAzv7Fvc.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Badge-Dkm8CRgf.js";import"./index-DgAF9SIF.js";import"./Input-vIzakoOT.js";import"./FieldStyles-CQy9UjBZ.js";import"./Textarea-CxXKxDMd.js";import"./Dialog-BvM6Q8hr.js";import"./DismissableLayer-0Dn_Gr2D.js";function r(s){const n={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...o(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Best Practices"}),`
 `,e.jsx(l,{}),`
 `,e.jsx(a,{children:"Design + Engineering Checklist"}),`
 `,e.jsx(c,{children:e.jsx(n.p,{children:"Use these rules to keep components consistent with the Aurora plan and avoid regressions in accessibility or theming."})}),`
@@ -34,17 +34,22 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as o}from"
 `,e.jsx(n.li,{children:"Keep command labels explicit and searchable."}),`
 `,e.jsx(n.li,{children:"Provide empty-state guidance when no command matches the query."}),`
 `,e.jsxs(n.li,{children:["Track user query updates with ",e.jsx(n.code,{children:"onQueryChange"})," for downstream telemetry."]}),`
+`,e.jsx(n.li,{children:"Show reasoning disclosure with explicit user intent (default collapsed)."}),`
+`,e.jsxs(n.li,{children:["Use streaming containers that surface busy completion (",e.jsx(n.code,{children:"aria-busy"}),") for assistive tech parity."]}),`
 `]}),`
 `,e.jsx(i,{of:p}),`
-`,e.jsx(i,{of:x}),`
+`,e.jsx(i,{of:j}),`
+`,e.jsx(i,{of:u}),`
+`,e.jsx(i,{of:f}),`
 `,e.jsx(i,{of:m}),`
+`,e.jsx(i,{of:x}),`
 `,e.jsx(n.h2,{id:"notification-behavior",children:"Notification Behavior"}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsxs(n.li,{children:["Use ",e.jsx(n.code,{children:"duration={0}"})," for blocking notifications that require explicit user action."]}),`
 `,e.jsxs(n.li,{children:["Keep ",e.jsx(n.code,{children:"closeOnEscape"})," aligned with task criticality; disable Escape only for must-read states."]}),`
 `,e.jsxs(n.li,{children:["Verify hover pause behavior when ",e.jsx(n.code,{children:"pauseOnHover"})," is enabled."]}),`
 `]}),`
-`,e.jsx(i,{of:j}),`
+`,e.jsx(i,{of:b}),`
 `,e.jsx(n.h2,{id:"data-presentation-patterns",children:"Data Presentation Patterns"}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsx(n.li,{children:"Use typed columns and stable row keys in data tables."}),`
@@ -53,6 +58,6 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as o}from"
 `,e.jsx(n.li,{children:"Keep row actions predictable and keyboard reachable."}),`
 `,e.jsx(n.li,{children:"Ensure tabs support Arrow/Home/End and skip disabled entries."}),`
 `]}),`
-`,e.jsx(i,{of:u}),`
-`,e.jsx(i,{of:f}),`
-`,e.jsx(i,{of:b})]})}function H(s={}){const{wrapper:n}={...o(),...s.components};return n?e.jsx(n,{...s,children:e.jsx(r,{...s})}):r(s)}export{H as default};
+`,e.jsx(i,{of:y}),`
+`,e.jsx(i,{of:g}),`
+`,e.jsx(i,{of:v})]})}function W(s={}){const{wrapper:n}={...o(),...s.components};return n?e.jsx(n,{...s,children:e.jsx(r,{...s})}):r(s)}export{W as default};

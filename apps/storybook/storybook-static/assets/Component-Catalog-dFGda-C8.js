@@ -1,7 +1,7 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as c,T as t,S as i,D as s}from"./index-BO_ech6s.js";import"./index-BWu4c2F4.js";import"./iframe-5Ih7D5Gl.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{title:"Docs/Component Catalog"}),`
-`,e.jsx(t,{}),`
-`,e.jsx(i,{children:"Components, Coverage, and Entry Points"}),`
-`,e.jsx(s,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as c,T as i,S as s,D as t}from"./index-TUPM37VB.js";import"./index-BWu4c2F4.js";import"./iframe-BAzv7Fvc.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(c,{title:"Docs/Component Catalog"}),`
+`,e.jsx(i,{}),`
+`,e.jsx(s,{children:"Components, Coverage, and Entry Points"}),`
+`,e.jsx(t,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
 Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsx(o.h2,{id:"core-and-form",children:"Core and Form"}),`
 `,e.jsxs(o.p,{children:[`| Component | Export | Storybook | Unit Test |
@@ -37,7 +37,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsx(o.h2,{id:"overlay",children:"Overlay"}),`
 `,e.jsxs(o.p,{children:[`| Component | Export | Storybook | Unit Test |
 | --- | --- | --- | --- |
-| Tooltip | `,e.jsx(o.code,{children:"Tooltip"}),` | demo coverage | - |
+| Tooltip | `,e.jsx(o.code,{children:"Tooltip"})," | ",e.jsx(o.code,{children:"Overlay/Tooltip"}),` | yes |
 | Popover | `,e.jsx(o.code,{children:"Popover"})," | ",e.jsx(o.code,{children:"Overlay/Popover"}),` | yes |
 | Dialog | `,e.jsx(o.code,{children:"Dialog"})," | ",e.jsx(o.code,{children:"Overlay/Dialog"}),` | yes |
 | Drawer | `,e.jsx(o.code,{children:"Drawer"}),` | demo coverage | yes |
@@ -47,9 +47,9 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsxs(o.p,{children:[`| Component | Export | Storybook | Unit Test |
 | --- | --- | --- | --- |
 | PromptInput | `,e.jsx(o.code,{children:"PromptInput"})," | ",e.jsx(o.code,{children:"AI/PromptInput"}),` | yes |
-| MessageBubble | `,e.jsx(o.code,{children:"MessageBubble"}),` | demo coverage | - |
-| ReasoningPanel | `,e.jsx(o.code,{children:"ReasoningPanel"}),` | demo coverage | - |
-| StreamingCodeBlock | `,e.jsx(o.code,{children:"StreamingCodeBlock"})," | demo coverage | - |"]}),`
+| MessageBubble | `,e.jsx(o.code,{children:"MessageBubble"})," | ",e.jsx(o.code,{children:"AI/MessageBubble"}),` | yes |
+| ReasoningPanel | `,e.jsx(o.code,{children:"ReasoningPanel"})," | ",e.jsx(o.code,{children:"AI/ReasoningPanel"}),` | yes |
+| StreamingCodeBlock | `,e.jsx(o.code,{children:"StreamingCodeBlock"})," | ",e.jsx(o.code,{children:"AI/StreamingCodeBlock"})," | yes |"]}),`
 `,e.jsx(o.h2,{id:"extension-checklist",children:"Extension Checklist"}),`
 `,e.jsxs(o.ol,{children:[`
 `,e.jsx(o.li,{children:"Add or update story with deterministic state."}),`
