@@ -17,6 +17,7 @@
 ## React Components
 - Form/Input
   - `Button`, `Input`, `FormField`: production-refined
+  - `Tag`, `Badge`: production-refined
   - `Combobox`: production-refined
   - `Select`: production-refined
   - `Textarea`: production-refined

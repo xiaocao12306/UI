@@ -13,6 +13,8 @@
 | Component | Status | Storybook Entry | Key Tests |
 | --- | --- | --- | --- |
 | Button | production-refined | `Core/Button` | `Button.test.tsx` |
+| Tag | production-refined | `Core/Tag` | `Tag.test.tsx` |
+| Badge | production-refined | `Core/Badge` | `Badge.test.tsx` |
 | Input / FormField | production-refined | `Form/Input` | `Input.test.tsx`, `FormField.test.tsx` |
 | Select | production-refined | `Form/Select` | `Select.test.tsx` |
 | Textarea | production-refined | `Form/Textarea` | `Textarea.test.tsx` |
@@ -63,6 +65,7 @@
 - 无障碍工具函数测试补齐：新增 `a11y.test.ts`，锁定 `resolveInvalidState` 对 `true/false/grammar/spelling` 输入的稳定语义。
 - FormField 语义合并修复：保留子控件既有 `aria-describedby/aria-invalid/required`，并与字段级提示/错误做增量合并。
 - FormField required/error 收口：`aria-required="false"` 不再被误判为必填，且子控件 `aria-errormessage` 会与字段错误 ID 去重合并。
+- Tag/Badge 覆盖补齐：新增单测并接入 Storybook `Core/Tag` + `Core/Badge` 场景，补上导出组件验收闭环。
 - Toast: added timer-path tests (`duration`, `pauseOnHover`) and `closeOnEscape={false}` branch, then fixed paused-state reset on close/reopen; Storybook now includes action-required persistent notification example.
 - Tabs: validated `Home/End` focus + selection behavior with disabled tabs in keyboard flow tests.
 - Table: validated `aria-sort` transitions and ascending/descending row-order toggling assertions; sortable headers now expose next-direction `aria-label` and `scope="col"`.
