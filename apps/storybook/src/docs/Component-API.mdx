@@ -2,6 +2,7 @@ import { Meta, Title, Subtitle, Description, Canvas, Controls } from '@storybook
 import * as ButtonStories from '../stories/Button.stories';
 import * as InputStories from '../stories/Input.stories';
 import * as ComboboxStories from '../stories/Combobox.stories';
+import * as DatePickerStories from '../stories/DatePicker.stories';
 import * as DialogStories from '../stories/Dialog.stories';
 import * as PopoverStories from '../stories/Popover.stories';
 import * as DropdownStories from '../stories/Dropdown.stories';
@@ -46,6 +47,18 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled modes are both available. |
 | `onValueChange` | `(value: string) => void` | Fires when user confirms option by click or Enter. |
 | `emptyMessage` | `ReactNode` | Custom no-result content for search miss scenarios. |
+
+### DatePicker
+
+<Canvas of={DatePickerStories.Controlled} />
+<Controls of={DatePickerStories.InvalidState} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `value` / `defaultValue` | `string` | Uses native `YYYY-MM-DD` value format. |
+| `onValueChange` | `(value: string) => void` | Emits selected date string from native date input. |
+| `min` / `max` | `string` | Native date range constraints. |
+| `invalid` | `boolean` | Adds `aria-invalid` to communicate validation state. |
 
 ## Overlay
 

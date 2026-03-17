@@ -17,7 +17,7 @@
 ## React Components
 - Form/Input
   - `Button`, `Input`, `FormField`: production-refined
-  - `Textarea`, `Select`, `Combobox`: done
+  - `Textarea`, `Select`, `Combobox`, `DatePicker`: done
   - `Checkbox`, `RadioGroup`, `Switch`: done
 - Data/Navigation
   - `Tabs`: production-refined
@@ -45,5 +45,4 @@
 - Data pagination E2E (`Release feed` page switching): covered
 
 ## Planned Next (v0.2)
-- `DatePicker`
 - Storybook interaction test runner expansion

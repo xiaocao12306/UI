@@ -36,3 +36,4 @@
 - Demo E2E: added Data section keyboard/sort regression (`Tabs Home/End`, table sort toggle) to guard real user flows.
 - Pagination: added accessible nav controls, ellipsis behavior tests, Storybook examples, and demo feed page-switch E2E.
 - Combobox: added searchable option filtering, disabled-option keyboard skip, and Storybook/demo regression coverage.
+- DatePicker: added controlled date input wrapper, range/invalid coverage, and demo interaction regression.

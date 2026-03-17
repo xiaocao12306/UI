@@ -131,6 +131,8 @@
   - Demo 数据区分页示例与 E2E 回归（Release feed 翻页路径）
   - Combobox 组件落地（搜索过滤、禁用项跳过、Arrow/Home/End/Enter 键盘流）
   - Storybook `Form/Combobox` + Demo 表单集成 + E2E 选项选择回归
+  - DatePicker 组件落地（受控/非受控日期输入、min/max、invalid 状态）
+  - Storybook `Form/DatePicker` + Demo 日期联动 + E2E 日期更新回归
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

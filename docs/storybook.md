@@ -26,6 +26,7 @@ pnpm --filter @aurora-ui/storybook-app build-storybook
 - `Core/Button`
 - `Form/Input`
 - `Form/Combobox`
+- `Form/DatePicker`
 - `Overlay/Dialog`
 - `Overlay/Popover`
 - `Overlay/Dropdown`

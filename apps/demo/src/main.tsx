@@ -9,6 +9,7 @@ import {
   Checkbox,
   Combobox,
   CommandPalette,
+  DatePicker,
   Dialog,
   Drawer,
   Dropdown,
@@ -113,6 +114,7 @@ function App() {
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
   const [framework, setFramework] = React.useState("react");
+  const [releaseDate, setReleaseDate] = React.useState("2026-03-17");
   const [feedPage, setFeedPage] = React.useState(1);
   const feedPageSize = 3;
   const feedPageCount = Math.ceil(releaseFeed.length / feedPageSize);
@@ -263,6 +265,16 @@ function App() {
                 options={frameworkOptions}
                 value={framework}
                 onValueChange={setFramework}
+              />
+            </FormField>
+            <FormField label="Release Date" htmlFor="release-date" description={`Selected date: ${releaseDate}`}>
+              <DatePicker
+                id="release-date"
+                aria-label="Release Date"
+                value={releaseDate}
+                onValueChange={setReleaseDate}
+                min="2026-01-01"
+                max="2026-12-31"
               />
             </FormField>
             <Checkbox label="Enable analytics" defaultChecked />

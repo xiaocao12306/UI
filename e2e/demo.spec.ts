@@ -124,6 +124,14 @@ test("selects framework from combobox", async ({ page }) => {
   await expect(page.getByText("Current selection: svelte")).toBeVisible();
 });
 
+test("updates release date with date picker", async ({ page }) => {
+  await page.goto("/");
+
+  const datePicker = page.getByLabel("Release Date");
+  await datePicker.fill("2026-05-20");
+  await expect(page.getByText("Selected date: 2026-05-20")).toBeVisible();
+});
+
 test("opens dropdown using keyboard", async ({ page }) => {
   await page.goto("/");
 
