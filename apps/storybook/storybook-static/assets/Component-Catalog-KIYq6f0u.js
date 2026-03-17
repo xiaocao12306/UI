@@ -1,7 +1,7 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as c,S as s,D as i}from"./index-CIxwKROi.js";import"./index-BWu4c2F4.js";import"./iframe-C2tD68GJ.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as c,S as i,D as s}from"./index-CFDx51JO.js";import"./index-BWu4c2F4.js";import"./iframe-CHGN_DmR.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
 `,e.jsx(c,{}),`
-`,e.jsx(s,{children:"Components, Coverage, and Entry Points"}),`
-`,e.jsx(i,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
+`,e.jsx(i,{children:"Components, Coverage, and Entry Points"}),`
+`,e.jsx(s,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
 Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsx(o.h2,{id:"core-and-form",children:"Core and Form"}),`
 `,e.jsxs(o.p,{children:[`| Component | Export | Storybook | Unit Test |
@@ -19,6 +19,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 | --- | --- | --- | --- |
 | Tabs | `,e.jsx(o.code,{children:"Tabs"})," | ",e.jsx(o.code,{children:"Data/Tabs"})," + ",e.jsx(o.code,{children:"KeyboardNavigationGuide"}),` | yes |
 | Table | `,e.jsx(o.code,{children:"Table"})," | ",e.jsx(o.code,{children:"Data/Table"})," + ",e.jsx(o.code,{children:"SortTelemetry"}),` | yes |
+| Pagination | `,e.jsx(o.code,{children:"Pagination"})," | ",e.jsx(o.code,{children:"Data/Pagination"}),` | yes |
 | Tag | `,e.jsx(o.code,{children:"Tag"})," | used in ",e.jsx(o.code,{children:"Core/Button"}),` story | - |
 | Badge | `,e.jsx(o.code,{children:"Badge"})," | used in multiple stories | - |"]}),`
 `,e.jsx(o.h2,{id:"feedback-and-state",children:"Feedback and State"}),`
@@ -53,4 +54,4 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsx(o.li,{children:"Add interaction/unit test for new behavior branch."}),`
 `,e.jsx(o.li,{children:"Verify all theme packs from Storybook toolbar."}),`
 `,e.jsxs(o.li,{children:["Update ",e.jsx(o.code,{children:"docs/component-status.md"})," and this catalog when coverage changes."]}),`
-`]})]})}function u(n={}){const{wrapper:o}={...r(),...n.components};return o?e.jsx(o,{...n,children:e.jsx(d,{...n})}):d(n)}export{u as default};
+`]})]})}function y(n={}){const{wrapper:o}={...r(),...n.components};return o?e.jsx(o,{...n,children:e.jsx(d,{...n})}):d(n)}export{y as default};
