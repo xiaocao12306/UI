@@ -19,7 +19,7 @@
     "build": "tsup src/index.tsx --format esm,cjs --dts",
     "dev": "tsup src/index.tsx --watch --format esm,cjs --dts",
     "lint": "eslint src --ext .ts,.tsx",
-    "test": "pnpm run typecheck",
+    "test": "vitest run --dir src",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   }
 }
