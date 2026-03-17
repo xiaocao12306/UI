@@ -49,7 +49,7 @@ export function Tabs({ items, value, defaultValue, ariaLabel = "Tabs", onValueCh
   const select = React.useCallback(
     (nextValue: string) => {
       const target = items.find((item) => item.key === nextValue);
-      if (!target || target.disabled) {
+      if (!target || target.disabled || nextValue === currentValue) {
         return;
       }
 
@@ -58,7 +58,7 @@ export function Tabs({ items, value, defaultValue, ariaLabel = "Tabs", onValueCh
       }
       onValueChange?.(nextValue);
     },
-    [items, onValueChange, value]
+    [currentValue, items, onValueChange, value]
   );
 
   return (

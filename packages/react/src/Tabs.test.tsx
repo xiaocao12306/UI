@@ -67,6 +67,23 @@ describe("Tabs", () => {
     expect(onValueChange).toHaveBeenCalledWith("two");
   });
 
+  it("does not emit value change when selecting the already active tab", () => {
+    const onValueChange = vi.fn();
+    render(
+      <Tabs
+        value="one"
+        onValueChange={onValueChange}
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("tab", { name: "One" }));
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
   it("supports Home and End keyboard navigation while skipping disabled tabs", () => {
     render(
       <Tabs

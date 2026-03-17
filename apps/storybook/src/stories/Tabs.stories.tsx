@@ -121,3 +121,46 @@ export const KeyboardNavigationGuide: Story = {
     </div>
   )
 };
+
+function ChangeTelemetryDemo() {
+  const [value, setValue] = React.useState("build");
+  const [changes, setChanges] = React.useState(0);
+
+  return (
+    <div style={{ width: 620, display: "grid", gap: 10 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ color: "var(--aurora-text-secondary)" }}>Value change events</span>
+        <Badge tone="default" data-testid="change-count">
+          {changes}
+        </Badge>
+      </div>
+      <Tabs
+        items={productTabs}
+        value={value}
+        onValueChange={(nextValue) => {
+          setValue(nextValue);
+          setChanges((count) => count + 1);
+        }}
+      />
+    </div>
+  );
+}
+
+export const ChangeTelemetry: Story = {
+  render: () => <ChangeTelemetryDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+    const releaseTab = canvas.getByRole("tab", { name: "Release" });
+    const counter = canvas.getByTestId("change-count");
+
+    await userEvent.click(buildTab);
+    await expect(counter).toHaveTextContent("0");
+
+    await userEvent.click(releaseTab);
+    await expect(counter).toHaveTextContent("1");
+
+    await userEvent.click(releaseTab);
+    await expect(counter).toHaveTextContent("1");
+  }
+};

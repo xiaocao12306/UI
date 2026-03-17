@@ -279,9 +279,10 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `items` | `TabItem[]` | Include `disabled` for unavailable states. |
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled modes are both supported. |
-| `onValueChange` | `(value: string) => void` | Fires only for enabled tabs. |
+| `onValueChange` | `(value: string) => void` | Fires only for enabled tabs and only when active key changes. |
 
 <Canvas of={TabsStories.KeyboardNavigationGuide} />
+<Canvas of={TabsStories.ChangeTelemetry} />
 
 ### Table
 
