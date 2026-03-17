@@ -156,3 +156,27 @@ test("dismisses toast with escape key", async ({ page }) => {
   await page.keyboard.press("Escape");
   await expect(toast).toBeHidden();
 });
+
+test("updates ai section prompt and reasoning trace", async ({ page }) => {
+  await page.goto("/");
+
+  const aiSection = page.locator("#ai-components");
+  const promptInput = aiSection.getByRole("textbox", { name: "Prompt input" });
+
+  await promptInput.fill("Generate release rollout checklist");
+  await promptInput.press("Control+Enter");
+
+  await expect(aiSection.getByRole("article", { name: "User message" })).toContainText(
+    "Generate release rollout checklist"
+  );
+
+  const reasoningToggle = aiSection.getByRole("button", { name: /Model reasoning/ });
+  await expect(reasoningToggle).toHaveAttribute("aria-expanded", "false");
+  await reasoningToggle.click();
+  await expect(reasoningToggle).toHaveAttribute("aria-expanded", "true");
+  await expect(aiSection.getByText("Generate form schema and OTP fallback path.")).toBeVisible();
+
+  const streamingBlock = aiSection.locator("[aria-busy]");
+  await expect(aiSection.locator("code")).toContainText("export function OtpFallback()", { timeout: 5000 });
+  await expect(streamingBlock).toHaveAttribute("aria-busy", "false", { timeout: 5000 });
+});
