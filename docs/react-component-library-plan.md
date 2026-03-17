@@ -119,6 +119,9 @@
   - 生产级返工（Toast）
   - 生产级返工（Tabs）
   - 生产级返工（Table）
+  - 横向收口（CommandPalette：Home/End 键盘分支、禁用项跳过、Query Telemetry 示例）
+  - 横向收口（Toast：auto-dismiss/pauseOnHover/closeOnEscape=false 测试分支、ActionRequired 示例）
+  - 横向收口（Tabs/Table：Home/End 焦点流、`aria-sort` 与排序切换断言、排序 telemetry 示例）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

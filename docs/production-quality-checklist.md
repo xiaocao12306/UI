@@ -27,3 +27,9 @@
 2. Any a11y behavior change must update role/name assertions in tests.
 3. Any visual state change should be checked in all 4 theme packs and Chromatic (if token configured).
 4. Release blocking condition: `pnpm verify` + `pnpm demo:e2e` both green.
+
+## Recent Closure Notes (2026-03-17)
+- CommandPalette: added `Home/End` keyboard paths, deterministic disabled-option skipping, and query telemetry + empty message Storybook example.
+- Toast: added timer-path tests (`duration`, `pauseOnHover`) and `closeOnEscape={false}` branch; Storybook now includes action-required persistent notification example.
+- Tabs: validated `Home/End` focus + selection behavior with disabled tabs in keyboard flow tests.
+- Table: validated `aria-sort` transitions and ascending/descending row-order toggling assertions.
