@@ -16,6 +16,19 @@ describe("Toast", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
+  it("uses alert role for danger tone", () => {
+    render(<Toast open tone="danger" title="Failed" />);
+    expect(screen.getByRole("alert")).toHaveAttribute("aria-live", "assertive");
+  });
+
+  it("supports escape to close", () => {
+    const onOpenChange = vi.fn();
+    render(<Toast open title="Escapable" onOpenChange={onOpenChange} />);
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it("does not render when closed", () => {
     render(<Toast open={false} title="Hidden" />);
     expect(screen.queryByRole("status")).toBeNull();

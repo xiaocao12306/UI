@@ -22,7 +22,8 @@
 - Data/Navigation
   - `Tabs`, `Table`: done
 - Feedback/State
-  - `Alert`, `Toast`, `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
+  - `Alert`, `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
+  - `Toast`: production-refined
 - Overlay
   - `Tooltip`, `Drawer`: done
   - `Dialog`: production-refined
@@ -41,4 +42,4 @@
 ## Planned Next (v0.2)
 - `DatePicker` / `Combobox` / `Pagination`
 - Storybook interaction test runner expansion
-- Remaining production refinements: `Toast`, `Tabs`, `Table`
+- Remaining production refinements: `Tabs`, `Table`

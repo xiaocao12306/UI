@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as d}from"./index-CHKtz2QT.js";import{M as t,T as c,S as s,D as i}from"./index-C2c43Eu8.js";import"./index-BWu4c2F4.js";import"./iframe-C2Hv-uHj.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function r(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...d(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as c,S as s,D as i}from"./index-BZAR1fPd.js";import"./index-BWu4c2F4.js";import"./iframe-DpfPL2Q2.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function d(n){const o={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",...r(),...n.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Component Catalog"}),`
 `,e.jsx(c,{}),`
 `,e.jsx(s,{children:"Components, Coverage, and Entry Points"}),`
 `,e.jsx(i,{children:e.jsx(o.p,{children:`This index tracks Aurora UI component groups with implementation and quality signals.
@@ -25,7 +25,7 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsxs(o.p,{children:[`| Component | Export | Storybook | Unit Test |
 | --- | --- | --- | --- |
 | Alert | `,e.jsx(o.code,{children:"Alert"}),` | demo coverage | - |
-| Toast | `,e.jsx(o.code,{children:"Toast"}),` | demo coverage | yes |
+| Toast | `,e.jsx(o.code,{children:"Toast"})," | ",e.jsx(o.code,{children:"Feedback/Toast"}),` | yes |
 | Progress | `,e.jsx(o.code,{children:"Progress"}),` | demo coverage | - |
 | Skeleton | `,e.jsx(o.code,{children:"Skeleton"}),` | demo coverage | - |
 | Empty | `,e.jsx(o.code,{children:"Empty"}),` | demo coverage | - |
@@ -53,4 +53,4 @@ Use it as the first stop before extending APIs or adding new stories.`})}),`
 `,e.jsx(o.li,{children:"Add interaction/unit test for new behavior branch."}),`
 `,e.jsx(o.li,{children:"Verify all theme packs from Storybook toolbar."}),`
 `,e.jsxs(o.li,{children:["Update ",e.jsx(o.code,{children:"docs/component-status.md"})," and this catalog when coverage changes."]}),`
-`]})]})}function u(n={}){const{wrapper:o}={...d(),...n.components};return o?e.jsx(o,{...n,children:e.jsx(r,{...n})}):r(n)}export{u as default};
+`]})]})}function u(n={}){const{wrapper:o}={...r(),...n.components};return o?e.jsx(o,{...n,children:e.jsx(d,{...n})}):d(n)}export{u as default};
