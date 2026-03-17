@@ -51,7 +51,8 @@ function AiFlowPalette() {
 
   const actionCommands: CommandItem[] = commands.map((item) => ({
     ...item,
-    onSelect: () => setLastAction(item.label)
+    onSelect: () =>
+      setLastAction(typeof item.textValue === "string" ? item.textValue : typeof item.label === "string" ? item.label : item.key)
   }));
 
   return (
@@ -105,6 +106,27 @@ function DisabledOnlyResultsPalette() {
   );
 }
 
+function TextValueAndAccentSearchPalette() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <CommandPalette
+      open={open}
+      onOpenChange={setOpen}
+      commands={[
+        {
+          key: "cafe-settings",
+          label: <span>Café Settings</span>,
+          textValue: "Cafe Settings",
+          keywords: ["preferences"]
+        },
+        { key: "open-reports", label: "Open Reports" }
+      ]}
+      placeholder="Try searching cafe..."
+    />
+  );
+}
+
 export const SearchCommands: Story = {
   render: () => <OpenPalette />,
   play: async ({ canvasElement }) => {
@@ -148,5 +170,18 @@ export const DisabledOnlyResults: Story = {
     await userEvent.clear(input);
     await userEvent.type(input, "release");
     await expect(canvas.getByRole("status")).toHaveTextContent('No enabled commands match "release".');
+  }
+};
+
+export const TextValueAndAccentSearch: Story = {
+  render: () => <TextValueAndAccentSearchPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "cafe");
+    await expect(canvas.getByRole("option", { name: "Café Settings" })).toBeInTheDocument();
+    await expect(canvas.queryByRole("option", { name: "Open Reports" })).not.toBeInTheDocument();
   }
 };

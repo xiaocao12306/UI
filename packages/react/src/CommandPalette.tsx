@@ -4,7 +4,8 @@ import { Input } from "./Input";
 
 export type CommandItem = {
   key: string;
-  label: string;
+  label: React.ReactNode;
+  textValue?: string;
   keywords?: string[];
   disabled?: boolean;
   onSelect?: () => void;
@@ -49,17 +50,19 @@ export function CommandPalette({
     inputRef.current?.focus();
   }, [open]);
 
+  const normalizedQuery = React.useMemo(() => normalizeSearchText(query.trim()), [query]);
+
   const filtered = React.useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    if (!normalized) {
+    if (!normalizedQuery) {
       return commands;
     }
 
     return commands.filter((item) => {
-      const haystack = [item.label, ...(item.keywords ?? [])].join(" ").toLowerCase();
-      return haystack.includes(normalized);
+      const labelText = getCommandText(item);
+      const haystack = [labelText, ...(item.keywords ?? [])].join(" ");
+      return normalizeSearchText(haystack).includes(normalizedQuery);
     });
-  }, [commands, query]);
+  }, [commands, normalizedQuery]);
   const enabledCount = React.useMemo(
     () => filtered.reduce((count, command) => (command.disabled ? count : count + 1), 0),
     [filtered]
@@ -253,6 +256,21 @@ export function CommandPalette({
       </div>
     </Dialog>
   );
+}
+
+function getCommandText(item: CommandItem) {
+  if (typeof item.textValue === "string") {
+    return item.textValue.trim();
+  }
+
+  return typeof item.label === "string" ? item.label.trim() : "";
+}
+
+function normalizeSearchText(text: string) {
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
 }
 
 function defaultGetResultsStatusText({

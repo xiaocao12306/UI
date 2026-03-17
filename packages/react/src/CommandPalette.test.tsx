@@ -31,6 +31,51 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("filters non-string labels via textValue", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          {
+            key: "deploy",
+            label: <span>Deploy Project</span>,
+            textValue: "deploy project",
+            keywords: ["release"]
+          },
+          { key: "settings", label: "Open Settings" }
+        ]}
+      />
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "deploy" }
+    });
+
+    expect(screen.getByRole("option", { name: "Deploy Project" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
+  });
+
+  it("matches accented labels with plain query text", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "cafe", label: "Café Settings", keywords: ["profil"] },
+          { key: "release", label: "Release Notes" }
+        ]}
+      />
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "cafe" }
+    });
+
+    expect(screen.getByRole("option", { name: "Café Settings" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Release Notes" })).toBeNull();
+  });
+
   it("closes on escape key through dialog dismiss", () => {
     const onOpenChange = vi.fn();
 

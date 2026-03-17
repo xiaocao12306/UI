@@ -198,6 +198,7 @@
   - Pagination 生产级返工（Home/End/Arrow 键盘快捷翻页、重复回调防抖、可定制 aria label、单测 + Storybook `Data/Pagination`）
   - DatePicker 生产级返工（`aria-invalid` 推断、`onChange` + `onValueChange` 双回调、状态矩阵 Storybook 与单测补齐）
   - Alert 生产级返工（status/alert live region 语义、dismiss 分支、单测 + Storybook `Feedback/Alert`）
+  - CommandPalette 搜索语义收口（`textValue` 非文本标签别名 + 重音归一匹配，`cafe` 可命中 `Café`）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

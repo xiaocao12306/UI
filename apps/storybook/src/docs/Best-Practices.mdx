@@ -68,6 +68,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 
 - Always expose pending/loading states for AI request actions.
 - Keep command labels explicit and searchable.
+- Provide `textValue` aliases for non-string command labels and accent-friendly matching terms.
 - Provide empty-state guidance when no command matches the query.
 - Track user query updates with `onQueryChange` for downstream telemetry.
 - Keep live-region narration aligned with actionable commands (enabled matches), not just visible results.
@@ -81,6 +82,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={StreamingCodeBlockStories.Default} />
 <Canvas of={CommandPaletteStories.AiInteractionFlow} />
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
+<Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />
 
 ## Notification Behavior
 
