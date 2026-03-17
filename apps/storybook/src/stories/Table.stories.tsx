@@ -23,7 +23,7 @@ const columns: Array<TableColumn<ReleaseRow>> = [
     header: "Status",
     width: 140,
     render: (row) => {
-      const tone = row.status === "ready" ? "success" : row.status === "review" ? "default" : "warning";
+      const tone = row.status === "ready" ? "success" : row.status === "review" ? "default" : "danger";
       return <Badge tone={tone}>{row.status}</Badge>;
     }
   }
