@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as l,S as a,D as c,C as n}from"./index-CRCbnjLP.js";import{VariantMatrix as d}from"./Button.stories-BXebMVGm.js";import{Interactive as h}from"./Dialog.stories-DAHpLifv.js";import{AiInteractionFlow as x,QueryTelemetry as m}from"./CommandPalette.stories-BPOkuy6X.js";import{WithAiRequestState as p}from"./PromptInput.stories-BwvNydVy.js";import{Conversation as j}from"./MessageBubble.stories-wEP5cOKd.js";import{Default as u}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as f}from"./StreamingCodeBlock.stories-Jd4VPz8N.js";import{ActionRequired as b}from"./Toast.stories-CpVJq6Gv.js";import{KeyboardNavigationGuide as y}from"./Tabs.stories-Cy2LOKSd.js";import{ReleaseChecklist as g,SortTelemetry as v}from"./Table.stories-C9VhWdqZ.js";import"./index-BWu4c2F4.js";import"./iframe-BJEg69ls.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-Dkm8CRgf.js";import"./index-DgAF9SIF.js";import"./Input-BX0mitHu.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-yJ-B0ZWx.js";import"./Textarea-fTPIcDVw.js";import"./Dialog-Cnf6Xxt0.js";import"./FocusScope-Db3t2k9z.js";import"./DismissableLayer-0Dn_Gr2D.js";function o(s){const i={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...r(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Best Practices"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as o}from"./index-CHKtz2QT.js";import{M as t,T as l,S as a,D as c,C as n}from"./index-vwKx3MTQ.js";import{VariantMatrix as d}from"./Button.stories-BXebMVGm.js";import{WithInputControl as h}from"./FormField.stories-DOKkAx_C.js";import{Interactive as x}from"./Dialog.stories-V0lPaEGK.js";import{AiInteractionFlow as p,QueryTelemetry as m}from"./CommandPalette.stories-_5CAnDN0.js";import{WithAiRequestState as j}from"./PromptInput.stories-13o5jTlT.js";import{Conversation as u}from"./MessageBubble.stories-wEP5cOKd.js";import{Default as f}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as y}from"./StreamingCodeBlock.stories-Jd4VPz8N.js";import{ActionRequired as b}from"./Toast.stories-CpVJq6Gv.js";import{KeyboardNavigationGuide as g}from"./Tabs.stories-Cy2LOKSd.js";import{ReleaseChecklist as v,SortTelemetry as w}from"./Table.stories-C9VhWdqZ.js";import"./index-BWu4c2F4.js";import"./iframe-BZhlaWin.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-Hgh0jeno.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-Dkm8CRgf.js";import"./index-DgAF9SIF.js";import"./Input-C1lkqvCi.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-BfGecBuf.js";import"./FormField-BE5Iwla2.js";import"./Textarea-Cv11yY2F.js";import"./Dialog-Cnf6Xxt0.js";import"./FocusScope-Db3t2k9z.js";import"./DismissableLayer-0Dn_Gr2D.js";function r(s){const i={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...o(),...s.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Best Practices"}),`
 `,e.jsx(l,{}),`
 `,e.jsx(a,{children:"Design + Engineering Checklist"}),`
 `,e.jsx(c,{children:e.jsx(i.p,{children:"Use these rules to keep components consistent with the Aurora plan and avoid regressions in accessibility or theming."})}),`
@@ -20,11 +20,13 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `,e.jsxs(i.ul,{children:[`
 `,e.jsx(i.li,{children:"Ensure keyboard dismissal paths for overlay components."}),`
 `,e.jsx(i.li,{children:"Keep visible labels or accessible names for form controls."}),`
+`,e.jsxs(i.li,{children:["Prefer ",e.jsx(i.code,{children:"FormField"})," wrappers for helper/error copy so ",e.jsx(i.code,{children:"aria-describedby"})," and ",e.jsx(i.code,{children:"aria-errormessage"})," stay in sync."]}),`
 `,e.jsxs(i.li,{children:["Avoid ",e.jsx(i.code,{children:"autoFocus"}),"; use intentional focus management when opening overlays."]}),`
 `,e.jsxs(i.li,{children:["For combobox/listbox patterns, map ",e.jsx(i.code,{children:"aria-selected"})," to the committed value, not temporary active focus."]}),`
 `,e.jsxs(i.li,{children:["For ",e.jsx(i.code,{children:"aria-activedescendant"})," combobox flows, keep listbox options out of tab order and preserve input focus during pointer selection."]}),`
 `]}),`
 `,e.jsx(n,{of:h}),`
+`,e.jsx(n,{of:x}),`
 `,e.jsx(i.h2,{id:"overlay-policies",children:"Overlay Policies"}),`
 `,e.jsxs(i.ul,{children:[`
 `,e.jsxs(i.li,{children:["Dialog/Drawer should explicitly define dismiss policy (",e.jsx(i.code,{children:"closeOnEscape"}),", ",e.jsx(i.code,{children:"closeOnOutsidePointer"}),") for critical workflows."]}),`
@@ -46,11 +48,11 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `,e.jsx(i.li,{children:"Show reasoning disclosure with explicit user intent (default collapsed)."}),`
 `,e.jsxs(i.li,{children:["Use streaming containers that surface busy completion (",e.jsx(i.code,{children:"aria-busy"}),") for assistive tech parity."]}),`
 `]}),`
-`,e.jsx(n,{of:p}),`
 `,e.jsx(n,{of:j}),`
 `,e.jsx(n,{of:u}),`
 `,e.jsx(n,{of:f}),`
-`,e.jsx(n,{of:x}),`
+`,e.jsx(n,{of:y}),`
+`,e.jsx(n,{of:p}),`
 `,e.jsx(n,{of:m}),`
 `,e.jsx(i.h2,{id:"notification-behavior",children:"Notification Behavior"}),`
 `,e.jsxs(i.ul,{children:[`
@@ -67,6 +69,6 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `,e.jsx(i.li,{children:"Keep row actions predictable and keyboard reachable."}),`
 `,e.jsx(i.li,{children:"Ensure tabs support Arrow/Home/End and skip disabled entries."}),`
 `]}),`
-`,e.jsx(n,{of:y}),`
 `,e.jsx(n,{of:g}),`
-`,e.jsx(n,{of:v})]})}function J(s={}){const{wrapper:i}={...r(),...s.components};return i?e.jsx(i,{...s,children:e.jsx(o,{...s})}):o(s)}export{J as default};
+`,e.jsx(n,{of:v}),`
+`,e.jsx(n,{of:w})]})}function ee(s={}){const{wrapper:i}={...o(),...s.components};return i?e.jsx(i,{...s,children:e.jsx(r,{...s})}):r(s)}export{ee as default};
