@@ -15,6 +15,7 @@ import * as PopoverStories from '../stories/Popover.stories';
 import * as DropdownStories from '../stories/Dropdown.stories';
 import * as CommandPaletteStories from '../stories/CommandPalette.stories';
 import * as EmptyStories from '../stories/Empty.stories';
+import * as SkeletonStories from '../stories/Skeleton.stories';
 import * as ProgressStories from '../stories/Progress.stories';
 import * as AlertStories from '../stories/Alert.stories';
 import * as ToastStories from '../stories/Toast.stories';
@@ -252,6 +253,20 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `align` / `titleAs` | `'center' \| 'left'` / heading element | Control content layout and heading semantics. |
 
 <Canvas of={EmptyStories.ToneMatrix} />
+
+### Skeleton
+
+<Canvas of={SkeletonStories.Default} />
+<Controls of={SkeletonStories.NarratedStatus} />
+
+| Prop | Type | Notes |
+| --- | --- | --- |
+| `variant` | `'rect' \| 'text' \| 'circle'` | Shape selection for block/text/avatar placeholders. |
+| `animated` | `boolean` | Toggle shimmer animation for reduced-motion or static placeholders. |
+| `ariaLabel` | `string` | Enables narrated loading status semantics when needed. |
+| `width` / `height` / `radius` | `number \| string` | Explicit geometry control for layout matching. |
+
+<Canvas of={SkeletonStories.ProfileCard} />
 
 ### Progress
 

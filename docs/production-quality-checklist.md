@@ -34,6 +34,7 @@
 | Toast | production-refined | `Feedback/Toast` | `Toast.test.tsx` |
 | Progress | production-refined | `Feedback/Progress` | `Progress.test.tsx` |
 | Empty | production-refined | `Feedback/Empty` | `Empty.test.tsx` |
+| Skeleton | production-refined | `Feedback/Skeleton` | `Skeleton.test.tsx` |
 | Alert | production-refined | `Feedback/Alert` | `Alert.test.tsx` |
 | Tabs | production-refined | `Data/Tabs` | `Tabs.test.tsx` |
 | Table | production-refined | `Data/Table` | `Table.test.tsx` |
@@ -68,6 +69,7 @@
 - Tooltip production hardening: added controlled/uncontrolled flow, pointer delay/close policy, and `aria-describedby` wiring assertions.
 - Progress production hardening: added indeterminate semantics, tone/size/value narration API, and Storybook state matrix coverage.
 - Empty production hardening: added role/label narration, tone/align variants, and action/icon story validation.
+- Skeleton production hardening: added decorative-vs-narrated semantics, variant geometry controls, and profile-card Storybook scenarios.
 - Pagination production hardening: added keyboard shortcuts (`Home/End/Arrow`), redundant-change guards, and customizable aria label generation for i18n.
 - DatePicker production hardening: aligned invalid inference with `aria-invalid`, exposed native `onChange` hook, and expanded state-matrix Storybook coverage.
 - Alert production hardening: added tone-based live-region semantics, dismiss action branch, and dedicated Storybook + unit coverage.

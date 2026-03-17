@@ -32,7 +32,8 @@
   - `Alert`: production-refined
   - `Progress`: production-refined
   - `Empty`: production-refined
-  - `Skeleton`, `LoadingDots`, `StreamingText`: done
+  - `Skeleton`: production-refined
+  - `LoadingDots`, `StreamingText`: done
   - `Toast`: production-refined
 - Overlay
   - `Tooltip`: production-refined
