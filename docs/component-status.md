@@ -58,3 +58,6 @@
 ## Planned Next (v0.2)
 - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
 - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
+
+## Recent Infra Improvements
+- 发布 dry-run 自动校验已接入（`pnpm release:dry-run` + CI `release-dry-run.yml`）

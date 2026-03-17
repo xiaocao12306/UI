@@ -34,6 +34,7 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release:preflight": "node scripts/release-preflight.mjs",
+    "release:dry-run": "node scripts/release-dry-run.mjs",
     "release": "changeset publish"
   },
   "devDependencies": {

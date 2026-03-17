@@ -53,15 +53,22 @@ pnpm release
 Run from repo root:
 
 ```bash
-pnpm changeset version
-pnpm --filter @aurora-ui/tokens exec npm publish --dry-run --access public
-pnpm --filter @aurora-ui/primitives exec npm publish --dry-run --access public
-pnpm --filter @aurora-ui/react exec npm publish --dry-run --access public
+pnpm release:dry-run
 ```
 
 Expected behavior:
 - when no pending changesets: `No unreleased changesets found, exiting.`
 - `npm publish --dry-run` prints tarball manifest/size and ends without real publish
+- command exits non-zero if any step fails (`changeset version` or any package dry-run)
+
+Underlying commands (for troubleshooting):
+
+```bash
+pnpm changeset version
+pnpm --filter @aurora-ui/tokens exec npm publish --dry-run --access public
+pnpm --filter @aurora-ui/primitives exec npm publish --dry-run --access public
+pnpm --filter @aurora-ui/react exec npm publish --dry-run --access public
+```
 
 Latest dry-run record:
 - date: 2026-03-17
@@ -69,7 +76,7 @@ Latest dry-run record:
   - `changeset version`: `No unreleased changesets found, exiting.`
   - `@aurora-ui/tokens`: dry-run tarball size ~3.0 kB
   - `@aurora-ui/primitives`: dry-run tarball size ~13.5 kB
-  - `@aurora-ui/react`: dry-run tarball size ~29.6 kB
+  - `@aurora-ui/react`: dry-run tarball size ~34.6 kB
   - npm prints login warning in dry-run mode, but command exits successfully
 
 ## GitHub Release Automation
@@ -79,6 +86,10 @@ Behavior:
 - always runs Changesets version PR automation on `main`
 - publishes npm packages only when `NPM_TOKEN` is configured
 - uses npm provenance (`id-token: write`) during publish
+
+Dry-run workflow: `.github/workflows/release-dry-run.yml`
+- runs `pnpm release:dry-run` on PRs that touch package/release related files
+- validates publishable tarballs without requiring `NPM_TOKEN`
 
 Required repository secrets:
 - `NPM_TOKEN` (for npm publish)
