@@ -27,7 +27,7 @@
 - Data/Navigation
   - `Tabs`: production-refined
   - `Table`: production-refined
-  - `Pagination`: done
+  - `Pagination`: production-refined
 - Feedback/State
   - `Alert`, `Progress`, `Skeleton`, `Empty`, `LoadingDots`, `StreamingText`: done
   - `Toast`: production-refined

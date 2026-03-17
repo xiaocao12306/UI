@@ -33,6 +33,7 @@
 | Toast | production-refined | `Feedback/Toast` | `Toast.test.tsx` |
 | Tabs | production-refined | `Data/Tabs` | `Tabs.test.tsx` |
 | Table | production-refined | `Data/Table` | `Table.test.tsx` |
+| Pagination | production-refined | `Data/Pagination` | `Pagination.test.tsx` |
 
 ## Ongoing Maintenance Rules
 1. Any API change must update Storybook controls/docs and at least one interaction test.
@@ -60,3 +61,4 @@
 - RadioGroup production hardening: added controlled/uncontrolled flow, disabled options, invalid semantics, and dedicated unit + Storybook coverage.
 - Switch production hardening: added controlled/uncontrolled flow, helper narration wiring, invalid/disabled semantics, and keyboard interaction coverage.
 - Drawer production hardening: aligned with dialog-level aria semantics, configurable dismiss policy, and dedicated Storybook overlay scenarios.
+- Pagination production hardening: added keyboard shortcuts (`Home/End/Arrow`), redundant-change guards, and customizable aria label generation for i18n.

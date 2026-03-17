@@ -49,6 +49,36 @@ export const Controlled: Story = {
   }
 };
 
+function KeyboardShortcutsDemo() {
+  const [page, setPage] = React.useState(4);
+
+  return (
+    <div style={{ width: 640, display: "grid", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ color: "var(--aurora-text-secondary)" }}>Keyboard page</span>
+        <Badge tone="default">{page}</Badge>
+      </div>
+      <Pagination page={page} pageCount={12} onPageChange={setPage} />
+    </div>
+  );
+}
+
+export const KeyboardShortcuts: Story = {
+  render: () => <KeyboardShortcutsDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const current = canvas.getByRole("button", { name: "Current page, 4" });
+
+    current.focus();
+    await userEvent.keyboard("{End}");
+    await expect(canvas.getByRole("button", { name: "Current page, 12" })).toBeInTheDocument();
+
+    canvas.getByRole("button", { name: "Current page, 12" }).focus();
+    await userEvent.keyboard("{Home}");
+    await expect(canvas.getByRole("button", { name: "Current page, 1" })).toBeInTheDocument();
+  }
+};
+
 export const CompactRange: Story = {
   args: {
     page: 9,
@@ -71,6 +101,15 @@ export const DisabledPagination: Story = {
     page: 4,
     pageCount: 12,
     disabled: true,
+    onPageChange: () => {}
+  }
+};
+
+export const CustomAriaLabels: Story = {
+  args: {
+    page: 2,
+    pageCount: 9,
+    getItemAriaLabel: (type, page) => `Pagination ${type} ${page}`,
     onPageChange: () => {}
   }
 };

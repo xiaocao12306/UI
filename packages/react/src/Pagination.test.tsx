@@ -58,6 +58,46 @@ describe("Pagination", () => {
     expect(onPageChange).not.toHaveBeenCalled();
   });
 
+  it("does not emit redundant events when selecting current page", () => {
+    const onPageChange = vi.fn();
+    render(<Pagination page={4} pageCount={10} onPageChange={onPageChange} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Current page, 4" }));
+    expect(onPageChange).not.toHaveBeenCalled();
+  });
+
+  it("supports Home/End and arrow keyboard shortcuts on navigation", () => {
+    const onPageChange = vi.fn();
+    render(<Pagination page={4} pageCount={10} onPageChange={onPageChange} />);
+
+    const nav = screen.getByRole("navigation", { name: "Pagination" });
+    fireEvent.keyDown(nav, { key: "Home" });
+    fireEvent.keyDown(nav, { key: "End" });
+    fireEvent.keyDown(nav, { key: "ArrowLeft" });
+    fireEvent.keyDown(nav, { key: "ArrowRight" });
+
+    expect(onPageChange).toHaveBeenNthCalledWith(1, 1);
+    expect(onPageChange).toHaveBeenNthCalledWith(2, 10);
+    expect(onPageChange).toHaveBeenNthCalledWith(3, 3);
+    expect(onPageChange).toHaveBeenNthCalledWith(4, 5);
+  });
+
+  it("supports custom aria label generators", () => {
+    render(
+      <Pagination
+        page={2}
+        pageCount={6}
+        onPageChange={() => {}}
+        getItemAriaLabel={(type, pageNumber) => `${type}:${pageNumber}`}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "first:1" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "current:2" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "page:3" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "next:3" })).toBeInTheDocument();
+  });
+
   it("hides first and last controls when showFirstLast is disabled", () => {
     render(<Pagination page={4} pageCount={10} onPageChange={() => {}} showFirstLast={false} />);
 

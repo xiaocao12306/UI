@@ -11,6 +11,10 @@ export type PaginationProps = {
   disabled?: boolean;
   showFirstLast?: boolean;
   ariaLabel?: string;
+  getItemAriaLabel?: (
+    type: "page" | "current" | "first" | "last" | "next" | "previous",
+    page: number
+  ) => string;
 };
 
 function clamp(value: number, min: number, max: number) {
@@ -71,7 +75,8 @@ export function Pagination({
   boundaryCount = 1,
   disabled = false,
   showFirstLast = true,
-  ariaLabel = "Pagination"
+  ariaLabel = "Pagination",
+  getItemAriaLabel = defaultGetItemAriaLabel
 }: PaginationProps) {
   if (pageCount <= 1) {
     return null;
@@ -86,11 +91,35 @@ export function Pagination({
     if (disabled) {
       return;
     }
-    onPageChange(clamp(nextPage, 1, pageCount));
+    const resolvedPage = clamp(nextPage, 1, pageCount);
+    if (resolvedPage === currentPage) {
+      return;
+    }
+    onPageChange(resolvedPage);
   };
 
   return (
-    <nav aria-label={ariaLabel}>
+    <nav
+      aria-label={ariaLabel}
+      onKeyDown={(event) => {
+        if (disabled) {
+          return;
+        }
+        if (event.key === "Home") {
+          event.preventDefault();
+          goToPage(1);
+        } else if (event.key === "End") {
+          event.preventDefault();
+          goToPage(pageCount);
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          goToPage(currentPage - 1);
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          goToPage(currentPage + 1);
+        }
+      }}
+    >
       <ul
         style={{
           listStyle: "none",
@@ -108,7 +137,7 @@ export function Pagination({
               type="button"
               disabled={!canGoPrevious}
               onClick={() => goToPage(1)}
-              aria-label="Go to first page"
+              aria-label={getItemAriaLabel("first", 1)}
               style={buttonStyle(false, !canGoPrevious)}
             >
               «
@@ -120,7 +149,7 @@ export function Pagination({
             type="button"
             disabled={!canGoPrevious}
             onClick={() => goToPage(currentPage - 1)}
-            aria-label="Go to previous page"
+            aria-label={getItemAriaLabel("previous", currentPage - 1)}
             style={buttonStyle(false, !canGoPrevious)}
           >
             ‹
@@ -143,7 +172,7 @@ export function Pagination({
                 onClick={() => goToPage(token)}
                 disabled={disabled}
                 aria-current={selected ? "page" : undefined}
-                aria-label={selected ? `Current page, ${token}` : `Go to page ${token}`}
+                aria-label={selected ? getItemAriaLabel("current", token) : getItemAriaLabel("page", token)}
                 style={buttonStyle(selected, disabled)}
               >
                 {token}
@@ -156,7 +185,7 @@ export function Pagination({
             type="button"
             disabled={!canGoNext}
             onClick={() => goToPage(currentPage + 1)}
-            aria-label="Go to next page"
+            aria-label={getItemAriaLabel("next", currentPage + 1)}
             style={buttonStyle(false, !canGoNext)}
           >
             ›
@@ -168,7 +197,7 @@ export function Pagination({
               type="button"
               disabled={!canGoNext}
               onClick={() => goToPage(pageCount)}
-              aria-label="Go to last page"
+              aria-label={getItemAriaLabel("last", pageCount)}
               style={buttonStyle(false, !canGoNext)}
             >
               »
@@ -178,6 +207,26 @@ export function Pagination({
       </ul>
     </nav>
   );
+}
+
+function defaultGetItemAriaLabel(
+  type: "page" | "current" | "first" | "last" | "next" | "previous",
+  page: number
+) {
+  switch (type) {
+    case "first":
+      return "Go to first page";
+    case "last":
+      return "Go to last page";
+    case "previous":
+      return "Go to previous page";
+    case "next":
+      return "Go to next page";
+    case "current":
+      return `Current page, ${page}`;
+    default:
+      return `Go to page ${page}`;
+  }
 }
 
 function buttonStyle(selected: boolean, disabled: boolean): React.CSSProperties {

@@ -148,6 +148,7 @@
   - Switch 生产级返工（受控/非受控、描述语义、invalid/disabled 状态、单测 + Storybook `Form/Switch`）
   - Drawer 生产级返工（title/description aria 语义、可配置 dismiss policy、单测 + Storybook `Overlay/Drawer`）
   - Pagination 细节打磨（禁用态视觉与 `showFirstLast=false` 分支测试）
+  - Pagination 生产级返工（Home/End/Arrow 键盘快捷翻页、重复回调防抖、可定制 aria label、单测 + Storybook `Data/Pagination`）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

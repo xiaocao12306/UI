@@ -137,6 +137,21 @@ test("paginates release activity feed", async ({ page }) => {
   await expect(page.getByText("v0.1.0: Button interaction states promoted to production grade.")).toBeHidden();
 });
 
+test("navigates release pagination with Home/End shortcuts", async ({ page }) => {
+  await page.goto("/");
+
+  const paginationNav = page.getByRole("navigation", { name: "Release feed pagination" });
+  const firstPageButton = paginationNav.getByRole("button", { name: "Current page, 1" });
+  await firstPageButton.focus();
+  await firstPageButton.press("End");
+
+  await expect(page.getByText("v0.1.0: Release dry-run evidence recorded for all npm packages.")).toBeVisible();
+  await expect(page.getByText("v0.1.0: Button interaction states promoted to production grade.")).toBeHidden();
+
+  await paginationNav.getByRole("button", { name: "Current page, 3" }).press("Home");
+  await expect(page.getByText("v0.1.0: Button interaction states promoted to production grade.")).toBeVisible();
+});
+
 test("selects framework from combobox", async ({ page }) => {
   await page.goto("/");
 

@@ -203,7 +203,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 ### Pagination
 
 <Canvas of={PaginationStories.Controlled} />
-<Controls of={PaginationStories.CompactRange} />
+<Controls of={PaginationStories.KeyboardShortcuts} />
 
 | Prop | Type | Notes |
 | --- | --- | --- |
@@ -212,6 +212,9 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onPageChange` | `(page: number) => void` | Called for navigation intent. |
 | `showFirstLast` | `boolean` | Toggle first/last jump buttons. |
 | `siblingCount` / `boundaryCount` | `number` | Controls visible number tokens before ellipsis. |
+| `getItemAriaLabel` | `(type, page) => string` | Customize pagination control narration for i18n. |
+
+<Canvas of={PaginationStories.KeyboardShortcuts} />
 
 ## Feedback
 
