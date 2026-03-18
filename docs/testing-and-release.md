@@ -191,11 +191,11 @@ Result summary:
 
 - overall status: `passed`
 - verify: `passed` (`lint` + `typecheck` + `test` + `build`)
-- demo e2e: `65/65` passed
+- demo e2e: `69/69` passed
 - demo dist sync gate: `passed` (`demo:dist:check`)
 - storybook docs import gate: `passed` (`4` mdx files scanned)
 - storybook static sync gate: `passed` (`storybook-static` synchronized)
-- storybook interaction tests: `176/176` passed (`32` suites)
+- storybook interaction tests: `177/177` passed (`32` suites)
 - release gate pass: `yes`
 
 ### 备注
