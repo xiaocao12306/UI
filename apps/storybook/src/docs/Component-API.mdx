@@ -531,6 +531,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `emptyMessage` | `ReactNode` | Custom empty-state guidance for no-match queries. |
 | `resultsAriaLabel` | `string` | Localized accessible name for the command result listbox (default: `Command results`). |
 | `onQueryChange` | `(query: string) => void` | Use for analytics and AI telemetry pipelines; palette close now emits `""` so external telemetry/state can reset with internal query lifecycle. |
+| `onCloseReason` | `(reason: 'close-button' \| 'item-select' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry so analytics can distinguish user-dismiss path vs action completion. |
 | `getResultsStatusText` | `({ query, visibleCount, enabledCount, totalCount }) => string` | Customize live narration with both visible and actionable-result counts. |
 | `onOpenChange` | `(open: boolean) => void` | Required controlled dialog state. |
 | combobox relation | conditional `aria-controls` + listbox mount | Search input references listbox only while filtered results exist, avoiding empty-state dangling IDs. |
@@ -540,6 +541,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Escape priority | preempted events skip palette hook/dismiss | If higher-level handlers already `preventDefault()` Escape, palette keeps dialog open and does not fire `onEscapeKeyDown`. |
 
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
+<Canvas of={CommandPaletteStories.CloseReasonTelemetry} />
 <Canvas of={CommandPaletteStories.EmptyStateAriaControlsLifecycle} />
 <Canvas of={CommandPaletteStories.LocalizedResultsLabel} />
 <Canvas of={CommandPaletteStories.LocalizedDialogCopy} />

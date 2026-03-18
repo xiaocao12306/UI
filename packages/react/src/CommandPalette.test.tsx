@@ -6,11 +6,13 @@ describe("CommandPalette", () => {
   it("filters commands and handles selection", () => {
     const onOpenChange = vi.fn();
     const onCreateProject = vi.fn();
+    const onCloseReason = vi.fn();
 
     render(
       <CommandPalette
         open
         onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
         commands={[
           { key: "open-settings", label: "Open Settings", keywords: ["settings"] },
           { key: "create-project", label: "Create Project", keywords: ["new", "project"], onSelect: onCreateProject }
@@ -28,6 +30,7 @@ describe("CommandPalette", () => {
     fireEvent.click(screen.getByRole("option", { name: "Create Project" }));
 
     expect(onCreateProject).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenCalledWith("item-select");
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
@@ -78,26 +81,31 @@ describe("CommandPalette", () => {
 
   it("closes on escape key through dialog dismiss", () => {
     const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
 
     render(
       <CommandPalette
         open
         onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
         commands={[{ key: "open-settings", label: "Open Settings" }]}
       />
     );
 
     fireEvent.keyDown(document, { key: "Escape" });
+    expect(onCloseReason).toHaveBeenCalledWith("escape-key");
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
   it("clears query on first Escape before dismissing palette", () => {
     const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
 
     render(
       <CommandPalette
         open
         onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
         commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
       />
     );
@@ -108,9 +116,11 @@ describe("CommandPalette", () => {
 
     fireEvent.keyDown(input, { key: "Escape" });
     expect(input).toHaveValue("");
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
 
     fireEvent.keyDown(input, { key: "Escape" });
+    expect(onCloseReason).toHaveBeenCalledWith("escape-key");
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
@@ -160,11 +170,13 @@ describe("CommandPalette", () => {
   it("forwards escape and outside-pointer dismiss events", () => {
     const onEscapeKeyDown = vi.fn();
     const onPointerDownOutside = vi.fn();
+    const onCloseReason = vi.fn();
 
     render(
       <CommandPalette
         open
         onOpenChange={() => {}}
+        onCloseReason={onCloseReason}
         onEscapeKeyDown={onEscapeKeyDown}
         onPointerDownOutside={onPointerDownOutside}
         commands={[{ key: "open-settings", label: "Open Settings" }]}
@@ -173,9 +185,11 @@ describe("CommandPalette", () => {
 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "escape-key");
 
     fireEvent.pointerDown(document.body);
     expect(onPointerDownOutside).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenNthCalledWith(2, "outside-pointer");
   });
 
   it("allows custom dismiss guards by preventing escape/outside events", () => {
@@ -205,6 +219,7 @@ describe("CommandPalette", () => {
   it("skips escape callback and dismiss when Escape is preempted upstream", () => {
     const onOpenChange = vi.fn();
     const onEscapeKeyDown = vi.fn();
+    const onCloseReason = vi.fn();
     const preemptEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -217,6 +232,7 @@ describe("CommandPalette", () => {
         open
         onOpenChange={onOpenChange}
         onEscapeKeyDown={onEscapeKeyDown}
+        onCloseReason={onCloseReason}
         commands={[{ key: "open-settings", label: "Open Settings" }]}
       />
     );
@@ -224,8 +240,27 @@ describe("CommandPalette", () => {
     fireEvent.keyDown(document, { key: "Escape" });
 
     expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
     document.removeEventListener("keydown", preemptEscape, true);
+  });
+
+  it("emits close-button close reason when dismiss button is clicked", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
+    expect(onCloseReason).toHaveBeenCalledWith("close-button");
+    expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
   it("shows empty-state copy when query has no match", () => {

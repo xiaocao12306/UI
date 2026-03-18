@@ -261,7 +261,7 @@
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
-  - Release Gate 证据刷新（2026-03-18：demo E2E `52` + Storybook `166/166` + dry-run `react` unpacked `~308.6 kB`）
+  - Release Gate 证据刷新（2026-03-18：demo E2E `52` + Storybook `168/168` + dry-run `react` unpacked `~308.6 kB`）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
   - CommandPalette Escape 查询收口（新增 `clearQueryOnEscape` 默认行为：首次 Escape 清空 query，二次 Escape 再触发关闭）
@@ -313,6 +313,7 @@
   - CommandPalette 结果命名语义收口（新增 `resultsAriaLabel`，支持 listbox 可访问名称本地化）
   - CommandPalette 对话文案语义收口（新增 `title/description/searchAriaLabel`，支持非英文产品可访问名称本地化）
   - CommandPalette 查询遥测收口（关闭时自动触发 `onQueryChange(\"\")`，确保外部 telemetry 与内部 query 生命周期一致）
+  - CommandPalette 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/item-select/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Demo CommandPalette 查询遥测验收（新增可视 telemetry 指示 + Playwright 回归，锁定关闭后重置为 `N/A`）
   - Storybook CommandPalette 空态引用验收（新增 `EmptyStateAriaControlsLifecycle` 场景，锁定 `aria-controls` 与 listbox 挂载生命周期）
   - Storybook CommandPalette i18n 验收（新增 `LocalizedResultsLabel` 场景，锁定结果 listbox 本地化命名）

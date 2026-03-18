@@ -114,6 +114,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For conditional approval guards, prefer `onEscapeKeyDown/onPointerDownOutside` + `event.preventDefault()` so dismiss policy can be unlocked at runtime.
 - When app-level shortcuts preempt Escape with `preventDefault()`, rely on built-in callback-skip behavior so command-level escape hooks stay side-effect free.
 - Ignore command list navigation/selection keys while IME composition is active so Enter confirms text composition instead of executing commands.
+- Use `onCloseReason` to emit deterministic dismissal telemetry (`close-button` / `item-select` / `escape-key` / `outside-pointer`) instead of inferring close path from side effects.
 - Guard Ctrl/Cmd + Enter submission against active IME composition to avoid accidental sends for CJK input.
 - Show reasoning disclosure with explicit user intent (default collapsed).
 - Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
@@ -124,6 +125,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={StreamingCodeBlockStories.Default} />
 <Canvas of={CommandPaletteStories.AiInteractionFlow} />
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
+<Canvas of={CommandPaletteStories.CloseReasonTelemetry} />
 <Canvas of={CommandPaletteStories.DisabledCommandGuard} />
 <Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />
 <Canvas of={CommandPaletteStories.PersistentSelection} />

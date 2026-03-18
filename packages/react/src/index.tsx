@@ -82,7 +82,7 @@ export { Dropdown } from "./Dropdown";
 export type { DropdownCloseReason, DropdownItem, DropdownProps } from "./Dropdown";
 
 export { CommandPalette } from "./CommandPalette";
-export type { CommandItem, CommandPaletteProps } from "./CommandPalette";
+export type { CommandItem, CommandPaletteCloseReason, CommandPaletteProps } from "./CommandPalette";
 
 export { PromptInput } from "./PromptInput";
 export type { PromptInputProps } from "./PromptInput";

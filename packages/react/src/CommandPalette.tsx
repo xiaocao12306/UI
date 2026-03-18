@@ -28,6 +28,7 @@ export type CommandPaletteProps = {
   placeholder?: string;
   emptyMessage?: React.ReactNode;
   onQueryChange?: (query: string) => void;
+  onCloseReason?: (reason: CommandPaletteCloseReason) => void;
   getResultsStatusText?: (params: {
     query: string;
     visibleCount: number;
@@ -35,6 +36,8 @@ export type CommandPaletteProps = {
     totalCount: number;
   }) => string;
 };
+
+export type CommandPaletteCloseReason = "close-button" | "item-select" | "escape-key" | "outside-pointer";
 
 export function CommandPalette({
   open,
@@ -53,14 +56,44 @@ export function CommandPalette({
   placeholder = "Search commands...",
   emptyMessage = "No commands found.",
   onQueryChange,
+  onCloseReason,
   getResultsStatusText = defaultGetResultsStatusText
 }: CommandPaletteProps) {
   const [query, setQuery] = React.useState("");
   const [activeIndex, setActiveIndex] = React.useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const activeCommandKeyRef = React.useRef<string | null>(null);
+  const closeReasonRef = React.useRef<CommandPaletteCloseReason | null>(null);
   const wasOpenRef = React.useRef(open);
   const listId = React.useId();
+
+  const markCloseReason = React.useCallback(
+    (reason: CommandPaletteCloseReason) => {
+      closeReasonRef.current = reason;
+      onCloseReason?.(reason);
+    },
+    [onCloseReason]
+  );
+
+  const closeWithReason = React.useCallback(
+    (reason: CommandPaletteCloseReason) => {
+      markCloseReason(reason);
+      onOpenChange(false);
+    },
+    [markCloseReason, onOpenChange]
+  );
+
+  const handleOpenChange = React.useCallback(
+    (nextOpen: boolean) => {
+      if (!nextOpen && open && closeReasonRef.current === null) {
+        onCloseReason?.("close-button");
+      }
+
+      closeReasonRef.current = null;
+      onOpenChange(nextOpen);
+    },
+    [onCloseReason, onOpenChange, open]
+  );
 
   React.useEffect(() => {
     if (open) {
@@ -157,10 +190,10 @@ export function CommandPalette({
 
       item.onSelect?.();
       if (closeOnSelect) {
-        onOpenChange(false);
+        closeWithReason("item-select");
       }
     },
-    [closeOnSelect, filtered, onOpenChange]
+    [closeOnSelect, closeWithReason, filtered]
   );
 
   const moveActiveIndex = (direction: 1 | -1) => {
@@ -181,14 +214,28 @@ export function CommandPalette({
   return (
     <Dialog
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       title={title}
       description={description}
       size="md"
       closeOnEscape={closeOnEscape}
       closeOnOutsidePointer={closeOnOutsidePointer}
-      onEscapeKeyDown={onEscapeKeyDown}
-      onPointerDownOutside={onPointerDownOutside}
+      onEscapeKeyDown={(event) => {
+        onEscapeKeyDown?.(event);
+        if (event.defaultPrevented || !closeOnEscape) {
+          return;
+        }
+
+        markCloseReason("escape-key");
+      }}
+      onPointerDownOutside={(event) => {
+        onPointerDownOutside?.(event);
+        if (event.defaultPrevented || !closeOnOutsidePointer) {
+          return;
+        }
+
+        markCloseReason("outside-pointer");
+      }}
     >
       <div style={{ display: "grid", gap: 10 }}>
         <Input

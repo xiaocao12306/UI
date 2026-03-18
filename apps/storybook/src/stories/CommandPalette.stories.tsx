@@ -93,6 +93,34 @@ function QueryTelemetryPalette() {
   );
 }
 
+function CloseReasonTelemetryPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [lastReason, setLastReason] = React.useState("none");
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last close reason:{" "}
+        <strong data-testid="command-close-reason" style={{ color: "var(--aurora-text-primary)" }}>
+          {lastReason}
+        </strong>
+      </p>
+      <button type="button" onClick={() => setOpen(true)}>
+        Reopen Palette
+      </button>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        onCloseReason={(reason) => setLastReason(reason)}
+        commands={[
+          { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
+          { key: "run-e2e", label: "Run E2E Smoke", keywords: ["playwright", "test"] }
+        ]}
+      />
+    </div>
+  );
+}
+
 function DisabledOnlyResultsPalette() {
   const [open, setOpen] = React.useState(true);
 
@@ -418,6 +446,33 @@ export const QueryTelemetry: Story = {
     await userEvent.keyboard("{ArrowDown}{Enter}");
     await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
     await expect(canvas.getByTestId("query-telemetry")).toHaveTextContent("N/A");
+  }
+};
+
+export const CloseReasonTelemetry: Story = {
+  render: () => <CloseReasonTelemetryPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const doc = canvasElement.ownerDocument;
+
+    await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("none");
+    await userEvent.click(await canvas.findByRole("option", { name: "Create Spec" }));
+    await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("item-select");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("escape-key");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await userEvent.click(doc.body);
+    await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("outside-pointer");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Close dialog" }));
+    await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("close-button");
   }
 };
 
