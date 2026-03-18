@@ -505,6 +505,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `duration` | `number` | Auto-dismiss delay in ms; `0` disables timer. |
 | `live` | `'polite' \| 'assertive' \| 'off'` | Optional live-region politeness override for notification noise control. |
 | `pauseOnHover` | `boolean` | Suspends timer while hovered or while focus stays inside toast controls. |
+| `position` | `'bottom-right' \| 'bottom-left' \| 'top-right' \| 'top-left'` | Controls viewport anchor for stack placement and Escape-priority grouping. |
 | `closeOnEscape` | `boolean` | Optional keyboard dismiss path; Escape is consumed so stacked toasts dismiss one at a time. |
 | `onEscapeKeyDown` | `(event: KeyboardEvent) => void` | Optional toast-level Escape hook; call `event.preventDefault()` to keep toast open in guarded flows. |
 | actionable role mapping | `action` => `dialog/alertdialog` | When `action` is provided, toast exposes interactive surface semantics (`aria-modal="false"`) instead of live-region-only status roles. |
@@ -518,6 +519,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `ariaLabel` | `string` | Optional live-region accessible name override for icon-only or non-text titles. |
 
 <Canvas of={ToastStories.ActionRequired} />
+<Canvas of={ToastStories.ActionRequiredDanger} />
 <Canvas of={ToastStories.CloseReasonTelemetry} />
 <Canvas of={ToastStories.EscapeStackOrder} />
 <Canvas of={ToastStories.StackedViewportOffset} />
@@ -540,6 +542,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `commands` | `CommandItem[]` | `disabled` commands remain visible but non-selectable. Use `textValue` for non-string labels and locale aliases. |
 | `title` / `description` | `ReactNode` | Localizable dialog heading and supporting copy for command context. |
 | `searchAriaLabel` | `string` | Localizable accessible name for the search combobox (default: `Search commands`). |
+| `placeholder` | `string` | Custom search input hint text for product-specific command vocabulary. |
 | `closeLabel` | `string` | Localizable close-button accessible name (defaults to Dialog close label). |
 | `closeOnSelect` | `boolean` | Defaults to `true`; set `false` for batch workflows that keep the palette open after each command. |
 | `clearQueryOnEscape` | `boolean` | Defaults to `true`; first Escape clears active query before dismiss is allowed, reducing accidental close during search refinement. |

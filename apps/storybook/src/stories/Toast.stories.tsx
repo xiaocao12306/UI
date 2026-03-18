@@ -124,6 +124,46 @@ export const ActionRequired: Story = {
   }
 };
 
+function DangerActionToastDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <div style={{ minHeight: 260, padding: 16 }}>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Reopen
+      </Button>
+      <Toast
+        open={open}
+        onOpenChange={setOpen}
+        duration={0}
+        closeOnEscape={false}
+        closeLabel="Close incident notice"
+        title="Production incident requires approval"
+        description="Incident severity is high. Confirm rollback owner before continuing."
+        tone="danger"
+        action={
+          <Button size="sm" onClick={() => setOpen(false)}>
+            Confirm owner
+          </Button>
+        }
+      />
+    </div>
+  );
+}
+
+export const ActionRequiredDanger: Story = {
+  render: () => <DangerActionToastDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await expect(canvas.getByRole("alertdialog")).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Close incident notice" }));
+    await expect(canvas.queryByRole("alertdialog")).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Reopen" }));
+    await expect(canvas.getByRole("alertdialog")).toBeInTheDocument();
+  }
+};
+
 function CloseReasonTelemetryDemo() {
   const [open, setOpen] = React.useState(true);
   const [lastReason, setLastReason] = React.useState("none");

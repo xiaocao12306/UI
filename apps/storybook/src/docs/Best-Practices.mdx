@@ -48,7 +48,8 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Preserve nuanced `aria-invalid` values (`grammar`/`spelling`) when integrating validation services; avoid normalizing them to generic `true`.
 - For tooltip-enhanced controls that already have helper text, keep `aria-describedby` lifecycle clean: append tooltip ID only while visible and remove it on close.
 - Avoid `autoFocus`; use intentional focus management when opening overlays.
-- For combobox/listbox patterns, map `aria-selected` to the committed value, not temporary active focus.
+- For value-selection combobox/listbox patterns, map `aria-selected` to the committed value, not temporary active focus.
+- For command-palette `aria-activedescendant` flows, keep `aria-selected` on the active option so screen readers announce current keyboard focus target.
 - For `aria-activedescendant` combobox flows, keep listbox options out of tab order and preserve input focus during pointer selection.
 - Keep combobox `aria-controls` conditional on popup visibility to avoid dangling listbox references.
 - Keep command-palette combobox `aria-controls` conditional on filtered-result listbox visibility so empty states do not expose stale or missing listbox IDs.
@@ -138,6 +139,8 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={CommandPaletteStories.PersistentSelection} />
 <Canvas of={CommandPaletteStories.RefinedSearchKeepsActiveCommand} />
 <Canvas of={CommandPaletteStories.PagedKeyboardNavigation} />
+<Canvas of={CommandPaletteStories.LocalizedResultsLabel} />
+<Canvas of={CommandPaletteStories.LocalizedDialogCopy} />
 <Canvas of={CommandPaletteStories.ImeCompositionGuard} />
 <Canvas of={CommandPaletteStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={CommandPaletteStories.GuardedDismissEvents} />
@@ -161,6 +164,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For high-frequency passive updates, set `live="off"` to reduce assistive-tech interruption while keeping visual toast context.
 
 <Canvas of={ToastStories.ActionRequired} />
+<Canvas of={ToastStories.ActionRequiredDanger} />
 <Canvas of={ToastStories.CloseReasonTelemetry} />
 <Canvas of={ToastStories.EscapeStackOrder} />
 <Canvas of={ToastStories.StackedViewportOffset} />

@@ -281,8 +281,10 @@
   - Overlay 焦点策略收口（Popover/Dropdown 仅在键盘关闭时回焦 trigger，外部点击关闭保留指针目标焦点）
   - Storybook Dropdown 焦点策略回归补齐（Escape 回焦 trigger + outside pointer 目标焦点保留）
   - Storybook 文档同步（Component API / Best Practices 增补 Dropdown 焦点策略示例）
+  - Storybook 文档精修（Component API 增补 `Toast.position` / `CommandPalette.placeholder`，Best Practices 收紧 combobox 与 command palette `aria-selected` 语义边界）
   - Storybook CommandPalette 防误触场景补齐（`DisabledCommandGuard` 覆盖禁用命令点击不执行且不关闭）
   - Storybook Toast 抢占式 Escape 场景补齐（`EscapePreemptedByGlobalHandler` 覆盖 `defaultPrevented` 不关闭分支）
+  - Storybook Toast 危急动作场景补齐（新增 `ActionRequiredDanger`，锁定 `alertdialog` 语义与交互回归）
   - Table 键盘排序收口（`Enter/Space` 触发 sortable header，单测 + Storybook `SortTelemetry` 回归）
   - Tabs 键盘边界收口（`KeyboardNavigationGuide` 增补 `Home/End` + 禁用项跳过的 Storybook 交互断言）
   - Data 文档语义收口（Component API / Best Practices 明确 Table `Enter/Space` 键盘排序语义）
