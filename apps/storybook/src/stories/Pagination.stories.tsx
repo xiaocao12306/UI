@@ -72,13 +72,14 @@ export const KeyboardShortcuts: Story = {
     current.focus();
     await expect(current).toHaveFocus();
     await userEvent.keyboard("{End}");
-    await expect(await canvas.findByRole("button", { name: "Current page, 12" })).toBeInTheDocument();
-
     const currentLast = await canvas.findByRole("button", { name: "Current page, 12" });
-    currentLast.focus();
+    await expect(currentLast).toBeInTheDocument();
     await expect(currentLast).toHaveFocus();
+
     await userEvent.keyboard("{Home}");
-    await expect(await canvas.findByRole("button", { name: "Current page, 1" })).toBeInTheDocument();
+    const currentFirst = await canvas.findByRole("button", { name: "Current page, 1" });
+    await expect(currentFirst).toBeInTheDocument();
+    await expect(currentFirst).toHaveFocus();
   }
 };
 
@@ -107,14 +108,15 @@ export const RtlKeyboardShortcuts: Story = {
     current.focus();
     await expect(current).toHaveFocus();
     await userEvent.keyboard("{ArrowRight}");
-    await expect(await canvas.findByRole("button", { name: "Current page, 3" })).toBeInTheDocument();
+    const currentRtl = await canvas.findByRole("button", { name: "Current page, 3" });
+    await expect(currentRtl).toBeInTheDocument();
+    await expect(currentRtl).toHaveFocus();
     await expect(canvas.getByTestId("rtl-page-value")).toHaveTextContent("3");
 
-    const currentRtl = await canvas.findByRole("button", { name: "Current page, 3" });
-    currentRtl.focus();
-    await expect(currentRtl).toHaveFocus();
     await userEvent.keyboard("{ArrowLeft}");
-    await expect(await canvas.findByRole("button", { name: "Current page, 4" })).toBeInTheDocument();
+    const currentDefault = await canvas.findByRole("button", { name: "Current page, 4" });
+    await expect(currentDefault).toBeInTheDocument();
+    await expect(currentDefault).toHaveFocus();
     await expect(canvas.getByTestId("rtl-page-value")).toHaveTextContent("4");
   }
 };
@@ -165,5 +167,27 @@ export const BoundaryAriaLabels: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("button", { name: "Pagination previous 1" })).toBeInTheDocument();
     await expect(canvas.getByRole("button", { name: "Pagination next 2" })).toBeInTheDocument();
+  }
+};
+
+export const LabelledByHeading: Story = {
+  render: (args) => (
+    <div style={{ width: 640, display: "grid", gap: 12 }}>
+      <h3 id="pagination-release-heading" style={{ margin: 0 }}>
+        Release pages
+      </h3>
+      <Pagination {...args} ariaLabelledBy="pagination-release-heading" />
+    </div>
+  ),
+  args: {
+    page: 3,
+    pageCount: 12,
+    onPageChange: () => {}
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const nav = await canvas.findByRole("navigation", { name: "Release pages" });
+    await expect(nav).toHaveAttribute("aria-labelledby", "pagination-release-heading");
+    await expect(nav).not.toHaveAttribute("aria-label");
   }
 };

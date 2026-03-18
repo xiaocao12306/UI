@@ -11,6 +11,7 @@ export type PaginationProps = {
   disabled?: boolean;
   showFirstLast?: boolean;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
   getItemAriaLabel?: (
     type: "page" | "current" | "first" | "last" | "next" | "previous",
     page: number
@@ -76,12 +77,11 @@ export function Pagination({
   disabled = false,
   showFirstLast = true,
   ariaLabel = "Pagination",
+  ariaLabelledBy,
   getItemAriaLabel = defaultGetItemAriaLabel
 }: PaginationProps) {
-  if (pageCount <= 1) {
-    return null;
-  }
-
+  const navRef = React.useRef<HTMLElement>(null);
+  const pendingFocusPageRef = React.useRef<number | null>(null);
   const currentPage = clamp(page, 1, pageCount);
   const tokens = getPaginationTokens(currentPage, pageCount, siblingCount, boundaryCount);
   const previousPage = clamp(currentPage - 1, 1, pageCount);
@@ -100,16 +100,36 @@ export function Pagination({
     onPageChange(resolvedPage);
   };
 
+  React.useEffect(() => {
+    if (pendingFocusPageRef.current === null) {
+      return;
+    }
+    const targetPage = pendingFocusPageRef.current;
+    pendingFocusPageRef.current = null;
+    const target = navRef.current?.querySelector<HTMLButtonElement>(`button[data-aurora-pagination-page="${targetPage}"]`);
+    target?.focus();
+  }, [currentPage]);
+
+  const goToPageWithFocus = (nextPage: number) => {
+    const resolvedPage = clamp(nextPage, 1, pageCount);
+    if (resolvedPage === currentPage) {
+      pendingFocusPageRef.current = null;
+      return;
+    }
+    pendingFocusPageRef.current = resolvedPage;
+    goToPage(resolvedPage);
+  };
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (disabled) {
       return;
     }
     if (event.key === "Home") {
       event.preventDefault();
-      goToPage(1);
+      goToPageWithFocus(1);
     } else if (event.key === "End") {
       event.preventDefault();
-      goToPage(pageCount);
+      goToPageWithFocus(pageCount);
       return;
     }
 
@@ -119,11 +139,15 @@ export function Pagination({
     }
 
     event.preventDefault();
-    goToPage(currentPage + arrowDelta);
+    goToPageWithFocus(currentPage + arrowDelta);
   };
 
+  if (pageCount <= 1) {
+    return null;
+  }
+
   return (
-    <nav aria-label={ariaLabel}>
+    <nav ref={navRef} aria-label={ariaLabelledBy ? undefined : ariaLabel} aria-labelledby={ariaLabelledBy}>
       <ul
         style={{
           listStyle: "none",
@@ -178,6 +202,7 @@ export function Pagination({
                 onClick={() => goToPage(token)}
                 disabled={disabled}
                 onKeyDown={handleKeyDown}
+                data-aurora-pagination-page={token}
                 aria-current={selected ? "page" : undefined}
                 aria-label={selected ? getItemAriaLabel("current", token) : getItemAriaLabel("page", token)}
                 style={buttonStyle(selected, disabled)}

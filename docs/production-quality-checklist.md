@@ -96,6 +96,9 @@
 - Storybook Tag stability hardening: `Core/Tag/MetadataRow` now has explicit play assertions to reduce interaction-runner navigation retry noise.
 - Storybook Toast stability hardening: `Feedback/Toast/ToneMatrix` now uses `duration={0}` so baseline stories stay deterministic during interaction-runner sweeps.
 - Storybook Pagination stability hardening: keyboard stories now await async role transitions (`findByRole`) and assert focus preconditions to reduce interaction-runner retry noise.
+- Pagination naming hardening: added `ariaLabelledBy` so pager nav can inherit visible-heading naming and suppress fallback `aria-label` when heading binding is present.
+- Pagination focus-continuity hardening: keyboard paging (`Home/End/Arrow`) now restores focus to the newly active page button, with unit + Storybook interaction coverage.
+- Storybook static-sync gate hardening: `storybook:static:check` now rebuilds static output and fails on `git status` diff so missing static commits are caught before runner startup.
 - Pages delivery hardening: GitHub Pages artifact now ships Demo root + Storybook subpath (`/storybook`) in one deploy workflow.
 - Pages observability hardening: deploy workflow now writes Demo + Storybook external URLs into `GITHUB_STEP_SUMMARY`.
 - Release-gate baseline refresh: `pnpm release:gate` rerun passed on 2026-03-18 after latest Tabs/Table hardening, with dry-run tarballs still publishable.

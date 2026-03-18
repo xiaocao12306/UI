@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import * as React from "react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Pagination } from "./Pagination";
 
@@ -11,6 +12,24 @@ describe("Pagination", () => {
   it("marks current page with aria-current", () => {
     render(<Pagination page={3} pageCount={8} onPageChange={() => {}} />);
     expect(screen.getByRole("button", { name: "Current page, 3" })).toHaveAttribute("aria-current", "page");
+  });
+
+  it("uses default navigation label when ariaLabelledBy is not provided", () => {
+    render(<Pagination page={3} pageCount={8} onPageChange={() => {}} />);
+    expect(screen.getByRole("navigation", { name: "Pagination" })).toBeInTheDocument();
+  });
+
+  it("supports ariaLabelledBy naming and suppresses fallback aria-label", () => {
+    render(
+      <div>
+        <h2 id="release-pages-heading">Release pages</h2>
+        <Pagination page={3} pageCount={8} onPageChange={() => {}} ariaLabelledBy="release-pages-heading" />
+      </div>
+    );
+
+    const navigation = screen.getByRole("navigation", { name: "Release pages" });
+    expect(navigation).toHaveAttribute("aria-labelledby", "release-pages-heading");
+    expect(navigation).not.toHaveAttribute("aria-label");
   });
 
   it("moves to previous and next page", () => {
@@ -80,6 +99,29 @@ describe("Pagination", () => {
     expect(onPageChange).toHaveBeenNthCalledWith(2, 10);
     expect(onPageChange).toHaveBeenNthCalledWith(3, 3);
     expect(onPageChange).toHaveBeenNthCalledWith(4, 5);
+  });
+
+  it("keeps focus on the newly active page button after keyboard page changes", async () => {
+    function ControlledPaginationHarness() {
+      const [page, setPage] = React.useState(4);
+      return <Pagination page={page} pageCount={10} onPageChange={setPage} />;
+    }
+
+    render(<ControlledPaginationHarness />);
+
+    const currentButton = screen.getByRole("button", { name: "Current page, 4" });
+    currentButton.focus();
+    fireEvent.keyDown(currentButton, { key: "End" });
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Current page, 10" })).toHaveFocus();
+    });
+
+    fireEvent.keyDown(screen.getByRole("button", { name: "Current page, 10" }), { key: "Home" });
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Current page, 1" })).toHaveFocus();
+    });
   });
 
   it("mirrors ArrowLeft/ArrowRight keyboard shortcuts in rtl containers", () => {
