@@ -140,16 +140,20 @@ test("navigates data tabs with Home/End keys", async ({ page }) => {
   await page.goto("/");
 
   const overviewTab = page.getByRole("tab", { name: "Overview" });
+  const overviewPanel = page.locator(`#${await overviewTab.getAttribute("aria-controls")}`);
   await overviewTab.focus();
   await overviewTab.press("End");
 
   const settingsTab = page.getByRole("tab", { name: "Settings" });
+  const settingsPanel = page.locator(`#${await settingsTab.getAttribute("aria-controls")}`);
   await expect(settingsTab).toBeFocused();
-  await expect(page.getByRole("tabpanel")).toContainText("Theme, access control, and preferences.");
+  await expect(settingsPanel).toContainText("Theme, access control, and preferences.");
+  await expect(settingsPanel).not.toHaveAttribute("hidden");
 
   await settingsTab.press("Home");
   await expect(page.getByRole("tab", { name: "Overview" })).toBeFocused();
-  await expect(page.getByRole("tabpanel")).toContainText("Project health and adoption summary.");
+  await expect(overviewPanel).toContainText("Project health and adoption summary.");
+  await expect(overviewPanel).not.toHaveAttribute("hidden");
 });
 
 test("sorts demo table from column headers", async ({ page }) => {
