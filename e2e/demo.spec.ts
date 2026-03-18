@@ -188,6 +188,24 @@ test("sorts demo table from column headers", async ({ page }) => {
   await expect(firstRow).toContainText("StreamingCodeBlock");
 });
 
+test("sorts demo table with keyboard activation", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table");
+  const componentColumn = table.getByRole("columnheader", { name: /Component/ });
+  const componentSortButton = table.getByRole("button", { name: /Component/ });
+  const firstRow = table.locator("tbody tr").first();
+
+  await componentSortButton.focus();
+  await componentSortButton.press("Enter");
+  await expect(componentColumn).toHaveAttribute("aria-sort", "descending");
+  await expect(firstRow).toContainText("StreamingCodeBlock");
+
+  await componentSortButton.press("Space");
+  await expect(componentColumn).toHaveAttribute("aria-sort", "ascending");
+  await expect(firstRow).toContainText("Button");
+});
+
 test("toggles table loading state and disables sort controls", async ({ page }) => {
   await page.goto("/");
 
