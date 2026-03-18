@@ -669,6 +669,36 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("supports PageUp/PageDown navigation across long result lists while skipping disabled options", () => {
+    render(
+      <CommandPalette
+        open
+        closeOnSelect={false}
+        onOpenChange={() => {}}
+        commands={[
+          { key: "disabled-first", label: "Disabled First", disabled: true },
+          { key: "cmd-1", label: "Command 1" },
+          { key: "cmd-2", label: "Command 2" },
+          { key: "disabled-middle", label: "Disabled Middle", disabled: true },
+          { key: "cmd-3", label: "Command 3" },
+          { key: "cmd-4", label: "Command 4" },
+          { key: "cmd-5", label: "Command 5" },
+          { key: "cmd-6", label: "Command 6" },
+          { key: "cmd-7", label: "Command 7" }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
+
+    fireEvent.keyDown(input, { key: "PageDown" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-7"));
+
+    fireEvent.keyDown(input, { key: "PageUp" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
+  });
+
   it("preserves active command intent when query refinement keeps that command", () => {
     const onSearchDocs = vi.fn();
     const onSendReport = vi.fn();

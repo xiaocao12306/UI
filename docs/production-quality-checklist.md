@@ -245,7 +245,7 @@
 - Tabs RTL keyboard hardening: horizontal arrow semantics now follow container direction (`dir=\"rtl\"` mirrors ArrowLeft/ArrowRight), with unit + Storybook interaction coverage.
 - Table sort narration hardening: `aria-sort` now appears only on the actively sorted column; unsorted headers omit the attribute to reduce screen-reader noise and align with ARIA guidance.
 - Table live-sort narration hardening: added `getSortStatusText` to localize active sort-state live region updates, with unit + Storybook interaction coverage for ascending/descending transitions.
-- Release evidence refresh: reran `demo:e2e` (`65` passed) and `release:dry-run` (`react` unpacked `342.6 kB`) with Storybook interaction baseline `32/32` suites and `175/175` tests.
+- Release evidence refresh: reran `demo:e2e` (`65` passed) and `release:dry-run` (`react` unpacked `342.6 kB`) with Storybook interaction baseline `32/32` suites and `176/176` tests.
 - Demo table narration parity: Playwright now asserts unsorted columns keep `aria-sort` absent while active sorted column toggles, matching unit/Storybook semantics.
 - Toast IME callback parity: Escape during composition no longer fires `onEscapeKeyDown`, preventing guarded flows from treating IME confirm/cancel as dismissal intent.
 - Demo RTL tabs parity: added dedicated Data section RTL tablist and Playwright ArrowRight/ArrowLeft regression to lock direction-aware keyboard navigation in real app flows.
@@ -271,6 +271,7 @@
 - Storybook toast-stack parity: added `StackedViewportOffset` interaction assertions to lock stack-offset behavior in visual regression baselines.
 - Toast actionable-role parity: toasts with `action` now expose `dialog/alertdialog` semantics (`aria-modal="false"`) while passive notifications keep `status/alert`.
 - Table sortable-header state parity: sortable controls now expose hover/pressed/focus-visible feedback and `aria-keyshortcuts="Enter Space"` for keyboard audit clarity.
+- CommandPalette page-jump parity: long lists now support `PageUp/PageDown` jumps across actionable options while preserving disabled-option skip semantics.
 - Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.
 - Storybook popover preemption parity: Popover now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps surface open and skips hook side effects.

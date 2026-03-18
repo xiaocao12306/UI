@@ -351,6 +351,30 @@ function RefinedSearchKeepsActiveCommandPalette() {
   );
 }
 
+function PagedKeyboardNavigationPalette() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <CommandPalette
+      open={open}
+      onOpenChange={setOpen}
+      closeOnSelect={false}
+      commands={[
+        { key: "cmd-1", label: "Command 1" },
+        { key: "cmd-2", label: "Command 2" },
+        { key: "cmd-3-disabled", label: "Command 3 (disabled)", disabled: true },
+        { key: "cmd-4", label: "Command 4" },
+        { key: "cmd-5", label: "Command 5" },
+        { key: "cmd-6", label: "Command 6" },
+        { key: "cmd-7", label: "Command 7" },
+        { key: "cmd-8", label: "Command 8" },
+        { key: "cmd-9", label: "Command 9" }
+      ]}
+      placeholder="Use PageUp/PageDown to jump 5 actionable commands"
+    />
+  );
+}
+
 function ImeCompositionGuardPalette() {
   const [open, setOpen] = React.useState(true);
   const [selectedCount, setSelectedCount] = React.useState(0);
@@ -669,6 +693,22 @@ export const RefinedSearchKeepsActiveCommand: Story = {
     await userEvent.clear(input);
     await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  }
+};
+
+export const PagedKeyboardNavigation: Story = {
+  render: () => <PagedKeyboardNavigationPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+    await userEvent.click(input);
+
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+    await userEvent.keyboard("{PageDown}");
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-6"));
+
+    await userEvent.keyboard("{PageUp}");
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
   }
 };
 

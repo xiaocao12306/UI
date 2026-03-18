@@ -195,7 +195,7 @@ Result summary:
 - demo dist sync gate: `passed` (`demo:dist:check`)
 - storybook docs import gate: `passed` (`4` mdx files scanned)
 - storybook static sync gate: `passed` (`storybook-static` synchronized)
-- storybook interaction tests: `175/175` passed (`32` suites)
+- storybook interaction tests: `176/176` passed (`32` suites)
 - release gate pass: `yes`
 
 ### 备注

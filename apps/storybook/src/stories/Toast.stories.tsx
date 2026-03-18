@@ -440,13 +440,13 @@ export const EscapeIgnoresImeComposition: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
     const doc = canvasElement.ownerDocument;
-    await expect(canvas.getByRole("status", { name: "IME composition guard" })).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog", { name: "IME composition guard" })).toBeInTheDocument();
 
     fireEvent.keyDown(doc, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
-    await expect(canvas.getByRole("status", { name: "IME composition guard" })).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog", { name: "IME composition guard" })).toBeInTheDocument();
 
     await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));
-    await expect(canvas.queryByRole("status", { name: "IME composition guard" })).not.toBeInTheDocument();
+    await expect(canvas.queryByRole("dialog", { name: "IME composition guard" })).not.toBeInTheDocument();
   }
 };
 

@@ -146,16 +146,18 @@ export function CommandPalette({
     [commands.length, enabledCount, filtered.length, getResultsStatusText, query]
   );
 
-  const firstEnabledIndex = React.useMemo(() => filtered.findIndex((command) => !command.disabled), [filtered]);
-  const lastEnabledIndex = React.useMemo(() => {
-    for (let index = filtered.length - 1; index >= 0; index -= 1) {
-      if (!filtered[index]?.disabled) {
-        return index;
-      }
-    }
-
-    return -1;
-  }, [filtered]);
+  const enabledIndices = React.useMemo(
+    () =>
+      filtered.reduce<number[]>((indices, command, index) => {
+        if (!command.disabled) {
+          indices.push(index);
+        }
+        return indices;
+      }, []),
+    [filtered]
+  );
+  const firstEnabledIndex = enabledIndices[0] ?? -1;
+  const lastEnabledIndex = enabledIndices[enabledIndices.length - 1] ?? -1;
 
   React.useEffect(() => {
     if (filtered.length === 0) {
@@ -230,6 +232,24 @@ export function CommandPalette({
         return;
       }
     }
+  };
+
+  const moveActiveIndexByPage = (direction: 1 | -1) => {
+    if (enabledIndices.length === 0) {
+      return;
+    }
+
+    const currentEnabledPosition = enabledIndices.indexOf(activeIndex);
+    if (currentEnabledPosition < 0) {
+      setActiveIndex(direction === 1 ? firstEnabledIndex : lastEnabledIndex);
+      return;
+    }
+
+    const nextEnabledPosition = Math.min(
+      enabledIndices.length - 1,
+      Math.max(0, currentEnabledPosition + direction * 5)
+    );
+    setActiveIndex(enabledIndices[nextEnabledPosition] ?? firstEnabledIndex);
   };
 
   return (
@@ -308,6 +328,18 @@ export function CommandPalette({
             if (event.key === "End") {
               event.preventDefault();
               setActiveIndex(lastEnabledIndex);
+              return;
+            }
+
+            if (event.key === "PageDown") {
+              event.preventDefault();
+              moveActiveIndexByPage(1);
+              return;
+            }
+
+            if (event.key === "PageUp") {
+              event.preventDefault();
+              moveActiveIndexByPage(-1);
               return;
             }
 
