@@ -194,6 +194,25 @@ export const EscapeDismissFocusReturn: Story = {
   }
 };
 
+export const TabDismissToNextControl: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <Dropdown label="Tab Flow Menu" items={items} />
+      <button type="button">After Menu Control</button>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Tab Flow Menu" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Tab Flow Menu" })).toBeInTheDocument();
+    await userEvent.keyboard("{Tab}");
+    await expect(canvas.queryByRole("menu", { name: "Tab Flow Menu" })).not.toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "After Menu Control" })).toHaveFocus();
+  }
+};
+
 export const NestedDismissOrder: Story = {
   render: () => (
     <Popover triggerLabel="Open container">

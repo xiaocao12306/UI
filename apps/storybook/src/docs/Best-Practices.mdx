@@ -59,11 +59,13 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For nested overlays, dismiss policy should resolve top-layer first so one Escape/outside click does not collapse the full stack.
 - Keep trigger `aria-controls` conditional on open state for popover/menu patterns to avoid stale ID references.
 - For dropdown typeahead, set `textValue` when item labels are non-string or need locale/accent-friendly buffered matching aliases.
+- Keep dropdown `Tab` behavior aligned with document order: close menu and continue focus to next control.
 - For icon-only popover/dropdown triggers, always provide `triggerAriaLabel` to preserve an explicit control name.
 - Command palette and combobox-style overlays should keep text input as the primary focus anchor for navigation.
 
 <Canvas of={DropdownStories.OutsideDismissFocusTransfer} />
 <Canvas of={DropdownStories.EscapeDismissFocusReturn} />
+<Canvas of={DropdownStories.TabDismissToNextControl} />
 
 ## Testing
 
