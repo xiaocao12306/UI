@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Toast } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Feedback/Toast",
@@ -161,6 +161,64 @@ export const FocusedToastEscapesFirst: Story = {
       <EscapeStackOrderDemo />
     </div>
   )
+};
+
+function EscapePreemptedDemo() {
+  const [open, setOpen] = React.useState(true);
+  const [preemptEscape, setPreemptEscape] = React.useState(true);
+
+  React.useEffect(() => {
+    if (!preemptEscape) {
+      return undefined;
+    }
+
+    const onKeyDownCapture = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDownCapture, true);
+    return () => {
+      document.removeEventListener("keydown", onKeyDownCapture, true);
+    };
+  }, [preemptEscape]);
+
+  return (
+    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Reopen Toast
+      </Button>
+      <Button variant="ghost" onClick={() => setPreemptEscape((value) => !value)}>
+        {preemptEscape ? "Disable global Escape handler" : "Enable global Escape handler"}
+      </Button>
+      <Toast
+        open={open}
+        onOpenChange={setOpen}
+        duration={0}
+        title="Global Escape override"
+        description="When upper-layer handlers preempt Escape, toast should stay open."
+        tone="info"
+      />
+    </div>
+  );
+}
+
+export const EscapePreemptedByGlobalHandler: Story = {
+  render: () => <EscapePreemptedDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const doc = canvasElement.ownerDocument;
+    await expect(canvas.getByRole("status", { name: "Global Escape override" })).toBeInTheDocument();
+
+    fireEvent.keyDown(doc, { key: "Escape" });
+    await expect(canvas.getByRole("status", { name: "Global Escape override" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Disable global Escape handler" }));
+    await expect(canvas.getByRole("button", { name: "Enable global Escape handler" })).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));
+    await expect(canvas.queryByRole("status", { name: "Global Escape override" })).not.toBeInTheDocument();
+  }
 };
 
 export const AriaLabelOverride: Story = {

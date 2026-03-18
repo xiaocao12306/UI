@@ -57,7 +57,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `Feedback/StreamingText` streaming/instant 完成态与 cursor 分支路径
   - `Feedback/Progress` determinate/indeterminate 语义路径
   - `Feedback/Alert` dismiss 分支与 live region 语义路径
-  - `Feedback/Toast` 关闭与重开流程
+  - `Feedback/Toast` 关闭与重开流程 + Escape 栈顺序/全局快捷键抢占分支
   - `Data/Tabs` 点击切换 + Home/End 键导航 + manual/vertical 模式键盘路径
   - `Data/Table` 排序切换与 `aria-sort` 状态同步
 
@@ -96,7 +96,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - `Docs/Component API`
 - `Docs/Component Catalog`
 - `Docs/Best Practices`
-- 核心边界示例：`CommandPalette/QueryTelemetry`、`CommandPalette/DisabledCommandGuard`、`Toast/ActionRequired`、`Tabs/KeyboardNavigationGuide`、`Table/SortTelemetry`
+- 核心边界示例：`CommandPalette/QueryTelemetry`、`CommandPalette/DisabledCommandGuard`、`Toast/ActionRequired`、`Toast/EscapePreemptedByGlobalHandler`、`Tabs/KeyboardNavigationGuide`、`Table/SortTelemetry`
 
 说明：预览层通过 toolbar 全局切换 `core-light/core-dark/glass/neo-brutal`，用于验证 token 与主题一致性。
 生产级验收矩阵：`docs/production-quality-checklist.md`
