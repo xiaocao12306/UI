@@ -124,6 +124,7 @@ function App() {
   const [palettePersistent, setPalettePersistent] = React.useState(false);
   const [paletteEscapeClearsQuery, setPaletteEscapeClearsQuery] = React.useState(true);
   const [paletteQueryTelemetry, setPaletteQueryTelemetry] = React.useState("");
+  const [popoverCloseReason, setPopoverCloseReason] = React.useState("none");
   const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
@@ -496,7 +497,7 @@ function App() {
             <Tooltip content="Runs a dry-run build">
               <Button variant="outline">Hover me</Button>
             </Tooltip>
-            <Popover triggerLabel="Open Popover">
+            <Popover triggerLabel="Open Popover" onCloseReason={setPopoverCloseReason}>
               <p style={{ margin: 0 }}>This popover is built with Aurora primitives.</p>
             </Popover>
             <Dropdown
@@ -515,6 +516,12 @@ function App() {
               Command Palette
             </Button>
           </div>
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            Popover close reason telemetry:{" "}
+            <strong data-testid="popover-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
+              {popoverCloseReason}
+            </strong>
+          </p>
           <div style={{ display: "grid", gap: 6, maxWidth: 300 }}>
             <label htmlFor="overlay-outside-target" style={{ color: "var(--aurora-text-secondary)", fontSize: 14 }}>
               Overlay outside focus target

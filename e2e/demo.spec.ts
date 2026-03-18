@@ -700,6 +700,28 @@ test("keeps popover open when Escape is preempted by a global handler", async ({
   await expect(popover).toBeHidden();
 });
 
+test("reports popover close reason telemetry for trigger, Escape, and outside pointer", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Open Popover" });
+  const telemetry = page.getByTestId("popover-close-reason-demo");
+  const outsideTarget = page.getByLabel("Overlay outside focus target");
+
+  await expect(telemetry).toHaveText("none");
+
+  await trigger.click();
+  await page.keyboard.press("Escape");
+  await expect(telemetry).toHaveText("escape-key");
+
+  await trigger.click();
+  await outsideTarget.click();
+  await expect(telemetry).toHaveText("outside-pointer");
+
+  await trigger.click();
+  await trigger.click();
+  await expect(telemetry).toHaveText("trigger-click");
+});
+
 test("opens dropdown using keyboard", async ({ page }) => {
   await page.goto("/");
 
