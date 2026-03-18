@@ -14,6 +14,7 @@ pnpm storybook:smoke
 pnpm storybook:build
 pnpm storybook:docs:check
 pnpm storybook:coverage:report
+pnpm storybook:coverage:check
 pnpm storybook:static:check
 pnpm storybook:test
 pnpm storybook:test:ci
@@ -34,9 +35,10 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - 入口脚本：
   - `storybook:docs:check`：校验 docs MDX 中 `*Stories` 引用是否都有对应 import，并验证 `of={XStories.Y}` 中 `Y` 在故事文件里真实导出，避免文档页运行时 `ReferenceError` / `Missing story export`
   - `storybook:coverage:report`：统计 `apps/storybook/src/stories/*.stories.*` 覆盖率清单，输出 docs import/reference 覆盖率、未被 docs 引用的 story 文件、以及 docs 引用校验摘要（缺失 import / 缺失 story 文件 / 缺失导出 / 未使用 import）；附加 `--strict` 时如存在门禁问题会非 0 退出
+  - `storybook:coverage:check`：`storybook:coverage:report -- --strict` 的门禁封装，适用于 CI
   - `storybook:static:check`：先执行 `build-storybook`，再通过 `git status -- apps/storybook/storybook-static` 校验静态产物是否同步；有 diff 会直接失败并提示提交静态更新
   - `storybook:test`：针对已运行的 Storybook URL 执行交互测试
-- `storybook:test:ci`：先执行 `storybook:docs:check` + `storybook:static:check`，再在本地静态产物（`storybook-static`）上通过 `scripts/serve-storybook-static.mjs` 启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
+- `storybook:test:ci`：先执行 `storybook:coverage:check` + `storybook:docs:check` + `storybook:static:check`，再在本地静态产物（`storybook-static`）上通过 `scripts/serve-storybook-static.mjs` 启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
 - 当前已覆盖 play 场景：
   - `Core/Button` 键盘激活 + loading 禁用分支
   - `Core/Tag` MetadataRow/AI context 可见性断言
