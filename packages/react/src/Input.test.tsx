@@ -5,7 +5,9 @@ import { Input } from "./Input";
 describe("Input", () => {
   it("renders with placeholder text", () => {
     render(<Input placeholder="Search" />);
-    expect(screen.getByPlaceholderText("Search")).toBeInTheDocument();
+    const input = screen.getByPlaceholderText("Search");
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveAttribute("data-aurora-input", "true");
   });
 
   it("applies invalid accessibility attributes", () => {

@@ -13,6 +13,9 @@ export function GlobalStyles() {
       }
       * { box-sizing: border-box; }
       body { margin: 0; }
+      input[data-aurora-input="true"]::placeholder {
+        color: var(--aurora-input-placeholder);
+      }
       `}
     </style>
   );

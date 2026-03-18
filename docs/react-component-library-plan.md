@@ -304,6 +304,7 @@
   - Button 键盘兼容收口（补齐 legacy `Spacebar` 激活键值，统一 pressed 态反馈分支）
   - Button 运行时状态收口（按下态切换到 `loading/disabled` 时立即清理 pressed 偏移视觉）
   - Button 焦点反馈收口（仅 `focus-visible` 显示焦点环，避免鼠标点击触发键盘焦点样式）
+  - Input 占位符 token 收口（通过 `data-aurora-input` + `GlobalStyles ::placeholder` 让 `--aurora-input-placeholder` 真正生效）
   - 表单 invalid token 语义收口（`aria-invalid=\"grammar|spelling\"` 跨 Input/Select/Textarea/DatePicker/Checkbox/RadioGroup/Switch/FormField 保留原值）
   - FormField invalid 优先级收口（字段 `error` 覆盖子控件 grammar/spelling token，避免冲突播报）
   - Storybook invalid token 验收（新增 `Form/Input/InvalidTokenSemantics` play 断言，锁定 grammar token 语义）

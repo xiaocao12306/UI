@@ -30,6 +30,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
     <input
       ref={ref}
       disabled={disabled}
+      data-aurora-input="true"
       aria-invalid={resolvedInvalidAria}
       data-invalid={isInvalid ? "true" : undefined}
       data-focused={focused ? "true" : undefined}
