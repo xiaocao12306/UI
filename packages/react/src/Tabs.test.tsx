@@ -132,11 +132,15 @@ describe("Tabs", () => {
     expect(onePanel).not.toBeNull();
     expect(twoPanel).not.toBeNull();
     expect(onePanel).not.toHaveAttribute("hidden");
+    expect(onePanel).toHaveAttribute("tabindex", "0");
     expect(twoPanel).toHaveAttribute("hidden");
+    expect(twoPanel).toHaveAttribute("tabindex", "-1");
 
     fireEvent.click(twoTab);
     expect(onePanel).toHaveAttribute("hidden");
+    expect(onePanel).toHaveAttribute("tabindex", "-1");
     expect(twoPanel).not.toHaveAttribute("hidden");
+    expect(twoPanel).toHaveAttribute("tabindex", "0");
   });
 
   it("skips disabled tabs during keyboard navigation", () => {

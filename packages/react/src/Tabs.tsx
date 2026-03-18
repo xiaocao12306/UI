@@ -227,6 +227,7 @@ export function Tabs({
             id={`${baseId}-panel-${item.key}`}
             role="tabpanel"
             aria-labelledby={`${baseId}-tab-${item.key}`}
+            tabIndex={selected ? 0 : -1}
             hidden={!selected}
             style={{
               display: selected ? undefined : "none",

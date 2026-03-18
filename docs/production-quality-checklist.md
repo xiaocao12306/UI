@@ -93,6 +93,7 @@
 - Demo tabs parity: Playwright now covers manual-activation `Space` path so Enter/Space semantics stay aligned with Tabs API contract.
 - Tabs cross-browser keyboard parity: manual activation now accepts legacy `Spacebar` key value, with dedicated unit regression coverage.
 - Tabs keyboard parity extension: manual activation now also accepts modern `Space` key value, and Storybook manual-flow interactions explicitly validate the Space activation path.
+- Tabs panel-focus parity: active `tabpanel` now exposes `tabIndex=0` while inactive panels stay `-1`, ensuring keyboard users can reliably enter panel content.
 - Tabs telemetry de-dup hardening: manual mode now ignores follow-up keyboard-generated click (`detail=0`) after key activation, preventing duplicate `onValueChange` emissions.
 - Storybook Tag stability hardening: `Core/Tag/MetadataRow` now has explicit play assertions to reduce interaction-runner navigation retry noise.
 - Storybook Toast stability hardening: `Feedback/Toast/ToneMatrix` now uses `duration={0}` so baseline stories stay deterministic during interaction-runner sweeps.
