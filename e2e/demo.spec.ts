@@ -1151,6 +1151,23 @@ test("reports toast close reason telemetry for Escape, close button, and timeout
   await expect(telemetry).toHaveText("timeout", { timeout: 6000 });
 });
 
+test("renders actionable toast with dialog semantics and handles action click", async ({ page }) => {
+  await page.goto("/");
+
+  const handledCount = page.getByTestId("action-toast-handled-count");
+  await expect(handledCount).toHaveText("0");
+
+  await page.getByRole("button", { name: "Trigger action toast" }).click();
+  const actionToast = page.getByRole("dialog", { name: "Release approval action required" });
+  await expect(actionToast).toBeVisible();
+  await expect(actionToast).toHaveAttribute("aria-modal", "false");
+  await expect(actionToast).not.toHaveAttribute("aria-live");
+
+  await page.getByRole("button", { name: "Acknowledge approval action" }).click();
+  await expect(actionToast).toBeHidden();
+  await expect(handledCount).toHaveText("1");
+});
+
 test("dismisses toast with escape key", async ({ page }) => {
   await page.goto("/");
 

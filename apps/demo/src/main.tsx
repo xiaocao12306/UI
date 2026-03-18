@@ -436,6 +436,7 @@ function App() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [toastOpen, setToastOpen] = React.useState(false);
   const [toastTelemetryOpen, setToastTelemetryOpen] = React.useState(false);
+  const [actionToastOpen, setActionToastOpen] = React.useState(false);
   const [silentToastOpen, setSilentToastOpen] = React.useState(false);
   const [blockingToastOpen, setBlockingToastOpen] = React.useState(false);
   const [stackedToastOpen, setStackedToastOpen] = React.useState({ first: false, second: false });
@@ -451,6 +452,7 @@ function App() {
   const [dialogCloseReason, setDialogCloseReason] = React.useState("none");
   const [drawerCloseReason, setDrawerCloseReason] = React.useState("none");
   const [toastCloseReason, setToastCloseReason] = React.useState("none");
+  const [actionToastHandledCount, setActionToastHandledCount] = React.useState(0);
   const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
@@ -821,6 +823,9 @@ function App() {
             <Button variant="outline" onClick={() => setToastTelemetryOpen(true)}>
               Trigger telemetry toast
             </Button>
+            <Button variant="outline" onClick={() => setActionToastOpen(true)}>
+              Trigger action toast
+            </Button>
             <Button variant="outline" onClick={() => setSilentToastOpen(true)}>
               Trigger silent toast
             </Button>
@@ -844,6 +849,12 @@ function App() {
             Toast close reason telemetry:{" "}
             <strong data-testid="toast-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
               {toastCloseReason}
+            </strong>
+          </p>
+          <p style={mutedBodyStyle}>
+            Action toast handled count:{" "}
+            <strong data-testid="action-toast-handled-count" style={{ color: "var(--aurora-text-primary)" }}>
+              {actionToastHandledCount}
             </strong>
           </p>
           <Progress value={62} />
@@ -1085,6 +1096,26 @@ function App() {
           duration={900}
           closeLabel="Dismiss telemetry toast"
           position="bottom-left"
+        />
+        <Toast
+          open={actionToastOpen}
+          onClose={() => setActionToastOpen(false)}
+          title="Release approval action required"
+          description="Review release blockers before publish."
+          duration={0}
+          position="top-left"
+          closeLabel="Dismiss approval action toast"
+          action={
+            <Button
+              size="sm"
+              onClick={() => {
+                setActionToastHandledCount((current) => current + 1);
+                setActionToastOpen(false);
+              }}
+            >
+              Acknowledge approval action
+            </Button>
+          }
         />
         <Toast
           open={silentToastOpen}

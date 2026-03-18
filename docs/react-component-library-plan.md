@@ -399,6 +399,7 @@
   - Demo CommandPalette 翻页键验收（新增键盘提示文案 + Playwright `PageUp/PageDown` 回归，锁定禁用项跳过行为）
   - Toast 关闭回调契约收口（单测锁定 `onCloseReason -> onClose -> onOpenChange(false)` 顺序，并同步 Component API / Best Practices）
   - Toast 动作语义收口（`action` 存在时切换为 `dialog/alertdialog` 语义，避免可交互通知被当作纯 live-region）
+  - Demo Toast 动作语义验收（新增 action toast 场景 + Playwright 回归，锁定 `dialog` 语义与业务按钮闭环）
   - Toast 同角堆叠可见性收口（同一 viewport 角落的多条通知自动偏移，避免视觉重叠与信息遮挡）
   - Storybook Toast 堆叠可见性验收（新增 `StackedViewportOffset` 场景，断言旧通知偏移与新通知贴边）
   - Demo 首屏门禁文案收口（移除易过期的硬编码验收数字，改为稳定门禁状态表达）
