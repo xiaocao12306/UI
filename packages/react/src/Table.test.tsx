@@ -258,6 +258,7 @@ describe("Table", () => {
 
   it("supports keyboard activation on sortable headers", async () => {
     const onSortChange = vi.fn();
+    const user = userEvent.setup();
 
     render(
       <Table
@@ -275,14 +276,13 @@ describe("Table", () => {
     );
 
     const sortDescending = screen.getByRole("button", { name: "Name sort descending" });
-    sortDescending.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.tab();
+    expect(sortDescending).toHaveFocus();
+    await user.keyboard("{Enter}");
     expect(onSortChange).toHaveBeenNthCalledWith(1, "name", "desc");
     expect(onSortChange).toHaveBeenCalledTimes(1);
 
-    const sortAscending = screen.getByRole("button", { name: "Name sort ascending" });
-    sortAscending.focus();
-    fireEvent.keyDown(sortAscending, { key: " " });
+    await user.keyboard("{Space}");
     expect(onSortChange).toHaveBeenNthCalledWith(2, "name", "asc");
     expect(onSortChange).toHaveBeenCalledTimes(2);
   });

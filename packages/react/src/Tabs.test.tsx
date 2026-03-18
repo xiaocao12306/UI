@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Tabs } from "./Tabs";
 
@@ -108,7 +109,8 @@ describe("Tabs", () => {
     expect(screen.getByRole("tab", { name: "One" })).toHaveFocus();
   });
 
-  it("ignores ArrowUp and ArrowDown in horizontal orientation", () => {
+  it("ignores ArrowUp and ArrowDown in horizontal orientation", async () => {
+    const user = userEvent.setup();
     render(
       <Tabs
         defaultValue="one"
@@ -120,17 +122,19 @@ describe("Tabs", () => {
     );
 
     const oneTab = screen.getByRole("tab", { name: "One" });
-    oneTab.focus();
-    fireEvent.keyDown(oneTab, { key: "ArrowDown" });
+    await user.tab();
+    expect(oneTab).toHaveFocus();
+    await user.keyboard("{ArrowDown}");
     expect(oneTab).toHaveFocus();
     expect(screen.getByText("Panel One")).toBeInTheDocument();
 
-    fireEvent.keyDown(oneTab, { key: "ArrowUp" });
+    await user.keyboard("{ArrowUp}");
     expect(oneTab).toHaveFocus();
     expect(screen.getByText("Panel One")).toBeInTheDocument();
   });
 
-  it("ignores ArrowLeft and ArrowRight in vertical orientation", () => {
+  it("ignores ArrowLeft and ArrowRight in vertical orientation", async () => {
+    const user = userEvent.setup();
     render(
       <Tabs
         defaultValue="one"
@@ -143,12 +147,13 @@ describe("Tabs", () => {
     );
 
     const oneTab = screen.getByRole("tab", { name: "One" });
-    oneTab.focus();
-    fireEvent.keyDown(oneTab, { key: "ArrowRight" });
+    await user.tab();
+    expect(oneTab).toHaveFocus();
+    await user.keyboard("{ArrowRight}");
     expect(oneTab).toHaveFocus();
     expect(screen.getByText("Panel One")).toBeInTheDocument();
 
-    fireEvent.keyDown(oneTab, { key: "ArrowLeft" });
+    await user.keyboard("{ArrowLeft}");
     expect(oneTab).toHaveFocus();
     expect(screen.getByText("Panel One")).toBeInTheDocument();
   });
