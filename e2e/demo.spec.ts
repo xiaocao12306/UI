@@ -60,6 +60,39 @@ test("opens and dismisses dialog with keyboard", async ({ page }) => {
   await expect(dialog).toBeHidden();
 });
 
+test("keeps dialog open when Escape is preempted by a global handler", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Dialog" }).click();
+  const dialog = page.getByRole("dialog").filter({ hasText: "Dialog Example" });
+  await expect(dialog).toBeVisible();
+
+  await page.evaluate(() => {
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+    (window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }).__demoPreemptEscape =
+      preemptEscape;
+    document.addEventListener("keydown", preemptEscape, true);
+  });
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeVisible();
+
+  await page.evaluate(() => {
+    const globalWindow = window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void };
+    if (globalWindow.__demoPreemptEscape) {
+      document.removeEventListener("keydown", globalWindow.__demoPreemptEscape, true);
+      delete globalWindow.__demoPreemptEscape;
+    }
+  });
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+});
+
 test("opens and dismisses drawer with keyboard", async ({ page }) => {
   await page.goto("/");
 
@@ -67,6 +100,39 @@ test("opens and dismisses drawer with keyboard", async ({ page }) => {
   const drawer = page.getByRole("dialog", { name: "Drawer Example" });
   await expect(drawer).toBeVisible();
   await expect(drawer).toContainText("Contextual panel for filters, details, and quick actions.");
+
+  await page.keyboard.press("Escape");
+  await expect(drawer).toBeHidden();
+});
+
+test("keeps drawer open when Escape is preempted by a global handler", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Drawer" }).click();
+  const drawer = page.getByRole("dialog", { name: "Drawer Example" });
+  await expect(drawer).toBeVisible();
+
+  await page.evaluate(() => {
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+    (window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }).__demoPreemptEscape =
+      preemptEscape;
+    document.addEventListener("keydown", preemptEscape, true);
+  });
+
+  await page.keyboard.press("Escape");
+  await expect(drawer).toBeVisible();
+
+  await page.evaluate(() => {
+    const globalWindow = window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void };
+    if (globalWindow.__demoPreemptEscape) {
+      document.removeEventListener("keydown", globalWindow.__demoPreemptEscape, true);
+      delete globalWindow.__demoPreemptEscape;
+    }
+  });
 
   await page.keyboard.press("Escape");
   await expect(drawer).toBeHidden();

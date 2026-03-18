@@ -260,7 +260,7 @@
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
-  - Release Gate 证据刷新（2026-03-18：demo E2E `47` + Storybook `160/160` + dry-run `react` unpacked `~301.7 kB`）
+  - Release Gate 证据刷新（2026-03-18：demo E2E `49` + Storybook `160/160` + dry-run `react` unpacked `~301.7 kB`）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
   - CommandPalette Escape 查询收口（新增 `clearQueryOnEscape` 默认行为：首次 Escape 清空 query，二次 Escape 再触发关闭）
@@ -303,7 +303,7 @@
   - Storybook Dropdown 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
   - Storybook CommandPalette 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
   - Storybook Dialog/Drawer 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
-  - Demo Escape 抢占验收扩展（CommandPalette/Dropdown 新增 Playwright 回归，锁定全局抢占后保持打开，解除抢占后恢复正常关闭）
+  - Demo Escape 抢占验收扩展（Dialog/Drawer/CommandPalette/Dropdown 新增 Playwright 回归，锁定全局抢占后保持打开，解除抢占后恢复正常关闭）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中
