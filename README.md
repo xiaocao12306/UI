@@ -87,7 +87,16 @@ pnpm chromatic
   - `https://xiaocao12306.github.io/UI/storybook/`
 - To refresh this link after Storybook changes:
   - `pnpm storybook:build`
-  - `git add apps/storybook/storybook-static && git commit -m "build(storybook): refresh static bundle" && git push`
+  - `git add apps/storybook/storybook-static && git commit -m "构建(静态站): 刷新 Storybook 产物" && git push`
+
+## Commit 规范
+- 统一格式：`类型(范围): 中文说明`
+- 推荐类型：`功能` / `修复` / `文档` / `测试` / `构建` / `重构` / `工程`
+- 示例：
+  - `功能(表格): 补充空态排序提示`
+  - `修复(命令面板): 修正关闭原因状态重置`
+  - `文档(Storybook): 更新组件用法说明`
+  - `构建(静态站): 刷新 Storybook 产物`
 
 ## Release Workflow
 - automated workflow: `.github/workflows/release.yml`

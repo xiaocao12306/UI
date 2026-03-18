@@ -60,7 +60,8 @@
 
 ## 7. 工程规范
 - 分支模型：`main` + `feature/*`。
-- 提交规范：Conventional Commits。
+- 提交规范：Conventional Commits + 中文说明，统一格式 `类型(范围): 中文说明`。
+  - 推荐示例：`功能(表格): 补充空态排序提示`、`修复(命令面板): 修正关闭原因状态重置`、`文档(Storybook): 更新组件用法说明`、`构建(静态站): 刷新 Storybook 产物`。
 - 版本管理：Changesets。
 - 组件准入门槛：
   - API 设计文档
