@@ -127,7 +127,7 @@
   - Secrets 配置文档（`docs/secrets.md`）及 README 引导
   - 发布 dry-run 验证（`changeset version` + `npm publish --dry-run`）
   - 发布 dry-run 复验（生产级返工后再次验证 3 个包 tarball 清单与体积）
-  - 发布前置校验脚本（`pnpm release:preflight` 检查 Chromatic/NPM token 并输出缺失提示）
+  - 发布前置校验脚本（`pnpm release:preflight` + `release:preflight:chromatic/publish` 按 scope 检查 token 并输出缺失提示）
   - 发布 dry-run 自动化（`pnpm release:dry-run` 脚本 + `.github/workflows/release-dry-run.yml`）
   - 发布 dry-run 无副作用收口（要求干净工作区并在执行后自动回滚 `changeset version` 文件改动）
   - 发布 dry-run 自动发现收口（按 `packages/*` 自动发现可发布包，避免新增包漏检）

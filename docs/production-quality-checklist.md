@@ -66,6 +66,7 @@
 - Toast close lifecycle parity: manual close now suppresses timeout duplicate callbacks in the same open cycle.
 - Toast escape-stack parity: when top toast disables Escape, dismissal now falls through to the nearest escapable toast.
 - Release dry-run package discovery parity: publish dry-run now auto-discovers non-private packages under `packages/*` and records skipped/no-package state in summary.
+- Release preflight scope parity: `release:preflight` now supports `--scope=all|chromatic|publish`, matching optional Chromatic vs required publish validation workflows.
 - Table live-region parity: empty datasets now suppress sort-status live narration so empty-state messaging remains single-source.
 - Token integrity parity: added `--aurora-color-amber-500` to global tokens so warning-tone Progress/Empty no longer depend on undefined CSS vars.
 - Drawer close-button parity: close control now matches Dialog/Toast hover/active/focus-visible treatment for overlay-level interaction consistency.

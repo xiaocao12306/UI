@@ -122,7 +122,8 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 
 - 工作流：`.github/workflows/chromatic.yml`
 - 接入文档：`docs/chromatic.md`
-- 若仓库未配置 `CHROMATIC_PROJECT_TOKEN`，工作流会自动跳过上传并提示配置方式
+- 默认模式（`enforce=false`）：若仓库未配置 `CHROMATIC_PROJECT_TOKEN`，工作流会自动跳过上传并提示配置方式
+- 审核模式（`workflow_dispatch` + `enforce=true`）：缺失 token 会升级为硬失败，避免发布验收误判为已完成视觉回归
 
 ## 外部预览
 

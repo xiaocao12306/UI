@@ -104,9 +104,12 @@ pnpm chromatic
 - release PR generation uses Changesets on `main`
 - npm publish runs only when `NPM_TOKEN` is configured
 - secrets setup guide: `docs/secrets.md`
-- local preflight: `pnpm release:preflight` (checks `CHROMATIC_PROJECT_TOKEN` + `NPM_TOKEN`)
+- local preflight:
+  - `pnpm release:preflight` (`CHROMATIC_PROJECT_TOKEN` + `NPM_TOKEN`)
+  - `pnpm release:preflight:chromatic` (`CHROMATIC_PROJECT_TOKEN` only)
+  - `pnpm release:preflight:publish` (`NPM_TOKEN` only)
 - local CI-equivalent gate: `pnpm release:gate:ci` (`verify + demo:e2e + demo:dist:check + storybook:test:ci`)
-- local publish dry-run: `pnpm release:dry-run` (runs `changeset version` + 3 package `npm publish --dry-run`)
+- local publish dry-run: `pnpm release:dry-run` (runs `changeset version` + auto-discovered publishable packages `npm publish --dry-run`)
   - requires clean working tree and auto-reverts dry-run version file edits
 - full pre-release gate: `pnpm release:gate` (`release:gate:ci` + `release:dry-run`)
 

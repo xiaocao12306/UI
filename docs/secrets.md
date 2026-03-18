@@ -5,11 +5,17 @@
 - `CHROMATIC_PROJECT_TOKEN`：Storybook 视觉回归上传
 - `NPM_TOKEN`：Changesets 自动发布到 npm
 
-建议先执行一次本地预检：
+建议先执行本地预检（按目标选择 scope）：
 
 ```bash
 pnpm release:preflight
+pnpm release:preflight:chromatic
+pnpm release:preflight:publish
 ```
+
+- `release:preflight`：检查 `CHROMATIC_PROJECT_TOKEN + NPM_TOKEN`
+- `release:preflight:chromatic`：仅检查 `CHROMATIC_PROJECT_TOKEN`
+- `release:preflight:publish`：仅检查 `NPM_TOKEN`
 
 ## CHROMATIC_PROJECT_TOKEN
 

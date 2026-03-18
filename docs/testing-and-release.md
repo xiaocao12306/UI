@@ -52,12 +52,16 @@ Run this before Chromatic upload or npm publish:
 
 ```bash
 pnpm release:preflight
+pnpm release:preflight:chromatic
+pnpm release:preflight:publish
 ```
 
 Expected behavior:
 
-- both `CHROMATIC_PROJECT_TOKEN` and `NPM_TOKEN` exist: command exits with code `0`
-- any missing token: command prints `MISSING` line(s), points to `docs/secrets.md`, and exits with code `1`
+- `release:preflight`: checks `CHROMATIC_PROJECT_TOKEN + NPM_TOKEN`
+- `release:preflight:chromatic`: checks `CHROMATIC_PROJECT_TOKEN` only
+- `release:preflight:publish`: checks `NPM_TOKEN` only
+- any missing token in selected scope: command prints `MISSING` line(s), points to `docs/secrets.md`, and exits with code `1`
 
 ## Versioning
 
@@ -165,7 +169,7 @@ This runs:
 1. `pnpm verify`
 2. `pnpm demo:e2e`
 3. `pnpm demo:dist:check`
-4. `pnpm storybook:test:ci`（内含 `storybook:docs:check` + `storybook:static:check`）
+4. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:static:check`）
 
 Full local pre-release gate (includes tarball evidence):
 
