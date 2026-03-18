@@ -32,7 +32,14 @@ export const MetadataRow: Story = {
       <Tag>design-system</Tag>
       <Tag style={{ borderColor: "var(--aurora-color-blue-500)", color: "var(--aurora-color-blue-500)" }}>priority</Tag>
     </div>
-  )
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("cloud")).toBeInTheDocument();
+    await expect(canvas.getByText("frontend")).toBeInTheDocument();
+    await expect(canvas.getByText("design-system")).toBeInTheDocument();
+    await expect(canvas.getByText("priority")).toBeInTheDocument();
+  }
 };
 
 export const AiContextMarkers: Story = {

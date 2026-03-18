@@ -33,6 +33,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `storybook:test:ci`：在本地静态产物（`storybook-static`）上启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
 - 当前已覆盖 play 场景：
   - `Core/Button` 键盘激活 + loading 禁用分支
+  - `Core/Tag` MetadataRow/AI context 可见性断言
   - `Form/Input` blur 校验 + 输入计数 + 提交禁用分支
   - `Form/Checkbox` 勾选切换、mixed 状态与 invalid/disabled 展示路径
   - `Form/RadioGroup` 选项切换、禁用项和 invalid 语义路径
