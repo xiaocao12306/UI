@@ -331,6 +331,21 @@ test("keeps outside pointer target focus after dropdown dismiss", async ({ page 
   await expect(outsideTarget).toBeFocused();
 });
 
+test("tabs out of dropdown menu and moves focus to next control", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  const nextButton = page.getByRole("button", { name: "Open Dialog" });
+
+  await trigger.focus();
+  await trigger.press("ArrowDown");
+  await expect(page.getByRole("menu")).toBeVisible();
+
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("menu")).toBeHidden();
+  await expect(nextButton).toBeFocused();
+});
+
 test("dismisses toast with escape key", async ({ page }) => {
   await page.goto("/");
 

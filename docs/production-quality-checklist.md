@@ -79,6 +79,7 @@
 - Demo Table loading coverage: added runtime loading toggle and Playwright regression for `aria-busy`, disabled sort controls, and stale-row suppression.
 - Demo Table empty-state coverage: added runtime empty toggle and Playwright regression asserting empty copy plus disabled sortable headers.
 - Demo Dropdown focus-policy coverage: added outside-focus target and Playwright regressions for Escape trigger focus return + outside pointer focus retention.
+- Demo Dropdown Tab flow coverage: added Playwright regression asserting menu closes on Tab and focus continues to the next actionable control.
 - Storybook Dropdown focus-policy coverage: added explicit `EscapeDismissFocusReturn` interaction scenario to lock trigger focus restoration on keyboard dismiss.
 - Storybook docs parity: `Component API` and `Best Practices` now both include Dropdown focus-policy canvases for implementation + QA alignment.
 - Dropdown unit focus-policy branch: added explicit outside-target focus retention assertion so pointer dismiss cannot regress into trigger focus theft.
