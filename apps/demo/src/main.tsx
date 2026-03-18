@@ -522,8 +522,8 @@ function App() {
                   Token-first React component library with AI interaction patterns. Current theme: <strong>{theme}</strong>
                 </p>
                 <div className="demo-hero-badge-row" style={heroBadgeRowStyle}>
-                  <Badge tone="success">32 Storybook suites green</Badge>
-                  <Badge>60 Demo E2E checks</Badge>
+                  <Badge tone="success">Storybook interaction gate green</Badge>
+                  <Badge>Demo E2E gate green</Badge>
                   <Tag>Design-token driven</Tag>
                   <Tag>Overlay + AI ready</Tag>
                 </div>
