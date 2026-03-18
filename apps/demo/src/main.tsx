@@ -119,6 +119,7 @@ function App() {
   const [stackedToastOpen, setStackedToastOpen] = React.useState({ first: false, second: false });
   const [paletteOpen, setPaletteOpen] = React.useState(false);
   const [paletteBlocking, setPaletteBlocking] = React.useState(false);
+  const [paletteDismissGuard, setPaletteDismissGuard] = React.useState(false);
   const [palettePersistent, setPalettePersistent] = React.useState(false);
   const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
@@ -523,6 +524,12 @@ function App() {
             description="Disable Escape and outside-click dismissal for approval workflows."
           />
           <Switch
+            checked={paletteDismissGuard}
+            onCheckedChange={setPaletteDismissGuard}
+            label="Guard palette dismiss via event hooks"
+            description="Use onEscapeKeyDown/onPointerDownOutside with preventDefault() while enabled."
+          />
+          <Switch
             checked={palettePersistent}
             onCheckedChange={setPalettePersistent}
             label="Keep palette open after command select"
@@ -578,6 +585,16 @@ function App() {
           closeOnSelect={!palettePersistent}
           closeOnEscape={!paletteBlocking}
           closeOnOutsidePointer={!paletteBlocking}
+          onEscapeKeyDown={(event) => {
+            if (paletteDismissGuard) {
+              event.preventDefault();
+            }
+          }}
+          onPointerDownOutside={(event) => {
+            if (paletteDismissGuard) {
+              event.preventDefault();
+            }
+          }}
           commands={[
             { key: "open-settings", label: "Open Settings", keywords: ["preferences", "config"] },
             {

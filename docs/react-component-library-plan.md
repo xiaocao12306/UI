@@ -215,6 +215,7 @@
   - CommandPalette 关闭策略收口（`closeOnEscape`/`closeOnOutsidePointer` 支持阻塞式审批流，避免误关闭）
   - CommandPalette 条件拦截收口（新增 `onEscapeKeyDown/onPointerDownOutside`，支持运行时 `preventDefault()` 审批守卫）
   - Demo 阻塞式命令面板模式（可切换 `closeOnEscape/closeOnOutsidePointer`）与 Playwright 外部点击/Escape 回归用例
+  - Demo 命令面板条件守卫收口（`onEscapeKeyDown/onPointerDownOutside` 运行时开关）与 Playwright 阻断/恢复回归
   - Demo 命令面板连续执行模式（`closeOnSelect=false`）与 Playwright 选择后保持打开回归
   - Demo 命令面板禁用项场景（`disabled` option 不可执行且保持打开）与 Playwright 回归
   - Demo 阻塞式 Toast 通知（`closeOnEscape={false}`）与 Playwright 显式关闭路径回归

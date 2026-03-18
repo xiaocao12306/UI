@@ -107,6 +107,34 @@ test("keeps command palette open when blocking dismiss mode is enabled", async (
   await expect(palette).toBeHidden();
 });
 
+test("guards command palette dismiss through event hooks when enabled", async ({ page }) => {
+  await page.goto("/");
+
+  const guardSwitch = page.getByRole("switch", { name: "Guard palette dismiss via event hooks" });
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await expect(palette).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeVisible();
+
+  await page.mouse.click(8, 8);
+  await expect(palette).toBeVisible();
+
+  await palette.getByRole("button", { name: "Close dialog" }).click();
+  await expect(palette).toBeHidden();
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  await expect(palette).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeHidden();
+});
+
 test("keeps command palette open after command select in persistent mode", async ({ page }) => {
   await page.goto("/");
 
