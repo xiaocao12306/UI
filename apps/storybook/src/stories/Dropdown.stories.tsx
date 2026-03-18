@@ -87,6 +87,57 @@ export const NonDismissible: Story = {
   }
 };
 
+function EscapePreemptedDropdown() {
+  const [open, setOpen] = React.useState(false);
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+
+  React.useEffect(() => {
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptEscape, true);
+    return () => {
+      document.removeEventListener("keydown", preemptEscape, true);
+    };
+  }, []);
+
+  return (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Escape hook calls:{" "}
+        <strong data-testid="dropdown-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <Dropdown
+        label="Preempted Escape Menu"
+        open={open}
+        onOpenChange={setOpen}
+        onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
+        items={items}
+      />
+    </div>
+  );
+}
+
+export const EscapePreemptedByGlobalHandler: Story = {
+  render: () => <EscapePreemptedDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Preempted Escape Menu" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Preempted Escape Menu" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("menu", { name: "Preempted Escape Menu" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-escape-calls")).toHaveTextContent("0");
+  }
+};
+
 function SelectionTelemetryDropdown() {
   const [selected, setSelected] = React.useState("none");
 
