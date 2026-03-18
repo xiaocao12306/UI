@@ -1,9 +1,16 @@
 import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { Dialog } from "./Dialog";
 import { Dropdown } from "./Dropdown";
+import { Drawer } from "./Drawer";
+import { resetBodyScrollLockForTests } from "./bodyScrollLock";
+
+afterEach(() => {
+  document.body.style.overflow = "";
+  resetBodyScrollLockForTests();
+});
 
 describe("Dialog", () => {
   it("calls onOpenChange(false) when close button clicked", () => {
@@ -81,6 +88,47 @@ describe("Dialog", () => {
         <p>Body</p>
       </Dialog>
     );
+    expect(document.body.style.overflow).toBe("");
+  });
+
+  it("keeps body scroll locked while another modal surface remains open", () => {
+    const { rerender } = render(
+      <>
+        <Dialog open onOpenChange={() => {}} title="Dialog lock">
+          <p>Dialog content</p>
+        </Dialog>
+        <Drawer open onOpenChange={() => {}} title="Drawer lock">
+          <p>Drawer content</p>
+        </Drawer>
+      </>
+    );
+
+    expect(document.body.style.overflow).toBe("hidden");
+
+    rerender(
+      <>
+        <Dialog open={false} onOpenChange={() => {}} title="Dialog lock">
+          <p>Dialog content</p>
+        </Dialog>
+        <Drawer open onOpenChange={() => {}} title="Drawer lock">
+          <p>Drawer content</p>
+        </Drawer>
+      </>
+    );
+
+    expect(document.body.style.overflow).toBe("hidden");
+
+    rerender(
+      <>
+        <Dialog open={false} onOpenChange={() => {}} title="Dialog lock">
+          <p>Dialog content</p>
+        </Dialog>
+        <Drawer open={false} onOpenChange={() => {}} title="Drawer lock">
+          <p>Drawer content</p>
+        </Drawer>
+      </>
+    );
+
     expect(document.body.style.overflow).toBe("");
   });
 

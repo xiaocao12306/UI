@@ -116,6 +116,7 @@
 - Tabs interaction hardening: `activationMode="manual"` decouples arrow-key focus movement from activation and supports Enter/Space commit.
 - Toast escape hardening: Escape now respects `defaultPrevented` so stacked notifications close one at a time.
 - Overlay focus-policy hardening: Popover/Dropdown now restore trigger focus on Escape while preserving outside pointer target focus on pointer dismiss.
+- Overlay scroll-lock hardening: Dialog/Drawer now share reference-counted body scroll lock, preventing premature unlock when multiple modal surfaces overlap.
 - DismissableLayer stack hardening: nested overlays now dismiss from top layer first on Escape/outside pointer, preventing multi-layer cascade closes.
 - Dialog nested overlay coverage: added `Dropdown in Dialog` Escape-order test + Storybook scenario to lock top-layer-first dismissal behavior.
 - Drawer nested overlay coverage: added `Dropdown in Drawer` Escape-order test + Storybook scenario to lock one-layer-per-Escape dismiss behavior.

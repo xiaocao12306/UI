@@ -1,5 +1,6 @@
 import * as React from "react";
 import { DismissableLayer, FocusScope, Portal } from "@aurora-ui/primitives";
+import { lockBodyScroll } from "./bodyScrollLock";
 
 export type DialogSize = "sm" | "md" | "lg";
 
@@ -44,15 +45,11 @@ export function Dialog({
   const descriptionId = React.useId();
 
   React.useEffect(() => {
-    if (!open || typeof document === "undefined") {
+    if (!open) {
       return;
     }
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
+    return lockBodyScroll();
   }, [open]);
 
   if (!open) {
