@@ -66,6 +66,7 @@
 - Table live-region parity: empty datasets now suppress sort-status live narration so empty-state messaging remains single-source.
 - Token integrity parity: added `--aurora-color-amber-500` to global tokens so warning-tone Progress/Empty no longer depend on undefined CSS vars.
 - Drawer close-button parity: close control now matches Dialog/Toast hover/active/focus-visible treatment for overlay-level interaction consistency.
+- Tabs idref parity: tab/panel `id` wiring now stays stable even when `items[].key` contains spaces, symbols, or non-Latin text.
 - CommandPalette focus model hardening: option nodes now stay out of tab order (`tabIndex=-1`) and preserve combobox focus on pointer selection for `aria-activedescendant` parity.
 - CommandPalette search hardening: `commands[].textValue` now supports non-string labels, and matching is accent-insensitive (`cafe` matches `Café`).
 - Table i18n hardening: `getSortAriaLabel` now enables localized sortable-header narration while preserving `aria-sort` behavior.

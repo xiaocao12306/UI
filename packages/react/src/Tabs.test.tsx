@@ -143,6 +143,30 @@ describe("Tabs", () => {
     expect(twoPanel).toHaveAttribute("tabindex", "0");
   });
 
+  it("keeps tab and panel id wiring stable when keys contain special characters", () => {
+    render(
+      <Tabs
+        defaultValue="Roadmap / 2026"
+        items={[
+          { key: "Roadmap / 2026", label: "Roadmap", content: <div>Roadmap panel</div> },
+          { key: "验收项 #1", label: "验收项", content: <div>验收 panel</div> }
+        ]}
+      />
+    );
+
+    const roadmapTab = screen.getByRole("tab", { name: "Roadmap" });
+    const acceptanceTab = screen.getByRole("tab", { name: "验收项" });
+    expect(roadmapTab.id).toMatch(/-tab-\d+$/);
+    expect(acceptanceTab.id).toMatch(/-tab-\d+$/);
+
+    const roadmapPanel = document.getElementById(roadmapTab.getAttribute("aria-controls") ?? "");
+    const acceptancePanel = document.getElementById(acceptanceTab.getAttribute("aria-controls") ?? "");
+    expect(roadmapPanel).not.toBeNull();
+    expect(acceptancePanel).not.toBeNull();
+    expect(roadmapPanel).toHaveAttribute("aria-labelledby", roadmapTab.id);
+    expect(acceptancePanel).toHaveAttribute("aria-labelledby", acceptanceTab.id);
+  });
+
   it("skips disabled tabs during keyboard navigation", () => {
     render(
       <Tabs

@@ -132,11 +132,11 @@ export function Tabs({
               ref={(node) => {
                 tabRefs.current[index] = node;
               }}
-              id={`${baseId}-tab-${item.key}`}
+              id={`${baseId}-tab-${index}`}
               type="button"
               role="tab"
               aria-selected={selected}
-              aria-controls={`${baseId}-panel-${item.key}`}
+              aria-controls={`${baseId}-panel-${index}`}
               aria-disabled={disabled || undefined}
               tabIndex={focusTargetValue === item.key ? 0 : -1}
               disabled={disabled}
@@ -218,15 +218,15 @@ export function Tabs({
         })}
       </div>
 
-      {items.map((item) => {
+      {items.map((item, index) => {
         const selected = item.key === currentValue;
 
         return (
           <div
             key={item.key}
-            id={`${baseId}-panel-${item.key}`}
+            id={`${baseId}-panel-${index}`}
             role="tabpanel"
-            aria-labelledby={`${baseId}-tab-${item.key}`}
+            aria-labelledby={`${baseId}-tab-${index}`}
             tabIndex={selected ? 0 : -1}
             hidden={!selected}
             style={{
