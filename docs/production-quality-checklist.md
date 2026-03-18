@@ -69,6 +69,7 @@
 - Tabs idref parity: tab/panel `id` wiring now stays stable even when `items[].key` contains spaces, symbols, or non-Latin text.
 - Demo productization parity: page shell now uses full-viewport themed background, and hero navigation/KPI cards expose clearer hover + focus-visible hierarchy.
 - Storybook docs gate parity: docs check now validates both `*Stories` imports and `of={XStories.Y}` export existence before interaction runner.
+- Toast timer continuity parity: hover/focus pauses now resume auto-dismiss with remaining time instead of resetting full duration.
 - CommandPalette focus model hardening: option nodes now stay out of tab order (`tabIndex=-1`) and preserve combobox focus on pointer selection for `aria-activedescendant` parity.
 - CommandPalette search hardening: `commands[].textValue` now supports non-string labels, and matching is accent-insensitive (`cafe` matches `Café`).
 - Table i18n hardening: `getSortAriaLabel` now enables localized sortable-header narration while preserving `aria-sort` behavior.

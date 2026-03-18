@@ -112,6 +112,9 @@ export function Toast({
   const rootRef = React.useRef<HTMLDivElement>(null);
   const closeButtonFocusIntentRef = React.useRef(true);
   const closeRequestedRef = React.useRef(false);
+  const timeoutRef = React.useRef<number | null>(null);
+  const timerStartedAtRef = React.useRef(0);
+  const remainingDurationRef = React.useRef(duration);
   const [pauseState, setPauseState] = React.useState({ hover: false, focus: false });
   const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
   const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
@@ -139,6 +142,14 @@ export function Toast({
     closeRequestedRef.current = false;
   }, [open]);
 
+  const clearCloseTimer = React.useCallback(() => {
+    if (timeoutRef.current !== null) {
+      window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    timerStartedAtRef.current = 0;
+  }, []);
+
   const close = React.useCallback(
     (reason: ToastCloseReason) => {
       if (closeRequestedRef.current) {
@@ -146,11 +157,12 @@ export function Toast({
       }
 
       closeRequestedRef.current = true;
+      clearCloseTimer();
       onCloseReason?.(reason);
       onClose?.();
       onOpenChange?.(false);
     },
-    [onClose, onCloseReason, onOpenChange]
+    [clearCloseTimer, onClose, onCloseReason, onOpenChange]
   );
 
   const closeByButton = React.useCallback(() => {
@@ -173,19 +185,64 @@ export function Toast({
     pushToastToStack(element);
   }, [open]);
 
-  React.useEffect(() => {
-    if (!open || duration <= 0 || (pauseOnHover && paused)) {
+  const startCloseTimer = React.useCallback(
+    (timeoutMs: number) => {
+      if (timeoutMs <= 0) {
+        closeByTimeout();
+        return;
+      }
+
+      clearCloseTimer();
+      remainingDurationRef.current = timeoutMs;
+      timerStartedAtRef.current = Date.now();
+      timeoutRef.current = window.setTimeout(() => {
+        timeoutRef.current = null;
+        timerStartedAtRef.current = 0;
+        remainingDurationRef.current = 0;
+        closeByTimeout();
+      }, timeoutMs);
+    },
+    [clearCloseTimer, closeByTimeout]
+  );
+
+  const pauseCloseTimer = React.useCallback(() => {
+    if (timeoutRef.current === null || timerStartedAtRef.current === 0) {
       return;
     }
 
-    const timer = window.setTimeout(() => {
-      closeByTimeout();
-    }, duration);
+    const elapsed = Date.now() - timerStartedAtRef.current;
+    remainingDurationRef.current = Math.max(0, remainingDurationRef.current - elapsed);
+    clearCloseTimer();
+  }, [clearCloseTimer]);
 
+  React.useEffect(() => {
+    clearCloseTimer();
+    remainingDurationRef.current = duration;
+
+    if (!open || duration <= 0) {
+      return;
+    }
+
+    startCloseTimer(duration);
     return () => {
-      window.clearTimeout(timer);
+      clearCloseTimer();
     };
-  }, [closeByTimeout, duration, open, pauseOnHover, paused]);
+  }, [clearCloseTimer, duration, open, startCloseTimer]);
+
+  React.useEffect(() => {
+    if (!open || duration <= 0 || !pauseOnHover) {
+      return;
+    }
+
+    if (paused) {
+      pauseCloseTimer();
+      return;
+    }
+
+    if (timeoutRef.current === null) {
+      startCloseTimer(remainingDurationRef.current);
+    }
+  }, [duration, open, pauseCloseTimer, pauseOnHover, paused, startCloseTimer]);
 
   React.useEffect(() => {
     if (!open || !closeOnEscape) {

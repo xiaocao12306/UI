@@ -143,6 +143,7 @@
   - Toast 关闭按钮状态矩阵收口（hover/active/focus-visible 反馈统一，降低键盘与鼠标反馈割裂）
   - Toast 关闭事件去重收口（手动关闭后忽略同生命周期 timeout 二次触发）
   - Toast Escape 栈策略收口（栈顶不可关闭时，Esc 回退关闭最近可关闭通知）
+  - Toast 计时续时收口（hover/focus 暂停后按剩余时长恢复，不再重置整段 duration）
   - 生产级返工（Tabs）
   - Tabs 交互语义收口（重复选择当前 tab 不再触发 `onValueChange`，降低遥测噪音）
   - Tabs 引用语义收口（所有 `tabpanel` 常驻并通过 `hidden` 切换，保证 `aria-controls` 始终有效）

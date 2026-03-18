@@ -147,7 +147,7 @@ describe("Toast", () => {
     }
   });
 
-  it("pauses auto dismiss while hovered when pauseOnHover is enabled", () => {
+  it("pauses auto dismiss while hovered and resumes with remaining duration", () => {
     vi.useFakeTimers();
     const onOpenChange = vi.fn();
 
@@ -167,7 +167,7 @@ describe("Toast", () => {
 
       fireEvent.mouseLeave(toast);
       act(() => {
-        vi.advanceTimersByTime(1999);
+        vi.advanceTimersByTime(999);
       });
       expect(onOpenChange).not.toHaveBeenCalled();
 
@@ -180,7 +180,7 @@ describe("Toast", () => {
     }
   });
 
-  it("pauses auto dismiss while toast controls are focused", () => {
+  it("pauses auto dismiss while toast controls are focused and resumes with remaining duration", () => {
     vi.useFakeTimers();
     const onOpenChange = vi.fn();
 
@@ -200,7 +200,7 @@ describe("Toast", () => {
 
       fireEvent.blur(closeButton);
       act(() => {
-        vi.advanceTimersByTime(1499);
+        vi.advanceTimersByTime(799);
       });
       expect(onOpenChange).not.toHaveBeenCalled();
 
