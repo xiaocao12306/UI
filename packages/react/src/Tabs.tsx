@@ -111,8 +111,11 @@ export function Tabs({
               aria-disabled={disabled || undefined}
               tabIndex={focusTargetValue === item.key ? 0 : -1}
               disabled={disabled}
-              onClick={() => {
+              onClick={(event) => {
                 setFocusedValue(item.key);
+                if (activationMode === "manual" && event.detail === 0) {
+                  return;
+                }
                 select(item.key);
               }}
               onFocus={() => {

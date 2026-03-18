@@ -138,6 +138,28 @@ describe("Tabs", () => {
     expect(onValueChange).not.toHaveBeenCalled();
   });
 
+  it("avoids duplicate onValueChange in manual mode when keyboard activation also emits click", () => {
+    const onValueChange = vi.fn();
+    render(
+      <Tabs
+        value="one"
+        activationMode="manual"
+        onValueChange={onValueChange}
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    fireEvent.keyDown(twoTab, { key: "Enter" });
+    fireEvent.click(twoTab, { detail: 0 });
+
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange).toHaveBeenCalledWith("two");
+  });
+
   it("supports Home and End keyboard navigation while skipping disabled tabs", () => {
     render(
       <Tabs
