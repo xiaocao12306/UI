@@ -283,6 +283,7 @@
   - Drawer 嵌套 overlay 验收补齐（Dropdown in Drawer 的 Escape 分层关闭单测 + Storybook 交互场景）
   - CommandPalette IME 输入收口（组合输入阶段忽略 Arrow/Enter 导航执行，防止 CJK 文本确认误触发命令）
   - Toast IME 输入收口（组合输入阶段忽略 Escape 关闭，防止 CJK 文本确认误关闭通知）
+  - Tabs RTL 键盘收口（`dir=\"rtl\"` 下横向 ArrowLeft/ArrowRight 语义镜像，保持视觉阅读方向一致）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

@@ -317,11 +317,13 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled modes are both supported. |
 | `ariaLabel` / `ariaLabelledBy` | `string` / `string` | Name the tablist with a direct label or an external heading reference for screen-reader context. |
 | `orientation` | `'horizontal' \| 'vertical'` | Keyboard map follows orientation (`Left/Right` or `Up/Down`) with shared `Home/End` behavior. |
+| RTL keyboard parity | horizontal ArrowLeft/ArrowRight auto-flip | In `dir="rtl"` containers, horizontal arrow intent is mirrored so navigation follows visual reading direction. |
 | `activationMode` | `'automatic' \| 'manual'` | Automatic mode switches panels on arrow navigation; manual mode requires `Enter`/`Space` to activate focused tab. |
 | `onValueChange` | `(value: string) => void` | Fires only for enabled tabs and only when active key changes. |
 | tab relation | mounted `tabpanel` set + `hidden` toggle | Keeps every `aria-controls` target valid while showing only active content panel. |
 
 <Canvas of={TabsStories.KeyboardNavigationGuide} />
+<Canvas of={TabsStories.RtlKeyboardNavigation} />
 <Canvas of={TabsStories.LabelledByHeading} />
 <Canvas of={TabsStories.ManualActivation} />
 <Canvas of={TabsStories.ManualVerticalActivation} />

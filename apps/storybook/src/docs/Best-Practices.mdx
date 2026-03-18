@@ -147,12 +147,14 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Surface status semantics with tokens instead of custom ad-hoc colors.
 - Keep row actions predictable and keyboard reachable.
 - Ensure tabs support orientation-aware arrows (`Left/Right` or `Up/Down`) plus `Home/End`, and skip disabled entries.
+- In RTL layouts, verify horizontal `ArrowLeft`/`ArrowRight` intent is mirrored so tab navigation matches visual reading flow.
 - Prefer `ariaLabelledBy` with a visible heading when tabs already have on-screen context labels; fall back to `ariaLabel` for standalone tab groups.
 - Use `activationMode="manual"` when arrow-key navigation should not immediately trigger expensive panel renders.
 - Keep tab panels mounted and toggle `hidden` so tab `aria-controls` always points to a real panel.
 - Avoid duplicate telemetry from tabs by emitting `onValueChange` only on actual key transitions.
 
 <Canvas of={TabsStories.KeyboardNavigationGuide} />
+<Canvas of={TabsStories.RtlKeyboardNavigation} />
 <Canvas of={TabsStories.LabelledByHeading} />
 <Canvas of={TabsStories.ManualActivation} />
 <Canvas of={TabsStories.ManualVerticalActivation} />

@@ -45,6 +45,7 @@ export function Tabs({
   onValueChange
 }: TabsProps) {
   const baseId = React.useId();
+  const tabListRef = React.useRef<HTMLDivElement>(null);
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const firstEnabledKey = items.find((item) => !item.disabled)?.key;
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
@@ -82,6 +83,7 @@ export function Tabs({
   return (
     <div style={{ display: "grid", gap: 10 }}>
       <div
+        ref={tabListRef}
         role="tablist"
         aria-label={ariaLabelledBy ? undefined : ariaLabel}
         aria-labelledby={ariaLabelledBy}
@@ -155,18 +157,18 @@ export function Tabs({
                   return;
                 }
 
-                const nextKeyToDirection =
-                  orientation === "horizontal"
-                    ? { ArrowRight: 1 as const, ArrowLeft: -1 as const }
-                    : { ArrowDown: 1 as const, ArrowUp: -1 as const };
-                const direction = nextKeyToDirection[event.key as keyof typeof nextKeyToDirection];
-                if (!direction) {
+                const moveDirection = getTabMoveDirection({
+                  orientation,
+                  key: event.key,
+                  isRtl: orientation === "horizontal" && isElementDirectionRtl(tabListRef.current)
+                });
+                if (!moveDirection) {
                   return;
                 }
 
                 event.preventDefault();
 
-                const nextIndex = getNextEnabledIndex(items, index, direction);
+                const nextIndex = getNextEnabledIndex(items, index, moveDirection);
                 moveToIndex(nextIndex);
               }}
               style={{
@@ -217,4 +219,53 @@ export function Tabs({
 
 function isTabActivationKey(key: string) {
   return key === "Enter" || key === " " || key === "Spacebar";
+}
+
+function getTabMoveDirection({
+  orientation,
+  key,
+  isRtl
+}: {
+  orientation: "horizontal" | "vertical";
+  key: string;
+  isRtl: boolean;
+}) {
+  if (orientation === "vertical") {
+    if (key === "ArrowDown") {
+      return 1 as const;
+    }
+    if (key === "ArrowUp") {
+      return -1 as const;
+    }
+    return undefined;
+  }
+
+  if (key === "ArrowRight") {
+    return isRtl ? (-1 as const) : (1 as const);
+  }
+  if (key === "ArrowLeft") {
+    return isRtl ? (1 as const) : (-1 as const);
+  }
+
+  return undefined;
+}
+
+function isElementDirectionRtl(element: HTMLElement | null) {
+  if (!element) {
+    return false;
+  }
+
+  const nearestDirRoot = element.closest<HTMLElement>("[dir]");
+  if (nearestDirRoot?.dir === "rtl") {
+    return true;
+  }
+  if (nearestDirRoot?.dir === "ltr") {
+    return false;
+  }
+
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  return window.getComputedStyle(element).direction === "rtl";
 }

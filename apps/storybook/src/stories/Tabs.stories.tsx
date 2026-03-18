@@ -189,6 +189,33 @@ export const Vertical: Story = {
   }
 };
 
+export const RtlKeyboardNavigation: Story = {
+  render: () => (
+    <div dir="rtl" style={{ width: 620, display: "grid", gap: 12 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        In RTL layouts, horizontal ArrowRight moves to the previous tab and ArrowLeft moves to the next tab.
+      </p>
+      <Tabs ariaLabel="RTL workflow tabs" defaultValue="spec" items={productTabs} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const releaseTab = canvas.getByRole("tab", { name: "Release" });
+
+    await userEvent.click(specTab);
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Token contract, component API");
+
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(releaseTab).toHaveFocus();
+    await expect(releaseTab).toHaveAttribute("aria-selected", "true");
+
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(specTab).toHaveFocus();
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+  }
+};
+
 export const ManualActivation: Story = {
   render: () => (
     <div style={{ width: 620, display: "grid", gap: 12 }}>

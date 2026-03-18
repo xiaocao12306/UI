@@ -34,6 +34,30 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
+  it("uses RTL arrow semantics for horizontal keyboard navigation", () => {
+    render(
+      <div dir="rtl">
+        <Tabs
+          defaultValue="one"
+          items={[
+            { key: "one", label: "One", content: <div>Panel One</div> },
+            { key: "two", label: "Two", content: <div>Panel Two</div> },
+            { key: "three", label: "Three", content: <div>Panel Three</div> }
+          ]}
+        />
+      </div>
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    fireEvent.keyDown(oneTab, { key: "ArrowRight" });
+    expect(screen.getByRole("tab", { name: "Three" })).toHaveFocus();
+    expect(screen.getByText("Panel Three")).toBeInTheDocument();
+
+    fireEvent.keyDown(screen.getByRole("tab", { name: "Three" }), { key: "ArrowLeft" });
+    expect(screen.getByRole("tab", { name: "One" })).toHaveFocus();
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+  });
+
   it("supports vertical keyboard navigation with ArrowUp and ArrowDown", () => {
     render(
       <Tabs
