@@ -335,6 +335,8 @@
   - CommandPalette 对话文案语义收口（新增 `title/description/searchAriaLabel`，支持非英文产品可访问名称本地化）
   - CommandPalette 查询遥测收口（关闭时自动触发 `onQueryChange(\"\")`，确保外部 telemetry 与内部 query 生命周期一致）
   - CommandPalette 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/item-select/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
+  - CommandPalette listbox 语义补强（结果项改为纯 `role="option"` 语义节点，避免 `button+option` 角色冲突）
+  - CommandPalette 结果播报关联补强（combobox `aria-describedby` 绑定 live status 文本，稳定读屏播报路径）
   - Demo CommandPalette 查询遥测验收（新增可视 telemetry 指示 + Playwright 回归，锁定关闭后重置为 `N/A`）
   - Demo CommandPalette 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 escape/item-select/close-button/outside-pointer）
   - Storybook CommandPalette 空态引用验收（新增 `EmptyStateAriaControlsLifecycle` 场景，锁定 `aria-controls` 与 listbox 挂载生命周期）

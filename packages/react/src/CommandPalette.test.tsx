@@ -26,6 +26,7 @@ describe("CommandPalette", () => {
     });
 
     expect(screen.getByRole("option", { name: "Create Project" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Create Project" })).toBeNull();
     expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
 
     fireEvent.click(screen.getByRole("option", { name: "Create Project" }));
@@ -78,6 +79,28 @@ describe("CommandPalette", () => {
 
     expect(screen.getByRole("option", { name: "Café Settings" })).toBeInTheDocument();
     expect(screen.queryByRole("option", { name: "Release Notes" })).toBeNull();
+  });
+
+  it("associates combobox with live result status narration", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "create-project", label: "Create Project" }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    const status = screen.getByRole("status");
+    const statusId = status.getAttribute("id");
+    expect(statusId).toBeTruthy();
+    expect(input).toHaveAttribute("aria-describedby", statusId!);
+
+    fireEvent.change(input, { target: { value: "project" } });
+    expect(status).toHaveTextContent('1 command found for "project".');
   });
 
   it("closes on escape key through dialog dismiss", () => {

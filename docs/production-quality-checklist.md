@@ -259,3 +259,5 @@
 - Storybook overlay IME parity: added `Dialog/Drawer EscapeIgnoresImeComposition` interaction scenarios so composition-guard behavior is locked in visual/interaction baseline.
 - Demo keyboard parity hardening: added Playwright regressions for CommandPalette/Toast IME Escape composition paths and Tabs/Table legacy `Spacebar` activation paths.
 - Tabs boundary-loop parity: added `loop` prop to opt out of Arrow wrap-around at tablist edges, with unit + Storybook `NoLoopNavigation` interaction coverage.
+- CommandPalette option-role parity: listbox items now render as semantic `role="option"` nodes (no `button+option` role conflict), with regression coverage for role queries.
+- CommandPalette status-link parity: combobox now binds `aria-describedby` to live result-status narration to stabilize screen-reader announcement context during filtering.

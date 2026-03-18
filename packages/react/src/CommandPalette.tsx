@@ -66,6 +66,7 @@ export function CommandPalette({
   const closeReasonRef = React.useRef<CommandPaletteCloseReason | null>(null);
   const wasOpenRef = React.useRef(open);
   const listId = React.useId();
+  const statusId = React.useId();
 
   const markCloseReason = React.useCallback(
     (reason: CommandPaletteCloseReason) => {
@@ -247,6 +248,7 @@ export function CommandPalette({
           aria-autocomplete="list"
           aria-controls={hasResults ? listId : undefined}
           aria-activedescendant={activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
+          aria-describedby={statusId}
           placeholder={placeholder}
           value={query}
           onChange={(event) => {
@@ -297,6 +299,7 @@ export function CommandPalette({
           aria-label={searchAriaLabel}
         />
         <p
+          id={statusId}
           role="status"
           aria-live="polite"
           style={{
@@ -323,17 +326,15 @@ export function CommandPalette({
             {filtered.map((item, index) => {
               const active = index === activeIndex;
               return (
-                <button
+                <div
                   key={item.key}
                   id={`${listId}-option-${index}`}
-                  type="button"
                   role="option"
                   aria-selected={active}
                   aria-disabled={item.disabled || undefined}
                   aria-posinset={index + 1}
                   aria-setsize={filtered.length}
                   tabIndex={-1}
-                  disabled={item.disabled}
                   onMouseDown={(event) => {
                     // Keep combobox input focus while selecting listbox options.
                     event.preventDefault();
@@ -343,7 +344,13 @@ export function CommandPalette({
                       setActiveIndex(index);
                     }
                   }}
-                  onClick={() => selectItem(index)}
+                  onClick={() => {
+                    if (item.disabled) {
+                      return;
+                    }
+
+                    selectItem(index);
+                  }}
                   style={{
                     border: "1px solid var(--aurora-border-default)",
                     background: active
@@ -360,7 +367,7 @@ export function CommandPalette({
                   }}
                 >
                   {item.label}
-                </button>
+                </div>
               );
             })}
           </div>
