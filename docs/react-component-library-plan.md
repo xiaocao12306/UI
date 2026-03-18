@@ -237,6 +237,8 @@
   - DatePicker 错误关联收口（`errorMessageId` 同步 `aria-describedby` + `aria-errormessage`，并做重复 ID 去重）
   - Alert 生产级返工（status/alert live region 语义、dismiss 分支、单测 + Storybook `Feedback/Alert`）
   - CommandPalette 搜索语义收口（`textValue` 非文本标签别名 + 重音归一匹配，`cafe` 可命中 `Café`）
+  - CommandPalette 结果播报补齐（查询命中启用+禁用混合结果时，live region 明确播报可执行子集）
+  - CommandPalette 全禁用键盘收口（结果全禁用时 `Arrow/Home/End/PageUp/PageDown/Enter` 保持 no-op，不触发误关闭）
   - Table i18n 语义收口（`getSortAriaLabel` 支持排序按钮 aria-label 本地化）
   - Table loading 语义收口（`loading/loadingContent` + `aria-busy` + 加载期间禁用排序交互）
   - Table 空态播报收口（空数据 + 默认排序时仅保留空态 live region，避免重复 status 读屏）
@@ -245,6 +247,7 @@
   - Table rowKey 索引语义收口（`rowKey` 第二参数改为 source index，排序切换不再导致索引型 key 抖动）
   - Table cell render 索引语义收口（`columns[].render(row, rowIndex, sourceIndex)` 同时暴露视觉索引与源索引，降低排序后埋点/跳转歧义）
   - Tabs 激活模式收口（`activationMode` 支持 manual/automatic，键盘焦点与激活解耦）
+  - Tabs 受控值兜底收口（`value` 非法或指向禁用项时回退到首个可用 tab，避免悬空选中态）
   - Toast Escape 语义收口（堆叠通知场景下一次按键仅关闭一个 toast）
   - Toast 堆叠顺序语义收口（Escape 仅作用于最新/顶层 toast，避免误关历史通知）
   - Toast 交互优先级收口（focus/hover 的 toast 提升为栈顶，Escape 优先关闭当前操作通知）
@@ -324,6 +327,7 @@
   - Table 空态语义收口（`emptyContent` 改为 `role=\"status\"` polite 播报，增强无障碍反馈一致性）
   - Table 单行排序收口（数据量 `<=1` 时自动禁用 sortable header，避免无效排序交互与冗余遥测）
   - Table 排序播报语义收口（新增 `getSortStatusText`，可本地化 live-region 排序状态播报，补齐单测与 Storybook 回归）
+  - Table 日期排序补齐（`sortAccessor` 返回 `Date` 时升降序回归覆盖，锁定时间字段排序稳定性）
   - Toast 播报策略收口（新增 `live` API，支持 `off` 降噪和 `assertive/polite` 显式控制）
   - Demo CommandPalette Escape 查询验收（新增运行时开关 + Playwright 回归，锁定首次 Escape 清空查询、二次 Escape 关闭）
   - Demo Toast 静默通知验收（新增 `live=\"off\"` 场景 + Playwright 回归，验证被动更新降噪语义）
