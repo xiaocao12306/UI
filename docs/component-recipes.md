@@ -230,3 +230,30 @@ export function SearchFirstPalette() {
   );
 }
 ```
+
+## 10) Silent Toast for Passive Background Updates
+```tsx
+import * as React from "react";
+import { Button, Toast } from "@aurora-ui/react";
+
+export function SilentBackgroundToast() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Trigger silent update
+      </Button>
+      <Toast
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Background sync update"
+        description="Artifact metadata refreshed in background."
+        live="off"
+        duration={0}
+        closeLabel="Dismiss silent toast"
+      />
+    </>
+  );
+}
+```
