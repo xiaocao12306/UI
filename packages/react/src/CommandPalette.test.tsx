@@ -109,6 +109,23 @@ describe("CommandPalette", () => {
     expect(status).toHaveTextContent('1 command found for "project".');
   });
 
+  it("announces enabled subset when query matches enabled and disabled commands", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "deploy-now", label: "Deploy now", keywords: ["deploy"] },
+          { key: "deploy-lock", label: "Deploy after lock", keywords: ["deploy"], disabled: true }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.change(input, { target: { value: "deploy" } });
+    expect(screen.getByRole("status")).toHaveTextContent('1 of 2 matching command available for "deploy".');
+  });
+
   it("closes on escape key through dialog dismiss", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();
@@ -368,6 +385,35 @@ describe("CommandPalette", () => {
     fireEvent.change(screen.getByLabelText("Search commands"), { target: { value: "no-match" } });
     expect(screen.getByText("No commands found.")).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent('No commands match "no-match".');
+  });
+
+  it("ignores arrow and page navigation when all filtered commands are disabled", () => {
+    const onOpenChange = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        commands={[
+          { key: "archive", label: "Archive workspace", disabled: true },
+          { key: "delete", label: "Delete workspace", disabled: true }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    expect(input).not.toHaveAttribute("aria-activedescendant");
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "ArrowUp" });
+    fireEvent.keyDown(input, { key: "PageDown" });
+    fireEvent.keyDown(input, { key: "PageUp" });
+    fireEvent.keyDown(input, { key: "Home" });
+    fireEvent.keyDown(input, { key: "End" });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(input).not.toHaveAttribute("aria-activedescendant");
+    expect(onOpenChange).not.toHaveBeenCalled();
   });
 
   it("keeps combobox aria-controls only while the result listbox is present", () => {
