@@ -30,7 +30,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - 工具：`@storybook/test-runner`
 - 入口脚本：
   - `storybook:test`：针对已运行的 Storybook URL 执行交互测试
-  - `storybook:test:ci`：在本地静态产物（`storybook-static`）上启动临时服务并运行测试
+  - `storybook:test:ci`：在本地静态产物（`storybook-static`）上启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
 - 当前已覆盖 play 场景：
   - `Core/Button` 键盘激活 + loading 禁用分支
   - `Form/Input` blur 校验 + 输入计数 + 提交禁用分支
@@ -46,7 +46,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `Overlay/Drawer` 侧边抽屉打开关闭、non-dismissible 分支
   - `Overlay/Tooltip` hover 延迟打开、受控/禁用分支与 Escape 关闭路径
   - `Overlay/Popover` click/Escape/ArrowDown 打开关闭路径
-  - `Overlay/Dropdown` End/Enter 选择 + ArrowDown 再次打开路径
+  - `Overlay/Dropdown` End/Enter 选择 + ArrowDown 再次打开 + Escape 回焦 trigger + outside pointer 保持目标焦点
   - `AI/CommandPalette` 搜索/禁用项/回车关闭流程
   - `AI/PromptInput` 提交/禁用边界与多动作反馈路径
   - `AI/ReasoningPanel` 展开/折叠可访问性路径
@@ -58,7 +58,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `Feedback/Progress` determinate/indeterminate 语义路径
   - `Feedback/Alert` dismiss 分支与 live region 语义路径
   - `Feedback/Toast` 关闭与重开流程
-  - `Data/Tabs` 点击切换 + Home 键回到首个可用标签
+  - `Data/Tabs` 点击切换 + Home/End 键导航 + manual/vertical 模式键盘路径
   - `Data/Table` 排序切换与 `aria-sort` 状态同步
 
 ## 当前已覆盖故事
