@@ -9,6 +9,14 @@ describe("Pagination", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
+  it("returns null without throwing when pageCount is zero or negative", () => {
+    const { container: zeroContainer } = render(<Pagination page={1} pageCount={0} onPageChange={() => {}} />);
+    expect(zeroContainer).toBeEmptyDOMElement();
+
+    const { container: negativeContainer } = render(<Pagination page={1} pageCount={-2} onPageChange={() => {}} />);
+    expect(negativeContainer).toBeEmptyDOMElement();
+  });
+
   it("marks current page with aria-current", () => {
     render(<Pagination page={3} pageCount={8} onPageChange={() => {}} />);
     expect(screen.getByRole("button", { name: "Current page, 3" })).toHaveAttribute("aria-current", "page");

@@ -80,6 +80,10 @@ export function Pagination({
   ariaLabelledBy,
   getItemAriaLabel = defaultGetItemAriaLabel
 }: PaginationProps) {
+  if (pageCount <= 1) {
+    return null;
+  }
+
   const navRef = React.useRef<HTMLElement>(null);
   const pendingFocusPageRef = React.useRef<number | null>(null);
   const currentPage = clamp(page, 1, pageCount);
@@ -141,10 +145,6 @@ export function Pagination({
     event.preventDefault();
     goToPageWithFocus(currentPage + arrowDelta);
   };
-
-  if (pageCount <= 1) {
-    return null;
-  }
 
   return (
     <nav ref={navRef} aria-label={ariaLabelledBy ? undefined : ariaLabel} aria-labelledby={ariaLabelledBy}>
