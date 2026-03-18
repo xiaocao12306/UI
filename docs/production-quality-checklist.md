@@ -83,6 +83,7 @@
 - Demo Dropdown Tab flow coverage: added Playwright regression asserting menu closes on Tab and focus continues to the next actionable control.
 - Storybook Dropdown focus-policy coverage: added explicit `EscapeDismissFocusReturn` interaction scenario to lock trigger focus restoration on keyboard dismiss.
 - Storybook docs parity: `Component API` and `Best Practices` now both include Dropdown focus-policy canvases for implementation + QA alignment.
+- CommandPalette disabled-action guard: added dedicated Storybook `DisabledCommandGuard` interaction scenario plus unit branch to ensure disabled options never execute and never dismiss palette.
 - Dropdown unit focus-policy branch: added explicit outside-target focus retention assertion so pointer dismiss cannot regress into trigger focus theft.
 - Table empty-state sort coverage: sortable headers now disable when data is empty, with unit + Storybook play assertions to prevent no-op sort telemetry.
 - Tabs manual keyboard coverage: `Home/End` now has explicit unit + Storybook play assertions confirming focus movement does not activate panel until `Enter/Space`.

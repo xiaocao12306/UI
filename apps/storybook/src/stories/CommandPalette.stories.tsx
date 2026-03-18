@@ -106,6 +106,42 @@ function DisabledOnlyResultsPalette() {
   );
 }
 
+function DisabledCommandGuardPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [executedCount, setExecutedCount] = React.useState(0);
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Executed commands:{" "}
+        <strong data-testid="executed-count" style={{ color: "var(--aurora-text-primary)" }}>
+          {executedCount}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        commands={[
+          {
+            key: "publish-release",
+            label: "Publish Release",
+            keywords: ["release"],
+            disabled: true,
+            onSelect: () => setExecutedCount((count) => count + 1)
+          },
+          {
+            key: "open-changelog",
+            label: "Open Changelog",
+            keywords: ["release notes"],
+            onSelect: () => setExecutedCount((count) => count + 1)
+          }
+        ]}
+        placeholder="Try searching publish..."
+      />
+    </div>
+  );
+}
+
 function TextValueAndAccentSearchPalette() {
   const [open, setOpen] = React.useState(true);
 
@@ -221,6 +257,24 @@ export const DisabledOnlyResults: Story = {
     await userEvent.clear(input);
     await userEvent.type(input, "release");
     await expect(canvas.getByRole("status")).toHaveTextContent('No enabled commands match "release".');
+  }
+};
+
+export const DisabledCommandGuard: Story = {
+  render: () => <DisabledCommandGuardPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "publish");
+
+    const disabledOption = canvas.getByRole("option", { name: "Publish Release" });
+    await expect(disabledOption).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(disabledOption);
+
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("executed-count")).toHaveTextContent("0");
   }
 };
 

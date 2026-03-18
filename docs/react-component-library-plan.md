@@ -230,6 +230,7 @@
   - Overlay 焦点策略收口（Popover/Dropdown 仅在键盘关闭时回焦 trigger，外部点击关闭保留指针目标焦点）
   - Storybook Dropdown 焦点策略回归补齐（Escape 回焦 trigger + outside pointer 目标焦点保留）
   - Storybook 文档同步（Component API / Best Practices 增补 Dropdown 焦点策略示例）
+  - Storybook CommandPalette 防误触场景补齐（`DisabledCommandGuard` 覆盖禁用命令点击不执行且不关闭）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
   - DismissableLayer 栈语义收口（嵌套 overlay 时仅顶层响应 Escape/外部点击，避免单次事件联动关闭多层）

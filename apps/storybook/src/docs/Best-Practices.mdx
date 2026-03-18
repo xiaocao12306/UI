@@ -79,6 +79,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Provide empty-state guidance when no command matches the query.
 - Track user query updates with `onQueryChange` for downstream telemetry.
 - Keep live-region narration aligned with actionable commands (enabled matches), not just visible results.
+- Keep disabled command entries non-executable and keep palette state unchanged on disabled clicks.
 - For batched command execution, set `closeOnSelect={false}` so users can run multiple actions without reopening the palette.
 - For blocking approvals, set `closeOnEscape={false}` and `closeOnOutsidePointer={false}` so command confirmation cannot be dismissed accidentally.
 - Guard Ctrl/Cmd + Enter submission against active IME composition to avoid accidental sends for CJK input.
@@ -91,6 +92,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={StreamingCodeBlockStories.Default} />
 <Canvas of={CommandPaletteStories.AiInteractionFlow} />
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
+<Canvas of={CommandPaletteStories.DisabledCommandGuard} />
 <Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />
 <Canvas of={CommandPaletteStories.PersistentSelection} />
 

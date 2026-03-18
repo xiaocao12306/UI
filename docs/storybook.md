@@ -47,7 +47,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `Overlay/Tooltip` hover 延迟打开、受控/禁用分支与 Escape 关闭路径
   - `Overlay/Popover` click/Escape/ArrowDown 打开关闭路径
   - `Overlay/Dropdown` End/Enter 选择 + ArrowDown 再次打开 + Escape 回焦 trigger + outside pointer 保持目标焦点
-  - `AI/CommandPalette` 搜索/禁用项/回车关闭流程
+  - `AI/CommandPalette` 搜索/禁用项/回车关闭流程 + 禁用命令点击防误触
   - `AI/PromptInput` 提交/禁用边界与多动作反馈路径
   - `AI/ReasoningPanel` 展开/折叠可访问性路径
   - `AI/StreamingCodeBlock` streaming 完成与 busy 状态路径
@@ -96,7 +96,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - `Docs/Component API`
 - `Docs/Component Catalog`
 - `Docs/Best Practices`
-- 核心边界示例：`CommandPalette/QueryTelemetry`、`Toast/ActionRequired`、`Tabs/KeyboardNavigationGuide`、`Table/SortTelemetry`
+- 核心边界示例：`CommandPalette/QueryTelemetry`、`CommandPalette/DisabledCommandGuard`、`Toast/ActionRequired`、`Tabs/KeyboardNavigationGuide`、`Table/SortTelemetry`
 
 说明：预览层通过 toolbar 全局切换 `core-light/core-dark/glass/neo-brutal`，用于验证 token 与主题一致性。
 生产级验收矩阵：`docs/production-quality-checklist.md`

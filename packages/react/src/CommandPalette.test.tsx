@@ -195,6 +195,28 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
+  it("ignores disabled command click without closing palette", () => {
+    const onOpenChange = vi.fn();
+    const onDisabledSelect = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        commands={[
+          { key: "publish-release", label: "Publish Release", disabled: true, onSelect: onDisabledSelect },
+          { key: "open-settings", label: "Open Settings" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("option", { name: "Publish Release" }));
+
+    expect(onDisabledSelect).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  });
+
   it("resets search query after palette closes", () => {
     const onOpenChange = vi.fn();
     const { rerender } = render(
