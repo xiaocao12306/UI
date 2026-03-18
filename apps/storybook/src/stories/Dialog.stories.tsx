@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Dialog, Dropdown, Input, Textarea } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Overlay/Dialog",
@@ -179,5 +179,34 @@ export const NestedDismissOrder: Story = {
 
     await userEvent.keyboard("{Escape}");
     await expect(body.queryByRole("dialog", { name: "Nested Overlay Dialog" })).not.toBeInTheDocument();
+  }
+};
+
+function EscapeImeGuardDialog() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen} title="IME composition dialog">
+      <p style={{ margin: 0 }}>Escape should be ignored while IME composition is active.</p>
+    </Dialog>
+  );
+}
+
+export const EscapeIgnoresImeComposition: Story = {
+  render: () => <EscapeImeGuardDialog />,
+  play: async ({ canvasElement }) => {
+    const ownerDocument = canvasElement.ownerDocument;
+    const body = within(ownerDocument.body);
+
+    await expect(await body.findByRole("dialog", { name: "IME composition dialog" })).toBeInTheDocument();
+
+    fireEvent.keyDown(ownerDocument, { key: "Escape", isComposing: true });
+    await expect(body.getByRole("dialog", { name: "IME composition dialog" })).toBeInTheDocument();
+
+    fireEvent.keyDown(ownerDocument, { key: "Escape", keyCode: 229 });
+    await expect(body.getByRole("dialog", { name: "IME composition dialog" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(body.queryByRole("dialog", { name: "IME composition dialog" })).not.toBeInTheDocument();
   }
 };
