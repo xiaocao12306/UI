@@ -40,6 +40,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Ensure keyboard dismissal paths for overlay components.
 - Keep visible labels or accessible names for form controls.
 - Prefer `FormField` wrappers for helper/error copy so `aria-describedby` and `aria-errormessage` stay in sync.
+- When using standalone DatePicker error messaging, pass `errorMessageId` with `invalid` so both `aria-describedby` and `aria-errormessage` stay aligned.
 - Preserve nuanced `aria-invalid` values (`grammar`/`spelling`) when integrating validation services; avoid normalizing them to generic `true`.
 - Avoid `autoFocus`; use intentional focus management when opening overlays.
 - For combobox/listbox patterns, map `aria-selected` to the committed value, not temporary active focus.

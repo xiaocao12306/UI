@@ -187,7 +187,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onChange` | `(event) => void` | Optional native change callback for analytics/instrumentation hooks. |
 | `min` / `max` | `string` | Native date range constraints. |
 | `invalid` | `boolean` | Adds `aria-invalid` to communicate validation state. |
-| `errorMessageId` | `string` | Appends error helper ID into `aria-describedby` when `invalid` is true. |
+| `errorMessageId` | `string` | Appends error helper ID into `aria-describedby` and `aria-errormessage` when `invalid` is true (deduped if ID already exists). |
 
 <Canvas of={DatePickerStories.InvalidWithHelper} />
 <Canvas of={DatePickerStories.StateMatrix} />

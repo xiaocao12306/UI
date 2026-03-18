@@ -81,7 +81,13 @@ export const InvalidWithHelper: Story = {
         Release date must be in the approved launch window.
       </p>
     </div>
-  )
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByLabelText("Release date");
+    await expect(input).toHaveAttribute("aria-describedby", "release-date-help release-date-error");
+    await expect(input).toHaveAttribute("aria-errormessage", "release-date-error");
+  }
 };
 
 export const StateMatrix: Story = {

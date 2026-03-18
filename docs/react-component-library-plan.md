@@ -200,6 +200,7 @@
   - Pagination 生产级返工（Home/End/Arrow 键盘快捷翻页、重复回调防抖、可定制 aria label、单测 + Storybook `Data/Pagination`）
   - Pagination 边界标签收口（`getItemAriaLabel` 的 previous/next 页码在首末页钳制到合法范围）
   - DatePicker 生产级返工（`aria-invalid` 推断、`onChange` + `onValueChange` 双回调、状态矩阵 Storybook 与单测补齐）
+  - DatePicker 错误关联收口（`errorMessageId` 同步 `aria-describedby` + `aria-errormessage`，并做重复 ID 去重）
   - Alert 生产级返工（status/alert live region 语义、dismiss 分支、单测 + Storybook `Feedback/Alert`）
   - CommandPalette 搜索语义收口（`textValue` 非文本标签别名 + 重音归一匹配，`cafe` 可命中 `Café`）
   - Table i18n 语义收口（`getSortAriaLabel` 支持排序按钮 aria-label 本地化）

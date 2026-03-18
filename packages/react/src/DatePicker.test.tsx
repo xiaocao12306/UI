@@ -53,6 +53,7 @@ describe("DatePicker", () => {
     );
 
     expect(screen.getByLabelText("Release date")).toHaveAttribute("aria-describedby", "release-hint release-error");
+    expect(screen.getByLabelText("Release date")).toHaveAttribute("aria-errormessage", "release-error");
   });
 
   it("does not append error message id when field is not invalid", () => {
@@ -66,6 +67,21 @@ describe("DatePicker", () => {
     );
 
     expect(screen.getByLabelText("Release date")).toHaveAttribute("aria-describedby", "release-hint");
+    expect(screen.getByLabelText("Release date")).not.toHaveAttribute("aria-errormessage");
+  });
+
+  it("deduplicates helper/error ids when they already exist in aria-describedby", () => {
+    render(
+      <DatePicker
+        aria-label="Release date"
+        invalid
+        aria-describedby="release-hint release-error"
+        errorMessageId="release-error"
+        onValueChange={() => {}}
+      />
+    );
+
+    expect(screen.getByLabelText("Release date")).toHaveAttribute("aria-describedby", "release-hint release-error");
   });
 
   it("accepts invalid semantics from aria-invalid", () => {

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Input } from "./Input";
-import { resolveInvalidAria } from "./a11y";
+import { mergeAriaReferenceIds, resolveInvalidAria } from "./a11y";
 
 export type DatePickerProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -25,7 +25,10 @@ export function DatePicker({
 }: DatePickerProps) {
   const resolvedInvalidAria = resolveInvalidAria(invalid, restProps["aria-invalid"]);
   const isInvalid = resolvedInvalidAria !== undefined;
-  const describedBy = [restProps["aria-describedby"], isInvalid ? errorMessageId : undefined].filter(Boolean).join(" ") || undefined;
+  const describedBy = mergeAriaReferenceIds(restProps["aria-describedby"], isInvalid ? errorMessageId : undefined);
+  const errorMessage = isInvalid
+    ? mergeAriaReferenceIds(restProps["aria-errormessage"], errorMessageId)
+    : restProps["aria-errormessage"];
 
   return (
     <Input
@@ -34,6 +37,7 @@ export function DatePicker({
       value={value}
       defaultValue={defaultValue}
       aria-describedby={describedBy}
+      aria-errormessage={errorMessage}
       aria-invalid={resolvedInvalidAria}
       onChange={(event) => {
         onChange?.(event);
