@@ -100,6 +100,28 @@ describe("Tooltip", () => {
     expect(screen.queryByRole("tooltip")).toBeNull();
   });
 
+  it("cleans tooltip id from aria-describedby after close", () => {
+    render(
+      <Tooltip content="Tooltip content" closeDelay={0}>
+        <button type="button" aria-describedby="helper-id">
+          Trigger
+        </button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Trigger" });
+    fireEvent.focus(trigger);
+
+    const tooltip = screen.getByRole("tooltip");
+    const tooltipId = tooltip.getAttribute("id");
+    expect(trigger.getAttribute("aria-describedby")).toContain("helper-id");
+    expect(trigger.getAttribute("aria-describedby")).toContain(tooltipId as string);
+
+    fireEvent.keyDown(trigger, { key: "Escape" });
+    expect(screen.queryByRole("tooltip")).toBeNull();
+    expect(trigger).toHaveAttribute("aria-describedby", "helper-id");
+  });
+
   it("respects preventDefault from trigger handlers", () => {
     const onMouseEnter = vi.fn((event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault());
     const onFocus = vi.fn((event: React.FocusEvent<HTMLButtonElement>) => event.preventDefault());

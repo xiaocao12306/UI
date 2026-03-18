@@ -191,6 +191,7 @@
   - Switch 生产级返工（受控/非受控、描述语义、invalid/disabled 状态、单测 + Storybook `Form/Switch`）
   - Drawer 生产级返工（title/description aria 语义、可配置 dismiss policy、单测 + Storybook `Overlay/Drawer`）
   - Tooltip 生产级返工（受控/非受控、延迟开关策略、`aria-describedby` 语义合并、单测 + Storybook `Overlay/Tooltip`）
+  - Tooltip 描述语义收口（已存在 helper id 场景下，tooltip 打开追加 id、关闭回收 id，不残留）
   - Progress 生产级返工（determinate/indeterminate 语义、tone/size/valueText API、单测 + Storybook `Feedback/Progress`）
   - Empty 生产级返工（status 语义、tone/align/action/icon 场景、单测 + Storybook `Feedback/Empty`）
   - Skeleton 生产级返工（装饰/叙述双语义、variant 形态与动画分支、单测 + Storybook `Feedback/Skeleton`）

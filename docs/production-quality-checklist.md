@@ -176,6 +176,7 @@
 - Switch production hardening: added controlled/uncontrolled flow, helper narration wiring, invalid/disabled semantics, and keyboard interaction coverage.
 - Drawer production hardening: aligned with dialog-level aria semantics, configurable dismiss policy, and dedicated Storybook overlay scenarios.
 - Tooltip production hardening: added controlled/uncontrolled flow, pointer delay/close policy, and `aria-describedby` wiring assertions.
+- Tooltip `aria-describedby` lifecycle hardening: trigger now has regression coverage for appending tooltip ID on open and cleaning it after close while preserving pre-existing helper IDs.
 - Progress production hardening: added indeterminate semantics, tone/size/value narration API, and Storybook state matrix coverage.
 - Empty production hardening: added role/label narration, tone/align variants, and action/icon story validation.
 - Skeleton production hardening: added decorative-vs-narrated semantics, variant geometry controls, and profile-card Storybook scenarios.

@@ -112,3 +112,32 @@ export const Controlled: Story = {
     });
   }
 };
+
+export const DescribedByLifecycle: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 8, justifyItems: "start" }}>
+      <Tooltip content="Tooltip with described-by lifecycle checks" closeDelay={0}>
+        <button type="button" aria-describedby="helper-id">
+          Lifecycle target
+        </button>
+      </Tooltip>
+      <small id="helper-id" style={{ color: "var(--aurora-text-secondary)" }}>
+        Existing helper narration
+      </small>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Lifecycle target" });
+
+    trigger.focus();
+    const tooltip = await canvas.findByRole("tooltip");
+    const tooltipId = tooltip.getAttribute("id") as string;
+    await expect(trigger.getAttribute("aria-describedby") ?? "").toContain("helper-id");
+    await expect(trigger.getAttribute("aria-describedby") ?? "").toContain(tooltipId);
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("tooltip")).not.toBeInTheDocument();
+    await expect(trigger).toHaveAttribute("aria-describedby", "helper-id");
+  }
+};
