@@ -176,6 +176,24 @@ export const OutsideDismissFocusTransfer: Story = {
   }
 };
 
+export const EscapeDismissFocusReturn: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <Dropdown label="Escape Focus Policy" items={items} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Escape Focus Policy" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Escape Focus Policy" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("menu", { name: "Escape Focus Policy" })).not.toBeInTheDocument();
+    await expect(trigger).toHaveFocus();
+  }
+};
+
 export const NestedDismissOrder: Story = {
   render: () => (
     <Popover triggerLabel="Open container">
