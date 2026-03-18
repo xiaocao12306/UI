@@ -1,6 +1,7 @@
 # Testing and Release Workflow
 
 ## Local Quality Gates
+
 Run from repo root:
 
 ```bash
@@ -11,6 +12,7 @@ pnpm build
 ```
 
 ## Package-Level Checks
+
 Examples:
 
 ```bash
@@ -25,15 +27,18 @@ pnpm storybook:test:ci
 ```
 
 Storybook static gate behavior:
+
 - `storybook:static:check` rebuilds `apps/storybook/storybook-static` before interaction tests.
 - stale static diff is treated as error and blocks the command (run `pnpm storybook:build` and commit updated static files).
 - `storybook:test:ci` uses repository-local `scripts/serve-storybook-static.mjs` to host static output before running `@storybook/test-runner`.
 
 Demo dist gate behavior:
+
 - `demo:dist:check` rebuilds `apps/demo/dist` before release gate checks.
 - stale dist diff is treated as error and blocks the command (run `pnpm demo:build` and commit updated dist files).
 
 ## E2E (Playwright)
+
 Install browser once in local environment:
 
 ```bash
@@ -42,6 +47,7 @@ pnpm demo:e2e
 ```
 
 ## Release Secrets Preflight
+
 Run this before Chromatic upload or npm publish:
 
 ```bash
@@ -49,10 +55,12 @@ pnpm release:preflight
 ```
 
 Expected behavior:
+
 - both `CHROMATIC_PROJECT_TOKEN` and `NPM_TOKEN` exist: command exits with code `0`
 - any missing token: command prints `MISSING` line(s), points to `docs/secrets.md`, and exits with code `1`
 
 ## Versioning
+
 Use Changesets:
 
 ```bash
@@ -62,6 +70,7 @@ pnpm release
 ```
 
 ## Publish Dry-Run (Recommended Before Real Release)
+
 Run from repo root:
 
 ```bash
@@ -69,6 +78,7 @@ pnpm release:dry-run
 ```
 
 Expected behavior:
+
 - requires a clean working tree (`git status --porcelain` empty) before execution
 - when no pending changesets: `No unreleased changesets found, exiting.`
 - auto-discovers publishable packages under `packages/*` (`package.json` has `name` and not `private: true`)
@@ -87,16 +97,20 @@ pnpm --filter <workspace-package-name> exec npm publish --dry-run --access publi
 Run history/evidence is tracked in workflow run summaries (`GITHUB_STEP_SUMMARY`) instead of this document.
 
 ## GitHub Release Automation
+
 Workflow: `.github/workflows/release.yml`
 
 Behavior:
+
 - always runs Changesets version PR automation on `main`
 - runs `pnpm release:gate:ci` (`verify + demo:e2e + demo:dist:check + storybook:test:ci`) before any version/publish step
 - publishes npm packages only when `NPM_TOKEN` is configured
 - uses npm provenance (`id-token: write`) during publish
 - when `NPM_TOKEN` is missing, workflow emits explicit warning annotation and writes skip details into `GITHUB_STEP_SUMMARY` with setup path (`docs/secrets.md`)
+- supports `workflow_dispatch` input `enforce=true` to fail hard when `NPM_TOKEN` is missing (manual release audit mode)
 
 Dry-run workflow: `.github/workflows/release-dry-run.yml`
+
 - runs `pnpm release:dry-run` on PRs that touch package/release related files
 - path trigger coverage includes `.changeset/**`, `packages/**`, `scripts/**`, `pnpm-workspace.yaml`, lockfile and workflow itself
 - enables workflow-level `concurrency` (same ref cancels in-progress old runs)
@@ -105,12 +119,15 @@ Dry-run workflow: `.github/workflows/release-dry-run.yml`
 - on failure, summary still records `status=failed` and the failed step label to speed up triage
 
 Required repository secrets:
+
 - `NPM_TOKEN` (for npm publish)
 - `CHROMATIC_PROJECT_TOKEN` (optional, visual regression upload)
 - setup reference: `docs/secrets.md`
 
 ## CI
+
 GitHub Actions workflow runs:
+
 - install
 - lint
 - typecheck
@@ -121,13 +138,17 @@ GitHub Actions workflow runs:
 - demo static freshness gate (`pnpm demo:dist:check`)
 
 Separate workflows:
+
 - Chromatic visual regression upload: `.github/workflows/chromatic.yml` (when `CHROMATIC_PROJECT_TOKEN` is configured)
   - supports `workflow_dispatch` input `enforce=true` to fail hard when token is missing (release/manual audit mode)
   - default behavior remains soft-skip (`enforce=false`) when token is absent
   - writes upload status/build URL/storybook URL/change/error counts into `GITHUB_STEP_SUMMARY`
 - release PR + npm publish: `.github/workflows/release.yml` (when `NPM_TOKEN` is configured)
+  - supports `workflow_dispatch` input `enforce=true` to hard-fail on missing `NPM_TOKEN`
+  - default behavior remains soft-skip (`enforce=false`) when token is absent
 
 ## Release Readiness Checklist
+
 - all quality gates green
 - no pending `git status`
 - docs updated for new component APIs
@@ -140,6 +161,7 @@ pnpm release:gate:ci
 ```
 
 This runs:
+
 1. `pnpm verify`
 2. `pnpm demo:e2e`
 3. `pnpm demo:dist:check`
@@ -151,10 +173,10 @@ Full local pre-release gate (includes tarball evidence):
 pnpm release:gate
 ```
 
-This appends:
-5. `pnpm release:dry-run`
+This appends: 5. `pnpm release:dry-run`
 
 ## Release Gate Evidence (2026-03-19)
+
 Command executed from `/www/code/react-ui-library`:
 
 ```bash
@@ -162,6 +184,7 @@ pnpm release:gate:ci
 ```
 
 Result summary:
+
 - overall status: `passed`
 - verify: `passed` (`lint` + `typecheck` + `test` + `build`)
 - demo e2e: `60/60` passed
@@ -172,9 +195,11 @@ Result summary:
 - release gate pass: `yes`
 
 ### 备注
+
 - 同日早些时候曾在 `@aurora-ui/primitives` 的 `DismissableLayer` 非主键 pointer 用例触发阻塞；修复后已通过本节最终复验。
 
 ## Release Dry-Run Evidence (2026-03-19)
+
 Command executed from `/www/code/react-ui-library`:
 
 ```bash
@@ -182,6 +207,7 @@ pnpm release:dry-run
 ```
 
 Result summary:
+
 - overall status: `passed`
 - changeset phase: `No unreleased changesets found, exiting.`
 - publish dry-run targets: `@aurora-ui/primitives` / `@aurora-ui/react` / `@aurora-ui/tokens`

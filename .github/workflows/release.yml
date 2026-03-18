@@ -4,6 +4,12 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+    inputs:
+      enforce:
+        description: "Fail the workflow when NPM_TOKEN is missing"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -32,11 +38,31 @@ jobs:
       - id: npm-token
         name: Check NPM Token
         run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.enforce }}" = "true" ]; then
+            echo "enforce=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enforce=false" >> "$GITHUB_OUTPUT"
+          fi
+
           if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Fail Publish (enforced mode)
+        if: steps.npm-token.outputs.enabled != 'true' && steps.npm-token.outputs.enforce == 'true'
+        run: |
+          echo "::error title=Release Enforced::NPM_TOKEN is required when enforce=true."
+          {
+            echo "## npm Publish Failed"
+            echo
+            echo "- mode: \`enforce=true\`"
+            echo "- reason: \`NPM_TOKEN\` is not configured."
+            echo "- action: add repository secret \`NPM_TOKEN\`."
+            echo "- guide: \`docs/secrets.md\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 1
 
       - name: Create Release PR / Publish
         if: steps.npm-token.outputs.enabled == 'true'
@@ -51,7 +77,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create Release PR (Publish Skipped)
-        if: steps.npm-token.outputs.enabled != 'true'
+        if: steps.npm-token.outputs.enabled != 'true' && steps.npm-token.outputs.enforce != 'true'
         uses: changesets/action@v1
         with:
           version: pnpm version-packages
@@ -61,7 +87,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Skip Publish Notice
-        if: steps.npm-token.outputs.enabled != 'true'
+        if: steps.npm-token.outputs.enabled != 'true' && steps.npm-token.outputs.enforce != 'true'
         run: |
           echo "::warning title=Release Publish Skipped::NPM_TOKEN is missing; Changesets PR automation will run but npm publish is skipped."
           echo "Configure secret path: GitHub -> Settings -> Secrets and variables -> Actions -> New repository secret"
