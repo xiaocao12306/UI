@@ -845,7 +845,9 @@ test("reports dropdown close reason telemetry for all dismiss paths", async ({ p
   await trigger.click();
   await expect(telemetry).toHaveText("trigger-click");
 
-  await trigger.click();
+  await trigger.focus();
+  await trigger.press("ArrowDown");
+  await expect(page.getByRole("menu")).toBeVisible();
   await page.keyboard.press("Tab");
   await expect(telemetry).toHaveText("tab-key");
 });
