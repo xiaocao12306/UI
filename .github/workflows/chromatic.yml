@@ -13,6 +13,12 @@ on:
       - "pnpm-lock.yaml"
       - ".github/workflows/chromatic.yml"
   workflow_dispatch:
+    inputs:
+      enforce:
+        description: "Fail the workflow when CHROMATIC_PROJECT_TOKEN is missing"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -35,6 +41,12 @@ jobs:
       - id: token
         name: Check Chromatic Token
         run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.enforce }}" = "true" ]; then
+            echo "enforce=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enforce=false" >> "$GITHUB_OUTPUT"
+          fi
+
           if [ -n "${{ secrets.CHROMATIC_PROJECT_TOKEN }}" ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           else
@@ -69,8 +81,22 @@ jobs:
             echo "- error count: ${{ steps.chromatic.outputs.errorCount || 'n/a' }}"
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Fail Chromatic (enforced mode)
+        if: steps.token.outputs.enabled != 'true' && steps.token.outputs.enforce == 'true'
+        run: |
+          echo "::error title=Chromatic Enforced::CHROMATIC_PROJECT_TOKEN is required when enforce=true."
+          {
+            echo "## Chromatic Upload Failed"
+            echo
+            echo "- mode: \`enforce=true\`"
+            echo "- reason: \`CHROMATIC_PROJECT_TOKEN\` is not configured."
+            echo "- action: add repository secret \`CHROMATIC_PROJECT_TOKEN\`."
+            echo "- guide: \`docs/secrets.md\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
       - name: Skip Chromatic
-        if: steps.token.outputs.enabled != 'true'
+        if: steps.token.outputs.enabled != 'true' && steps.token.outputs.enforce != 'true'
         run: |
           echo "::warning title=Chromatic Skipped::CHROMATIC_PROJECT_TOKEN is missing; visual regression upload is skipped."
           echo "Configure secret path: GitHub -> Settings -> Secrets and variables -> Actions -> New repository secret"

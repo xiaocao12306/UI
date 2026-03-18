@@ -122,6 +122,8 @@ GitHub Actions workflow runs:
 
 Separate workflows:
 - Chromatic visual regression upload: `.github/workflows/chromatic.yml` (when `CHROMATIC_PROJECT_TOKEN` is configured)
+  - supports `workflow_dispatch` input `enforce=true` to fail hard when token is missing (release/manual audit mode)
+  - default behavior remains soft-skip (`enforce=false`) when token is absent
   - writes upload status/build URL/storybook URL/change/error counts into `GITHUB_STEP_SUMMARY`
 - release PR + npm publish: `.github/workflows/release.yml` (when `NPM_TOKEN` is configured)
 
