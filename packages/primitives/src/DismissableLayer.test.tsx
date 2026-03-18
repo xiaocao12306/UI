@@ -1,6 +1,6 @@
 import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { DismissableLayer } from "./DismissableLayer";
 
 function NestedDismissableLayers() {
@@ -57,5 +57,22 @@ describe("DismissableLayer", () => {
 
     fireEvent.pointerDown(screen.getByRole("button", { name: "Outside target" }));
     expect(screen.queryByTestId("outer-shell")).toBeNull();
+  });
+
+  it("ignores Escape dismiss while IME composition is active", () => {
+    const onDismiss = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+
+    render(
+      <DismissableLayer onDismiss={onDismiss} onEscapeKeyDown={onEscapeKeyDown}>
+        <div>Layer body</div>
+      </DismissableLayer>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape", isComposing: true });
+    fireEvent.keyDown(document, { key: "Escape", keyCode: 229 });
+
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onDismiss).not.toHaveBeenCalled();
   });
 });

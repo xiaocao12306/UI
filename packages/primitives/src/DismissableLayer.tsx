@@ -27,6 +27,10 @@ function isTopLayer(element: HTMLElement) {
   return dismissableLayerStack[dismissableLayerStack.length - 1] === element;
 }
 
+function isComposingKeyEvent(event: KeyboardEvent) {
+  return event.isComposing || event.keyCode === 229;
+}
+
 export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLayerProps>(function DismissableLayer(
   { children, onEscapeKeyDown, onPointerDownOutside, onDismiss, ...props },
   forwardedRef
@@ -48,6 +52,9 @@ export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLaye
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") {
+        return;
+      }
+      if (isComposingKeyEvent(event)) {
         return;
       }
 

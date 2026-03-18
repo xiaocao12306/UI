@@ -211,3 +211,4 @@
 - Demo RTL pagination parity: added `RTL release pagination` block and Playwright regression to verify ArrowRight/ArrowLeft page movement mirrors in app-level flows.
 - Toast Escape preemption parity: preempted Escape now bypasses `onEscapeKeyDown`, with unit + Storybook `EscapePreemptedSkipsToastHook` coverage to avoid duplicate guarded-flow side effects.
 - Dropdown IME typeahead parity: menu typeahead now ignores composition-phase key events (`isComposing` / `keyCode=229`) so CJK input confirmation does not jump focus.
+- DismissableLayer IME Escape parity: overlay dismiss layer now ignores Escape during composition (`isComposing` / `keyCode=229`), preventing nested surfaces from closing while CJK input is being confirmed.

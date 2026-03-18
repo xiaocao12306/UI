@@ -237,6 +237,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls dismiss policy for blocking vs non-blocking dialogs. |
 | `showCloseButton` / `closeLabel` | `boolean` / `string` | Close affordance visibility and accessible label text. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Inspect or cancel dismiss intent before `onOpenChange(false)`. |
+| IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`isComposing` / `keyCode=229`) to prevent accidental close while confirming CJK input. |
 | nested dismiss order | top layer first | Nested overlay stacks (for example dropdown inside dialog) dismiss one layer per Escape/outside interaction. |
 
 <Canvas of={DialogStories.NestedDismissOrder} />
@@ -296,6 +297,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | trigger relation | conditional `aria-controls` | Trigger points to menu ID only when expanded. |
 | keyboard behavior | Arrow / Home / End / Escape / Tab / Typeahead | Roving-focus menu navigation with deterministic close policy, buffered multi-character typeahead, repeated-key cycling, and trigger focus restore on Escape. |
 | IME safety | composition key guard | Typeahead matching is paused during active IME composition (`isComposing` / `keyCode=229`) so CJK input confirmation does not move focus unexpectedly. |
+| overlay IME Escape safety | dismiss-layer composition guard | Escape dismiss is ignored during active IME composition to avoid collapsing parent overlays while confirming CJK input. |
 | pointer dismiss focus | outside pointer keeps target focus | Outside pointer dismissal closes menu without forcing focus back to trigger. |
 | nested overlay dismiss | top layer first | Escape/outside dismiss resolves from topmost dismissable layer to avoid collapsing parent overlay stacks in one event. |
 
