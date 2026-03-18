@@ -259,9 +259,10 @@
   - Storybook 稳定性收口（`Core/Tag/MetadataRow` 增补 play 断言，降低 runner 重试噪音）
   - Storybook Toast 稳定性收口（`Feedback/Toast/ToneMatrix` 固定 `duration={0}`，避免自动消失导致的重试噪音）
   - Storybook Pagination 稳定性收口（交互断言改为异步 `findByRole` + 焦点前置检查，降低键盘场景重试噪音）
-  - Pagination 命名语义收口（新增 `ariaLabelledBy`，支持与可见标题绑定 nav 命名并在提供时覆盖 `ariaLabel`）
-  - Pagination 键盘焦点连续性收口（Home/End/Arrow 快捷翻页后自动聚焦新激活页按钮，避免键盘用户丢焦点）
-  - Storybook 静态产物门禁收口（`storybook:static:check` 改为 build + git diff 校验，新增 story 未同步静态产物会提前失败并给出修复提示）
+  - Pagination 命名语义收口（新增 `ariaLabelledBy`，支持可见标题命名导航容器并覆盖 `aria-label` 回退）
+  - Pagination 键盘焦点连续性收口（快捷翻页后自动聚焦新当前页按钮，避免键盘上下文丢失）
+  - Demo 品牌化视觉收口（Hero 面板、状态徽标与分区卡片统一层级，提升产品化观感一致性）
+  - Storybook 静态产物门禁收口（新增 `storybook:static:check`，执行 build + git diff 校验，新增 story 未同步静态产物会提前失败并给出修复提示）
   - Storybook 构建噪音收口（配置 `vite.build.chunkSizeWarningLimit=2500`，减少 vendor chunk 告警噪音）
   - Pages 交付收口（`.github/workflows/demo-pages.yml` 合并发布 Demo 根路径 + Storybook 子路径）
   - Pages 可观测性收口（Deploy 后将 Demo/Storybook 外链写入 `GITHUB_STEP_SUMMARY`）

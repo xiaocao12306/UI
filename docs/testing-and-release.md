@@ -23,6 +23,10 @@ pnpm storybook:build
 pnpm storybook:test:ci
 ```
 
+Storybook static gate behavior:
+- `storybook:static:check` rebuilds `apps/storybook/storybook-static` before interaction tests.
+- stale static diff is treated as error and blocks the command (run `pnpm storybook:build` and commit updated static files).
+
 ## E2E (Playwright)
 Install browser once in local environment:
 
