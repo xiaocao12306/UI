@@ -260,6 +260,27 @@ test("keeps manual tabs panel stable until Enter activation", async ({ page }) =
   await expect(reviewPanel).not.toHaveAttribute("hidden");
 });
 
+test("keeps manual tabs panel stable until Space activation", async ({ page }) => {
+  await page.goto("/");
+
+  const manualTablist = page.getByRole("tablist", { name: "Manual release workflow tabs" });
+  const draftTab = manualTablist.getByRole("tab", { name: "Draft" });
+  const shipTab = manualTablist.getByRole("tab", { name: "Ship" });
+  const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
+  const shipPanel = page.locator(`#${await shipTab.getAttribute("aria-controls")}`);
+
+  await draftTab.focus();
+  await draftTab.press("End");
+  await expect(shipTab).toBeFocused();
+  await expect(draftPanel).toContainText("Draft checklist and scoped API notes.");
+  await expect(draftPanel).not.toHaveAttribute("hidden");
+  await expect(shipPanel).toHaveAttribute("hidden");
+
+  await shipTab.press("Space");
+  await expect(shipPanel).toContainText("Tag release, publish packages, and announce changelog.");
+  await expect(shipPanel).not.toHaveAttribute("hidden");
+});
+
 test("navigates vertical tabs with ArrowDown and ArrowUp", async ({ page }) => {
   await page.goto("/");
 
