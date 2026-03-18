@@ -71,6 +71,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For overlays built on `DismissableLayer`, ignore Escape while IME composition is active so CJK text confirmation does not close parent surfaces unexpectedly.
 - For dialog/drawer flows under app-level shortcuts, rely on built-in Escape preemption behavior so `onEscapeKeyDown` hooks stay side-effect free when Escape is already prevented.
 - Keep trigger `aria-controls` conditional on open state for popover/menu patterns to avoid stale ID references.
+- Use dialog `onCloseReason` for deterministic telemetry (`close-button` / `escape-key` / `outside-pointer`) instead of inferring dismiss origin from external state transitions.
 - For dropdown typeahead, set `textValue` when item labels are non-string or need locale/accent-friendly buffered matching aliases.
 - Ignore dropdown typeahead key matching during IME composition so CJK input confirmation does not shift active menu focus unexpectedly.
 - When app-level shortcuts preempt Escape with `preventDefault()`, keep dropdown-level Escape hooks side-effect free and rely on built-in preemption skip behavior.
@@ -90,6 +91,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={DropdownStories.TypeaheadIgnoresImeComposition} />
 <Canvas of={PopoverStories.CloseReasonTelemetry} />
 <Canvas of={PopoverStories.EscapePreemptedByGlobalHandler} />
+<Canvas of={DialogStories.CloseReasonTelemetry} />
 <Canvas of={DialogStories.EscapeIgnoresImeComposition} />
 <Canvas of={DialogStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={DrawerStories.EscapePreemptedByGlobalHandler} />

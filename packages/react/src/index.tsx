@@ -73,7 +73,7 @@ export { Popover } from "./Popover";
 export type { PopoverCloseReason, PopoverProps } from "./Popover";
 
 export { Dialog } from "./Dialog";
-export type { DialogProps } from "./Dialog";
+export type { DialogCloseReason, DialogProps } from "./Dialog";
 
 export { Drawer } from "./Drawer";
 export type { DrawerProps } from "./Drawer";

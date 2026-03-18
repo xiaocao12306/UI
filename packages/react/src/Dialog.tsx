@@ -3,6 +3,7 @@ import { DismissableLayer, FocusScope, Portal } from "@aurora-ui/primitives";
 import { lockBodyScroll } from "./bodyScrollLock";
 
 export type DialogSize = "sm" | "md" | "lg";
+export type DialogCloseReason = "close-button" | "escape-key" | "outside-pointer";
 
 export type DialogProps = {
   open: boolean;
@@ -17,6 +18,7 @@ export type DialogProps = {
   closeLabel?: string;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
   onPointerDownOutside?: (event: PointerEvent) => void;
+  onCloseReason?: (reason: DialogCloseReason) => void;
   onOpenChange: (open: boolean) => void;
 };
 
@@ -39,10 +41,19 @@ export function Dialog({
   closeLabel = "Close dialog",
   onEscapeKeyDown,
   onPointerDownOutside,
+  onCloseReason,
   onOpenChange
 }: DialogProps) {
   const titleId = React.useId();
   const descriptionId = React.useId();
+
+  const closeWithReason = React.useCallback(
+    (reason: DialogCloseReason) => {
+      onCloseReason?.(reason);
+      onOpenChange(false);
+    },
+    [onCloseReason, onOpenChange]
+  );
 
   React.useEffect(() => {
     if (!open) {
@@ -72,15 +83,27 @@ export function Dialog({
         <DismissableLayer
           onEscapeKeyDown={(event) => {
             onEscapeKeyDown?.(event);
+            if (event.defaultPrevented) {
+              return;
+            }
             if (!closeOnEscape) {
               event.preventDefault();
+              return;
             }
+
+            onCloseReason?.("escape-key");
           }}
           onPointerDownOutside={(event) => {
             onPointerDownOutside?.(event);
+            if (event.defaultPrevented) {
+              return;
+            }
             if (!closeOnOutsidePointer) {
               event.preventDefault();
+              return;
             }
+
+            onCloseReason?.("outside-pointer");
           }}
           onDismiss={() => onOpenChange(false)}
         >
@@ -116,7 +139,7 @@ export function Dialog({
                 {showCloseButton ? (
                   <button
                     type="button"
-                    onClick={() => onOpenChange(false)}
+                    onClick={() => closeWithReason("close-button")}
                     aria-label={closeLabel}
                     style={{
                       borderRadius: "var(--aurora-radius-sm)",

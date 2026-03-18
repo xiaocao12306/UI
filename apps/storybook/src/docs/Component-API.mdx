@@ -237,11 +237,13 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls dismiss policy for blocking vs non-blocking dialogs. |
 | `showCloseButton` / `closeLabel` | `boolean` / `string` | Close affordance visibility and accessible label text. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Inspect or cancel dismiss intent before `onOpenChange(false)`. |
+| `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for dialog-dismiss analytics and workflow tracing. |
 | IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`isComposing` / `keyCode=229`) to prevent accidental close while confirming CJK input. |
 | Escape priority | preempted events skip dialog hook/dismiss | If higher-level handlers already `preventDefault()` Escape, dialog stays open and does not fire `onEscapeKeyDown`. |
 | nested dismiss order | top layer first | Nested overlay stacks (for example dropdown inside dialog) dismiss one layer per Escape/outside interaction. |
 
 <Canvas of={DialogStories.NestedDismissOrder} />
+<Canvas of={DialogStories.CloseReasonTelemetry} />
 <Canvas of={DialogStories.EscapeIgnoresImeComposition} />
 <Canvas of={DialogStories.EscapePreemptedByGlobalHandler} />
 

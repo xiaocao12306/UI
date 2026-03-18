@@ -15,14 +15,16 @@ afterEach(() => {
 describe("Dialog", () => {
   it("calls onOpenChange(false) when close button clicked", () => {
     const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
 
     render(
-      <Dialog open onOpenChange={onOpenChange} title="Settings">
+      <Dialog open onOpenChange={onOpenChange} onCloseReason={onCloseReason} title="Settings">
         <p>Body</p>
       </Dialog>
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
+    expect(onCloseReason).toHaveBeenCalledWith("close-button");
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
@@ -52,19 +54,64 @@ describe("Dialog", () => {
 
   it("does not dismiss on escape when closeOnEscape is false", () => {
     const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
     render(
-      <Dialog open onOpenChange={onOpenChange} title="Pinned" closeOnEscape={false}>
+      <Dialog open onOpenChange={onOpenChange} onCloseReason={onCloseReason} title="Pinned" closeOnEscape={false}>
         <p>Body</p>
       </Dialog>
     );
 
     fireEvent.keyDown(document, { key: "Escape" });
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it("emits close reasons for Escape and outside-pointer dismiss", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <Dialog open onOpenChange={onOpenChange} onCloseReason={onCloseReason} title="Dismiss reasons">
+        <p>Body</p>
+      </Dialog>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "escape-key");
+    expect(onOpenChange).toHaveBeenNthCalledWith(1, false);
+
+    fireEvent.pointerDown(document.body);
+    expect(onCloseReason).toHaveBeenNthCalledWith(2, "outside-pointer");
+    expect(onOpenChange).toHaveBeenNthCalledWith(2, false);
+  });
+
+  it("does not emit close reason when dialog escape handler prevents dismiss", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <Dialog
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        onEscapeKeyDown={(event) => {
+          event.preventDefault();
+        }}
+        title="Guarded dismiss"
+      >
+        <p>Body</p>
+      </Dialog>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
   it("skips escape callback and dismiss when Escape is preempted upstream", () => {
     const onOpenChange = vi.fn();
     const onEscapeKeyDown = vi.fn();
+    const onCloseReason = vi.fn();
     const preemptEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -74,7 +121,13 @@ describe("Dialog", () => {
     document.addEventListener("keydown", preemptEscape, true);
 
     render(
-      <Dialog open onOpenChange={onOpenChange} title="Preempted escape" onEscapeKeyDown={onEscapeKeyDown}>
+      <Dialog
+        open
+        onOpenChange={onOpenChange}
+        title="Preempted escape"
+        onEscapeKeyDown={onEscapeKeyDown}
+        onCloseReason={onCloseReason}
+      >
         <p>Body</p>
       </Dialog>
     );
@@ -82,6 +135,7 @@ describe("Dialog", () => {
     fireEvent.keyDown(document, { key: "Escape" });
 
     expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
     document.removeEventListener("keydown", preemptEscape, true);
   });
@@ -104,13 +158,21 @@ describe("Dialog", () => {
 
   it("does not dismiss on outside pointer when closeOnOutsidePointer is false", () => {
     const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
     render(
-      <Dialog open onOpenChange={onOpenChange} title="Pinned" closeOnOutsidePointer={false}>
+      <Dialog
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        title="Pinned"
+        closeOnOutsidePointer={false}
+      >
         <p>Body</p>
       </Dialog>
     );
 
     fireEvent.pointerDown(document.body);
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
