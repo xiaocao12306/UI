@@ -52,6 +52,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For `aria-activedescendant` combobox flows, keep listbox options out of tab order and preserve input focus during pointer selection.
 - Keep combobox `aria-controls` conditional on popup visibility to avoid dangling listbox references.
 - Keep command-palette combobox `aria-controls` conditional on filtered-result listbox visibility so empty states do not expose stale or missing listbox IDs.
+- Localize command-palette result list semantics with `resultsAriaLabel` in non-English products, instead of relying on the default English listbox label.
 
 <Canvas of={FormFieldStories.WithInputControl} />
 <Canvas of={TooltipStories.DescribedByLifecycle} />

@@ -520,6 +520,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls whether overlay dismisses on Escape or outside pointer interactions for blocking approval flows. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | `(event) => void` | Low-level dismiss hooks; call `event.preventDefault()` for conditional approval guards while keeping default close policy enabled. |
 | `emptyMessage` | `ReactNode` | Custom empty-state guidance for no-match queries. |
+| `resultsAriaLabel` | `string` | Localized accessible name for the command result listbox (default: `Command results`). |
 | `onQueryChange` | `(query: string) => void` | Use for analytics and AI telemetry pipelines. |
 | `getResultsStatusText` | `({ query, visibleCount, enabledCount, totalCount }) => string` | Customize live narration with both visible and actionable-result counts. |
 | `onOpenChange` | `(open: boolean) => void` | Required controlled dialog state. |
@@ -531,6 +532,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
 <Canvas of={CommandPaletteStories.EmptyStateAriaControlsLifecycle} />
+<Canvas of={CommandPaletteStories.LocalizedResultsLabel} />
 <Canvas of={CommandPaletteStories.DisabledCommandGuard} />
 <Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />
 <Canvas of={CommandPaletteStories.PersistentSelection} />

@@ -15,6 +15,7 @@ export type CommandPaletteProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   commands: CommandItem[];
+  resultsAriaLabel?: string;
   closeOnSelect?: boolean;
   clearQueryOnEscape?: boolean;
   closeOnEscape?: boolean;
@@ -36,6 +37,7 @@ export function CommandPalette({
   open,
   onOpenChange,
   commands,
+  resultsAriaLabel = "Command results",
   closeOnSelect = true,
   clearQueryOnEscape = true,
   closeOnEscape = true,
@@ -251,7 +253,12 @@ export function CommandPalette({
           {resultsStatusText}
         </p>
         {hasResults ? (
-          <div id={listId} role="listbox" aria-label="Command results" style={{ maxHeight: 280, overflow: "auto", display: "grid", gap: 4 }}>
+          <div
+            id={listId}
+            role="listbox"
+            aria-label={resultsAriaLabel}
+            style={{ maxHeight: 280, overflow: "auto", display: "grid", gap: 4 }}
+          >
             {filtered.map((item, index) => {
               const active = index === activeIndex;
               return (

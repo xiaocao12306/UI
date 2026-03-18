@@ -288,6 +288,22 @@ describe("CommandPalette", () => {
     expect(options[1]).toHaveAttribute("aria-setsize", "2");
   });
 
+  it("supports localized listbox accessible naming", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        resultsAriaLabel="命令结果列表"
+        commands={[
+          { key: "open-settings", label: "Open Settings", keywords: ["settings"] },
+          { key: "create-project", label: "Create Project", keywords: ["project"] }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("listbox", { name: "命令结果列表" })).toBeInTheDocument();
+  });
+
   it("supports keyboard navigation and enter selection", () => {
     const onCreate = vi.fn();
     const onOpenChange = vi.fn();

@@ -260,7 +260,7 @@
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
-  - Release Gate 证据刷新（2026-03-18：demo E2E `51` + Storybook `162/162` + dry-run `react` unpacked `~301.3 kB`）
+  - Release Gate 证据刷新（2026-03-18：demo E2E `51` + Storybook `163/163` + dry-run `react` unpacked `~301.3 kB`）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
   - CommandPalette Escape 查询收口（新增 `clearQueryOnEscape` 默认行为：首次 Escape 清空 query，二次 Escape 再触发关闭）
@@ -306,7 +306,9 @@
   - Storybook Popover 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
   - Demo Escape 抢占验收扩展（Dialog/Drawer/Popover/CommandPalette/Dropdown/Toast 新增 Playwright 回归，锁定全局抢占后保持打开，解除抢占后恢复正常关闭）
   - CommandPalette 空态语义收口（无匹配结果时移除 combobox `aria-controls` 并卸载 listbox，避免空态悬空引用）
+  - CommandPalette 结果命名语义收口（新增 `resultsAriaLabel`，支持 listbox 可访问名称本地化）
   - Storybook CommandPalette 空态引用验收（新增 `EmptyStateAriaControlsLifecycle` 场景，锁定 `aria-controls` 与 listbox 挂载生命周期）
+  - Storybook CommandPalette i18n 验收（新增 `LocalizedResultsLabel` 场景，锁定结果 listbox 本地化命名）
   - Storybook 文档引用门禁收口（新增 `storybook:docs:check`，校验 docs MDX 的 `*Stories` 引用都有 import，并纳入 `storybook:test:ci`）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）

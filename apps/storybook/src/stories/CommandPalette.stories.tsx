@@ -439,6 +439,24 @@ export const EmptyStateAriaControlsLifecycle: Story = {
   }
 };
 
+export const LocalizedResultsLabel: Story = {
+  render: () => (
+    <CommandPalette
+      open
+      onOpenChange={() => {}}
+      resultsAriaLabel="AI workflow commands"
+      commands={[
+        { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
+        { key: "run-e2e", label: "Run E2E Smoke", keywords: ["playwright", "test"] }
+      ]}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await expect(await canvas.findByRole("listbox", { name: "AI workflow commands" })).toBeInTheDocument();
+  }
+};
+
 export const DisabledOnlyResults: Story = {
   render: () => <DisabledOnlyResultsPalette />,
   play: async ({ canvasElement }) => {
