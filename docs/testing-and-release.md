@@ -82,36 +82,14 @@ pnpm --filter @aurora-ui/primitives exec npm publish --dry-run --access public
 pnpm --filter @aurora-ui/react exec npm publish --dry-run --access public
 ```
 
-Latest dry-run record:
-- date: 2026-03-18
-- result:
-  - `changeset version`: `No unreleased changesets found, exiting.`
-  - `@aurora-ui/tokens`: dry-run tarball size ~3.0 kB
-  - `@aurora-ui/primitives`: dry-run tarball size ~14.0 kB
-  - `@aurora-ui/react`: dry-run tarball size ~54.3 kB (unpacked ~316.7 kB after latest overlay/demo telemetry and Tabs/Table telemetry refinements)
-  - npm prints login warning in dry-run mode, but command exits successfully
-  - CI summary now includes package size / unpacked size table via `GITHUB_STEP_SUMMARY`
-
-Latest release gate run:
-- date: 2026-03-18
-- command: `pnpm release:gate`
-- result: passed (`verify` + `demo:e2e` + `storybook:test:ci` + `release:dry-run`)
-- notes:
-  - demo E2E total now `60` checks
-  - Storybook interaction suites refreshed to `32/32`, tests `174/174` all passed after latest Dialog/Drawer telemetry + Popover story typecheck hardening + telemetry story expansion
-  - primitives regression: `pnpm --filter @aurora-ui/primitives exec vitest run src/DismissableLayer.test.tsx` passed after IME Escape + Escape preemption dismiss-guard hardening
-  - react overlay regressions: `pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/Drawer.test.tsx` passed after IME Escape guard coverage expansion
-  - react preemption regressions: `pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/CommandPalette.test.tsx` passed after Escape-preemption callback-skip coverage expansion and close-reason lifecycle reset hardening
-  - react preemption overlay expansion: `pnpm --filter @aurora-ui/react exec vitest run src/Popover.test.tsx src/Dropdown.test.tsx` passed after Escape-preemption callback-skip coverage expansion
-  - react preemption overlay completion: `pnpm --filter @aurora-ui/react exec vitest run src/Drawer.test.tsx` passed after Escape-preemption callback-skip coverage expansion
-  - demo IME/legacy keyboard regressions: `pnpm demo:e2e` passed after adding Dialog/Drawer/Dropdown/Toast/CommandPalette close-reason telemetry checks plus Tabs/Table telemetry indicators and existing IME/legacy keyboard paths
-  - release dry-run package size evidence refreshed (`react` unpacked size ~318.9 kB)
+Run history/evidence is tracked in workflow run summaries (`GITHUB_STEP_SUMMARY`) instead of this document.
 
 ## GitHub Release Automation
 Workflow: `.github/workflows/release.yml`
 
 Behavior:
 - always runs Changesets version PR automation on `main`
+- runs `pnpm release:gate:ci` (`verify + demo:e2e + demo:dist:check + storybook:test:ci`) before any version/publish step
 - publishes npm packages only when `NPM_TOKEN` is configured
 - uses npm provenance (`id-token: write`) during publish
 - when `NPM_TOKEN` is missing, workflow emits explicit warning annotation and writes skip details into `GITHUB_STEP_SUMMARY` with setup path (`docs/secrets.md`)
@@ -134,10 +112,13 @@ GitHub Actions workflow runs:
 - typecheck
 - test
 - build
+- storybook interaction gate (`pnpm storybook:test:ci`, includes docs/static freshness checks)
 - demo e2e smoke test
-- storybook static build
-- chromatic visual regression upload (when token configured)
-- changesets release PR + npm publish (when `NPM_TOKEN` configured)
+- demo static freshness gate (`pnpm demo:dist:check`)
+
+Separate workflows:
+- Chromatic visual regression upload: `.github/workflows/chromatic.yml` (when `CHROMATIC_PROJECT_TOKEN` is configured)
+- release PR + npm publish: `.github/workflows/release.yml` (when `NPM_TOKEN` is configured)
 
 ## Release Readiness Checklist
 - all quality gates green
@@ -148,7 +129,7 @@ GitHub Actions workflow runs:
 One-command gate (recommended before cutting a release):
 
 ```bash
-pnpm release:gate
+pnpm release:gate:ci
 ```
 
 This runs:
@@ -156,4 +137,12 @@ This runs:
 2. `pnpm demo:e2e`
 3. `pnpm demo:dist:check`
 4. `pnpm storybook:test:ci`（内含 `storybook:docs:check` + `storybook:static:check`）
+
+Full local pre-release gate (includes tarball evidence):
+
+```bash
+pnpm release:gate
+```
+
+This appends:
 5. `pnpm release:dry-run`

@@ -22,7 +22,6 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
-      - run: pnpm storybook:build
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm storybook:test:ci
 
@@ -40,3 +39,4 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm demo:e2e
+      - run: pnpm demo:dist:check

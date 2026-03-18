@@ -25,6 +25,9 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Run Release Quality Gate
+        run: pnpm release:gate:ci
 
       - id: npm-token
         name: Check NPM Token
@@ -41,8 +44,8 @@ jobs:
         with:
           version: pnpm version-packages
           publish: pnpm release
-          commit: "chore(release): version packages"
-          title: "chore(release): version packages"
+          commit: "构建(发布): 版本变更"
+          title: "构建(发布): 版本变更"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -52,8 +55,8 @@ jobs:
         uses: changesets/action@v1
         with:
           version: pnpm version-packages
-          commit: "chore(release): version packages"
-          title: "chore(release): version packages"
+          commit: "构建(发布): 版本变更"
+          title: "构建(发布): 版本变更"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
