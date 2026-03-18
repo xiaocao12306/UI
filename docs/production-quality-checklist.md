@@ -155,6 +155,7 @@
 - Table 命名语义补齐：新增 `ariaLabel` API 与 Storybook `AccessibleNameWithoutCaption` 场景，覆盖无 caption 的可访问性分支。
 - Table 命名语义扩展：新增 `ariaLabelledBy` API 与 Storybook `AccessibleNameLabelledByHeading` 场景，覆盖可见标题命名表格路径并优先于 `ariaLabel`。
 - Table 命名兜底收口：无 `caption/ariaLabel` 时回退 `aria-label="Data table"`，补齐单测与 Storybook `AccessibleNameFallback` 断言。
+- Table Storybook keyboard parity: `SortTelemetry` now covers `Enter` + `Space` sorting activation paths to lock non-pointer behavior parity in interaction runner baselines.
 - Table 排序稳定性收口：相同排序值保持原始输入顺序，避免同值行在不同运行环境中抖动。
 - Tabs 回调语义收口：重复点击已选中页签不再触发 `onValueChange`，并补齐 Storybook 遥测去重交互断言。
 - Tabs 引用语义收口：所有 `tabpanel` 持续挂载并使用 `hidden` 切换，保证每个 tab 的 `aria-controls` 都有有效目标。

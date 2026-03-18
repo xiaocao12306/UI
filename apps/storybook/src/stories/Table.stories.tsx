@@ -224,7 +224,7 @@ export const SortTelemetry: Story = {
     await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
 
     issueSortAsc.focus();
-    await userEvent.keyboard("{Enter}");
+    await userEvent.keyboard("{Space}");
     await expect(canvas.getByText("id asc")).toBeInTheDocument();
     await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
     await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Issue ascending.");

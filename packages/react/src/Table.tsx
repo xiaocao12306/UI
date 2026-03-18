@@ -362,5 +362,5 @@ function defaultGetSortStatusText({
 }
 
 function isSortSpaceActivationKey(key: string) {
-  return key === " " || key === "Spacebar";
+  return key === " " || key === "Space" || key === "Spacebar";
 }
