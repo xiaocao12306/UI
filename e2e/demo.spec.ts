@@ -138,6 +138,27 @@ test("keeps drawer open when Escape is preempted by a global handler", async ({ 
   await expect(drawer).toBeHidden();
 });
 
+test("reports drawer close reason telemetry for close button, Escape, and outside pointer", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Open Drawer" });
+  const telemetry = page.getByTestId("drawer-close-reason-demo");
+
+  await expect(telemetry).toHaveText("none");
+
+  await trigger.click();
+  await page.getByRole("button", { name: "Close drawer" }).click();
+  await expect(telemetry).toHaveText("close-button");
+
+  await trigger.click();
+  await page.keyboard.press("Escape");
+  await expect(telemetry).toHaveText("escape-key");
+
+  await trigger.click();
+  await page.mouse.click(8, 8);
+  await expect(telemetry).toHaveText("outside-pointer");
+});
+
 test("filters command palette and triggers drawer action", async ({ page }) => {
   await page.goto("/");
 

@@ -125,6 +125,7 @@ function App() {
   const [paletteEscapeClearsQuery, setPaletteEscapeClearsQuery] = React.useState(true);
   const [paletteQueryTelemetry, setPaletteQueryTelemetry] = React.useState("");
   const [popoverCloseReason, setPopoverCloseReason] = React.useState("none");
+  const [drawerCloseReason, setDrawerCloseReason] = React.useState("none");
   const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
@@ -522,6 +523,12 @@ function App() {
               {popoverCloseReason}
             </strong>
           </p>
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            Drawer close reason telemetry:{" "}
+            <strong data-testid="drawer-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
+              {drawerCloseReason}
+            </strong>
+          </p>
           <div style={{ display: "grid", gap: 6, maxWidth: 300 }}>
             <label htmlFor="overlay-outside-target" style={{ color: "var(--aurora-text-secondary)", fontSize: 14 }}>
               Overlay outside focus target
@@ -634,6 +641,7 @@ function App() {
           onOpenChange={setDrawerOpen}
           title="Drawer Example"
           description="Contextual panel for filters, details, and quick actions."
+          onCloseReason={setDrawerCloseReason}
         >
           <p style={{ margin: 0 }}>This drawer can host contextual forms, filters, or details.</p>
         </Drawer>
