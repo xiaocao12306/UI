@@ -101,7 +101,11 @@ export function Toast({
   onOpenChange
 }: ToastProps) {
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const closeButtonFocusIntentRef = React.useRef(true);
   const [pauseState, setPauseState] = React.useState({ hover: false, focus: false });
+  const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
+  const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
+  const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
   const paused = pauseOnHover && (pauseState.hover || pauseState.focus);
   const titleId = React.useId();
   const descriptionId = React.useId();
@@ -266,14 +270,52 @@ export function Toast({
           type="button"
           onClick={closeByButton}
           aria-label={closeLabel}
+          onMouseEnter={() => {
+            setCloseButtonHovered(true);
+          }}
+          onMouseLeave={() => {
+            setCloseButtonHovered(false);
+            setCloseButtonPressed(false);
+          }}
+          onMouseDown={() => {
+            closeButtonFocusIntentRef.current = false;
+            setCloseButtonFocusVisible(false);
+            setCloseButtonPressed(true);
+          }}
+          onMouseUp={() => {
+            setCloseButtonPressed(false);
+          }}
+          onKeyDown={() => {
+            closeButtonFocusIntentRef.current = true;
+          }}
+          onFocus={(event) => {
+            setCloseButtonFocusVisible(resolveFocusVisibleState(event.currentTarget, closeButtonFocusIntentRef.current));
+          }}
+          onBlur={() => {
+            setCloseButtonFocusVisible(false);
+            setCloseButtonPressed(false);
+          }}
           style={{
             borderRadius: "var(--aurora-radius-sm)",
-            border: "1px solid var(--aurora-border-default)",
-            background: "var(--aurora-surface-elevated)",
+            border:
+              closeButtonHovered || closeButtonFocusVisible
+                ? "1px solid var(--aurora-border-strong)"
+                : "1px solid var(--aurora-border-default)",
+            background: closeButtonPressed
+              ? "color-mix(in srgb, var(--aurora-surface-elevated) 66%, var(--aurora-surface-default))"
+              : closeButtonHovered
+                ? "color-mix(in srgb, var(--aurora-surface-elevated) 82%, var(--aurora-surface-default))"
+                : "var(--aurora-surface-elevated)",
             cursor: "pointer",
-            color: "var(--aurora-text-secondary)",
+            color: closeButtonHovered ? "var(--aurora-text-primary)" : "var(--aurora-text-secondary)",
+            boxShadow: closeButtonFocusVisible
+              ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 45%, transparent)"
+              : "none",
             width: 28,
-            height: 28
+            height: 28,
+            transform: closeButtonPressed ? "translateY(1px)" : "translateY(0)",
+            transition:
+              "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
           }}
         >
           ×
@@ -287,4 +329,12 @@ export function Toast({
       {action ? <div>{action}</div> : null}
     </div>
   );
+}
+
+function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {
+  try {
+    return target.matches(":focus-visible");
+  } catch {
+    return fallback;
+  }
 }

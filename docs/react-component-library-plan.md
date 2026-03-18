@@ -138,6 +138,7 @@
   - Drawer 焦点回收收口（默认关闭后恢复原焦点，支持 `restoreFocus=false` 关闭）
   - Popover/Dropdown 图标触发器可访问性补齐（`triggerAriaLabel`，覆盖 icon-only 交互）
   - 生产级返工（Toast）
+  - Toast 关闭按钮状态矩阵收口（hover/active/focus-visible 反馈统一，降低键盘与鼠标反馈割裂）
   - 生产级返工（Tabs）
   - Tabs 交互语义收口（重复选择当前 tab 不再触发 `onValueChange`，降低遥测噪音）
   - Tabs 引用语义收口（所有 `tabpanel` 常驻并通过 `hidden` 切换，保证 `aria-controls` 始终有效）
