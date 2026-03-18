@@ -256,6 +256,45 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledWith("name", "desc");
   });
 
+  it("clears stale sort state when active sort column becomes non-sortable", () => {
+    const data = [
+      { name: "Dialog", score: 80 },
+      { name: "Button", score: 95 }
+    ];
+
+    const { rerender } = render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={data}
+        defaultSortKey="name"
+      />
+    );
+
+    const sortedFirstRow = screen.getAllByRole("row")[1];
+    expect(sortedFirstRow).toHaveTextContent("Button");
+    expect(screen.getByRole("columnheader", { name: /Name/ })).toHaveAttribute("aria-sort", "ascending");
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toBeInTheDocument();
+
+    rerender(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={data}
+        defaultSortKey="name"
+      />
+    );
+
+    const restoredFirstRow = screen.getAllByRole("row")[1];
+    expect(restoredFirstRow).toHaveTextContent("Dialog");
+    expect(screen.getByRole("columnheader", { name: /Name/ })).not.toHaveAttribute("aria-sort");
+    expect(screen.queryByRole("button", { name: /Name sort/i })).toBeNull();
+  });
+
   it("supports keyboard activation on sortable headers", async () => {
     const onSortChange = vi.fn();
     const user = userEvent.setup();

@@ -91,6 +91,17 @@ export function Table<T>({
     resolveInitialSortState(columns, defaultSortKey, defaultSortDirection)
   );
 
+  React.useEffect(() => {
+    if (!sortState) {
+      return;
+    }
+
+    const activeSortColumn = columns.find((column) => String(column.key) === sortState.key);
+    if (!activeSortColumn?.sortable) {
+      setSortState(null);
+    }
+  }, [columns, sortState]);
+
   const sortedEntries = React.useMemo(() => {
     const sourceEntries = data.map((row, sourceIndex) => ({ row, sourceIndex }));
     if (!sortState) {
@@ -211,8 +222,8 @@ export function Table<T>({
           <tr>
             {columns.map((column) => {
               const key = String(column.key);
-              const sorted = sortState?.key === key && sortedEntries.length > 1 ? sortState.direction : undefined;
               const sortable = Boolean(column.sortable);
+              const sorted = sortable && sortState?.key === key && sortedEntries.length > 1 ? sortState.direction : undefined;
               const ariaSort = sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined;
               const textAlign = column.align ?? "left";
               const headerLabel = typeof column.header === "string" ? column.header : key;
