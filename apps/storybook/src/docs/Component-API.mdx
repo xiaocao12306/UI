@@ -523,7 +523,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onEscapeKeyDown` / `onPointerDownOutside` | `(event) => void` | Low-level dismiss hooks; call `event.preventDefault()` for conditional approval guards while keeping default close policy enabled. |
 | `emptyMessage` | `ReactNode` | Custom empty-state guidance for no-match queries. |
 | `resultsAriaLabel` | `string` | Localized accessible name for the command result listbox (default: `Command results`). |
-| `onQueryChange` | `(query: string) => void` | Use for analytics and AI telemetry pipelines. |
+| `onQueryChange` | `(query: string) => void` | Use for analytics and AI telemetry pipelines; palette close now emits `""` so external telemetry/state can reset with internal query lifecycle. |
 | `getResultsStatusText` | `({ query, visibleCount, enabledCount, totalCount }) => string` | Customize live narration with both visible and actionable-result counts. |
 | `onOpenChange` | `(open: boolean) => void` | Required controlled dialog state. |
 | combobox relation | conditional `aria-controls` + listbox mount | Search input references listbox only while filtered results exist, avoiding empty-state dangling IDs. |

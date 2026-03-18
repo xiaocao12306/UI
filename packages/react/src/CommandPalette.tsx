@@ -59,17 +59,24 @@ export function CommandPalette({
   const [activeIndex, setActiveIndex] = React.useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const activeCommandKeyRef = React.useRef<string | null>(null);
+  const wasOpenRef = React.useRef(open);
   const listId = React.useId();
 
   React.useEffect(() => {
-    if (!open) {
-      setQuery("");
+    if (open) {
+      inputRef.current?.focus();
+    } else if (wasOpenRef.current) {
+      setQuery((currentQuery) => {
+        if (currentQuery.length > 0) {
+          onQueryChange?.("");
+        }
+        return "";
+      });
       setActiveIndex(0);
-      return;
     }
 
-    inputRef.current?.focus();
-  }, [open]);
+    wasOpenRef.current = open;
+  }, [onQueryChange, open]);
 
   const normalizedQuery = React.useMemo(() => normalizeSearchText(query.trim()), [query]);
 

@@ -423,29 +423,35 @@ describe("CommandPalette", () => {
 
   it("resets search query after palette closes", () => {
     const onOpenChange = vi.fn();
+    const onQueryChange = vi.fn();
     const { rerender } = render(
       <CommandPalette
         open
         onOpenChange={onOpenChange}
+        onQueryChange={onQueryChange}
         commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
       />
     );
 
     fireEvent.change(screen.getByLabelText("Search commands"), { target: { value: "settings" } });
     expect((screen.getByLabelText("Search commands") as HTMLInputElement).value).toBe("settings");
+    expect(onQueryChange).toHaveBeenLastCalledWith("settings");
 
     rerender(
       <CommandPalette
         open={false}
         onOpenChange={onOpenChange}
+        onQueryChange={onQueryChange}
         commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
       />
     );
+    expect(onQueryChange).toHaveBeenLastCalledWith("");
 
     rerender(
       <CommandPalette
         open
         onOpenChange={onOpenChange}
+        onQueryChange={onQueryChange}
         commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
       />
     );

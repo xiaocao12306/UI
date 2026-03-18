@@ -308,6 +308,7 @@
   - CommandPalette 空态语义收口（无匹配结果时移除 combobox `aria-controls` 并卸载 listbox，避免空态悬空引用）
   - CommandPalette 结果命名语义收口（新增 `resultsAriaLabel`，支持 listbox 可访问名称本地化）
   - CommandPalette 对话文案语义收口（新增 `title/description/searchAriaLabel`，支持非英文产品可访问名称本地化）
+  - CommandPalette 查询遥测收口（关闭时自动触发 `onQueryChange(\"\")`，确保外部 telemetry 与内部 query 生命周期一致）
   - Storybook CommandPalette 空态引用验收（新增 `EmptyStateAriaControlsLifecycle` 场景，锁定 `aria-controls` 与 listbox 挂载生命周期）
   - Storybook CommandPalette i18n 验收（新增 `LocalizedResultsLabel` 场景，锁定结果 listbox 本地化命名）
   - Storybook CommandPalette i18n 验收扩展（新增 `LocalizedDialogCopy` 场景，锁定 dialog heading + 搜索输入 + listbox 的本地化命名）

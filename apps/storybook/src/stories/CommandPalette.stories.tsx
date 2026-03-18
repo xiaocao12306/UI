@@ -72,7 +72,10 @@ function QueryTelemetryPalette() {
   return (
     <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        Latest query telemetry: <strong style={{ color: "var(--aurora-text-primary)" }}>{query || "N/A"}</strong>
+        Latest query telemetry:{" "}
+        <strong data-testid="query-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
+          {query || "N/A"}
+        </strong>
       </p>
       <CommandPalette
         open={open}
@@ -414,6 +417,7 @@ export const QueryTelemetry: Story = {
 
     await userEvent.keyboard("{ArrowDown}{Enter}");
     await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("query-telemetry")).toHaveTextContent("N/A");
   }
 };
 
