@@ -191,4 +191,4 @@ This appends: 5. `pnpm release:dry-run`
 1. `CI` workflow：查看 `Storybook Interaction Gate` + `Demo Quality Gate` summary（coverage/docs/static/test + demo e2e/dist gate 快照）。
 2. `Release Dry Run` workflow：查看包体积表、失败步骤、恢复文件计数。
 3. `Chromatic Visual Tests` workflow：查看 mode/token 状态、build/storybook URL、change/error 计数。
-4. `Release` workflow：查看 `Release Gate (CI)` summary + `Publish Mode` summary（`enforce`/token 状态）。
+4. `Release` workflow：查看 `Release Gate (CI)` summary（verify + demo e2e run/result + demo dist + storybook gate）以及 `Publish Mode` summary（`enforce`/token 状态）。

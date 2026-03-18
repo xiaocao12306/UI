@@ -39,6 +39,9 @@ jobs:
           gate_status=${PIPESTATUS[0]}
 
           verify_line=$(grep -m1 "verify" /tmp/release-gate.log || true)
+          demo_run_line=$(grep -m1 "^Running [0-9][0-9]* tests using" /tmp/release-gate.log || true)
+          demo_result_line=$(grep -m1 " passed (" /tmp/release-gate.log || true)
+          demo_failed_line=$(grep -m1 " failed" /tmp/release-gate.log || true)
           demo_dist_line=$(grep -m1 "\\[demo-dist-check\\] ok:" /tmp/release-gate.log || true)
           storybook_coverage_line=$(grep -m1 "docs reference coverage:" /tmp/release-gate.log || true)
           storybook_docs_line=$(grep -m1 "\\[storybook-docs-import-check\\] ok:" /tmp/release-gate.log || true)
@@ -56,6 +59,11 @@ jobs:
             fi
             echo "- command: \`pnpm release:gate:ci\`"
             echo "- ${verify_line:-verify: n/a}"
+            echo "- ${demo_run_line:-demo:e2e run line: n/a}"
+            echo "- ${demo_result_line:-demo:e2e result line: n/a}"
+            if [ "$gate_status" -ne 0 ]; then
+              echo "- ${demo_failed_line:-demo:e2e failed line: n/a}"
+            fi
             echo "- ${demo_dist_line:-demo dist gate: n/a}"
             echo "- ${storybook_coverage_line:-storybook docs reference coverage: n/a}"
             echo "- ${storybook_docs_line:-storybook docs gate: n/a}"
