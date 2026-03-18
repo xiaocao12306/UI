@@ -129,6 +129,7 @@ function App() {
   const [framework, setFramework] = React.useState("react");
   const [releaseDate, setReleaseDate] = React.useState("2026-03-17");
   const [feedPage, setFeedPage] = React.useState(1);
+  const [rtlFeedPage, setRtlFeedPage] = React.useState(4);
   const [tableLoading, setTableLoading] = React.useState(false);
   const [tableEmpty, setTableEmpty] = React.useState(false);
   const feedPageSize = 3;
@@ -424,6 +425,24 @@ function App() {
               page={feedPage}
               pageCount={feedPageCount}
               onPageChange={setFeedPage}
+            />
+          </div>
+          <div dir="rtl" style={{ display: "grid", gap: 10 }}>
+            <h3 style={{ margin: 0, fontSize: 16 }}>RTL Pagination</h3>
+            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+              In RTL layouts, ArrowRight moves to the previous page and ArrowLeft moves to the next page.
+            </p>
+            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+              Current RTL page:{" "}
+              <strong data-testid="rtl-pagination-page" style={{ color: "var(--aurora-text-primary)" }}>
+                {rtlFeedPage}
+              </strong>
+            </p>
+            <Pagination
+              ariaLabel="RTL release pagination"
+              page={rtlFeedPage}
+              pageCount={7}
+              onPageChange={setRtlFeedPage}
             />
           </div>
         </Section>

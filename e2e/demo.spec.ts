@@ -439,6 +439,22 @@ test("navigates release pagination with Home/End shortcuts", async ({ page }) =>
   await expect(page.getByText("v0.1.0: Button interaction states promoted to production grade.")).toBeVisible();
 });
 
+test("mirrors pagination arrow shortcuts in rtl layout", async ({ page }) => {
+  await page.goto("/");
+
+  const rtlNav = page.getByRole("navigation", { name: "RTL release pagination" });
+  const currentPage = rtlNav.getByRole("button", { name: "Current page, 4" });
+  await currentPage.focus();
+  await currentPage.press("ArrowRight");
+
+  await expect(rtlNav.getByRole("button", { name: "Current page, 3" })).toBeVisible();
+  await expect(page.getByTestId("rtl-pagination-page")).toHaveText("3");
+
+  await rtlNav.getByRole("button", { name: "Current page, 3" }).press("ArrowLeft");
+  await expect(rtlNav.getByRole("button", { name: "Current page, 4" })).toBeVisible();
+  await expect(page.getByTestId("rtl-pagination-page")).toHaveText("4");
+});
+
 test("selects framework from combobox", async ({ page }) => {
   await page.goto("/");
 
