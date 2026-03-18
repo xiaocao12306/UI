@@ -34,4 +34,15 @@ describe("Button", () => {
     fireEvent.focus(button);
     expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
   });
+
+  it("supports legacy Spacebar key value for pressed-state feedback", () => {
+    render(<Button>Legacy Spacebar</Button>);
+    const button = screen.getByRole("button", { name: "Legacy Spacebar" });
+
+    fireEvent.keyDown(button, { key: "Spacebar" });
+    expect(button.getAttribute("style")).toContain("translateY(1px)");
+
+    fireEvent.keyUp(button, { key: "Spacebar" });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+  });
 });

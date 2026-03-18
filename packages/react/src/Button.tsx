@@ -164,13 +164,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         onBlur?.(event);
       }}
       onKeyDown={(event) => {
-        if (!interactionDisabled && (event.key === " " || event.key === "Enter")) {
+        if (!interactionDisabled && isButtonActivationKey(event.key)) {
           setPressed(true);
         }
         onKeyDown?.(event);
       }}
       onKeyUp={(event) => {
-        if (event.key === " " || event.key === "Enter") {
+        if (isButtonActivationKey(event.key)) {
           setPressed(false);
         }
         onKeyUp?.(event);
@@ -198,3 +198,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     </button>
   );
 });
+
+function isButtonActivationKey(key: string) {
+  return key === "Enter" || key === " " || key === "Spacebar";
+}
