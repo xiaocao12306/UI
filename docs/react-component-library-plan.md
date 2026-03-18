@@ -213,6 +213,7 @@
   - CommandPalette 关闭策略收口（`closeOnEscape`/`closeOnOutsidePointer` 支持阻塞式审批流，避免误关闭）
   - Demo 阻塞式命令面板模式（可切换 `closeOnEscape/closeOnOutsidePointer`）与 Playwright 外部点击/Escape 回归用例
   - Demo 命令面板连续执行模式（`closeOnSelect=false`）与 Playwright 选择后保持打开回归
+  - Demo 命令面板禁用项场景（`disabled` option 不可执行且保持打开）与 Playwright 回归
   - Demo 阻塞式 Toast 通知（`closeOnEscape={false}`）与 Playwright 显式关闭路径回归
   - Demo Toast 堆叠顺序场景（top-most 优先）与 Playwright Escape 逐层关闭回归
   - Demo 手动激活 Tabs 场景（`activationMode="manual"`）与 Playwright 键盘焦点/激活分离回归

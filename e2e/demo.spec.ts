@@ -128,6 +128,22 @@ test("keeps command palette open after command select in persistent mode", async
   await expect(palette).toBeHidden();
 });
 
+test("does not close command palette when disabled command is clicked", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await expect(palette).toBeVisible();
+
+  await palette.getByPlaceholder("Search commands...").fill("archive");
+  const disabledOption = palette.getByRole("option", { name: "Archive Workspace" });
+  await expect(disabledOption).toHaveAttribute("aria-disabled", "true");
+  await palette.getByPlaceholder("Search commands...").press("Enter");
+
+  await expect(palette).toBeVisible();
+  await expect(palette.getByRole("status")).toContainText('No enabled commands match "archive".');
+});
+
 test("highlights active section in anchor nav", async ({ page }) => {
   await page.goto("/");
 

@@ -574,6 +574,12 @@ function App() {
               keywords: ["new", "workspace"],
               onSelect: () => setToastOpen(true)
             },
+            {
+              key: "archive-workspace",
+              label: "Archive Workspace",
+              keywords: ["archive", "lock"],
+              disabled: true
+            },
             { key: "run-tests", label: "Run Tests", keywords: ["ci", "quality"] }
           ]}
         />

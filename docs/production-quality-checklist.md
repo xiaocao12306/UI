@@ -73,6 +73,7 @@
 - Demo CommandPalette blocking-mode coverage: added UI toggle for dismiss policy (`closeOnEscape/closeOnOutsidePointer`) and Playwright regression asserting Escape/outside click do not close when blocking mode is enabled.
 - Demo Toast blocking-mode coverage: added `closeOnEscape={false}` notification path and Playwright regression asserting Escape is ignored until explicit close action.
 - Demo CommandPalette persistent-mode coverage: added runtime `closeOnSelect=false` toggle and Playwright regression asserting selection keeps palette open for batch actions.
+- Demo CommandPalette disabled-option coverage: added disabled archive command and Playwright regression asserting click does not close or execute blocked action.
 - Demo Toast stack-order coverage: added runtime stacked-toast trigger and Playwright regression asserting Escape closes newest toast before older notices.
 - Demo Tabs manual-activation coverage: added `activationMode="manual"` data-workflow example and Playwright regression locking focus-move vs Enter-activation split.
 - Demo Tabs vertical-orientation coverage: added `orientation="vertical"` example and Playwright ArrowUp/ArrowDown regression for focus + activation flow.
