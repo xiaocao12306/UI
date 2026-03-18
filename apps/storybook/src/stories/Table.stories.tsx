@@ -218,6 +218,7 @@ export const SortTelemetry: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const issueSort = canvas.getByRole("button", { name: "Issue sort descending" });
+    await expect(issueSort).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 
     issueSort.focus();
     await userEvent.keyboard("{Enter}");

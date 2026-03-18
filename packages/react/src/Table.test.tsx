@@ -287,6 +287,78 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledTimes(2);
   });
 
+  it("exposes Enter/Space keyboard shortcuts on sortable headers", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  });
+
+  it("shows sort-button focus ring only for keyboard-intended focus", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    const matchesSpy = vi.spyOn(sortButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(sortButton);
+    fireEvent.focus(sortButton);
+    expect(sortButton.style.boxShadow).toBe("none");
+
+    fireEvent.blur(sortButton);
+    fireEvent.keyDown(sortButton, { key: "Tab" });
+    fireEvent.focus(sortButton);
+    expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
+    matchesSpy.mockRestore();
+  });
+
+  it("applies pressed offset while pointer is active on sortable headers", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    fireEvent.mouseDown(sortButton);
+    expect(sortButton.style.transform).toBe("translateY(1px)");
+
+    fireEvent.mouseUp(sortButton);
+    expect(sortButton.style.transform).toBe("translateY(0)");
+  });
+
   it("supports legacy Spacebar key value on sortable headers", () => {
     const onSortChange = vi.fn();
 

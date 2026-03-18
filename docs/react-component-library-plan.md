@@ -402,6 +402,7 @@
   - Demo 首屏门禁文案收口（移除易过期的硬编码验收数字，改为稳定门禁状态表达）
   - Storybook 入口文档收口（`Getting Started` 改为分域导航 + 阅读路径，补齐 Catalog/API/Best Practices 跳转）
   - Table 空/单行排序语义收口（`defaultSortKey` 在无有效排序条件时不再暴露 `aria-sort` 与排序播报，避免禁用态误导）
+  - Table 排序交互状态收口（sortable header 补齐 hover/active/focus-visible 反馈，并显式暴露 `aria-keyshortcuts="Enter Space"`）
   - Demo Table 空态 E2E 分支收口（排序按钮断言兼容 `ascending/descending` 标签，覆盖空态语义分支）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）

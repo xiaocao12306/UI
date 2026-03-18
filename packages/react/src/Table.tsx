@@ -81,6 +81,11 @@ export function Table<T>({
   onSortChange
 }: TableProps<T>) {
   const resolvedAriaLabel = ariaLabelledBy ? undefined : (ariaLabel ?? (caption ? undefined : "Data table"));
+  const sortButtonRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
+  const sortFocusIntentRef = React.useRef(true);
+  const [hoveredSortKey, setHoveredSortKey] = React.useState<string | null>(null);
+  const [pressedSortKey, setPressedSortKey] = React.useState<string | null>(null);
+  const [focusVisibleSortKey, setFocusVisibleSortKey] = React.useState<string | null>(null);
 
   const [sortState, setSortState] = React.useState<{ key: string; direction: TableSortDirection } | null>(() =>
     resolveInitialSortState(columns, defaultSortKey, defaultSortDirection)
@@ -214,6 +219,10 @@ export function Table<T>({
               const nextDirection: TableSortDirection = sorted === "asc" ? "desc" : "asc";
               const sortAriaLabel = getSortAriaLabel({ columnKey: key, columnHeader: headerLabel, nextDirection });
               const sortDisabled = loading || sortedEntries.length <= 1;
+              const hovered = hoveredSortKey === key;
+              const pressed = pressedSortKey === key;
+              const focusVisible = focusVisibleSortKey === key;
+              const interactive = hovered || focusVisible;
               const activateSort = () => {
                 if (sortDisabled) {
                   return;
@@ -242,10 +251,56 @@ export function Table<T>({
                   {sortable ? (
                     <button
                       type="button"
+                      ref={(node) => {
+                        sortButtonRefs.current[key] = node;
+                      }}
                       aria-label={sortAriaLabel}
+                      aria-keyshortcuts="Enter Space"
                       disabled={sortDisabled}
                       onClick={activateSort}
+                      onMouseEnter={() => {
+                        if (sortDisabled) {
+                          return;
+                        }
+
+                        setHoveredSortKey(key);
+                      }}
+                      onMouseLeave={() => {
+                        setHoveredSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                        setPressedSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                      }}
+                      onMouseDown={() => {
+                        if (sortDisabled) {
+                          return;
+                        }
+
+                        sortFocusIntentRef.current = false;
+                        setFocusVisibleSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                        setPressedSortKey(key);
+                      }}
+                      onMouseUp={() => {
+                        setPressedSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                      }}
+                      onFocus={() => {
+                        if (sortDisabled) {
+                          setFocusVisibleSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                          return;
+                        }
+
+                        setFocusVisibleSortKey((currentKey) =>
+                          resolveFocusVisibleState(sortButtonRefs.current[key], sortFocusIntentRef.current)
+                            ? key
+                            : currentKey === key
+                              ? null
+                              : currentKey
+                        );
+                      }}
+                      onBlur={() => {
+                        setFocusVisibleSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                        setPressedSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                      }}
                       onKeyDown={(event) => {
+                        sortFocusIntentRef.current = true;
                         if (!isSortSpaceActivationKey(event.key)) {
                           return;
                         }
@@ -254,16 +309,29 @@ export function Table<T>({
                         activateSort();
                       }}
                       style={{
-                        border: 0,
-                        background: "transparent",
+                        border: interactive
+                          ? "1px solid color-mix(in srgb, var(--aurora-accent-default) 48%, transparent)"
+                          : "1px solid transparent",
+                        borderRadius: "var(--aurora-radius-sm)",
+                        background: pressed
+                          ? "color-mix(in srgb, var(--aurora-surface-elevated) 68%, var(--aurora-surface-default))"
+                          : hovered
+                            ? "color-mix(in srgb, var(--aurora-surface-elevated) 86%, var(--aurora-surface-default))"
+                            : "transparent",
                         color: "inherit",
                         font: "inherit",
                         cursor: sortDisabled ? "not-allowed" : "pointer",
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 6,
-                        padding: 0,
-                        opacity: sortDisabled ? 0.64 : 1
+                        padding: "2px 6px",
+                        opacity: sortDisabled ? 0.64 : 1,
+                        boxShadow: focusVisible
+                          ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 42%, transparent)"
+                          : "none",
+                        transform: pressed ? "translateY(1px)" : "translateY(0)",
+                        transition:
+                          "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
                       }}
                     >
                       {column.header}
@@ -378,4 +446,16 @@ function defaultGetSortStatusText({
 
 function isSortSpaceActivationKey(key: string) {
   return key === " " || key === "Space" || key === "Spacebar";
+}
+
+function resolveFocusVisibleState(target: HTMLButtonElement | null, fallback: boolean) {
+  if (!target) {
+    return fallback;
+  }
+
+  try {
+    return target.matches(":focus-visible");
+  } catch {
+    return fallback;
+  }
 }

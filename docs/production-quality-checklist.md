@@ -270,6 +270,7 @@
 - Toast viewport-stack parity: same-corner notifications now apply deterministic visual offsets so older notices remain readable behind the latest toast.
 - Storybook toast-stack parity: added `StackedViewportOffset` interaction assertions to lock stack-offset behavior in visual regression baselines.
 - Toast actionable-role parity: toasts with `action` now expose `dialog/alertdialog` semantics (`aria-modal="false"`) while passive notifications keep `status/alert`.
+- Table sortable-header state parity: sortable controls now expose hover/pressed/focus-visible feedback and `aria-keyshortcuts="Enter Space"` for keyboard audit clarity.
 - Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.
 - Storybook popover preemption parity: Popover now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps surface open and skips hook side effects.
