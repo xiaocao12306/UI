@@ -747,6 +747,22 @@ function App() {
               ]}
             />
           </div>
+          <div style={{ display: "grid", gap: 8 }}>
+            <h3 style={sectionSubheadingStyle}>No-Loop Keyboard Boundaries</h3>
+            <p style={mutedBodyStyle}>
+              With <code>loop=false</code>, Arrow keys stop at the first/last enabled tab and still skip disabled items.
+            </p>
+            <Tabs
+              ariaLabel="No-loop release tabs"
+              loop={false}
+              defaultValue="draft"
+              items={[
+                { key: "draft", label: "Draft", content: <p style={{ margin: 0 }}>Draft scope and implementation notes.</p> },
+                { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-team review and signoff.</p>, disabled: true },
+                { key: "release", label: "Release", content: <p style={{ margin: 0 }}>Release train and rollout sequencing.</p> }
+              ]}
+            />
+          </div>
           <Table
             caption="Component readiness metrics"
             defaultSortKey="component"

@@ -263,6 +263,7 @@
   - Demo 纵向 Tabs 场景（`orientation="vertical"`）与 Playwright ArrowUp/ArrowDown 回归
   - Demo Tabs 切换遥测验收（新增可视 telemetry 指示 + Playwright 回归，锁定 active tab 值随交互更新）
   - Tabs 手动纵向收口（manual + vertical 增补 Storybook/单测/demo E2E，锁定 ArrowUp/ArrowDown 焦点移动与 Enter/Space 激活分离）
+  - Demo Tabs No-Loop 验收（新增 `loop=false` 场景 + Playwright 回归，锁定边界停留与禁用项跳过）
   - Demo Table loading 验收场景（`aria-busy` + 禁用排序 + 抑制旧数据）与 Playwright 回归
   - Demo Table empty 验收场景（`emptyContent` + 禁用排序）与 Playwright 回归
   - Demo Table 排序遥测验收（新增可视 telemetry 指示 + Playwright click/keyboard 双路径回归）

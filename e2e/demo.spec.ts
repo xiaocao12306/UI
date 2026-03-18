@@ -806,6 +806,29 @@ test("keeps manual vertical tabs panel stable until Enter activation", async ({ 
   await expect(shipPanel).not.toHaveAttribute("hidden");
 });
 
+test("keeps focus at no-loop tab boundaries while skipping disabled tabs", async ({ page }) => {
+  await page.goto("/");
+
+  const noLoopTablist = page.getByRole("tablist", { name: "No-loop release tabs" });
+  const draftTab = noLoopTablist.getByRole("tab", { name: "Draft" });
+  const releaseTab = noLoopTablist.getByRole("tab", { name: "Release" });
+  const releasePanel = page.locator(`#${await releaseTab.getAttribute("aria-controls")}`);
+  const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
+
+  await draftTab.focus();
+  await draftTab.press("ArrowLeft");
+  await expect(draftTab).toBeFocused();
+  await expect(draftPanel).not.toHaveAttribute("hidden");
+
+  await draftTab.press("ArrowRight");
+  await expect(releaseTab).toBeFocused();
+  await expect(releasePanel).not.toHaveAttribute("hidden");
+
+  await releaseTab.press("ArrowRight");
+  await expect(releaseTab).toBeFocused();
+  await expect(releasePanel).not.toHaveAttribute("hidden");
+});
+
 test("navigates vertical tabs with ArrowDown and ArrowUp", async ({ page }) => {
   await page.goto("/");
 
