@@ -265,6 +265,7 @@
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
   - CommandPalette Escape 查询收口（新增 `clearQueryOnEscape` 默认行为：首次 Escape 清空 query，二次 Escape 再触发关闭）
   - Table 空态语义收口（`emptyContent` 改为 `role=\"status\"` polite 播报，增强无障碍反馈一致性）
+  - Table 排序播报语义收口（新增 `getSortStatusText`，可本地化 live-region 排序状态播报，补齐单测与 Storybook 回归）
   - Toast 播报策略收口（新增 `live` API，支持 `off` 降噪和 `assertive/polite` 显式控制）
   - Demo CommandPalette Escape 查询验收（新增运行时开关 + Playwright 回归，锁定首次 Escape 清空查询、二次 Escape 关闭）
   - Demo Toast 静默通知验收（新增 `live=\"off\"` 场景 + Playwright 回归，验证被动更新降噪语义）

@@ -30,6 +30,11 @@ export type TableProps<T> = {
     columnHeader: string;
     nextDirection: TableSortDirection;
   }) => string;
+  getSortStatusText?: (params: {
+    columnKey: string;
+    columnHeader: string;
+    direction: TableSortDirection;
+  }) => string;
   onSortChange?: (key: string, direction: TableSortDirection) => void;
 };
 
@@ -65,6 +70,7 @@ export function Table<T>({
   defaultSortKey,
   defaultSortDirection = "asc",
   getSortAriaLabel = defaultGetSortAriaLabel,
+  getSortStatusText = defaultGetSortStatusText,
   onSortChange
 }: TableProps<T>) {
   const resolvedAriaLabel = ariaLabel ?? (caption ? undefined : "Data table");
@@ -119,6 +125,20 @@ export function Table<T>({
       });
   }, [columns, data, sortState]);
 
+  const sortStatusText = React.useMemo(() => {
+    if (!sortState) {
+      return "";
+    }
+
+    const activeSortColumn = columns.find((column) => String(column.key) === sortState.key);
+    if (!activeSortColumn?.sortable) {
+      return "";
+    }
+
+    const columnHeader = typeof activeSortColumn.header === "string" ? activeSortColumn.header : String(activeSortColumn.key);
+    return getSortStatusText({ columnKey: sortState.key, columnHeader, direction: sortState.direction });
+  }, [columns, getSortStatusText, sortState]);
+
   return (
     <div
       style={{
@@ -127,6 +147,25 @@ export function Table<T>({
         overflow: "auto"
       }}
     >
+      {sortStatusText ? (
+        <p
+          role="status"
+          aria-live="polite"
+          style={{
+            position: "absolute",
+            width: 1,
+            height: 1,
+            padding: 0,
+            margin: -1,
+            overflow: "hidden",
+            clip: "rect(0, 0, 0, 0)",
+            whiteSpace: "nowrap",
+            border: 0
+          }}
+        >
+          {sortStatusText}
+        </p>
+      ) : null}
       <table
         aria-label={resolvedAriaLabel}
         aria-busy={loading || undefined}
@@ -306,6 +345,17 @@ function defaultGetSortAriaLabel({
   nextDirection: TableSortDirection;
 }) {
   return `${columnHeader} sort ${nextDirection === "asc" ? "ascending" : "descending"}`;
+}
+
+function defaultGetSortStatusText({
+  columnHeader,
+  direction
+}: {
+  columnKey: string;
+  columnHeader: string;
+  direction: TableSortDirection;
+}) {
+  return `Sorted by ${columnHeader} ${direction === "asc" ? "ascending" : "descending"}.`;
 }
 
 function isSortSpaceActivationKey(key: string) {

@@ -253,6 +253,47 @@ describe("Table", () => {
     expect(screen.getByRole("button", { name: "按升序排序：Name" })).toBeInTheDocument();
   });
 
+  it("announces active sort state through live narration", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score" }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("Sorted by Name ascending.");
+    fireEvent.click(screen.getByRole("button", { name: "Name sort descending" }));
+    expect(screen.getByRole("status")).toHaveTextContent("Sorted by Name descending.");
+  });
+
+  it("supports localized sort status narration via getSortStatusText", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score" }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        getSortStatusText={({ columnHeader, direction }) => `当前排序：${columnHeader}（${direction}）`}
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("当前排序：Name（asc）");
+    fireEvent.click(screen.getByRole("button", { name: "Name sort descending" }));
+    expect(screen.getByRole("status")).toHaveTextContent("当前排序：Name（desc）");
+  });
+
   it("disables sortable header controls while loading", () => {
     const onSortChange = vi.fn();
 

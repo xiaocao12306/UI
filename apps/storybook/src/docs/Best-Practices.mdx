@@ -164,6 +164,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep non-sortable headers free of `aria-sort` so assistive tech does not announce inert columns as interactive.
 - Validate sortable headers with both pointer and keyboard (`Enter`/`Space`, including legacy `Spacebar`) so non-pointer workflows stay first-class.
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
+- Use `getSortStatusText` to localize active-sort live narration so keyboard and pointer sorting changes remain equally discoverable to assistive tech users.
 - During async refreshes, set `loading` so table emits `aria-busy` and temporarily suppresses stale row actions/sorting.
 - For empty datasets, use meaningful `emptyContent`; table announces it through polite live status narration.
 - For pagination i18n, generate `getItemAriaLabel` from the provided `page` argument; boundary previous/next labels are already clamped to valid page ranges.

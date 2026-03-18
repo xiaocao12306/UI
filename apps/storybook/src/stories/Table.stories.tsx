@@ -186,6 +186,7 @@ export const SortTelemetry: Story = {
     issueSort.focus();
     await userEvent.keyboard("{Enter}");
     await expect(canvas.getByText("id desc")).toBeInTheDocument();
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Issue descending.");
     const issueSortAsc = canvas.getByRole("button", { name: "Issue sort ascending" });
     const issueHeader = issueSortAsc.closest("th");
     await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
@@ -194,6 +195,7 @@ export const SortTelemetry: Story = {
     await userEvent.keyboard("{Enter}");
     await expect(canvas.getByText("id asc")).toBeInTheDocument();
     await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Issue ascending.");
   }
 };
 
@@ -207,14 +209,17 @@ export const LocalizedSortLabels: Story = {
         getSortAriaLabel={({ columnHeader, nextDirection }) =>
           `按${nextDirection === "asc" ? "升序" : "降序"}排序：${columnHeader}`
         }
+        getSortStatusText={({ columnHeader, direction }) => `当前排序：${columnHeader}（${direction === "asc" ? "升序" : "降序"}）`}
       />
     </div>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const descendingButton = canvas.getByRole("button", { name: "按降序排序：Issue" });
+    await expect(canvas.getByRole("status")).toHaveTextContent("当前排序：Issue（升序）");
     await userEvent.click(descendingButton);
     await expect(canvas.getByRole("button", { name: "按升序排序：Issue" })).toBeInTheDocument();
+    await expect(canvas.getByRole("status")).toHaveTextContent("当前排序：Issue（降序）");
   }
 };
 
