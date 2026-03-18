@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Table } from "./Table";
 
@@ -153,6 +154,35 @@ describe("Table", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Name sort descending" }));
     expect(onSortChange).toHaveBeenCalledWith("name", "desc");
+  });
+
+  it("supports keyboard activation on sortable headers", async () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        onSortChange={onSortChange}
+      />
+    );
+
+    const sortDescending = screen.getByRole("button", { name: "Name sort descending" });
+    sortDescending.focus();
+    await userEvent.keyboard("{Enter}");
+    expect(onSortChange).toHaveBeenCalledWith("name", "desc");
+
+    const sortAscending = screen.getByRole("button", { name: "Name sort ascending" });
+    sortAscending.focus();
+    fireEvent.keyDown(sortAscending, { key: " " });
+    expect(onSortChange).toHaveBeenCalledWith("name", "asc");
   });
 
   it("supports localized sort aria labels via getSortAriaLabel", () => {

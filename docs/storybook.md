@@ -59,7 +59,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `Feedback/Alert` dismiss 分支与 live region 语义路径
   - `Feedback/Toast` 关闭与重开流程 + Escape 栈顺序/全局快捷键抢占分支
   - `Data/Tabs` 点击切换 + Home/End 键导航 + manual/vertical 模式键盘路径
-  - `Data/Table` 排序切换与 `aria-sort` 状态同步
+  - `Data/Table` 键盘/点击排序切换与 `aria-sort` 状态同步
 
 ## 当前已覆盖故事
 - `Core/Button`

@@ -160,11 +160,17 @@ export const SortTelemetry: Story = {
     const canvas = within(canvasElement);
     const issueSort = canvas.getByRole("button", { name: "Issue sort descending" });
 
-    await userEvent.click(issueSort);
+    issueSort.focus();
+    await userEvent.keyboard("{Enter}");
     await expect(canvas.getByText("id desc")).toBeInTheDocument();
     const issueSortAsc = canvas.getByRole("button", { name: "Issue sort ascending" });
     const issueHeader = issueSortAsc.closest("th");
     await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
+
+    issueSortAsc.focus();
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByText("id asc")).toBeInTheDocument();
+    await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
   }
 };
 

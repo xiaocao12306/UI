@@ -154,6 +154,14 @@ export function Table<T>({
               const nextDirection: TableSortDirection = sorted === "asc" ? "desc" : "asc";
               const sortAriaLabel = getSortAriaLabel({ columnKey: key, columnHeader: headerLabel, nextDirection });
               const sortDisabled = loading || sortedEntries.length === 0;
+              const activateSort = () => {
+                if (sortDisabled) {
+                  return;
+                }
+
+                setSortState({ key, direction: nextDirection });
+                onSortChange?.(key, nextDirection);
+              };
 
               return (
                 <th
@@ -176,12 +184,14 @@ export function Table<T>({
                       type="button"
                       aria-label={sortAriaLabel}
                       disabled={sortDisabled}
-                      onClick={() => {
-                        if (sortDisabled) {
+                      onClick={activateSort}
+                      onKeyDown={(event) => {
+                        if (!isSortActivationKey(event.key)) {
                           return;
                         }
-                        setSortState({ key, direction: nextDirection });
-                        onSortChange?.(key, nextDirection);
+
+                        event.preventDefault();
+                        activateSort();
                       }}
                       style={{
                         border: 0,
@@ -281,4 +291,8 @@ function defaultGetSortAriaLabel({
   nextDirection: TableSortDirection;
 }) {
   return `${columnHeader} sort ${nextDirection === "asc" ? "ascending" : "descending"}`;
+}
+
+function isSortActivationKey(key: string) {
+  return key === "Enter" || key === " " || key === "Spacebar";
 }
