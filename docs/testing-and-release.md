@@ -88,6 +88,7 @@ Latest release gate run:
   - demo E2E total now `41` checks
   - Storybook interaction suites refreshed to `32/32`, tests `154/154` all passed after latest Dropdown IME typeahead hardening
   - primitives regression: `pnpm --filter @aurora-ui/primitives exec vitest run src/DismissableLayer.test.tsx` passed after IME Escape dismiss guard hardening
+  - react overlay regressions: `pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/Drawer.test.tsx` passed after IME Escape guard coverage expansion
   - release dry-run package size evidence refreshed (`react` unpacked size ~296.8 kB)
 
 ## GitHub Release Automation

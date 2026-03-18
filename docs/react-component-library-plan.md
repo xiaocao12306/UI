@@ -293,6 +293,7 @@
   - Toast Escape 抢占收口（上层 `preventDefault` 后不再触发 `onEscapeKeyDown`，避免审批流重复副作用）
   - Dropdown IME typeahead 收口（组合输入阶段忽略字母 typeahead 匹配，避免 CJK 输入确认误移焦）
   - DismissableLayer IME Escape 收口（组合输入阶段忽略 Escape dismiss，防止嵌套 overlay 在 CJK 确认时误关闭）
+  - Dialog/Drawer IME Escape 验收补齐（补组件层单测，锁定组合输入阶段不关闭、普通 Escape 正常关闭）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

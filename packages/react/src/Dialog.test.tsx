@@ -62,6 +62,22 @@ describe("Dialog", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("ignores Escape dismiss while IME composition is active", () => {
+    const onOpenChange = vi.fn();
+    render(
+      <Dialog open onOpenChange={onOpenChange} title="IME safe dialog">
+        <p>Body</p>
+      </Dialog>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape", isComposing: true });
+    fireEvent.keyDown(document, { key: "Escape", keyCode: 229 });
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it("does not dismiss on outside pointer when closeOnOutsidePointer is false", () => {
     const onOpenChange = vi.fn();
     render(
