@@ -75,8 +75,8 @@ Latest dry-run record:
 - result:
   - `changeset version`: `No unreleased changesets found, exiting.`
   - `@aurora-ui/tokens`: dry-run tarball size ~3.0 kB
-  - `@aurora-ui/primitives`: dry-run tarball size ~13.5 kB
-  - `@aurora-ui/react`: dry-run tarball size ~48.4 kB (feature growth reflected in package payload)
+  - `@aurora-ui/primitives`: dry-run tarball size ~13.9 kB
+  - `@aurora-ui/react`: dry-run tarball size ~50.0 kB (feature growth reflected in package payload)
   - npm prints login warning in dry-run mode, but command exits successfully
 
 ## GitHub Release Automation
