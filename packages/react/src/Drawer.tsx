@@ -39,6 +39,10 @@ export function Drawer({
 }: DrawerProps) {
   const titleId = React.useId();
   const descriptionId = React.useId();
+  const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
+  const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
+  const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
+  const closeButtonFocusIntentRef = React.useRef(true);
 
   const closeWithReason = React.useCallback(
     (reason: DrawerCloseReason) => {
@@ -141,14 +145,52 @@ export function Drawer({
                     type="button"
                     onClick={() => closeWithReason("close-button")}
                     aria-label={closeLabel}
+                    onMouseEnter={() => {
+                      setCloseButtonHovered(true);
+                    }}
+                    onMouseLeave={() => {
+                      setCloseButtonHovered(false);
+                      setCloseButtonPressed(false);
+                    }}
+                    onMouseDown={() => {
+                      closeButtonFocusIntentRef.current = false;
+                      setCloseButtonFocusVisible(false);
+                      setCloseButtonPressed(true);
+                    }}
+                    onMouseUp={() => {
+                      setCloseButtonPressed(false);
+                    }}
+                    onKeyDown={() => {
+                      closeButtonFocusIntentRef.current = true;
+                    }}
+                    onFocus={(event) => {
+                      setCloseButtonFocusVisible(resolveFocusVisibleState(event.currentTarget, closeButtonFocusIntentRef.current));
+                    }}
+                    onBlur={() => {
+                      setCloseButtonFocusVisible(false);
+                      setCloseButtonPressed(false);
+                    }}
                     style={{
                       borderRadius: "var(--aurora-radius-sm)",
-                      border: "1px solid var(--aurora-border-default)",
-                      background: "var(--aurora-surface-elevated)",
-                      color: "var(--aurora-text-secondary)",
+                      border:
+                        closeButtonHovered || closeButtonFocusVisible
+                          ? "1px solid var(--aurora-border-strong)"
+                          : "1px solid var(--aurora-border-default)",
+                      background: closeButtonPressed
+                        ? "color-mix(in srgb, var(--aurora-surface-elevated) 66%, var(--aurora-surface-default))"
+                        : closeButtonHovered
+                          ? "color-mix(in srgb, var(--aurora-surface-elevated) 82%, var(--aurora-surface-default))"
+                          : "var(--aurora-surface-elevated)",
+                      color: closeButtonHovered ? "var(--aurora-text-primary)" : "var(--aurora-text-secondary)",
+                      boxShadow: closeButtonFocusVisible
+                        ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 45%, transparent)"
+                        : "none",
                       width: 30,
                       height: 30,
-                      cursor: "pointer"
+                      cursor: "pointer",
+                      transform: closeButtonPressed ? "translateY(1px)" : "translateY(0)",
+                      transition:
+                        "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
                     }}
                   >
                     ×
@@ -162,4 +204,12 @@ export function Drawer({
       </div>
     </Portal>
   );
+}
+
+function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {
+  try {
+    return target.matches(":focus-visible");
+  } catch {
+    return fallback;
+  }
 }
