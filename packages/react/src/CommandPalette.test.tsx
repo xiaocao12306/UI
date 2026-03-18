@@ -329,6 +329,50 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("emits item-select and close-button callbacks in deterministic order", () => {
+    const events: string[] = [];
+    const onOpenChange = (nextOpen: boolean) => {
+      events.push(`open:${String(nextOpen)}`);
+    };
+
+    const { rerender } = render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={(reason) => {
+          events.push(`reason:${reason}`);
+        }}
+        commands={[
+          {
+            key: "open-settings",
+            label: "Open Settings",
+            onSelect: () => {
+              events.push("select");
+            }
+          }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("option", { name: "Open Settings" }));
+    expect(events).toEqual(["select", "reason:item-select", "open:false"]);
+
+    events.length = 0;
+    rerender(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={(reason) => {
+          events.push(`reason:${reason}`);
+        }}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
+    expect(events).toEqual(["reason:close-button", "open:false"]);
+  });
+
   it("supports localized close-button accessible label", () => {
     render(
       <CommandPalette
