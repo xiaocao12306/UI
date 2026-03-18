@@ -102,11 +102,15 @@ export const SingleRowSortDisabled: Story = {
       <Table
         columns={columns}
         data={[{ id: "BTN-102", component: "Button", owner: "Design System", status: "ready" }]}
+        defaultSortKey="id"
       />
     </div>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const issueHeader = canvas.getByRole("columnheader", { name: /Issue/ });
+    await expect(issueHeader).not.toHaveAttribute("aria-sort");
+    await expect(canvas.queryByRole("status")).not.toBeInTheDocument();
     await expect(canvas.getByRole("button", { name: "Issue sort ascending" })).toBeDisabled();
   }
 };
