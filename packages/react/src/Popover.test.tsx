@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Popover } from "./Popover";
+import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 describe("Popover", () => {
   it("opens and closes through trigger, escape key, and outside pointer", () => {
@@ -169,11 +170,3 @@ describe("Popover", () => {
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   });
 });
-
-function dispatchNonPrimaryPointerDown(target: EventTarget) {
-  const event = new Event("pointerdown", { bubbles: true, cancelable: true });
-  Object.defineProperty(event, "button", { configurable: true, value: 2 });
-  Object.defineProperty(event, "buttons", { configurable: true, value: 2 });
-  Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
-  target.dispatchEvent(event);
-}

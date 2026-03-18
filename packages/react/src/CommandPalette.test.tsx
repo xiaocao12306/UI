@@ -2,6 +2,7 @@ import * as React from "react";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { CommandPalette } from "./CommandPalette";
+import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 describe("CommandPalette", () => {
   it("filters commands and handles selection", () => {
@@ -786,11 +787,3 @@ describe("CommandPalette", () => {
     expect(input).toHaveFocus();
   });
 });
-
-function dispatchNonPrimaryPointerDown(target: EventTarget) {
-  const event = new Event("pointerdown", { bubbles: true, cancelable: true });
-  Object.defineProperty(event, "button", { configurable: true, value: 2 });
-  Object.defineProperty(event, "buttons", { configurable: true, value: 2 });
-  Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
-  target.dispatchEvent(event);
-}

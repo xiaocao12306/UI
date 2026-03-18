@@ -6,6 +6,7 @@ import { Dialog } from "./Dialog";
 import { Dropdown } from "./Dropdown";
 import { Drawer } from "./Drawer";
 import { resetBodyScrollLockForTests } from "./bodyScrollLock";
+import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 afterEach(() => {
   document.body.style.overflow = "";
@@ -399,11 +400,3 @@ describe("Dialog", () => {
     expect(screen.queryByRole("dialog", { name: "Nested overlay dialog" })).toBeNull();
   });
 });
-
-function dispatchNonPrimaryPointerDown(target: EventTarget) {
-  const event = new Event("pointerdown", { bubbles: true, cancelable: true });
-  Object.defineProperty(event, "button", { configurable: true, value: 2 });
-  Object.defineProperty(event, "buttons", { configurable: true, value: 2 });
-  Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
-  target.dispatchEvent(event);
-}

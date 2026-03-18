@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Dropdown } from "./Dropdown";
+import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 describe("Dropdown", () => {
   it("selects an item and closes the menu", () => {
@@ -435,11 +436,3 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menu", { name: "Ignore right click" })).toBeInTheDocument();
   });
 });
-
-function dispatchNonPrimaryPointerDown(target: EventTarget) {
-  const event = new Event("pointerdown", { bubbles: true, cancelable: true });
-  Object.defineProperty(event, "button", { configurable: true, value: 2 });
-  Object.defineProperty(event, "buttons", { configurable: true, value: 2 });
-  Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
-  target.dispatchEvent(event);
-}

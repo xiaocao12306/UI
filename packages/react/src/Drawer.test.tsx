@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { Drawer } from "./Drawer";
 import { Dropdown } from "./Dropdown";
 import { resetBodyScrollLockForTests } from "./bodyScrollLock";
+import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 afterEach(() => {
   document.body.style.overflow = "";
@@ -308,11 +309,3 @@ describe("Drawer", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 });
-
-function dispatchNonPrimaryPointerDown(target: EventTarget) {
-  const event = new Event("pointerdown", { bubbles: true, cancelable: true });
-  Object.defineProperty(event, "button", { configurable: true, value: 2 });
-  Object.defineProperty(event, "buttons", { configurable: true, value: 2 });
-  Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
-  target.dispatchEvent(event);
-}
