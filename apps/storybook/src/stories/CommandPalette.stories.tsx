@@ -294,6 +294,32 @@ function EscapeClearsQueryFirstPalette() {
   );
 }
 
+function RefinedSearchKeepsActiveCommandPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [lastAction, setLastAction] = React.useState("none");
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last command:{" "}
+        <strong data-testid="last-command" style={{ color: "var(--aurora-text-primary)" }}>
+          {lastAction}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        closeOnSelect={false}
+        commands={[
+          { key: "scan-code", label: "Scan Code", keywords: ["scan"] },
+          { key: "search-docs", label: "Search Docs", keywords: ["search"], onSelect: () => setLastAction("search-docs") },
+          { key: "send-report", label: "Send Report", keywords: ["send"], onSelect: () => setLastAction("send-report") }
+        ]}
+      />
+    </div>
+  );
+}
+
 export const SearchCommands: Story = {
   render: () => <OpenPalette />,
   play: async ({ canvasElement }) => {
@@ -441,5 +467,20 @@ export const EscapeClearsQueryFirst: Story = {
     await userEvent.keyboard("{Escape}");
     await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
     await expect(canvas.getByTestId("open-state")).toHaveTextContent("closed");
+  }
+};
+
+export const RefinedSearchKeepsActiveCommand: Story = {
+  render: () => <RefinedSearchKeepsActiveCommandPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await userEvent.type(input, "search");
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    await userEvent.clear(input);
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   }
 };

@@ -50,6 +50,7 @@ export function CommandPalette({
   const [query, setQuery] = React.useState("");
   const [activeIndex, setActiveIndex] = React.useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const activeCommandKeyRef = React.useRef<string | null>(null);
   const listId = React.useId();
 
   React.useEffect(() => {
@@ -104,12 +105,32 @@ export function CommandPalette({
 
   React.useEffect(() => {
     if (filtered.length === 0) {
+      activeCommandKeyRef.current = null;
       setActiveIndex(-1);
       return;
     }
 
+    const preferredKey = activeCommandKeyRef.current;
+    if (preferredKey) {
+      const preferredIndex = filtered.findIndex((command) => !command.disabled && command.key === preferredKey);
+      if (preferredIndex >= 0) {
+        setActiveIndex(preferredIndex);
+        return;
+      }
+    }
+
     setActiveIndex(firstEnabledIndex);
+    activeCommandKeyRef.current = firstEnabledIndex >= 0 ? filtered[firstEnabledIndex]?.key ?? null : null;
   }, [filtered, firstEnabledIndex]);
+
+  React.useEffect(() => {
+    if (activeIndex < 0) {
+      activeCommandKeyRef.current = null;
+      return;
+    }
+
+    activeCommandKeyRef.current = filtered[activeIndex]?.key ?? null;
+  }, [activeIndex, filtered]);
 
   const selectItem = React.useCallback(
     (index: number) => {

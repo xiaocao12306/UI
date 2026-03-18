@@ -103,6 +103,7 @@
 - Toast escape-priority coverage: added explicit `defaultPrevented` unit branch to ensure global/higher-priority Escape handlers can preempt toast dismissal.
 - CommandPalette list semantics: options now expose `aria-posinset/aria-setsize` so assistive tech can announce positional context within filtered command results.
 - Demo CommandPalette Escape-query coverage: added runtime toggle + Playwright regression to lock first-Escape query clear and second-Escape dismiss behavior.
+- CommandPalette query-refinement parity: active option now follows command identity (not stale index), so narrowing search keeps Enter target deterministic.
 - Demo Toast live-region coverage: added silent-toast path + Playwright regression asserting `aria-live=\"off\"` passive update semantics.
 - Demo Toast focus-priority coverage: added Playwright regression ensuring focused toast is promoted and dismissed first on Escape in stacked mode.
 - Toast live override coverage: added regression ensuring `live` can override danger default politeness while retaining `role="alert"` semantics.

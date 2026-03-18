@@ -374,6 +374,36 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("preserves active command intent when query refinement keeps that command", () => {
+    const onSearchDocs = vi.fn();
+    const onSendReport = vi.fn();
+    const onOpenChange = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        commands={[
+          { key: "scan-code", label: "Scan Code" },
+          { key: "search-docs", label: "Search Docs", keywords: ["search"], onSelect: onSearchDocs },
+          { key: "send-report", label: "Send Report", keywords: ["send"], onSelect: onSendReport }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
+
+    fireEvent.change(input, { target: { value: "search" } });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onSearchDocs).toHaveBeenCalledTimes(1);
+    expect(onSendReport).not.toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it("emits onQueryChange and supports custom empty message", () => {
     const onQueryChange = vi.fn();
 

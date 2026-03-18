@@ -268,6 +268,8 @@
   - 表单 invalid token 语义收口（`aria-invalid=\"grammar|spelling\"` 跨 Input/Select/Textarea/DatePicker/Checkbox/RadioGroup/Switch/FormField 保留原值）
   - FormField invalid 优先级收口（字段 `error` 覆盖子控件 grammar/spelling token，避免冲突播报）
   - Storybook invalid token 验收（新增 `Form/Input/InvalidTokenSemantics` play 断言，锁定 grammar token 语义）
+  - CommandPalette 查询缩小收口（激活项按 command key 跟随而非索引复用，避免 Enter 误触发）
+  - Storybook CommandPalette 查询缩小验收（新增 `RefinedSearchKeepsActiveCommand` play 断言）
   - DismissableLayer 栈语义收口（嵌套 overlay 时仅顶层响应 Escape/外部点击，避免单次事件联动关闭多层）
   - Dialog 嵌套 overlay 验收补齐（Dropdown in Dialog 的 Escape 分层关闭单测 + Storybook 交互场景）
   - Drawer 嵌套 overlay 验收补齐（Dropdown in Drawer 的 Escape 分层关闭单测 + Storybook 交互场景）
