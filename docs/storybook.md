@@ -119,8 +119,9 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - 工作流会在 `GITHUB_STEP_SUMMARY` 输出以上链接，便于发布后直接复制。
 - 备用静态地址（无需 Pages）：`https://rawcdn.githack.com/xiaocao12306/UI/main/apps/storybook/storybook-static/index.html`
 
-## Blocker Log
+## Historical Blocker Log
 - 日期：2026-03-17
 - 事项：执行 `pnpm dlx storybook@next init --builder Vite --type react`
-- 阻塞：`storybook@next` 要求 Node `20.19+` 或 `22.12+`，当前环境 Node `18.19.1`
-- 处理：改用 Storybook 8 完成初始化与交付；待运行时升级 Node 后再切换到 `@next/10.x`
+- 历史阻塞：`storybook@next` 当时要求 Node `20.19+` 或 `22.12+`，环境为 Node `18.19.1`
+- 处理：改用 Storybook `8.6.18` 完成初始化与交付，当前 `storybook:build` / `storybook:test:ci` 均可稳定运行。
+- 后续：若升级到 Node `20.19+` 或 `22.12+`，可按需评估迁移到 `@next/10.x`。
