@@ -26,6 +26,7 @@ pnpm storybook:test:ci
 Storybook static gate behavior:
 - `storybook:static:check` rebuilds `apps/storybook/storybook-static` before interaction tests.
 - stale static diff is treated as error and blocks the command (run `pnpm storybook:build` and commit updated static files).
+- `storybook:test:ci` uses repository-local `scripts/serve-storybook-static.mjs` to host static output before running `@storybook/test-runner`.
 
 ## E2E (Playwright)
 Install browser once in local environment:
