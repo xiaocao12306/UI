@@ -82,7 +82,7 @@ Latest dry-run record:
 Latest release gate run:
 - date: 2026-03-18
 - command: `pnpm release:gate`
-- result: passed (`verify` + `demo:e2e` + `release:dry-run`)
+- result: passed (`verify` + `demo:e2e` + `storybook:test:ci` + `release:dry-run`)
 
 ## GitHub Release Automation
 Workflow: `.github/workflows/release.yml`
