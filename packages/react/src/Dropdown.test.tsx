@@ -264,6 +264,35 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menu", { name: "Policy" })).toBeInTheDocument();
   });
 
+  it("skips escape callback and dismiss when Escape is preempted upstream", () => {
+    const onEscapeKeyDown = vi.fn();
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptEscape, true);
+    render(
+      <Dropdown
+        label="Preempted"
+        onEscapeKeyDown={onEscapeKeyDown}
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Preempted" }));
+    expect(screen.getByRole("menu", { name: "Preempted" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(screen.getByRole("menu", { name: "Preempted" })).toBeInTheDocument();
+    document.removeEventListener("keydown", preemptEscape, true);
+  });
+
   it("closes menu on Tab without forcing trigger focus", () => {
     render(
       <div>

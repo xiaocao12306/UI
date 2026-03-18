@@ -86,4 +86,28 @@ describe("Popover", () => {
     expect(onPointerDownOutside).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   });
+
+  it("skips escape callback and dismiss when Escape is preempted upstream", () => {
+    const onEscapeKeyDown = vi.fn();
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptEscape, true);
+    render(
+      <Popover triggerLabel="Preempted" onEscapeKeyDown={onEscapeKeyDown}>
+        <p>Preempted content</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Preempted" }));
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    document.removeEventListener("keydown", preemptEscape, true);
+  });
 });

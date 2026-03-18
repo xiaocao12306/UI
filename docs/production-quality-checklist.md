@@ -214,6 +214,7 @@
 - DismissableLayer IME Escape parity: overlay dismiss layer now ignores Escape during composition (`isComposing` / `keyCode=229`), preventing nested surfaces from closing while CJK input is being confirmed.
 - DismissableLayer Escape preemption parity: when upstream handlers already `preventDefault()` Escape, dismiss layer now skips both `onEscapeKeyDown` and dismiss to avoid duplicate guarded-flow side effects across overlays.
 - Overlay Escape preemption coverage: Dialog + CommandPalette now include component-level regressions asserting preempted Escape bypasses `onEscapeKeyDown` and close transitions.
+- Overlay Escape preemption coverage expansion: Popover + Dropdown now include regressions asserting preempted Escape bypasses `onEscapeKeyDown` and keeps overlays open.
 - Dialog/Drawer IME Escape coverage: added component-level regressions to ensure composition-phase Escape does not emit close events while plain Escape still dismisses as expected.
 - Storybook overlay IME parity: added `Dialog/Drawer EscapeIgnoresImeComposition` interaction scenarios so composition-guard behavior is locked in visual/interaction baseline.
 - Demo keyboard parity hardening: added Playwright regressions for CommandPalette/Toast IME Escape composition paths and Tabs/Table legacy `Spacebar` activation paths.

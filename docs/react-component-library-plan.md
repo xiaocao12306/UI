@@ -298,6 +298,7 @@
   - Demo E2E 键盘边界补齐（CommandPalette/Toast 组合输入 Escape 场景 + Tabs/Table legacy `Spacebar` 键值回归）
   - DismissableLayer Escape 抢占收口（事件已被上层 `preventDefault` 时跳过 layer `onEscapeKeyDown` 与 dismiss，避免重复副作用）
   - Overlay Escape 抢占验收补齐（Dialog/CommandPalette 组件层补测，锁定抢占后不触发 `onEscapeKeyDown` 与关闭）
+  - Overlay Escape 抢占验收扩展（Popover/Dropdown 组件层补测，锁定菜单/浮层在抢占后保持打开且不触发回调）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中
