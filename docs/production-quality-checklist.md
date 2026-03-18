@@ -101,6 +101,7 @@
 - Pagination Arrow-focus regression coverage: added explicit unit assertions for `ArrowLeft/ArrowRight` focus handoff so keyboard page transitions keep focus anchored to the newly active page.
 - Pagination boundary hardening: `pageCount<=1` now short-circuits before token/range math, with regression coverage for `0` and negative page counts.
 - Storybook static-sync gate hardening: `storybook:static:check` now rebuilds static output and fails on `git status` diff so stale static artifacts are blocked before interaction tests.
+- Demo dist-sync gate hardening: `demo:dist:check` now rebuilds demo dist and fails on `git status` diff so stale public-preview artifacts are blocked before release gate completion.
 - Demo visual productization hardening: updated hero panel, badge rail, nav pill styling, and section card surfaces for stronger brand hierarchy and commercial polish.
 - Pages delivery hardening: GitHub Pages artifact now ships Demo root + Storybook subpath (`/storybook`) in one deploy workflow.
 - Pages observability hardening: deploy workflow now writes Demo + Storybook external URLs into `GITHUB_STEP_SUMMARY`.

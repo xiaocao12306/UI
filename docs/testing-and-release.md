@@ -17,6 +17,7 @@ Examples:
 pnpm --filter @aurora-ui/react test
 pnpm --filter @aurora-ui/demo build
 pnpm demo:e2e
+pnpm demo:dist:check
 pnpm storybook:docs:check
 pnpm storybook:static:check
 pnpm storybook:build
@@ -27,6 +28,10 @@ Storybook static gate behavior:
 - `storybook:static:check` rebuilds `apps/storybook/storybook-static` before interaction tests.
 - stale static diff is treated as error and blocks the command (run `pnpm storybook:build` and commit updated static files).
 - `storybook:test:ci` uses repository-local `scripts/serve-storybook-static.mjs` to host static output before running `@storybook/test-runner`.
+
+Demo dist gate behavior:
+- `demo:dist:check` rebuilds `apps/demo/dist` before release gate checks.
+- stale dist diff is treated as error and blocks the command (run `pnpm demo:build` and commit updated dist files).
 
 ## E2E (Playwright)
 Install browser once in local environment:
@@ -149,5 +154,6 @@ pnpm release:gate
 This runs:
 1. `pnpm verify`
 2. `pnpm demo:e2e`
-3. `pnpm storybook:test:ci`（内含 `storybook:docs:check` + `storybook:static:check`）
-4. `pnpm release:dry-run`
+3. `pnpm demo:dist:check`
+4. `pnpm storybook:test:ci`（内含 `storybook:docs:check` + `storybook:static:check`）
+5. `pnpm release:dry-run`

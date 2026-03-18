@@ -19,6 +19,7 @@
     "demo:build": "pnpm --filter @aurora-ui/demo build",
     "demo:preview": "pnpm --filter @aurora-ui/demo preview",
     "demo:e2e": "playwright test",
+    "demo:dist:check": "node scripts/check-demo-dist-freshness.mjs",
     "storybook:dev": "pnpm --filter @aurora-ui/storybook-app storybook",
     "storybook:smoke": "pnpm --filter @aurora-ui/storybook-app storybook:smoke",
     "storybook:build": "pnpm --filter @aurora-ui/storybook-app build-storybook",
@@ -37,7 +38,7 @@
     "version-packages": "changeset version",
     "release:preflight": "node scripts/release-preflight.mjs",
     "release:dry-run": "node scripts/release-dry-run.mjs",
-    "release:gate": "pnpm verify && pnpm demo:e2e && pnpm storybook:test:ci && pnpm release:dry-run",
+    "release:gate": "pnpm verify && pnpm demo:e2e && pnpm demo:dist:check && pnpm storybook:test:ci && pnpm release:dry-run",
     "release": "changeset publish"
   },
   "devDependencies": {
