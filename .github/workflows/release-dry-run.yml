@@ -4,15 +4,21 @@ on:
   pull_request:
     paths:
       - ".changeset/**"
+      - ".changeset/config.json"
       - "packages/**"
-      - "scripts/release-dry-run.mjs"
+      - "scripts/**"
       - "package.json"
+      - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
       - ".github/workflows/release-dry-run.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: release-dry-run-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   dry-run:

@@ -71,7 +71,9 @@ pnpm release:dry-run
 Expected behavior:
 - requires a clean working tree (`git status --porcelain` empty) before execution
 - when no pending changesets: `No unreleased changesets found, exiting.`
+- auto-discovers publishable packages under `packages/*` (`package.json` has `name` and not `private: true`)
 - `npm publish --dry-run` prints tarball manifest/size and ends without real publish
+- when no publishable package is discovered: script exits with `status=skipped` and writes summary evidence
 - any version-file edits from `changeset version` are automatically reverted before script exit
 - command exits non-zero if any step fails (`changeset version` or any package dry-run)
 
@@ -79,9 +81,7 @@ Underlying commands (for troubleshooting):
 
 ```bash
 pnpm changeset version
-pnpm --filter @aurora-ui/tokens exec npm publish --dry-run --access public
-pnpm --filter @aurora-ui/primitives exec npm publish --dry-run --access public
-pnpm --filter @aurora-ui/react exec npm publish --dry-run --access public
+pnpm --filter <workspace-package-name> exec npm publish --dry-run --access public
 ```
 
 Run history/evidence is tracked in workflow run summaries (`GITHUB_STEP_SUMMARY`) instead of this document.
@@ -98,6 +98,8 @@ Behavior:
 
 Dry-run workflow: `.github/workflows/release-dry-run.yml`
 - runs `pnpm release:dry-run` on PRs that touch package/release related files
+- path trigger coverage includes `.changeset/**`, `packages/**`, `scripts/**`, `pnpm-workspace.yaml`, lockfile and workflow itself
+- enables workflow-level `concurrency` (same ref cancels in-progress old runs)
 - validates publishable tarballs without requiring `NPM_TOKEN`
 - writes tarball size summary (`package size` / `unpacked size`) into `GITHUB_STEP_SUMMARY` for reviewer-facing release evidence
 - on failure, summary still records `status=failed` and the failed step label to speed up triage

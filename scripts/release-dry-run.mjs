@@ -1,25 +1,18 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
-import { appendFileSync } from "node:fs";
+import { appendFileSync, readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
 
 const checks = [
   {
     label: "changeset version",
     command: ["pnpm", "changeset", "version"]
   },
-  {
-    label: "@aurora-ui/tokens npm publish --dry-run",
-    command: ["pnpm", "--filter", "@aurora-ui/tokens", "exec", "npm", "publish", "--dry-run", "--access", "public"]
-  },
-  {
-    label: "@aurora-ui/primitives npm publish --dry-run",
-    command: ["pnpm", "--filter", "@aurora-ui/primitives", "exec", "npm", "publish", "--dry-run", "--access", "public"]
-  },
-  {
-    label: "@aurora-ui/react npm publish --dry-run",
-    command: ["pnpm", "--filter", "@aurora-ui/react", "exec", "npm", "publish", "--dry-run", "--access", "public"]
-  }
+  ...discoverPublishablePackages().map((packageName) => ({
+    label: `${packageName} npm publish --dry-run`,
+    command: ["pnpm", "--filter", packageName, "exec", "npm", "publish", "--dry-run", "--access", "public"]
+  }))
 ];
 
 const packageMetrics = [];
@@ -66,6 +59,34 @@ function extractPackageMetrics(output) {
   return { name, packageSize, unpackedSize };
 }
 
+function discoverPublishablePackages() {
+  const packageRoot = path.resolve(process.cwd(), "packages");
+  const packageNames = [];
+  const entries = readdirSync(packageRoot, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+
+    const manifestPath = path.join(packageRoot, entry.name, "package.json");
+    let manifest;
+    try {
+      manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    } catch {
+      continue;
+    }
+
+    if (manifest.private || typeof manifest.name !== "string" || manifest.name.length === 0) {
+      continue;
+    }
+
+    packageNames.push(manifest.name);
+  }
+
+  return packageNames.sort((left, right) => left.localeCompare(right));
+}
+
 function writeSummary() {
   const summaryPath = process.env.GITHUB_STEP_SUMMARY;
   if (!summaryPath) {
@@ -78,14 +99,19 @@ function writeSummary() {
     `- status: \`${dryRunStatus}\``,
     ...(failedStepLabel ? [`- failed step: \`${failedStepLabel}\``] : []),
     `- changeset version: \`${changesetStatus}\``,
+    `- publishable packages: \`${checks.length - 1}\``,
     `- restored version files: \`${restoredFileCount}\``,
     "",
     "| Package | Tarball Size | Unpacked Size |",
     "| --- | --- | --- |"
   ];
 
-  for (const metric of packageMetrics) {
-    lines.push(`| \`${metric.name}\` | ${metric.packageSize} | ${metric.unpackedSize} |`);
+  if (packageMetrics.length === 0) {
+    lines.push("| _none_ | n/a | n/a |");
+  } else {
+    for (const metric of packageMetrics) {
+      lines.push(`| \`${metric.name}\` | ${metric.packageSize} | ${metric.unpackedSize} |`);
+    }
   }
 
   lines.push("");
@@ -161,6 +187,14 @@ console.log("-------------------------");
 
 try {
   ensureCleanWorkingTree();
+
+  if (checks.length === 1) {
+    dryRunStatus = "skipped";
+    changesetStatus = "skipped-no-publishable-packages";
+    console.log("No publishable packages discovered under packages/*, skipping dry-run.");
+    writeSummary();
+    process.exit(0);
+  }
 
   for (const step of checks) {
     runStep(step.label, step.command);
