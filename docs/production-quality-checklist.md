@@ -178,3 +178,4 @@
 - Demo toast guard parity: added runtime toggle for `Toast onEscapeKeyDown` interception and Playwright regression confirming Escape is blocked/unblocked by toast-level guard state.
 - Storybook build-log hygiene: set `vite.build.chunkSizeWarningLimit=2500` to suppress known vendor-size warning noise without changing runtime behavior.
 - Table row-header E2E parity: demo Playwright now asserts rowheader semantics survive sort transitions.
+- Release dry-run observability: `release-dry-run` now writes package-size evidence into `GITHUB_STEP_SUMMARY` for CI reviewers.

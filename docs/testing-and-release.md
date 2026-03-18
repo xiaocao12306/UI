@@ -96,6 +96,7 @@ Behavior:
 Dry-run workflow: `.github/workflows/release-dry-run.yml`
 - runs `pnpm release:dry-run` on PRs that touch package/release related files
 - validates publishable tarballs without requiring `NPM_TOKEN`
+- writes tarball size summary (`package size` / `unpacked size`) into `GITHUB_STEP_SUMMARY` for reviewer-facing release evidence
 
 Required repository secrets:
 - `NPM_TOKEN` (for npm publish)
