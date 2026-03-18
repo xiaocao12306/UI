@@ -14,7 +14,7 @@
     "storybook:smoke": "storybook dev -p 6006 --smoke-test --ci",
     "build-storybook": "storybook build",
     "storybook:test": "test-storybook --url http://127.0.0.1:6106 --maxWorkers=2",
-    "storybook:test:ci": "start-server-and-test \"http-server storybook-static -p 6106 -c-1\" http-get://127.0.0.1:6106 \"pnpm storybook:test\"",
+    "storybook:test:ci": "start-server-and-test \"http-server storybook-static -p 6106 -c-1 --silent\" http-get://127.0.0.1:6106 \"pnpm storybook:test\"",
     "chromatic": "chromatic --exit-once-uploaded --storybook-build-dir storybook-static"
   },
   "dependencies": {
