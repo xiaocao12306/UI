@@ -37,6 +37,7 @@ import {
   Toast,
   Tooltip
 } from "@aurora-ui/react";
+import "./main.css";
 
 const sectionLinks = [
   { id: "basic-components", label: "Basic" },
@@ -74,6 +75,20 @@ const mutedBodyStyle: React.CSSProperties = {
   lineHeight: 1.55
 };
 const sectionSubheadingStyle: React.CSSProperties = { margin: 0, fontSize: 16, letterSpacing: "0.01em" };
+const sectionStyle: React.CSSProperties = { display: "grid", gap: 12, scrollMarginTop: 84 };
+const sectionHeaderStyle: React.CSSProperties = { display: "grid", gap: 6 };
+const sectionHeadingRowStyle: React.CSSProperties = { display: "flex", alignItems: "center", gap: 10 };
+const sectionEyebrowStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 11,
+  textTransform: "uppercase",
+  letterSpacing: "0.11em",
+  color: "var(--aurora-text-secondary)",
+  padding: "3px 10px",
+  borderRadius: 999,
+  border: "1px solid color-mix(in srgb, var(--aurora-border-default) 72%, transparent)",
+  background: "color-mix(in srgb, var(--aurora-surface-elevated) 82%, var(--aurora-surface-default))"
+};
 const sectionCardStyle: React.CSSProperties = {
   border: "1px solid color-mix(in srgb, var(--aurora-border-default) 82%, transparent)",
   borderRadius: "var(--aurora-radius-lg)",
@@ -82,7 +97,9 @@ const sectionCardStyle: React.CSSProperties = {
   boxShadow: "var(--aurora-shadow-sm)",
   padding: 18,
   display: "grid",
-  gap: 14
+  gap: 14,
+  position: "relative",
+  overflow: "hidden"
 };
 const appShellStyle: React.CSSProperties = {
   minHeight: "100vh",
@@ -106,13 +123,64 @@ const mainLayoutStyle: React.CSSProperties = {
 };
 const heroPanelStyle: React.CSSProperties = {
   display: "grid",
-  gap: 16,
+  gap: 18,
   border: "1px solid color-mix(in srgb, var(--aurora-accent-default) 30%, var(--aurora-border-default))",
   borderRadius: "var(--aurora-radius-lg)",
   background:
     "radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--aurora-accent-default) 16%, transparent), transparent 45%), linear-gradient(180deg, var(--aurora-surface-elevated), color-mix(in srgb, var(--aurora-surface-elevated) 70%, var(--aurora-surface-default) 30%))",
   boxShadow: "var(--aurora-shadow-md)",
-  padding: "18px 18px 16px"
+  padding: "20px clamp(14px, 2vw, 22px) 18px"
+};
+const heroHeadlineStyle: React.CSSProperties = {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 12
+};
+const heroTitleBlockStyle: React.CSSProperties = { display: "grid", gap: 8 };
+const heroLabelStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 12,
+  letterSpacing: "0.11em",
+  textTransform: "uppercase",
+  color: "var(--aurora-text-secondary)"
+};
+const heroTitleStyle: React.CSSProperties = { margin: 0, fontSize: "clamp(28px, 4vw, 38px)", letterSpacing: "-0.03em" };
+const heroOverviewStyle: React.CSSProperties = {
+  display: "grid",
+  gap: 12,
+  gridTemplateColumns: "minmax(0, 1fr) minmax(220px, 300px)"
+};
+const heroOverviewCopyStyle: React.CSSProperties = { display: "grid", gap: 10 };
+const heroBadgeRowStyle: React.CSSProperties = { display: "flex", flexWrap: "wrap", gap: 8 };
+const heroContextCardStyle: React.CSSProperties = {
+  margin: 0,
+  display: "grid",
+  gap: 8,
+  alignContent: "start",
+  border: "1px solid color-mix(in srgb, var(--aurora-border-default) 84%, transparent)",
+  borderRadius: "var(--aurora-radius-md)",
+  background: "color-mix(in srgb, var(--aurora-surface-elevated) 90%, var(--aurora-surface-default))",
+  boxShadow: "var(--aurora-shadow-sm)",
+  padding: "10px 12px"
+};
+const heroContextLabelStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 11,
+  textTransform: "uppercase",
+  letterSpacing: "0.1em",
+  color: "var(--aurora-text-secondary)"
+};
+const heroContextValueStyle: React.CSSProperties = { margin: 0, fontSize: 16, letterSpacing: "-0.01em" };
+const heroContextMetaStyle: React.CSSProperties = { ...mutedBodyStyle, fontSize: 13 };
+const sectionNavShellStyle: React.CSSProperties = { display: "grid", gap: 8 };
+const sectionNavLabelStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 12,
+  color: "var(--aurora-text-secondary)",
+  letterSpacing: "0.08em",
+  textTransform: "uppercase"
 };
 const sectionNavStyle: React.CSSProperties = {
   display: "flex",
@@ -148,9 +216,14 @@ const sectionNavLinkStyle: React.CSSProperties = {
   color: "var(--aurora-text-primary)",
   textDecoration: "none",
   fontWeight: "var(--aurora-font-weight-medium)",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 8,
+  position: "relative",
   border: "1px solid var(--aurora-border-default)",
   borderRadius: 999,
-  padding: "4px 12px",
+  padding: "6px 14px",
   fontSize: 13,
   transition:
     "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
@@ -170,17 +243,18 @@ function Section({
   const headingId = `${id}-title`;
 
   return (
-    <section id={id} aria-labelledby={headingId} style={{ display: "grid", gap: 12, scrollMarginTop: 84 }}>
-      <header style={{ display: "grid", gap: 4 }}>
-        <p style={{ margin: 0, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--aurora-text-secondary)" }}>
-          {id.replaceAll("-", " ")}
-        </p>
-        <h2 id={headingId} style={{ margin: 0, fontSize: 20, letterSpacing: "-0.01em" }}>
+    <section id={id} aria-labelledby={headingId} className="demo-section" style={sectionStyle}>
+      <header className="demo-section-header" style={sectionHeaderStyle}>
+        <div style={sectionHeadingRowStyle}>
+          <p style={sectionEyebrowStyle}>{id.replaceAll("-", " ")}</p>
+          <span aria-hidden="true" className="demo-section-heading-rule" />
+        </div>
+        <h2 id={headingId} style={{ margin: 0, fontSize: "clamp(21px, 2.1vw, 24px)", letterSpacing: "-0.015em" }}>
           {title}
         </h2>
         {description ? <p style={mutedBodyStyle}>{description}</p> : null}
       </header>
-      <div style={sectionCardStyle}>
+      <div className="demo-section-card" style={sectionCardStyle}>
         {children}
       </div>
     </section>
@@ -202,11 +276,16 @@ function SectionNavLink({
   const [focusVisible, setFocusVisible] = React.useState(false);
   const focusIntentRef = React.useRef(true);
 
-  const activeBackground = "color-mix(in srgb, var(--aurora-accent-default) 14%, transparent)";
-  const idleBackground = hovered ? "color-mix(in srgb, var(--aurora-surface-elevated) 86%, var(--aurora-surface-default))" : "transparent";
+  const interactive = active || hovered || focusVisible;
+  const activeBackground =
+    "linear-gradient(180deg, color-mix(in srgb, var(--aurora-accent-default) 18%, transparent), color-mix(in srgb, var(--aurora-accent-default) 10%, transparent))";
+  const idleBackground = hovered
+    ? "color-mix(in srgb, var(--aurora-surface-elevated) 88%, var(--aurora-surface-default))"
+    : "transparent";
 
   return (
     <a
+      className="demo-section-nav-pill"
       href={`#${id}`}
       aria-current={active ? "location" : undefined}
       onClick={onNavigate}
@@ -233,9 +312,13 @@ function SectionNavLink({
         ...sectionNavLinkStyle,
         border: active ? "1px solid var(--aurora-accent-default)" : "1px solid var(--aurora-border-default)",
         background: active ? activeBackground : idleBackground,
-        boxShadow: focusVisible ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 42%, transparent)" : "none",
+        boxShadow: focusVisible
+          ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 42%, transparent)"
+          : interactive
+            ? "var(--aurora-shadow-sm)"
+            : "none",
         color: active || hovered ? "var(--aurora-text-primary)" : "var(--aurora-text-secondary)",
-        transform: hovered ? "translateY(-1px)" : "translateY(0)"
+        transform: interactive ? "translateY(-1px)" : "translateY(0)"
       }}
     >
       {label}
@@ -258,6 +341,7 @@ function HeroStatCard({
 
   return (
     <button
+      className="demo-hero-stat-card"
       type="button"
       onMouseEnter={() => {
         setHovered(true);
@@ -406,79 +490,88 @@ function App() {
     <AuroraProvider theme={theme}>
       <GlobalStyles />
       <div style={appShellStyle}>
-      <main style={mainLayoutStyle}>
-        <header style={heroPanelStyle}>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-            <div style={{ display: "grid", gap: 8 }}>
-              <p style={{ margin: 0, fontSize: 12, letterSpacing: "0.11em", textTransform: "uppercase", color: "var(--aurora-text-secondary)" }}>
-                Production React UI Library
-              </p>
-              <h1 style={{ margin: 0, fontSize: "clamp(28px, 4vw, 36px)", letterSpacing: "-0.03em" }}>Aurora UI Demo</h1>
+        <main className="demo-main-layout" style={mainLayoutStyle}>
+          <header className="demo-hero" style={heroPanelStyle}>
+            <div style={heroHeadlineStyle}>
+              <div style={heroTitleBlockStyle}>
+                <p style={heroLabelStyle}>
+                  Production React UI Library
+                </p>
+                <h1 style={heroTitleStyle}>Aurora UI Demo</h1>
+              </div>
+              <div className="demo-hero-theme-control" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                <label htmlFor="theme-select" style={{ color: "var(--aurora-text-secondary)" }}>
+                  Theme
+                </label>
+                <Select
+                  id="theme-select"
+                  value={theme}
+                  onChange={(event) => setTheme(event.target.value as ThemeName)}
+                  style={{ width: "min(180px, 48vw)" }}
+                >
+                  <option value="core-light">core-light</option>
+                  <option value="core-dark">core-dark</option>
+                  <option value="glass">glass</option>
+                  <option value="neo-brutal">neo-brutal</option>
+                </Select>
+              </div>
             </div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-              <label htmlFor="theme-select" style={{ color: "var(--aurora-text-secondary)" }}>
-                Theme
-              </label>
-              <Select
-                id="theme-select"
-                value={theme}
-                onChange={(event) => setTheme(event.target.value as ThemeName)}
-                style={{ width: 180 }}
-              >
-                <option value="core-light">core-light</option>
-                <option value="core-dark">core-dark</option>
-                <option value="glass">glass</option>
-                <option value="neo-brutal">neo-brutal</option>
-              </Select>
+            <div className="demo-hero-overview" style={heroOverviewStyle}>
+              <div style={heroOverviewCopyStyle}>
+                <p style={{ ...mutedBodyStyle, maxWidth: 820 }}>
+                  Token-first React component library with AI interaction patterns. Current theme: <strong>{theme}</strong>
+                </p>
+                <div className="demo-hero-badge-row" style={heroBadgeRowStyle}>
+                  <Badge tone="success">32 Storybook suites green</Badge>
+                  <Badge>60 Demo E2E checks</Badge>
+                  <Tag>Design-token driven</Tag>
+                  <Tag>Overlay + AI ready</Tag>
+                </div>
+              </div>
+              <aside aria-label="Delivery focus" style={heroContextCardStyle}>
+                <p style={heroContextLabelStyle}>Delivery Focus</p>
+                <p style={heroContextValueStyle}>Production Refinement</p>
+                <p style={heroContextMetaStyle}>A11y parity, interaction resilience, docs quality, and release confidence.</p>
+              </aside>
             </div>
-          </div>
-          <p style={{ ...mutedBodyStyle, maxWidth: 820 }}>
-            Token-first React component library with AI interaction patterns. Current theme: <strong>{theme}</strong>
-          </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            <Badge tone="success">32 Storybook suites green</Badge>
-            <Badge>60 Demo E2E checks</Badge>
-            <Tag>Design-token driven</Tag>
-            <Tag>Overlay + AI ready</Tag>
-          </div>
-          <div style={heroStatsGridStyle}>
-            <HeroStatCard
-              label="Quality Gate"
-              value="release:gate ✅"
-              description="verify + demo:e2e + storybook:test:ci + release:dry-run"
-            />
-            <HeroStatCard
-              label="Active Workstream"
-              value="Production Refinement"
-              description="A11y parity, interaction resilience, and docs/release consistency."
-            />
-            <HeroStatCard
-              label="Theme Pack"
-              value={theme}
-              description="Token-first surface, accent, and typography language."
-            />
-          </div>
-          <nav
-            aria-label="Demo sections"
-            style={sectionNavStyle}
-          >
-            {sectionLinks.map((item) => (
-              <SectionNavLink
-                key={item.id}
-                id={item.id}
-                label={item.label}
-                active={activeSection === item.id}
-                onNavigate={() => setActiveSection(item.id)}
+            <div style={heroStatsGridStyle}>
+              <HeroStatCard
+                label="Quality Gate"
+                value="release:gate ✅"
+                description="verify + demo:e2e + storybook:test:ci + release:dry-run"
               />
-            ))}
-          </nav>
-        </header>
+              <HeroStatCard
+                label="Active Workstream"
+                value="Production Refinement"
+                description="A11y parity, interaction resilience, and docs/release consistency."
+              />
+              <HeroStatCard
+                label="Theme Pack"
+                value={theme}
+                description="Token-first surface, accent, and typography language."
+              />
+            </div>
+            <div className="demo-section-nav-shell" style={sectionNavShellStyle}>
+              <p style={sectionNavLabelStyle}>Jump to section</p>
+              <nav aria-label="Demo sections" className="demo-section-nav" style={sectionNavStyle}>
+                {sectionLinks.map((item) => (
+                  <SectionNavLink
+                    key={item.id}
+                    id={item.id}
+                    label={item.label}
+                    active={activeSection === item.id}
+                    onNavigate={() => setActiveSection(item.id)}
+                  />
+                ))}
+              </nav>
+            </div>
+          </header>
 
-        <Section
-          id="basic-components"
-          title="Basic Components"
-          description="Core controls and form primitives with theme-driven tokens."
-        >
+          <Section
+            id="basic-components"
+            title="Basic Components"
+            description="Core controls and form primitives with theme-driven tokens."
+          >
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Button>Primary</Button>
             <Button variant="outline">Outline</Button>
@@ -538,13 +631,13 @@ function App() {
               description="Automatically refresh release feed every 30 seconds."
             />
           </div>
-        </Section>
+          </Section>
 
-        <Section
-          id="data-navigation"
-          title="Data & Navigation"
-          description="Common data surfaces and navigation containers."
-        >
+          <Section
+            id="data-navigation"
+            title="Data & Navigation"
+            description="Common data surfaces and navigation containers."
+          >
           <Tabs
             value={topTabsValue}
             onValueChange={setTopTabsValue}
@@ -686,13 +779,13 @@ function App() {
               onPageChange={setRtlFeedPage}
             />
           </div>
-        </Section>
+          </Section>
 
-        <Section
-          id="feedback-states"
-          title="Feedback & States"
-          description="System status, loading skeletons, and streaming indicators."
-        >
+          <Section
+            id="feedback-states"
+            title="Feedback & States"
+            description="System status, loading skeletons, and streaming indicators."
+          >
           <Alert title="Network recovered" tone="success">
             All queued jobs were synchronized.
           </Alert>
@@ -734,13 +827,13 @@ function App() {
           <Empty title="No records found" description="Create your first workflow to start collecting events." action={<Button>Create workflow</Button>} />
           <LoadingDots />
           <StreamingText text="Streaming response in progress..." />
-        </Section>
+          </Section>
 
-        <Section
-          id="overlays-navigation"
-          title="Overlays & Navigation"
-          description="Layered surfaces with keyboard and pointer dismissal behavior."
-        >
+          <Section
+            id="overlays-navigation"
+            title="Overlays & Navigation"
+            description="Layered surfaces with keyboard and pointer dismissal behavior."
+          >
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <Tooltip content="Runs a dry-run build">
               <Button variant="outline">Hover me</Button>
@@ -846,9 +939,9 @@ function App() {
               {paletteCloseReason}
             </strong>
           </p>
-        </Section>
+          </Section>
 
-        <Section id="ai-components" title="AI Components" description="Prompt, reasoning, and streaming response building blocks.">
+          <Section id="ai-components" title="AI Components" description="Prompt, reasoning, and streaming response building blocks.">
           <PromptInput
             onSubmit={(prompt) => {
               setSubmittedPrompt(prompt);
@@ -875,7 +968,7 @@ function App() {
   return <div>{step}</div>;
 }`}
           />
-        </Section>
+          </Section>
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen} onCloseReason={setDialogCloseReason} title="Dialog Example">
           <p style={{ margin: 0 }}>Modal built with FocusScope + DismissableLayer.</p>
@@ -1000,7 +1093,7 @@ function App() {
           duration={0}
           position="top-left"
         />
-      </main>
+        </main>
       </div>
     </AuroraProvider>
   );
