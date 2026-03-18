@@ -133,6 +133,29 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Resume card" })).toHaveFocus();
   });
 
+  it("ignores typeahead key presses while IME composition is active", () => {
+    render(
+      <Dropdown
+        label="IME Guard"
+        items={[
+          { key: "duplicate", label: "Duplicate" },
+          { key: "archive", label: "Archive" },
+          { key: "rename", label: "Rename" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "IME Guard" }));
+    const menu = screen.getByRole("menu");
+    expect(screen.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "a", isComposing: true, keyCode: 229, which: 229 });
+    expect(screen.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "a" });
+    expect(screen.getByRole("menuitem", { name: "Archive" })).toHaveFocus();
+  });
+
   it("cycles repeated typeahead key presses across matching items", () => {
     render(
       <Dropdown

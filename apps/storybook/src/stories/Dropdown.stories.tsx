@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Dropdown, Popover, type DropdownItem } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const items: DropdownItem[] = [
   { key: "duplicate", label: "Duplicate" },
@@ -152,6 +152,31 @@ export const TypeaheadNavigation: Story = {
     await userEvent.keyboard("res");
     await expect(canvas.getByRole("menuitem", { name: "Resume card" })).toHaveFocus();
     await expect(menu).toBeInTheDocument();
+  }
+};
+
+export const TypeaheadIgnoresImeComposition: Story = {
+  args: {
+    label: "IME Typeahead Guard",
+    items: [
+      { key: "duplicate", label: "Duplicate" },
+      { key: "archive", label: "Archive" },
+      { key: "rename", label: "Rename" }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "IME Typeahead Guard" });
+
+    await userEvent.click(trigger);
+    const menu = canvas.getByRole("menu");
+    await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "a", isComposing: true, keyCode: 229, which: 229 });
+    await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+
+    await userEvent.keyboard("a");
+    await expect(canvas.getByRole("menuitem", { name: "Archive" })).toHaveFocus();
   }
 };
 

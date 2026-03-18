@@ -238,6 +238,10 @@ export function Dropdown({
                 return;
               }
 
+              if (isComposingDropdownKeyEvent(event)) {
+                return;
+              }
+
               if (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey) {
                 const normalizedKey = normalizeTypeaheadText(event.key);
                 if (normalizedKey.length === 0) {
@@ -316,4 +320,13 @@ export function Dropdown({
       ) : null}
     </div>
   );
+}
+
+function isComposingDropdownKeyEvent(event: React.KeyboardEvent<HTMLElement>) {
+  const nativeEvent = event.nativeEvent;
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }
