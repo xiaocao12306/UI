@@ -85,7 +85,7 @@ Latest release gate run:
 - command: `pnpm release:gate`
 - result: passed (`verify` + `demo:e2e` + `storybook:test:ci` + `release:dry-run`)
 - notes:
-  - demo E2E total now `39` checks
+  - demo E2E total now `40` checks
   - Storybook interaction suites refreshed to `32/32`, tests `151/151` all passed after latest CommandPalette/Toast/Tabs/Table production hardening
   - release dry-run package size evidence refreshed (`react` unpacked size ~296.8 kB)
 

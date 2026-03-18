@@ -341,6 +341,21 @@ function App() {
               ]}
             />
           </div>
+          <div dir="rtl" style={{ display: "grid", gap: 8 }}>
+            <h3 style={{ margin: 0, fontSize: 16 }}>RTL Direction Tabs</h3>
+            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+              In RTL layouts, ArrowRight moves to the previous tab and ArrowLeft moves to the next tab.
+            </p>
+            <Tabs
+              ariaLabel="RTL release workflow tabs"
+              defaultValue="spec"
+              items={[
+                { key: "spec", label: "Spec", content: <p style={{ margin: 0 }}>Specification scope and API contracts.</p> },
+                { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-functional review and QA checkpoints.</p> },
+                { key: "release", label: "Release", content: <p style={{ margin: 0 }}>Release checklist and rollout sequencing.</p> }
+              ]}
+            />
+          </div>
           <div style={{ display: "grid", gap: 8 }}>
             <h3 style={{ margin: 0, fontSize: 16 }}>Vertical Orientation Tabs</h3>
             <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>

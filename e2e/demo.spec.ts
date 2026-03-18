@@ -227,6 +227,27 @@ test("navigates data tabs with Home/End keys", async ({ page }) => {
   await expect(overviewPanel).not.toHaveAttribute("hidden");
 });
 
+test("mirrors horizontal tab arrows in rtl layout", async ({ page }) => {
+  await page.goto("/");
+
+  const rtlTablist = page.getByRole("tablist", { name: "RTL release workflow tabs" });
+  const specTab = rtlTablist.getByRole("tab", { name: "Spec" });
+  const releaseTab = rtlTablist.getByRole("tab", { name: "Release" });
+  const releasePanel = page.locator(`#${await releaseTab.getAttribute("aria-controls")}`);
+  const specPanel = page.locator(`#${await specTab.getAttribute("aria-controls")}`);
+
+  await specTab.focus();
+  await specTab.press("ArrowRight");
+  await expect(releaseTab).toBeFocused();
+  await expect(releasePanel).toContainText("Release checklist and rollout sequencing.");
+  await expect(releasePanel).not.toHaveAttribute("hidden");
+
+  await releaseTab.press("ArrowLeft");
+  await expect(specTab).toBeFocused();
+  await expect(specPanel).toContainText("Specification scope and API contracts.");
+  await expect(specPanel).not.toHaveAttribute("hidden");
+});
+
 test("sorts demo table from column headers", async ({ page }) => {
   await page.goto("/");
 
