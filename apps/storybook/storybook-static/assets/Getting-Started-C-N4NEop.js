@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as i,T as s,S as c,D as a}from"./index-Ct5qd9W6.js";import"./index-BWu4c2F4.js";import"./iframe-IgpfpMQt.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function t(o){const n={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",ul:"ul",...r(),...o.components};return e.jsxs(e.Fragment,{children:[e.jsx(i,{title:"Docs/Getting Started"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as i,T as s,S as c,D as a}from"./index-Ch2xncOi.js";import"./index-BWu4c2F4.js";import"./iframe-CpMePTV8.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";function t(o){const n={code:"code",h2:"h2",li:"li",ol:"ol",p:"p",ul:"ul",...r(),...o.components};return e.jsxs(e.Fragment,{children:[e.jsx(i,{title:"Docs/Getting Started"}),`
 `,e.jsx(s,{}),`
 `,e.jsx(c,{children:"Aurora UI Storybook"}),`
 `,e.jsx(a,{children:e.jsxs(n.p,{children:[`Aurora UI Storybook is the primary visual documentation surface for React components.
