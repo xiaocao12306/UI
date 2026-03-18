@@ -327,10 +327,18 @@ function SectionNavLink({
 }
 
 function HeroStatCard({
+  targetId,
+  targetLabel,
+  active,
+  onNavigate,
   label,
   value,
   description
 }: {
+  targetId: string;
+  targetLabel: string;
+  active: boolean;
+  onNavigate: (targetId: string) => void;
   label: string;
   value: string;
   description: string;
@@ -340,9 +348,14 @@ function HeroStatCard({
   const focusIntentRef = React.useRef(true);
 
   return (
-    <button
+    <a
       className="demo-hero-stat-card"
-      type="button"
+      href={`#${targetId}`}
+      aria-label={`Jump to ${targetLabel} section`}
+      aria-current={active ? "location" : undefined}
+      onClick={() => {
+        onNavigate(targetId);
+      }}
       onMouseEnter={() => {
         setHovered(true);
       }}
@@ -364,19 +377,22 @@ function HeroStatCard({
       }}
       style={{
         ...heroStatCardStyle,
+        textDecoration: "none",
+        color: "inherit",
         textAlign: "left",
-        font: "inherit",
-        cursor: "default",
+        cursor: "pointer",
         border:
-          hovered || focusVisible
+          active
+            ? "1px solid color-mix(in srgb, var(--aurora-accent-default) 62%, var(--aurora-border-default))"
+            : hovered || focusVisible
             ? "1px solid color-mix(in srgb, var(--aurora-accent-default) 52%, var(--aurora-border-default))"
             : heroStatCardStyle.border,
         boxShadow: focusVisible
           ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 42%, transparent), var(--aurora-shadow-sm)"
-          : hovered
+          : active || hovered
             ? "var(--aurora-shadow-md)"
             : "var(--aurora-shadow-sm)",
-        transform: hovered ? "translateY(-2px)" : "translateY(0)",
+        transform: active || hovered ? "translateY(-2px)" : "translateY(0)",
         transition:
           "transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
       }}
@@ -394,7 +410,7 @@ function HeroStatCard({
       </p>
       <strong style={{ fontSize: 18, letterSpacing: "-0.02em" }}>{value}</strong>
       <p style={{ ...mutedBodyStyle, fontSize: 12 }}>{description}</p>
-    </button>
+    </a>
   );
 }
 
@@ -522,8 +538,8 @@ function App() {
                   Token-first React component library with AI interaction patterns. Current theme: <strong>{theme}</strong>
                 </p>
                 <div className="demo-hero-badge-row" style={heroBadgeRowStyle}>
-                  <Badge tone="success">Storybook interaction gate green</Badge>
-                  <Badge>Demo E2E gate green</Badge>
+                  <Badge tone="success">Production-ready interactions</Badge>
+                  <Badge>Accessibility-first defaults</Badge>
                   <Tag>Design-token driven</Tag>
                   <Tag>Overlay + AI ready</Tag>
                 </div>
@@ -536,19 +552,31 @@ function App() {
             </div>
             <div style={heroStatsGridStyle}>
               <HeroStatCard
+                targetId="basic-components"
+                targetLabel="Basic Components"
+                active={activeSection === "basic-components"}
+                onNavigate={setActiveSection}
                 label="Quality Gate"
-                value="release:gate ✅"
-                description="verify + demo:e2e + storybook:test:ci + release:dry-run"
+                value="Production confidence"
+                description="Core controls and forms with production-grade interaction and a11y defaults."
               />
               <HeroStatCard
+                targetId="overlays-navigation"
+                targetLabel="Overlays and Navigation"
+                active={activeSection === "overlays-navigation"}
+                onNavigate={setActiveSection}
                 label="Active Workstream"
                 value="Production Refinement"
-                description="A11y parity, interaction resilience, and docs/release consistency."
+                description="Overlay close policy, focus flow, and telemetry consistency across dismissal paths."
               />
               <HeroStatCard
+                targetId="feedback-states"
+                targetLabel="Feedback and States"
+                active={activeSection === "feedback-states"}
+                onNavigate={setActiveSection}
                 label="Theme Pack"
                 value={theme}
-                description="Token-first surface, accent, and typography language."
+                description="Token-first surface, accent, and typography language across all feedback states."
               />
             </div>
             <div className="demo-section-nav-shell" style={sectionNavShellStyle}>

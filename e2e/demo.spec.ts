@@ -521,6 +521,15 @@ test("highlights active section in anchor nav", async ({ page }) => {
   await expect(statesLink).toHaveAttribute("aria-current", "location");
 });
 
+test("navigates to target sections from hero stat cards", async ({ page }) => {
+  await page.goto("/");
+
+  const overlaysCardLink = page.getByRole("link", { name: "Jump to Overlays and Navigation section" });
+  await overlaysCardLink.click();
+  await expect(page).toHaveURL(/#overlays-navigation$/);
+  await expect(page.getByRole("link", { name: "Overlays", exact: true })).toHaveAttribute("aria-current", "location");
+});
+
 test("navigates data tabs with Home/End keys", async ({ page }) => {
   await page.goto("/");
 
