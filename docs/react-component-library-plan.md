@@ -209,6 +209,7 @@
   - Toast Escape 语义收口（堆叠通知场景下一次按键仅关闭一个 toast）
   - Toast 堆叠顺序语义收口（Escape 仅作用于最新/顶层 toast，避免误关历史通知）
   - Toast 交互优先级收口（focus/hover 的 toast 提升为栈顶，Escape 优先关闭当前操作通知）
+  - Toast 条件拦截收口（新增 `onEscapeKeyDown`，支持 toast 级 `preventDefault()` 运行时审批守卫）
   - CommandPalette 批量执行收口（`closeOnSelect=false` 支持连续执行命令，避免重复打开面板）
   - CommandPalette 关闭策略收口（`closeOnEscape`/`closeOnOutsidePointer` 支持阻塞式审批流，避免误关闭）
   - CommandPalette 条件拦截收口（新增 `onEscapeKeyDown/onPointerDownOutside`，支持运行时 `preventDefault()` 审批守卫）

@@ -459,6 +459,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `duration` | `number` | Auto-dismiss delay in ms; `0` disables timer. |
 | `pauseOnHover` | `boolean` | Suspends timer while hovered or while focus stays inside toast controls. |
 | `closeOnEscape` | `boolean` | Optional keyboard dismiss path; Escape is consumed so stacked toasts dismiss one at a time. |
+| `onEscapeKeyDown` | `(event: KeyboardEvent) => void` | Optional toast-level Escape hook; call `event.preventDefault()` to keep toast open in guarded flows. |
 | stacked Escape order | top-priority toast first | In multi-toast layouts, Escape dismisses the top toast (latest opened or most recently focused/hovered). |
 | `closeLabel` | `string` | Customize close-button accessible name for i18n. |
 | `ariaLabel` | `string` | Optional live-region accessible name override for icon-only or non-text titles. |
@@ -467,6 +468,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={ToastStories.EscapeStackOrder} />
 <Canvas of={ToastStories.FocusedToastEscapesFirst} />
 <Canvas of={ToastStories.EscapePreemptedByGlobalHandler} />
+<Canvas of={ToastStories.EscapeGuardedByToastHandler} />
 
 ## AI
 

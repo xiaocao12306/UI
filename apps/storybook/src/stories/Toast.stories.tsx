@@ -204,6 +204,35 @@ function EscapePreemptedDemo() {
   );
 }
 
+function EscapeGuardedByToastDemo() {
+  const [open, setOpen] = React.useState(true);
+  const [guardEscape, setGuardEscape] = React.useState(true);
+
+  return (
+    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Reopen Toast
+      </Button>
+      <Button variant="ghost" onClick={() => setGuardEscape((value) => !value)}>
+        {guardEscape ? "Disable toast Escape guard" : "Enable toast Escape guard"}
+      </Button>
+      <Toast
+        open={open}
+        onOpenChange={setOpen}
+        duration={0}
+        title="Toast-level Escape guard"
+        description="Toast can intercept Escape locally before close logic runs."
+        tone="info"
+        onEscapeKeyDown={(event) => {
+          if (guardEscape) {
+            event.preventDefault();
+          }
+        }}
+      />
+    </div>
+  );
+}
+
 export const EscapePreemptedByGlobalHandler: Story = {
   render: () => <EscapePreemptedDemo />,
   play: async ({ canvasElement }) => {
@@ -218,6 +247,21 @@ export const EscapePreemptedByGlobalHandler: Story = {
     await expect(canvas.getByRole("button", { name: "Enable global Escape handler" })).toBeInTheDocument();
     await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));
     await expect(canvas.queryByRole("status", { name: "Global Escape override" })).not.toBeInTheDocument();
+  }
+};
+
+export const EscapeGuardedByToastHandler: Story = {
+  render: () => <EscapeGuardedByToastDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const doc = canvasElement.ownerDocument;
+    await expect(canvas.getByRole("status", { name: "Toast-level Escape guard" })).toBeInTheDocument();
+
+    fireEvent.keyDown(doc, { key: "Escape" });
+    await expect(canvas.getByRole("status", { name: "Toast-level Escape guard" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Disable toast Escape guard" }));
+    await expect(canvas.getByRole("button", { name: "Enable toast Escape guard" })).toBeInTheDocument();
   }
 };
 

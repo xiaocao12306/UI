@@ -104,6 +104,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 
 - Use `duration={0}` for blocking notifications that require explicit user action.
 - Keep `closeOnEscape` aligned with task criticality; disable Escape only for must-read states.
+- Use `onEscapeKeyDown` when Escape policy must be toggled dynamically at runtime (e.g. approval checkpoints).
 - Ensure upper-layer shortcuts that `preventDefault()` on Escape can preempt toast dismiss when required.
 - For stacked notifications, rely on Escape handling that dismisses one toast per key press, prioritizing the latest or most recently interacted toast.
 - Verify timer pause behavior for both pointer hover and keyboard focus when `pauseOnHover` is enabled.
@@ -113,6 +114,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={ToastStories.EscapeStackOrder} />
 <Canvas of={ToastStories.FocusedToastEscapesFirst} />
 <Canvas of={ToastStories.EscapePreemptedByGlobalHandler} />
+<Canvas of={ToastStories.EscapeGuardedByToastHandler} />
 
 ## Data Presentation Patterns
 

@@ -12,6 +12,7 @@ export type ToastProps = {
   duration?: number;
   pauseOnHover?: boolean;
   closeOnEscape?: boolean;
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
   closeLabel?: string;
   ariaLabel?: string;
   position?: ToastPosition;
@@ -79,6 +80,7 @@ export function Toast({
   duration = 4000,
   pauseOnHover = true,
   closeOnEscape = true,
+  onEscapeKeyDown,
   closeLabel = "Close toast",
   ariaLabel,
   position = "bottom-right",
@@ -142,12 +144,17 @@ export function Toast({
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape" || event.defaultPrevented) {
+      if (event.key !== "Escape") {
         return;
       }
 
       const element = rootRef.current;
       if (!element || !isTopToast(element)) {
+        return;
+      }
+
+      onEscapeKeyDown?.(event);
+      if (event.defaultPrevented) {
         return;
       }
 
@@ -159,7 +166,7 @@ export function Toast({
     return () => {
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [close, closeOnEscape, open]);
+  }, [close, closeOnEscape, onEscapeKeyDown, open]);
 
   if (!open) {
     return null;

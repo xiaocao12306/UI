@@ -45,6 +45,36 @@ describe("Toast", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("calls onEscapeKeyDown before closing", () => {
+    const onOpenChange = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+
+    render(<Toast open title="Escapable" onOpenChange={onOpenChange} onEscapeKeyDown={onEscapeKeyDown} />);
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it("allows onEscapeKeyDown to prevent dismissal", () => {
+    const onOpenChange = vi.fn();
+
+    render(
+      <Toast
+        open
+        title="Guarded"
+        onOpenChange={onOpenChange}
+        onEscapeKeyDown={(event) => {
+          event.preventDefault();
+        }}
+      />
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("status", { name: "Guarded" })).toBeInTheDocument();
+  });
+
   it("does not render when closed", () => {
     render(<Toast open={false} title="Hidden" />);
     expect(screen.queryByRole("status")).toBeNull();
