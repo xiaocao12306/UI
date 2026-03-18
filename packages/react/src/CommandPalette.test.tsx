@@ -202,6 +202,32 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
+  it("skips escape callback and dismiss when Escape is preempted upstream", () => {
+    const onOpenChange = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptEscape, true);
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onEscapeKeyDown={onEscapeKeyDown}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    document.removeEventListener("keydown", preemptEscape, true);
+  });
+
   it("shows empty-state copy when query has no match", () => {
     render(
       <CommandPalette

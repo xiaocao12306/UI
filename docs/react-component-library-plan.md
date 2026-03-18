@@ -297,6 +297,7 @@
   - Storybook IME Escape 验收补齐（新增 `Dialog/Drawer EscapeIgnoresImeComposition` 交互场景并接入文档）
   - Demo E2E 键盘边界补齐（CommandPalette/Toast 组合输入 Escape 场景 + Tabs/Table legacy `Spacebar` 键值回归）
   - DismissableLayer Escape 抢占收口（事件已被上层 `preventDefault` 时跳过 layer `onEscapeKeyDown` 与 dismiss，避免重复副作用）
+  - Overlay Escape 抢占验收补齐（Dialog/CommandPalette 组件层补测，锁定抢占后不触发 `onEscapeKeyDown` 与关闭）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中
