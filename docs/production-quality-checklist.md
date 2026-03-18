@@ -98,6 +98,7 @@
 - Storybook Pagination stability hardening: keyboard stories now await async role transitions (`findByRole`) and assert focus preconditions to reduce interaction-runner retry noise.
 - Pagination naming hardening: added `ariaLabelledBy` so pager nav can inherit visible-heading naming and suppress fallback `aria-label` when heading binding is present.
 - Pagination focus-continuity hardening: keyboard paging (`Home/End/Arrow`) now restores focus to the newly active page button, with unit + Storybook interaction coverage.
+- Pagination Arrow-focus regression coverage: added explicit unit assertions for `ArrowLeft/ArrowRight` focus handoff so keyboard page transitions keep focus anchored to the newly active page.
 - Storybook static-sync gate hardening: `storybook:static:check` now rebuilds static output and fails on `git status` diff so stale static artifacts are blocked before interaction tests.
 - Demo visual productization hardening: updated hero panel, badge rail, nav pill styling, and section card surfaces for stronger brand hierarchy and commercial polish.
 - Pages delivery hardening: GitHub Pages artifact now ships Demo root + Storybook subpath (`/storybook`) in one deploy workflow.

@@ -124,6 +124,29 @@ describe("Pagination", () => {
     });
   });
 
+  it("keeps focus on the newly active page button after Arrow key pagination", async () => {
+    function ControlledPaginationHarness() {
+      const [page, setPage] = React.useState(4);
+      return <Pagination page={page} pageCount={10} onPageChange={setPage} />;
+    }
+
+    render(<ControlledPaginationHarness />);
+
+    const currentButton = screen.getByRole("button", { name: "Current page, 4" });
+    currentButton.focus();
+    fireEvent.keyDown(currentButton, { key: "ArrowRight" });
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Current page, 5" })).toHaveFocus();
+    });
+
+    fireEvent.keyDown(screen.getByRole("button", { name: "Current page, 5" }), { key: "ArrowLeft" });
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Current page, 4" })).toHaveFocus();
+    });
+  });
+
   it("mirrors ArrowLeft/ArrowRight keyboard shortcuts in rtl containers", () => {
     const onPageChange = vi.fn();
     render(
