@@ -120,6 +120,7 @@ function App() {
   const [paletteOpen, setPaletteOpen] = React.useState(false);
   const [paletteBlocking, setPaletteBlocking] = React.useState(false);
   const [palettePersistent, setPalettePersistent] = React.useState(false);
+  const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
   const [framework, setFramework] = React.useState("react");
@@ -428,6 +429,12 @@ function App() {
               Trigger stacked toasts
             </Button>
           </div>
+          <Switch
+            checked={toastEscapeGuard}
+            onCheckedChange={setToastEscapeGuard}
+            label="Guard prompt toast Escape at toast layer"
+            description="Uses Toast onEscapeKeyDown + preventDefault() while enabled."
+          />
           <Progress value={62} />
           <div style={{ display: "grid", gap: 8, maxWidth: 320 }}>
             <Skeleton height={14} />
@@ -606,6 +613,11 @@ function App() {
           onClose={() => setToastOpen(false)}
           title="Prompt submitted"
           description="Your AI request is now in the queue."
+          onEscapeKeyDown={(event) => {
+            if (toastEscapeGuard) {
+              event.preventDefault();
+            }
+          }}
         />
         <Toast
           open={blockingToastOpen}

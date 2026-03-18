@@ -436,6 +436,29 @@ test("dismisses toast with escape key", async ({ page }) => {
   await expect(toast).toBeHidden();
 });
 
+test("keeps prompt toast open while toast-level escape guard is enabled", async ({ page }) => {
+  await page.goto("/");
+
+  const guardSwitch = page.getByRole("switch", { name: "Guard prompt toast Escape at toast layer" });
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await palette.getByRole("option", { name: "Create Project" }).click();
+
+  const toast = page.getByRole("status").filter({ hasText: "Prompt submitted" });
+  await expect(toast).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(toast).toBeVisible();
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await page.keyboard.press("Escape");
+  await expect(toast).toBeHidden();
+});
+
 test("dismisses stacked toasts from top-most to oldest on Escape", async ({ page }) => {
   await page.goto("/");
 

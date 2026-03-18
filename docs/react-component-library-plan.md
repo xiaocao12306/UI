@@ -218,6 +218,7 @@
   - Demo 命令面板连续执行模式（`closeOnSelect=false`）与 Playwright 选择后保持打开回归
   - Demo 命令面板禁用项场景（`disabled` option 不可执行且保持打开）与 Playwright 回归
   - Demo 阻塞式 Toast 通知（`closeOnEscape={false}`）与 Playwright 显式关闭路径回归
+  - Demo Toast 条件拦截收口（`onEscapeKeyDown` 运行时开关）与 Playwright Escape 阻断/恢复回归
   - Demo Toast 堆叠顺序场景（top-most 优先）与 Playwright Escape 逐层关闭回归
   - Demo 手动激活 Tabs 场景（`activationMode="manual"`）与 Playwright 键盘焦点/激活分离回归
   - Demo 纵向 Tabs 场景（`orientation="vertical"`）与 Playwright ArrowUp/ArrowDown 回归
