@@ -166,3 +166,43 @@ export function ReadinessTable() {
   );
 }
 ```
+
+## 8) Command Palette Conditional Dismiss Guard
+```tsx
+import * as React from "react";
+import { Button, CommandPalette } from "@aurora-ui/react";
+
+export function GuardedCommandPalette() {
+  const [open, setOpen] = React.useState(false);
+  const [guardDismiss, setGuardDismiss] = React.useState(true);
+
+  return (
+    <div style={{ display: "grid", gap: 8 }}>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Open palette
+      </Button>
+      <Button variant="ghost" onClick={() => setGuardDismiss((v) => !v)}>
+        {guardDismiss ? "Disable guard" : "Enable guard"}
+      </Button>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        onEscapeKeyDown={(event) => {
+          if (guardDismiss) {
+            event.preventDefault();
+          }
+        }}
+        onPointerDownOutside={(event) => {
+          if (guardDismiss) {
+            event.preventDefault();
+          }
+        }}
+        commands={[
+          { key: "approve", label: "Approve release" },
+          { key: "reject", label: "Reject release" }
+        ]}
+      />
+    </div>
+  );
+}
+```
