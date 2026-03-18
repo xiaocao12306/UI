@@ -99,6 +99,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep `clearQueryOnEscape` enabled so first Escape clears query intent before full palette dismissal; disable only when product expects immediate close.
 - For blocking approvals, set `closeOnEscape={false}` and `closeOnOutsidePointer={false}` so command confirmation cannot be dismissed accidentally.
 - For conditional approval guards, prefer `onEscapeKeyDown/onPointerDownOutside` + `event.preventDefault()` so dismiss policy can be unlocked at runtime.
+- When app-level shortcuts preempt Escape with `preventDefault()`, rely on built-in callback-skip behavior so command-level escape hooks stay side-effect free.
 - Ignore command list navigation/selection keys while IME composition is active so Enter confirms text composition instead of executing commands.
 - Guard Ctrl/Cmd + Enter submission against active IME composition to avoid accidental sends for CJK input.
 - Show reasoning disclosure with explicit user intent (default collapsed).
@@ -115,6 +116,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={CommandPaletteStories.PersistentSelection} />
 <Canvas of={CommandPaletteStories.RefinedSearchKeepsActiveCommand} />
 <Canvas of={CommandPaletteStories.ImeCompositionGuard} />
+<Canvas of={CommandPaletteStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={CommandPaletteStories.GuardedDismissEvents} />
 <Canvas of={CommandPaletteStories.EscapeClearsQueryFirst} />
 

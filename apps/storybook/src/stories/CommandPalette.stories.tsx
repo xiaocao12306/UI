@@ -345,6 +345,44 @@ function ImeCompositionGuardPalette() {
   );
 }
 
+function EscapePreemptedPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+
+  React.useEffect(() => {
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptEscape, true);
+    return () => {
+      document.removeEventListener("keydown", preemptEscape, true);
+    };
+  }, []);
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Escape hook calls:{" "}
+        <strong data-testid="command-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "run-e2e", label: "Run E2E Smoke" }
+        ]}
+      />
+    </div>
+  );
+}
+
 export const SearchCommands: Story = {
   render: () => <OpenPalette />,
   play: async ({ canvasElement }) => {
@@ -526,5 +564,17 @@ export const ImeCompositionGuard: Story = {
     await userEvent.keyboard("{ArrowDown}");
     await userEvent.keyboard("{Enter}");
     await expect(canvas.getByTestId("ime-selection-count")).toHaveTextContent("1");
+  }
+};
+
+export const EscapePreemptedByGlobalHandler: Story = {
+  render: () => <EscapePreemptedPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+
+    await expect(await canvas.findByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("command-escape-calls")).toHaveTextContent("0");
   }
 };

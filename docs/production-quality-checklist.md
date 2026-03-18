@@ -203,7 +203,7 @@
 - Toast IME safety hardening: Escape dismiss now ignores composition mode (`isComposing` + `keyCode=229`) to prevent accidental close while confirming CJK input inside toast action controls.
 - Tabs RTL keyboard hardening: horizontal arrow semantics now follow container direction (`dir=\"rtl\"` mirrors ArrowLeft/ArrowRight), with unit + Storybook interaction coverage.
 - Table sort narration hardening: `aria-sort` now appears only on the actively sorted column; unsorted headers omit the attribute to reduce screen-reader noise and align with ARIA guidance.
-- Release evidence refresh: reran `demo:e2e` (`45` passed) and `release:dry-run` (`react` unpacked ~301.7 kB) with Storybook interaction baseline now `32/32` suites and `157/157` tests.
+- Release evidence refresh: reran `demo:e2e` (`45` passed) and `release:dry-run` (`react` unpacked ~301.7 kB) with Storybook interaction baseline now `32/32` suites and `158/158` tests.
 - Demo table narration parity: Playwright now asserts unsorted columns keep `aria-sort` absent while active sorted column toggles, matching unit/Storybook semantics.
 - Toast IME callback parity: Escape during composition no longer fires `onEscapeKeyDown`, preventing guarded flows from treating IME confirm/cancel as dismissal intent.
 - Demo RTL tabs parity: added dedicated Data section RTL tablist and Playwright ArrowRight/ArrowLeft regression to lock direction-aware keyboard navigation in real app flows.
@@ -216,6 +216,7 @@
 - Overlay Escape preemption coverage: Dialog + CommandPalette now include component-level regressions asserting preempted Escape bypasses `onEscapeKeyDown` and close transitions.
 - Overlay Escape preemption coverage expansion: Popover + Dropdown now include regressions asserting preempted Escape bypasses `onEscapeKeyDown` and keeps overlays open.
 - Storybook overlay preemption parity: Dropdown now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keep-open behavior is locked in visual baseline.
+- Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Dialog/Drawer IME Escape coverage: added component-level regressions to ensure composition-phase Escape does not emit close events while plain Escape still dismisses as expected.
 - Storybook overlay IME parity: added `Dialog/Drawer EscapeIgnoresImeComposition` interaction scenarios so composition-guard behavior is locked in visual/interaction baseline.
 - Demo keyboard parity hardening: added Playwright regressions for CommandPalette/Toast IME Escape composition paths and Tabs/Table legacy `Spacebar` activation paths.

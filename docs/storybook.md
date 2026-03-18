@@ -97,7 +97,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - `Docs/Component API`
 - `Docs/Component Catalog`
 - `Docs/Best Practices`
-- 核心边界示例：`CommandPalette/QueryTelemetry`、`CommandPalette/DisabledCommandGuard`、`CommandPalette/GuardedDismissEvents`、`CommandPalette/EscapeClearsQueryFirst`、`Toast/ActionRequired`、`Toast/EscapePreemptedByGlobalHandler`、`Toast/EscapeGuardedByToastHandler`、`Dialog/EscapeIgnoresImeComposition`、`Drawer/EscapeIgnoresImeComposition`、`Dropdown/EscapePreemptedByGlobalHandler`、`Dropdown/TabDismissToNextControl`、`Tabs/KeyboardNavigationGuide`、`Tabs/ManualVerticalActivation`、`Table/SortTelemetry`（含键盘排序）、`Table/RowHeaderSemantics`
+- 核心边界示例：`CommandPalette/QueryTelemetry`、`CommandPalette/DisabledCommandGuard`、`CommandPalette/GuardedDismissEvents`、`CommandPalette/EscapeClearsQueryFirst`、`CommandPalette/EscapePreemptedByGlobalHandler`、`Toast/ActionRequired`、`Toast/EscapePreemptedByGlobalHandler`、`Toast/EscapeGuardedByToastHandler`、`Dialog/EscapeIgnoresImeComposition`、`Drawer/EscapeIgnoresImeComposition`、`Dropdown/EscapePreemptedByGlobalHandler`、`Dropdown/TabDismissToNextControl`、`Tabs/KeyboardNavigationGuide`、`Tabs/ManualVerticalActivation`、`Table/SortTelemetry`（含键盘排序）、`Table/RowHeaderSemantics`
 
 说明：预览层通过 toolbar 全局切换 `core-light/core-dark/glass/neo-brutal`，用于验证 token 与主题一致性。
 生产级验收矩阵：`docs/production-quality-checklist.md`
