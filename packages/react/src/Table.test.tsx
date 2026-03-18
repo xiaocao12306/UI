@@ -522,6 +522,37 @@ describe("Table", () => {
     expect(cells[4]).toHaveTextContent("Beta");
   });
 
+  it("uses natural string sorting for sortable text columns", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "a2", status: "Stable" },
+          { name: "A10", status: "Stable" },
+          { name: "a1", status: "Stable" },
+          { name: "A11", status: "Stable" }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    let cells = screen.getAllByRole("cell");
+    expect(cells[0]).toHaveTextContent("a1");
+    expect(cells[2]).toHaveTextContent("a2");
+    expect(cells[4]).toHaveTextContent("A10");
+    expect(cells[6]).toHaveTextContent("A11");
+
+    fireEvent.click(screen.getByRole("button", { name: "Name sort descending" }));
+    cells = screen.getAllByRole("cell");
+    expect(cells[0]).toHaveTextContent("A11");
+    expect(cells[2]).toHaveTextContent("A10");
+    expect(cells[4]).toHaveTextContent("a2");
+    expect(cells[6]).toHaveTextContent("a1");
+  });
+
   it("keeps fallback row keys stable across sorting when rowKey is not provided", () => {
     render(
       <Table

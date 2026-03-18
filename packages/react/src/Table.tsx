@@ -39,6 +39,11 @@ export type TableProps<T> = {
   onSortChange?: (key: string, direction: TableSortDirection) => void;
 };
 
+const tableStringCollator = new Intl.Collator(undefined, {
+  numeric: true,
+  sensitivity: "base"
+});
+
 function resolveInitialSortState<T>(
   columns: Array<TableColumn<T>>,
   defaultSortKey: string | undefined,
@@ -111,6 +116,15 @@ export function Table<T>({
       .sort((leftEntry, rightEntry) => {
         const leftValue = accessor(leftEntry.row);
         const rightValue = accessor(rightEntry.row);
+
+        if (typeof leftValue === "string" && typeof rightValue === "string") {
+          const compareResult = tableStringCollator.compare(leftValue, rightValue);
+          if (compareResult !== 0) {
+            return sortState.direction === "asc" ? compareResult : -compareResult;
+          }
+
+          return leftEntry.sourceIndex - rightEntry.sourceIndex;
+        }
 
         const normalizedLeft = leftValue instanceof Date ? leftValue.getTime() : leftValue;
         const normalizedRight = rightValue instanceof Date ? rightValue.getTime() : rightValue;

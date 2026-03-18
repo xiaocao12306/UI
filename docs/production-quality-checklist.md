@@ -71,6 +71,7 @@
 - Storybook docs gate parity: docs check now validates both `*Stories` imports and `of={XStories.Y}` export existence before interaction runner.
 - Toast timer continuity parity: hover/focus pauses now resume auto-dismiss with remaining time instead of resetting full duration.
 - Chromatic gate parity: workflow now supports soft-skip (default) and enforce hard-fail mode (`workflow_dispatch` + `enforce=true`) for release audits.
+- Table natural-sort parity: sortable string columns now use `Intl.Collator` for numeric/case-friendly ordering (`a2 < A10 < A11`).
 - CommandPalette focus model hardening: option nodes now stay out of tab order (`tabIndex=-1`) and preserve combobox focus on pointer selection for `aria-activedescendant` parity.
 - CommandPalette search hardening: `commands[].textValue` now supports non-string labels, and matching is accent-insensitive (`cafe` matches `Café`).
 - Table i18n hardening: `getSortAriaLabel` now enables localized sortable-header narration while preserving `aria-sort` behavior.
