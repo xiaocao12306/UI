@@ -204,6 +204,52 @@ export const EscapeStackOrder: Story = {
   render: () => <EscapeStackOrderDemo />
 };
 
+function StackedViewportOffsetDemo() {
+  const [openState, setOpenState] = React.useState({ first: true, second: true });
+
+  return (
+    <div style={{ minHeight: 280, padding: 16 }}>
+      <Button variant="outline" onClick={() => setOpenState({ first: true, second: true })}>
+        Reopen stack
+      </Button>
+      <Toast
+        open={openState.first}
+        onOpenChange={(open) => {
+          setOpenState((current) => ({ ...current, first: open }));
+        }}
+        title="First stack item"
+        description="Older toast should offset away from viewport edge."
+        tone="info"
+        duration={0}
+        position="bottom-right"
+      />
+      <Toast
+        open={openState.second}
+        onOpenChange={(open) => {
+          setOpenState((current) => ({ ...current, second: open }));
+        }}
+        title="Second stack item"
+        description="Latest toast remains anchored to viewport edge."
+        tone="success"
+        duration={0}
+        position="bottom-right"
+      />
+    </div>
+  );
+}
+
+export const StackedViewportOffset: Story = {
+  render: () => <StackedViewportOffsetDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const first = await canvas.findByRole("status", { name: "First stack item" });
+    const second = await canvas.findByRole("status", { name: "Second stack item" });
+
+    await expect(first.getAttribute("style")).toContain("--aurora-toast-stack-offset: -14px");
+    await expect(second.getAttribute("style")).toContain("--aurora-toast-stack-offset: 0px");
+  }
+};
+
 export const FocusedToastEscapesFirst: Story = {
   render: () => (
     <div style={{ minHeight: 280, padding: 16, display: "grid", gap: 8 }}>

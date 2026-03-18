@@ -54,6 +54,13 @@ const positionStyleMap: Record<ToastPosition, React.CSSProperties> = {
 };
 
 const toastEscapeStack: HTMLElement[] = [];
+const toastVisualStackOffset = 14;
+const toastVisualStacks: Record<ToastPosition, HTMLElement[]> = {
+  "bottom-right": [],
+  "bottom-left": [],
+  "top-right": [],
+  "top-left": []
+};
 
 function pushToastToStack(element: HTMLElement) {
   const existingIndex = toastEscapeStack.lastIndexOf(element);
@@ -68,6 +75,37 @@ function removeToastFromStack(element: HTMLElement) {
   if (existingIndex >= 0) {
     toastEscapeStack.splice(existingIndex, 1);
   }
+}
+
+function updateToastVisualStackStyles(position: ToastPosition) {
+  const stack = toastVisualStacks[position];
+  const direction = position.startsWith("bottom") ? -1 : 1;
+  stack.forEach((entry, index) => {
+    const distanceFromTop = stack.length - 1 - index;
+    entry.style.setProperty("--aurora-toast-stack-offset", `${distanceFromTop * direction * toastVisualStackOffset}px`);
+  });
+}
+
+function pushToastToVisualStack(element: HTMLElement, position: ToastPosition) {
+  const stack = toastVisualStacks[position];
+  const existingIndex = stack.lastIndexOf(element);
+  if (existingIndex >= 0) {
+    stack.splice(existingIndex, 1);
+  }
+  stack.push(element);
+  updateToastVisualStackStyles(position);
+}
+
+function removeToastFromVisualStack(element: HTMLElement, position: ToastPosition) {
+  const stack = toastVisualStacks[position];
+  const existingIndex = stack.lastIndexOf(element);
+  element.style.removeProperty("--aurora-toast-stack-offset");
+  if (existingIndex < 0) {
+    return;
+  }
+
+  stack.splice(existingIndex, 1);
+  updateToastVisualStackStyles(position);
 }
 
 function isTopCloseableToast(element: HTMLElement) {
@@ -130,10 +168,12 @@ export function Toast({
     }
 
     pushToastToStack(element);
+    pushToastToVisualStack(element, position);
     return () => {
       removeToastFromStack(element);
+      removeToastFromVisualStack(element, position);
     };
-  }, [open]);
+  }, [open, position]);
 
   React.useEffect(() => {
     if (!open) {
@@ -183,7 +223,8 @@ export function Toast({
       return;
     }
     pushToastToStack(element);
-  }, [open]);
+    pushToastToVisualStack(element, position);
+  }, [open, position]);
 
   const startCloseTimer = React.useCallback(
     (timeoutMs: number) => {
@@ -332,6 +373,8 @@ export function Toast({
         padding: 12,
         display: "grid",
         gap: 8,
+        transform: "translateY(var(--aurora-toast-stack-offset, 0px))",
+        transition: "transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)",
         ...toneStyleMap[tone],
         ...positionStyleMap[position]
       }}

@@ -511,12 +511,14 @@ When controls are available, Storybook reflects the runtime API contract directl
 | IME safety | Escape composition guard | Escape dismissal ignores active IME composition (`isComposing` / `keyCode=229`) to avoid accidental close while confirming CJK text input. |
 | Escape priority | preempted events skip toast hook | If higher-level handlers already `preventDefault()` Escape, toast does not run `onEscapeKeyDown` or close. |
 | stacked Escape order | top-priority toast first | In multi-toast layouts, Escape dismisses the top toast (latest opened or most recently focused/hovered). |
+| stacked viewport layout | per-position visual offset | Same-corner toast stacks apply deterministic offset so older notifications remain visible under the latest toast. |
 | `closeLabel` | `string` | Customize close-button accessible name for i18n. |
 | `ariaLabel` | `string` | Optional live-region accessible name override for icon-only or non-text titles. |
 
 <Canvas of={ToastStories.ActionRequired} />
 <Canvas of={ToastStories.CloseReasonTelemetry} />
 <Canvas of={ToastStories.EscapeStackOrder} />
+<Canvas of={ToastStories.StackedViewportOffset} />
 <Canvas of={ToastStories.FocusedToastEscapesFirst} />
 <Canvas of={ToastStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={ToastStories.EscapePreemptedSkipsToastHook} />

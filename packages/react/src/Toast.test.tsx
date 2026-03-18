@@ -1,5 +1,5 @@
 import * as React from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Toast } from "./Toast";
 
@@ -334,6 +334,30 @@ describe("Toast", () => {
 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(screen.queryByRole("status", { name: "First" })).toBeNull();
+  });
+
+  it("adds visible offset for older toasts in the same viewport corner", async () => {
+    function StackedToasts() {
+      const [firstOpen, setFirstOpen] = React.useState(true);
+      const [secondOpen, setSecondOpen] = React.useState(true);
+
+      return (
+        <>
+          <Toast open={firstOpen} title="First" duration={0} position="bottom-right" onOpenChange={setFirstOpen} />
+          <Toast open={secondOpen} title="Second" duration={0} position="bottom-right" onOpenChange={setSecondOpen} />
+        </>
+      );
+    }
+
+    render(<StackedToasts />);
+
+    const firstToast = screen.getByRole("status", { name: "First" });
+    const secondToast = screen.getByRole("status", { name: "Second" });
+
+    await waitFor(() => {
+      expect(firstToast.getAttribute("style")).toContain("--aurora-toast-stack-offset: -14px");
+      expect(secondToast.getAttribute("style")).toContain("--aurora-toast-stack-offset: 0px");
+    });
   });
 
   it("promotes focused toast to top of stack before Escape dismiss", () => {
