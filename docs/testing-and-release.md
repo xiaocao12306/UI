@@ -173,3 +173,21 @@ Result summary:
 
 ### 备注
 - 同日早些时候曾在 `@aurora-ui/primitives` 的 `DismissableLayer` 非主键 pointer 用例触发阻塞；修复后已通过本节最终复验。
+
+## Release Dry-Run Evidence (2026-03-19)
+Command executed from `/www/code/react-ui-library`:
+
+```bash
+pnpm release:dry-run
+```
+
+Result summary:
+- overall status: `passed`
+- changeset phase: `No unreleased changesets found, exiting.`
+- publish dry-run targets: `@aurora-ui/primitives` / `@aurora-ui/react` / `@aurora-ui/tokens`
+- npm auth: dry-run warning expected (`requires you to be logged in`) and does not block output
+- package tarball evidence:
+  - `@aurora-ui/primitives@0.1.0`: package `14.4 kB`, unpacked `71.2 kB`
+  - `@aurora-ui/react@0.1.0`: package `57.5 kB`, unpacked `342.6 kB`
+  - `@aurora-ui/tokens@0.1.0`: package `3.2 kB`, unpacked `17.0 kB`
+- post-run workspace hygiene: `release-dry-run` reverted temporary version-file edits automatically

@@ -301,6 +301,7 @@
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
   - Release Gate 证据刷新（2026-03-18：demo E2E `60` + Storybook `174/174` + dry-run `react` unpacked `~318.9 kB`）
+  - Release Dry-Run 证据刷新（2026-03-19：`release:dry-run` 通过，`react` unpacked `342.6 kB` / `primitives` `71.2 kB` / `tokens` `17.0 kB`）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板 + Overlay/Tabs/Table telemetry 模板）
   - CommandPalette Escape 查询收口（新增 `clearQueryOnEscape` 默认行为：首次 Escape 清空 query，二次 Escape 再触发关闭）
