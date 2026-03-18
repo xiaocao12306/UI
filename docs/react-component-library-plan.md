@@ -385,6 +385,7 @@
   - Storybook CommandPalette i18n 验收扩展（新增 `LocalizedDialogCopy` 场景，锁定 dialog heading + 搜索输入 + listbox 的本地化命名）
   - Storybook 文档引用门禁收口（`storybook:docs:check` 同时校验 docs MDX 的 `*Stories` import 与 `of={XStories.Y}` 导出存在性，并纳入 `storybook:test:ci`）
   - Storybook 覆盖报告门禁收口（新增 `storybook:coverage:check` 并纳入 `storybook:test:ci`，强制 docs/story 引用覆盖率硬校验）
+  - Storybook 覆盖报告可观测性收口（`storybook:coverage:report` 在 CI 自动写入 `GITHUB_STEP_SUMMARY` 覆盖率与问题计数）
   - Storybook 静态元数据去噪（构建后自动归一化 `storybook-static/project.json` 的 `generatedAt/userSince`，减少时间戳抖动导致的噪音 diff）
   - Demo 静态产物门禁收口（新增 `demo:dist:check`，校验 `apps/demo/dist` 与源码同步并纳入 `release:gate`）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）

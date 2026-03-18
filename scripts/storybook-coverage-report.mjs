@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { access, readdir, readFile } from "node:fs/promises";
+import { access, appendFile, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
@@ -146,6 +146,62 @@ function relative(filePath) {
   return path.relative(rootDir, filePath);
 }
 
+async function writeGithubStepSummary({
+  strict,
+  storyFiles,
+  importedStoryFiles,
+  referencedStoryFiles,
+  docFiles,
+  docsWithStoryImports,
+  totalStoryImports,
+  totalStoryRefs,
+  validStoryRefs,
+  missingImports,
+  missingStoryFiles,
+  missingStoryExports,
+  unusedStoryImports,
+  unreferencedStoryFiles,
+  gatingIssueCount
+}) {
+  const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+  if (!summaryPath) {
+    return;
+  }
+
+  const status = gatingIssueCount > 0 ? "issues-found" : "ok";
+  const lines = [
+    "## Storybook Docs Coverage",
+    "",
+    `- mode: \`${strict ? "strict" : "report-only"}\``,
+    `- status: \`${status}\``,
+    `- stories total: \`${storyFiles.length}\``,
+    `- docs import coverage: \`${importedStoryFiles.size}/${storyFiles.length} (${percent(importedStoryFiles.size, storyFiles.length)}%)\``,
+    `- docs reference coverage: \`${referencedStoryFiles.size}/${storyFiles.length} (${percent(referencedStoryFiles.size, storyFiles.length)}%)\``,
+    `- docs scanned: \`${docFiles.length}\` (with story imports: \`${docsWithStoryImports}\`)`,
+    `- story imports in docs: \`${totalStoryImports}\``,
+    `- story refs in docs: \`${totalStoryRefs}\` (valid: \`${validStoryRefs}\`)`,
+    `- missing imports: \`${missingImports.length}\``,
+    `- missing story files: \`${missingStoryFiles.length}\``,
+    `- missing story exports: \`${missingStoryExports.length}\``,
+    `- unused story imports: \`${unusedStoryImports.length}\``,
+    `- unreferenced story files: \`${unreferencedStoryFiles.length}\``
+  ];
+
+  if (unreferencedStoryFiles.length > 0) {
+    lines.push("");
+    lines.push("### Unreferenced Story Files");
+    for (const storyFile of unreferencedStoryFiles.slice(0, 10)) {
+      lines.push(`- \`${relative(storyFile)}\``);
+    }
+    if (unreferencedStoryFiles.length > 10) {
+      lines.push(`- ... and \`${unreferencedStoryFiles.length - 10}\` more`);
+    }
+  }
+
+  lines.push("");
+  await appendFile(summaryPath, `${lines.join("\n")}\n`);
+}
+
 const { strict } = parseArgs(process.argv.slice(2));
 
 const storyExportsCache = new Map();
@@ -260,11 +316,18 @@ for (const docFile of docFiles) {
   }
 }
 
-const unimportedStoryFiles = storyFiles.filter((filePath) => !importedStoryFiles.has(path.resolve(filePath)));
-const unreferencedStoryFiles = storyFiles.filter((filePath) => !referencedStoryFiles.has(path.resolve(filePath)));
+const unimportedStoryFiles = storyFiles.filter(
+  (filePath) => !importedStoryFiles.has(path.resolve(filePath))
+);
+const unreferencedStoryFiles = storyFiles.filter(
+  (filePath) => !referencedStoryFiles.has(path.resolve(filePath))
+);
 
 const gatingIssueCount =
-  missingImports.length + missingStoryFiles.length + missingStoryExports.length + unreferencedStoryFiles.length;
+  missingImports.length +
+  missingStoryFiles.length +
+  missingStoryExports.length +
+  unreferencedStoryFiles.length;
 
 console.log(`${LOG_PREFIX} summary`);
 console.log(`mode: ${strict ? "strict" : "report-only"}`);
@@ -320,7 +383,9 @@ if (missingStoryExports.length > 0) {
   console.log("");
   console.log("missing story exports:");
   for (const issue of missingStoryExports) {
-    console.log(`  - ${relative(issue.docFile)}: ${issue.alias}.${issue.exportName} -> ${relative(issue.storyFile)}`);
+    console.log(
+      `  - ${relative(issue.docFile)}: ${issue.alias}.${issue.exportName} -> ${relative(issue.storyFile)}`
+    );
   }
 }
 
@@ -340,9 +405,29 @@ if (unimportedStoryFiles.length > 0) {
   }
 }
 
+await writeGithubStepSummary({
+  strict,
+  storyFiles,
+  importedStoryFiles,
+  referencedStoryFiles,
+  docFiles,
+  docsWithStoryImports,
+  totalStoryImports,
+  totalStoryRefs,
+  validStoryRefs,
+  missingImports,
+  missingStoryFiles,
+  missingStoryExports,
+  unusedStoryImports,
+  unreferencedStoryFiles,
+  gatingIssueCount
+});
+
 if (strict && gatingIssueCount > 0) {
   console.error("");
-  console.error(`${LOG_PREFIX} error: strict mode failed with ${gatingIssueCount} gating issue(s).`);
+  console.error(
+    `${LOG_PREFIX} error: strict mode failed with ${gatingIssueCount} gating issue(s).`
+  );
   process.exit(1);
 }
 

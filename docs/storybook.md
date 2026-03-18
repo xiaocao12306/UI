@@ -1,11 +1,13 @@
 # Storybook 使用与维护
 
 ## 目录与定位
+
 - 应用目录：`apps/storybook`
 - 框架：`@storybook/react-vite`（Storybook 8）
 - 目标：为 `@aurora-ui/react` 提供组件可视化、主题切换与交互演示
 
 ## 启动与构建
+
 在仓库根目录执行：
 
 ```bash
@@ -31,10 +33,11 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 ```
 
 ## Interaction Runner
+
 - 工具：`@storybook/test-runner`
 - 入口脚本：
   - `storybook:docs:check`：校验 docs MDX 中 `*Stories` 引用是否都有对应 import，并验证 `of={XStories.Y}` 中 `Y` 在故事文件里真实导出，避免文档页运行时 `ReferenceError` / `Missing story export`
-  - `storybook:coverage:report`：统计 `apps/storybook/src/stories/*.stories.*` 覆盖率清单，输出 docs import/reference 覆盖率、未被 docs 引用的 story 文件、以及 docs 引用校验摘要（缺失 import / 缺失 story 文件 / 缺失导出 / 未使用 import）；附加 `--strict` 时如存在门禁问题会非 0 退出
+  - `storybook:coverage:report`：统计 `apps/storybook/src/stories/*.stories.*` 覆盖率清单，输出 docs import/reference 覆盖率、未被 docs 引用的 story 文件、以及 docs 引用校验摘要（缺失 import / 缺失 story 文件 / 缺失导出 / 未使用 import）；附加 `--strict` 时如存在门禁问题会非 0 退出；在 CI 中会自动写入 `GITHUB_STEP_SUMMARY` 便于 reviewer 快速审阅
   - `storybook:coverage:check`：`storybook:coverage:report -- --strict` 的门禁封装，适用于 CI
   - `storybook:static:check`：先执行 `build-storybook`，再通过 `git status -- apps/storybook/storybook-static` 校验静态产物是否同步；有 diff 会直接失败并提示提交静态更新
   - `storybook:test`：针对已运行的 Storybook URL 执行交互测试
@@ -71,6 +74,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `Data/Table` 键盘/点击排序切换与 `aria-sort` 状态同步
 
 ## 当前已覆盖故事
+
 - `Core/Button`
 - `Form/Input`
 - `Form/Checkbox`
@@ -115,11 +119,13 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 静态产物新鲜度门禁：`scripts/check-storybook-static-freshness.mjs` 会在 `storybook:test:ci` 前执行，避免新增/重命名 story 后因静态产物未更新触发 `MissingStoryAfterHmrError`。
 
 ## Chromatic
+
 - 工作流：`.github/workflows/chromatic.yml`
 - 接入文档：`docs/chromatic.md`
 - 若仓库未配置 `CHROMATIC_PROJECT_TOKEN`，工作流会自动跳过上传并提示配置方式
 
 ## 外部预览
+
 - GitHub Pages 工作流：`.github/workflows/demo-pages.yml`
 - Pages 启用后可用地址：
   - Demo：`https://xiaocao12306.github.io/UI/`
@@ -128,6 +134,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - 备用静态地址（无需 Pages）：`https://rawcdn.githack.com/xiaocao12306/UI/main/apps/storybook/storybook-static/index.html`
 
 ## Historical Blocker Log
+
 - 日期：2026-03-17
 - 事项：执行 `pnpm dlx storybook@next init --builder Vite --type react`
 - 历史阻塞：`storybook@next` 当时要求 Node `20.19+` 或 `22.12+`，环境为 Node `18.19.1`
