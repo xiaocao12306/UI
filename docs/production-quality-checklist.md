@@ -169,3 +169,4 @@
 - DatePicker production hardening: aligned invalid inference with `aria-invalid`, exposed native `onChange` hook, and expanded state-matrix Storybook coverage.
 - Alert production hardening: added tone-based live-region semantics, dismiss action branch, and dedicated Storybook + unit coverage.
 - Table cross-browser keyboard parity: added dedicated unit regression for legacy `Spacebar` sortable-header activation.
+- Dropdown keyboard-dismiss parity: added unit coverage for `Tab`-close branch to align with existing demo/E2E focus-continuation flow.

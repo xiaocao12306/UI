@@ -241,6 +241,30 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menu", { name: "Policy" })).toBeInTheDocument();
   });
 
+  it("closes menu on Tab without forcing trigger focus", () => {
+    render(
+      <div>
+        <Dropdown
+          label="Keyboard exit"
+          items={[
+            { key: "one", label: "One" },
+            { key: "two", label: "Two" }
+          ]}
+        />
+        <button type="button">Next control</button>
+      </div>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Keyboard exit" });
+    fireEvent.click(trigger);
+    const menu = screen.getByRole("menu", { name: "Keyboard exit" });
+    expect(menu).toBeInTheDocument();
+
+    fireEvent.keyDown(menu, { key: "Tab" });
+    expect(screen.queryByRole("menu", { name: "Keyboard exit" })).toBeNull();
+    expect(trigger).not.toHaveFocus();
+  });
+
   it("preserves outside pointer target focus when dismissing", () => {
     render(
       <div>

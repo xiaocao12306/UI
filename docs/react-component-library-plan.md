@@ -240,6 +240,7 @@
   - Tabs 键盘兼容收口（manual 模式补齐 legacy `Spacebar` key 兼容 + 单测回归）
   - Tabs 回调去重收口（manual 键盘激活后忽略 `detail=0` click，避免 `onValueChange` 重复触发）
   - Table 键盘兼容收口（sortable header 补齐 legacy `Spacebar` 激活单测回归）
+  - Dropdown 键盘关闭收口（补齐 `Tab` 关闭菜单单测，保持与 demo/E2E 一致）
   - Storybook 稳定性收口（`Core/Tag/MetadataRow` 增补 play 断言，降低 runner 重试噪音）
   - Pages 交付收口（`.github/workflows/demo-pages.yml` 合并发布 Demo 根路径 + Storybook 子路径）
   - Pages 可观测性收口（Deploy 后将 Demo/Storybook 外链写入 `GITHUB_STEP_SUMMARY`）
