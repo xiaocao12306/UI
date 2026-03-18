@@ -80,6 +80,7 @@ export function CommandPalette({
     () => filtered.reduce((count, command) => (command.disabled ? count : count + 1), 0),
     [filtered]
   );
+  const hasResults = filtered.length > 0;
 
   const resultsStatusText = React.useMemo(
     () =>
@@ -181,7 +182,7 @@ export function CommandPalette({
           aria-expanded={open}
           aria-haspopup="listbox"
           aria-autocomplete="list"
-          aria-controls={listId}
+          aria-controls={hasResults ? listId : undefined}
           aria-activedescendant={activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
           placeholder={placeholder}
           value={query}
@@ -249,14 +250,9 @@ export function CommandPalette({
         >
           {resultsStatusText}
         </p>
-        <div
-          id={listId}
-          role="listbox"
-          aria-label="Command results"
-          style={{ maxHeight: 280, overflow: "auto", display: "grid", gap: 4 }}
-        >
-          {filtered.length > 0 ? (
-            filtered.map((item, index) => {
+        {hasResults ? (
+          <div id={listId} role="listbox" aria-label="Command results" style={{ maxHeight: 280, overflow: "auto", display: "grid", gap: 4 }}>
+            {filtered.map((item, index) => {
               const active = index === activeIndex;
               return (
                 <button
@@ -298,13 +294,13 @@ export function CommandPalette({
                   {item.label}
                 </button>
               );
-            })
-          ) : (
-            <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-              {emptyMessage}
-            </p>
-          )}
-        </div>
+            })}
+          </div>
+        ) : (
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+            {emptyMessage}
+          </p>
+        )}
       </div>
     </Dialog>
   );

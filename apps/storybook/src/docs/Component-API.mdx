@@ -523,12 +523,14 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onQueryChange` | `(query: string) => void` | Use for analytics and AI telemetry pipelines. |
 | `getResultsStatusText` | `({ query, visibleCount, enabledCount, totalCount }) => string` | Customize live narration with both visible and actionable-result counts. |
 | `onOpenChange` | `(open: boolean) => void` | Required controlled dialog state. |
+| combobox relation | conditional `aria-controls` + listbox mount | Search input references listbox only while filtered results exist, avoiding empty-state dangling IDs. |
 | focus model | combobox + `aria-activedescendant` | Options stay outside tab order to keep keyboard flow anchored on the search input. |
 | search matching | accent-insensitive + lowercase normalization | Plain query text like `cafe` can match `Café` labels/aliases. |
 | IME safety | composition key guard | Arrow/Enter handling is ignored while `isComposing` (or legacy `keyCode=229`) to prevent accidental command execution during CJK input. |
 | Escape priority | preempted events skip palette hook/dismiss | If higher-level handlers already `preventDefault()` Escape, palette keeps dialog open and does not fire `onEscapeKeyDown`. |
 
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
+<Canvas of={CommandPaletteStories.EmptyStateAriaControlsLifecycle} />
 <Canvas of={CommandPaletteStories.DisabledCommandGuard} />
 <Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />
 <Canvas of={CommandPaletteStories.PersistentSelection} />

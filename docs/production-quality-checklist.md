@@ -203,7 +203,7 @@
 - Toast IME safety hardening: Escape dismiss now ignores composition mode (`isComposing` + `keyCode=229`) to prevent accidental close while confirming CJK input inside toast action controls.
 - Tabs RTL keyboard hardening: horizontal arrow semantics now follow container direction (`dir=\"rtl\"` mirrors ArrowLeft/ArrowRight), with unit + Storybook interaction coverage.
 - Table sort narration hardening: `aria-sort` now appears only on the actively sorted column; unsorted headers omit the attribute to reduce screen-reader noise and align with ARIA guidance.
-- Release evidence refresh: reran `demo:e2e` (`51` passed) and `release:dry-run` (`react` unpacked ~301.7 kB) with Storybook interaction baseline now `32/32` suites and `161/161` tests.
+- Release evidence refresh: reran `demo:e2e` (`51` passed) and `release:dry-run` (`react` unpacked ~301.7 kB) with Storybook interaction baseline now `32/32` suites and `162/162` tests.
 - Demo table narration parity: Playwright now asserts unsorted columns keep `aria-sort` absent while active sorted column toggles, matching unit/Storybook semantics.
 - Toast IME callback parity: Escape during composition no longer fires `onEscapeKeyDown`, preventing guarded flows from treating IME confirm/cancel as dismissal intent.
 - Demo RTL tabs parity: added dedicated Data section RTL tablist and Playwright ArrowRight/ArrowLeft regression to lock direction-aware keyboard navigation in real app flows.
@@ -221,6 +221,7 @@
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.
 - Storybook popover preemption parity: Popover now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps surface open and skips hook side effects.
 - Demo preemption parity: Playwright now validates global Escape preemption for Dialog + Drawer + Popover + CommandPalette + Dropdown + Toast, ensuring overlays stay open under app-level shortcut interception.
+- CommandPalette empty-state semantics: combobox now removes `aria-controls` when no filtered results exist, and listbox mounts only with actual options to avoid empty-state dangling references.
 - Storybook docs import guard: added `pnpm storybook:docs:check` and wired it into `storybook:test:ci` so missing `*Stories` imports in MDX fail fast before visual/interaction regression runs.
 - Dialog/Drawer IME Escape coverage: added component-level regressions to ensure composition-phase Escape does not emit close events while plain Escape still dismisses as expected.
 - Storybook overlay IME parity: added `Dialog/Drawer EscapeIgnoresImeComposition` interaction scenarios so composition-guard behavior is locked in visual/interaction baseline.

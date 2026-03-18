@@ -417,6 +417,28 @@ export const QueryTelemetry: Story = {
   }
 };
 
+export const EmptyStateAriaControlsLifecycle: Story = {
+  render: () => <QueryTelemetryPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    const initialListbox = canvas.getByRole("listbox", { name: "Command results" });
+    const initialListboxId = initialListbox.getAttribute("id");
+    await expect(initialListboxId).toBeTruthy();
+    await expect(input).toHaveAttribute("aria-controls", initialListboxId!);
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "no-match");
+    await expect(canvas.queryByRole("listbox", { name: "Command results" })).not.toBeInTheDocument();
+    await expect(input).not.toHaveAttribute("aria-controls");
+
+    await userEvent.clear(input);
+    const restoredListbox = await canvas.findByRole("listbox", { name: "Command results" });
+    await expect(input).toHaveAttribute("aria-controls", restoredListbox.getAttribute("id"));
+  }
+};
+
 export const DisabledOnlyResults: Story = {
   render: () => <DisabledOnlyResultsPalette />,
   play: async ({ canvasElement }) => {

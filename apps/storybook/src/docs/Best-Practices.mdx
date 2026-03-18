@@ -51,6 +51,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For combobox/listbox patterns, map `aria-selected` to the committed value, not temporary active focus.
 - For `aria-activedescendant` combobox flows, keep listbox options out of tab order and preserve input focus during pointer selection.
 - Keep combobox `aria-controls` conditional on popup visibility to avoid dangling listbox references.
+- Keep command-palette combobox `aria-controls` conditional on filtered-result listbox visibility so empty states do not expose stale or missing listbox IDs.
 
 <Canvas of={FormFieldStories.WithInputControl} />
 <Canvas of={TooltipStories.DescribedByLifecycle} />

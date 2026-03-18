@@ -242,6 +242,30 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("status")).toHaveTextContent('No commands match "no-match".');
   });
 
+  it("keeps combobox aria-controls only while the result listbox is present", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    const listbox = screen.getByRole("listbox", { name: "Command results" });
+    const listboxId = listbox.getAttribute("id");
+    expect(listboxId).toBeTruthy();
+    expect(input).toHaveAttribute("aria-controls", listboxId!);
+
+    fireEvent.change(input, { target: { value: "no-match" } });
+    expect(screen.queryByRole("listbox", { name: "Command results" })).toBeNull();
+    expect(input).not.toHaveAttribute("aria-controls");
+
+    fireEvent.change(input, { target: { value: "settings" } });
+    const restoredListbox = screen.getByRole("listbox", { name: "Command results" });
+    expect(input).toHaveAttribute("aria-controls", restoredListbox.getAttribute("id"));
+  });
+
   it("renders filtered results as listbox options", () => {
     render(
       <CommandPalette
