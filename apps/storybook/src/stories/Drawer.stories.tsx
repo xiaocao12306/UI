@@ -107,6 +107,72 @@ export const NonDismissible: Story = {
   }
 };
 
+function CloseReasonTelemetryDrawerDemo() {
+  const [open, setOpen] = React.useState(false);
+  const [lastReason, setLastReason] = React.useState("none");
+
+  return (
+    <div style={{ minHeight: 420, padding: 16, display: "grid", gap: 10, justifyItems: "start" }}>
+      <button
+        type="button"
+        data-testid="drawer-outside-target"
+        aria-label="Drawer outside target"
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: 1,
+          height: 1,
+          opacity: 0
+        }}
+      />
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last close reason:{" "}
+        <strong data-testid="drawer-close-reason" style={{ color: "var(--aurora-text-primary)" }}>
+          {lastReason}
+        </strong>
+      </p>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Open Telemetry Drawer
+      </Button>
+      <Drawer
+        open={open}
+        onOpenChange={setOpen}
+        title="Close reason telemetry drawer"
+        onCloseReason={(reason) => setLastReason(reason)}
+      >
+        <p style={{ margin: 0 }}>Track close-button, Escape, and outside-pointer dismiss reasons.</p>
+      </Drawer>
+    </div>
+  );
+}
+
+export const CloseReasonTelemetry: Story = {
+  render: () => <CloseReasonTelemetryDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    const outsideTarget = canvas.getByTestId("drawer-outside-target");
+
+    await expect(canvas.getByTestId("drawer-close-reason")).toHaveTextContent("none");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Open Telemetry Drawer" }));
+    await expect(await body.findByRole("dialog", { name: "Close reason telemetry drawer" })).toBeInTheDocument();
+    await userEvent.click(body.getByRole("button", { name: "Close drawer" }));
+    await expect(canvas.getByTestId("drawer-close-reason")).toHaveTextContent("close-button");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Open Telemetry Drawer" }));
+    await expect(await body.findByRole("dialog", { name: "Close reason telemetry drawer" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByTestId("drawer-close-reason")).toHaveTextContent("escape-key");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Open Telemetry Drawer" }));
+    await expect(await body.findByRole("dialog", { name: "Close reason telemetry drawer" })).toBeInTheDocument();
+    await userEvent.pointer({ target: outsideTarget, keys: "[MouseLeft]" });
+    await expect(canvas.getByTestId("drawer-close-reason")).toHaveTextContent("outside-pointer");
+  }
+};
+
 function FocusReturnDrawerDemo() {
   const [open, setOpen] = React.useState(false);
 

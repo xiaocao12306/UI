@@ -2,6 +2,8 @@ import * as React from "react";
 import { DismissableLayer, FocusScope, Portal } from "@aurora-ui/primitives";
 import { lockBodyScroll } from "./bodyScrollLock";
 
+export type DrawerCloseReason = "close-button" | "escape-key" | "outside-pointer";
+
 export type DrawerProps = {
   open: boolean;
   side?: "left" | "right";
@@ -15,6 +17,7 @@ export type DrawerProps = {
   closeLabel?: string;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
   onPointerDownOutside?: (event: PointerEvent) => void;
+  onCloseReason?: (reason: DrawerCloseReason) => void;
   onOpenChange: (open: boolean) => void;
 };
 
@@ -31,10 +34,19 @@ export function Drawer({
   closeLabel = "Close drawer",
   onEscapeKeyDown,
   onPointerDownOutside,
+  onCloseReason,
   onOpenChange
 }: DrawerProps) {
   const titleId = React.useId();
   const descriptionId = React.useId();
+
+  const closeWithReason = React.useCallback(
+    (reason: DrawerCloseReason) => {
+      onCloseReason?.(reason);
+      onOpenChange(false);
+    },
+    [onCloseReason, onOpenChange]
+  );
 
   React.useEffect(() => {
     if (!open) {
@@ -62,15 +74,27 @@ export function Drawer({
         <DismissableLayer
           onEscapeKeyDown={(event) => {
             onEscapeKeyDown?.(event);
+            if (event.defaultPrevented) {
+              return;
+            }
             if (!closeOnEscape) {
               event.preventDefault();
+              return;
             }
+
+            onCloseReason?.("escape-key");
           }}
           onPointerDownOutside={(event) => {
             onPointerDownOutside?.(event);
+            if (event.defaultPrevented) {
+              return;
+            }
             if (!closeOnOutsidePointer) {
               event.preventDefault();
+              return;
             }
+
+            onCloseReason?.("outside-pointer");
           }}
           onDismiss={() => onOpenChange(false)}
         >
@@ -115,7 +139,7 @@ export function Drawer({
                 {showCloseButton ? (
                   <button
                     type="button"
-                    onClick={() => onOpenChange(false)}
+                    onClick={() => closeWithReason("close-button")}
                     aria-label={closeLabel}
                     style={{
                       borderRadius: "var(--aurora-radius-sm)",

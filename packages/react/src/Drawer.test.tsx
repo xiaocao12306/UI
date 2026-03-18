@@ -13,30 +13,42 @@ afterEach(() => {
 describe("Drawer", () => {
   it("calls onOpenChange(false) from close controls", () => {
     const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
 
     render(
-      <Drawer open onOpenChange={onOpenChange} title="Filters">
+      <Drawer open onOpenChange={onOpenChange} onCloseReason={onCloseReason} title="Filters">
         <p>Drawer content</p>
       </Drawer>
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Close drawer" }));
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "close-button");
     expect(onOpenChange).toHaveBeenCalledWith(false);
 
     onOpenChange.mockClear();
     fireEvent.keyDown(document, { key: "Escape" });
+    expect(onCloseReason).toHaveBeenNthCalledWith(2, "escape-key");
     expect(onOpenChange).toHaveBeenCalledWith(false);
 
     onOpenChange.mockClear();
     fireEvent.pointerDown(document.body);
+    expect(onCloseReason).toHaveBeenNthCalledWith(3, "outside-pointer");
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
   it("supports non-dismissible escape and outside-pointer branches", () => {
     const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
 
     render(
-      <Drawer open onOpenChange={onOpenChange} title="Release notes" closeOnEscape={false} closeOnOutsidePointer={false}>
+      <Drawer
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        title="Release notes"
+        closeOnEscape={false}
+        closeOnOutsidePointer={false}
+      >
         <p>Drawer content</p>
       </Drawer>
     );
@@ -44,12 +56,14 @@ describe("Drawer", () => {
     fireEvent.keyDown(document, { key: "Escape" });
     fireEvent.pointerDown(document.body);
 
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
   it("skips escape callback and dismiss when Escape is preempted upstream", () => {
     const onOpenChange = vi.fn();
     const onEscapeKeyDown = vi.fn();
+    const onCloseReason = vi.fn();
     const preemptEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -59,7 +73,13 @@ describe("Drawer", () => {
     document.addEventListener("keydown", preemptEscape, true);
 
     render(
-      <Drawer open onOpenChange={onOpenChange} title="Preempted escape drawer" onEscapeKeyDown={onEscapeKeyDown}>
+      <Drawer
+        open
+        onOpenChange={onOpenChange}
+        title="Preempted escape drawer"
+        onEscapeKeyDown={onEscapeKeyDown}
+        onCloseReason={onCloseReason}
+      >
         <p>Drawer content</p>
       </Drawer>
     );
@@ -67,8 +87,37 @@ describe("Drawer", () => {
     fireEvent.keyDown(document, { key: "Escape" });
 
     expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
     document.removeEventListener("keydown", preemptEscape, true);
+  });
+
+  it("does not emit close reason when dismissal handlers prevent default", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+    const onEscapeKeyDown = vi.fn((event: KeyboardEvent) => event.preventDefault());
+    const onPointerDownOutside = vi.fn((event: PointerEvent) => event.preventDefault());
+
+    render(
+      <Drawer
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        title="Guarded drawer"
+        onEscapeKeyDown={onEscapeKeyDown}
+        onPointerDownOutside={onPointerDownOutside}
+      >
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    fireEvent.pointerDown(document.body);
+
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onPointerDownOutside).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
   });
 
   it("ignores Escape dismiss while IME composition is active", () => {

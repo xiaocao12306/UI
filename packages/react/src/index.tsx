@@ -76,7 +76,7 @@ export { Dialog } from "./Dialog";
 export type { DialogCloseReason, DialogProps } from "./Dialog";
 
 export { Drawer } from "./Drawer";
-export type { DrawerProps } from "./Drawer";
+export type { DrawerCloseReason, DrawerProps } from "./Drawer";
 
 export { Dropdown } from "./Dropdown";
 export type { DropdownCloseReason, DropdownItem, DropdownProps } from "./Dropdown";

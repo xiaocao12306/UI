@@ -277,6 +277,7 @@
   - Dropdown 关闭原因遥测收口（新增 `onCloseReason`，回传 `trigger-click/item-select/escape-key/outside-pointer/tab-key` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Popover 关闭原因遥测收口（新增 `onCloseReason`，回传 `trigger-click/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Dialog 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
+  - Drawer 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Button 键盘兼容收口（补齐 legacy `Spacebar` 激活键值，统一 pressed 态反馈分支）
   - Button 运行时状态收口（按下态切换到 `loading/disabled` 时立即清理 pressed 偏移视觉）
   - 表单 invalid token 语义收口（`aria-invalid=\"grammar|spelling\"` 跨 Input/Select/Textarea/DatePicker/Checkbox/RadioGroup/Switch/FormField 保留原值）
