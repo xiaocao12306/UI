@@ -24,6 +24,8 @@ const checks = [
 
 const packageMetrics = [];
 let changesetStatus = "ok";
+let dryRunStatus = "success";
+let failedStepLabel = "";
 
 function runStep(label, command) {
   console.log("");
@@ -71,6 +73,8 @@ function writeSummary() {
   const lines = [
     "## Release Dry-Run Summary",
     "",
+    `- status: \`${dryRunStatus}\``,
+    ...(failedStepLabel ? [`- failed step: \`${failedStepLabel}\``] : []),
     `- changeset version: \`${changesetStatus}\``,
     "",
     "| Package | Tarball Size | Unpacked Size |",
@@ -90,8 +94,17 @@ function writeSummary() {
 console.log("Aurora UI release dry-run");
 console.log("-------------------------");
 
-for (const step of checks) {
-  runStep(step.label, step.command);
+try {
+  for (const step of checks) {
+    runStep(step.label, step.command);
+  }
+} catch (error) {
+  dryRunStatus = "failed";
+  if (error instanceof Error && error.message.startsWith("Step failed: ")) {
+    failedStepLabel = error.message.replace("Step failed: ", "");
+  }
+  writeSummary();
+  throw error;
 }
 
 writeSummary();
