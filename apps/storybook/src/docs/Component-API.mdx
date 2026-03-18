@@ -338,6 +338,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `defaultSortKey` / `defaultSortDirection` | `string` / `'asc' \| 'desc'` | Sets initial `aria-sort` and data order when key points to a sortable column. |
 | `getSortAriaLabel` | `({ columnKey, columnHeader, nextDirection }) => string` | Localize sortable-header aria labels without changing sorting behavior. |
 | `onSortChange` | `(key, direction) => void` | Useful for telemetry and analytics. |
+| sortable header keyboard | `Enter` / `Space` | Sort buttons support pointer + keyboard activation with the same direction toggling semantics. |
 
 <Canvas of={TableStories.SortTelemetry} />
 <Canvas of={TableStories.LocalizedSortLabels} />

@@ -117,6 +117,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For custom cell renderers, use `render(row, rowIndex, sourceIndex)` and pick the index intentionally (`rowIndex` for ranking UI, `sourceIndex` for source-linked IDs/telemetry).
 - Ensure each table has an accessible name through `caption` or `ariaLabel`; fallback `Data table` naming exists but should be treated as a safety net.
 - Prefer sortable columns with explicit `aria-sort` state for keyboard and screen-reader parity.
+- Validate sortable headers with both pointer and keyboard (`Enter`/`Space`) so non-pointer workflows stay first-class.
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - During async refreshes, set `loading` so table emits `aria-busy` and temporarily suppresses stale row actions/sorting.
 - Surface status semantics with tokens instead of custom ad-hoc colors.

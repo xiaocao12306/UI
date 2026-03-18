@@ -234,6 +234,7 @@
   - Storybook Toast 抢占式 Escape 场景补齐（`EscapePreemptedByGlobalHandler` 覆盖 `defaultPrevented` 不关闭分支）
   - Table 键盘排序收口（`Enter/Space` 触发 sortable header，单测 + Storybook `SortTelemetry` 回归）
   - Tabs 键盘边界收口（`KeyboardNavigationGuide` 增补 `Home/End` + 禁用项跳过的 Storybook 交互断言）
+  - Data 文档语义收口（Component API / Best Practices 明确 Table `Enter/Space` 键盘排序语义）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
   - DismissableLayer 栈语义收口（嵌套 overlay 时仅顶层响应 Escape/外部点击，避免单次事件联动关闭多层）

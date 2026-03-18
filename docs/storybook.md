@@ -96,7 +96,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - `Docs/Component API`
 - `Docs/Component Catalog`
 - `Docs/Best Practices`
-- 核心边界示例：`CommandPalette/QueryTelemetry`、`CommandPalette/DisabledCommandGuard`、`Toast/ActionRequired`、`Toast/EscapePreemptedByGlobalHandler`、`Tabs/KeyboardNavigationGuide`、`Table/SortTelemetry`
+- 核心边界示例：`CommandPalette/QueryTelemetry`、`CommandPalette/DisabledCommandGuard`、`Toast/ActionRequired`、`Toast/EscapePreemptedByGlobalHandler`、`Tabs/KeyboardNavigationGuide`、`Table/SortTelemetry`（含键盘排序）
 
 说明：预览层通过 toolbar 全局切换 `core-light/core-dark/glass/neo-brutal`，用于验证 token 与主题一致性。
 生产级验收矩阵：`docs/production-quality-checklist.md`
