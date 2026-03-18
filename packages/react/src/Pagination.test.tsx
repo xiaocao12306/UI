@@ -98,6 +98,22 @@ describe("Pagination", () => {
     expect(screen.getByRole("button", { name: "next:3" })).toBeInTheDocument();
   });
 
+  it("clamps custom previous/next aria label pages at boundaries", () => {
+    const getItemAriaLabel = vi.fn((type: string, pageNumber: number) => `${type}:${pageNumber}`);
+
+    const { rerender } = render(
+      <Pagination page={1} pageCount={6} onPageChange={() => {}} getItemAriaLabel={getItemAriaLabel} />
+    );
+
+    expect(screen.getByRole("button", { name: "previous:1" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "next:2" })).toBeInTheDocument();
+
+    rerender(<Pagination page={6} pageCount={6} onPageChange={() => {}} getItemAriaLabel={getItemAriaLabel} />);
+
+    expect(screen.getByRole("button", { name: "previous:5" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "next:6" })).toBeInTheDocument();
+  });
+
   it("hides first and last controls when showFirstLast is disabled", () => {
     render(<Pagination page={4} pageCount={10} onPageChange={() => {}} showFirstLast={false} />);
 

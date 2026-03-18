@@ -84,6 +84,8 @@ export function Pagination({
 
   const currentPage = clamp(page, 1, pageCount);
   const tokens = getPaginationTokens(currentPage, pageCount, siblingCount, boundaryCount);
+  const previousPage = clamp(currentPage - 1, 1, pageCount);
+  const nextPage = clamp(currentPage + 1, 1, pageCount);
   const canGoPrevious = !disabled && currentPage > 1;
   const canGoNext = !disabled && currentPage < pageCount;
 
@@ -148,9 +150,9 @@ export function Pagination({
           <button
             type="button"
             disabled={!canGoPrevious}
-            onClick={() => goToPage(currentPage - 1)}
+            onClick={() => goToPage(previousPage)}
             onKeyDown={handleKeyDown}
-            aria-label={getItemAriaLabel("previous", currentPage - 1)}
+            aria-label={getItemAriaLabel("previous", previousPage)}
             style={buttonStyle(false, !canGoPrevious)}
           >
             ‹
@@ -186,9 +188,9 @@ export function Pagination({
           <button
             type="button"
             disabled={!canGoNext}
-            onClick={() => goToPage(currentPage + 1)}
+            onClick={() => goToPage(nextPage)}
             onKeyDown={handleKeyDown}
-            aria-label={getItemAriaLabel("next", currentPage + 1)}
+            aria-label={getItemAriaLabel("next", nextPage)}
             style={buttonStyle(false, !canGoNext)}
           >
             ›

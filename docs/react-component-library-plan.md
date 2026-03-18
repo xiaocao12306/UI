@@ -198,6 +198,7 @@
   - StreamingText 生产级返工（streaming 生命周期回调、cursor 策略、单测 + Storybook `Feedback/StreamingText`）
   - Pagination 细节打磨（禁用态视觉与 `showFirstLast=false` 分支测试）
   - Pagination 生产级返工（Home/End/Arrow 键盘快捷翻页、重复回调防抖、可定制 aria label、单测 + Storybook `Data/Pagination`）
+  - Pagination 边界标签收口（`getItemAriaLabel` 的 previous/next 页码在首末页钳制到合法范围）
   - DatePicker 生产级返工（`aria-invalid` 推断、`onChange` + `onValueChange` 双回调、状态矩阵 Storybook 与单测补齐）
   - Alert 生产级返工（status/alert live region 语义、dismiss 分支、单测 + Storybook `Feedback/Alert`）
   - CommandPalette 搜索语义收口（`textValue` 非文本标签别名 + 重音归一匹配，`cafe` 可命中 `Café`）

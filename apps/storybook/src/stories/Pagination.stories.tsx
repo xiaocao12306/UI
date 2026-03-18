@@ -113,3 +113,17 @@ export const CustomAriaLabels: Story = {
     onPageChange: () => {}
   }
 };
+
+export const BoundaryAriaLabels: Story = {
+  args: {
+    page: 1,
+    pageCount: 9,
+    getItemAriaLabel: (type, page) => `Pagination ${type} ${page}`,
+    onPageChange: () => {}
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: "Pagination previous 1" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Pagination next 2" })).toBeInTheDocument();
+  }
+};

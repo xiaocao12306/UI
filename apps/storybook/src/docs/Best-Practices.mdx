@@ -135,6 +135,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - During async refreshes, set `loading` so table emits `aria-busy` and temporarily suppresses stale row actions/sorting.
 - For empty datasets, use meaningful `emptyContent`; table announces it through polite live status narration.
+- For pagination i18n, generate `getItemAriaLabel` from the provided `page` argument; boundary previous/next labels are already clamped to valid page ranges.
 - Surface status semantics with tokens instead of custom ad-hoc colors.
 - Keep row actions predictable and keyboard reachable.
 - Ensure tabs support orientation-aware arrows (`Left/Right` or `Up/Down`) plus `Home/End`, and skip disabled entries.

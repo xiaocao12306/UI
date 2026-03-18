@@ -182,6 +182,7 @@
 - LoadingDots production hardening: added pause/resume/live-region branches, interval/dotCount controls, and Storybook paused state validation.
 - StreamingText production hardening: added streaming lifecycle callbacks, cursor policies, and instant-done accessibility branch coverage.
 - Pagination production hardening: added keyboard shortcuts (`Home/End/Arrow`), redundant-change guards, and customizable aria label generation for i18n.
+- Pagination aria-label boundary hardening: `getItemAriaLabel` now receives clamped previous/next page values at edges, avoiding `0` / `pageCount+1` narration drift.
 - DatePicker production hardening: aligned invalid inference with `aria-invalid`, exposed native `onChange` hook, and expanded state-matrix Storybook coverage.
 - Alert production hardening: added tone-based live-region semantics, dismiss action branch, and dedicated Storybook + unit coverage.
 - Table cross-browser keyboard parity: added dedicated unit regression for legacy `Spacebar` sortable-header activation.
