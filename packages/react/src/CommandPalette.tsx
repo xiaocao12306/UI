@@ -69,6 +69,7 @@ export function CommandPalette({
   const wasOpenRef = React.useRef(open);
   const listId = React.useId();
   const statusId = React.useId();
+  const listRef = React.useRef<HTMLDivElement>(null);
 
   const markCloseReason = React.useCallback(
     (reason: CommandPaletteCloseReason) => {
@@ -184,6 +185,22 @@ export function CommandPalette({
 
     activeCommandKeyRef.current = filtered[activeIndex]?.key ?? null;
   }, [activeIndex, filtered]);
+
+  React.useEffect(() => {
+    if (!open || activeIndex < 0) {
+      return;
+    }
+
+    const list = listRef.current;
+    const activeOption = document.getElementById(`${listId}-option-${activeIndex}`);
+    if (!list || !activeOption || !list.contains(activeOption)) {
+      return;
+    }
+
+    if (typeof activeOption.scrollIntoView === "function") {
+      activeOption.scrollIntoView({ block: "nearest" });
+    }
+  }, [activeIndex, listId, open]);
 
   const selectItem = React.useCallback(
     (index: number) => {
@@ -322,6 +339,7 @@ export function CommandPalette({
         {hasResults ? (
           <div
             id={listId}
+            ref={listRef}
             role="listbox"
             aria-label={resultsAriaLabel}
             style={{ maxHeight: 280, overflow: "auto", display: "grid", gap: 4 }}

@@ -472,6 +472,47 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("keeps active option visible while navigating long result lists", () => {
+    const originalScrollIntoView = HTMLElement.prototype.scrollIntoView;
+    const scrollIntoView = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+      configurable: true,
+      value: scrollIntoView
+    });
+
+    try {
+      render(
+        <CommandPalette
+          open
+          closeOnSelect={false}
+          onOpenChange={() => {}}
+          commands={Array.from({ length: 30 }, (_, index) => ({
+            key: `command-${index + 1}`,
+            label: `Command ${index + 1}`
+          }))}
+        />
+      );
+
+      const input = screen.getByRole("combobox", { name: "Search commands" });
+      scrollIntoView.mockClear();
+
+      for (let index = 0; index < 8; index += 1) {
+        fireEvent.keyDown(input, { key: "ArrowDown" });
+      }
+
+      expect(scrollIntoView).toHaveBeenCalled();
+    } finally {
+      if (originalScrollIntoView) {
+        Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+          configurable: true,
+          value: originalScrollIntoView
+        });
+      } else {
+        Reflect.deleteProperty(HTMLElement.prototype, "scrollIntoView");
+      }
+    }
+  });
+
   it("ignores navigation and selection keys while IME composition is active", () => {
     const onDeploy = vi.fn();
     const onOpenChange = vi.fn();
