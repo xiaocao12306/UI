@@ -507,6 +507,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `closeOnEscape` | `boolean` | Optional keyboard dismiss path; Escape is consumed so stacked toasts dismiss one at a time. |
 | `onEscapeKeyDown` | `(event: KeyboardEvent) => void` | Optional toast-level Escape hook; call `event.preventDefault()` to keep toast open in guarded flows. |
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'timeout') => void` | Emits a structured close reason for analytics and workflow telemetry. |
+| close callback order | `onCloseReason` -> `onClose` -> `onOpenChange(false)` | Close lifecycle is deterministic across button/Escape/timeout paths, so telemetry and state reducers can avoid duplicate side effects. |
 | IME safety | Escape composition guard | Escape dismissal ignores active IME composition (`isComposing` / `keyCode=229`) to avoid accidental close while confirming CJK text input. |
 | Escape priority | preempted events skip toast hook | If higher-level handlers already `preventDefault()` Escape, toast does not run `onEscapeKeyDown` or close. |
 | stacked Escape order | top-priority toast first | In multi-toast layouts, Escape dismisses the top toast (latest opened or most recently focused/hovered). |

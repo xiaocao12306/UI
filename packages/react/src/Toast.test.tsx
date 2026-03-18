@@ -21,6 +21,29 @@ describe("Toast", () => {
     expect(onCloseReason).toHaveBeenCalledWith("close-button");
   });
 
+  it("emits close callbacks in deterministic order for close-button dismiss", () => {
+    const events: string[] = [];
+    render(
+      <Toast
+        open
+        title="Saved"
+        onCloseReason={(reason) => {
+          events.push(`reason:${reason}`);
+        }}
+        onClose={() => {
+          events.push("close");
+        }}
+        onOpenChange={(nextOpen) => {
+          events.push(`open:${String(nextOpen)}`);
+        }}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Close toast" }));
+
+    expect(events).toEqual(["reason:close-button", "close", "open:false"]);
+  });
+
   it("supports explicit live-region label override", () => {
     render(<Toast open title={<span aria-hidden>✅</span>} ariaLabel="Sync completed notification" />);
 
