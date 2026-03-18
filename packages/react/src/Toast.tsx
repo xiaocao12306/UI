@@ -9,6 +9,7 @@ export type ToastProps = {
   description?: React.ReactNode;
   action?: React.ReactNode;
   tone?: ToastTone;
+  live?: "polite" | "assertive" | "off";
   duration?: number;
   pauseOnHover?: boolean;
   closeOnEscape?: boolean;
@@ -77,6 +78,7 @@ export function Toast({
   description,
   action,
   tone = "info",
+  live,
   duration = 4000,
   pauseOnHover = true,
   closeOnEscape = true,
@@ -173,7 +175,7 @@ export function Toast({
   }
 
   const role = tone === "danger" ? "alert" : "status";
-  const ariaLive = tone === "danger" ? "assertive" : "polite";
+  const ariaLive = live ?? (tone === "danger" ? "assertive" : "polite");
 
   return (
     <div

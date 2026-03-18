@@ -276,3 +276,16 @@ export const AriaLabelOverride: Story = {
     await expect(canvas.getByRole("status", { name: "Build artifact ready notification" })).toBeInTheDocument();
   }
 };
+
+export const LiveRegionOff: Story = {
+  args: {
+    title: "Background sync",
+    description: "Silent status updates are visible but not announced.",
+    live: "off",
+    duration: 0
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await expect(canvas.getByRole("status", { name: "Background sync" })).toHaveAttribute("aria-live", "off");
+  }
+};

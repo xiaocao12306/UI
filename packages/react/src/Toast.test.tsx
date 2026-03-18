@@ -37,6 +37,11 @@ describe("Toast", () => {
     expect(screen.getByRole("alert")).toHaveAttribute("aria-live", "assertive");
   });
 
+  it("supports overriding live-region politeness", () => {
+    render(<Toast open title="Background sync" live="off" duration={0} />);
+    expect(screen.getByRole("status", { name: "Background sync" })).toHaveAttribute("aria-live", "off");
+  });
+
   it("supports escape to close", () => {
     const onOpenChange = vi.fn();
     render(<Toast open title="Escapable" onOpenChange={onOpenChange} />);

@@ -113,6 +113,7 @@
 - Storybook API 文档补齐：新增 Button/Input/Dialog/Popover/Dropdown 的 prop 契约与键盘/关闭策略说明，减少集成歧义。
 - CommandPalette Escape 语义收口：新增 `clearQueryOnEscape`（默认启用）以实现首次 Escape 清空查询、二次 Escape 再关闭，降低搜索过程中误关闭风险。
 - Table 空态播报收口：`emptyContent` 通过 `role="status"` 进行 polite 播报，避免数据筛空后仅视觉可见而读屏无反馈。
+- Toast 播报强度收口：新增 `live`（`polite/assertive/off`）以支持被动高频通知降噪，同时保留危险态默认 assertive。
 - Overlay 分层一致性收口：Dialog/Drawer/Popover/Dropdown/Tooltip 改为统一引用 `z` token 变量，避免硬编码层级漂移。
 - Table 排序语义修复：`defaultSortKey` 非 sortable 列时不再错误设置初始 `aria-sort`，并补充单测覆盖。
 - 发布链路提示收口：`release.yml` 在缺失 `NPM_TOKEN` 时输出结构化 warning 与配置路径，降低排障成本。
