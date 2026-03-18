@@ -25,5 +25,17 @@ export const componentTokens: FlatTokenMap = {
   "panel.shadow": "var(--aurora-shadow-md)",
   "skeleton.base": "rgba(148, 163, 184, 0.18)",
   "skeleton.highlight": "rgba(148, 163, 184, 0.32)",
-  "streaming.cursor": "var(--aurora-accent-default)"
+  "streaming.cursor": "var(--aurora-accent-default)",
+  "feedback.info.bg": "color-mix(in srgb, var(--aurora-color-cyan-500) 12%, transparent)",
+  "feedback.info.border": "color-mix(in srgb, var(--aurora-color-cyan-500) 30%, transparent)",
+  "feedback.info.text": "color-mix(in srgb, var(--aurora-color-cyan-500) 80%, var(--aurora-text-primary))",
+  "feedback.success.bg": "color-mix(in srgb, var(--aurora-color-green-500) 12%, transparent)",
+  "feedback.success.border": "color-mix(in srgb, var(--aurora-color-green-500) 30%, transparent)",
+  "feedback.success.text": "color-mix(in srgb, var(--aurora-color-green-500) 78%, var(--aurora-text-primary))",
+  "feedback.warning.bg": "color-mix(in srgb, var(--aurora-color-amber-500) 14%, transparent)",
+  "feedback.warning.border": "color-mix(in srgb, var(--aurora-color-amber-500) 32%, transparent)",
+  "feedback.warning.text": "color-mix(in srgb, var(--aurora-color-amber-500) 80%, var(--aurora-text-primary))",
+  "feedback.danger.bg": "color-mix(in srgb, var(--aurora-color-red-500) 14%, transparent)",
+  "feedback.danger.border": "color-mix(in srgb, var(--aurora-color-red-500) 32%, transparent)",
+  "feedback.danger.text": "color-mix(in srgb, var(--aurora-color-red-500) 80%, var(--aurora-text-primary))"
 };

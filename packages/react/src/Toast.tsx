@@ -25,23 +25,23 @@ export type ToastProps = {
 
 const toneStyleMap: Record<ToastTone, React.CSSProperties> = {
   info: {
-    borderColor: "color-mix(in srgb, var(--aurora-accent-default) 38%, var(--aurora-border-default))",
-    background: "var(--aurora-surface-overlay)",
+    borderColor: "var(--aurora-feedback-info-border)",
+    background: "color-mix(in srgb, var(--aurora-feedback-info-bg) 58%, var(--aurora-surface-overlay))",
     color: "var(--aurora-text-primary)"
   },
   success: {
-    borderColor: "rgba(34, 197, 94, 0.45)",
-    background: "color-mix(in srgb, rgba(34, 197, 94, 0.12) 42%, var(--aurora-surface-overlay))",
+    borderColor: "var(--aurora-feedback-success-border)",
+    background: "color-mix(in srgb, var(--aurora-feedback-success-bg) 58%, var(--aurora-surface-overlay))",
     color: "var(--aurora-text-primary)"
   },
   warning: {
-    borderColor: "rgba(245, 158, 11, 0.5)",
-    background: "color-mix(in srgb, rgba(245, 158, 11, 0.16) 42%, var(--aurora-surface-overlay))",
+    borderColor: "var(--aurora-feedback-warning-border)",
+    background: "color-mix(in srgb, var(--aurora-feedback-warning-bg) 62%, var(--aurora-surface-overlay))",
     color: "var(--aurora-text-primary)"
   },
   danger: {
-    borderColor: "rgba(239, 68, 68, 0.5)",
-    background: "color-mix(in srgb, rgba(239, 68, 68, 0.16) 42%, var(--aurora-surface-overlay))",
+    borderColor: "var(--aurora-feedback-danger-border)",
+    background: "color-mix(in srgb, var(--aurora-feedback-danger-bg) 62%, var(--aurora-surface-overlay))",
     color: "var(--aurora-text-primary)"
   }
 };

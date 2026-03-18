@@ -11,18 +11,26 @@ export type AlertProps = React.ComponentPropsWithoutRef<"div"> & {
 };
 
 const toneStyleMap: Record<AlertTone, React.CSSProperties> = {
-  info: { background: "rgba(14, 165, 233, 0.12)", borderColor: "rgba(14, 165, 233, 0.3)", color: "#0369a1" },
+  info: {
+    background: "var(--aurora-feedback-info-bg)",
+    borderColor: "var(--aurora-feedback-info-border)",
+    color: "var(--aurora-feedback-info-text)"
+  },
   success: {
-    background: "rgba(34, 197, 94, 0.12)",
-    borderColor: "rgba(34, 197, 94, 0.3)",
-    color: "#15803d"
+    background: "var(--aurora-feedback-success-bg)",
+    borderColor: "var(--aurora-feedback-success-border)",
+    color: "var(--aurora-feedback-success-text)"
   },
   warning: {
-    background: "rgba(245, 158, 11, 0.12)",
-    borderColor: "rgba(245, 158, 11, 0.3)",
-    color: "#b45309"
+    background: "var(--aurora-feedback-warning-bg)",
+    borderColor: "var(--aurora-feedback-warning-border)",
+    color: "var(--aurora-feedback-warning-text)"
   },
-  danger: { background: "rgba(239, 68, 68, 0.12)", borderColor: "rgba(239, 68, 68, 0.3)", color: "#b91c1c" }
+  danger: {
+    background: "var(--aurora-feedback-danger-bg)",
+    borderColor: "var(--aurora-feedback-danger-border)",
+    color: "var(--aurora-feedback-danger-text)"
+  }
 };
 
 export function Alert({

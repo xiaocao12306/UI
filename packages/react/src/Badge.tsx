@@ -7,8 +7,14 @@ export type BadgeProps = React.ComponentPropsWithoutRef<"span"> & {
 
 const toneStyles: Record<BadgeTone, React.CSSProperties> = {
   default: { background: "var(--aurora-surface-elevated)", color: "var(--aurora-text-primary)" },
-  success: { background: "rgba(34, 197, 94, 0.15)", color: "var(--aurora-color-green-500)" },
-  danger: { background: "rgba(239, 68, 68, 0.15)", color: "var(--aurora-color-red-500)" }
+  success: {
+    background: "var(--aurora-feedback-success-bg)",
+    color: "var(--aurora-feedback-success-text)"
+  },
+  danger: {
+    background: "var(--aurora-feedback-danger-bg)",
+    color: "var(--aurora-feedback-danger-text)"
+  }
 };
 
 export function Badge({ tone = "default", style, ...props }: BadgeProps) {

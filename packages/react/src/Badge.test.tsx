@@ -13,7 +13,8 @@ describe("Badge", () => {
     const badge = screen.getByText("Healthy");
     const style = badge.getAttribute("style") ?? "";
 
-    expect(style).toContain("var(--aurora-color-green-500)");
+    expect(style).toContain("var(--aurora-feedback-success-bg)");
+    expect(style).toContain("var(--aurora-feedback-success-text)");
   });
 
   it("allows style overrides", () => {

@@ -11,6 +11,7 @@ describe("token css utilities", () => {
     expect(vars["--aurora-surface-default"]).toBe("#ffffff");
     expect(vars["--aurora-button-solid-bg"]).toBe("var(--aurora-accent-default)");
     expect(vars["--aurora-color-amber-500"]).toBe("#f59e0b");
+    expect(vars["--aurora-feedback-success-bg"]).toContain("var(--aurora-color-green-500)");
   });
 
   it("creates stylesheet output", () => {
