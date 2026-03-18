@@ -75,6 +75,7 @@
 - Tabs key-boundary parity: non-applicable arrow keys are now explicitly covered by regression tests (no focus or panel drift).
 - CommandPalette lint parity: option click path now carries keyboard listener fallback to satisfy strict a11y lint gates.
 - Demo label parity: KPI card semantics no longer collide with theme-select accessible label queries in E2E/assistive tooling.
+- Release gate recovery parity: after fixing CommandPalette lint + demo label collision, `release:gate:ci` returned to full-pass state on 2026-03-19.
 - CommandPalette focus model hardening: option nodes now stay out of tab order (`tabIndex=-1`) and preserve combobox focus on pointer selection for `aria-activedescendant` parity.
 - CommandPalette search hardening: `commands[].textValue` now supports non-string labels, and matching is accent-insensitive (`cafe` matches `Café`).
 - Table i18n hardening: `getSortAriaLabel` now enables localized sortable-header narration while preserving `aria-sort` behavior.

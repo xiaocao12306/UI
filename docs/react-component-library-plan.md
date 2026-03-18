@@ -295,6 +295,7 @@
   - Pages 交付收口（`.github/workflows/demo-pages.yml` 合并发布 Demo 根路径 + Storybook 子路径）
   - Pages 可观测性收口（Deploy 后将 Demo/Storybook 外链写入 `GITHUB_STEP_SUMMARY`）
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
+  - Release Gate 复验（2026-03-19：修复 CommandPalette lint 与 Demo 标签冲突后，`release:gate:ci` 全链路恢复通过）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
   - Release Gate 证据刷新（2026-03-18：demo E2E `60` + Storybook `174/174` + dry-run `react` unpacked `~318.9 kB`）
