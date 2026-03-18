@@ -48,7 +48,7 @@
 1. Any API change must update Storybook controls/docs and at least one interaction test.
 2. Any a11y behavior change must update role/name assertions in tests.
 3. Any visual state change should be checked in all 4 theme packs and Chromatic (if token configured).
-4. Release blocking condition: `pnpm verify` + `pnpm demo:e2e` + `pnpm release:dry-run` all green.
+4. Release blocking condition: `pnpm verify` + `pnpm demo:e2e` + `pnpm release:dry-run` all green (or run `pnpm release:gate`).
 
 ## Recent Closure Notes (2026-03-17)
 - CommandPalette: added `Home/End` keyboard paths, deterministic disabled-option skipping, explicit `aria-disabled` option semantics, and query telemetry + empty message Storybook example.

@@ -35,6 +35,7 @@
     "version-packages": "changeset version",
     "release:preflight": "node scripts/release-preflight.mjs",
     "release:dry-run": "node scripts/release-dry-run.mjs",
+    "release:gate": "pnpm verify && pnpm demo:e2e && pnpm release:dry-run",
     "release": "changeset publish"
   },
   "devDependencies": {

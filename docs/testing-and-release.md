@@ -114,3 +114,14 @@ GitHub Actions workflow runs:
 - no pending `git status`
 - docs updated for new component APIs
 - demo updated for new interactions
+
+One-command gate (recommended before cutting a release):
+
+```bash
+pnpm release:gate
+```
+
+This runs:
+1. `pnpm verify`
+2. `pnpm demo:e2e`
+3. `pnpm release:dry-run`
