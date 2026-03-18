@@ -388,6 +388,36 @@ describe("Table", () => {
     expect(onSortChange).not.toHaveBeenCalled();
   });
 
+  it("keeps only loading narration while loading to avoid duplicate live regions", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        loading
+        loadingContent="Loading release rows..."
+      />
+    );
+
+    const statuses = screen.getAllByRole("status");
+    expect(statuses).toHaveLength(1);
+    expect(statuses[0]).toHaveTextContent("Loading release rows...");
+  });
+
+  it("uses safe colSpan fallback when columns are empty", () => {
+    render(<Table columns={[]} data={[]} emptyContent="No rows yet." />);
+
+    const emptyStatus = screen.getByRole("status");
+    expect(emptyStatus).toHaveTextContent("No rows yet.");
+    expect(emptyStatus.closest("td")).toHaveAttribute("colspan", "1");
+  });
+
   it("updates aria-sort state and row order as sort toggles", () => {
     render(
       <Table

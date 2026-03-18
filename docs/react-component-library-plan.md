@@ -168,6 +168,8 @@
   - Table 命名语义扩展（新增 `ariaLabelledBy`，支持复用可见标题命名表格并覆盖 `ariaLabel` 回退）
   - Table Storybook 键盘验收补齐（`SortTelemetry` 增补 `Space` 排序路径，锁定 `Enter/Space` 双路径一致性）
   - Table 排序稳定性收口（同值项保持原始顺序，补齐单测保证跨环境确定性）
+  - Table loading 播报降噪（loading 时抑制排序 live region，仅保留 loading 状态播报）
+  - Table 空列边界收口（`columns=[]` 时 `colSpan` 安全回退为 `1`，避免无效表格语义）
   - Overlay 层级 token 化收口（Dialog/Drawer/Popover/Dropdown/Tooltip 使用统一 `z` 变量）
   - Overlay 行为文档深化（层级 token 标尺 + focus return 规则，`docs/overlay-behavior.md`）
   - Demo E2E 扩展（Data 区域 Tabs Home/End 与 Table 排序回归）

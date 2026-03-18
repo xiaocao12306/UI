@@ -128,7 +128,7 @@ export function Table<T>({
   }, [columns, data, sortState]);
 
   const sortStatusText = React.useMemo(() => {
-    if (!sortState) {
+    if (loading || !sortState) {
       return "";
     }
 
@@ -139,7 +139,8 @@ export function Table<T>({
 
     const columnHeader = typeof activeSortColumn.header === "string" ? activeSortColumn.header : String(activeSortColumn.key);
     return getSortStatusText({ columnKey: sortState.key, columnHeader, direction: sortState.direction });
-  }, [columns, getSortStatusText, sortState]);
+  }, [columns, getSortStatusText, loading, sortState]);
+  const tableColSpan = Math.max(columns.length, 1);
 
   return (
     <div
@@ -266,7 +267,7 @@ export function Table<T>({
           {loading ? (
             <tr>
               <td
-                colSpan={columns.length}
+                colSpan={tableColSpan}
                 style={{
                   padding: "16px 12px",
                   color: "var(--aurora-text-secondary)",
@@ -281,7 +282,7 @@ export function Table<T>({
           ) : sortedEntries.length === 0 ? (
             <tr>
               <td
-                colSpan={columns.length}
+                colSpan={tableColSpan}
                 style={{
                   padding: "16px 12px",
                   color: "var(--aurora-text-secondary)",
