@@ -264,6 +264,8 @@
 - Toast lifecycle parity: close callback order is now contract-locked by tests/docs (`onCloseReason` -> `onClose` -> `onOpenChange(false)`).
 - Demo copy hygiene parity: hero gate badges now use non-stale status language instead of hardcoded test-count numbers.
 - Storybook onboarding parity: `Getting Started` now provides domain-based catalog map and direct API/Best-Practices reading path.
+- Table empty/single-row semantics parity: `defaultSortKey` no longer exposes misleading sorted state when sort controls are disabled.
+- Demo table empty-state parity: E2E assertions now cover both ascending/descending sort-label branches to match semantic fallback behavior.
 - Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.
 - Storybook popover preemption parity: Popover now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps surface open and skips hook side effects.
