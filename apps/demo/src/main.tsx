@@ -353,6 +353,23 @@ function App() {
               ]}
             />
           </div>
+          <div style={{ display: "grid", gap: 8 }}>
+            <h3 style={{ margin: 0, fontSize: 16 }}>Manual Vertical Tabs</h3>
+            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+              In manual vertical mode, ArrowUp/ArrowDown move focus only; Enter or Space activates the focused stage.
+            </p>
+            <Tabs
+              ariaLabel="Manual vertical release tabs"
+              orientation="vertical"
+              activationMode="manual"
+              defaultValue="backlog"
+              items={[
+                { key: "backlog", label: "Backlog", content: <p style={{ margin: 0 }}>Backlog scope and release intent.</p> },
+                { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Review and signoff notes.</p>, disabled: true },
+                { key: "ship", label: "Ship", content: <p style={{ margin: 0 }}>Ship checklist and release notes.</p> }
+              ]}
+            />
+          </div>
           <Table
             caption="Component readiness metrics"
             defaultSortKey="component"

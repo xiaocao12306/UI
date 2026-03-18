@@ -232,6 +232,42 @@ export const ManualActivation: Story = {
   }
 };
 
+export const ManualVerticalActivation: Story = {
+  render: () => (
+    <div style={{ width: 620, display: "grid", gap: 12 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Vertical + manual mode keeps selection stable while ArrowUp/ArrowDown move focus; Enter/Space activates.
+      </p>
+      <Tabs
+        ariaLabel="Manual vertical release tabs"
+        orientation="vertical"
+        activationMode="manual"
+        defaultValue="backlog"
+        items={[
+          { key: "backlog", label: "Backlog", content: "Backlog scope and release intent." },
+          { key: "review", label: "Review", content: "Review and signoff.", disabled: true },
+          { key: "ship", label: "Ship", content: "Ship checklist and release notes." }
+        ]}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const backlogTab = canvas.getByRole("tab", { name: "Backlog" });
+    const shipTab = canvas.getByRole("tab", { name: "Ship" });
+
+    await userEvent.click(backlogTab);
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Backlog scope and release intent.");
+
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(shipTab).toHaveFocus();
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Backlog scope and release intent.");
+
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Ship checklist and release notes.");
+  }
+};
+
 function ChangeTelemetryDemo() {
   const [value, setValue] = React.useState("build");
   const [changes, setChanges] = React.useState(0);

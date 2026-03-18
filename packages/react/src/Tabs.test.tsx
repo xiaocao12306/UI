@@ -225,6 +225,34 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
+  it("keeps vertical manual mode panel stable until explicit activation", () => {
+    render(
+      <Tabs
+        defaultValue="backlog"
+        orientation="vertical"
+        activationMode="manual"
+        items={[
+          { key: "backlog", label: "Backlog", content: <div>Panel Backlog</div> },
+          { key: "review", label: "Review", content: <div>Panel Review</div>, disabled: true },
+          { key: "ship", label: "Ship", content: <div>Panel Ship</div> }
+        ]}
+      />
+    );
+
+    const backlogTab = screen.getByRole("tab", { name: "Backlog" });
+    const shipTab = screen.getByRole("tab", { name: "Ship" });
+    fireEvent.keyDown(backlogTab, { key: "ArrowDown" });
+
+    const shipPanel = document.getElementById(shipTab.getAttribute("aria-controls")!);
+    expect(shipPanel).not.toBeNull();
+    expect(shipTab).toHaveFocus();
+    expect(screen.getByText("Panel Backlog")).toBeInTheDocument();
+    expect(shipPanel).toHaveAttribute("hidden");
+
+    fireEvent.keyDown(shipTab, { key: "Enter" });
+    expect(screen.getByText("Panel Ship")).toBeInTheDocument();
+  });
+
   it("supports manual activation mode with legacy Spacebar key value", () => {
     render(
       <Tabs

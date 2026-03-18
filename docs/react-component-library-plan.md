@@ -220,6 +220,7 @@
   - Demo Toast 堆叠顺序场景（top-most 优先）与 Playwright Escape 逐层关闭回归
   - Demo 手动激活 Tabs 场景（`activationMode="manual"`）与 Playwright 键盘焦点/激活分离回归
   - Demo 纵向 Tabs 场景（`orientation="vertical"`）与 Playwright ArrowUp/ArrowDown 回归
+  - Tabs 手动纵向收口（manual + vertical 增补 Storybook/单测/demo E2E，锁定 ArrowUp/ArrowDown 焦点移动与 Enter/Space 激活分离）
   - Demo Table loading 验收场景（`aria-busy` + 禁用排序 + 抑制旧数据）与 Playwright 回归
   - Demo Table empty 验收场景（`emptyContent` + 禁用排序）与 Playwright 回归
   - Demo Dropdown 焦点策略场景（Escape 回焦 trigger / outside pointer 保持目标焦点 / Tab 自然前进）与 Playwright 回归
