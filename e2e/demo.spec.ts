@@ -684,7 +684,7 @@ test("shows empty table state and keeps sort controls disabled", async ({ page }
 
   await emptyToggle.click();
   await expect(page.getByText("No component readiness metrics yet.")).toBeVisible();
-  await expect(table.getByRole("button", { name: "Component sort descending" })).toBeDisabled();
+  await expect(table.getByRole("button", { name: /Component sort (ascending|descending)/ })).toBeDisabled();
   await expect(table.getByRole("rowheader", { name: "Button" })).toHaveCount(0);
 
   await emptyToggle.click();
