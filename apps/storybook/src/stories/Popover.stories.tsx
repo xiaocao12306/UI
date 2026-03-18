@@ -148,6 +148,10 @@ function CloseReasonTelemetryPopoverDemo() {
 }
 
 export const CloseReasonTelemetry: Story = {
+  args: {
+    triggerLabel: "Telemetry popover",
+    children: <p style={{ margin: 0 }}>Track trigger / Escape / outside close behavior.</p>
+  },
   render: () => <CloseReasonTelemetryPopoverDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
