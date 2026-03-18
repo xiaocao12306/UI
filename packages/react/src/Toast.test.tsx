@@ -443,6 +443,21 @@ describe("Toast", () => {
     }
   });
 
+  it("emits close callbacks once when close button and Escape fire back-to-back", () => {
+    const onCloseReason = vi.fn();
+    const onOpenChange = vi.fn();
+
+    render(<Toast open title="Deduped close" duration={0} onCloseReason={onCloseReason} onOpenChange={onOpenChange} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Close toast" }));
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(onCloseReason).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenCalledWith("close-button");
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it("closes the most recent escapable toast when top-most toast disables Escape", () => {
     function StackedToasts() {
       const [firstOpen, setFirstOpen] = React.useState(true);
