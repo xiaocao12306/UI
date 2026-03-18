@@ -112,6 +112,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - Pages 启用后可用地址：
   - Demo：`https://xiaocao12306.github.io/UI/`
   - Storybook：`https://xiaocao12306.github.io/UI/storybook/`
+- 工作流会在 `GITHUB_STEP_SUMMARY` 输出以上链接，便于发布后直接复制。
 - 备用静态地址（无需 Pages）：`https://rawcdn.githack.com/xiaocao12306/UI/main/apps/storybook/storybook-static/index.html`
 
 ## Blocker Log

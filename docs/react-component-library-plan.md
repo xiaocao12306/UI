@@ -242,6 +242,7 @@
   - Table 键盘兼容收口（sortable header 补齐 legacy `Spacebar` 激活单测回归）
   - Storybook 稳定性收口（`Core/Tag/MetadataRow` 增补 play 断言，降低 runner 重试噪音）
   - Pages 交付收口（`.github/workflows/demo-pages.yml` 合并发布 Demo 根路径 + Storybook 子路径）
+  - Pages 可观测性收口（Deploy 后将 Demo/Storybook 外链写入 `GITHUB_STEP_SUMMARY`）
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）

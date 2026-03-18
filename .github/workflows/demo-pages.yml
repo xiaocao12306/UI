@@ -51,7 +51,13 @@ jobs:
           fi
       - name: Pages Disabled Notice
         if: steps.pages-status.outputs.enabled != 'true'
-        run: echo "GitHub Pages is not enabled for this repository. Skipping Pages deployment."
+        run: |
+          echo "GitHub Pages is not enabled for this repository. Skipping Pages deployment."
+          {
+            echo "### Pages Deploy Skipped"
+            echo "- Reason: GitHub Pages is not enabled for this repository."
+            echo "- Enable Pages in repository settings to publish Demo and Storybook external links."
+          } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/configure-pages@v5
         if: steps.pages-status.outputs.enabled == 'true'
         with:
@@ -71,3 +77,11 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+      - name: Publish Link Summary
+        run: |
+          base_url="${{ steps.deployment.outputs.page_url }}"
+          {
+            echo "### External Preview Links"
+            echo "- Demo: ${base_url}"
+            echo "- Storybook: ${base_url}storybook/"
+          } >> "$GITHUB_STEP_SUMMARY"

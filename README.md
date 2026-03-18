@@ -98,6 +98,7 @@ pnpm chromatic
 - GitHub Pages now publishes:
   - demo root: `https://xiaocao12306.github.io/UI/`
   - storybook docs: `https://xiaocao12306.github.io/UI/storybook/`
+- Deploy workflow writes both URLs into `GITHUB_STEP_SUMMARY` after successful publish.
 - Immediate preview (no Pages dependency):
   - `https://rawcdn.githack.com/xiaocao12306/UI/main/apps/demo/dist/index.html`
 - If Pages is not enabled yet, the workflow will skip deploy without failing CI.
