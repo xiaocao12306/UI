@@ -229,6 +229,7 @@
   - Storybook Dropdown 焦点策略回归补齐（Escape 回焦 trigger + outside pointer 目标焦点保留）
   - Storybook 文档同步（Component API / Best Practices 增补 Dropdown 焦点策略示例）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
+  - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
   - DismissableLayer 栈语义收口（嵌套 overlay 时仅顶层响应 Escape/外部点击，避免单次事件联动关闭多层）
   - Dialog 嵌套 overlay 验收补齐（Dropdown in Dialog 的 Escape 分层关闭单测 + Storybook 交互场景）
   - Drawer 嵌套 overlay 验收补齐（Dropdown in Drawer 的 Escape 分层关闭单测 + Storybook 交互场景）

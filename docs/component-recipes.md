@@ -71,3 +71,98 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   );
 }
 ```
+
+## 5) Blocking Dropdown Approval Flow
+```tsx
+import * as React from "react";
+import { Button, Dropdown, type DropdownItem } from "@aurora-ui/react";
+
+export function ApprovalMenu() {
+  const [open, setOpen] = React.useState(false);
+  const [status, setStatus] = React.useState("pending");
+
+  const items: DropdownItem[] = [
+    { key: "approve", label: "Approve Release", onSelect: () => setStatus("approved") },
+    { key: "reject", label: "Reject Release", onSelect: () => setStatus("rejected") }
+  ];
+
+  return (
+    <div style={{ display: "grid", gap: 8 }}>
+      <Dropdown
+        label="Review Actions"
+        items={items}
+        open={open}
+        onOpenChange={setOpen}
+        closeOnEscape={false}
+        closeOnOutsidePointer={false}
+      />
+      <Button variant="outline" onClick={() => setOpen(false)}>
+        Close menu
+      </Button>
+      <p style={{ margin: 0 }}>Current status: {status}</p>
+    </div>
+  );
+}
+```
+
+## 6) Command Palette Batch Mode
+```tsx
+import * as React from "react";
+import { CommandPalette } from "@aurora-ui/react";
+
+export function BatchCommands() {
+  const [open, setOpen] = React.useState(true);
+  const [selected, setSelected] = React.useState<string[]>([]);
+
+  return (
+    <CommandPalette
+      open={open}
+      onOpenChange={setOpen}
+      closeOnSelect={false}
+      commands={[
+        { key: "lint", label: "Run Lint", onSelect: () => setSelected((v) => [...v, "lint"]) },
+        { key: "typecheck", label: "Run Typecheck", onSelect: () => setSelected((v) => [...v, "typecheck"]) },
+        { key: "test", label: "Run Tests", onSelect: () => setSelected((v) => [...v, "test"]) }
+      ]}
+    />
+  );
+}
+```
+
+## 7) Table Loading + Empty States
+```tsx
+import * as React from "react";
+import { Button, Table } from "@aurora-ui/react";
+
+const columns = [
+  { key: "component", header: "Component", sortable: true },
+  { key: "status", header: "Status", sortable: true }
+];
+
+const rows = [
+  { component: "Button", status: "stable" },
+  { component: "Dialog", status: "stable" }
+];
+
+export function ReadinessTable() {
+  const [loading, setLoading] = React.useState(false);
+  const [empty, setEmpty] = React.useState(false);
+
+  return (
+    <div style={{ display: "grid", gap: 8 }}>
+      <Table
+        caption="Readiness"
+        columns={columns}
+        data={empty ? [] : rows}
+        loading={loading}
+        loadingContent="Syncing readiness data..."
+        emptyContent="No readiness records yet."
+      />
+      <div style={{ display: "flex", gap: 8 }}>
+        <Button variant="outline" onClick={() => setLoading((v) => !v)}>Toggle loading</Button>
+        <Button variant="outline" onClick={() => setEmpty((v) => !v)}>Toggle empty</Button>
+      </div>
+    </div>
+  );
+}
+```
