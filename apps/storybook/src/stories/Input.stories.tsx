@@ -109,3 +109,21 @@ export const ValidationFlow: Story = {
     await expect(canvas.getByRole("button", { name: "Submit Prompt" })).not.toBeDisabled();
   }
 };
+
+export const InvalidTokenSemantics: Story = {
+  render: () => (
+    <div style={{ width: 520, display: "grid", gap: 8 }}>
+      <FormField label="Grammar review">
+        <Input aria-label="Grammar review input" aria-invalid="grammar" defaultValue="Needs grammar check" />
+      </FormField>
+      <small style={{ color: "var(--aurora-text-secondary)" }}>
+        Preserves `aria-invalid="grammar"` for assistive-tech integrations that distinguish grammar/spelling corrections.
+      </small>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByRole("textbox", { name: "Grammar review input" });
+    await expect(input).toHaveAttribute("aria-invalid", "grammar");
+  }
+};

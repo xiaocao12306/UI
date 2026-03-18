@@ -109,6 +109,7 @@
 - Button keyboard parity: added legacy `Spacebar` activation-key compatibility regression for pressed-state feedback.
 - Form invalid-token parity: `aria-invalid=\"grammar|spelling\"` now remains intact across Input/Select/Textarea/DatePicker/Checkbox/RadioGroup/Switch/FormField instead of collapsing to `true`.
 - FormField invalid precedence parity: field-level `error` now explicitly overrides child `aria-invalid=\"grammar|spelling\"` to `true`, keeping form-error narration deterministic.
+- Storybook invalid-token parity: added `Form/Input/InvalidTokenSemantics` play assertion to keep `aria-invalid=\"grammar\"` semantics inside visual/interaction regression chain.
 - Tabs interaction hardening: `activationMode="manual"` decouples arrow-key focus movement from activation and supports Enter/Space commit.
 - Toast escape hardening: Escape now respects `defaultPrevented` so stacked notifications close one at a time.
 - Overlay focus-policy hardening: Popover/Dropdown now restore trigger focus on Escape while preserving outside pointer target focus on pointer dismiss.
