@@ -218,6 +218,7 @@
   - Demo 纵向 Tabs 场景（`orientation="vertical"`）与 Playwright ArrowUp/ArrowDown 回归
   - Demo Table loading 验收场景（`aria-busy` + 禁用排序 + 抑制旧数据）与 Playwright 回归
   - Demo Table empty 验收场景（`emptyContent` + 禁用排序）与 Playwright 回归
+  - Demo Dropdown 焦点策略场景（Escape 回焦 trigger / outside pointer 保持目标焦点）与 Playwright 回归
   - Tabs manual 模式键盘边界补强（`Home/End` 仅移动焦点，`Enter/Space` 才激活）并补单测 + Storybook 交互断言
   - Toast Escape 事件优先级补测（`defaultPrevented` 分支单测，避免与上层快捷键处理冲突）
   - CommandPalette listbox 语义补强（`aria-posinset/aria-setsize`）并补回归测试

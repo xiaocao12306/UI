@@ -450,6 +450,12 @@ function App() {
               Command Palette
             </Button>
           </div>
+          <div style={{ display: "grid", gap: 6, maxWidth: 300 }}>
+            <label htmlFor="overlay-outside-target" style={{ color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+              Overlay outside focus target
+            </label>
+            <Input id="overlay-outside-target" placeholder="Click here to validate outside-dismiss focus." />
+          </div>
           <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
             Keyboard shortcut: press{" "}
             <kbd

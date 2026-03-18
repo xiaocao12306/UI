@@ -305,6 +305,32 @@ test("opens dropdown using keyboard", async ({ page }) => {
   await expect(page.getByRole("menuitem", { name: "Duplicate" })).toBeVisible();
 });
 
+test("returns dropdown trigger focus on Escape dismiss", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  await trigger.click();
+  await expect(page.getByRole("menu")).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("menu")).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
+test("keeps outside pointer target focus after dropdown dismiss", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  const outsideTarget = page.getByLabel("Overlay outside focus target");
+
+  await trigger.click();
+  await expect(page.getByRole("menu")).toBeVisible();
+
+  await outsideTarget.click();
+  await expect(page.getByRole("menu")).toBeHidden();
+  await expect(outsideTarget).toBeFocused();
+});
+
 test("dismisses toast with escape key", async ({ page }) => {
   await page.goto("/");
 
