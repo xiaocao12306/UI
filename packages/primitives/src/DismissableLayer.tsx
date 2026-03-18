@@ -62,6 +62,9 @@ export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLaye
       if (!element || !isTopLayer(element)) {
         return;
       }
+      if (event.defaultPrevented) {
+        return;
+      }
 
       onEscapeKeyDown?.(event);
       if (!event.defaultPrevented) {

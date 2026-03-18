@@ -87,7 +87,7 @@ Latest release gate run:
 - notes:
   - demo E2E total now `45` checks
   - Storybook interaction suites refreshed to `32/32`, tests `156/156` all passed after adding Dialog/Drawer IME Escape composition guard scenarios
-  - primitives regression: `pnpm --filter @aurora-ui/primitives exec vitest run src/DismissableLayer.test.tsx` passed after IME Escape dismiss guard hardening
+  - primitives regression: `pnpm --filter @aurora-ui/primitives exec vitest run src/DismissableLayer.test.tsx` passed after IME Escape + Escape preemption dismiss-guard hardening
   - react overlay regressions: `pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/Drawer.test.tsx` passed after IME Escape guard coverage expansion
   - demo IME/legacy keyboard regressions: `pnpm demo:e2e` passed after adding CommandPalette+Toast IME Escape coverage and Tabs/Table legacy `Spacebar` keyboard-path checks
   - release dry-run package size evidence refreshed (`react` unpacked size ~301.7 kB)

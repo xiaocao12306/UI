@@ -212,6 +212,7 @@
 - Toast Escape preemption parity: preempted Escape now bypasses `onEscapeKeyDown`, with unit + Storybook `EscapePreemptedSkipsToastHook` coverage to avoid duplicate guarded-flow side effects.
 - Dropdown IME typeahead parity: menu typeahead now ignores composition-phase key events (`isComposing` / `keyCode=229`) so CJK input confirmation does not jump focus.
 - DismissableLayer IME Escape parity: overlay dismiss layer now ignores Escape during composition (`isComposing` / `keyCode=229`), preventing nested surfaces from closing while CJK input is being confirmed.
+- DismissableLayer Escape preemption parity: when upstream handlers already `preventDefault()` Escape, dismiss layer now skips both `onEscapeKeyDown` and dismiss to avoid duplicate guarded-flow side effects across overlays.
 - Dialog/Drawer IME Escape coverage: added component-level regressions to ensure composition-phase Escape does not emit close events while plain Escape still dismisses as expected.
 - Storybook overlay IME parity: added `Dialog/Drawer EscapeIgnoresImeComposition` interaction scenarios so composition-guard behavior is locked in visual/interaction baseline.
 - Demo keyboard parity hardening: added Playwright regressions for CommandPalette/Toast IME Escape composition paths and Tabs/Table legacy `Spacebar` activation paths.

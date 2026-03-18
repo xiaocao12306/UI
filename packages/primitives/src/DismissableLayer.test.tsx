@@ -1,6 +1,6 @@
 import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { DismissableLayer } from "./DismissableLayer";
 
 function NestedDismissableLayers() {
@@ -29,6 +29,10 @@ function NestedDismissableLayers() {
 }
 
 describe("DismissableLayer", () => {
+  afterEach(() => {
+    document.removeEventListener("keydown", preemptEscape, true);
+  });
+
   it("dismisses only the topmost layer on Escape", () => {
     render(<NestedDismissableLayers />);
 
@@ -75,4 +79,27 @@ describe("DismissableLayer", () => {
     expect(onEscapeKeyDown).not.toHaveBeenCalled();
     expect(onDismiss).not.toHaveBeenCalled();
   });
+
+  it("skips escape callback and dismiss when event is preempted upstream", () => {
+    const onDismiss = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+
+    document.addEventListener("keydown", preemptEscape, true);
+    render(
+      <DismissableLayer onDismiss={onDismiss} onEscapeKeyDown={onEscapeKeyDown}>
+        <div>Layer body</div>
+      </DismissableLayer>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onDismiss).not.toHaveBeenCalled();
+  });
 });
+
+function preemptEscape(event: KeyboardEvent) {
+  if (event.key === "Escape") {
+    event.preventDefault();
+  }
+}
