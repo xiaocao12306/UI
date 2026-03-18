@@ -116,11 +116,11 @@ export const ActionRequired: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await expect(canvas.getByRole("status")).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
     await userEvent.click(canvas.getByRole("button", { name: "Close blocking notice" }));
-    await expect(canvas.queryByRole("status")).not.toBeInTheDocument();
+    await expect(canvas.queryByRole("dialog")).not.toBeInTheDocument();
     await userEvent.click(canvas.getByRole("button", { name: "Reopen" }));
-    await expect(canvas.getByRole("status")).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   }
 };
 

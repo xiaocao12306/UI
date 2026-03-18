@@ -396,6 +396,7 @@
   - CommandPalette i18n 收口（新增 `closeLabel`，支持关闭按钮可访问名称本地化，并补齐 Storybook `LocalizedDialogCopy` 断言）
   - CommandPalette 长列表键盘可见区收口（高亮 option 随 `activeIndex` 自动 `scrollIntoView`，避免“选中不可见”）
   - Toast 关闭回调契约收口（单测锁定 `onCloseReason -> onClose -> onOpenChange(false)` 顺序，并同步 Component API / Best Practices）
+  - Toast 动作语义收口（`action` 存在时切换为 `dialog/alertdialog` 语义，避免可交互通知被当作纯 live-region）
   - Toast 同角堆叠可见性收口（同一 viewport 角落的多条通知自动偏移，避免视觉重叠与信息遮挡）
   - Storybook Toast 堆叠可见性验收（新增 `StackedViewportOffset` 场景，断言旧通知偏移与新通知贴边）
   - Demo 首屏门禁文案收口（移除易过期的硬编码验收数字，改为稳定门禁状态表达）

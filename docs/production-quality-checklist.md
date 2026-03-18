@@ -268,6 +268,7 @@
 - Demo table empty-state parity: E2E assertions now cover both ascending/descending sort-label branches to match semantic fallback behavior.
 - Toast viewport-stack parity: same-corner notifications now apply deterministic visual offsets so older notices remain readable behind the latest toast.
 - Storybook toast-stack parity: added `StackedViewportOffset` interaction assertions to lock stack-offset behavior in visual regression baselines.
+- Toast actionable-role parity: toasts with `action` now expose `dialog/alertdialog` semantics (`aria-modal="false"`) while passive notifications keep `status/alert`.
 - Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.
 - Storybook popover preemption parity: Popover now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps surface open and skips hook side effects.

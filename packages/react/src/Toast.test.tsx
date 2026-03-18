@@ -62,6 +62,22 @@ describe("Toast", () => {
     expect(screen.getByRole("alert")).toHaveAttribute("aria-live", "assertive");
   });
 
+  it("uses dialog role for actionable non-danger toast", () => {
+    render(<Toast open title="Action required" action={<button type="button">Acknowledge</button>} />);
+
+    const toast = screen.getByRole("dialog", { name: "Action required" });
+    expect(toast).toHaveAttribute("aria-modal", "false");
+    expect(toast).not.toHaveAttribute("aria-live");
+  });
+
+  it("uses alertdialog role for actionable danger toast", () => {
+    render(<Toast open tone="danger" title="Incident" action={<button type="button">Review</button>} />);
+
+    const toast = screen.getByRole("alertdialog", { name: "Incident" });
+    expect(toast).toHaveAttribute("aria-modal", "false");
+    expect(toast).not.toHaveAttribute("aria-live");
+  });
+
   it("supports overriding live-region politeness", () => {
     render(<Toast open title="Background sync" live="off" duration={0} />);
     expect(screen.getByRole("status", { name: "Background sync" })).toHaveAttribute("aria-live", "off");

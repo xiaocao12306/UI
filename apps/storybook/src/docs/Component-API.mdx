@@ -500,12 +500,13 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 | Prop | Type | Notes |
 | --- | --- | --- |
-| `tone` | `'info' \| 'success' \| 'warning' \| 'danger'` | Drives semantics: danger uses `role="alert"`. |
+| `tone` | `'info' \| 'success' \| 'warning' \| 'danger'` | Drives semantics: non-action toasts use `status/alert`; actionable toasts use `dialog/alertdialog` by tone. |
 | `duration` | `number` | Auto-dismiss delay in ms; `0` disables timer. |
 | `live` | `'polite' \| 'assertive' \| 'off'` | Optional live-region politeness override for notification noise control. |
 | `pauseOnHover` | `boolean` | Suspends timer while hovered or while focus stays inside toast controls. |
 | `closeOnEscape` | `boolean` | Optional keyboard dismiss path; Escape is consumed so stacked toasts dismiss one at a time. |
 | `onEscapeKeyDown` | `(event: KeyboardEvent) => void` | Optional toast-level Escape hook; call `event.preventDefault()` to keep toast open in guarded flows. |
+| actionable role mapping | `action` => `dialog/alertdialog` | When `action` is provided, toast exposes interactive surface semantics (`aria-modal="false"`) instead of live-region-only status roles. |
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'timeout') => void` | Emits a structured close reason for analytics and workflow telemetry. |
 | close callback order | `onCloseReason` -> `onClose` -> `onOpenChange(false)` | Close lifecycle is deterministic across button/Escape/timeout paths, so telemetry and state reducers can avoid duplicate side effects. |
 | IME safety | Escape composition guard | Escape dismissal ignores active IME composition (`isComposing` / `keyCode=229`) to avoid accidental close while confirming CJK text input. |

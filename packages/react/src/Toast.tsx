@@ -327,14 +327,16 @@ export function Toast({
     return null;
   }
 
-  const role = tone === "danger" ? "alert" : "status";
-  const ariaLive = live ?? (tone === "danger" ? "assertive" : "polite");
+  const hasAction = action !== undefined && action !== null;
+  const role = hasAction ? (tone === "danger" ? "alertdialog" : "dialog") : tone === "danger" ? "alert" : "status";
+  const ariaLive = hasAction ? undefined : (live ?? (tone === "danger" ? "assertive" : "polite"));
 
   return (
     <div
       ref={rootRef}
       role={role}
       data-close-on-escape={closeOnEscape ? "true" : "false"}
+      aria-modal={hasAction ? "false" : undefined}
       aria-live={ariaLive}
       aria-atomic="true"
       aria-label={ariaLabel}
