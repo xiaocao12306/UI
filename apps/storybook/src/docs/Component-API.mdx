@@ -369,11 +369,11 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `caption` / `ariaLabel` / `ariaLabelledBy` | `ReactNode` / `string` / `string` | Prefer explicit naming via visible caption, screen-reader label, or existing heading binding (`ariaLabelledBy` takes precedence over `ariaLabel`); when all are omitted, table falls back to `aria-label="Data table"`. |
 | `loading` / `loadingContent` | `boolean` / `ReactNode` | Sets `aria-busy` and renders loading row content while temporarily suppressing data/empty rows and sort interactions. |
 | `emptyContent` | `ReactNode` | Empty rows render as polite status narration (`role="status"`) for screen-reader parity in data-refresh workflows. |
-| `defaultSortKey` / `defaultSortDirection` | `string` / `'asc' \| 'desc'` | Sets initial data order and marks the active sorted header with `aria-sort`. |
+| `defaultSortKey` / `defaultSortDirection` | `string` / `'asc' \| 'desc'` | Sets initial data order; sorted semantics (`aria-sort` + live status) activate only when row count is greater than one. |
 | `getSortAriaLabel` | `({ columnKey, columnHeader, nextDirection }) => string` | Localize sortable-header aria labels without changing sorting behavior. |
 | `getSortStatusText` | `({ columnKey, columnHeader, direction }) => string` | Customize live-region narration for active sort state changes; defaults to `Sorted by ...`. |
 | `onSortChange` | `(key, direction) => void` | Useful for telemetry and analytics. |
-| sort interaction guard | loading/empty/single-row auto-disabled | Sort buttons disable automatically when sorting would be no-op (`loading`, zero rows, or one row). |
+| sort interaction guard | loading/empty/single-row auto-disabled | Sort buttons disable automatically when sorting would be no-op (`loading`, zero rows, or one row), and no sorted-state narration is emitted in those branches. |
 | sortable header keyboard | `Enter` / `Space` / legacy `Spacebar` | Sort buttons support pointer + keyboard activation with the same direction toggling semantics across browser key-value variants. |
 | `aria-sort` exposure | active sorted header only | Unsorted headers (including sortable ones) omit `aria-sort`, reducing screen-reader noise and matching ARIA table guidance. |
 
