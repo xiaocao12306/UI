@@ -76,7 +76,7 @@ Latest dry-run record:
   - `changeset version`: `No unreleased changesets found, exiting.`
   - `@aurora-ui/tokens`: dry-run tarball size ~3.0 kB
   - `@aurora-ui/primitives`: dry-run tarball size ~13.9 kB
-  - `@aurora-ui/react`: dry-run tarball size ~50.6 kB (includes latest CommandPalette escape-query behavior hardening)
+  - `@aurora-ui/react`: dry-run tarball size ~50.6 kB (unpacked ~292.4 kB after latest demo/a11y hardening)
   - npm prints login warning in dry-run mode, but command exits successfully
   - CI summary now includes package size / unpacked size table via `GITHUB_STEP_SUMMARY`
 
@@ -85,9 +85,9 @@ Latest release gate run:
 - command: `pnpm release:gate`
 - result: passed (`verify` + `demo:e2e` + `storybook:test:ci` + `release:dry-run`)
 - notes:
-  - demo E2E total now `36` checks (includes table rowheader + toast-level escape guard + command-palette dismiss-guard regressions)
-  - Storybook interaction suites `32/32`, tests `143/143` all passed
-  - release dry-run package size evidence refreshed (`react` unpacked size ~292.1 kB)
+  - demo E2E total now `38` checks (adds command-palette Escape query clear + silent-toast `aria-live="off"` regressions)
+  - Storybook interaction suites refreshed to `32/32`, tests `144/144` all passed after latest toast story expansion
+  - release dry-run package size evidence refreshed (`react` unpacked size ~292.4 kB)
 
 ## GitHub Release Automation
 Workflow: `.github/workflows/release.yml`
