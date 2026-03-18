@@ -123,6 +123,7 @@ function App() {
   const [paletteDismissGuard, setPaletteDismissGuard] = React.useState(false);
   const [palettePersistent, setPalettePersistent] = React.useState(false);
   const [paletteEscapeClearsQuery, setPaletteEscapeClearsQuery] = React.useState(true);
+  const [paletteQueryTelemetry, setPaletteQueryTelemetry] = React.useState("");
   const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
@@ -580,6 +581,12 @@ function App() {
             label="Escape clears palette query first"
             description="When enabled, first Escape clears the query and second Escape dismisses."
           />
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            Palette query telemetry:{" "}
+            <strong data-testid="palette-query-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
+              {paletteQueryTelemetry || "N/A"}
+            </strong>
+          </p>
         </Section>
 
         <Section id="ai-components" title="AI Components" description="Prompt, reasoning, and streaming response building blocks.">
@@ -631,6 +638,7 @@ function App() {
           clearQueryOnEscape={paletteEscapeClearsQuery}
           closeOnEscape={!paletteBlocking}
           closeOnOutsidePointer={!paletteBlocking}
+          onQueryChange={setPaletteQueryTelemetry}
           onEscapeKeyDown={(event) => {
             if (paletteDismissGuard) {
               event.preventDefault();

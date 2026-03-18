@@ -225,6 +225,7 @@
 - CommandPalette i18n semantics: added `resultsAriaLabel` so command result listbox naming can be localized while preserving default `Command results` fallback.
 - CommandPalette i18n copy semantics: added `title` / `description` / `searchAriaLabel` so dialog heading, helper copy, and combobox naming can be localized without forking component markup.
 - CommandPalette query lifecycle parity: closing the palette now emits `onQueryChange("")` so external telemetry/state resets with internal query clearing, with unit + Storybook interaction coverage.
+- Demo query telemetry parity: added `palette-query-telemetry` indicator + Playwright regression to ensure command-palette close actions reset telemetry back to `N/A`.
 - Storybook docs import guard: added `pnpm storybook:docs:check` and wired it into `storybook:test:ci` so missing `*Stories` imports in MDX fail fast before visual/interaction regression runs.
 - Storybook static metadata hygiene: `build-storybook` now normalizes `storybook-static/project.json` volatile timestamps (`generatedAt`, `userSince`) to stable values, reducing no-op static bundle churn in review diffs.
 - Dialog/Drawer IME Escape coverage: added component-level regressions to ensure composition-phase Escape does not emit close events while plain Escape still dismisses as expected.

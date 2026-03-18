@@ -152,6 +152,24 @@ test("filters command palette and triggers drawer action", async ({ page }) => {
   await expect(page.getByRole("dialog").filter({ hasText: "Drawer Example" })).toBeVisible();
 });
 
+test("resets command palette query telemetry after close", async ({ page }) => {
+  await page.goto("/");
+
+  const telemetry = page.getByTestId("palette-query-telemetry");
+  await expect(telemetry).toHaveText("N/A");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await expect(palette).toBeVisible();
+
+  await palette.getByPlaceholder("Search commands...").fill("drawer");
+  await expect(telemetry).toHaveText("drawer");
+
+  await palette.getByRole("option", { name: "Open Drawer" }).click();
+  await expect(palette).toBeHidden();
+  await expect(telemetry).toHaveText("N/A");
+});
+
 test("keeps command palette open when blocking dismiss mode is enabled", async ({ page }) => {
   await page.goto("/");
 
