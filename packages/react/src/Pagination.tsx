@@ -80,21 +80,18 @@ export function Pagination({
   ariaLabelledBy,
   getItemAriaLabel = defaultGetItemAriaLabel
 }: PaginationProps) {
-  if (pageCount <= 1) {
-    return null;
-  }
-
   const navRef = React.useRef<HTMLElement>(null);
   const pendingFocusPageRef = React.useRef<number | null>(null);
-  const currentPage = clamp(page, 1, pageCount);
-  const tokens = getPaginationTokens(currentPage, pageCount, siblingCount, boundaryCount);
-  const previousPage = clamp(currentPage - 1, 1, pageCount);
-  const nextPage = clamp(currentPage + 1, 1, pageCount);
-  const canGoPrevious = !disabled && currentPage > 1;
-  const canGoNext = !disabled && currentPage < pageCount;
+  const resolvedPageCount = Math.max(pageCount, 1);
+  const currentPage = clamp(page, 1, resolvedPageCount);
+  const tokens = pageCount <= 1 ? [] : getPaginationTokens(currentPage, pageCount, siblingCount, boundaryCount);
+  const previousPage = clamp(currentPage - 1, 1, resolvedPageCount);
+  const nextPage = clamp(currentPage + 1, 1, resolvedPageCount);
+  const canGoPrevious = !disabled && pageCount > 1 && currentPage > 1;
+  const canGoNext = !disabled && pageCount > 1 && currentPage < pageCount;
 
   const goToPage = (nextPage: number) => {
-    if (disabled) {
+    if (disabled || pageCount <= 1) {
       return;
     }
     const resolvedPage = clamp(nextPage, 1, pageCount);
@@ -133,7 +130,7 @@ export function Pagination({
       goToPageWithFocus(1);
     } else if (event.key === "End") {
       event.preventDefault();
-      goToPageWithFocus(pageCount);
+      goToPageWithFocus(resolvedPageCount);
       return;
     }
 
@@ -145,6 +142,10 @@ export function Pagination({
     event.preventDefault();
     goToPageWithFocus(currentPage + arrowDelta);
   };
+
+  if (pageCount <= 1) {
+    return null;
+  }
 
   return (
     <nav ref={navRef} aria-label={ariaLabelledBy ? undefined : ariaLabel} aria-labelledby={ariaLabelledBy}>
