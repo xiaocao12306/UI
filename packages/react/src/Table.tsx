@@ -150,6 +150,8 @@ export function Table<T>({
             {columns.map((column) => {
               const key = String(column.key);
               const sorted = sortState?.key === key ? sortState.direction : undefined;
+              const sortable = Boolean(column.sortable);
+              const ariaSort = sortable ? (sorted ? (sorted === "asc" ? "ascending" : "descending") : "none") : undefined;
               const textAlign = column.align ?? "left";
               const headerLabel = typeof column.header === "string" ? column.header : key;
               const nextDirection: TableSortDirection = sorted === "asc" ? "desc" : "asc";
@@ -168,7 +170,7 @@ export function Table<T>({
                 <th
                   key={key}
                   scope="col"
-                  aria-sort={sorted ? (sorted === "asc" ? "ascending" : "descending") : "none"}
+                  aria-sort={ariaSort}
                   style={{
                     textAlign,
                     color: "var(--aurora-text-secondary)",
@@ -180,7 +182,7 @@ export function Table<T>({
                     width: column.width
                   }}
                 >
-                  {column.sortable ? (
+                  {sortable ? (
                     <button
                       type="button"
                       aria-label={sortAriaLabel}

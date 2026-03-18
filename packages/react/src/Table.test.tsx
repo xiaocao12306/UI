@@ -330,7 +330,7 @@ describe("Table", () => {
     const statusHeader = screen.getByRole("columnheader", { name: "Status" });
 
     expect(nameHeader).toHaveAttribute("aria-sort", "none");
-    expect(statusHeader).toHaveAttribute("aria-sort", "none");
+    expect(statusHeader).not.toHaveAttribute("aria-sort");
     expect(screen.queryByRole("button", { name: /Status sort/ })).toBeNull();
     expect(screen.getAllByRole("cell")[0]).toHaveTextContent("Dialog");
   });

@@ -64,6 +64,7 @@
 - Table loading hardening: `loading/loadingContent` now sets `aria-busy`, suppresses stale rows/empty-state rendering, and disables sort controls during refresh windows.
 - Table row-key hardening: `rowKey(row, rowIndex)` now receives source-data index (not sorted visual index), preventing index-derived key churn during sort toggles.
 - Table render-index hardening: `columns[].render(row, rowIndex, sourceIndex)` now exposes visual index + source index together, so sorted rankings and source-linked telemetry can stay deterministic.
+- Table header semantics hardening: non-sortable columns no longer expose `aria-sort`, preventing screen readers from announcing inert headers as sortable.
 - Toast stack-order hardening: Escape dismissal now targets only the latest open toast first, so stacked notifications close deterministically from top to bottom.
 - Toast interaction-priority hardening: focusing or hovering an older toast now promotes it to stack top so Escape follows current user interaction context.
 - CommandPalette batching hardening: `closeOnSelect` now supports persistent mode for multi-command execution without repeated reopen friction.

@@ -203,6 +203,7 @@
   - CommandPalette 搜索语义收口（`textValue` 非文本标签别名 + 重音归一匹配，`cafe` 可命中 `Café`）
   - Table i18n 语义收口（`getSortAriaLabel` 支持排序按钮 aria-label 本地化）
   - Table loading 语义收口（`loading/loadingContent` + `aria-busy` + 加载期间禁用排序交互）
+  - Table 列头语义收口（仅 sortable 列暴露 `aria-sort`，非 sortable 列移除该属性避免误导播报）
   - Table 行头语义收口（`columns[].rowHeader` 支持 `<th scope="row">`，强化行上下文可访问性）
   - Table rowKey 索引语义收口（`rowKey` 第二参数改为 source index，排序切换不再导致索引型 key 抖动）
   - Table cell render 索引语义收口（`columns[].render(row, rowIndex, sourceIndex)` 同时暴露视觉索引与源索引，降低排序后埋点/跳转歧义）
