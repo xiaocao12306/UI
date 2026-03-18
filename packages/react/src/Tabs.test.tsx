@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Tabs } from "./Tabs";
@@ -323,6 +323,39 @@ describe("Tabs", () => {
 
     expect(onValueChange).toHaveBeenCalledTimes(1);
     expect(onValueChange).toHaveBeenCalledWith("two");
+  });
+
+  it("expires keyboard dedupe latch so later detail=0 activation still works", () => {
+    vi.useFakeTimers();
+    const onValueChange = vi.fn();
+
+    try {
+      render(
+        <Tabs
+          value="one"
+          activationMode="manual"
+          onValueChange={onValueChange}
+          items={[
+            { key: "one", label: "One", content: <div>Panel One</div> },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />
+      );
+
+      const twoTab = screen.getByRole("tab", { name: "Two" });
+      fireEvent.keyDown(twoTab, { key: "Enter" });
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+
+      act(() => {
+        vi.advanceTimersByTime(0);
+      });
+
+      fireEvent.click(twoTab, { detail: 0 });
+      expect(onValueChange).toHaveBeenCalledTimes(2);
+      expect(onValueChange).toHaveBeenNthCalledWith(2, "two");
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("supports Home and End keyboard navigation while skipping disabled tabs", () => {

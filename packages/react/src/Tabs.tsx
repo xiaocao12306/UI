@@ -75,6 +75,7 @@ export function Tabs({
   const tabListRef = React.useRef<HTMLDivElement>(null);
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const keyboardActivationTabKeyRef = React.useRef<string | null>(null);
+  const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const focusIntentRef = React.useRef(true);
   const firstEnabledKey = items.find((item) => !item.disabled)?.key;
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
@@ -96,6 +97,22 @@ export function Tabs({
   React.useEffect(() => {
     setFocusedValue(currentValue);
   }, [currentValue]);
+
+  React.useEffect(() => {
+    return () => {
+      if (keyboardActivationResetTimerRef.current !== null) {
+        window.clearTimeout(keyboardActivationResetTimerRef.current);
+      }
+    };
+  }, []);
+
+  const clearKeyboardActivationLatch = React.useCallback(() => {
+    keyboardActivationTabKeyRef.current = null;
+    if (keyboardActivationResetTimerRef.current !== null) {
+      window.clearTimeout(keyboardActivationResetTimerRef.current);
+      keyboardActivationResetTimerRef.current = null;
+    }
+  }, []);
 
   const select = React.useCallback(
     (nextValue: string) => {
@@ -153,7 +170,7 @@ export function Tabs({
                 setFocusedValue(item.key);
                 const clickFromKeyboardActivation =
                   activationMode === "manual" && event.detail === 0 && keyboardActivationTabKeyRef.current === item.key;
-                keyboardActivationTabKeyRef.current = null;
+                clearKeyboardActivationLatch();
                 if (clickFromKeyboardActivation) {
                   return;
                 }
@@ -202,6 +219,13 @@ export function Tabs({
                 if (activationMode === "manual" && isTabActivationKey(event.key)) {
                   event.preventDefault();
                   keyboardActivationTabKeyRef.current = item.key;
+                  if (keyboardActivationResetTimerRef.current !== null) {
+                    window.clearTimeout(keyboardActivationResetTimerRef.current);
+                  }
+                  keyboardActivationResetTimerRef.current = window.setTimeout(() => {
+                    keyboardActivationTabKeyRef.current = null;
+                    keyboardActivationResetTimerRef.current = null;
+                  }, 0);
                   select(item.key);
                   return;
                 }

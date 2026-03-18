@@ -327,7 +327,7 @@ export function Toast({
     return null;
   }
 
-  const hasAction = action !== undefined && action !== null;
+  const hasAction = React.Children.toArray(action).length > 0;
   const role = hasAction ? (tone === "danger" ? "alertdialog" : "dialog") : tone === "danger" ? "alert" : "status";
   const ariaLive = hasAction ? undefined : (live ?? (tone === "danger" ? "assertive" : "polite"));
 
@@ -445,7 +445,7 @@ export function Toast({
           {description}
         </div>
       ) : null}
-      {action ? <div>{action}</div> : null}
+      {hasAction ? <div>{action}</div> : null}
     </div>
   );
 }
