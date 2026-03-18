@@ -171,3 +171,4 @@
 - Table cross-browser keyboard parity: added dedicated unit regression for legacy `Spacebar` sortable-header activation.
 - Dropdown keyboard-dismiss parity: added unit coverage for `Tab`-close branch to align with existing demo/E2E focus-continuation flow.
 - Dropdown Storybook parity: added `TabDismissToNextControl` interaction scenario so Tab-close focus handoff is covered in visual regression chain.
+- CommandPalette dismiss guard hardening: added `onEscapeKeyDown/onPointerDownOutside` hooks so approval flows can block dismiss conditionally via `event.preventDefault()`, with unit + Storybook interaction coverage.

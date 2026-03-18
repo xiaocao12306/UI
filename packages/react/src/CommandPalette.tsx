@@ -18,6 +18,8 @@ export type CommandPaletteProps = {
   closeOnSelect?: boolean;
   closeOnEscape?: boolean;
   closeOnOutsidePointer?: boolean;
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
+  onPointerDownOutside?: (event: PointerEvent) => void;
   placeholder?: string;
   emptyMessage?: React.ReactNode;
   onQueryChange?: (query: string) => void;
@@ -36,6 +38,8 @@ export function CommandPalette({
   closeOnSelect = true,
   closeOnEscape = true,
   closeOnOutsidePointer = true,
+  onEscapeKeyDown,
+  onPointerDownOutside,
   placeholder = "Search commands...",
   emptyMessage = "No commands found.",
   onQueryChange,
@@ -144,6 +148,8 @@ export function CommandPalette({
       size="md"
       closeOnEscape={closeOnEscape}
       closeOnOutsidePointer={closeOnOutsidePointer}
+      onEscapeKeyDown={onEscapeKeyDown}
+      onPointerDownOutside={onPointerDownOutside}
     >
       <div style={{ display: "grid", gap: 10 }}>
         <Input

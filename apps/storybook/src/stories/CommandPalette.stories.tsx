@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { CommandPalette, type CommandItem } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const commands: CommandItem[] = [
   { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
@@ -214,6 +214,54 @@ function NonDismissiblePalette() {
   );
 }
 
+function GuardedDismissPalette() {
+  const [open, setOpen] = React.useState(false);
+  const [guardDismiss, setGuardDismiss] = React.useState(true);
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Dismiss guard can intercept Escape/outside dismiss until the flow is explicitly unlocked.
+      </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Guard state:{" "}
+        <strong data-testid="guard-state" style={{ color: "var(--aurora-text-primary)" }}>
+          {guardDismiss ? "enabled" : "disabled"}
+        </strong>
+      </p>
+      <button type="button" onClick={() => setOpen((value) => !value)}>
+        {open ? "Close guarded palette" : "Open guarded palette"}
+      </button>
+      <button type="button">Outside target</button>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        closeOnSelect={false}
+        onEscapeKeyDown={(event) => {
+          if (guardDismiss) {
+            event.preventDefault();
+          }
+        }}
+        onPointerDownOutside={(event) => {
+          if (guardDismiss) {
+            event.preventDefault();
+          }
+        }}
+        commands={[
+          {
+            key: "unlock",
+            label: "Unlock dismiss guard",
+            disabled: !guardDismiss,
+            onSelect: () => setGuardDismiss(false)
+          },
+          { key: "approve", label: "Approve release" },
+          { key: "reject", label: "Reject release" }
+        ]}
+      />
+    </div>
+  );
+}
+
 export const SearchCommands: Story = {
   render: () => <OpenPalette />,
   play: async ({ canvasElement }) => {
@@ -315,5 +363,30 @@ export const NonDismissible: Story = {
 
     await userEvent.click(canvas.getByRole("button", { name: "Outside target" }));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  }
+};
+
+export const GuardedDismissEvents: Story = {
+  render: () => <GuardedDismissPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const doc = canvasElement.ownerDocument;
+    await userEvent.click(await canvas.findByRole("button", { name: "Open guarded palette" }));
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+    fireEvent.pointerDown(doc.body);
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+    const input = canvas.getByRole("combobox", { name: "Search commands" });
+    await userEvent.clear(input);
+    await userEvent.type(input, "unlock");
+    await userEvent.click(canvas.getByRole("option", { name: "Unlock dismiss guard" }));
+    await expect(canvas.getByTestId("guard-state")).toHaveTextContent("disabled");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
   }
 };

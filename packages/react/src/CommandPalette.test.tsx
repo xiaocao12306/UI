@@ -113,6 +113,51 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
+  it("forwards escape and outside-pointer dismiss events", () => {
+    const onEscapeKeyDown = vi.fn();
+    const onPointerDownOutside = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        onEscapeKeyDown={onEscapeKeyDown}
+        onPointerDownOutside={onPointerDownOutside}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+
+    fireEvent.pointerDown(document.body);
+    expect(onPointerDownOutside).toHaveBeenCalledTimes(1);
+  });
+
+  it("allows custom dismiss guards by preventing escape/outside events", () => {
+    const onOpenChange = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onEscapeKeyDown={(event) => {
+          event.preventDefault();
+        }}
+        onPointerDownOutside={(event) => {
+          event.preventDefault();
+        }}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    fireEvent.pointerDown(document.body);
+
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  });
+
   it("shows empty-state copy when query has no match", () => {
     render(
       <CommandPalette
