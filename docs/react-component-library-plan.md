@@ -314,6 +314,7 @@
   - Storybook 构建噪音收口（配置 `vite.build.chunkSizeWarningLimit=2500`，减少 vendor chunk 告警噪音）
   - Pages 交付收口（`.github/workflows/demo-pages.yml` 合并发布 Demo 根路径 + Storybook 子路径）
   - Pages 可观测性收口（Deploy 后将 Demo/Storybook 外链写入 `GITHUB_STEP_SUMMARY`）
+  - CI Demo 门禁可观测性收口（`ci.yml` 输出 `Demo Quality Gate` summary，沉淀 demo e2e + dist gate 审阅证据）
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
   - Release Gate 复验（2026-03-19：修复 CommandPalette lint 与 Demo 标签冲突后，`release:gate:ci` 全链路恢复通过）
   - Release Gate 复验（2026-03-19：完成 DismissableLayer 指针边界修复与 Demo 成品化后，`release:gate:ci` 全链路通过，详细 tests/suites 以 run summary 为准）
@@ -404,6 +405,7 @@
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
   - Tabs 手动激活 AT 收口（修复 `click(detail=0)` 过度拦截：辅助技术触发点击可激活 tab，同时保持键盘激活去重）
   - CommandPalette i18n 收口（新增 `closeLabel`，支持关闭按钮可访问名称本地化，并补齐 Storybook `LocalizedDialogCopy` 断言）
+  - CommandPalette 回调契约收口（单测锁定 `item-select` 路径 `onSelect -> onCloseReason -> onOpenChange(false)` 与 close-button 路径 `onCloseReason -> onOpenChange(false)`）
   - CommandPalette 长列表键盘可见区收口（高亮 option 随 `activeIndex` 自动 `scrollIntoView`，避免“选中不可见”）
   - CommandPalette 长列表翻页键收口（新增 `PageUp/PageDown` 按 5 条可执行项跳转并跳过禁用项，降低高密列表操作成本）
   - Demo CommandPalette 翻页键验收（新增键盘提示文案 + Playwright `PageUp/PageDown` 回归，锁定禁用项跳过行为）

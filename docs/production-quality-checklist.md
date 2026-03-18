@@ -247,6 +247,7 @@
 - Table live-sort narration hardening: added `getSortStatusText` to localize active sort-state live region updates, with unit + Storybook interaction coverage for ascending/descending transitions.
 - Release evidence refresh: reran `demo:e2e` + `release:dry-run` and同步更新 workflow `GITHUB_STEP_SUMMARY` 证据链。
 - Release evidence refresh (2026-03-19 latest): reran `release:gate:ci` and以 run summary 作为 Storybook tests/suites 的唯一审阅来源（不在文档手工维护计数）。
+- CI demo-gate observability parity: `ci.yml` now writes `Demo Quality Gate` summary (demo:e2e + demo:dist:check pass/fail snapshot) into `GITHUB_STEP_SUMMARY`.
 - Release dry-run refresh (2026-03-19 latest): `release:dry-run` remains green with tarball evidence `@aurora-ui/react` package `60.3 kB` / unpacked `364.1 kB`.
 - Demo table narration parity: Playwright now asserts unsorted columns keep `aria-sort` absent while active sorted column toggles, matching unit/Storybook semantics.
 - Toast IME callback parity: Escape during composition no longer fires `onEscapeKeyDown`, preventing guarded flows from treating IME confirm/cancel as dismissal intent.
@@ -282,6 +283,7 @@
 - CommandPalette i18n semantics: added `resultsAriaLabel` so command result listbox naming can be localized while preserving default `Command results` fallback.
 - CommandPalette i18n copy semantics: added `title` / `description` / `searchAriaLabel` so dialog heading, helper copy, and combobox naming can be localized without forking component markup.
 - CommandPalette query lifecycle parity: closing the palette now emits `onQueryChange("")` so external telemetry/state resets with internal query clearing, with unit + Storybook interaction coverage.
+- CommandPalette close lifecycle parity: callback order is now contract-locked by tests/docs (`item-select`: `onSelect -> onCloseReason -> onOpenChange(false)`; close-button: `onCloseReason -> onOpenChange(false)`).
 - CommandPalette close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `item-select` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismissal tracking.
 - Demo query telemetry parity: added `palette-query-telemetry` indicator + Playwright regression to ensure command-palette close actions reset telemetry back to `N/A`.
 - Demo command-palette close-reason parity: added `palette-close-reason-telemetry` indicator and Playwright regression for `escape-key` / `item-select` / `close-button` / `outside-pointer` branches.
