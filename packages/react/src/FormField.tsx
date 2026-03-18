@@ -33,7 +33,6 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const mergedRequired = Boolean(required || childRequired);
   const childInvalidAria = resolveInvalidAria(undefined, childInvalid);
   const mergedInvalidAria = isInvalid ? true : childInvalidAria;
-  const mergedInvalid = mergedInvalidAria !== undefined;
   const mergedDescribedBy = mergeAriaReferenceIds(childDescribedBy, description ? describedById : undefined, error ? errorId : undefined);
   const mergedErrorMessage = mergeAriaReferenceIds(childErrorMessage, error ? errorId : undefined);
 
