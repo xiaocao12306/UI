@@ -250,6 +250,22 @@ describe("Tabs", () => {
     expect(onValueChange).toHaveBeenCalledWith("two");
   });
 
+  it("falls back to first enabled tab when controlled value is invalid or disabled", () => {
+    const items = [
+      { key: "one", label: "One", content: <div>Panel One</div> },
+      { key: "two", label: "Two", content: <div>Panel Two</div>, disabled: true },
+      { key: "three", label: "Three", content: <div>Panel Three</div> }
+    ];
+
+    const { rerender } = render(<Tabs value="unknown" items={items} />);
+    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+
+    rerender(<Tabs value="two" items={items} />);
+    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+  });
+
   it("does not emit value change when selecting the already active tab", () => {
     const onValueChange = vi.fn();
     render(
