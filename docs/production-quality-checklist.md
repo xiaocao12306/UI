@@ -92,6 +92,7 @@
 - Demo tabs parity: Playwright now covers manual-activation `Space` path so Enter/Space semantics stay aligned with Tabs API contract.
 - Tabs cross-browser keyboard parity: manual activation now accepts legacy `Spacebar` key value, with dedicated unit regression coverage.
 - Release-gate baseline refresh: `pnpm release:gate` rerun passed on 2026-03-18 after latest Tabs/Table hardening, with dry-run tarballs still publishable.
+- Release-gate hardening: `release:gate` now includes `storybook:test:ci` so publish checks always include Storybook interaction regression.
 - Dropdown unit focus-policy branch: added explicit outside-target focus retention assertion so pointer dismiss cannot regress into trigger focus theft.
 - Table empty-state sort coverage: sortable headers now disable when data is empty, with unit + Storybook play assertions to prevent no-op sort telemetry.
 - Tabs manual keyboard coverage: `Home/End` now has explicit unit + Storybook play assertions confirming focus movement does not activate panel until `Enter/Space`.

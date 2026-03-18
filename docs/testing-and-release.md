@@ -129,4 +129,5 @@ pnpm release:gate
 This runs:
 1. `pnpm verify`
 2. `pnpm demo:e2e`
-3. `pnpm release:dry-run`
+3. `pnpm storybook:test:ci`
+4. `pnpm release:dry-run`
