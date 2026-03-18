@@ -115,6 +115,7 @@ function App() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [toastOpen, setToastOpen] = React.useState(false);
+  const [silentToastOpen, setSilentToastOpen] = React.useState(false);
   const [blockingToastOpen, setBlockingToastOpen] = React.useState(false);
   const [stackedToastOpen, setStackedToastOpen] = React.useState({ first: false, second: false });
   const [paletteOpen, setPaletteOpen] = React.useState(false);
@@ -421,6 +422,9 @@ function App() {
             All queued jobs were synchronized.
           </Alert>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <Button variant="outline" onClick={() => setSilentToastOpen(true)}>
+              Trigger silent toast
+            </Button>
             <Button variant="outline" onClick={() => setBlockingToastOpen(true)}>
               Trigger blocking toast
             </Button>
@@ -643,6 +647,16 @@ function App() {
               event.preventDefault();
             }
           }}
+        />
+        <Toast
+          open={silentToastOpen}
+          onClose={() => setSilentToastOpen(false)}
+          title="Background sync update"
+          description="Artifact metadata refreshed in background."
+          duration={0}
+          live="off"
+          closeLabel="Dismiss silent toast"
+          position="bottom-right"
         />
         <Toast
           open={blockingToastOpen}

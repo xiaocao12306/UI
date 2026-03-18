@@ -502,6 +502,18 @@ test("dismisses toast with escape key", async ({ page }) => {
   await expect(toast).toBeHidden();
 });
 
+test("renders silent toast with aria-live off for passive updates", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Trigger silent toast" }).click();
+  const toast = page.getByRole("status", { name: "Background sync update" });
+  await expect(toast).toBeVisible();
+  await expect(toast).toHaveAttribute("aria-live", "off");
+
+  await page.getByRole("button", { name: "Dismiss silent toast" }).click();
+  await expect(toast).toBeHidden();
+});
+
 test("keeps prompt toast open while toast-level escape guard is enabled", async ({ page }) => {
   await page.goto("/");
 
