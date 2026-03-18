@@ -38,6 +38,18 @@ describe("Select", () => {
     expect(select).not.toHaveAttribute("data-invalid");
   });
 
+  it("preserves aria-invalid grammar/spelling tokens", () => {
+    render(
+      <Select aria-label="Spelling select" aria-invalid="spelling">
+        <option value="stable">Stable</option>
+      </Select>
+    );
+
+    const select = screen.getByRole("combobox", { name: "Spelling select" });
+    expect(select).toHaveAttribute("aria-invalid", "spelling");
+    expect(select).toHaveAttribute("data-invalid", "true");
+  });
+
   it("tracks focus state for visual feedback", () => {
     render(
       <Select aria-label="Focus state">

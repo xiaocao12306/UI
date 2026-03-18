@@ -1,5 +1,23 @@
 import { describe, expect, it } from "vitest";
-import { mergeAriaReferenceIds, resolveInvalidState, resolveRequiredState } from "./a11y";
+import { mergeAriaReferenceIds, resolveInvalidAria, resolveInvalidState, resolveRequiredState } from "./a11y";
+
+describe("resolveInvalidAria", () => {
+  it("prioritizes explicit invalid prop", () => {
+    expect(resolveInvalidAria(true, "false")).toBe(true);
+    expect(resolveInvalidAria(false, "true")).toBeUndefined();
+  });
+
+  it("preserves grammar/spelling tokens", () => {
+    expect(resolveInvalidAria(undefined, "grammar")).toBe("grammar");
+    expect(resolveInvalidAria(undefined, "spelling")).toBe("spelling");
+    expect(resolveInvalidAria(undefined, " Grammar ")).toBe("grammar");
+  });
+
+  it("normalizes false values to undefined", () => {
+    expect(resolveInvalidAria(undefined, false)).toBeUndefined();
+    expect(resolveInvalidAria(undefined, "false")).toBeUndefined();
+  });
+});
 
 describe("resolveInvalidState", () => {
   it("prioritizes explicit invalid prop", () => {

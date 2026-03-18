@@ -60,6 +60,11 @@ describe("RadioGroup", () => {
     expect(screen.getByRole("radiogroup", { name: "Aria group" })).toHaveAttribute("aria-invalid", "true");
   });
 
+  it("preserves spelling invalid semantics from aria-invalid on the group", () => {
+    render(<RadioGroup name="Spelling group" aria-invalid="spelling" options={baseOptions} />);
+    expect(screen.getByRole("radiogroup", { name: "Spelling group" })).toHaveAttribute("aria-invalid", "spelling");
+  });
+
   it("treats aria-invalid=false as valid", () => {
     render(<RadioGroup name="Valid group" aria-invalid="false" options={baseOptions} />);
     expect(screen.getByRole("radiogroup", { name: "Valid group" })).not.toHaveAttribute("aria-invalid");

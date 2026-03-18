@@ -1,5 +1,5 @@
 import * as React from "react";
-import { resolveInvalidState } from "./a11y";
+import { resolveInvalidAria } from "./a11y";
 
 export type SwitchProps = Omit<React.ComponentPropsWithoutRef<"button">, "children" | "role" | "onChange"> & {
   checked?: boolean;
@@ -38,7 +38,8 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
   const [focused, setFocused] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
   const [pressed, setPressed] = React.useState(false);
-  const isInvalid = resolveInvalidState(invalid, ariaInvalid);
+  const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
+  const isInvalid = resolvedInvalidAria !== undefined;
 
   const descriptionId = React.useId();
   const labelId = React.useId();
@@ -85,7 +86,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       type={type ?? "button"}
       role="switch"
       aria-checked={currentChecked}
-      aria-invalid={isInvalid || undefined}
+      aria-invalid={resolvedInvalidAria}
       aria-disabled={disabled || undefined}
       aria-describedby={describedBy}
       aria-labelledby={labelledBy}

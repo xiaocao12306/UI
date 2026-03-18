@@ -24,6 +24,14 @@ describe("Textarea", () => {
     expect(textarea).not.toHaveAttribute("data-invalid");
   });
 
+  it("preserves aria-invalid grammar token", () => {
+    render(<Textarea aria-label="Grammar note" aria-invalid="grammar" />);
+    const textarea = screen.getByRole("textbox", { name: "Grammar note" });
+
+    expect(textarea).toHaveAttribute("aria-invalid", "grammar");
+    expect(textarea).toHaveAttribute("data-invalid", "true");
+  });
+
   it("tracks focus state for visual feedback", () => {
     render(<Textarea aria-label="Description" />);
     const textarea = screen.getByRole("textbox", { name: "Description" });

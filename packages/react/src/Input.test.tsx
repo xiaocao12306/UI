@@ -28,7 +28,7 @@ describe("Input", () => {
     render(<Input aria-label="Commit message" aria-invalid="grammar" />);
     const input = screen.getByRole("textbox", { name: "Commit message" });
 
-    expect(input).toHaveAttribute("aria-invalid", "true");
+    expect(input).toHaveAttribute("aria-invalid", "grammar");
     expect(input).toHaveAttribute("data-invalid", "true");
   });
 

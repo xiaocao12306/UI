@@ -66,6 +66,16 @@ describe("FormField", () => {
     expect(screen.getByRole("textbox", { name: "Existing invalid" })).toHaveAttribute("aria-invalid", "true");
   });
 
+  it("preserves child grammar/spelling invalid token when no field error exists", () => {
+    render(
+      <FormField label="Grammar invalid">
+        <Input aria-invalid="grammar" />
+      </FormField>
+    );
+
+    expect(screen.getByRole("textbox", { name: "Grammar invalid" })).toHaveAttribute("aria-invalid", "grammar");
+  });
+
   it("merges child aria-describedby with field hints", () => {
     render(
       <FormField label="Deployment window" description="Use local timezone.">

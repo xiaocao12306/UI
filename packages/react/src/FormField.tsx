@@ -1,5 +1,5 @@
 import * as React from "react";
-import { mergeAriaReferenceIds, resolveInvalidState, resolveRequiredState } from "./a11y";
+import { mergeAriaReferenceIds, resolveInvalidAria, resolveRequiredState } from "./a11y";
 
 export type FormFieldProps = {
   label: React.ReactNode;
@@ -31,7 +31,9 @@ export function FormField({ label, htmlFor, description, error, required, disabl
     childProps?.["aria-required"] as React.AriaAttributes["aria-required"] | undefined
   );
   const mergedRequired = Boolean(required || childRequired);
-  const mergedInvalid = isInvalid || resolveInvalidState(undefined, childInvalid);
+  const childInvalidAria = resolveInvalidAria(undefined, childInvalid);
+  const mergedInvalidAria = isInvalid ? true : childInvalidAria;
+  const mergedInvalid = mergedInvalidAria !== undefined;
   const mergedDescribedBy = mergeAriaReferenceIds(childDescribedBy, description ? describedById : undefined, error ? errorId : undefined);
   const mergedErrorMessage = mergeAriaReferenceIds(childErrorMessage, error ? errorId : undefined);
 
@@ -41,7 +43,7 @@ export function FormField({ label, htmlFor, description, error, required, disabl
           id: controlId,
           "aria-describedby": mergedDescribedBy,
           "aria-errormessage": mergedErrorMessage,
-          "aria-invalid": mergedInvalid || undefined,
+          "aria-invalid": mergedInvalidAria,
           "aria-required": mergedRequired || undefined,
           required: mergedRequired || undefined,
           disabled: disabled || childProps?.disabled

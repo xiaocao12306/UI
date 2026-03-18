@@ -1,5 +1,5 @@
 import * as React from "react";
-import { resolveInvalidState } from "./a11y";
+import { resolveInvalidAria } from "./a11y";
 
 export type CheckboxProps = Omit<React.ComponentPropsWithoutRef<"input">, "type"> & {
   label?: React.ReactNode;
@@ -15,7 +15,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
   const [focused, setFocused] = React.useState(false);
   const localRef = React.useRef<HTMLInputElement | null>(null);
   const descriptionId = React.useId();
-  const isInvalid = resolveInvalidState(invalid, ariaInvalid);
+  const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
+  const isInvalid = resolvedInvalidAria !== undefined;
   const describedBy = [props["aria-describedby"], description ? descriptionId : undefined].filter(Boolean).join(" ") || undefined;
 
   React.useEffect(() => {
@@ -54,7 +55,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
         ref={assignRef}
         type="checkbox"
         disabled={disabled}
-        aria-invalid={isInvalid || undefined}
+        aria-invalid={resolvedInvalidAria}
         aria-checked={indeterminate ? "mixed" : props["aria-checked"]}
         aria-describedby={describedBy}
         data-focused={focused ? "true" : undefined}

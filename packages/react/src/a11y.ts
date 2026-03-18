@@ -3,9 +3,12 @@ import type * as React from "react";
 type AriaInvalidValue = React.AriaAttributes["aria-invalid"];
 type AriaRequiredValue = React.AriaAttributes["aria-required"];
 
-export function resolveInvalidState(invalid: boolean | undefined, ariaInvalid: AriaInvalidValue): boolean {
+export function resolveInvalidAria(
+  invalid: boolean | undefined,
+  ariaInvalid: AriaInvalidValue
+): true | "grammar" | "spelling" | undefined {
   if (typeof invalid === "boolean") {
-    return invalid;
+    return invalid ? true : undefined;
   }
 
   if (ariaInvalid === true) {
@@ -14,10 +17,22 @@ export function resolveInvalidState(invalid: boolean | undefined, ariaInvalid: A
 
   if (typeof ariaInvalid === "string") {
     const normalized = ariaInvalid.trim().toLowerCase();
-    return normalized === "true" || normalized === "grammar" || normalized === "spelling";
+    if (normalized === "true") {
+      return true;
+    }
+    if (normalized === "grammar") {
+      return "grammar";
+    }
+    if (normalized === "spelling") {
+      return "spelling";
+    }
   }
 
-  return false;
+  return undefined;
+}
+
+export function resolveInvalidState(invalid: boolean | undefined, ariaInvalid: AriaInvalidValue): boolean {
+  return resolveInvalidAria(invalid, ariaInvalid) !== undefined;
 }
 
 export function resolveRequiredState(required: boolean | undefined, ariaRequired: AriaRequiredValue): boolean {

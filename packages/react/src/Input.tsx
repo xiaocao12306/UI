@@ -1,6 +1,6 @@
 import * as React from "react";
 import { fieldBaseStyle } from "./FieldStyles";
-import { resolveInvalidState } from "./a11y";
+import { resolveInvalidAria } from "./a11y";
 
 export type InputProps = React.ComponentPropsWithoutRef<"input"> & {
   invalid?: boolean;
@@ -23,13 +23,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
 ) {
   const [focused, setFocused] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
-  const isInvalid = resolveInvalidState(invalid, ariaInvalid);
+  const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
+  const isInvalid = resolvedInvalidAria !== undefined;
 
   return (
     <input
       ref={ref}
       disabled={disabled}
-      aria-invalid={isInvalid || undefined}
+      aria-invalid={resolvedInvalidAria}
       data-invalid={isInvalid ? "true" : undefined}
       data-focused={focused ? "true" : undefined}
       style={{

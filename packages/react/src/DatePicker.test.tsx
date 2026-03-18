@@ -74,6 +74,12 @@ describe("DatePicker", () => {
     expect(screen.getByLabelText("Release date")).toHaveAttribute("aria-invalid", "true");
   });
 
+  it("preserves grammar/spelling invalid semantics from aria-invalid", () => {
+    render(<DatePicker aria-label="Release date" aria-invalid="grammar" onValueChange={() => {}} />);
+
+    expect(screen.getByLabelText("Release date")).toHaveAttribute("aria-invalid", "grammar");
+  });
+
   it("treats aria-invalid=false as valid", () => {
     render(<DatePicker aria-label="Release date" aria-invalid="false" onValueChange={() => {}} />);
 

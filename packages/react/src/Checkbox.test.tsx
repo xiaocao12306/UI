@@ -19,6 +19,11 @@ describe("Checkbox", () => {
     expect(screen.getByRole("checkbox", { name: "Policy" })).toHaveAttribute("aria-invalid", "true");
   });
 
+  it("preserves grammar invalid semantics from aria-invalid", () => {
+    render(<Checkbox label="Policy" aria-label="Policy" aria-invalid="grammar" />);
+    expect(screen.getByRole("checkbox", { name: "Policy" })).toHaveAttribute("aria-invalid", "grammar");
+  });
+
   it("treats aria-invalid=false as valid", () => {
     render(<Checkbox label="Policy" aria-label="Policy" aria-invalid="false" />);
     expect(screen.getByRole("checkbox", { name: "Policy" })).not.toHaveAttribute("aria-invalid");

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { resolveInvalidState } from "./a11y";
+import { resolveInvalidAria } from "./a11y";
 
 export type RadioOption = {
   label: React.ReactNode;
@@ -35,7 +35,8 @@ export function RadioGroup({
 }: RadioGroupProps) {
   const [internalValue, setInternalValue] = React.useState(defaultValue);
   const currentValue = value ?? internalValue;
-  const isInvalid = resolveInvalidState(invalid, ariaInvalid);
+  const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
+  const isInvalid = resolvedInvalidAria !== undefined;
 
   const handleChange = (nextValue: string, optionDisabled: boolean | undefined) => {
     if (disabled || optionDisabled) {
@@ -56,7 +57,7 @@ export function RadioGroup({
       }}
       role="radiogroup"
       aria-label={ariaLabel ?? name}
-      aria-invalid={isInvalid || undefined}
+      aria-invalid={resolvedInvalidAria}
     >
       {options.map((option) => (
         <label

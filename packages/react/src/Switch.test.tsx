@@ -66,6 +66,11 @@ describe("Switch", () => {
     expect(screen.getByRole("switch", { name: "Aria invalid switch" })).toHaveAttribute("aria-invalid", "true");
   });
 
+  it("preserves grammar invalid semantics from aria-invalid", () => {
+    render(<Switch label="Grammar switch" aria-invalid="grammar" />);
+    expect(screen.getByRole("switch", { name: "Grammar switch" })).toHaveAttribute("aria-invalid", "grammar");
+  });
+
   it("treats aria-invalid=false as valid", () => {
     render(<Switch label="Valid switch" aria-invalid="false" />);
     expect(screen.getByRole("switch", { name: "Valid switch" })).not.toHaveAttribute("aria-invalid");
