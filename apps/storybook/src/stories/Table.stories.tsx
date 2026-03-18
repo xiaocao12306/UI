@@ -96,6 +96,21 @@ export const EmptyState: Story = {
   }
 };
 
+export const SingleRowSortDisabled: Story = {
+  render: () => (
+    <div style={{ width: 780 }}>
+      <Table
+        columns={columns}
+        data={[{ id: "BTN-102", component: "Button", owner: "Design System", status: "ready" }]}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: "Issue sort ascending" })).toBeDisabled();
+  }
+};
+
 export const LoadingState: Story = {
   render: () => (
     <div style={{ width: 780 }}>

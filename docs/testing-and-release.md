@@ -87,7 +87,7 @@ Latest release gate run:
 - result: passed (`verify` + `demo:e2e` + `storybook:test:ci` + `release:dry-run`)
 - notes:
   - demo E2E total now `52` checks
-  - Storybook interaction suites refreshed to `32/32`, tests `168/168` all passed after latest Dropdown + CommandPalette close-reason telemetry coverage
+  - Storybook interaction suites refreshed to `32/32`, tests `169/169` all passed after latest Dropdown + CommandPalette close-reason telemetry coverage
   - primitives regression: `pnpm --filter @aurora-ui/primitives exec vitest run src/DismissableLayer.test.tsx` passed after IME Escape + Escape preemption dismiss-guard hardening
   - react overlay regressions: `pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/Drawer.test.tsx` passed after IME Escape guard coverage expansion
   - react preemption regressions: `pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/CommandPalette.test.tsx` passed after Escape-preemption callback-skip coverage expansion

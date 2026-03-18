@@ -95,6 +95,27 @@ describe("Table", () => {
     expect(onSortChange).not.toHaveBeenCalled();
   });
 
+  it("disables sortable controls when only one row is available", () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={[{ name: "Button", status: "Stable" }]}
+        onSortChange={onSortChange}
+      />
+    );
+
+    const nameSort = screen.getByRole("button", { name: "Name sort ascending" });
+    expect(nameSort).toBeDisabled();
+
+    fireEvent.click(nameSort);
+    expect(onSortChange).not.toHaveBeenCalled();
+  });
+
   it("renders loading state with aria-busy and suppresses table rows", () => {
     render(
       <Table

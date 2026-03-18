@@ -195,7 +195,7 @@ export function Table<T>({
               const headerLabel = typeof column.header === "string" ? column.header : key;
               const nextDirection: TableSortDirection = sorted === "asc" ? "desc" : "asc";
               const sortAriaLabel = getSortAriaLabel({ columnKey: key, columnHeader: headerLabel, nextDirection });
-              const sortDisabled = loading || sortedEntries.length === 0;
+              const sortDisabled = loading || sortedEntries.length <= 1;
               const activateSort = () => {
                 if (sortDisabled) {
                   return;

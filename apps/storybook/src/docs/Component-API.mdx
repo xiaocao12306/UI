@@ -367,6 +367,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `getSortAriaLabel` | `({ columnKey, columnHeader, nextDirection }) => string` | Localize sortable-header aria labels without changing sorting behavior. |
 | `getSortStatusText` | `({ columnKey, columnHeader, direction }) => string` | Customize live-region narration for active sort state changes; defaults to `Sorted by ...`. |
 | `onSortChange` | `(key, direction) => void` | Useful for telemetry and analytics. |
+| sort interaction guard | loading/empty/single-row auto-disabled | Sort buttons disable automatically when sorting would be no-op (`loading`, zero rows, or one row). |
 | sortable header keyboard | `Enter` / `Space` / legacy `Spacebar` | Sort buttons support pointer + keyboard activation with the same direction toggling semantics across browser key-value variants. |
 | `aria-sort` exposure | active sorted header only | Unsorted headers (including sortable ones) omit `aria-sort`, reducing screen-reader noise and matching ARIA table guidance. |
 
@@ -374,6 +375,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={TableStories.LocalizedSortLabels} />
 <Canvas of={TableStories.LoadingState} />
 <Canvas of={TableStories.EmptyState} />
+<Canvas of={TableStories.SingleRowSortDisabled} />
 <Canvas of={TableStories.SourceIndexRowKeyStability} />
 <Canvas of={TableStories.RenderIndexSemantics} />
 <Canvas of={TableStories.AccessibleNameWithoutCaption} />
