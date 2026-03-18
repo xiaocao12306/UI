@@ -42,6 +42,11 @@ describe("Toast", () => {
     expect(screen.getByRole("status", { name: "Background sync" })).toHaveAttribute("aria-live", "off");
   });
 
+  it("allows live override while preserving danger alert role", () => {
+    render(<Toast open tone="danger" title="Incident" live="polite" duration={0} />);
+    expect(screen.getByRole("alert", { name: "Incident" })).toHaveAttribute("aria-live", "polite");
+  });
+
   it("supports escape to close", () => {
     const onOpenChange = vi.fn();
     render(<Toast open title="Escapable" onOpenChange={onOpenChange} />);

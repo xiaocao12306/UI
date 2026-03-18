@@ -263,6 +263,7 @@
   - Demo CommandPalette Escape 查询验收（新增运行时开关 + Playwright 回归，锁定首次 Escape 清空查询、二次 Escape 关闭）
   - Demo Toast 静默通知验收（新增 `live=\"off\"` 场景 + Playwright 回归，验证被动更新降噪语义）
   - Demo Toast 焦点优先级验收（新增堆叠通知聚焦后 Escape 回归，锁定“当前操作通知优先关闭”行为）
+  - Toast 播报覆盖补齐（新增 `live` 覆盖 `danger` 默认播报强度回归，保持 `role=\"alert\"` 语义）
   - DismissableLayer 栈语义收口（嵌套 overlay 时仅顶层响应 Escape/外部点击，避免单次事件联动关闭多层）
   - Dialog 嵌套 overlay 验收补齐（Dropdown in Dialog 的 Escape 分层关闭单测 + Storybook 交互场景）
   - Drawer 嵌套 overlay 验收补齐（Dropdown in Drawer 的 Escape 分层关闭单测 + Storybook 交互场景）
