@@ -240,6 +240,7 @@
 - Demo drawer close-reason parity: added `drawer-close-reason-demo` telemetry indicator and Playwright regression for `close-button` / `escape-key` / `outside-pointer` branches.
 - Demo tabs telemetry parity: added `tabs-change-telemetry` indicator and Playwright regression to lock active tab value updates.
 - Demo table sort telemetry parity: added `table-sort-telemetry` indicator and Playwright regression for click/keyboard sort-path updates.
+- Component recipes telemetry parity: `docs/component-recipes.md` now includes reusable Overlay close-reason and Tabs/Table telemetry templates for direct product integration.
 - Storybook docs import guard: added `pnpm storybook:docs:check` and wired it into `storybook:test:ci` so missing `*Stories` imports in MDX fail fast before visual/interaction regression runs.
 - Storybook static metadata hygiene: `build-storybook` now normalizes `storybook-static/project.json` volatile timestamps (`generatedAt`, `userSince`) to stable values, reducing no-op static bundle churn in review diffs.
 - Dialog/Drawer IME Escape coverage: added component-level regressions to ensure composition-phase Escape does not emit close events while plain Escape still dismisses as expected.

@@ -265,7 +265,7 @@
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
   - Release Gate 证据刷新（2026-03-18：demo E2E `59` + Storybook `172/172` + dry-run `react` unpacked `~316.7 kB`）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
-  - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
+  - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板 + Overlay/Tabs/Table telemetry 模板）
   - CommandPalette Escape 查询收口（新增 `clearQueryOnEscape` 默认行为：首次 Escape 清空 query，二次 Escape 再触发关闭）
   - Table 空态语义收口（`emptyContent` 改为 `role=\"status\"` polite 播报，增强无障碍反馈一致性）
   - Table 单行排序收口（数据量 `<=1` 时自动禁用 sortable header，避免无效排序交互与冗余遥测）

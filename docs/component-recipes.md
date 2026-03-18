@@ -257,3 +257,105 @@ export function SilentBackgroundToast() {
   );
 }
 ```
+
+## 11) Overlay Close-Reason Telemetry Panel
+```tsx
+import * as React from "react";
+import { Button, CommandPalette, Dialog, Drawer, Popover, Toast } from "@aurora-ui/react";
+
+export function OverlayTelemetryPanel() {
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [paletteOpen, setPaletteOpen] = React.useState(false);
+  const [toastOpen, setToastOpen] = React.useState(false);
+  const [dialogReason, setDialogReason] = React.useState("none");
+  const [drawerReason, setDrawerReason] = React.useState("none");
+  const [paletteReason, setPaletteReason] = React.useState("none");
+  const [popoverReason, setPopoverReason] = React.useState("none");
+  const [toastReason, setToastReason] = React.useState("none");
+
+  return (
+    <div style={{ display: "grid", gap: 10 }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <Button onClick={() => setDialogOpen(true)}>Dialog</Button>
+        <Button variant="outline" onClick={() => setDrawerOpen(true)}>Drawer</Button>
+        <Button variant="ghost" onClick={() => setPaletteOpen(true)}>Command Palette</Button>
+        <Button variant="outline" onClick={() => setToastOpen(true)}>Toast</Button>
+        <Popover triggerLabel="Popover" onCloseReason={setPopoverReason}>
+          <p style={{ margin: 0 }}>Popover close-reason demo.</p>
+        </Popover>
+      </div>
+
+      <pre style={{ margin: 0 }}>{JSON.stringify({ dialogReason, drawerReason, paletteReason, popoverReason, toastReason }, null, 2)}</pre>
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen} onCloseReason={setDialogReason} title="Dialog telemetry">
+        <p style={{ margin: 0 }}>Close me via button / Escape / outside pointer.</p>
+      </Dialog>
+      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} onCloseReason={setDrawerReason} title="Drawer telemetry">
+        <p style={{ margin: 0 }}>Close me via button / Escape / outside pointer.</p>
+      </Drawer>
+      <CommandPalette
+        open={paletteOpen}
+        onOpenChange={setPaletteOpen}
+        onCloseReason={setPaletteReason}
+        commands={[{ key: "noop", label: "No-op command" }]}
+      />
+      <Toast
+        open={toastOpen}
+        onClose={() => setToastOpen(false)}
+        onCloseReason={setToastReason}
+        title="Toast telemetry"
+        description="Observe close-button / Escape / timeout."
+        duration={1200}
+      />
+    </div>
+  );
+}
+```
+
+## 12) Tabs + Table Telemetry Binding
+```tsx
+import * as React from "react";
+import { Table, Tabs, type TableSortDirection } from "@aurora-ui/react";
+
+const columns = [
+  { key: "component", header: "Component", sortable: true, rowHeader: true },
+  { key: "status", header: "Status", sortable: true }
+];
+
+const rows = [
+  { component: "Button", status: "stable" },
+  { component: "Dialog", status: "stable" },
+  { component: "StreamingCodeBlock", status: "beta" }
+];
+
+export function DataTelemetry() {
+  const [activeTab, setActiveTab] = React.useState("overview");
+  const [sortState, setSortState] = React.useState("component:asc");
+
+  return (
+    <div style={{ display: "grid", gap: 10 }}>
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        items={[
+          { key: "overview", label: "Overview", content: <p style={{ margin: 0 }}>Overview panel.</p> },
+          { key: "activity", label: "Activity", content: <p style={{ margin: 0 }}>Activity panel.</p> },
+          { key: "settings", label: "Settings", content: <p style={{ margin: 0 }}>Settings panel.</p> }
+        ]}
+      />
+
+      <Table
+        caption="Readiness"
+        columns={columns}
+        data={rows}
+        defaultSortKey="component"
+        onSortChange={(key, direction: TableSortDirection) => setSortState(`${key}:${direction}`)}
+      />
+
+      <p style={{ margin: 0 }}>activeTab={activeTab}</p>
+      <p style={{ margin: 0 }}>sortState={sortState}</p>
+    </div>
+  );
+}
+```
