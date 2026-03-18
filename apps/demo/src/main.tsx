@@ -967,6 +967,10 @@ function App() {
               {paletteCloseReason}
             </strong>
           </p>
+          <p style={mutedBodyStyle}>
+            Keyboard tip: use <kbd style={keyboardHintStyle}>PageDown</kbd> /{" "}
+            <kbd style={keyboardHintStyle}>PageUp</kbd> to jump across actionable commands.
+          </p>
           </Section>
 
           <Section id="ai-components" title="AI Components" description="Prompt, reasoning, and streaming response building blocks.">

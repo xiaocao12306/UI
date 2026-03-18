@@ -475,6 +475,25 @@ test("does not close command palette when disabled command is clicked", async ({
   await expect(palette.getByRole("status")).toContainText('No enabled commands match "archive".');
 });
 
+test("jumps command palette active option with PageDown/PageUp while skipping disabled commands", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  const searchInput = palette.getByRole("combobox", { name: "Search commands" });
+  await expect(palette).toBeVisible();
+
+  await expect(palette.getByRole("option", { name: "Open Settings" })).toHaveAttribute("aria-selected", "true");
+  await searchInput.press("PageDown");
+  await expect(palette.getByRole("option", { name: "Run Tests" })).toHaveAttribute("aria-selected", "true");
+  await expect(palette.getByRole("option", { name: "Archive Workspace" })).toHaveAttribute("aria-selected", "false");
+
+  await searchInput.press("PageUp");
+  await expect(palette.getByRole("option", { name: "Open Settings" })).toHaveAttribute("aria-selected", "true");
+});
+
 test("keeps command palette open when Escape is preempted by a global handler", async ({
   page
 }) => {
