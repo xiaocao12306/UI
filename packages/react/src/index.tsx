@@ -49,7 +49,7 @@ export { Alert } from "./Alert";
 export type { AlertProps, AlertTone } from "./Alert";
 
 export { Toast } from "./Toast";
-export type { ToastProps } from "./Toast";
+export type { ToastCloseReason, ToastProps } from "./Toast";
 
 export { Progress } from "./Progress";
 export type { ProgressProps } from "./Progress";

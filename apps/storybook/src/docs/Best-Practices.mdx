@@ -141,10 +141,12 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Ignore Escape dismissal while IME composition is active so CJK text confirmation inside toast actions does not close the notification unexpectedly.
 - For stacked notifications, rely on Escape handling that dismisses one toast per key press, prioritizing the latest or most recently interacted toast.
 - Verify timer pause behavior for both pointer hover and keyboard focus when `pauseOnHover` is enabled.
+- Use `onCloseReason` for deterministic telemetry (`close-button` / `escape-key` / `timeout`) instead of inferring dismiss origin from side effects.
 - Provide `ariaLabel` when toast title is icon-only or otherwise not plain text.
 - For high-frequency passive updates, set `live="off"` to reduce assistive-tech interruption while keeping visual toast context.
 
 <Canvas of={ToastStories.ActionRequired} />
+<Canvas of={ToastStories.CloseReasonTelemetry} />
 <Canvas of={ToastStories.EscapeStackOrder} />
 <Canvas of={ToastStories.FocusedToastEscapesFirst} />
 <Canvas of={ToastStories.EscapePreemptedByGlobalHandler} />

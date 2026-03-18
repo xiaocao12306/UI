@@ -124,6 +124,47 @@ export const ActionRequired: Story = {
   }
 };
 
+function CloseReasonTelemetryDemo() {
+  const [open, setOpen] = React.useState(true);
+  const [lastReason, setLastReason] = React.useState("none");
+
+  return (
+    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last close reason:{" "}
+        <strong data-testid="toast-close-reason" style={{ color: "var(--aurora-text-primary)" }}>
+          {lastReason}
+        </strong>
+      </p>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Reopen Toast
+      </Button>
+      <Toast
+        open={open}
+        onOpenChange={setOpen}
+        duration={0}
+        title="Close reason telemetry"
+        description="Track whether this toast closed from click, Escape, or timeout."
+        onCloseReason={(reason) => setLastReason(reason)}
+      />
+    </div>
+  );
+}
+
+export const CloseReasonTelemetry: Story = {
+  render: () => <CloseReasonTelemetryDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("none");
+    await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));
+    await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("close-button");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Reopen Toast" }));
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("escape-key");
+  }
+};
+
 function EscapeStackOrderDemo() {
   const [openState, setOpenState] = React.useState({ first: true, second: true });
 

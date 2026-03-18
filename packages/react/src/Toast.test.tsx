@@ -6,8 +6,9 @@ import { Toast } from "./Toast";
 describe("Toast", () => {
   it("renders live region and closes via close button", () => {
     const onClose = vi.fn();
+    const onCloseReason = vi.fn();
 
-    render(<Toast open title="Saved" description="Changes were persisted" onClose={onClose} />);
+    render(<Toast open title="Saved" description="Changes were persisted" onClose={onClose} onCloseReason={onCloseReason} />);
 
     const toast = screen.getByRole("status");
     expect(toast).toHaveAttribute("aria-live", "polite");
@@ -17,6 +18,7 @@ describe("Toast", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Close toast" }));
     expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenCalledWith("close-button");
   });
 
   it("supports explicit live-region label override", () => {
@@ -49,10 +51,12 @@ describe("Toast", () => {
 
   it("supports escape to close", () => {
     const onOpenChange = vi.fn();
-    render(<Toast open title="Escapable" onOpenChange={onOpenChange} />);
+    const onCloseReason = vi.fn();
+    render(<Toast open title="Escapable" onOpenChange={onOpenChange} onCloseReason={onCloseReason} />);
 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onCloseReason).toHaveBeenCalledWith("escape-key");
   });
 
   it("calls onEscapeKeyDown before closing", () => {
@@ -93,10 +97,11 @@ describe("Toast", () => {
   it("auto dismisses when duration elapses", () => {
     vi.useFakeTimers();
     const onClose = vi.fn();
+    const onCloseReason = vi.fn();
     const onOpenChange = vi.fn();
 
     try {
-      render(<Toast open title="Timed" duration={1200} onClose={onClose} onOpenChange={onOpenChange} />);
+      render(<Toast open title="Timed" duration={1200} onClose={onClose} onCloseReason={onCloseReason} onOpenChange={onOpenChange} />);
 
       act(() => {
         vi.advanceTimersByTime(1199);
@@ -109,6 +114,7 @@ describe("Toast", () => {
       });
       expect(onClose).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onCloseReason).toHaveBeenCalledWith("timeout");
     } finally {
       vi.useRealTimers();
     }

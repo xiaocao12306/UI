@@ -2,6 +2,7 @@ import * as React from "react";
 
 export type ToastTone = "info" | "success" | "warning" | "danger";
 export type ToastPosition = "bottom-right" | "bottom-left" | "top-right" | "top-left";
+export type ToastCloseReason = "close-button" | "escape-key" | "timeout";
 
 export type ToastProps = {
   open: boolean;
@@ -18,6 +19,7 @@ export type ToastProps = {
   ariaLabel?: string;
   position?: ToastPosition;
   onClose?: () => void;
+  onCloseReason?: (reason: ToastCloseReason) => void;
   onOpenChange?: (open: boolean) => void;
 };
 
@@ -95,6 +97,7 @@ export function Toast({
   ariaLabel,
   position = "bottom-right",
   onClose,
+  onCloseReason,
   onOpenChange
 }: ToastProps) {
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -121,10 +124,26 @@ export function Toast({
     }
   }, [open]);
 
-  const close = React.useCallback(() => {
-    onClose?.();
-    onOpenChange?.(false);
-  }, [onClose, onOpenChange]);
+  const close = React.useCallback(
+    (reason: ToastCloseReason) => {
+      onCloseReason?.(reason);
+      onClose?.();
+      onOpenChange?.(false);
+    },
+    [onClose, onCloseReason, onOpenChange]
+  );
+
+  const closeByButton = React.useCallback(() => {
+    close("close-button");
+  }, [close]);
+
+  const closeByEscape = React.useCallback(() => {
+    close("escape-key");
+  }, [close]);
+
+  const closeByTimeout = React.useCallback(() => {
+    close("timeout");
+  }, [close]);
 
   const promoteToTop = React.useCallback(() => {
     const element = rootRef.current;
@@ -140,13 +159,13 @@ export function Toast({
     }
 
     const timer = window.setTimeout(() => {
-      close();
+      closeByTimeout();
     }, duration);
 
     return () => {
       window.clearTimeout(timer);
     };
-  }, [close, duration, open, pauseOnHover, paused]);
+  }, [closeByTimeout, duration, open, pauseOnHover, paused]);
 
   React.useEffect(() => {
     if (!open || !closeOnEscape) {
@@ -177,14 +196,14 @@ export function Toast({
       }
 
       event.preventDefault();
-      close();
+      closeByEscape();
     };
 
     document.addEventListener("keydown", onKeyDown);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [close, closeOnEscape, onEscapeKeyDown, open]);
+  }, [closeByEscape, closeOnEscape, onEscapeKeyDown, open]);
 
   if (!open) {
     return null;
@@ -245,7 +264,7 @@ export function Toast({
         </strong>
         <button
           type="button"
-          onClick={close}
+          onClick={closeByButton}
           aria-label={closeLabel}
           style={{
             borderRadius: "var(--aurora-radius-sm)",
