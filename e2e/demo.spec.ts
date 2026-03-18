@@ -98,19 +98,26 @@ test("reports dialog close reason telemetry for close button, Escape, and outsid
 
   const trigger = page.getByRole("button", { name: "Open Dialog" });
   const telemetry = page.getByTestId("dialog-close-reason-demo");
+  const dialog = page.getByRole("dialog").filter({ hasText: "Dialog Example" });
 
   await expect(telemetry).toHaveText("none");
 
   await trigger.click();
+  await expect(dialog).toBeVisible();
   await page.getByRole("button", { name: "Close dialog" }).click();
+  await expect(dialog).toBeHidden();
   await expect(telemetry).toHaveText("close-button");
 
   await trigger.click();
+  await expect(dialog).toBeVisible();
   await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
   await expect(telemetry).toHaveText("escape-key");
 
   await trigger.click();
+  await expect(dialog).toBeVisible();
   await page.mouse.click(8, 8);
+  await expect(dialog).toBeHidden();
   await expect(telemetry).toHaveText("outside-pointer");
 });
 
@@ -164,19 +171,26 @@ test("reports drawer close reason telemetry for close button, Escape, and outsid
 
   const trigger = page.getByRole("button", { name: "Open Drawer" });
   const telemetry = page.getByTestId("drawer-close-reason-demo");
+  const drawerDialog = page.getByRole("dialog", { name: "Drawer Example" });
 
   await expect(telemetry).toHaveText("none");
 
   await trigger.click();
+  await expect(drawerDialog).toBeVisible();
   await page.getByRole("button", { name: "Close drawer" }).click();
+  await expect(drawerDialog).toBeHidden();
   await expect(telemetry).toHaveText("close-button");
 
   await trigger.click();
+  await expect(drawerDialog).toBeVisible();
   await page.keyboard.press("Escape");
+  await expect(drawerDialog).toBeHidden();
   await expect(telemetry).toHaveText("escape-key");
 
   await trigger.click();
+  await expect(drawerDialog).toBeVisible();
   await page.mouse.click(8, 8);
+  await expect(drawerDialog).toBeHidden();
   await expect(telemetry).toHaveText("outside-pointer");
 });
 
@@ -222,19 +236,27 @@ test("reports command palette close reason telemetry for all dismiss paths", asy
   await expect(telemetry).toHaveText("none");
 
   await trigger.click();
+  await expect(paletteDialog).toBeVisible();
   await page.keyboard.press("Escape");
+  await expect(paletteDialog).toBeHidden();
   await expect(telemetry).toHaveText("escape-key");
 
   await trigger.click();
+  await expect(paletteDialog).toBeVisible();
   await paletteDialog.getByRole("option", { name: "Create Project" }).click();
+  await expect(paletteDialog).toBeHidden();
   await expect(telemetry).toHaveText("item-select");
 
   await trigger.click();
+  await expect(paletteDialog).toBeVisible();
   await paletteDialog.getByRole("button", { name: "Close dialog" }).click();
+  await expect(paletteDialog).toBeHidden();
   await expect(telemetry).toHaveText("close-button");
 
   await trigger.click();
+  await expect(paletteDialog).toBeVisible();
   await page.mouse.click(8, 8);
+  await expect(paletteDialog).toBeHidden();
   await expect(telemetry).toHaveText("outside-pointer");
 });
 

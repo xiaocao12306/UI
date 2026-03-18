@@ -131,4 +131,4 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - 后续：若升级到 Node `20.19+` 或 `22.12+`，可按需评估迁移到 `@next/10.x`。
 - 日期：2026-03-18
 - 事项：`http-server` 在部分容器环境触发 `uv_interface_addresses` 系统错误，导致 `storybook:test:ci` 无法稳定起服
-- 处理：`apps/storybook` 的 `storybook:test:ci` 改为 `python3 -m http.server` 托管 `storybook-static`，消除 network interface 依赖抖动。
+- 处理：`apps/storybook` 的 `storybook:test:ci` 改为仓库内 `scripts/serve-storybook-static.mjs` 托管 `storybook-static`，消除对外部静态服务器实现差异的依赖并稳定容器环境起服行为。
