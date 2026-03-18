@@ -52,6 +52,45 @@ describe("Dialog", () => {
     expect(dialog).toHaveAttribute("aria-describedby", description.getAttribute("id"));
   });
 
+  it("constrains dialog height and enables scrollable content region", () => {
+    render(
+      <Dialog open onOpenChange={() => {}} title="Long content dialog">
+        <div style={{ height: 1200 }}>Long content</div>
+      </Dialog>
+    );
+
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toHaveStyle({ maxHeight: "calc(100vh - 32px)" });
+    const content = dialog.querySelector('[data-slot="dialog-content"]');
+    expect(content).not.toBeNull();
+    expect(content).toHaveStyle({ overflow: "auto" });
+  });
+
+  it("shows close-button focus ring only for focus-visible state", () => {
+    render(
+      <Dialog open onOpenChange={() => {}} title="Focus ring dialog">
+        <p>Body</p>
+      </Dialog>
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    const nativeMatches = closeButton.matches.bind(closeButton);
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        return true;
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.blur(closeButton);
+    expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+    matchesSpy.mockRestore();
+  });
+
   it("does not dismiss on escape when closeOnEscape is false", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();

@@ -46,6 +46,9 @@ export function Dialog({
 }: DialogProps) {
   const titleId = React.useId();
   const descriptionId = React.useId();
+  const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
+  const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
+  const closeButtonFocusIntentRef = React.useRef(true);
 
   const closeWithReason = React.useCallback(
     (reason: DialogCloseReason) => {
@@ -120,8 +123,10 @@ export function Dialog({
                 border: "1px solid var(--aurora-panel-border)",
                 background: "var(--aurora-panel-bg)",
                 boxShadow: "var(--aurora-panel-shadow)",
+                maxHeight: "calc(100vh - 32px)",
                 padding: 16,
                 display: "grid",
+                gridTemplateRows: "auto minmax(0, 1fr)",
                 gap: 12
               }}
             >
@@ -141,25 +146,61 @@ export function Dialog({
                     type="button"
                     onClick={() => closeWithReason("close-button")}
                     aria-label={closeLabel}
+                    onMouseEnter={() => {
+                      setCloseButtonHovered(true);
+                    }}
+                    onMouseLeave={() => {
+                      setCloseButtonHovered(false);
+                    }}
+                    onMouseDown={() => {
+                      closeButtonFocusIntentRef.current = false;
+                      setCloseButtonFocusVisible(false);
+                    }}
+                    onKeyDown={() => {
+                      closeButtonFocusIntentRef.current = true;
+                    }}
+                    onFocus={(event) => {
+                      setCloseButtonFocusVisible(resolveFocusVisibleState(event.currentTarget, closeButtonFocusIntentRef.current));
+                    }}
+                    onBlur={() => {
+                      setCloseButtonFocusVisible(false);
+                    }}
                     style={{
                       borderRadius: "var(--aurora-radius-sm)",
-                      border: "1px solid var(--aurora-border-default)",
-                      background: "var(--aurora-surface-elevated)",
-                      color: "var(--aurora-text-secondary)",
+                      border: closeButtonHovered ? "1px solid var(--aurora-border-strong)" : "1px solid var(--aurora-border-default)",
+                      background: closeButtonHovered
+                        ? "color-mix(in srgb, var(--aurora-surface-elevated) 78%, var(--aurora-surface-default))"
+                        : "var(--aurora-surface-elevated)",
+                      color: closeButtonHovered ? "var(--aurora-text-primary)" : "var(--aurora-text-secondary)",
+                      boxShadow: closeButtonFocusVisible
+                        ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 45%, transparent)"
+                        : "none",
                       width: 30,
                       height: 30,
-                      cursor: "pointer"
+                      cursor: "pointer",
+                      transition:
+                        "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
                     }}
                   >
                     ×
                   </button>
                 ) : null}
               </header>
-              <div>{children}</div>
+              <div data-slot="dialog-content" style={{ minHeight: 0, overflow: "auto", paddingRight: 2 }}>
+                {children}
+              </div>
             </section>
           </FocusScope>
         </DismissableLayer>
       </div>
     </Portal>
   );
+}
+
+function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {
+  try {
+    return target.matches(":focus-visible");
+  } catch {
+    return fallback;
+  }
 }

@@ -58,6 +58,7 @@
 - Table: fallback row key now uses source index (not sorted index) so row DOM/state remains stable across sort toggles.
 - Dropdown: typeahead now supports buffered multi-character matching, repeated-key cycling, and accent-normalized `textValue` search.
 - Dialog: close path now restores focus to the previously focused element by default, with `restoreFocus={false}` escape hatch.
+- Dialog overflow parity: modal surface now constrains max viewport height and enables inner content scrolling for long-copy flows.
 - CommandPalette focus model hardening: option nodes now stay out of tab order (`tabIndex=-1`) and preserve combobox focus on pointer selection for `aria-activedescendant` parity.
 - CommandPalette search hardening: `commands[].textValue` now supports non-string labels, and matching is accent-insensitive (`cafe` matches `Café`).
 - Table i18n hardening: `getSortAriaLabel` now enables localized sortable-header narration while preserving `aria-sort` behavior.
