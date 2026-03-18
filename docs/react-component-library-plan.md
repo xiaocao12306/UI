@@ -309,10 +309,10 @@
   - Pages 可观测性收口（Deploy 后将 Demo/Storybook 外链写入 `GITHUB_STEP_SUMMARY`）
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
   - Release Gate 复验（2026-03-19：修复 CommandPalette lint 与 Demo 标签冲突后，`release:gate:ci` 全链路恢复通过）
-  - Release Gate 复验（2026-03-19：完成 DismissableLayer 指针边界修复与 Demo 成品化后，`release:gate:ci` 全链路通过：demo E2E `60/60` + Storybook `174/174`）
+  - Release Gate 复验（2026-03-19：完成 DismissableLayer 指针边界修复与 Demo 成品化后，`release:gate:ci` 全链路通过：demo E2E `65/65` + Storybook `174/174`）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
-  - Release Gate 证据刷新（2026-03-18：demo E2E `60` + Storybook `174/174` + dry-run `react` unpacked `~318.9 kB`）
+  - Release Gate 证据刷新（2026-03-19：demo E2E `65` + Storybook `174/174` + dry-run `react` unpacked `342.6 kB`）
   - Release Dry-Run 证据刷新（2026-03-19：`release:dry-run` 通过，`react` unpacked `342.6 kB` / `primitives` `71.2 kB` / `tokens` `17.0 kB`）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板 + Overlay/Tabs/Table telemetry 模板）
