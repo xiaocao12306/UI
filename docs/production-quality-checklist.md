@@ -104,6 +104,7 @@
 - CommandPalette list semantics: options now expose `aria-posinset/aria-setsize` so assistive tech can announce positional context within filtered command results.
 - Demo CommandPalette Escape-query coverage: added runtime toggle + Playwright regression to lock first-Escape query clear and second-Escape dismiss behavior.
 - Demo Toast live-region coverage: added silent-toast path + Playwright regression asserting `aria-live=\"off\"` passive update semantics.
+- Demo Toast focus-priority coverage: added Playwright regression ensuring focused toast is promoted and dismissed first on Escape in stacked mode.
 - Tabs interaction hardening: `activationMode="manual"` decouples arrow-key focus movement from activation and supports Enter/Space commit.
 - Toast escape hardening: Escape now respects `defaultPrevented` so stacked notifications close one at a time.
 - Overlay focus-policy hardening: Popover/Dropdown now restore trigger focus on Escape while preserving outside pointer target focus on pointer dismiss.

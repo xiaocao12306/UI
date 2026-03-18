@@ -555,6 +555,24 @@ test("dismisses stacked toasts from top-most to oldest on Escape", async ({ page
   await expect(firstToast).toBeHidden();
 });
 
+test("prioritizes focused toast when dismissing stacked notifications with Escape", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Trigger stacked toasts" }).click();
+
+  const firstToast = page.getByRole("status", { name: "Sync started" });
+  const secondToast = page.getByRole("status", { name: "Sync completed" });
+  await expect(firstToast).toBeVisible();
+  await expect(secondToast).toBeVisible();
+
+  const closeButtons = page.getByRole("button", { name: "Close toast" });
+  await closeButtons.first().focus();
+  await page.keyboard.press("Escape");
+
+  await expect(firstToast).toBeHidden();
+  await expect(secondToast).toBeVisible();
+});
+
 test("keeps blocking toast open on Escape until explicit dismiss", async ({ page }) => {
   await page.goto("/");
 
