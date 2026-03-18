@@ -142,7 +142,7 @@ export function Table<T>({
   }, [columns, data, sortState]);
 
   const sortStatusText = React.useMemo(() => {
-    if (loading || sortedEntries.length === 0 || !sortState) {
+    if (loading || sortedEntries.length <= 1 || !sortState) {
       return "";
     }
 
@@ -206,7 +206,7 @@ export function Table<T>({
           <tr>
             {columns.map((column) => {
               const key = String(column.key);
-              const sorted = sortState?.key === key ? sortState.direction : undefined;
+              const sorted = sortState?.key === key && sortedEntries.length > 1 ? sortState.direction : undefined;
               const sortable = Boolean(column.sortable);
               const ariaSort = sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined;
               const textAlign = column.align ?? "left";

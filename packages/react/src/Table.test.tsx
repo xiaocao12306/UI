@@ -134,6 +134,24 @@ describe("Table", () => {
     expect(onSortChange).not.toHaveBeenCalled();
   });
 
+  it("suppresses sorted semantics for default sort key when only one row is available", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={[{ name: "Button", status: "Stable" }]}
+        defaultSortKey="name"
+      />
+    );
+
+    const nameHeader = screen.getByRole("columnheader", { name: /Name/ });
+    expect(nameHeader).not.toHaveAttribute("aria-sort");
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(screen.getByRole("button", { name: "Name sort ascending" })).toBeDisabled();
+  });
+
   it("renders loading state with aria-busy and suppresses table rows", () => {
     render(
       <Table
