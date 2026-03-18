@@ -9,15 +9,25 @@ Aurora UI Storybook is the primary visual documentation surface for React compon
 Use the toolbar theme selector to validate token behavior across `core-light`, `core-dark`, `glass`, and `neo-brutal`.
 </Description>
 
-## Coverage Scope
+## Documentation Path
 
-- Core controls: Button, Input
-- Overlay primitives in composed components: Dialog, CommandPalette
-- AI interaction demonstration paths
+1. Component Catalog (left sidebar stories): browse concrete implementations by domain.
+2. [Component API](?path=/docs/docs-component-api--docs): review prop contracts, accessibility semantics, and edge policies.
+3. [Best Practices](?path=/docs/docs-best-practices--docs): apply production integration guidance and policy decisions.
+
+## Component Domains
+
+- Core: foundational controls and metadata surfaces.
+- Form: data capture and validation flows.
+- Data: tabs, table, pagination, and navigation state.
+- Feedback: alert/toast/loading/empty-state communication.
+- Overlay: dialog/drawer/popover/dropdown/tooltip interaction layers.
+- AI: command workflows, prompt/message/reasoning composition.
 
 ## How To Validate A Component Change
 
 1. Open the affected story and switch all themes.
 2. Confirm keyboard and pointer interactions are preserved.
 3. Verify story docs and controls match real component props.
-4. Run Chromatic (when token is configured) to compare snapshots.
+4. Validate docs links (`Component API` + `Best Practices`) for the changed component group.
+5. Run Chromatic (when token is configured) to compare snapshots.
