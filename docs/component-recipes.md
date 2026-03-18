@@ -135,7 +135,7 @@ import * as React from "react";
 import { Button, Table } from "@aurora-ui/react";
 
 const columns = [
-  { key: "component", header: "Component", sortable: true },
+  { key: "component", header: "Component", sortable: true, rowHeader: true },
   { key: "status", header: "Status", sortable: true }
 ];
 
