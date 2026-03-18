@@ -142,6 +142,7 @@ GitHub Actions workflow runs:
 - storybook interaction gate (`pnpm storybook:test:ci`, includes coverage/docs/static freshness checks)
 - demo e2e smoke test
 - demo static freshness gate (`pnpm demo:dist:check`)
+- CI evidence summary: `GITHUB_STEP_SUMMARY` includes `Storybook Interaction Gate` and `Demo Quality Gate`
 
 Separate workflows:
 
@@ -187,7 +188,7 @@ This appends: 5. `pnpm release:dry-run`
 
 建议审阅顺序：
 
-1. `CI` workflow：查看 `Storybook Interaction Gate` summary（coverage/docs/static/test gate 快照）。
+1. `CI` workflow：查看 `Storybook Interaction Gate` + `Demo Quality Gate` summary（coverage/docs/static/test + demo e2e/dist gate 快照）。
 2. `Release Dry Run` workflow：查看包体积表、失败步骤、恢复文件计数。
 3. `Chromatic Visual Tests` workflow：查看 mode/token 状态、build/storybook URL、change/error 计数。
 4. `Release` workflow：查看 `Release Gate (CI)` summary + `Publish Mode` summary（`enforce`/token 状态）。

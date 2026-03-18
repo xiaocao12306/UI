@@ -67,5 +67,39 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm demo:e2e
-      - run: pnpm demo:dist:check
+      - name: Run Demo Quality Gate
+        run: |
+          set +e
+          pnpm demo:e2e 2>&1 | tee /tmp/demo-e2e.log
+          e2e_status=${PIPESTATUS[0]}
+
+          pnpm demo:dist:check 2>&1 | tee /tmp/demo-dist.log
+          dist_status=${PIPESTATUS[0]}
+
+          e2e_result_line=$(grep -m1 " passed (" /tmp/demo-e2e.log || true)
+          e2e_failed_line=$(grep -m1 " failed" /tmp/demo-e2e.log || true)
+          dist_ok_line=$(grep -m1 "\\[demo-dist-check\\] ok:" /tmp/demo-dist.log || true)
+
+          {
+            echo "## Demo Quality Gate"
+            echo
+            if [ "$e2e_status" -eq 0 ]; then
+              echo "- demo:e2e status: \`passed\`"
+            else
+              echo "- demo:e2e status: \`failed\`"
+            fi
+            echo "- ${e2e_result_line:-demo:e2e results: n/a}"
+            if [ "$e2e_status" -ne 0 ]; then
+              echo "- ${e2e_failed_line:-demo:e2e failed count: n/a}"
+            fi
+            if [ "$dist_status" -eq 0 ]; then
+              echo "- demo:dist:check status: \`passed\`"
+            else
+              echo "- demo:dist:check status: \`failed\`"
+            fi
+            echo "- ${dist_ok_line:-demo dist sync line: n/a}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$e2e_status" -ne 0 ] || [ "$dist_status" -ne 0 ]; then
+            exit 1
+          fi
