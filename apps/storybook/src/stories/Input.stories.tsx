@@ -117,7 +117,8 @@ export const InvalidTokenSemantics: Story = {
         <Input aria-label="Grammar review input" aria-invalid="grammar" defaultValue="Needs grammar check" />
       </FormField>
       <small style={{ color: "var(--aurora-text-secondary)" }}>
-        Preserves `aria-invalid="grammar"` for assistive-tech integrations that distinguish grammar/spelling corrections.
+        Preserves <code>aria-invalid=&quot;grammar&quot;</code> for assistive-tech integrations that distinguish
+        grammar/spelling corrections.
       </small>
     </div>
   ),
