@@ -147,7 +147,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Ensure each table has an accessible name through `caption` or `ariaLabel`; fallback `Data table` naming exists but should be treated as a safety net.
 - Expose `aria-sort` only on the actively sorted header so assistive narration reflects current sort state without repeating neutral columns.
 - Keep non-sortable headers free of `aria-sort` so assistive tech does not announce inert columns as interactive.
-- Validate sortable headers with both pointer and keyboard (`Enter`/`Space`) so non-pointer workflows stay first-class.
+- Validate sortable headers with both pointer and keyboard (`Enter`/`Space`, including legacy `Spacebar`) so non-pointer workflows stay first-class.
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - During async refreshes, set `loading` so table emits `aria-busy` and temporarily suppresses stale row actions/sorting.
 - For empty datasets, use meaningful `emptyContent`; table announces it through polite live status narration.
@@ -159,6 +159,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - In RTL layouts, verify horizontal `ArrowLeft`/`ArrowRight` intent is mirrored so tab navigation matches visual reading flow.
 - Prefer `ariaLabelledBy` with a visible heading when tabs already have on-screen context labels; fall back to `ariaLabel` for standalone tab groups.
 - Use `activationMode="manual"` when arrow-key navigation should not immediately trigger expensive panel renders.
+- Keep manual tabs compatible with legacy `Spacebar` key values so activation remains consistent across browser engines.
 - Keep tab panels mounted and toggle `hidden` so tab `aria-controls` always points to a real panel.
 - Avoid duplicate telemetry from tabs by emitting `onValueChange` only on actual key transitions.
 
