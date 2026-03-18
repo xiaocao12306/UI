@@ -56,6 +56,8 @@
 - Theme persistence and section anchor navigation: covered
 - Data keyboard/sort E2E (`Tabs Home/End`, `Table` sorting): covered
 - Data pagination E2E (`Release feed` page switching): covered
+- Overlay close-reason telemetry demo/E2E (`Dialog`, `Drawer`, `Popover`, `CommandPalette`, `Toast`): covered
+- Tabs/Table runtime telemetry indicators (`tabs-change-telemetry`, `table-sort-telemetry`) + E2E: covered
 
 ## Planned Next (v0.2)
 - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
