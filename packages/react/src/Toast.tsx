@@ -72,6 +72,14 @@ function isTopToast(element: HTMLElement) {
   return toastEscapeStack[toastEscapeStack.length - 1] === element;
 }
 
+function isComposingEscapeEvent(event: KeyboardEvent) {
+  if (event.isComposing) {
+    return true;
+  }
+
+  return event.keyCode === 229;
+}
+
 export function Toast({
   open,
   title,
@@ -147,6 +155,10 @@ export function Toast({
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") {
+        return;
+      }
+
+      if (isComposingEscapeEvent(event)) {
         return;
       }
 

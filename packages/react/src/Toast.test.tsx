@@ -218,6 +218,19 @@ describe("Toast", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("does not close on Escape while IME composition is active", () => {
+    const onOpenChange = vi.fn();
+
+    render(<Toast open title="Composing" onOpenChange={onOpenChange} />);
+
+    fireEvent.keyDown(document, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("status", { name: "Composing" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it("closes stacked toasts from top-most to oldest on Escape", () => {
     function StackedToasts() {
       const [firstOpen, setFirstOpen] = React.useState(true);

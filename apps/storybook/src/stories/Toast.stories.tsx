@@ -244,6 +244,27 @@ function EscapeGuardedByToastDemo() {
   );
 }
 
+function EscapeImeCompositionDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Reopen Toast
+      </Button>
+      <Toast
+        open={open}
+        onOpenChange={setOpen}
+        duration={0}
+        title="IME composition guard"
+        description="Escape during active composition should not dismiss this toast."
+        tone="info"
+        action={<input aria-label="Inline response" placeholder="Type with IME..." />}
+      />
+    </div>
+  );
+}
+
 export const EscapePreemptedByGlobalHandler: Story = {
   render: () => <EscapePreemptedDemo />,
   play: async ({ canvasElement }) => {
@@ -273,6 +294,21 @@ export const EscapeGuardedByToastHandler: Story = {
 
     await userEvent.click(canvas.getByRole("button", { name: "Disable toast Escape guard" }));
     await expect(canvas.getByRole("button", { name: "Enable toast Escape guard" })).toBeInTheDocument();
+  }
+};
+
+export const EscapeIgnoresImeComposition: Story = {
+  render: () => <EscapeImeCompositionDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const doc = canvasElement.ownerDocument;
+    await expect(canvas.getByRole("status", { name: "IME composition guard" })).toBeInTheDocument();
+
+    fireEvent.keyDown(doc, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    await expect(canvas.getByRole("status", { name: "IME composition guard" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));
+    await expect(canvas.queryByRole("status", { name: "IME composition guard" })).not.toBeInTheDocument();
   }
 };
 

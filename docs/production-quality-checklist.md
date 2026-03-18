@@ -200,3 +200,4 @@
 - Demo command-palette guard parity: added runtime `onEscapeKeyDown/onPointerDownOutside` toggle and Playwright regression for block/unblock dismiss behavior.
 - Release dry-run observability: `release-dry-run` now writes package-size evidence into `GITHUB_STEP_SUMMARY` for CI reviewers.
 - CommandPalette IME safety hardening: composition mode now bypasses Arrow/Enter command handlers (`isComposing` + legacy `keyCode=229`) so CJK text confirmation does not trigger accidental command execution.
+- Toast IME safety hardening: Escape dismiss now ignores composition mode (`isComposing` + `keyCode=229`) to prevent accidental close while confirming CJK input inside toast action controls.
