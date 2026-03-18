@@ -107,6 +107,13 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - 接入文档：`docs/chromatic.md`
 - 若仓库未配置 `CHROMATIC_PROJECT_TOKEN`，工作流会自动跳过上传并提示配置方式
 
+## 外部预览
+- GitHub Pages 工作流：`.github/workflows/demo-pages.yml`
+- Pages 启用后可用地址：
+  - Demo：`https://xiaocao12306.github.io/UI/`
+  - Storybook：`https://xiaocao12306.github.io/UI/storybook/`
+- 备用静态地址（无需 Pages）：`https://rawcdn.githack.com/xiaocao12306/UI/main/apps/storybook/storybook-static/index.html`
+
 ## Blocker Log
 - 日期：2026-03-17
 - 事项：执行 `pnpm dlx storybook@next init --builder Vite --type react`

@@ -78,6 +78,8 @@ pnpm chromatic
 ## Storybook External Link
 - Immediate static preview:
   - `https://rawcdn.githack.com/xiaocao12306/UI/main/apps/storybook/storybook-static/index.html`
+- GitHub Pages preview (when Pages enabled):
+  - `https://xiaocao12306.github.io/UI/storybook/`
 - To refresh this link after Storybook changes:
   - `pnpm storybook:build`
   - `git add apps/storybook/storybook-static && git commit -m "build(storybook): refresh static bundle" && git push`
@@ -93,10 +95,11 @@ pnpm chromatic
 
 ## Demo External Link
 - GitHub Pages workflow: `.github/workflows/demo-pages.yml`
+- GitHub Pages now publishes:
+  - demo root: `https://xiaocao12306.github.io/UI/`
+  - storybook docs: `https://xiaocao12306.github.io/UI/storybook/`
 - Immediate preview (no Pages dependency):
   - `https://rawcdn.githack.com/xiaocao12306/UI/main/apps/demo/dist/index.html`
-- Expected URL after Pages is enabled in repo settings:
-  - `https://xiaocao12306.github.io/UI/`
 - If Pages is not enabled yet, the workflow will skip deploy without failing CI.
 
 ## Package Usage (Example)

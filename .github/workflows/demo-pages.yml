@@ -30,6 +30,13 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm demo:build
+      - run: pnpm storybook:build
+      - name: Assemble Pages Site (demo + storybook)
+        run: |
+          rm -rf site
+          mkdir -p site/storybook
+          cp -R apps/demo/dist/. site/
+          cp -R apps/storybook/storybook-static/. site/storybook/
       - id: pages-status
         name: Check Pages Enablement
         run: |
@@ -52,7 +59,7 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         if: steps.pages-status.outputs.enabled == 'true'
         with:
-          path: ./apps/demo/dist
+          path: ./site
 
   deploy:
     if: needs.build.outputs.pages_enabled == 'true'
