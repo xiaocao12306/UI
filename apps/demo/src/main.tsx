@@ -121,6 +121,7 @@ function App() {
   const [paletteBlocking, setPaletteBlocking] = React.useState(false);
   const [paletteDismissGuard, setPaletteDismissGuard] = React.useState(false);
   const [palettePersistent, setPalettePersistent] = React.useState(false);
+  const [paletteEscapeClearsQuery, setPaletteEscapeClearsQuery] = React.useState(true);
   const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
@@ -535,6 +536,12 @@ function App() {
             label="Keep palette open after command select"
             description="Enable batch command execution without reopening the palette."
           />
+          <Switch
+            checked={paletteEscapeClearsQuery}
+            onCheckedChange={setPaletteEscapeClearsQuery}
+            label="Escape clears palette query first"
+            description="When enabled, first Escape clears the query and second Escape dismisses."
+          />
         </Section>
 
         <Section id="ai-components" title="AI Components" description="Prompt, reasoning, and streaming response building blocks.">
@@ -583,6 +590,7 @@ function App() {
           open={paletteOpen}
           onOpenChange={setPaletteOpen}
           closeOnSelect={!palettePersistent}
+          clearQueryOnEscape={paletteEscapeClearsQuery}
           closeOnEscape={!paletteBlocking}
           closeOnOutsidePointer={!paletteBlocking}
           onEscapeKeyDown={(event) => {

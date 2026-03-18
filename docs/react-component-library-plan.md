@@ -260,6 +260,7 @@
   - CommandPalette Escape 查询收口（新增 `clearQueryOnEscape` 默认行为：首次 Escape 清空 query，二次 Escape 再触发关闭）
   - Table 空态语义收口（`emptyContent` 改为 `role=\"status\"` polite 播报，增强无障碍反馈一致性）
   - Toast 播报策略收口（新增 `live` API，支持 `off` 降噪和 `assertive/polite` 显式控制）
+  - Demo CommandPalette Escape 查询验收（新增运行时开关 + Playwright 回归，锁定首次 Escape 清空查询、二次 Escape 关闭）
   - DismissableLayer 栈语义收口（嵌套 overlay 时仅顶层响应 Escape/外部点击，避免单次事件联动关闭多层）
   - Dialog 嵌套 overlay 验收补齐（Dropdown in Dialog 的 Escape 分层关闭单测 + Storybook 交互场景）
   - Drawer 嵌套 overlay 验收补齐（Dropdown in Drawer 的 Escape 分层关闭单测 + Storybook 交互场景）

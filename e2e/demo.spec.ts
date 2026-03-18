@@ -156,6 +156,33 @@ test("keeps command palette open after command select in persistent mode", async
   await expect(palette).toBeHidden();
 });
 
+test("clears palette query on first Escape before dismiss when enabled", async ({ page }) => {
+  await page.goto("/");
+
+  const escapeQuerySwitch = page.getByRole("switch", { name: "Escape clears palette query first" });
+  await expect(escapeQuerySwitch).toHaveAttribute("aria-checked", "true");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  const searchInput = palette.getByRole("combobox", { name: "Search commands" });
+
+  await searchInput.fill("drawer");
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeVisible();
+  await expect(searchInput).toHaveValue("");
+
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeHidden();
+
+  await escapeQuerySwitch.click();
+  await expect(escapeQuerySwitch).toHaveAttribute("aria-checked", "false");
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  await expect(palette).toBeVisible();
+  await searchInput.fill("drawer");
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeHidden();
+});
+
 test("does not close command palette when disabled command is clicked", async ({ page }) => {
   await page.goto("/");
 
