@@ -257,8 +257,8 @@ function HeroStatCard({
   const focusIntentRef = React.useRef(true);
 
   return (
-    <article
-      tabIndex={0}
+    <button
+      type="button"
       onMouseEnter={() => {
         setHovered(true);
       }}
@@ -280,6 +280,9 @@ function HeroStatCard({
       }}
       style={{
         ...heroStatCardStyle,
+        textAlign: "left",
+        font: "inherit",
+        cursor: "default",
         border:
           hovered || focusVisible
             ? "1px solid color-mix(in srgb, var(--aurora-accent-default) 52%, var(--aurora-border-default))"
@@ -307,7 +310,7 @@ function HeroStatCard({
       </p>
       <strong style={{ fontSize: 18, letterSpacing: "-0.02em" }}>{value}</strong>
       <p style={{ ...mutedBodyStyle, fontSize: 12 }}>{description}</p>
-    </article>
+    </button>
   );
 }
 

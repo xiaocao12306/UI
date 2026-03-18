@@ -351,6 +351,16 @@ export function CommandPalette({
 
                     selectItem(index);
                   }}
+                  onKeyDown={(event) => {
+                    if (item.disabled) {
+                      return;
+                    }
+
+                    if (event.key === "Enter" || event.key === " " || event.key === "Space" || event.key === "Spacebar") {
+                      event.preventDefault();
+                      selectItem(index);
+                    }
+                  }}
                   style={{
                     border: "1px solid var(--aurora-border-default)",
                     background: active

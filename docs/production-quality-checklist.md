@@ -73,6 +73,8 @@
 - Chromatic gate parity: workflow now supports soft-skip (default) and enforce hard-fail mode (`workflow_dispatch` + `enforce=true`) for release audits.
 - Table natural-sort parity: sortable string columns now use `Intl.Collator` for numeric/case-friendly ordering (`a2 < A10 < A11`).
 - Tabs key-boundary parity: non-applicable arrow keys are now explicitly covered by regression tests (no focus or panel drift).
+- CommandPalette lint parity: option click path now carries keyboard listener fallback to satisfy strict a11y lint gates.
+- Demo label parity: KPI card semantics no longer collide with theme-select accessible label queries in E2E/assistive tooling.
 - CommandPalette focus model hardening: option nodes now stay out of tab order (`tabIndex=-1`) and preserve combobox focus on pointer selection for `aria-activedescendant` parity.
 - CommandPalette search hardening: `commands[].textValue` now supports non-string labels, and matching is accent-insensitive (`cafe` matches `Café`).
 - Table i18n hardening: `getSortAriaLabel` now enables localized sortable-header narration while preserving `aria-sort` behavior.

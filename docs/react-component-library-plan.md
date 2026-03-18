@@ -289,6 +289,7 @@
   - Pagination 极值边界收口（`pageCount<=1` 提前返回，避免 `0/负数` 输入触发无意义分页计算）
   - Demo 品牌化视觉收口（Hero 面板、状态徽标与分区卡片统一层级，提升产品化观感一致性）
   - Demo 成品化细节深化（全页背景容器、导航 pill 三态反馈、KPI 卡片 hover/focus 反馈统一）
+  - Demo KPI 命名语义收口（移除与主题选择器重名的 `aria-label`，避免自动化与读屏标签匹配歧义）
   - Storybook 静态产物门禁收口（新增 `storybook:static:check`，执行 build + git diff 校验，新增 story 未同步静态产物会提前失败并给出修复提示）
   - Storybook 构建噪音收口（配置 `vite.build.chunkSizeWarningLimit=2500`，减少 vendor chunk 告警噪音）
   - Pages 交付收口（`.github/workflows/demo-pages.yml` 合并发布 Demo 根路径 + Storybook 子路径）
@@ -359,6 +360,7 @@
   - CommandPalette 查询遥测收口（关闭时自动触发 `onQueryChange(\"\")`，确保外部 telemetry 与内部 query 生命周期一致）
   - CommandPalette 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/item-select/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - CommandPalette listbox 语义补强（结果项改为纯 `role="option"` 语义节点，避免 `button+option` 角色冲突）
+  - CommandPalette 交互门禁收口（option 点击路径补键盘监听，满足 `jsx-a11y/click-events-have-key-events` 门禁）
   - CommandPalette 结果播报关联补强（combobox `aria-describedby` 绑定 live status 文本，稳定读屏播报路径）
   - Demo CommandPalette 查询遥测验收（新增可视 telemetry 指示 + Playwright 回归，锁定关闭后重置为 `N/A`）
   - Demo CommandPalette 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 escape/item-select/close-button/outside-pointer）
