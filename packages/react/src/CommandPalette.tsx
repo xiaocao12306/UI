@@ -25,6 +25,7 @@ export type CommandPaletteProps = {
   closeOnOutsidePointer?: boolean;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
   onPointerDownOutside?: (event: PointerEvent) => void;
+  closeLabel?: string;
   placeholder?: string;
   emptyMessage?: React.ReactNode;
   onQueryChange?: (query: string) => void;
@@ -53,6 +54,7 @@ export function CommandPalette({
   closeOnOutsidePointer = true,
   onEscapeKeyDown,
   onPointerDownOutside,
+  closeLabel,
   placeholder = "Search commands...",
   emptyMessage = "No commands found.",
   onQueryChange,
@@ -219,6 +221,7 @@ export function CommandPalette({
       onOpenChange={handleOpenChange}
       title={title}
       description={description}
+      closeLabel={closeLabel}
       size="md"
       closeOnEscape={closeOnEscape}
       closeOnOutsidePointer={closeOnOutsidePointer}

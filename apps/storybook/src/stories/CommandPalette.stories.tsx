@@ -525,6 +525,7 @@ export const LocalizedDialogCopy: Story = {
       description="快速检索并执行工作区操作。"
       searchAriaLabel="搜索命令"
       resultsAriaLabel="命令结果列表"
+      closeLabel="关闭命令面板"
       commands={[
         { key: "create-spec", label: "创建规范", keywords: ["文档", "计划"] },
         { key: "run-e2e", label: "运行 E2E", keywords: ["测试"] }
@@ -536,6 +537,7 @@ export const LocalizedDialogCopy: Story = {
     await expect(await canvas.findByRole("dialog", { name: "命令中心" })).toBeInTheDocument();
     await expect(canvas.getByRole("combobox", { name: "搜索命令" })).toBeInTheDocument();
     await expect(canvas.getByRole("listbox", { name: "命令结果列表" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "关闭命令面板" })).toBeInTheDocument();
   }
 };
 

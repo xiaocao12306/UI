@@ -312,6 +312,19 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("supports localized close-button accessible label", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        closeLabel="关闭命令面板"
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "关闭命令面板" })).toBeInTheDocument();
+  });
+
   it("resets close-reason tracking between dismiss cycles", () => {
     const onCloseReason = vi.fn();
 
