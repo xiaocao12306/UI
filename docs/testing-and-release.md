@@ -18,6 +18,7 @@ pnpm --filter @aurora-ui/react test
 pnpm --filter @aurora-ui/demo build
 pnpm demo:e2e
 pnpm storybook:docs:check
+pnpm storybook:static:check
 pnpm storybook:build
 pnpm storybook:test:ci
 ```
@@ -143,5 +144,5 @@ pnpm release:gate
 This runs:
 1. `pnpm verify`
 2. `pnpm demo:e2e`
-3. `pnpm storybook:test:ci`
+3. `pnpm storybook:test:ci`（内含 `storybook:docs:check` + `storybook:static:check`）
 4. `pnpm release:dry-run`

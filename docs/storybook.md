@@ -13,6 +13,7 @@ pnpm storybook:dev
 pnpm storybook:smoke
 pnpm storybook:build
 pnpm storybook:docs:check
+pnpm storybook:static:check
 pnpm storybook:test
 pnpm storybook:test:ci
 ```
@@ -31,8 +32,9 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - 工具：`@storybook/test-runner`
 - 入口脚本：
   - `storybook:docs:check`：校验 docs MDX 中 `*Stories` 引用是否都有对应 import，避免文档页运行时 `ReferenceError`
+  - `storybook:static:check`：先执行 `build-storybook`，再通过 `git status -- apps/storybook/storybook-static` 校验静态产物是否已同步提交；若有 diff 直接失败并输出修复提示
   - `storybook:test`：针对已运行的 Storybook URL 执行交互测试
-  - `storybook:test:ci`：先执行 `storybook:docs:check`，再在本地静态产物（`storybook-static`）上启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
+  - `storybook:test:ci`：先执行 `storybook:docs:check` + `storybook:static:check`，再在本地静态产物（`storybook-static`）上通过 `python3 -m http.server` 启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
 - 当前已覆盖 play 场景：
   - `Core/Button` 键盘激活 + loading 禁用分支
   - `Core/Tag` MetadataRow/AI context 可见性断言
@@ -83,6 +85,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - `Data/Table`
 - `Data/Pagination`
 - `Data/Pagination/KeyboardShortcuts`
+- `Data/Pagination/LabelledByHeading`
 - `Feedback/Empty`
 - `Feedback/Skeleton`
 - `Feedback/LoadingDots`
@@ -105,6 +108,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 生产级验收矩阵：`docs/production-quality-checklist.md`
 构建噪音控制：`.storybook/main.ts` 已设置 `vite.build.chunkSizeWarningLimit=2500`，避免 Storybook vendor chunk 的误导性超限告警干扰 CI 日志。
 静态产物去噪：`build-storybook` 结束后自动执行 `scripts/normalize-storybook-static-metadata.mjs`，将 `storybook-static/project.json` 中易波动字段（`generatedAt`、`userSince`）规范为稳定值，降低无意义 commit diff。
+静态产物新鲜度门禁：`scripts/check-storybook-static-freshness.mjs` 会在 `storybook:test:ci` 前执行，避免新增/重命名 story 后因静态产物未更新触发 `MissingStoryAfterHmrError`。
 
 ## Chromatic
 - 工作流：`.github/workflows/chromatic.yml`
@@ -125,3 +129,6 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 - 历史阻塞：`storybook@next` 当时要求 Node `20.19+` 或 `22.12+`，环境为 Node `18.19.1`
 - 处理：改用 Storybook `8.6.18` 完成初始化与交付，当前 `storybook:build` / `storybook:test:ci` 均可稳定运行。
 - 后续：若升级到 Node `20.19+` 或 `22.12+`，可按需评估迁移到 `@next/10.x`。
+- 日期：2026-03-18
+- 事项：`http-server` 在部分容器环境触发 `uv_interface_addresses` 系统错误，导致 `storybook:test:ci` 无法稳定起服
+- 处理：`apps/storybook` 的 `storybook:test:ci` 改为 `python3 -m http.server` 托管 `storybook-static`，消除 network interface 依赖抖动。
