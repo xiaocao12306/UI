@@ -128,7 +128,7 @@ export function Table<T>({
   }, [columns, data, sortState]);
 
   const sortStatusText = React.useMemo(() => {
-    if (loading || !sortState) {
+    if (loading || sortedEntries.length === 0 || !sortState) {
       return "";
     }
 
@@ -139,7 +139,7 @@ export function Table<T>({
 
     const columnHeader = typeof activeSortColumn.header === "string" ? activeSortColumn.header : String(activeSortColumn.key);
     return getSortStatusText({ columnKey: sortState.key, columnHeader, direction: sortState.direction });
-  }, [columns, getSortStatusText, loading, sortState]);
+  }, [columns, getSortStatusText, loading, sortState, sortedEntries.length]);
   const tableColSpan = Math.max(columns.length, 1);
 
   return (

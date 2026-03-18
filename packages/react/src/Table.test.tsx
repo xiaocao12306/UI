@@ -74,6 +74,24 @@ describe("Table", () => {
     expect(screen.getByRole("status")).toHaveTextContent("No components");
   });
 
+  it("keeps a single live region when empty state and default sorting coexist", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status" }
+        ]}
+        data={[]}
+        defaultSortKey="name"
+        emptyContent="No release rows"
+      />
+    );
+
+    const statuses = screen.getAllByRole("status");
+    expect(statuses).toHaveLength(1);
+    expect(statuses[0]).toHaveTextContent("No release rows");
+  });
+
   it("disables sortable controls when no rows are available", () => {
     const onSortChange = vi.fn();
 
