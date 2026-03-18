@@ -220,6 +220,26 @@ test("reports drawer close reason telemetry for close button, Escape, and outsid
   await expect(telemetry).toHaveText("outside-pointer");
 });
 
+test("keeps drawer open on non-primary outside pointer interaction", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Open Drawer" });
+  const telemetry = page.getByTestId("drawer-close-reason-demo");
+  const drawerDialog = page.getByRole("dialog", { name: "Drawer Example" });
+
+  await expect(telemetry).toHaveText("none");
+  await trigger.click();
+  await expect(drawerDialog).toBeVisible();
+
+  await page.mouse.click(8, 8, { button: "right" });
+  await expect(drawerDialog).toBeVisible();
+  await expect(telemetry).toHaveText("none");
+
+  await page.mouse.click(8, 8);
+  await expect(drawerDialog).toBeHidden();
+  await expect(telemetry).toHaveText("outside-pointer");
+});
+
 test("filters command palette and triggers drawer action", async ({ page }) => {
   await page.goto("/");
 
@@ -918,6 +938,27 @@ test("reports popover close reason telemetry for trigger, Escape, and outside po
   await expect(telemetry).toHaveText("trigger-click");
 });
 
+test("keeps popover open on non-primary outside pointer interaction", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Open Popover" });
+  const telemetry = page.getByTestId("popover-close-reason-demo");
+  const outsideTarget = page.getByLabel("Overlay outside focus target");
+  const popover = page.getByRole("dialog", { name: "Popover content" });
+
+  await expect(telemetry).toHaveText("none");
+  await trigger.click();
+  await expect(popover).toBeVisible();
+
+  await outsideTarget.click({ button: "right" });
+  await expect(popover).toBeVisible();
+  await expect(telemetry).toHaveText("none");
+
+  await outsideTarget.click();
+  await expect(popover).toBeHidden();
+  await expect(telemetry).toHaveText("outside-pointer");
+});
+
 test("reports dropdown close reason telemetry for all dismiss paths", async ({ page }) => {
   await page.goto("/");
 
@@ -948,6 +989,26 @@ test("reports dropdown close reason telemetry for all dismiss paths", async ({ p
   await expect(page.getByRole("menu")).toBeVisible();
   await page.keyboard.press("Tab");
   await expect(telemetry).toHaveText("tab-key");
+});
+
+test("keeps dropdown open on non-primary outside pointer interaction", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  const telemetry = page.getByTestId("dropdown-close-reason-demo");
+  const outsideTarget = page.getByLabel("Overlay outside focus target");
+
+  await expect(telemetry).toHaveText("none");
+  await trigger.click();
+  await expect(page.getByRole("menu")).toBeVisible();
+
+  await outsideTarget.click({ button: "right" });
+  await expect(page.getByRole("menu")).toBeVisible();
+  await expect(telemetry).toHaveText("none");
+
+  await outsideTarget.click();
+  await expect(page.getByRole("menu")).toBeHidden();
+  await expect(telemetry).toHaveText("outside-pointer");
 });
 
 test("opens dropdown using keyboard", async ({ page }) => {
