@@ -469,6 +469,35 @@ describe("Table", () => {
     expect(screen.getByRole("button", { name: "按升序排序：Name" })).toBeInTheDocument();
   });
 
+  it("sorts date values correctly when sortable accessor returns Date", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          {
+            key: "releasedAt",
+            header: "Released",
+            sortable: true,
+            sortAccessor: (row) => new Date(row.releasedAt)
+          }
+        ]}
+        data={[
+          { name: "Dialog", releasedAt: "2026-03-19" },
+          { name: "Button", releasedAt: "2026-01-10" },
+          { name: "Table", releasedAt: "2026-02-01" }
+        ]}
+        defaultSortKey="releasedAt"
+      />
+    );
+
+    let firstRow = screen.getAllByRole("row")[1];
+    expect(firstRow).toHaveTextContent("Button");
+
+    fireEvent.click(screen.getByRole("button", { name: "Released sort descending" }));
+    firstRow = screen.getAllByRole("row")[1];
+    expect(firstRow).toHaveTextContent("Dialog");
+  });
+
   it("announces active sort state through live narration", () => {
     render(
       <Table
