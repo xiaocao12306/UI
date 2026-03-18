@@ -136,13 +136,17 @@ function Section({
   description?: string;
   children: React.ReactNode;
 }) {
+  const headingId = `${id}-title`;
+
   return (
-    <section id={id} style={{ display: "grid", gap: 12, scrollMarginTop: 84 }}>
+    <section id={id} aria-labelledby={headingId} style={{ display: "grid", gap: 12, scrollMarginTop: 84 }}>
       <header style={{ display: "grid", gap: 4 }}>
         <p style={{ margin: 0, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--aurora-text-secondary)" }}>
           {id.replaceAll("-", " ")}
         </p>
-        <h2 style={{ margin: 0, fontSize: 20, letterSpacing: "-0.01em" }}>{title}</h2>
+        <h2 id={headingId} style={{ margin: 0, fontSize: 20, letterSpacing: "-0.01em" }}>
+          {title}
+        </h2>
         {description ? <p style={mutedBodyStyle}>{description}</p> : null}
       </header>
       <div style={sectionCardStyle}>
