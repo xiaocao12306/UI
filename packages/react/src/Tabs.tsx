@@ -74,6 +74,7 @@ export function Tabs({
   const baseId = React.useId();
   const tabListRef = React.useRef<HTMLDivElement>(null);
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
+  const keyboardActivationTabKeyRef = React.useRef<string | null>(null);
   const firstEnabledKey = items.find((item) => !item.disabled)?.key;
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
 
@@ -142,7 +143,10 @@ export function Tabs({
               disabled={disabled}
               onClick={(event) => {
                 setFocusedValue(item.key);
-                if (activationMode === "manual" && event.detail === 0) {
+                const clickFromKeyboardActivation =
+                  activationMode === "manual" && event.detail === 0 && keyboardActivationTabKeyRef.current === item.key;
+                keyboardActivationTabKeyRef.current = null;
+                if (clickFromKeyboardActivation) {
                   return;
                 }
                 select(item.key);
@@ -153,6 +157,7 @@ export function Tabs({
               onKeyDown={(event) => {
                 if (activationMode === "manual" && isTabActivationKey(event.key)) {
                   event.preventDefault();
+                  keyboardActivationTabKeyRef.current = item.key;
                   select(item.key);
                   return;
                 }
