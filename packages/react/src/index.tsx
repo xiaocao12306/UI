@@ -79,7 +79,7 @@ export { Drawer } from "./Drawer";
 export type { DrawerProps } from "./Drawer";
 
 export { Dropdown } from "./Dropdown";
-export type { DropdownItem, DropdownProps } from "./Dropdown";
+export type { DropdownCloseReason, DropdownItem, DropdownProps } from "./Dropdown";
 
 export { CommandPalette } from "./CommandPalette";
 export type { CommandItem, CommandPaletteProps } from "./CommandPalette";

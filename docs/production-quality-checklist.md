@@ -228,6 +228,7 @@
 - CommandPalette query lifecycle parity: closing the palette now emits `onQueryChange("")` so external telemetry/state resets with internal query clearing, with unit + Storybook interaction coverage.
 - Demo query telemetry parity: added `palette-query-telemetry` indicator + Playwright regression to ensure command-palette close actions reset telemetry back to `N/A`.
 - Toast close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `escape-key` / `timeout`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismissal tracking.
+- Dropdown close-reason telemetry parity: added `onCloseReason` with structured reasons (`trigger-click` / `item-select` / `escape-key` / `outside-pointer` / `tab-key`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
 - Storybook docs import guard: added `pnpm storybook:docs:check` and wired it into `storybook:test:ci` so missing `*Stories` imports in MDX fail fast before visual/interaction regression runs.
 - Storybook static metadata hygiene: `build-storybook` now normalizes `storybook-static/project.json` volatile timestamps (`generatedAt`, `userSince`) to stable values, reducing no-op static bundle churn in review diffs.
 - Dialog/Drawer IME Escape coverage: added component-level regressions to ensure composition-phase Escape does not emit close events while plain Escape still dismisses as expected.

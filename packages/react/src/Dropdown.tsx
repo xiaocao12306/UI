@@ -10,6 +10,8 @@ export type DropdownItem = {
   onSelect?: () => void;
 };
 
+export type DropdownCloseReason = "trigger-click" | "item-select" | "escape-key" | "outside-pointer" | "tab-key";
+
 export type DropdownProps = {
   label: React.ReactNode;
   triggerAriaLabel?: string;
@@ -21,6 +23,7 @@ export type DropdownProps = {
   closeOnOutsidePointer?: boolean;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
   onPointerDownOutside?: (event: PointerEvent) => void;
+  onCloseReason?: (reason: DropdownCloseReason) => void;
 };
 
 function getNextEnabledIndex(items: DropdownItem[], currentIndex: number, direction: 1 | -1) {
@@ -97,7 +100,8 @@ export function Dropdown({
   closeOnEscape = true,
   closeOnOutsidePointer = true,
   onEscapeKeyDown,
-  onPointerDownOutside
+  onPointerDownOutside,
+  onCloseReason
 }: DropdownProps) {
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false);
   const [activeIndex, setActiveIndex] = React.useState(-1);
@@ -118,6 +122,14 @@ export function Dropdown({
       onOpenChange?.(nextOpen);
     },
     [isControlled, onOpenChange]
+  );
+
+  const closeWithReason = React.useCallback(
+    (reason: DropdownCloseReason) => {
+      onCloseReason?.(reason);
+      setOpen(false);
+    },
+    [onCloseReason, setOpen]
   );
 
   React.useEffect(() => {
@@ -149,7 +161,13 @@ export function Dropdown({
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
-        onClick={() => setOpen(!isOpen)}
+        onClick={() => {
+          if (isOpen) {
+            closeWithReason("trigger-click");
+            return;
+          }
+          setOpen(true);
+        }}
         onKeyDown={(event) => {
           if (event.key !== "ArrowDown" && event.key !== "ArrowUp") {
             return;
@@ -176,17 +194,22 @@ export function Dropdown({
             }
 
             event.preventDefault();
-            setOpen(false);
+            closeWithReason("escape-key");
             triggerRef.current?.focus();
           }}
           onPointerDownOutside={(event) => {
+            const target = event.target;
+            if (target instanceof Node && triggerRef.current?.contains(target)) {
+              return;
+            }
+
             onPointerDownOutside?.(event);
             if (event.defaultPrevented || !closeOnOutsidePointer) {
               event.preventDefault();
               return;
             }
 
-            setOpen(false);
+            closeWithReason("outside-pointer");
           }}
         >
           <ul
@@ -234,7 +257,7 @@ export function Dropdown({
               }
 
               if (event.key === "Tab") {
-                setOpen(false);
+                closeWithReason("tab-key");
                 return;
               }
 
@@ -292,7 +315,7 @@ export function Dropdown({
                       }
 
                       item.onSelect?.();
-                      setOpen(false);
+                      closeWithReason("item-select");
                       triggerRef.current?.focus();
                     }}
                     style={{

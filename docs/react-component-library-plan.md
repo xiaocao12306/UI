@@ -273,6 +273,7 @@
   - Demo Toast 焦点优先级验收（新增堆叠通知聚焦后 Escape 回归，锁定“当前操作通知优先关闭”行为）
   - Toast 播报覆盖补齐（新增 `live` 覆盖 `danger` 默认播报强度回归，保持 `role=\"alert\"` 语义）
   - Toast 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/escape-key/timeout` 并补齐单测 + Storybook `CloseReasonTelemetry`）
+  - Dropdown 关闭原因遥测收口（新增 `onCloseReason`，回传 `trigger-click/item-select/escape-key/outside-pointer/tab-key` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Button 键盘兼容收口（补齐 legacy `Spacebar` 激活键值，统一 pressed 态反馈分支）
   - Button 运行时状态收口（按下态切换到 `loading/disabled` 时立即清理 pressed 偏移视觉）
   - 表单 invalid token 语义收口（`aria-invalid=\"grammar|spelling\"` 跨 Input/Select/Textarea/DatePicker/Checkbox/RadioGroup/Switch/FormField 保留原值）

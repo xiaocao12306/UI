@@ -178,6 +178,63 @@ export const SelectionTelemetry: Story = {
   }
 };
 
+function CloseReasonTelemetryDropdown() {
+  const [lastReason, setLastReason] = React.useState("none");
+
+  return (
+    <div style={{ display: "grid", gap: 8, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last close reason:{" "}
+        <strong data-testid="dropdown-close-reason" style={{ color: "var(--aurora-text-primary)" }}>
+          {lastReason}
+        </strong>
+      </p>
+      <Dropdown
+        label="Telemetry Menu"
+        onCloseReason={(reason) => setLastReason(reason)}
+        items={[
+          { key: "duplicate", label: "Duplicate" },
+          { key: "rename", label: "Rename" },
+          { key: "archive", label: "Archive" }
+        ]}
+      />
+      <button type="button">Outside target</button>
+    </div>
+  );
+}
+
+export const CloseReasonTelemetry: Story = {
+  render: () => <CloseReasonTelemetryDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Telemetry Menu" });
+    const outsideTarget = canvas.getByRole("button", { name: "Outside target" });
+
+    await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("none");
+
+    await userEvent.click(trigger);
+    await userEvent.click(canvas.getByRole("menuitem", { name: "Duplicate" }));
+    await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("item-select");
+
+    await userEvent.click(trigger);
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("escape-key");
+
+    await userEvent.click(trigger);
+    await userEvent.click(outsideTarget);
+    await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("outside-pointer");
+
+    await userEvent.click(trigger);
+    await userEvent.click(trigger);
+    await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("trigger-click");
+
+    await userEvent.click(trigger);
+    await userEvent.keyboard("{Tab}");
+    await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("tab-key");
+    await expect(outsideTarget).toHaveFocus();
+  }
+};
+
 export const TypeaheadNavigation: Story = {
   args: {
     label: "Quick Actions",

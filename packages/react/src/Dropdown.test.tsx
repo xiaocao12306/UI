@@ -5,10 +5,12 @@ import { Dropdown } from "./Dropdown";
 describe("Dropdown", () => {
   it("selects an item and closes the menu", () => {
     const onSelect = vi.fn();
+    const onCloseReason = vi.fn();
 
     render(
       <Dropdown
         label="Actions"
+        onCloseReason={onCloseReason}
         items={[
           { key: "duplicate", label: "Duplicate", onSelect },
           { key: "archive", label: "Archive" }
@@ -25,13 +27,17 @@ describe("Dropdown", () => {
     fireEvent.click(screen.getByRole("menuitem", { name: "Duplicate" }));
 
     expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenCalledWith("item-select");
     expect(screen.queryByRole("menu")).toBeNull();
   });
 
   it("closes on escape key and outside pointer", () => {
+    const onCloseReason = vi.fn();
+
     render(
       <Dropdown
         label="Options"
+        onCloseReason={onCloseReason}
         items={[
           { key: "one", label: "One" },
           { key: "two", label: "Two" }
@@ -46,6 +52,7 @@ describe("Dropdown", () => {
     fireEvent.keyDown(document, { key: "Escape" });
     expect(screen.queryByRole("menu")).toBeNull();
     expect(trigger).toHaveFocus();
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "escape-key");
 
     fireEvent.click(trigger);
     expect(screen.getByRole("menu")).toBeInTheDocument();
@@ -54,6 +61,7 @@ describe("Dropdown", () => {
     fireEvent.pointerDown(document.body);
     expect(screen.queryByRole("menu")).toBeNull();
     expect(trigger).not.toHaveFocus();
+    expect(onCloseReason).toHaveBeenNthCalledWith(2, "outside-pointer");
   });
 
   it("supports keyboard open and item navigation", () => {
@@ -237,6 +245,7 @@ describe("Dropdown", () => {
   it("supports configurable dismiss policies and event hooks", () => {
     const onEscapeKeyDown = vi.fn();
     const onPointerDownOutside = vi.fn();
+    const onCloseReason = vi.fn();
 
     render(
       <Dropdown
@@ -245,6 +254,7 @@ describe("Dropdown", () => {
         closeOnOutsidePointer={false}
         onEscapeKeyDown={onEscapeKeyDown}
         onPointerDownOutside={onPointerDownOutside}
+        onCloseReason={onCloseReason}
         items={[
           { key: "one", label: "One" },
           { key: "two", label: "Two" }
@@ -257,15 +267,18 @@ describe("Dropdown", () => {
 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(screen.getByRole("menu", { name: "Policy" })).toBeInTheDocument();
 
     fireEvent.pointerDown(document.body);
     expect(onPointerDownOutside).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(screen.getByRole("menu", { name: "Policy" })).toBeInTheDocument();
   });
 
   it("skips escape callback and dismiss when Escape is preempted upstream", () => {
     const onEscapeKeyDown = vi.fn();
+    const onCloseReason = vi.fn();
     const preemptEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -277,6 +290,7 @@ describe("Dropdown", () => {
       <Dropdown
         label="Preempted"
         onEscapeKeyDown={onEscapeKeyDown}
+        onCloseReason={onCloseReason}
         items={[
           { key: "one", label: "One" },
           { key: "two", label: "Two" }
@@ -289,15 +303,70 @@ describe("Dropdown", () => {
 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(screen.getByRole("menu", { name: "Preempted" })).toBeInTheDocument();
     document.removeEventListener("keydown", preemptEscape, true);
   });
 
+  it("emits trigger-click close reason when trigger toggles menu closed", () => {
+    const onCloseReason = vi.fn();
+
+    render(
+      <Dropdown
+        label="Trigger Toggle"
+        onCloseReason={onCloseReason}
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "Trigger Toggle" });
+    fireEvent.click(trigger);
+    expect(screen.getByRole("menu", { name: "Trigger Toggle" })).toBeInTheDocument();
+
+    fireEvent.click(trigger);
+    expect(screen.queryByRole("menu", { name: "Trigger Toggle" })).toBeNull();
+    expect(onCloseReason).toHaveBeenCalledWith("trigger-click");
+  });
+
+  it("does not treat trigger pointerdown as outside dismiss", () => {
+    const onCloseReason = vi.fn();
+    const onPointerDownOutside = vi.fn();
+
+    render(
+      <Dropdown
+        label="Trigger Pointer"
+        onCloseReason={onCloseReason}
+        onPointerDownOutside={onPointerDownOutside}
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "Trigger Pointer" });
+    fireEvent.click(trigger);
+    expect(screen.getByRole("menu", { name: "Trigger Pointer" })).toBeInTheDocument();
+
+    fireEvent.pointerDown(trigger);
+    fireEvent.click(trigger);
+
+    expect(onPointerDownOutside).not.toHaveBeenCalled();
+    expect(onCloseReason).toHaveBeenCalledWith("trigger-click");
+    expect(screen.queryByRole("menu", { name: "Trigger Pointer" })).toBeNull();
+  });
+
   it("closes menu on Tab without forcing trigger focus", () => {
+    const onCloseReason = vi.fn();
+
     render(
       <div>
         <Dropdown
           label="Keyboard exit"
+          onCloseReason={onCloseReason}
           items={[
             { key: "one", label: "One" },
             { key: "two", label: "Two" }
@@ -315,6 +384,7 @@ describe("Dropdown", () => {
     fireEvent.keyDown(menu, { key: "Tab" });
     expect(screen.queryByRole("menu", { name: "Keyboard exit" })).toBeNull();
     expect(trigger).not.toHaveFocus();
+    expect(onCloseReason).toHaveBeenCalledWith("tab-key");
   });
 
   it("preserves outside pointer target focus when dismissing", () => {
