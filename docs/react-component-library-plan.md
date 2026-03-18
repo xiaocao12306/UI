@@ -233,6 +233,7 @@
   - Demo Table empty 验收场景（`emptyContent` + 禁用排序）与 Playwright 回归
   - Demo Table 排序遥测验收（新增可视 telemetry 指示 + Playwright click/keyboard 双路径回归）
   - Demo Dropdown 焦点策略场景（Escape 回焦 trigger / outside pointer 保持目标焦点 / Tab 自然前进）与 Playwright 回归
+  - Demo Dropdown 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 item-select/escape/outside/trigger/tab）
   - Tabs manual 模式键盘边界补强（`Home/End` 仅移动焦点，`Enter/Space` 才激活）并补单测 + Storybook 交互断言
   - Tabs 回绕策略收口（新增 `loop`，支持 Arrow 到边界后停留不回绕，补齐单测 + Storybook `NoLoopNavigation`）
   - Toast Escape 事件优先级补测（`defaultPrevented` 分支单测，避免与上层快捷键处理冲突）

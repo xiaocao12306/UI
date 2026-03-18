@@ -820,6 +820,36 @@ test("reports popover close reason telemetry for trigger, Escape, and outside po
   await expect(telemetry).toHaveText("trigger-click");
 });
 
+test("reports dropdown close reason telemetry for all dismiss paths", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  const telemetry = page.getByTestId("dropdown-close-reason-demo");
+  const outsideTarget = page.getByLabel("Overlay outside focus target");
+
+  await expect(telemetry).toHaveText("none");
+
+  await trigger.click();
+  await page.getByRole("menuitem", { name: "Duplicate" }).click();
+  await expect(telemetry).toHaveText("item-select");
+
+  await trigger.click();
+  await page.keyboard.press("Escape");
+  await expect(telemetry).toHaveText("escape-key");
+
+  await trigger.click();
+  await outsideTarget.click();
+  await expect(telemetry).toHaveText("outside-pointer");
+
+  await trigger.click();
+  await trigger.click();
+  await expect(telemetry).toHaveText("trigger-click");
+
+  await trigger.click();
+  await page.keyboard.press("Tab");
+  await expect(telemetry).toHaveText("tab-key");
+});
+
 test("opens dropdown using keyboard", async ({ page }) => {
   await page.goto("/");
 

@@ -127,6 +127,7 @@ function App() {
   const [paletteQueryTelemetry, setPaletteQueryTelemetry] = React.useState("");
   const [paletteCloseReason, setPaletteCloseReason] = React.useState("none");
   const [popoverCloseReason, setPopoverCloseReason] = React.useState("none");
+  const [dropdownCloseReason, setDropdownCloseReason] = React.useState("none");
   const [dialogCloseReason, setDialogCloseReason] = React.useState("none");
   const [drawerCloseReason, setDrawerCloseReason] = React.useState("none");
   const [toastCloseReason, setToastCloseReason] = React.useState("none");
@@ -532,6 +533,7 @@ function App() {
             </Popover>
             <Dropdown
               label="Actions"
+              onCloseReason={setDropdownCloseReason}
               items={[
                 { key: "a", label: "Duplicate" },
                 { key: "b", label: "Archive" },
@@ -550,6 +552,12 @@ function App() {
             Popover close reason telemetry:{" "}
             <strong data-testid="popover-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
               {popoverCloseReason}
+            </strong>
+          </p>
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            Dropdown close reason telemetry:{" "}
+            <strong data-testid="dropdown-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
+              {dropdownCloseReason}
             </strong>
           </p>
           <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
