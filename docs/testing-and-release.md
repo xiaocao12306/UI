@@ -153,3 +153,23 @@ pnpm release:gate
 
 This appends:
 5. `pnpm release:dry-run`
+
+## Release Gate Evidence (2026-03-19)
+Command executed from `/www/code/react-ui-library`:
+
+```bash
+pnpm release:gate:ci
+```
+
+Result summary:
+- overall status: `passed`
+- verify: `passed` (`lint` + `typecheck` + `test` + `build`)
+- demo e2e: `60/60` passed
+- demo dist sync gate: `passed` (`demo:dist:check`)
+- storybook docs import gate: `passed` (`4` mdx files scanned)
+- storybook static sync gate: `passed` (`storybook-static` synchronized)
+- storybook interaction tests: `174/174` passed (`32` suites)
+- release gate pass: `yes`
+
+### 备注
+- 同日早些时候曾在 `@aurora-ui/primitives` 的 `DismissableLayer` 非主键 pointer 用例触发阻塞；修复后已通过本节最终复验。
