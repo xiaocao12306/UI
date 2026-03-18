@@ -305,6 +305,7 @@
   - Storybook Dialog/Drawer 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
   - Storybook Popover 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
   - Demo Escape 抢占验收扩展（Dialog/Drawer/Popover/CommandPalette/Dropdown/Toast 新增 Playwright 回归，锁定全局抢占后保持打开，解除抢占后恢复正常关闭）
+  - Storybook 文档引用门禁收口（新增 `storybook:docs:check`，校验 docs MDX 的 `*Stories` 引用都有 import，并纳入 `storybook:test:ci`）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

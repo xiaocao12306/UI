@@ -12,6 +12,7 @@
 pnpm storybook:dev
 pnpm storybook:smoke
 pnpm storybook:build
+pnpm storybook:docs:check
 pnpm storybook:test
 pnpm storybook:test:ci
 ```
@@ -29,8 +30,9 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 ## Interaction Runner
 - 工具：`@storybook/test-runner`
 - 入口脚本：
+  - `storybook:docs:check`：校验 docs MDX 中 `*Stories` 引用是否都有对应 import，避免文档页运行时 `ReferenceError`
   - `storybook:test`：针对已运行的 Storybook URL 执行交互测试
-  - `storybook:test:ci`：在本地静态产物（`storybook-static`）上启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
+  - `storybook:test:ci`：先执行 `storybook:docs:check`，再在本地静态产物（`storybook-static`）上启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
 - 当前已覆盖 play 场景：
   - `Core/Button` 键盘激活 + loading 禁用分支
   - `Core/Tag` MetadataRow/AI context 可见性断言
