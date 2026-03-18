@@ -77,7 +77,7 @@ Latest dry-run record:
   - `changeset version`: `No unreleased changesets found, exiting.`
   - `@aurora-ui/tokens`: dry-run tarball size ~3.0 kB
   - `@aurora-ui/primitives`: dry-run tarball size ~14.0 kB
-  - `@aurora-ui/react`: dry-run tarball size ~52.2 kB (unpacked ~301.7 kB after latest keyboard/IME regression hardening)
+  - `@aurora-ui/react`: dry-run tarball size ~52.3 kB (unpacked ~301.3 kB after latest CommandPalette semantic hardening)
   - npm prints login warning in dry-run mode, but command exits successfully
   - CI summary now includes package size / unpacked size table via `GITHUB_STEP_SUMMARY`
 
@@ -94,7 +94,7 @@ Latest release gate run:
   - react preemption overlay expansion: `pnpm --filter @aurora-ui/react exec vitest run src/Popover.test.tsx src/Dropdown.test.tsx` passed after Escape-preemption callback-skip coverage expansion
   - react preemption overlay completion: `pnpm --filter @aurora-ui/react exec vitest run src/Drawer.test.tsx` passed after Escape-preemption callback-skip coverage expansion
   - demo IME/legacy keyboard regressions: `pnpm demo:e2e` passed after adding Dialog+Drawer+Popover+CommandPalette+Dropdown+Toast Escape preemption coverage, CommandPalette+Toast IME Escape coverage, and Tabs/Table legacy `Spacebar` keyboard-path checks
-  - release dry-run package size evidence refreshed (`react` unpacked size ~301.7 kB)
+  - release dry-run package size evidence refreshed (`react` unpacked size ~301.3 kB)
 
 ## GitHub Release Automation
 Workflow: `.github/workflows/release.yml`
