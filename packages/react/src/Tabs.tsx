@@ -75,8 +75,12 @@ export function Tabs({
   const tabListRef = React.useRef<HTMLDivElement>(null);
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const keyboardActivationTabKeyRef = React.useRef<string | null>(null);
+  const focusIntentRef = React.useRef(true);
   const firstEnabledKey = items.find((item) => !item.disabled)?.key;
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
+  const [hoveredTabKey, setHoveredTabKey] = React.useState<string | null>(null);
+  const [pressedTabKey, setPressedTabKey] = React.useState<string | null>(null);
+  const [focusVisibleTabKey, setFocusVisibleTabKey] = React.useState<string | null>(null);
 
   const currentRawValue = value ?? internalValue;
   const currentValue = items.some((item) => item.key === currentRawValue && !item.disabled) ? currentRawValue : firstEnabledKey;
@@ -126,6 +130,10 @@ export function Tabs({
         {items.map((item, index) => {
           const selected = item.key === currentValue;
           const disabled = Boolean(item.disabled);
+          const hovered = hoveredTabKey === item.key;
+          const pressed = pressedTabKey === item.key;
+          const focusVisible = focusVisibleTabKey === item.key;
+          const interactive = hovered || focusVisible;
 
           return (
             <button
@@ -151,10 +159,46 @@ export function Tabs({
                 }
                 select(item.key);
               }}
+              onMouseEnter={() => {
+                if (disabled) {
+                  return;
+                }
+
+                setHoveredTabKey(item.key);
+              }}
+              onMouseLeave={() => {
+                setHoveredTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+              }}
+              onMouseDown={() => {
+                if (disabled) {
+                  return;
+                }
+
+                focusIntentRef.current = false;
+                setFocusVisibleTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                setPressedTabKey(item.key);
+              }}
+              onMouseUp={() => {
+                setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+              }}
               onFocus={() => {
                 setFocusedValue(item.key);
+                if (disabled) {
+                  setFocusVisibleTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                  return;
+                }
+
+                setFocusVisibleTabKey((currentKey) =>
+                  resolveFocusVisibleState(tabRefs.current[index], focusIntentRef.current) ? item.key : currentKey === item.key ? null : currentKey
+                );
+              }}
+              onBlur={() => {
+                setFocusVisibleTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
               }}
               onKeyDown={(event) => {
+                focusIntentRef.current = true;
                 if (activationMode === "manual" && isTabActivationKey(event.key)) {
                   event.preventDefault();
                   keyboardActivationTabKeyRef.current = item.key;
@@ -206,15 +250,29 @@ export function Tabs({
               style={{
                 height: 34,
                 borderRadius: "var(--aurora-radius-md)",
-                border: selected ? "1px solid var(--aurora-accent-default)" : "1px solid var(--aurora-border-default)",
+                border: selected
+                  ? "1px solid var(--aurora-accent-default)"
+                  : interactive
+                    ? "1px solid color-mix(in srgb, var(--aurora-accent-default) 52%, var(--aurora-border-default))"
+                    : "1px solid var(--aurora-border-default)",
                 background: selected
                   ? "color-mix(in srgb, var(--aurora-accent-default) 14%, transparent)"
+                  : pressed
+                    ? "color-mix(in srgb, var(--aurora-surface-elevated) 70%, var(--aurora-surface-default))"
+                    : hovered
+                      ? "color-mix(in srgb, var(--aurora-surface-elevated) 86%, var(--aurora-surface-default))"
                   : "var(--aurora-surface-default)",
                 color: disabled
                   ? "color-mix(in srgb, var(--aurora-text-secondary) 64%, transparent)"
                   : "var(--aurora-text-primary)",
                 padding: "0 12px",
-                cursor: disabled ? "not-allowed" : "pointer"
+                cursor: disabled ? "not-allowed" : "pointer",
+                boxShadow: focusVisible
+                  ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 42%, transparent)"
+                  : "none",
+                transform: pressed ? "translateY(1px)" : "translateY(0)",
+                transition:
+                  "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
               }}
             >
               {item.label}
@@ -301,4 +359,16 @@ function isElementDirectionRtl(element: HTMLElement | null) {
   }
 
   return window.getComputedStyle(element).direction === "rtl";
+}
+
+function resolveFocusVisibleState(target: HTMLButtonElement | null, fallback: boolean) {
+  if (!target) {
+    return fallback;
+  }
+
+  try {
+    return target.matches(":focus-visible");
+  } catch {
+    return fallback;
+  }
 }

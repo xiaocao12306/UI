@@ -459,6 +459,53 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Spec")).toBeInTheDocument();
   });
 
+  it("shows focus ring only for keyboard-intended tab focus", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    const matchesSpy = vi.spyOn(oneTab, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(oneTab);
+    fireEvent.focus(oneTab);
+    expect(oneTab.style.boxShadow).toBe("none");
+
+    fireEvent.blur(oneTab);
+    fireEvent.keyDown(oneTab, { key: "Tab" });
+    fireEvent.focus(oneTab);
+    expect(oneTab.style.boxShadow).toContain("0 0 0 3px");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("applies pressed offset only while pointer is active", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    fireEvent.mouseDown(twoTab);
+    expect(twoTab.style.transform).toBe("translateY(1px)");
+
+    fireEvent.mouseUp(twoTab);
+    expect(twoTab.style.transform).toBe("translateY(0)");
+  });
+
   it("supports tablist naming through aria-labelledby", () => {
     render(
       <div>
