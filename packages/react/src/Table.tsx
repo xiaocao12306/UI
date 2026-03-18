@@ -151,7 +151,7 @@ export function Table<T>({
               const key = String(column.key);
               const sorted = sortState?.key === key ? sortState.direction : undefined;
               const sortable = Boolean(column.sortable);
-              const ariaSort = sortable ? (sorted ? (sorted === "asc" ? "ascending" : "descending") : "none") : undefined;
+              const ariaSort = sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined;
               const textAlign = column.align ?? "left";
               const headerLabel = typeof column.header === "string" ? column.header : key;
               const nextDirection: TableSortDirection = sorted === "asc" ? "desc" : "asc";

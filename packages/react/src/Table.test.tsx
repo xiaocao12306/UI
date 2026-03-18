@@ -296,7 +296,7 @@ describe("Table", () => {
     const nameHeader = screen.getByRole("columnheader", { name: /Name/ });
     const scoreHeader = screen.getByRole("columnheader", { name: /Score/ });
     expect(nameHeader).toHaveAttribute("aria-sort", "ascending");
-    expect(scoreHeader).toHaveAttribute("aria-sort", "none");
+    expect(scoreHeader).not.toHaveAttribute("aria-sort");
     expect(screen.getAllByRole("cell")[0]).toHaveTextContent("Button");
 
     expect(screen.getByRole("button", { name: "Name sort descending" })).toBeInTheDocument();
@@ -329,7 +329,7 @@ describe("Table", () => {
     const nameHeader = screen.getByRole("columnheader", { name: "Name" });
     const statusHeader = screen.getByRole("columnheader", { name: "Status" });
 
-    expect(nameHeader).toHaveAttribute("aria-sort", "none");
+    expect(nameHeader).not.toHaveAttribute("aria-sort");
     expect(statusHeader).not.toHaveAttribute("aria-sort");
     expect(screen.queryByRole("button", { name: /Status sort/ })).toBeNull();
     expect(screen.getAllByRole("cell")[0]).toHaveTextContent("Dialog");

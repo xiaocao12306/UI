@@ -236,7 +236,7 @@ export const InvalidDefaultSortKeyFallback: Story = {
     const componentHeader = canvas.getByRole("columnheader", { name: "Component" });
     const statusHeader = canvas.getByRole("columnheader", { name: "Status" });
 
-    await expect(componentHeader).toHaveAttribute("aria-sort", "none");
+    await expect(componentHeader).not.toHaveAttribute("aria-sort");
     await expect(statusHeader).not.toHaveAttribute("aria-sort");
     await expect(canvas.queryByRole("button", { name: /Status sort/ })).not.toBeInTheDocument();
     await expect(canvas.getAllByRole("cell")[0]).toHaveTextContent("Button");

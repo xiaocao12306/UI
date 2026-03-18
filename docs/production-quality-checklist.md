@@ -202,3 +202,4 @@
 - CommandPalette IME safety hardening: composition mode now bypasses Arrow/Enter command handlers (`isComposing` + legacy `keyCode=229`) so CJK text confirmation does not trigger accidental command execution.
 - Toast IME safety hardening: Escape dismiss now ignores composition mode (`isComposing` + `keyCode=229`) to prevent accidental close while confirming CJK input inside toast action controls.
 - Tabs RTL keyboard hardening: horizontal arrow semantics now follow container direction (`dir=\"rtl\"` mirrors ArrowLeft/ArrowRight), with unit + Storybook interaction coverage.
+- Table sort narration hardening: `aria-sort` now appears only on the actively sorted column; unsorted headers omit the attribute to reduce screen-reader noise and align with ARIA guidance.
