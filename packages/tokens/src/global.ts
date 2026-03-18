@@ -15,6 +15,7 @@ export const globalTokens: FlatTokenMap = {
   "color.cyan.500": "#0891b2",
   "color.red.500": "#ef4444",
   "color.green.500": "#22c55e",
+  "color.amber.500": "#f59e0b",
   "space.0": "0px",
   "space.1": "4px",
   "space.2": "8px",

@@ -64,6 +64,7 @@
 - Toast escape-stack parity: when top toast disables Escape, dismissal now falls through to the nearest escapable toast.
 - Release dry-run package discovery parity: publish dry-run now auto-discovers non-private packages under `packages/*` and records skipped/no-package state in summary.
 - Table live-region parity: empty datasets now suppress sort-status live narration so empty-state messaging remains single-source.
+- Token integrity parity: added `--aurora-color-amber-500` to global tokens so warning-tone Progress/Empty no longer depend on undefined CSS vars.
 - CommandPalette focus model hardening: option nodes now stay out of tab order (`tabIndex=-1`) and preserve combobox focus on pointer selection for `aria-activedescendant` parity.
 - CommandPalette search hardening: `commands[].textValue` now supports non-string labels, and matching is accent-insensitive (`cafe` matches `Café`).
 - Table i18n hardening: `getSortAriaLabel` now enables localized sortable-header narration while preserving `aria-sort` behavior.

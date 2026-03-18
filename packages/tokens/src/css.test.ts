@@ -10,6 +10,7 @@ describe("token css utilities", () => {
     const vars = createThemeVariables("core-light");
     expect(vars["--aurora-surface-default"]).toBe("#ffffff");
     expect(vars["--aurora-button-solid-bg"]).toBe("var(--aurora-accent-default)");
+    expect(vars["--aurora-color-amber-500"]).toBe("#f59e0b");
   });
 
   it("creates stylesheet output", () => {

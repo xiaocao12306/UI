@@ -181,6 +181,7 @@
   - Table loading 播报降噪（loading 时抑制排序 live region，仅保留 loading 状态播报）
   - Table 空列边界收口（`columns=[]` 时 `colSpan` 安全回退为 `1`，避免无效表格语义）
   - Overlay 层级 token 化收口（Dialog/Drawer/Popover/Dropdown/Tooltip 使用统一 `z` 变量）
+  - Warning 色值 token 补齐（新增 `--aurora-color-amber-500`，修复 Progress/Empty warning 分支变量悬空）
   - Overlay 行为文档深化（层级 token 标尺 + focus return 规则，`docs/overlay-behavior.md`）
   - Demo E2E 扩展（Data 区域 Tabs Home/End 与 Table 排序回归）
   - Pagination 组件落地（`@aurora-ui/react` 导出、单元测试、Storybook `Data/Pagination`）
