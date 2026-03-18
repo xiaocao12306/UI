@@ -210,3 +210,52 @@ export const EscapeIgnoresImeComposition: Story = {
     await expect(body.queryByRole("dialog", { name: "IME composition dialog" })).not.toBeInTheDocument();
   }
 };
+
+function EscapePreemptedDialog() {
+  const [open, setOpen] = React.useState(true);
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+
+  React.useEffect(() => {
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptEscape, true);
+    return () => {
+      document.removeEventListener("keydown", preemptEscape, true);
+    };
+  }, []);
+
+  return (
+    <div style={{ display: "grid", gap: 12 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Escape hook calls:{" "}
+        <strong data-testid="dialog-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Preempted escape dialog"
+        onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
+      >
+        <p style={{ margin: 0 }}>Escape should remain preempted by global handlers.</p>
+      </Dialog>
+    </div>
+  );
+}
+
+export const EscapePreemptedByGlobalHandler: Story = {
+  render: () => <EscapePreemptedDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+
+    await expect(await body.findByRole("dialog", { name: "Preempted escape dialog" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    await expect(body.getByRole("dialog", { name: "Preempted escape dialog" })).toBeInTheDocument();
+    await expect(body.getByTestId("dialog-escape-calls")).toHaveTextContent("0");
+  }
+};

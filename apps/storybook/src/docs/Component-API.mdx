@@ -238,10 +238,12 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `showCloseButton` / `closeLabel` | `boolean` / `string` | Close affordance visibility and accessible label text. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Inspect or cancel dismiss intent before `onOpenChange(false)`. |
 | IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`isComposing` / `keyCode=229`) to prevent accidental close while confirming CJK input. |
+| Escape priority | preempted events skip dialog hook/dismiss | If higher-level handlers already `preventDefault()` Escape, dialog stays open and does not fire `onEscapeKeyDown`. |
 | nested dismiss order | top layer first | Nested overlay stacks (for example dropdown inside dialog) dismiss one layer per Escape/outside interaction. |
 
 <Canvas of={DialogStories.NestedDismissOrder} />
 <Canvas of={DialogStories.EscapeIgnoresImeComposition} />
+<Canvas of={DialogStories.EscapePreemptedByGlobalHandler} />
 
 ### Drawer
 
@@ -255,12 +257,14 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `restoreFocus` | `boolean` | Controls whether focus returns to previously focused element when drawer closes. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Fine-grained dismiss policy for blocking flows. |
 | `showCloseButton` | `boolean` | Allows explicit in-panel action-only dismissal. |
+| Escape priority | preempted events skip drawer hook/dismiss | If higher-level handlers already `preventDefault()` Escape, drawer stays open and does not fire `onEscapeKeyDown`. |
 | nested dismiss order | top layer first | Nested overlays inside drawer dismiss one layer per Escape/outside interaction. |
 
 <Canvas of={DrawerStories.FocusReturn} />
 <Canvas of={DrawerStories.NoFocusReturn} />
 <Canvas of={DrawerStories.NestedDismissOrder} />
 <Canvas of={DrawerStories.EscapeIgnoresImeComposition} />
+<Canvas of={DrawerStories.EscapePreemptedByGlobalHandler} />
 
 ### Popover
 
