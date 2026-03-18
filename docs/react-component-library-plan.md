@@ -165,6 +165,7 @@
   - CommandPalette 语义补强（`aria-disabled` option 语义与全禁用状态测试）
   - Toast 生命周期补丁（hover pause 状态在 close/reopen 后复位）
   - Toast 键盘可访问性补齐（`pauseOnHover` 同时覆盖 toast 内部 focus 路径，避免键盘操作期间自动消失）
+  - Toast 常驻边界补齐（`duration<=0` 不触发 timeout 自动关闭，补齐单测覆盖 0/-1 分支）
   - Table 可访问性增强（sortable header `aria-label` 下一步排序提示、`scope="col"`）
   - Table 可访问性增强（`ariaLabel` API，支持无 caption 场景下的命名语义）
   - Table 命名兜底收口（无 `caption/ariaLabel` 时自动回退 `aria-label="Data table"`，补齐单测与 Storybook 场景）

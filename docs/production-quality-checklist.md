@@ -172,6 +172,7 @@
 - PromptInput IME 收口：组合输入阶段屏蔽 Ctrl/Cmd+Enter 提交，补齐单测与 Storybook 交互断言。
 - Toast 焦点暂停收口：`pauseOnHover` 现在覆盖 toast 内部键盘 focus 路径，防止操作 close/action 按钮时被计时器中断。
 - Toast: added timer-path tests (`duration`, `pauseOnHover`) and `closeOnEscape={false}` branch, then fixed paused-state reset on close/reopen; Storybook now includes action-required persistent notification example.
+- Toast timer edge parity: added `duration<=0` regression to ensure persistent toasts never emit timeout close events.
 - Tabs: validated `Home/End` focus + selection behavior with disabled tabs in keyboard flow tests.
 - Table: validated `aria-sort` transitions and ascending/descending row-order toggling assertions; sortable headers now expose next-direction `aria-label` and `scope="col"`.
 - Demo E2E: added Data section keyboard/sort regression (`Tabs Home/End`, table sort toggle) to guard real user flows.

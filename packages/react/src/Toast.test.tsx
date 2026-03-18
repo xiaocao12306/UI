@@ -120,6 +120,33 @@ describe("Toast", () => {
     }
   });
 
+  it("does not auto dismiss when duration is zero or negative", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    try {
+      const { rerender } = render(
+        <Toast open title="Persistent" duration={0} onOpenChange={onOpenChange} onCloseReason={onCloseReason} />
+      );
+
+      act(() => {
+        vi.advanceTimersByTime(5000);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+      expect(onCloseReason).not.toHaveBeenCalled();
+
+      rerender(<Toast open title="Persistent" duration={-1} onOpenChange={onOpenChange} onCloseReason={onCloseReason} />);
+      act(() => {
+        vi.advanceTimersByTime(5000);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+      expect(onCloseReason).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("pauses auto dismiss while hovered when pauseOnHover is enabled", () => {
     vi.useFakeTimers();
     const onOpenChange = vi.fn();
