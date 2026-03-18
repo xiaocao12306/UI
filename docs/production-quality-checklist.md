@@ -203,7 +203,7 @@
 - Toast IME safety hardening: Escape dismiss now ignores composition mode (`isComposing` + `keyCode=229`) to prevent accidental close while confirming CJK input inside toast action controls.
 - Tabs RTL keyboard hardening: horizontal arrow semantics now follow container direction (`dir=\"rtl\"` mirrors ArrowLeft/ArrowRight), with unit + Storybook interaction coverage.
 - Table sort narration hardening: `aria-sort` now appears only on the actively sorted column; unsorted headers omit the attribute to reduce screen-reader noise and align with ARIA guidance.
-- Release evidence refresh: reran `demo:e2e` (`41` passed) and `release:dry-run` (`react` unpacked ~296.8 kB) with Storybook interaction baseline now `32/32` suites and `154/154` tests.
+- Release evidence refresh: reran `demo:e2e` (`45` passed) and `release:dry-run` (`react` unpacked ~296.8 kB) with Storybook interaction baseline now `32/32` suites and `156/156` tests.
 - Demo table narration parity: Playwright now asserts unsorted columns keep `aria-sort` absent while active sorted column toggles, matching unit/Storybook semantics.
 - Toast IME callback parity: Escape during composition no longer fires `onEscapeKeyDown`, preventing guarded flows from treating IME confirm/cancel as dismissal intent.
 - Demo RTL tabs parity: added dedicated Data section RTL tablist and Playwright ArrowRight/ArrowLeft regression to lock direction-aware keyboard navigation in real app flows.
@@ -214,3 +214,4 @@
 - DismissableLayer IME Escape parity: overlay dismiss layer now ignores Escape during composition (`isComposing` / `keyCode=229`), preventing nested surfaces from closing while CJK input is being confirmed.
 - Dialog/Drawer IME Escape coverage: added component-level regressions to ensure composition-phase Escape does not emit close events while plain Escape still dismisses as expected.
 - Storybook overlay IME parity: added `Dialog/Drawer EscapeIgnoresImeComposition` interaction scenarios so composition-guard behavior is locked in visual/interaction baseline.
+- Demo keyboard parity hardening: added Playwright regressions for CommandPalette/Toast IME Escape composition paths and Tabs/Table legacy `Spacebar` activation paths.

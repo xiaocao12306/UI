@@ -183,6 +183,38 @@ test("clears palette query on first Escape before dismiss when enabled", async (
   await expect(palette).toBeHidden();
 });
 
+test("ignores command palette navigation and selection keys during IME composition", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  const searchInput = palette.getByRole("combobox", { name: "Search commands" });
+
+  await expect(palette).toBeVisible();
+  const activeBefore = await searchInput.getAttribute("aria-activedescendant");
+
+  await searchInput.evaluate((element) => {
+    const event = new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true });
+    Object.defineProperty(event, "isComposing", { value: true });
+    Object.defineProperty(event, "keyCode", { value: 229 });
+    element.dispatchEvent(event);
+  });
+  await expect(searchInput).toHaveAttribute("aria-activedescendant", activeBefore ?? "");
+
+  await searchInput.evaluate((element) => {
+    const event = new KeyboardEvent("keydown", { key: "Enter", bubbles: true });
+    Object.defineProperty(event, "isComposing", { value: true });
+    Object.defineProperty(event, "keyCode", { value: 229 });
+    element.dispatchEvent(event);
+  });
+  await expect(palette).toBeVisible();
+
+  await searchInput.press("ArrowDown");
+  await searchInput.press("Enter");
+  await expect(palette).toBeHidden();
+  await expect(page.getByRole("dialog", { name: "Dialog Example" })).toBeVisible();
+});
+
 test("does not close command palette when disabled command is clicked", async ({ page }) => {
   await page.goto("/");
 
@@ -285,6 +317,24 @@ test("sorts demo table with keyboard activation", async ({ page }) => {
   await expect(firstRow).toContainText("Button");
 });
 
+test("sorts demo table with legacy Spacebar key event", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table");
+  const componentColumn = table.getByRole("columnheader", { name: /Component/ });
+  const componentSortButton = table.getByRole("button", { name: /Component/ });
+  const firstRow = table.locator("tbody tr").first();
+
+  await componentSortButton.focus();
+  await componentSortButton.evaluate((element) => {
+    const event = new KeyboardEvent("keydown", { key: "Spacebar", bubbles: true });
+    element.dispatchEvent(event);
+  });
+
+  await expect(componentColumn).toHaveAttribute("aria-sort", "descending");
+  await expect(firstRow).toContainText("StreamingCodeBlock");
+});
+
 test("keeps table identity column exposed as row headers across sorting", async ({ page }) => {
   await page.goto("/");
 
@@ -369,6 +419,30 @@ test("keeps manual tabs panel stable until Space activation", async ({ page }) =
   await shipTab.press("Space");
   await expect(shipPanel).toContainText("Tag release, publish packages, and announce changelog.");
   await expect(shipPanel).not.toHaveAttribute("hidden");
+});
+
+test("keeps manual tabs panel stable until legacy Spacebar activation", async ({ page }) => {
+  await page.goto("/");
+
+  const manualTablist = page.getByRole("tablist", { name: "Manual release workflow tabs" });
+  const draftTab = manualTablist.getByRole("tab", { name: "Draft" });
+  const reviewTab = manualTablist.getByRole("tab", { name: "Review" });
+  const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
+  const reviewPanel = page.locator(`#${await reviewTab.getAttribute("aria-controls")}`);
+
+  await draftTab.focus();
+  await draftTab.press("ArrowRight");
+  await expect(reviewTab).toBeFocused();
+  await expect(reviewPanel).toHaveAttribute("hidden");
+  await expect(draftPanel).not.toHaveAttribute("hidden");
+
+  await reviewTab.evaluate((element) => {
+    const event = new KeyboardEvent("keydown", { key: "Spacebar", bubbles: true });
+    element.dispatchEvent(event);
+  });
+
+  await expect(reviewPanel).not.toHaveAttribute("hidden");
+  await expect(draftPanel).toHaveAttribute("hidden");
 });
 
 test("keeps manual vertical tabs panel stable until Enter activation", async ({ page }) => {
@@ -536,6 +610,28 @@ test("dismisses toast with escape key", async ({ page }) => {
   await palette.getByRole("option", { name: "Create Project" }).click();
 
   const toast = page.getByRole("status").filter({ hasText: "Prompt submitted" });
+  await expect(toast).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(toast).toBeHidden();
+});
+
+test("keeps toast open when Escape is dispatched during IME composition", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await palette.getByRole("option", { name: "Create Project" }).click();
+
+  const toast = page.getByRole("status").filter({ hasText: "Prompt submitted" });
+  await expect(toast).toBeVisible();
+
+  await page.evaluate(() => {
+    const event = new KeyboardEvent("keydown", { key: "Escape", bubbles: true });
+    Object.defineProperty(event, "isComposing", { value: true });
+    Object.defineProperty(event, "keyCode", { value: 229 });
+    document.dispatchEvent(event);
+  });
   await expect(toast).toBeVisible();
 
   await page.keyboard.press("Escape");
