@@ -2,6 +2,7 @@ import { Meta, Title, Subtitle, Description, Canvas } from '@storybook/blocks';
 import * as ButtonStories from '../stories/Button.stories';
 import * as FormFieldStories from '../stories/FormField.stories';
 import * as DialogStories from '../stories/Dialog.stories';
+import * as DropdownStories from '../stories/Dropdown.stories';
 import * as CommandPaletteStories from '../stories/CommandPalette.stories';
 import * as PromptInputStories from '../stories/PromptInput.stories';
 import * as MessageBubbleStories from '../stories/MessageBubble.stories';
@@ -60,6 +61,9 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For dropdown typeahead, set `textValue` when item labels are non-string or need locale/accent-friendly buffered matching aliases.
 - For icon-only popover/dropdown triggers, always provide `triggerAriaLabel` to preserve an explicit control name.
 - Command palette and combobox-style overlays should keep text input as the primary focus anchor for navigation.
+
+<Canvas of={DropdownStories.OutsideDismissFocusTransfer} />
+<Canvas of={DropdownStories.EscapeDismissFocusReturn} />
 
 ## Testing
 
