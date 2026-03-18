@@ -91,6 +91,7 @@ Latest release gate run:
   - react overlay regressions: `pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/Drawer.test.tsx` passed after IME Escape guard coverage expansion
   - react preemption regressions: `pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/CommandPalette.test.tsx` passed after Escape-preemption callback-skip coverage expansion
   - react preemption overlay expansion: `pnpm --filter @aurora-ui/react exec vitest run src/Popover.test.tsx src/Dropdown.test.tsx` passed after Escape-preemption callback-skip coverage expansion
+  - react preemption overlay completion: `pnpm --filter @aurora-ui/react exec vitest run src/Drawer.test.tsx` passed after Escape-preemption callback-skip coverage expansion
   - demo IME/legacy keyboard regressions: `pnpm demo:e2e` passed after adding CommandPalette+Dropdown Escape preemption coverage, CommandPalette+Toast IME Escape coverage, and Tabs/Table legacy `Spacebar` keyboard-path checks
   - release dry-run package size evidence refreshed (`react` unpacked size ~301.7 kB)
 

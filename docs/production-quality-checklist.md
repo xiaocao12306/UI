@@ -215,6 +215,7 @@
 - DismissableLayer Escape preemption parity: when upstream handlers already `preventDefault()` Escape, dismiss layer now skips both `onEscapeKeyDown` and dismiss to avoid duplicate guarded-flow side effects across overlays.
 - Overlay Escape preemption coverage: Dialog + CommandPalette now include component-level regressions asserting preempted Escape bypasses `onEscapeKeyDown` and close transitions.
 - Overlay Escape preemption coverage expansion: Popover + Dropdown now include regressions asserting preempted Escape bypasses `onEscapeKeyDown` and keeps overlays open.
+- Overlay Escape preemption coverage completion: Drawer now includes component-level regression asserting preempted Escape bypasses `onEscapeKeyDown` and close transitions.
 - Storybook overlay preemption parity: Dropdown now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keep-open behavior is locked in visual baseline.
 - Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Demo preemption parity: Playwright now validates global Escape preemption for CommandPalette + Dropdown, ensuring overlays stay open under app-level shortcut interception.

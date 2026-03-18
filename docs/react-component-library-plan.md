@@ -299,6 +299,7 @@
   - DismissableLayer Escape 抢占收口（事件已被上层 `preventDefault` 时跳过 layer `onEscapeKeyDown` 与 dismiss，避免重复副作用）
   - Overlay Escape 抢占验收补齐（Dialog/CommandPalette 组件层补测，锁定抢占后不触发 `onEscapeKeyDown` 与关闭）
   - Overlay Escape 抢占验收扩展（Popover/Dropdown 组件层补测，锁定菜单/浮层在抢占后保持打开且不触发回调）
+  - Overlay Escape 抢占验收补齐（Drawer 组件层补测，锁定抢占后不触发 `onEscapeKeyDown` 与关闭）
   - Storybook Dropdown 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
   - Storybook CommandPalette 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
   - Demo Escape 抢占验收扩展（CommandPalette/Dropdown 新增 Playwright 回归，锁定全局抢占后保持打开，解除抢占后恢复正常关闭）

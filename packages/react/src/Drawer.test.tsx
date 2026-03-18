@@ -47,6 +47,30 @@ describe("Drawer", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("skips escape callback and dismiss when Escape is preempted upstream", () => {
+    const onOpenChange = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptEscape, true);
+
+    render(
+      <Drawer open onOpenChange={onOpenChange} title="Preempted escape drawer" onEscapeKeyDown={onEscapeKeyDown}>
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    document.removeEventListener("keydown", preemptEscape, true);
+  });
+
   it("ignores Escape dismiss while IME composition is active", () => {
     const onOpenChange = vi.fn();
 
