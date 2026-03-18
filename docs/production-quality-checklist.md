@@ -86,6 +86,7 @@
 - CommandPalette disabled-action guard: added dedicated Storybook `DisabledCommandGuard` interaction scenario plus unit branch to ensure disabled options never execute and never dismiss palette.
 - Toast Escape preemption guard: added Storybook `EscapePreemptedByGlobalHandler` scenario to lock `defaultPrevented` semantics and prevent accidental dismiss under global shortcut handlers.
 - Table keyboard sort parity: added `Enter/Space` activation coverage in unit + Storybook `SortTelemetry` play assertions to lock non-pointer sorting flows.
+- Tabs keyboard edge parity: Storybook `KeyboardNavigationGuide` now includes `Home/End` assertions with disabled-tab skipping to lock focus/selection semantics.
 - Dropdown unit focus-policy branch: added explicit outside-target focus retention assertion so pointer dismiss cannot regress into trigger focus theft.
 - Table empty-state sort coverage: sortable headers now disable when data is empty, with unit + Storybook play assertions to prevent no-op sort telemetry.
 - Tabs manual keyboard coverage: `Home/End` now has explicit unit + Storybook play assertions confirming focus movement does not activate panel until `Enter/Space`.

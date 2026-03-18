@@ -120,7 +120,25 @@ export const KeyboardNavigationGuide: Story = {
         ]}
       />
     </div>
-  )
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const releaseTab = canvas.getByRole("tab", { name: "Release" });
+    const blockedTab = canvas.getByRole("tab", { name: "Blocked" });
+
+    await userEvent.click(specTab);
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+    await expect(blockedTab).toHaveAttribute("aria-disabled", "true");
+
+    await userEvent.keyboard("{End}");
+    await expect(releaseTab).toHaveAttribute("aria-selected", "true");
+    await expect(releaseTab).toHaveFocus();
+
+    await userEvent.keyboard("{Home}");
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+    await expect(specTab).toHaveFocus();
+  }
 };
 
 function LabelledByHeadingDemo() {
