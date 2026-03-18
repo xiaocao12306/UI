@@ -118,6 +118,7 @@
   - 发布 dry-run 复验（生产级返工后再次验证 3 个包 tarball 清单与体积）
   - 发布前置校验脚本（`pnpm release:preflight` 检查 Chromatic/NPM token 并输出缺失提示）
   - 发布 dry-run 自动化（`pnpm release:dry-run` 脚本 + `.github/workflows/release-dry-run.yml`）
+  - 发布 dry-run 无副作用收口（要求干净工作区并在执行后自动回滚 `changeset version` 文件改动）
   - 发布门禁脚本补齐（`pnpm release:gate:ci` 执行 `verify + demo:e2e + demo:dist:check + storybook:test:ci`，`pnpm release:gate` 追加 `release:dry-run`）
   - Release 工作流缺失 `NPM_TOKEN` 提示增强（GitHub warning + secret 配置路径）
   - 生产级返工（Button、Input/FormField、Dialog）

@@ -26,6 +26,8 @@ const packageMetrics = [];
 let changesetStatus = "ok";
 let dryRunStatus = "success";
 let failedStepLabel = "";
+let versionStepRan = false;
+let restoredFileCount = 0;
 
 function runStep(label, command) {
   console.log("");
@@ -76,6 +78,7 @@ function writeSummary() {
     `- status: \`${dryRunStatus}\``,
     ...(failedStepLabel ? [`- failed step: \`${failedStepLabel}\``] : []),
     `- changeset version: \`${changesetStatus}\``,
+    `- restored version files: \`${restoredFileCount}\``,
     "",
     "| Package | Tarball Size | Unpacked Size |",
     "| --- | --- | --- |"
@@ -91,18 +94,103 @@ function writeSummary() {
   appendFileSync(summaryPath, `${lines.join("\n")}\n`, "utf8");
 }
 
+function runGit(args) {
+  const result = spawnSync("git", args, {
+    encoding: "utf8",
+    stdio: "pipe",
+    shell: process.platform === "win32"
+  });
+
+  if (result.status !== 0) {
+    throw new Error(`git ${args.join(" ")} failed`);
+  }
+
+  return result.stdout ?? "";
+}
+
+function getGitStatusLines() {
+  const output = runGit(["status", "--porcelain"]);
+  return output
+    .split("\n")
+    .map((line) => line.trimEnd())
+    .filter(Boolean);
+}
+
+function ensureCleanWorkingTree() {
+  const lines = getGitStatusLines();
+  if (lines.length > 0) {
+    throw new Error("Step failed: preflight clean-working-tree check");
+  }
+}
+
+function restoreVersionChanges() {
+  if (!versionStepRan) {
+    return;
+  }
+
+  const lines = getGitStatusLines();
+  const changedTrackedPaths = new Set();
+
+  for (const line of lines) {
+    const status = line.slice(0, 2);
+    if (status === "??") {
+      continue;
+    }
+
+    const rawPath = line.slice(3).trim();
+    if (!rawPath) {
+      continue;
+    }
+
+    const resolvedPath = rawPath.includes(" -> ") ? rawPath.split(" -> ")[1].trim() : rawPath;
+    if (resolvedPath) {
+      changedTrackedPaths.add(resolvedPath);
+    }
+  }
+
+  if (changedTrackedPaths.size === 0) {
+    return;
+  }
+
+  runGit(["checkout", "--", ...changedTrackedPaths]);
+  restoredFileCount = changedTrackedPaths.size;
+}
+
 console.log("Aurora UI release dry-run");
 console.log("-------------------------");
 
 try {
+  ensureCleanWorkingTree();
+
   for (const step of checks) {
     runStep(step.label, step.command);
+    if (step.label === "changeset version") {
+      versionStepRan = true;
+    }
   }
 } catch (error) {
   dryRunStatus = "failed";
   if (error instanceof Error && error.message.startsWith("Step failed: ")) {
     failedStepLabel = error.message.replace("Step failed: ", "");
   }
+
+  try {
+    restoreVersionChanges();
+  } catch {
+    if (!failedStepLabel) {
+      failedStepLabel = "restore version changes";
+    }
+  }
+
+  writeSummary();
+  throw error;
+}
+
+try {
+  restoreVersionChanges();
+} catch (error) {
+  dryRunStatus = "failed";
+  failedStepLabel = "restore version changes";
   writeSummary();
   throw error;
 }
@@ -111,4 +199,4 @@ writeSummary();
 
 console.log("");
 console.log("Dry-run completed.");
-console.log("If version files changed, commit/reset them intentionally before pushing.");
+console.log("Any version-file edits produced by dry-run were reverted automatically.");

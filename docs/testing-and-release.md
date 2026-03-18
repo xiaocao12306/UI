@@ -69,8 +69,10 @@ pnpm release:dry-run
 ```
 
 Expected behavior:
+- requires a clean working tree (`git status --porcelain` empty) before execution
 - when no pending changesets: `No unreleased changesets found, exiting.`
 - `npm publish --dry-run` prints tarball manifest/size and ends without real publish
+- any version-file edits from `changeset version` are automatically reverted before script exit
 - command exits non-zero if any step fails (`changeset version` or any package dry-run)
 
 Underlying commands (for troubleshooting):

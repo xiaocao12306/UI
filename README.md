@@ -107,6 +107,7 @@ pnpm chromatic
 - local preflight: `pnpm release:preflight` (checks `CHROMATIC_PROJECT_TOKEN` + `NPM_TOKEN`)
 - local CI-equivalent gate: `pnpm release:gate:ci` (`verify + demo:e2e + demo:dist:check + storybook:test:ci`)
 - local publish dry-run: `pnpm release:dry-run` (runs `changeset version` + 3 package `npm publish --dry-run`)
+  - requires clean working tree and auto-reverts dry-run version file edits
 - full pre-release gate: `pnpm release:gate` (`release:gate:ci` + `release:dry-run`)
 
 ## Demo External Link
