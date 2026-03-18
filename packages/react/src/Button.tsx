@@ -91,6 +91,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     onMouseLeave,
     onMouseDown,
     onMouseUp,
+    onPointerDown,
     onFocus,
     onBlur,
     onKeyDown,
@@ -102,7 +103,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
 ) {
   const [hovered, setHovered] = React.useState(false);
   const [pressed, setPressed] = React.useState(false);
-  const [focused, setFocused] = React.useState(false);
+  const [focusVisible, setFocusVisible] = React.useState(false);
+  const focusVisibleIntentRef = React.useRef(true);
   const interactionDisabled = disabled || loading;
   const variantStyles = variantStyleMap[variant];
   const stateStyle = interactionDisabled ? variantStyles.disabled : pressed ? variantStyles.active : hovered ? variantStyles.hover : null;
@@ -134,7 +136,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         transition:
           "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)",
         cursor: interactionDisabled ? "not-allowed" : "pointer",
-        boxShadow: focused ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 45%, transparent)" : undefined,
+        boxShadow: focusVisible ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 45%, transparent)" : undefined,
         transform: !interactionDisabled && pressed ? "translateY(1px)" : undefined,
         opacity: interactionDisabled ? 0.72 : 1,
         ...sizeStyleMap[size],
@@ -154,25 +156,33 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         onMouseLeave?.(event);
       }}
       onMouseDown={(event) => {
+        focusVisibleIntentRef.current = false;
+        setFocusVisible(false);
         if (!interactionDisabled && event.button === 0) {
           setPressed(true);
         }
         onMouseDown?.(event);
+      }}
+      onPointerDown={(event) => {
+        focusVisibleIntentRef.current = false;
+        setFocusVisible(false);
+        onPointerDown?.(event);
       }}
       onMouseUp={(event) => {
         setPressed(false);
         onMouseUp?.(event);
       }}
       onFocus={(event) => {
-        setFocused(true);
+        setFocusVisible(resolveFocusVisibleState(event.currentTarget, focusVisibleIntentRef.current));
         onFocus?.(event);
       }}
       onBlur={(event) => {
-        setFocused(false);
+        setFocusVisible(false);
         setPressed(false);
         onBlur?.(event);
       }}
       onKeyDown={(event) => {
+        focusVisibleIntentRef.current = true;
         if (!interactionDisabled && isButtonActivationKey(event.key)) {
           setPressed(true);
         }
@@ -210,4 +220,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
 
 function isButtonActivationKey(key: string) {
   return key === "Enter" || key === " " || key === "Spacebar";
+}
+
+function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {
+  try {
+    return target.matches(":focus-visible");
+  } catch {
+    return fallback;
+  }
 }

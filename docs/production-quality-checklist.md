@@ -121,6 +121,7 @@
 - Toast live override coverage: added regression ensuring `live` can override danger default politeness while retaining `role="alert"` semantics.
 - Button keyboard parity: added legacy `Spacebar` activation-key compatibility regression for pressed-state feedback.
 - Button loading/disabled state parity: pressed visual offset now clears immediately when runtime transitions to `loading` or `disabled`.
+- Button focus-visible parity: focus ring now appears only for keyboard-visible focus and stays hidden for pointer-driven focus paths.
 - Form invalid-token parity: `aria-invalid=\"grammar|spelling\"` now remains intact across Input/Select/Textarea/DatePicker/Checkbox/RadioGroup/Switch/FormField instead of collapsing to `true`.
 - FormField invalid precedence parity: field-level `error` now explicitly overrides child `aria-invalid=\"grammar|spelling\"` to `true`, keeping form-error narration deterministic.
 - Storybook invalid-token parity: added `Form/Input/InvalidTokenSemantics` play assertion to keep `aria-invalid=\"grammar\"` semantics inside visual/interaction regression chain.

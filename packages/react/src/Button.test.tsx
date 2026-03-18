@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Button } from "./Button";
 
 describe("Button", () => {
@@ -27,12 +27,32 @@ describe("Button", () => {
     expect(screen.getByRole("button", { name: "Action" })).toHaveAttribute("type", "button");
   });
 
-  it("applies focus ring on focus", () => {
+  it("applies focus ring when focus-visible is true", () => {
     render(<Button>Focus me</Button>);
     const button = screen.getByRole("button", { name: "Focus me" });
+    const matchesSpy = vi.spyOn(button, "matches").mockImplementation((selector) => selector === ":focus-visible");
 
     fireEvent.focus(button);
     expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+    matchesSpy.mockRestore();
+  });
+
+  it("does not apply focus ring for pointer-driven focus", () => {
+    render(<Button>Pointer Focus</Button>);
+    const button = screen.getByRole("button", { name: "Pointer Focus" });
+    const nativeMatches = button.matches.bind(button);
+    const matchesSpy = vi.spyOn(button, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        return false;
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.mouseDown(button, { button: 0 });
+    fireEvent.focus(button);
+    expect(button.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+    matchesSpy.mockRestore();
   });
 
   it("supports legacy Spacebar key value for pressed-state feedback", () => {
