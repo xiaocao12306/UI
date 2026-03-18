@@ -392,6 +392,12 @@
   - Demo 静态产物门禁收口（新增 `demo:dist:check`，校验 `apps/demo/dist` 与源码同步并纳入 `release:gate`）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
+  - Tabs 手动激活 AT 收口（修复 `click(detail=0)` 过度拦截：辅助技术触发点击可激活 tab，同时保持键盘激活去重）
+  - CommandPalette i18n 收口（新增 `closeLabel`，支持关闭按钮可访问名称本地化，并补齐 Storybook `LocalizedDialogCopy` 断言）
+  - CommandPalette 长列表键盘可见区收口（高亮 option 随 `activeIndex` 自动 `scrollIntoView`，避免“选中不可见”）
+  - Toast 关闭回调契约收口（单测锁定 `onCloseReason -> onClose -> onOpenChange(false)` 顺序，并同步 Component API / Best Practices）
+  - Demo 首屏门禁文案收口（移除易过期的硬编码验收数字，改为稳定门禁状态表达）
+  - Storybook 入口文档收口（`Getting Started` 改为分域导航 + 阅读路径，补齐 Catalog/API/Best Practices 跳转）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

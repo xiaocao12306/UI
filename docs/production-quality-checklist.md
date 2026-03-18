@@ -258,6 +258,12 @@
 - Overlay Escape preemption coverage expansion: Popover + Dropdown now include regressions asserting preempted Escape bypasses `onEscapeKeyDown` and keeps overlays open.
 - Overlay Escape preemption coverage completion: Drawer now includes component-level regression asserting preempted Escape bypasses `onEscapeKeyDown` and close transitions.
 - Storybook overlay preemption parity: Dropdown now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keep-open behavior is locked in visual baseline.
+- Tabs AT click parity: manual-activation tabs now allow assistive-tech `click(detail=0)` activation while still deduping keyboard-generated follow-up clicks.
+- CommandPalette i18n parity: added `closeLabel` so close-button accessible name can be localized alongside title/search/list labels.
+- CommandPalette long-list keyboard parity: active option now auto-scrolls into view on Arrow/Home/End navigation to avoid invisible selection states.
+- Toast lifecycle parity: close callback order is now contract-locked by tests/docs (`onCloseReason` -> `onClose` -> `onOpenChange(false)`).
+- Demo copy hygiene parity: hero gate badges now use non-stale status language instead of hardcoded test-count numbers.
+- Storybook onboarding parity: `Getting Started` now provides domain-based catalog map and direct API/Best-Practices reading path.
 - Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.
 - Storybook popover preemption parity: Popover now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps surface open and skips hook side effects.
