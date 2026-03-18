@@ -187,6 +187,30 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledTimes(2);
   });
 
+  it("supports legacy Spacebar key value on sortable headers", () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        onSortChange={onSortChange}
+      />
+    );
+
+    const sortAscending = screen.getByRole("button", { name: "Name sort descending" });
+    fireEvent.keyDown(sortAscending, { key: "Spacebar" });
+    expect(onSortChange).toHaveBeenCalledTimes(1);
+    expect(onSortChange).toHaveBeenCalledWith("name", "desc");
+  });
+
   it("supports localized sort aria labels via getSortAriaLabel", () => {
     render(
       <Table

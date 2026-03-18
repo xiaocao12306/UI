@@ -239,6 +239,7 @@
   - Demo Tabs E2E 收口（manual 模式补齐 `Space` 激活回归，覆盖 Enter/Space 双路径）
   - Tabs 键盘兼容收口（manual 模式补齐 legacy `Spacebar` key 兼容 + 单测回归）
   - Tabs 回调去重收口（manual 键盘激活后忽略 `detail=0` click，避免 `onValueChange` 重复触发）
+  - Table 键盘兼容收口（sortable header 补齐 legacy `Spacebar` 激活单测回归）
   - Storybook 稳定性收口（`Core/Tag/MetadataRow` 增补 play 断言，降低 runner 重试噪音）
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
