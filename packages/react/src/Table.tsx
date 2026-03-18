@@ -20,6 +20,7 @@ export type TableProps<T> = {
   rowKey?: (row: T, rowIndex: number) => string;
   caption?: React.ReactNode;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
   loading?: boolean;
   loadingContent?: React.ReactNode;
   emptyContent?: React.ReactNode;
@@ -64,6 +65,7 @@ export function Table<T>({
   rowKey,
   caption,
   ariaLabel,
+  ariaLabelledBy,
   loading = false,
   loadingContent = "Loading data...",
   emptyContent = "No data available.",
@@ -73,7 +75,7 @@ export function Table<T>({
   getSortStatusText = defaultGetSortStatusText,
   onSortChange
 }: TableProps<T>) {
-  const resolvedAriaLabel = ariaLabel ?? (caption ? undefined : "Data table");
+  const resolvedAriaLabel = ariaLabelledBy ? undefined : (ariaLabel ?? (caption ? undefined : "Data table"));
 
   const [sortState, setSortState] = React.useState<{ key: string; direction: TableSortDirection } | null>(() =>
     resolveInitialSortState(columns, defaultSortKey, defaultSortDirection)
@@ -168,6 +170,7 @@ export function Table<T>({
       ) : null}
       <table
         aria-label={resolvedAriaLabel}
+        aria-labelledby={ariaLabelledBy}
         aria-busy={loading || undefined}
         style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}
       >

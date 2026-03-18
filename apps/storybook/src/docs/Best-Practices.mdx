@@ -171,7 +171,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - If `rowKey` uses `rowIndex`, treat it as source-data index; avoid deriving keys from sorted visual position.
 - For custom cell renderers, use `render(row, rowIndex, sourceIndex)` and pick the index intentionally (`rowIndex` for ranking UI, `sourceIndex` for source-linked IDs/telemetry).
 - Mark the primary identity column with `rowHeader` so screen readers can announce row context consistently.
-- Ensure each table has an accessible name through `caption` or `ariaLabel`; fallback `Data table` naming exists but should be treated as a safety net.
+- Ensure each table has an accessible name through `caption`, `ariaLabel`, or `ariaLabelledBy`; fallback `Data table` naming exists but should be treated as a safety net.
 - Expose `aria-sort` only on the actively sorted header so assistive narration reflects current sort state without repeating neutral columns.
 - Keep non-sortable headers free of `aria-sort` so assistive tech does not announce inert columns as interactive.
 - Validate sortable headers with both pointer and keyboard (`Enter`/`Space`, including legacy `Spacebar`) so non-pointer workflows stay first-class.

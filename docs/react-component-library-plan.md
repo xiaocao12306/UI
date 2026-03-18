@@ -164,6 +164,7 @@
   - Table 可访问性增强（sortable header `aria-label` 下一步排序提示、`scope="col"`）
   - Table 可访问性增强（`ariaLabel` API，支持无 caption 场景下的命名语义）
   - Table 命名兜底收口（无 `caption/ariaLabel` 时自动回退 `aria-label="Data table"`，补齐单测与 Storybook 场景）
+  - Table 命名语义扩展（新增 `ariaLabelledBy`，支持复用可见标题命名表格并覆盖 `ariaLabel` 回退）
   - Table 排序稳定性收口（同值项保持原始顺序，补齐单测保证跨环境确定性）
   - Overlay 层级 token 化收口（Dialog/Drawer/Popover/Dropdown/Tooltip 使用统一 `z` 变量）
   - Overlay 行为文档深化（层级 token 标尺 + focus return 规则，`docs/overlay-behavior.md`）

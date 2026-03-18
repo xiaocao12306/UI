@@ -155,6 +155,30 @@ describe("Table", () => {
     expect(screen.getByRole("table", { name: "Component release status" })).toBeInTheDocument();
   });
 
+  it("supports ariaLabelledBy naming and suppresses aria-label fallback", () => {
+    render(
+      <div>
+        <h2 id="release-metrics-heading">Release metrics table</h2>
+        <Table
+          columns={[
+            { key: "name", header: "Name" },
+            { key: "status", header: "Status" }
+          ]}
+          data={[
+            { name: "Button", status: "Stable" },
+            { name: "Dialog", status: "Stable" }
+          ]}
+          ariaLabelledBy="release-metrics-heading"
+          ariaLabel="Should not be used when ariaLabelledBy exists"
+        />
+      </div>
+    );
+
+    const table = screen.getByRole("table", { name: "Release metrics table" });
+    expect(table).toHaveAttribute("aria-labelledby", "release-metrics-heading");
+    expect(table).not.toHaveAttribute("aria-label");
+  });
+
   it("prefers caption naming when ariaLabel is not provided", () => {
     render(
       <Table

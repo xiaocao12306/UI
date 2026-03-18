@@ -152,6 +152,23 @@ export const AccessibleNameFallback: Story = {
   }
 };
 
+export const AccessibleNameLabelledByHeading: Story = {
+  render: () => (
+    <div style={{ width: 780, display: "grid", gap: 10 }}>
+      <h3 id="release-board-heading" style={{ margin: 0 }}>
+        Release board metrics
+      </h3>
+      <Table ariaLabelledBy="release-board-heading" ariaLabel="Fallback table label" columns={columns} data={rows} rowKey={(row) => row.id} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole("table", { name: "Release board metrics" });
+    await expect(table).toHaveAttribute("aria-labelledby", "release-board-heading");
+    await expect(table).not.toHaveAttribute("aria-label");
+  }
+};
+
 export const RowHeaderSemantics: Story = {
   render: () => (
     <div style={{ width: 780 }}>
