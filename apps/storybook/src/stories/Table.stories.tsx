@@ -17,7 +17,7 @@ const rows: ReleaseRow[] = [
 ];
 
 const columns: Array<TableColumn<ReleaseRow>> = [
-  { key: "id", header: "Issue", width: 120, sortable: true },
+  { key: "id", header: "Issue", width: 120, sortable: true, rowHeader: true },
   { key: "component", header: "Component", sortable: true },
   { key: "owner", header: "Owner", sortable: true },
   {
@@ -107,7 +107,7 @@ export const LoadingState: Story = {
 
     await expect(table).toHaveAttribute("aria-busy", "true");
     await expect(canvas.getByText("Syncing release feed...")).toBeInTheDocument();
-    await expect(canvas.queryByRole("cell", { name: "BTN-102" })).not.toBeInTheDocument();
+    await expect(canvas.queryByRole("rowheader", { name: "BTN-102" })).not.toBeInTheDocument();
     await expect(canvas.getByRole("button", { name: "Issue sort descending" })).toBeDisabled();
   }
 };
