@@ -84,7 +84,7 @@ Latest release gate run:
 - date: 2026-03-18
 - command: `pnpm release:gate`
 - result: passed (`verify` + `demo:e2e` + `storybook:test:ci` + `release:dry-run`)
-- notes: demo E2E total now `35` checks (includes table rowheader + toast-level escape guard regressions)
+- notes: demo E2E total now `36` checks (includes table rowheader + toast-level escape guard + command-palette dismiss-guard regressions)
 
 ## GitHub Release Automation
 Workflow: `.github/workflows/release.yml`
