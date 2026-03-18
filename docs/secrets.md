@@ -9,13 +9,13 @@
 
 ```bash
 pnpm release:preflight
-pnpm release:preflight:chromatic
-pnpm release:preflight:publish
+pnpm release:preflight -- --scope=chromatic
+pnpm release:preflight -- --scope=publish
 ```
 
 - `release:preflight`：检查 `CHROMATIC_PROJECT_TOKEN + NPM_TOKEN`
-- `release:preflight:chromatic`：仅检查 `CHROMATIC_PROJECT_TOKEN`
-- `release:preflight:publish`：仅检查 `NPM_TOKEN`
+- `release:preflight -- --scope=chromatic`：仅检查 `CHROMATIC_PROJECT_TOKEN`
+- `release:preflight -- --scope=publish`：仅检查 `NPM_TOKEN`
 
 ## CHROMATIC_PROJECT_TOKEN
 
@@ -38,6 +38,11 @@ export CHROMATIC_PROJECT_TOKEN=<your token>
 pnpm storybook:build
 pnpm chromatic
 ```
+
+`enforce` 使用建议（Chromatic workflow）：
+
+- 日常 PR：保持默认 `enforce=false`，缺失 token 时 soft-skip（不阻塞主 CI）。
+- 发布前人工验收：手动触发 `workflow_dispatch` 并设置 `enforce=true`，将 `CHROMATIC_PROJECT_TOKEN` 缺失升级为硬失败。
 
 ## NPM_TOKEN
 
@@ -62,6 +67,11 @@ pnpm chromatic
 
 - 日常自动触发：保持默认 `enforce=false`，缺失 token 时允许软跳过 publish，避免阻塞非发布类迭代。
 - 发布前人工验收：手动触发 `workflow_dispatch` 并设置 `enforce=true`，将 `NPM_TOKEN` 缺失升级为硬失败，避免误以为完成了真实发布。
+
+统一可审阅口径：
+
+- `chromatic.yml` 与 `release.yml` 都会在 `GITHUB_STEP_SUMMARY` 输出 `enforce mode` 与 token 配置状态。
+- token 缺失时 summary 会附修复路径：`docs/secrets.md`。
 
 安全建议：
 

@@ -75,6 +75,8 @@ pnpm demo:e2e
 ```bash
 pnpm storybook:dev
 pnpm storybook:build
+pnpm storybook:coverage:report
+pnpm storybook:coverage:check
 pnpm storybook:test
 pnpm storybook:test:ci
 pnpm chromatic
@@ -106,12 +108,13 @@ pnpm chromatic
 - secrets setup guide: `docs/secrets.md`
 - local preflight:
   - `pnpm release:preflight` (`CHROMATIC_PROJECT_TOKEN` + `NPM_TOKEN`)
-  - `pnpm release:preflight:chromatic` (`CHROMATIC_PROJECT_TOKEN` only)
-  - `pnpm release:preflight:publish` (`NPM_TOKEN` only)
+  - `pnpm release:preflight -- --scope=chromatic` (`CHROMATIC_PROJECT_TOKEN` only)
+  - `pnpm release:preflight -- --scope=publish` (`NPM_TOKEN` only)
 - local CI-equivalent gate: `pnpm release:gate:ci` (`verify + demo:e2e + demo:dist:check + storybook:test:ci`)
 - local publish dry-run: `pnpm release:dry-run` (runs `changeset version` + auto-discovered publishable packages `npm publish --dry-run`)
   - requires clean working tree and auto-reverts dry-run version file edits
 - full pre-release gate: `pnpm release:gate` (`release:gate:ci` + `release:dry-run`)
+- workflow evidence should be read from each run's `GITHUB_STEP_SUMMARY` (storybook gate snapshot, token mode, dry-run package table)
 
 ## Demo External Link
 - GitHub Pages workflow: `.github/workflows/demo-pages.yml`

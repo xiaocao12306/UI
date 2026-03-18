@@ -20,6 +20,8 @@ pnpm --filter @aurora-ui/react test
 pnpm --filter @aurora-ui/demo build
 pnpm demo:e2e
 pnpm demo:dist:check
+pnpm storybook:coverage:report
+pnpm storybook:coverage:check
 pnpm storybook:docs:check
 pnpm storybook:static:check
 pnpm storybook:build
@@ -52,15 +54,15 @@ Run this before Chromatic upload or npm publish:
 
 ```bash
 pnpm release:preflight
-pnpm release:preflight:chromatic
-pnpm release:preflight:publish
+pnpm release:preflight -- --scope=chromatic
+pnpm release:preflight -- --scope=publish
 ```
 
 Expected behavior:
 
 - `release:preflight`: checks `CHROMATIC_PROJECT_TOKEN + NPM_TOKEN`
-- `release:preflight:chromatic`: checks `CHROMATIC_PROJECT_TOKEN` only
-- `release:preflight:publish`: checks `NPM_TOKEN` only
+- `release:preflight -- --scope=chromatic`: checks `CHROMATIC_PROJECT_TOKEN` only
+- `release:preflight -- --scope=publish`: checks `NPM_TOKEN` only
 - any missing token in selected scope: command prints `MISSING` line(s), points to `docs/secrets.md`, and exits with code `1`
 
 ## Versioning
@@ -137,7 +139,7 @@ GitHub Actions workflow runs:
 - typecheck
 - test
 - build
-- storybook interaction gate (`pnpm storybook:test:ci`, includes docs/static freshness checks)
+- storybook interaction gate (`pnpm storybook:test:ci`, includes coverage/docs/static freshness checks)
 - demo e2e smoke test
 - demo static freshness gate (`pnpm demo:dist:check`)
 
@@ -179,45 +181,13 @@ pnpm release:gate
 
 This appends: 5. `pnpm release:dry-run`
 
-## Release Gate Evidence (2026-03-19)
+## Evidence Retrieval
 
-Command executed from `/www/code/react-ui-library`:
+为避免手工维护计数过期（例如 Storybook tests/suites 或 dry-run 包体积），本仓库以 workflow run 的 `GITHUB_STEP_SUMMARY` 作为唯一审阅证据源。
 
-```bash
-pnpm release:gate:ci
-```
+建议审阅顺序：
 
-Result summary:
-
-- overall status: `passed`
-- verify: `passed` (`lint` + `typecheck` + `test` + `build`)
-- demo e2e: `69/69` passed
-- demo dist sync gate: `passed` (`demo:dist:check`)
-- storybook docs import gate: `passed` (`4` mdx files scanned)
-- storybook static sync gate: `passed` (`storybook-static` synchronized)
-- storybook interaction tests: `177/177` passed (`32` suites)
-- release gate pass: `yes`
-
-### 备注
-
-- 同日早些时候曾在 `@aurora-ui/primitives` 的 `DismissableLayer` 非主键 pointer 用例触发阻塞；修复后已通过本节最终复验。
-
-## Release Dry-Run Evidence (2026-03-19)
-
-Command executed from `/www/code/react-ui-library`:
-
-```bash
-pnpm release:dry-run
-```
-
-Result summary:
-
-- overall status: `passed`
-- changeset phase: `No unreleased changesets found, exiting.`
-- publish dry-run targets: `@aurora-ui/primitives` / `@aurora-ui/react` / `@aurora-ui/tokens`
-- npm auth: dry-run warning expected (`requires you to be logged in`) and does not block output
-- package tarball evidence:
-  - `@aurora-ui/primitives@0.1.0`: package `14.4 kB`, unpacked `71.2 kB`
-  - `@aurora-ui/react@0.1.0`: package `60.3 kB`, unpacked `364.1 kB`
-  - `@aurora-ui/tokens@0.1.0`: package `3.2 kB`, unpacked `17.0 kB`
-- post-run workspace hygiene: `release-dry-run` reverted temporary version-file edits automatically
+1. `CI` workflow：查看 `Storybook Interaction Gate` summary（coverage/docs/static/test gate 快照）。
+2. `Release Dry Run` workflow：查看包体积表、失败步骤、恢复文件计数。
+3. `Chromatic Visual Tests` workflow：查看 mode/token 状态、build/storybook URL、change/error 计数。
+4. `Release` workflow：查看 `Release Gate (CI)` summary + `Publish Mode` summary（`enforce`/token 状态）。

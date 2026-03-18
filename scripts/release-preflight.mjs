@@ -17,9 +17,13 @@ const validScopes = new Set(["all", "chromatic", "publish"]);
 const scopeArg = process.argv.find((arg) => arg.startsWith("--scope="));
 const scope = scopeArg ? scopeArg.split("=")[1] : "all";
 
+function printUsage() {
+  console.log("Usage: pnpm release:preflight -- --scope=<all|chromatic|publish>");
+}
+
 if (!validScopes.has(scope)) {
   console.error(`Invalid --scope value: ${scope}`);
-  console.error("Expected one of: all, chromatic, publish");
+  printUsage();
   process.exit(1);
 }
 
@@ -45,8 +49,9 @@ if (hasMissing) {
   console.log("");
   console.log(`Some required secrets are missing for scope "${scope}".`);
   console.log("See docs/secrets.md for setup instructions.");
+  printUsage();
   process.exit(1);
 }
 
 console.log("");
-console.log("All required secrets are available.");
+console.log("All required secrets are available for this scope.");

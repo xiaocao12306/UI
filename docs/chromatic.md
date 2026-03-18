@@ -24,10 +24,16 @@ pnpm chromatic
 3. 若 token 存在：构建 Storybook 并上传到 Chromatic
 4. 若 token 不存在且 `enforce=false`（默认）：优雅跳过，不阻塞主 CI（soft-skip）
 5. 若手动触发且 `enforce=true`：token 缺失时直接失败（hard-gate）
+6. 无论上传/跳过/失败，都会写入 `GITHUB_STEP_SUMMARY`（mode、token 状态、build URL、storybook URL、change/error 计数）
 
 `enforce` 使用建议：
 - 日常 PR：保持默认 `false`，避免在未配置 token 的仓库里阻塞开发流。
 - 发布前人工验收：手动触发 workflow_dispatch 并设置 `enforce=true`，将视觉回归升级为硬门禁。
+
+手动触发建议（发布前）：
+1. GitHub Actions 打开 `Chromatic Visual Tests` workflow。
+2. 点击 `Run workflow`，勾选 `enforce=true`。
+3. 检查 run 的 `GITHUB_STEP_SUMMARY`：确认 token 状态、Chromatic build URL 与 change/error 计数。
 
 ## 仓库配置步骤
 1. 在 Chromatic 创建项目，获取 project token。

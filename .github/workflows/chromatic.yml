@@ -53,6 +53,15 @@ jobs:
             echo "enabled=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Chromatic Mode Summary
+        run: |
+          {
+            echo "## Chromatic Mode"
+            echo
+            echo "- enforce mode: \`${{ steps.token.outputs.enforce }}\`"
+            echo "- chromatic token configured: \`${{ steps.token.outputs.enabled }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Build Storybook
         if: steps.token.outputs.enabled == 'true'
         run: pnpm storybook:build

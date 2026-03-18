@@ -33,7 +33,38 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
       - name: Run Release Quality Gate
-        run: pnpm release:gate:ci
+        run: |
+          set +e
+          pnpm release:gate:ci 2>&1 | tee /tmp/release-gate.log
+          gate_status=${PIPESTATUS[0]}
+
+          verify_line=$(grep -m1 "verify" /tmp/release-gate.log || true)
+          demo_dist_line=$(grep -m1 "\\[demo-dist-check\\] ok:" /tmp/release-gate.log || true)
+          storybook_coverage_line=$(grep -m1 "docs reference coverage:" /tmp/release-gate.log || true)
+          storybook_docs_line=$(grep -m1 "\\[storybook-docs-import-check\\] ok:" /tmp/release-gate.log || true)
+          storybook_static_line=$(grep -m1 "\\[storybook-static-check\\] ok:" /tmp/release-gate.log || true)
+          suites_line=$(grep -m1 "^Test Suites:" /tmp/release-gate.log || true)
+          tests_line=$(grep -m1 "^Tests:" /tmp/release-gate.log || true)
+
+          {
+            echo "## Release Gate (CI)"
+            echo
+            if [ "$gate_status" -eq 0 ]; then
+              echo "- status: \`passed\`"
+            else
+              echo "- status: \`failed\`"
+            fi
+            echo "- command: \`pnpm release:gate:ci\`"
+            echo "- ${verify_line:-verify: n/a}"
+            echo "- ${demo_dist_line:-demo dist gate: n/a}"
+            echo "- ${storybook_coverage_line:-storybook docs reference coverage: n/a}"
+            echo "- ${storybook_docs_line:-storybook docs gate: n/a}"
+            echo "- ${storybook_static_line:-storybook static gate: n/a}"
+            echo "- ${suites_line:-Test Suites: n/a}"
+            echo "- ${tests_line:-Tests: n/a}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          exit "$gate_status"
 
       - id: npm-token
         name: Check NPM Token
@@ -49,6 +80,15 @@ jobs:
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Publish Mode Summary
+        run: |
+          {
+            echo "## Publish Mode"
+            echo
+            echo "- enforce mode: \`${{ steps.npm-token.outputs.enforce }}\`"
+            echo "- npm token configured: \`${{ steps.npm-token.outputs.enabled }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail Publish (enforced mode)
         if: steps.npm-token.outputs.enabled != 'true' && steps.npm-token.outputs.enforce == 'true'

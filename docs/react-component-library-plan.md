@@ -127,7 +127,7 @@
   - Secrets 配置文档（`docs/secrets.md`）及 README 引导
   - 发布 dry-run 验证（`changeset version` + `npm publish --dry-run`）
   - 发布 dry-run 复验（生产级返工后再次验证 3 个包 tarball 清单与体积）
-  - 发布前置校验脚本（`pnpm release:preflight` + `release:preflight:chromatic/publish` 按 scope 检查 token 并输出缺失提示）
+  - 发布前置校验脚本（`pnpm release:preflight` + `--scope=chromatic/publish` 按 scope 检查 token 并输出缺失提示）
   - 发布 dry-run 自动化（`pnpm release:dry-run` 脚本 + `.github/workflows/release-dry-run.yml`）
   - 发布 dry-run 无副作用收口（要求干净工作区并在执行后自动回滚 `changeset version` 文件改动）
   - 发布 dry-run 自动发现收口（按 `packages/*` 自动发现可发布包，避免新增包漏检）
@@ -316,11 +316,11 @@
   - Pages 可观测性收口（Deploy 后将 Demo/Storybook 外链写入 `GITHUB_STEP_SUMMARY`）
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
   - Release Gate 复验（2026-03-19：修复 CommandPalette lint 与 Demo 标签冲突后，`release:gate:ci` 全链路恢复通过）
-  - Release Gate 复验（2026-03-19：完成 DismissableLayer 指针边界修复与 Demo 成品化后，`release:gate:ci` 全链路通过：demo E2E `65/65` + Storybook `176/176`）
+  - Release Gate 复验（2026-03-19：完成 DismissableLayer 指针边界修复与 Demo 成品化后，`release:gate:ci` 全链路通过，详细 tests/suites 以 run summary 为准）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
-  - Release Gate 证据刷新（2026-03-19：demo E2E `65` + Storybook `176/176` + dry-run `react` unpacked `342.6 kB`）
-  - Release Gate 证据刷新（2026-03-19：demo E2E `69/69` + Storybook `177/177`，含 CommandPalette 翻页键与 Toast 动作语义新增回归）
+  - Release Gate 证据刷新（2026-03-19：demo E2E + Storybook interaction + dry-run evidence 已沉淀到 workflow `GITHUB_STEP_SUMMARY`）
+  - Release Gate 证据刷新（2026-03-19：含 CommandPalette 翻页键与 Toast 动作语义新增回归；具体计数以 run summary 为准）
   - Release Dry-Run 证据刷新（2026-03-19：`release:dry-run` 通过，`react` unpacked `342.6 kB` / `primitives` `71.2 kB` / `tokens` `17.0 kB`）
   - Release Dry-Run 证据刷新（2026-03-19 latest：`release:dry-run` 通过，`react` package `60.3 kB` / unpacked `364.1 kB`，`primitives` unpacked `71.2 kB`，`tokens` unpacked `17.0 kB`）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）

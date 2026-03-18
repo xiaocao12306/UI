@@ -31,3 +31,18 @@ Use the toolbar theme selector to validate token behavior across `core-light`, `
 3. Verify story docs and controls match real component props.
 4. Validate docs links (`Component API` + `Best Practices`) for the changed component group.
 5. Run Chromatic (when token is configured) to compare snapshots.
+
+## Reviewable Gate Trail
+
+Run from repository root:
+
+```bash
+pnpm storybook:coverage:check
+pnpm storybook:docs:check
+pnpm storybook:static:check
+pnpm storybook:test:ci
+```
+
+- CI evidence source: workflow `GITHUB_STEP_SUMMARY` (Storybook Interaction Gate section).
+- Chromatic evidence source: `.github/workflows/chromatic.yml` summary (mode/token/build URL/change/error counts).
+- Avoid relying on hand-maintained test/suite numbers in docs; always review latest workflow summary output.

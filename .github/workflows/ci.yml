@@ -23,7 +23,36 @@ jobs:
       - run: pnpm test
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm storybook:test:ci
+      - name: Run Storybook Interaction Gate
+        run: |
+          set +e
+          pnpm storybook:test:ci 2>&1 | tee /tmp/storybook-gate.log
+          gate_status=${PIPESTATUS[0]}
+
+          stories_total_line=$(grep -m1 "stories total:" /tmp/storybook-gate.log || true)
+          coverage_line=$(grep -m1 "docs reference coverage:" /tmp/storybook-gate.log || true)
+          docs_gate_line=$(grep -m1 "\\[storybook-docs-import-check\\] ok:" /tmp/storybook-gate.log || true)
+          static_gate_line=$(grep -m1 "\\[storybook-static-check\\] ok:" /tmp/storybook-gate.log || true)
+          suites_line=$(grep -m1 "^Test Suites:" /tmp/storybook-gate.log || true)
+          tests_line=$(grep -m1 "^Tests:" /tmp/storybook-gate.log || true)
+
+          {
+            echo "## Storybook Interaction Gate"
+            echo
+            if [ "$gate_status" -eq 0 ]; then
+              echo "- status: \`passed\`"
+            else
+              echo "- status: \`failed\`"
+            fi
+            echo "- ${stories_total_line:-stories total: n/a}"
+            echo "- ${coverage_line:-docs reference coverage: n/a}"
+            echo "- ${docs_gate_line:-docs import gate: n/a}"
+            echo "- ${static_gate_line:-static sync gate: n/a}"
+            echo "- ${suites_line:-Test Suites: n/a}"
+            echo "- ${tests_line:-Tests: n/a}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          exit "$gate_status"
 
   demo-e2e:
     runs-on: ubuntu-latest
