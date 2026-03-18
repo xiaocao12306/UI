@@ -358,6 +358,49 @@ describe("Toast", () => {
     }
   });
 
+  it("emits close callback once even when timeout fires after manual close", () => {
+    vi.useFakeTimers();
+    const onCloseReason = vi.fn();
+    const onOpenChange = vi.fn();
+
+    try {
+      render(<Toast open title="Deduped close" duration={1000} onCloseReason={onCloseReason} onOpenChange={onOpenChange} />);
+
+      fireEvent.click(screen.getByRole("button", { name: "Close toast" }));
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      expect(onCloseReason).toHaveBeenCalledTimes(1);
+      expect(onCloseReason).toHaveBeenCalledWith("close-button");
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("closes the most recent escapable toast when top-most toast disables Escape", () => {
+    function StackedToasts() {
+      const [firstOpen, setFirstOpen] = React.useState(true);
+      const [secondOpen, setSecondOpen] = React.useState(true);
+
+      return (
+        <>
+          <Toast open={firstOpen} title="Escapable" duration={0} onOpenChange={setFirstOpen} />
+          <Toast open={secondOpen} title="Pinned" duration={0} closeOnEscape={false} onOpenChange={setSecondOpen} />
+        </>
+      );
+    }
+
+    render(<StackedToasts />);
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(screen.queryByRole("status", { name: "Escapable" })).toBeNull();
+    expect(screen.getByRole("status", { name: "Pinned" })).toBeInTheDocument();
+  });
+
   it("shows close button focus ring only for focus-visible state", () => {
     render(<Toast open title="Focusable" duration={0} />);
 

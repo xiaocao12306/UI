@@ -70,8 +70,17 @@ function removeToastFromStack(element: HTMLElement) {
   }
 }
 
-function isTopToast(element: HTMLElement) {
-  return toastEscapeStack[toastEscapeStack.length - 1] === element;
+function isTopCloseableToast(element: HTMLElement) {
+  for (let index = toastEscapeStack.length - 1; index >= 0; index -= 1) {
+    const entry = toastEscapeStack[index];
+    if (entry?.dataset.closeOnEscape !== "true") {
+      continue;
+    }
+
+    return entry === element;
+  }
+
+  return false;
 }
 
 function isComposingEscapeEvent(event: KeyboardEvent) {
@@ -102,6 +111,7 @@ export function Toast({
 }: ToastProps) {
   const rootRef = React.useRef<HTMLDivElement>(null);
   const closeButtonFocusIntentRef = React.useRef(true);
+  const closeRequestedRef = React.useRef(false);
   const [pauseState, setPauseState] = React.useState({ hover: false, focus: false });
   const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
   const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
@@ -126,10 +136,16 @@ export function Toast({
     if (!open) {
       setPauseState({ hover: false, focus: false });
     }
+    closeRequestedRef.current = false;
   }, [open]);
 
   const close = React.useCallback(
     (reason: ToastCloseReason) => {
+      if (closeRequestedRef.current) {
+        return;
+      }
+
+      closeRequestedRef.current = true;
       onCloseReason?.(reason);
       onClose?.();
       onOpenChange?.(false);
@@ -186,7 +202,7 @@ export function Toast({
       }
 
       const element = rootRef.current;
-      if (!element || !isTopToast(element)) {
+      if (!element || !isTopCloseableToast(element)) {
         return;
       }
 
@@ -220,6 +236,7 @@ export function Toast({
     <div
       ref={rootRef}
       role={role}
+      data-close-on-escape={closeOnEscape ? "true" : "false"}
       aria-live={ariaLive}
       aria-atomic="true"
       aria-label={ariaLabel}
