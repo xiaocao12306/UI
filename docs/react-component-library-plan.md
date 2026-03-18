@@ -285,6 +285,7 @@
   - Toast IME 输入收口（组合输入阶段忽略 Escape 关闭，防止 CJK 文本确认误关闭通知）
   - Tabs RTL 键盘收口（`dir=\"rtl\"` 下横向 ArrowLeft/ArrowRight 语义镜像，保持视觉阅读方向一致）
   - Table 排序播报收口（仅当前排序列暴露 `aria-sort`，未排序列移除属性以降低读屏噪音）
+  - Demo Table 排序播报验收（Playwright 断言非活动列不暴露 `aria-sort`，与 unit/Storybook 保持一致）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

@@ -232,14 +232,17 @@ test("sorts demo table from column headers", async ({ page }) => {
 
   const table = page.getByRole("table");
   const componentColumn = table.getByRole("columnheader", { name: /Component/ });
+  const statusColumn = table.getByRole("columnheader", { name: /Status/ });
   const componentSortButton = table.getByRole("button", { name: /Component/ });
   const firstRow = table.locator("tbody tr").first();
 
   await expect(componentColumn).toHaveAttribute("aria-sort", "ascending");
+  await expect(statusColumn).not.toHaveAttribute("aria-sort");
   await expect(firstRow).toContainText("Button");
 
   await componentSortButton.click();
   await expect(componentColumn).toHaveAttribute("aria-sort", "descending");
+  await expect(statusColumn).not.toHaveAttribute("aria-sort");
   await expect(firstRow).toContainText("StreamingCodeBlock");
 });
 
