@@ -12,6 +12,10 @@ Aurora UI is a token-first React component library monorepo with accessibility-f
   - `@aurora-ui/primitives`: low-level focus/portal/dismiss primitives
   - `@aurora-ui/react`: UI components + AI interaction set
 - Demo site: `apps/demo`
+- Production hardening highlights:
+  - Table supports row-identity semantics via `columns[].rowHeader` (`<th scope="row">`).
+  - CommandPalette and Toast both support runtime dismiss interception via event hooks (`onEscapeKeyDown`, `onPointerDownOutside`).
+  - Release dry-run now writes package-size evidence into `GITHUB_STEP_SUMMARY`.
 
 ## Tech Stack
 - React 19 + TypeScript 5
