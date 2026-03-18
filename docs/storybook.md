@@ -31,7 +31,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 ## Interaction Runner
 - 工具：`@storybook/test-runner`
 - 入口脚本：
-  - `storybook:docs:check`：校验 docs MDX 中 `*Stories` 引用是否都有对应 import，避免文档页运行时 `ReferenceError`
+  - `storybook:docs:check`：校验 docs MDX 中 `*Stories` 引用是否都有对应 import，并验证 `of={XStories.Y}` 中 `Y` 在故事文件里真实导出，避免文档页运行时 `ReferenceError` / `Missing story export`
   - `storybook:static:check`：先执行 `build-storybook`，再通过 `git status -- apps/storybook/storybook-static` 校验静态产物是否同步；有 diff 会直接失败并提示提交静态更新
   - `storybook:test`：针对已运行的 Storybook URL 执行交互测试
 - `storybook:test:ci`：先执行 `storybook:docs:check` + `storybook:static:check`，再在本地静态产物（`storybook-static`）上通过 `scripts/serve-storybook-static.mjs` 启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
