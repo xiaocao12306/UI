@@ -110,6 +110,20 @@ const keyboardHintStyle: React.CSSProperties = {
   borderRadius: 6,
   padding: "2px 6px"
 };
+const heroStatsGridStyle: React.CSSProperties = {
+  display: "grid",
+  gap: 10,
+  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))"
+};
+const heroStatCardStyle: React.CSSProperties = {
+  borderRadius: "var(--aurora-radius-md)",
+  border: "1px solid color-mix(in srgb, var(--aurora-border-default) 76%, transparent)",
+  background: "color-mix(in srgb, var(--aurora-surface-elevated) 92%, var(--aurora-surface-default))",
+  boxShadow: "var(--aurora-shadow-sm)",
+  padding: "10px 12px",
+  display: "grid",
+  gap: 4
+};
 
 function Section({
   id,
@@ -267,6 +281,53 @@ function App() {
             <Badge>60 Demo E2E checks</Badge>
             <Tag>Design-token driven</Tag>
             <Tag>Overlay + AI ready</Tag>
+          </div>
+          <div style={heroStatsGridStyle}>
+            <article style={heroStatCardStyle}>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  color: "var(--aurora-text-secondary)"
+                }}
+              >
+                Quality Gate
+              </p>
+              <strong style={{ fontSize: 18, letterSpacing: "-0.02em" }}>release:gate ✅</strong>
+              <p style={{ ...mutedBodyStyle, fontSize: 12 }}>verify + demo:e2e + storybook:test:ci + release:dry-run</p>
+            </article>
+            <article style={heroStatCardStyle}>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  color: "var(--aurora-text-secondary)"
+                }}
+              >
+                Active Workstream
+              </p>
+              <strong style={{ fontSize: 18, letterSpacing: "-0.02em" }}>Production Refinement</strong>
+              <p style={{ ...mutedBodyStyle, fontSize: 12 }}>A11y parity, interaction resilience, and docs/release consistency.</p>
+            </article>
+            <article style={heroStatCardStyle}>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  color: "var(--aurora-text-secondary)"
+                }}
+              >
+                Theme Pack
+              </p>
+              <strong style={{ fontSize: 18, letterSpacing: "-0.02em" }}>{theme}</strong>
+              <p style={{ ...mutedBodyStyle, fontSize: 12 }}>Token-first surface, accent, and typography language.</p>
+            </article>
           </div>
           <nav
             aria-label="Demo sections"
