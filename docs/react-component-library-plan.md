@@ -343,7 +343,7 @@
   - CommandPalette 查询缩小收口（激活项按 command key 跟随而非索引复用，避免 Enter 误触发）
   - Storybook CommandPalette 查询缩小验收（新增 `RefinedSearchKeepsActiveCommand` play 断言）
   - DismissableLayer 栈语义收口（嵌套 overlay 时仅顶层响应 Escape/外部点击，避免单次事件联动关闭多层）
-  - Overlay 非主键 pointer 收口（右键/非主键 pointer 不触发 dismiss，补齐 Dialog/Popover/Dropdown 组件层回归）
+  - Overlay 非主键 pointer 收口（右键/非主键 pointer 不触发 dismiss，补齐 Dialog/Drawer/Popover/Dropdown/CommandPalette 组件层回归）
   - Overlay 滚动锁收口（Dialog/Drawer 共享引用计数 body scroll lock，避免多层 modal 并存时提前解锁）
   - Dialog 嵌套 overlay 验收补齐（Dropdown in Dialog 的 Escape 分层关闭单测 + Storybook 交互场景）
   - Drawer 嵌套 overlay 验收补齐（Dropdown in Drawer 的 Escape 分层关闭单测 + Storybook 交互场景）

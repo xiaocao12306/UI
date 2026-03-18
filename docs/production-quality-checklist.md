@@ -154,7 +154,7 @@
 - Overlay focus-policy hardening: Popover/Dropdown now restore trigger focus on Escape while preserving outside pointer target focus on pointer dismiss.
 - Overlay scroll-lock hardening: Dialog/Drawer now share reference-counted body scroll lock, preventing premature unlock when multiple modal surfaces overlap.
 - DismissableLayer stack hardening: nested overlays now dismiss from top layer first on Escape/outside pointer, preventing multi-layer cascade closes.
-- Overlay non-primary pointer hardening: right-click/non-primary pointerdown now no longer dismisses overlays, with Dialog/Popover/Dropdown regression coverage locking the branch.
+- Overlay non-primary pointer hardening: right-click/non-primary pointerdown now no longer dismisses overlays, with Dialog/Drawer/Popover/Dropdown/CommandPalette regression coverage locking the branch.
 - Dialog nested overlay coverage: added `Dropdown in Dialog` Escape-order test + Storybook scenario to lock top-layer-first dismissal behavior.
 - Drawer nested overlay coverage: added `Dropdown in Drawer` Escape-order test + Storybook scenario to lock one-layer-per-Escape dismiss behavior.
 - Drawer focus-return parity: added `restoreFocus` API + unit/storybook interaction coverage to align close-focus policy with Dialog defaults.

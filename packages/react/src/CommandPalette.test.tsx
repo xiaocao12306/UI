@@ -16,7 +16,12 @@ describe("CommandPalette", () => {
         onCloseReason={onCloseReason}
         commands={[
           { key: "open-settings", label: "Open Settings", keywords: ["settings"] },
-          { key: "create-project", label: "Create Project", keywords: ["new", "project"], onSelect: onCreateProject }
+          {
+            key: "create-project",
+            label: "Create Project",
+            keywords: ["new", "project"],
+            onSelect: onCreateProject
+          }
         ]}
       />
     );
@@ -187,6 +192,25 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
 
     fireEvent.pointerDown(document.body);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  });
+
+  it("ignores non-primary outside pointer interactions", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    dispatchNonPrimaryPointerDown(document.body);
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
@@ -498,7 +522,12 @@ describe("CommandPalette", () => {
         open
         onOpenChange={onOpenChange}
         commands={[
-          { key: "publish-release", label: "Publish Release", disabled: true, onSelect: onDisabledSelect },
+          {
+            key: "publish-release",
+            label: "Publish Release",
+            disabled: true,
+            onSelect: onDisabledSelect
+          },
           { key: "open-settings", label: "Open Settings" }
         ]}
       />
@@ -596,7 +625,12 @@ describe("CommandPalette", () => {
         onOpenChange={onOpenChange}
         commands={[
           { key: "scan-code", label: "Scan Code" },
-          { key: "search-docs", label: "Search Docs", keywords: ["search"], onSelect: onSearchDocs },
+          {
+            key: "search-docs",
+            label: "Search Docs",
+            keywords: ["search"],
+            onSelect: onSearchDocs
+          },
           { key: "send-report", label: "Send Report", keywords: ["send"], onSelect: onSendReport }
         ]}
       />
@@ -661,7 +695,12 @@ describe("CommandPalette", () => {
         open
         onOpenChange={() => {}}
         commands={[
-          { key: "publish-release", label: "Publish Release", keywords: ["release"], disabled: true },
+          {
+            key: "publish-release",
+            label: "Publish Release",
+            keywords: ["release"],
+            disabled: true
+          },
           { key: "open-settings", label: "Open Settings", keywords: ["settings"] }
         ]}
       />
@@ -747,3 +786,11 @@ describe("CommandPalette", () => {
     expect(input).toHaveFocus();
   });
 });
+
+function dispatchNonPrimaryPointerDown(target: EventTarget) {
+  const event = new Event("pointerdown", { bubbles: true, cancelable: true });
+  Object.defineProperty(event, "button", { configurable: true, value: 2 });
+  Object.defineProperty(event, "buttons", { configurable: true, value: 2 });
+  Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
+  target.dispatchEvent(event);
+}

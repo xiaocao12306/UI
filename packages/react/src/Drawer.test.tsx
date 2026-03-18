@@ -60,6 +60,27 @@ describe("Drawer", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("ignores non-primary outside pointer interactions", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <Drawer
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        title="Ignore right click"
+      >
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    dispatchNonPrimaryPointerDown(document.body);
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Ignore right click" })).toBeInTheDocument();
+  });
+
   it("skips escape callback and dismiss when Escape is preempted upstream", () => {
     const onOpenChange = vi.fn();
     const onEscapeKeyDown = vi.fn();
@@ -139,7 +160,12 @@ describe("Drawer", () => {
 
   it("wires title and description semantics", () => {
     render(
-      <Drawer open onOpenChange={() => {}} title="Keyboard shortcuts" description="Use Ctrl/Cmd + K to open command palette.">
+      <Drawer
+        open
+        onOpenChange={() => {}}
+        title="Keyboard shortcuts"
+        description="Use Ctrl/Cmd + K to open command palette."
+      >
         <p>Drawer content</p>
       </Drawer>
     );
@@ -218,7 +244,12 @@ describe("Drawer", () => {
           <button type="button" onClick={() => setOpen(true)}>
             Open no-restore drawer
           </button>
-          <Drawer open={open} onOpenChange={setOpen} title="No focus restore drawer" restoreFocus={false}>
+          <Drawer
+            open={open}
+            onOpenChange={setOpen}
+            title="No focus restore drawer"
+            restoreFocus={false}
+          >
             <p>Drawer content</p>
           </Drawer>
         </div>
@@ -277,3 +308,11 @@ describe("Drawer", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 });
+
+function dispatchNonPrimaryPointerDown(target: EventTarget) {
+  const event = new Event("pointerdown", { bubbles: true, cancelable: true });
+  Object.defineProperty(event, "button", { configurable: true, value: 2 });
+  Object.defineProperty(event, "buttons", { configurable: true, value: 2 });
+  Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
+  target.dispatchEvent(event);
+}
