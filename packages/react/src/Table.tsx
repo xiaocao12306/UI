@@ -186,7 +186,7 @@ export function Table<T>({
                       disabled={sortDisabled}
                       onClick={activateSort}
                       onKeyDown={(event) => {
-                        if (!isSortActivationKey(event.key)) {
+                        if (!isSortSpaceActivationKey(event.key)) {
                           return;
                         }
 
@@ -293,6 +293,6 @@ function defaultGetSortAriaLabel({
   return `${columnHeader} sort ${nextDirection === "asc" ? "ascending" : "descending"}`;
 }
 
-function isSortActivationKey(key: string) {
-  return key === "Enter" || key === " " || key === "Spacebar";
+function isSortSpaceActivationKey(key: string) {
+  return key === " " || key === "Spacebar";
 }

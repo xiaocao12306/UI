@@ -177,12 +177,14 @@ describe("Table", () => {
     const sortDescending = screen.getByRole("button", { name: "Name sort descending" });
     sortDescending.focus();
     await userEvent.keyboard("{Enter}");
-    expect(onSortChange).toHaveBeenCalledWith("name", "desc");
+    expect(onSortChange).toHaveBeenNthCalledWith(1, "name", "desc");
+    expect(onSortChange).toHaveBeenCalledTimes(1);
 
     const sortAscending = screen.getByRole("button", { name: "Name sort ascending" });
     sortAscending.focus();
     fireEvent.keyDown(sortAscending, { key: " " });
-    expect(onSortChange).toHaveBeenCalledWith("name", "asc");
+    expect(onSortChange).toHaveBeenNthCalledWith(2, "name", "asc");
+    expect(onSortChange).toHaveBeenCalledTimes(2);
   });
 
   it("supports localized sort aria labels via getSortAriaLabel", () => {
