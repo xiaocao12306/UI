@@ -285,6 +285,7 @@
   - Storybook Dropdown 焦点策略回归补齐（Escape 回焦 trigger + outside pointer 目标焦点保留）
   - Storybook 文档同步（Component API / Best Practices 增补 Dropdown 焦点策略示例）
   - Storybook 文档精修（Component API 增补 `Toast.position` / `CommandPalette.placeholder`，Best Practices 收紧 combobox 与 command palette `aria-selected` 语义边界）
+  - Storybook Data 文档补齐（Tabs 增补 `Vertical` 场景；Table 增补 `WithRowAction` / `InvalidDefaultSortKeyFallback` / `AccessibleNameFallback`）
   - Storybook CommandPalette 防误触场景补齐（`DisabledCommandGuard` 覆盖禁用命令点击不执行且不关闭）
   - Storybook Toast 抢占式 Escape 场景补齐（`EscapePreemptedByGlobalHandler` 覆盖 `defaultPrevented` 不关闭分支）
   - Storybook Toast 危急动作场景补齐（新增 `ActionRequiredDanger`，锁定 `alertdialog` 语义与交互回归）
