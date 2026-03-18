@@ -114,9 +114,13 @@ export const Controlled: Story = {
 };
 
 export const DescribedByLifecycle: Story = {
-  render: () => (
+  args: {
+    content: "Tooltip with described-by lifecycle checks",
+    children: <Button variant="outline">Lifecycle target</Button>
+  },
+  render: (args) => (
     <div style={{ display: "grid", gap: 8, justifyItems: "start" }}>
-      <Tooltip content="Tooltip with described-by lifecycle checks" closeDelay={0}>
+      <Tooltip content={args.content} closeDelay={0}>
         <button type="button" aria-describedby="helper-id">
           Lifecycle target
         </button>

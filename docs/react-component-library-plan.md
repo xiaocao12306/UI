@@ -281,6 +281,7 @@
   - Overlay 滚动锁收口（Dialog/Drawer 共享引用计数 body scroll lock，避免多层 modal 并存时提前解锁）
   - Dialog 嵌套 overlay 验收补齐（Dropdown in Dialog 的 Escape 分层关闭单测 + Storybook 交互场景）
   - Drawer 嵌套 overlay 验收补齐（Dropdown in Drawer 的 Escape 分层关闭单测 + Storybook 交互场景）
+  - CommandPalette IME 输入收口（组合输入阶段忽略 Arrow/Enter 导航执行，防止 CJK 文本确认误触发命令）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

@@ -261,6 +261,38 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("ignores navigation and selection keys while IME composition is active", () => {
+    const onDeploy = vi.fn();
+    const onOpenChange = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        closeOnSelect={false}
+        onOpenChange={onOpenChange}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "deploy", label: "Deploy Project", onSelect: onDeploy }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "ArrowDown", isComposing: true, keyCode: 229, which: 229 });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    expect(onDeploy).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onDeploy).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
   it("keeps palette open after selection when closeOnSelect is false", () => {
     const onOpenChange = vi.fn();
     const onCreate = vi.fn();

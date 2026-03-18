@@ -320,6 +320,31 @@ function RefinedSearchKeepsActiveCommandPalette() {
   );
 }
 
+function ImeCompositionGuardPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [selectedCount, setSelectedCount] = React.useState(0);
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Executed commands:{" "}
+        <strong data-testid="ime-selection-count" style={{ color: "var(--aurora-text-primary)" }}>
+          {selectedCount}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        closeOnSelect={false}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "deploy", label: "Deploy Project", onSelect: () => setSelectedCount((value) => value + 1) }
+        ]}
+      />
+    </div>
+  );
+}
+
 export const SearchCommands: Story = {
   render: () => <OpenPalette />,
   play: async ({ canvasElement }) => {
@@ -482,5 +507,24 @@ export const RefinedSearchKeepsActiveCommand: Story = {
     await userEvent.clear(input);
     await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  }
+};
+
+export const ImeCompositionGuard: Story = {
+  render: () => <ImeCompositionGuardPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+    await userEvent.click(input);
+
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "ArrowDown", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(input, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    await expect(canvas.getByTestId("ime-selection-count")).toHaveTextContent("0");
+
+    await userEvent.keyboard("{ArrowDown}");
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByTestId("ime-selection-count")).toHaveTextContent("1");
   }
 };

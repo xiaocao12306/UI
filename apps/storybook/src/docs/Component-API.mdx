@@ -502,12 +502,14 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onOpenChange` | `(open: boolean) => void` | Required controlled dialog state. |
 | focus model | combobox + `aria-activedescendant` | Options stay outside tab order to keep keyboard flow anchored on the search input. |
 | search matching | accent-insensitive + lowercase normalization | Plain query text like `cafe` can match `Café` labels/aliases. |
+| IME safety | composition key guard | Arrow/Enter handling is ignored while `isComposing` (or legacy `keyCode=229`) to prevent accidental command execution during CJK input. |
 
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
 <Canvas of={CommandPaletteStories.DisabledCommandGuard} />
 <Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />
 <Canvas of={CommandPaletteStories.PersistentSelection} />
 <Canvas of={CommandPaletteStories.RefinedSearchKeepsActiveCommand} />
+<Canvas of={CommandPaletteStories.ImeCompositionGuard} />
 <Canvas of={CommandPaletteStories.NonDismissible} />
 <Canvas of={CommandPaletteStories.GuardedDismissEvents} />
 <Canvas of={CommandPaletteStories.EscapeClearsQueryFirst} />

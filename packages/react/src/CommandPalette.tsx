@@ -190,6 +190,10 @@ export function CommandPalette({
             onQueryChange?.(event.target.value);
           }}
           onKeyDown={(event) => {
+            if (isComposingCommandKeyEvent(event)) {
+              return;
+            }
+
             if (event.key === "Escape" && clearQueryOnEscape && query.length > 0) {
               event.preventDefault();
               setQuery("");
@@ -319,6 +323,16 @@ function normalizeSearchText(text: string) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
+}
+
+function isComposingCommandKeyEvent(event: React.KeyboardEvent<HTMLInputElement>) {
+  const nativeEvent = event.nativeEvent;
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  // Legacy fallback for IME workflows on browsers emitting keyCode=229.
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }
 
 function defaultGetResultsStatusText({
