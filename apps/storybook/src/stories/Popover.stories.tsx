@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Input, Popover } from "@aurora-ui/react";
 import { expect, userEvent, within } from "@storybook/test";
@@ -124,5 +125,60 @@ export const OutsideDismissFocusTransfer: Story = {
     await userEvent.click(outsideTarget);
     await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
     await expect(outsideTarget).toHaveFocus();
+  }
+};
+
+function EscapePreemptedPopoverDemo() {
+  const [open, setOpen] = React.useState(false);
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+
+  React.useEffect(() => {
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptEscape, true);
+    return () => {
+      document.removeEventListener("keydown", preemptEscape, true);
+    };
+  }, []);
+
+  return (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Escape hook calls:{" "}
+        <strong data-testid="popover-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <Popover
+        triggerLabel="Preempted popover"
+        open={open}
+        onOpenChange={setOpen}
+        onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
+      >
+        <p style={{ margin: 0 }}>Escape should remain preempted by global handlers.</p>
+      </Popover>
+    </div>
+  );
+}
+
+export const EscapePreemptedByGlobalHandler: Story = {
+  args: {
+    triggerLabel: "Preempted popover",
+    children: <p style={{ margin: 0 }}>Escape should remain preempted by global handlers.</p>
+  },
+  render: () => <EscapePreemptedPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Preempted popover" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-escape-calls")).toHaveTextContent("0");
   }
 };
