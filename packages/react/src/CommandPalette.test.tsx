@@ -1,3 +1,4 @@
+import * as React from "react";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { CommandPalette } from "./CommandPalette";
@@ -261,6 +262,37 @@ describe("CommandPalette", () => {
     fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
     expect(onCloseReason).toHaveBeenCalledWith("close-button");
     expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it("resets close-reason tracking between dismiss cycles", () => {
+    const onCloseReason = vi.fn();
+
+    function CloseReasonCycleFixture() {
+      const [open, setOpen] = React.useState(true);
+
+      return (
+        <div>
+          <button type="button" onClick={() => setOpen(true)}>
+            Reopen palette
+          </button>
+          <CommandPalette
+            open={open}
+            onOpenChange={setOpen}
+            onCloseReason={onCloseReason}
+            commands={[{ key: "open-settings", label: "Open Settings" }]}
+          />
+        </div>
+      );
+    }
+
+    render(<CloseReasonCycleFixture />);
+
+    fireEvent.click(screen.getByRole("option", { name: "Open Settings" }));
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "item-select");
+
+    fireEvent.click(screen.getByRole("button", { name: "Reopen palette" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
+    expect(onCloseReason).toHaveBeenNthCalledWith(2, "close-button");
   });
 
   it("shows empty-state copy when query has no match", () => {

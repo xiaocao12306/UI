@@ -212,6 +212,32 @@ test("resets command palette query telemetry after close", async ({ page }) => {
   await expect(telemetry).toHaveText("N/A");
 });
 
+test("reports command palette close reason telemetry for all dismiss paths", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Command Palette" });
+  const telemetry = page.getByTestId("palette-close-reason-telemetry");
+  const paletteDialog = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+
+  await expect(telemetry).toHaveText("none");
+
+  await trigger.click();
+  await page.keyboard.press("Escape");
+  await expect(telemetry).toHaveText("escape-key");
+
+  await trigger.click();
+  await paletteDialog.getByRole("option", { name: "Create Project" }).click();
+  await expect(telemetry).toHaveText("item-select");
+
+  await trigger.click();
+  await paletteDialog.getByRole("button", { name: "Close dialog" }).click();
+  await expect(telemetry).toHaveText("close-button");
+
+  await trigger.click();
+  await page.mouse.click(8, 8);
+  await expect(telemetry).toHaveText("outside-pointer");
+});
+
 test("keeps command palette open when blocking dismiss mode is enabled", async ({ page }) => {
   await page.goto("/");
 

@@ -321,6 +321,7 @@
   - CommandPalette 查询遥测收口（关闭时自动触发 `onQueryChange(\"\")`，确保外部 telemetry 与内部 query 生命周期一致）
   - CommandPalette 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/item-select/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Demo CommandPalette 查询遥测验收（新增可视 telemetry 指示 + Playwright 回归，锁定关闭后重置为 `N/A`）
+  - Demo CommandPalette 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 escape/item-select/close-button/outside-pointer）
   - Storybook CommandPalette 空态引用验收（新增 `EmptyStateAriaControlsLifecycle` 场景，锁定 `aria-controls` 与 listbox 挂载生命周期）
   - Storybook CommandPalette i18n 验收（新增 `LocalizedResultsLabel` 场景，锁定结果 listbox 本地化命名）
   - Storybook CommandPalette i18n 验收扩展（新增 `LocalizedDialogCopy` 场景，锁定 dialog heading + 搜索输入 + listbox 的本地化命名）

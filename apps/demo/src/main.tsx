@@ -124,6 +124,7 @@ function App() {
   const [palettePersistent, setPalettePersistent] = React.useState(false);
   const [paletteEscapeClearsQuery, setPaletteEscapeClearsQuery] = React.useState(true);
   const [paletteQueryTelemetry, setPaletteQueryTelemetry] = React.useState("");
+  const [paletteCloseReason, setPaletteCloseReason] = React.useState("none");
   const [popoverCloseReason, setPopoverCloseReason] = React.useState("none");
   const [dialogCloseReason, setDialogCloseReason] = React.useState("none");
   const [drawerCloseReason, setDrawerCloseReason] = React.useState("none");
@@ -608,6 +609,12 @@ function App() {
               {paletteQueryTelemetry || "N/A"}
             </strong>
           </p>
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            Palette close reason telemetry:{" "}
+            <strong data-testid="palette-close-reason-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
+              {paletteCloseReason}
+            </strong>
+          </p>
         </Section>
 
         <Section id="ai-components" title="AI Components" description="Prompt, reasoning, and streaming response building blocks.">
@@ -661,6 +668,7 @@ function App() {
           closeOnEscape={!paletteBlocking}
           closeOnOutsidePointer={!paletteBlocking}
           onQueryChange={setPaletteQueryTelemetry}
+          onCloseReason={setPaletteCloseReason}
           onEscapeKeyDown={(event) => {
             if (paletteDismissGuard) {
               event.preventDefault();

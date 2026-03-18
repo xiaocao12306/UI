@@ -79,6 +79,7 @@ export function CommandPalette({
     (reason: CommandPaletteCloseReason) => {
       markCloseReason(reason);
       onOpenChange(false);
+      closeReasonRef.current = null;
     },
     [markCloseReason, onOpenChange]
   );
