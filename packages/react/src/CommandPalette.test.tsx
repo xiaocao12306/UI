@@ -304,6 +304,23 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("listbox", { name: "命令结果列表" })).toBeInTheDocument();
   });
 
+  it("supports localized dialog and search input copy", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        title="命令中心"
+        description="快速检索并执行工作区操作。"
+        searchAriaLabel="搜索命令"
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    expect(screen.getByRole("dialog", { name: "命令中心" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "搜索命令" })).toBeInTheDocument();
+    expect(screen.getByText("快速检索并执行工作区操作。")).toBeInTheDocument();
+  });
+
   it("supports keyboard navigation and enter selection", () => {
     const onCreate = vi.fn();
     const onOpenChange = vi.fn();

@@ -515,6 +515,8 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `commands` | `CommandItem[]` | `disabled` commands remain visible but non-selectable. Use `textValue` for non-string labels and locale aliases. |
+| `title` / `description` | `ReactNode` | Localizable dialog heading and supporting copy for command context. |
+| `searchAriaLabel` | `string` | Localizable accessible name for the search combobox (default: `Search commands`). |
 | `closeOnSelect` | `boolean` | Defaults to `true`; set `false` for batch workflows that keep the palette open after each command. |
 | `clearQueryOnEscape` | `boolean` | Defaults to `true`; first Escape clears active query before dismiss is allowed, reducing accidental close during search refinement. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls whether overlay dismisses on Escape or outside pointer interactions for blocking approval flows. |
@@ -533,6 +535,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
 <Canvas of={CommandPaletteStories.EmptyStateAriaControlsLifecycle} />
 <Canvas of={CommandPaletteStories.LocalizedResultsLabel} />
+<Canvas of={CommandPaletteStories.LocalizedDialogCopy} />
 <Canvas of={CommandPaletteStories.DisabledCommandGuard} />
 <Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />
 <Canvas of={CommandPaletteStories.PersistentSelection} />

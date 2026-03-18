@@ -15,6 +15,9 @@ export type CommandPaletteProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   commands: CommandItem[];
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  searchAriaLabel?: string;
   resultsAriaLabel?: string;
   closeOnSelect?: boolean;
   clearQueryOnEscape?: boolean;
@@ -37,6 +40,9 @@ export function CommandPalette({
   open,
   onOpenChange,
   commands,
+  title = "Command Palette",
+  description = "Quickly search and execute workspace actions.",
+  searchAriaLabel = "Search commands",
   resultsAriaLabel = "Command results",
   closeOnSelect = true,
   clearQueryOnEscape = true,
@@ -169,8 +175,8 @@ export function CommandPalette({
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Command Palette"
-      description="Quickly search and execute workspace actions."
+      title={title}
+      description={description}
       size="md"
       closeOnEscape={closeOnEscape}
       closeOnOutsidePointer={closeOnOutsidePointer}
@@ -233,7 +239,7 @@ export function CommandPalette({
               selectItem(activeIndex);
             }
           }}
-          aria-label="Search commands"
+          aria-label={searchAriaLabel}
         />
         <p
           role="status"

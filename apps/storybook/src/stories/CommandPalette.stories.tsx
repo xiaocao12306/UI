@@ -457,6 +457,29 @@ export const LocalizedResultsLabel: Story = {
   }
 };
 
+export const LocalizedDialogCopy: Story = {
+  render: () => (
+    <CommandPalette
+      open
+      onOpenChange={() => {}}
+      title="命令中心"
+      description="快速检索并执行工作区操作。"
+      searchAriaLabel="搜索命令"
+      resultsAriaLabel="命令结果列表"
+      commands={[
+        { key: "create-spec", label: "创建规范", keywords: ["文档", "计划"] },
+        { key: "run-e2e", label: "运行 E2E", keywords: ["测试"] }
+      ]}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await expect(await canvas.findByRole("dialog", { name: "命令中心" })).toBeInTheDocument();
+    await expect(canvas.getByRole("combobox", { name: "搜索命令" })).toBeInTheDocument();
+    await expect(canvas.getByRole("listbox", { name: "命令结果列表" })).toBeInTheDocument();
+  }
+};
+
 export const DisabledOnlyResults: Story = {
   render: () => <DisabledOnlyResultsPalette />,
   play: async ({ canvasElement }) => {
