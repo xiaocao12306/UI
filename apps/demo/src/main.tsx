@@ -115,6 +115,7 @@ function App() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [toastOpen, setToastOpen] = React.useState(false);
+  const [toastTelemetryOpen, setToastTelemetryOpen] = React.useState(false);
   const [silentToastOpen, setSilentToastOpen] = React.useState(false);
   const [blockingToastOpen, setBlockingToastOpen] = React.useState(false);
   const [stackedToastOpen, setStackedToastOpen] = React.useState({ first: false, second: false });
@@ -128,6 +129,7 @@ function App() {
   const [popoverCloseReason, setPopoverCloseReason] = React.useState("none");
   const [dialogCloseReason, setDialogCloseReason] = React.useState("none");
   const [drawerCloseReason, setDrawerCloseReason] = React.useState("none");
+  const [toastCloseReason, setToastCloseReason] = React.useState("none");
   const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
@@ -461,6 +463,9 @@ function App() {
             All queued jobs were synchronized.
           </Alert>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <Button variant="outline" onClick={() => setToastTelemetryOpen(true)}>
+              Trigger telemetry toast
+            </Button>
             <Button variant="outline" onClick={() => setSilentToastOpen(true)}>
               Trigger silent toast
             </Button>
@@ -480,6 +485,12 @@ function App() {
             label="Guard prompt toast Escape at toast layer"
             description="Uses Toast onEscapeKeyDown + preventDefault() while enabled."
           />
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            Toast close reason telemetry:{" "}
+            <strong data-testid="toast-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
+              {toastCloseReason}
+            </strong>
+          </p>
           <Progress value={62} />
           <div style={{ display: "grid", gap: 8, maxWidth: 320 }}>
             <Skeleton height={14} />
@@ -719,6 +730,16 @@ function App() {
               event.preventDefault();
             }
           }}
+        />
+        <Toast
+          open={toastTelemetryOpen}
+          onClose={() => setToastTelemetryOpen(false)}
+          onCloseReason={setToastCloseReason}
+          title="Telemetry toast"
+          description="Used to validate close-button / Escape / timeout branches."
+          duration={900}
+          closeLabel="Dismiss telemetry toast"
+          position="bottom-left"
         />
         <Toast
           open={silentToastOpen}

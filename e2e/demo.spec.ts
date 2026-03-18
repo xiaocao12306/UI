@@ -876,6 +876,27 @@ test("tabs out of dropdown menu and moves focus to next control", async ({ page 
   await expect(nextButton).toBeFocused();
 });
 
+test("reports toast close reason telemetry for Escape, close button, and timeout", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Trigger telemetry toast" });
+  const telemetry = page.getByTestId("toast-close-reason-demo");
+
+  await expect(telemetry).toHaveText("none");
+
+  await trigger.click();
+  await page.keyboard.press("Escape");
+  await expect(telemetry).toHaveText("escape-key");
+
+  await trigger.click();
+  await page.getByRole("button", { name: "Dismiss telemetry toast" }).click();
+  await expect(telemetry).toHaveText("close-button");
+
+  await trigger.click();
+  await expect(page.getByRole("status").filter({ hasText: "Telemetry toast" })).toBeVisible();
+  await expect(telemetry).toHaveText("timeout", { timeout: 6000 });
+});
+
 test("dismisses toast with escape key", async ({ page }) => {
   await page.goto("/");
 

@@ -231,6 +231,7 @@
 - Demo query telemetry parity: added `palette-query-telemetry` indicator + Playwright regression to ensure command-palette close actions reset telemetry back to `N/A`.
 - Demo command-palette close-reason parity: added `palette-close-reason-telemetry` indicator and Playwright regression for `escape-key` / `item-select` / `close-button` / `outside-pointer` branches.
 - Toast close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `escape-key` / `timeout`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismissal tracking.
+- Demo toast close-reason parity: added `toast-close-reason-demo` indicator and Playwright regression for `escape-key` / `close-button` / `timeout` branches.
 - Dropdown close-reason telemetry parity: added `onCloseReason` with structured reasons (`trigger-click` / `item-select` / `escape-key` / `outside-pointer` / `tab-key`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
 - Popover close-reason telemetry parity: added `onCloseReason` with structured reasons (`trigger-click` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
 - Dialog close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.

@@ -274,6 +274,7 @@
   - Demo Toast 焦点优先级验收（新增堆叠通知聚焦后 Escape 回归，锁定“当前操作通知优先关闭”行为）
   - Toast 播报覆盖补齐（新增 `live` 覆盖 `danger` 默认播报强度回归，保持 `role=\"alert\"` 语义）
   - Toast 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/escape-key/timeout` 并补齐单测 + Storybook `CloseReasonTelemetry`）
+  - Demo Toast 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 escape/close-button/timeout）
   - Dropdown 关闭原因遥测收口（新增 `onCloseReason`，回传 `trigger-click/item-select/escape-key/outside-pointer/tab-key` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Popover 关闭原因遥测收口（新增 `onCloseReason`，回传 `trigger-click/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Dialog 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
