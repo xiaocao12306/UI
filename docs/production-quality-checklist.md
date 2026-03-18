@@ -205,7 +205,7 @@
 - Tabs RTL keyboard hardening: horizontal arrow semantics now follow container direction (`dir=\"rtl\"` mirrors ArrowLeft/ArrowRight), with unit + Storybook interaction coverage.
 - Table sort narration hardening: `aria-sort` now appears only on the actively sorted column; unsorted headers omit the attribute to reduce screen-reader noise and align with ARIA guidance.
 - Table live-sort narration hardening: added `getSortStatusText` to localize active sort-state live region updates, with unit + Storybook interaction coverage for ascending/descending transitions.
-- Release evidence refresh: reran `demo:e2e` (`52` passed) and `release:dry-run` (`react` unpacked ~312.7 kB) with Storybook interaction baseline now `32/32` suites and `169/169` tests.
+- Release evidence refresh: reran `demo:e2e` (`52` passed) and `release:dry-run` (`react` unpacked ~312.7 kB) with Storybook interaction baseline now `32/32` suites and `170/170` tests.
 - Demo table narration parity: Playwright now asserts unsorted columns keep `aria-sort` absent while active sorted column toggles, matching unit/Storybook semantics.
 - Toast IME callback parity: Escape during composition no longer fires `onEscapeKeyDown`, preventing guarded flows from treating IME confirm/cancel as dismissal intent.
 - Demo RTL tabs parity: added dedicated Data section RTL tablist and Playwright ArrowRight/ArrowLeft regression to lock direction-aware keyboard navigation in real app flows.
@@ -231,6 +231,7 @@
 - Demo query telemetry parity: added `palette-query-telemetry` indicator + Playwright regression to ensure command-palette close actions reset telemetry back to `N/A`.
 - Toast close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `escape-key` / `timeout`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismissal tracking.
 - Dropdown close-reason telemetry parity: added `onCloseReason` with structured reasons (`trigger-click` / `item-select` / `escape-key` / `outside-pointer` / `tab-key`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
+- Popover close-reason telemetry parity: added `onCloseReason` with structured reasons (`trigger-click` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
 - Storybook docs import guard: added `pnpm storybook:docs:check` and wired it into `storybook:test:ci` so missing `*Stories` imports in MDX fail fast before visual/interaction regression runs.
 - Storybook static metadata hygiene: `build-storybook` now normalizes `storybook-static/project.json` volatile timestamps (`generatedAt`, `userSince`) to stable values, reducing no-op static bundle churn in review diffs.
 - Dialog/Drawer IME Escape coverage: added component-level regressions to ensure composition-phase Escape does not emit close events while plain Escape still dismisses as expected.

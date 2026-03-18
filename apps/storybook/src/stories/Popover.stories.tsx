@@ -128,6 +128,48 @@ export const OutsideDismissFocusTransfer: Story = {
   }
 };
 
+function CloseReasonTelemetryPopoverDemo() {
+  const [lastReason, setLastReason] = React.useState("none");
+
+  return (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last close reason:{" "}
+        <strong data-testid="popover-close-reason" style={{ color: "var(--aurora-text-primary)" }}>
+          {lastReason}
+        </strong>
+      </p>
+      <Popover triggerLabel="Telemetry popover" onCloseReason={(reason) => setLastReason(reason)}>
+        <p style={{ margin: 0 }}>Track trigger / Escape / outside close behavior.</p>
+      </Popover>
+      <button type="button">Outside target</button>
+    </div>
+  );
+}
+
+export const CloseReasonTelemetry: Story = {
+  render: () => <CloseReasonTelemetryPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Telemetry popover" });
+    const outsideTarget = canvas.getByRole("button", { name: "Outside target" });
+
+    await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("none");
+
+    await userEvent.click(trigger);
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("escape-key");
+
+    await userEvent.click(trigger);
+    await userEvent.click(outsideTarget);
+    await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("outside-pointer");
+
+    await userEvent.click(trigger);
+    await userEvent.click(trigger);
+    await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("trigger-click");
+  }
+};
+
 function EscapePreemptedPopoverDemo() {
   const [open, setOpen] = React.useState(false);
   const [escapeCalls, setEscapeCalls] = React.useState(0);

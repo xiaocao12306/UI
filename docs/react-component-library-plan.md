@@ -261,7 +261,7 @@
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
-  - Release Gate 证据刷新（2026-03-18：demo E2E `52` + Storybook `169/169` + dry-run `react` unpacked `~312.7 kB`）
+  - Release Gate 证据刷新（2026-03-18：demo E2E `52` + Storybook `170/170` + dry-run `react` unpacked `~312.7 kB`）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
   - CommandPalette Escape 查询收口（新增 `clearQueryOnEscape` 默认行为：首次 Escape 清空 query，二次 Escape 再触发关闭）
@@ -275,6 +275,7 @@
   - Toast 播报覆盖补齐（新增 `live` 覆盖 `danger` 默认播报强度回归，保持 `role=\"alert\"` 语义）
   - Toast 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/escape-key/timeout` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Dropdown 关闭原因遥测收口（新增 `onCloseReason`，回传 `trigger-click/item-select/escape-key/outside-pointer/tab-key` 并补齐单测 + Storybook `CloseReasonTelemetry`）
+  - Popover 关闭原因遥测收口（新增 `onCloseReason`，回传 `trigger-click/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Button 键盘兼容收口（补齐 legacy `Spacebar` 激活键值，统一 pressed 态反馈分支）
   - Button 运行时状态收口（按下态切换到 `loading/disabled` 时立即清理 pressed 偏移视觉）
   - 表单 invalid token 语义收口（`aria-invalid=\"grammar|spelling\"` 跨 Input/Select/Textarea/DatePicker/Checkbox/RadioGroup/Switch/FormField 保留原值）

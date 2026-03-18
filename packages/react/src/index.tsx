@@ -70,7 +70,7 @@ export { Tooltip } from "./Tooltip";
 export type { TooltipProps } from "./Tooltip";
 
 export { Popover } from "./Popover";
-export type { PopoverProps } from "./Popover";
+export type { PopoverCloseReason, PopoverProps } from "./Popover";
 
 export { Dialog } from "./Dialog";
 export type { DialogProps } from "./Dialog";

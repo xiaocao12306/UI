@@ -3,6 +3,7 @@ import { DismissableLayer } from "@aurora-ui/primitives";
 import { Button } from "./Button";
 
 export type PopoverAlign = "start" | "end";
+export type PopoverCloseReason = "trigger-click" | "escape-key" | "outside-pointer";
 
 export type PopoverProps = {
   triggerLabel: React.ReactNode;
@@ -15,6 +16,7 @@ export type PopoverProps = {
   closeOnOutsidePointer?: boolean;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
   onPointerDownOutside?: (event: PointerEvent) => void;
+  onCloseReason?: (reason: PopoverCloseReason) => void;
   align?: PopoverAlign;
   sideOffset?: number;
   contentLabel?: string;
@@ -31,6 +33,7 @@ export function Popover({
   closeOnOutsidePointer = true,
   onEscapeKeyDown,
   onPointerDownOutside,
+  onCloseReason,
   align = "start",
   sideOffset = 8,
   contentLabel = "Popover content"
@@ -50,6 +53,14 @@ export function Popover({
       onOpenChange?.(nextOpen);
     },
     [isControlled, onOpenChange]
+  );
+
+  const closeWithReason = React.useCallback(
+    (reason: PopoverCloseReason) => {
+      onCloseReason?.(reason);
+      setOpen(false);
+    },
+    [onCloseReason, setOpen]
   );
 
   React.useEffect(() => {
@@ -79,7 +90,14 @@ export function Popover({
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         aria-controls={isOpen ? contentId : undefined}
-        onClick={() => setOpen(!isOpen)}
+        onClick={() => {
+          if (isOpen) {
+            closeWithReason("trigger-click");
+            return;
+          }
+
+          setOpen(true);
+        }}
         onKeyDown={(event) => {
           if (event.key === "ArrowDown" && !isOpen) {
             event.preventDefault();
@@ -104,17 +122,22 @@ export function Popover({
             }
 
             event.preventDefault();
-            setOpen(false);
+            closeWithReason("escape-key");
             triggerRef.current?.focus();
           }}
           onPointerDownOutside={(event) => {
+            const target = event.target;
+            if (target instanceof Node && triggerRef.current?.contains(target)) {
+              return;
+            }
+
             onPointerDownOutside?.(event);
             if (event.defaultPrevented || !closeOnOutsidePointer) {
               event.preventDefault();
               return;
             }
 
-            setOpen(false);
+            closeWithReason("outside-pointer");
           }}
           style={{
             position: "absolute",
