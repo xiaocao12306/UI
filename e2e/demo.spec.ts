@@ -516,7 +516,7 @@ test("keeps command palette open when Escape is preempted by a global handler", 
 test("highlights active section in anchor nav", async ({ page }) => {
   await page.goto("/");
 
-  const statesLink = page.getByRole("link", { name: "States" });
+  const statesLink = page.getByRole("link", { name: "States", exact: true });
   await statesLink.click();
   await expect(statesLink).toHaveAttribute("aria-current", "location");
 });
