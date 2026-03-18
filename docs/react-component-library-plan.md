@@ -258,6 +258,7 @@
   - Dropdown Storybook 收口（新增 `TabDismissToNextControl` 场景，补齐 Tab 关闭 + 焦点前进可视回归）
   - Storybook 稳定性收口（`Core/Tag/MetadataRow` 增补 play 断言，降低 runner 重试噪音）
   - Storybook Toast 稳定性收口（`Feedback/Toast/ToneMatrix` 固定 `duration={0}`，避免自动消失导致的重试噪音）
+  - Storybook Pagination 稳定性收口（交互断言改为异步 `findByRole` + 焦点前置检查，降低键盘场景重试噪音）
   - Storybook 构建噪音收口（配置 `vite.build.chunkSizeWarningLimit=2500`，减少 vendor chunk 告警噪音）
   - Pages 交付收口（`.github/workflows/demo-pages.yml` 合并发布 Demo 根路径 + Storybook 子路径）
   - Pages 可观测性收口（Deploy 后将 Demo/Storybook 外链写入 `GITHUB_STEP_SUMMARY`）

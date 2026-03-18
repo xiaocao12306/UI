@@ -44,8 +44,8 @@ export const Controlled: Story = {
   render: () => <ControlledPaginationDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByRole("button", { name: "Go to page 2" }));
-    await expect(canvas.getByRole("button", { name: "Current page, 2" })).toBeInTheDocument();
+    await userEvent.click(await canvas.findByRole("button", { name: "Go to page 2" }));
+    await expect(await canvas.findByRole("button", { name: "Current page, 2" })).toBeInTheDocument();
   }
 };
 
@@ -67,15 +67,18 @@ export const KeyboardShortcuts: Story = {
   render: () => <KeyboardShortcutsDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const current = canvas.getByRole("button", { name: "Current page, 4" });
+    const current = await canvas.findByRole("button", { name: "Current page, 4" });
 
     current.focus();
+    await expect(current).toHaveFocus();
     await userEvent.keyboard("{End}");
-    await expect(canvas.getByRole("button", { name: "Current page, 12" })).toBeInTheDocument();
+    await expect(await canvas.findByRole("button", { name: "Current page, 12" })).toBeInTheDocument();
 
-    canvas.getByRole("button", { name: "Current page, 12" }).focus();
+    const currentLast = await canvas.findByRole("button", { name: "Current page, 12" });
+    currentLast.focus();
+    await expect(currentLast).toHaveFocus();
     await userEvent.keyboard("{Home}");
-    await expect(canvas.getByRole("button", { name: "Current page, 1" })).toBeInTheDocument();
+    await expect(await canvas.findByRole("button", { name: "Current page, 1" })).toBeInTheDocument();
   }
 };
 
@@ -99,16 +102,19 @@ export const RtlKeyboardShortcuts: Story = {
   render: () => <RtlKeyboardShortcutsDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const current = canvas.getByRole("button", { name: "Current page, 4" });
+    const current = await canvas.findByRole("button", { name: "Current page, 4" });
 
     current.focus();
+    await expect(current).toHaveFocus();
     await userEvent.keyboard("{ArrowRight}");
-    await expect(canvas.getByRole("button", { name: "Current page, 3" })).toBeInTheDocument();
+    await expect(await canvas.findByRole("button", { name: "Current page, 3" })).toBeInTheDocument();
     await expect(canvas.getByTestId("rtl-page-value")).toHaveTextContent("3");
 
-    canvas.getByRole("button", { name: "Current page, 3" }).focus();
+    const currentRtl = await canvas.findByRole("button", { name: "Current page, 3" });
+    currentRtl.focus();
+    await expect(currentRtl).toHaveFocus();
     await userEvent.keyboard("{ArrowLeft}");
-    await expect(canvas.getByRole("button", { name: "Current page, 4" })).toBeInTheDocument();
+    await expect(await canvas.findByRole("button", { name: "Current page, 4" })).toBeInTheDocument();
     await expect(canvas.getByTestId("rtl-page-value")).toHaveTextContent("4");
   }
 };
