@@ -41,7 +41,9 @@ test("opens command palette with keyboard shortcut", async ({ page }) => {
   await page.goto("/");
 
   await page.evaluate(() => {
-    document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }));
+    document.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true })
+    );
   });
 
   const dialog = page.getByRole("dialog");
@@ -73,8 +75,9 @@ test("keeps dialog open when Escape is preempted by a global handler", async ({ 
         event.preventDefault();
       }
     };
-    (window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }).__demoPreemptEscape =
-      preemptEscape;
+    (
+      window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }
+    ).__demoPreemptEscape = preemptEscape;
     document.addEventListener("keydown", preemptEscape, true);
   });
 
@@ -82,7 +85,9 @@ test("keeps dialog open when Escape is preempted by a global handler", async ({ 
   await expect(dialog).toBeVisible();
 
   await page.evaluate(() => {
-    const globalWindow = window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void };
+    const globalWindow = window as typeof window & {
+      __demoPreemptEscape?: (event: KeyboardEvent) => void;
+    };
     if (globalWindow.__demoPreemptEscape) {
       document.removeEventListener("keydown", globalWindow.__demoPreemptEscape, true);
       delete globalWindow.__demoPreemptEscape;
@@ -93,7 +98,9 @@ test("keeps dialog open when Escape is preempted by a global handler", async ({ 
   await expect(dialog).toBeHidden();
 });
 
-test("reports dialog close reason telemetry for close button, Escape, and outside pointer", async ({ page }) => {
+test("reports dialog close reason telemetry for close button, Escape, and outside pointer", async ({
+  page
+}) => {
   await page.goto("/");
 
   const trigger = page.getByRole("button", { name: "Open Dialog" });
@@ -121,6 +128,20 @@ test("reports dialog close reason telemetry for close button, Escape, and outsid
   await expect(telemetry).toHaveText("outside-pointer");
 });
 
+test("keeps dialog open on non-primary outside pointer interaction", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Dialog" }).click();
+  const dialog = page.getByRole("dialog").filter({ hasText: "Dialog Example" });
+  await expect(dialog).toBeVisible();
+
+  await page.mouse.click(8, 8, { button: "right" });
+  await expect(dialog).toBeVisible();
+
+  await page.mouse.click(8, 8);
+  await expect(dialog).toBeHidden();
+});
+
 test("opens and dismisses drawer with keyboard", async ({ page }) => {
   await page.goto("/");
 
@@ -146,8 +167,9 @@ test("keeps drawer open when Escape is preempted by a global handler", async ({ 
         event.preventDefault();
       }
     };
-    (window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }).__demoPreemptEscape =
-      preemptEscape;
+    (
+      window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }
+    ).__demoPreemptEscape = preemptEscape;
     document.addEventListener("keydown", preemptEscape, true);
   });
 
@@ -155,7 +177,9 @@ test("keeps drawer open when Escape is preempted by a global handler", async ({ 
   await expect(drawer).toBeVisible();
 
   await page.evaluate(() => {
-    const globalWindow = window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void };
+    const globalWindow = window as typeof window & {
+      __demoPreemptEscape?: (event: KeyboardEvent) => void;
+    };
     if (globalWindow.__demoPreemptEscape) {
       document.removeEventListener("keydown", globalWindow.__demoPreemptEscape, true);
       delete globalWindow.__demoPreemptEscape;
@@ -166,7 +190,9 @@ test("keeps drawer open when Escape is preempted by a global handler", async ({ 
   await expect(drawer).toBeHidden();
 });
 
-test("reports drawer close reason telemetry for close button, Escape, and outside pointer", async ({ page }) => {
+test("reports drawer close reason telemetry for close button, Escape, and outside pointer", async ({
+  page
+}) => {
   await page.goto("/");
 
   const trigger = page.getByRole("button", { name: "Open Drawer" });
@@ -260,6 +286,26 @@ test("reports command palette close reason telemetry for all dismiss paths", asy
   await expect(telemetry).toHaveText("outside-pointer");
 });
 
+test("keeps command palette open on non-primary outside pointer interaction", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Command Palette" });
+  const telemetry = page.getByTestId("palette-close-reason-telemetry");
+  const paletteDialog = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+
+  await expect(telemetry).toHaveText("none");
+  await trigger.click();
+  await expect(paletteDialog).toBeVisible();
+
+  await page.mouse.click(8, 8, { button: "right" });
+  await expect(paletteDialog).toBeVisible();
+  await expect(telemetry).toHaveText("none");
+
+  await page.mouse.click(8, 8);
+  await expect(paletteDialog).toBeHidden();
+  await expect(telemetry).toHaveText("outside-pointer");
+});
+
 test("keeps command palette open when blocking dismiss mode is enabled", async ({ page }) => {
   await page.goto("/");
 
@@ -312,7 +358,9 @@ test("guards command palette dismiss through event hooks when enabled", async ({
 test("keeps command palette open after command select in persistent mode", async ({ page }) => {
   await page.goto("/");
 
-  const persistentSwitch = page.getByRole("switch", { name: "Keep palette open after command select" });
+  const persistentSwitch = page.getByRole("switch", {
+    name: "Keep palette open after command select"
+  });
   await persistentSwitch.click();
   await expect(persistentSwitch).toHaveAttribute("aria-checked", "true");
 
@@ -357,7 +405,9 @@ test("clears palette query on first Escape before dismiss when enabled", async (
   await expect(palette).toBeHidden();
 });
 
-test("ignores command palette navigation and selection keys during IME composition", async ({ page }) => {
+test("ignores command palette navigation and selection keys during IME composition", async ({
+  page
+}) => {
   await page.goto("/");
 
   await page.getByRole("button", { name: "Command Palette" }).click();
@@ -405,7 +455,9 @@ test("does not close command palette when disabled command is clicked", async ({
   await expect(palette.getByRole("status")).toContainText('No enabled commands match "archive".');
 });
 
-test("keeps command palette open when Escape is preempted by a global handler", async ({ page }) => {
+test("keeps command palette open when Escape is preempted by a global handler", async ({
+  page
+}) => {
   await page.goto("/");
 
   await page.evaluate(() => {
@@ -414,8 +466,9 @@ test("keeps command palette open when Escape is preempted by a global handler", 
         event.preventDefault();
       }
     };
-    (window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }).__demoPreemptEscape =
-      preemptEscape;
+    (
+      window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }
+    ).__demoPreemptEscape = preemptEscape;
     document.addEventListener("keydown", preemptEscape, true);
   });
 
@@ -427,7 +480,9 @@ test("keeps command palette open when Escape is preempted by a global handler", 
   await expect(palette).toBeVisible();
 
   await page.evaluate(() => {
-    const globalWindow = window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void };
+    const globalWindow = window as typeof window & {
+      __demoPreemptEscape?: (event: KeyboardEvent) => void;
+    };
     if (globalWindow.__demoPreemptEscape) {
       document.removeEventListener("keydown", globalWindow.__demoPreemptEscape, true);
       delete globalWindow.__demoPreemptEscape;
@@ -728,11 +783,17 @@ test("paginates release activity feed", async ({ page }) => {
   await page.goto("/");
 
   const paginationNav = page.getByRole("navigation", { name: "Release feed pagination" });
-  await expect(page.getByText("v0.1.0: Button interaction states promoted to production grade.")).toBeVisible();
+  await expect(
+    page.getByText("v0.1.0: Button interaction states promoted to production grade.")
+  ).toBeVisible();
 
   await paginationNav.getByRole("button", { name: "Go to page 2" }).click();
-  await expect(page.getByText("v0.1.0: Toast timer path stabilized for hover pause lifecycle.")).toBeVisible();
-  await expect(page.getByText("v0.1.0: Button interaction states promoted to production grade.")).toBeHidden();
+  await expect(
+    page.getByText("v0.1.0: Toast timer path stabilized for hover pause lifecycle.")
+  ).toBeVisible();
+  await expect(
+    page.getByText("v0.1.0: Button interaction states promoted to production grade.")
+  ).toBeHidden();
 });
 
 test("navigates release pagination with Home/End shortcuts", async ({ page }) => {
@@ -743,11 +804,17 @@ test("navigates release pagination with Home/End shortcuts", async ({ page }) =>
   await firstPageButton.focus();
   await firstPageButton.press("End");
 
-  await expect(page.getByText("v0.1.0: Release dry-run evidence recorded for all npm packages.")).toBeVisible();
-  await expect(page.getByText("v0.1.0: Button interaction states promoted to production grade.")).toBeHidden();
+  await expect(
+    page.getByText("v0.1.0: Release dry-run evidence recorded for all npm packages.")
+  ).toBeVisible();
+  await expect(
+    page.getByText("v0.1.0: Button interaction states promoted to production grade.")
+  ).toBeHidden();
 
   await paginationNav.getByRole("button", { name: "Current page, 3" }).press("Home");
-  await expect(page.getByText("v0.1.0: Button interaction states promoted to production grade.")).toBeVisible();
+  await expect(
+    page.getByText("v0.1.0: Button interaction states promoted to production grade.")
+  ).toBeVisible();
 });
 
 test("mirrors pagination arrow shortcuts in rtl layout", async ({ page }) => {
@@ -772,7 +839,11 @@ test("selects framework from combobox", async ({ page }) => {
   const combobox = page.getByRole("combobox", { name: "Framework Combobox" });
   await combobox.click();
   await combobox.fill("sv");
-  await expect(page.getByRole("listbox", { name: "Framework Combobox options" }).getByRole("option", { name: "Svelte" })).toBeVisible();
+  await expect(
+    page
+      .getByRole("listbox", { name: "Framework Combobox options" })
+      .getByRole("option", { name: "Svelte" })
+  ).toBeVisible();
 
   await combobox.press("ArrowDown");
   await combobox.press("Enter");
@@ -800,8 +871,9 @@ test("keeps popover open when Escape is preempted by a global handler", async ({
         event.preventDefault();
       }
     };
-    (window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }).__demoPreemptEscape =
-      preemptEscape;
+    (
+      window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }
+    ).__demoPreemptEscape = preemptEscape;
     document.addEventListener("keydown", preemptEscape, true);
   });
 
@@ -809,7 +881,9 @@ test("keeps popover open when Escape is preempted by a global handler", async ({
   await expect(popover).toBeVisible();
 
   await page.evaluate(() => {
-    const globalWindow = window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void };
+    const globalWindow = window as typeof window & {
+      __demoPreemptEscape?: (event: KeyboardEvent) => void;
+    };
     if (globalWindow.__demoPreemptEscape) {
       document.removeEventListener("keydown", globalWindow.__demoPreemptEscape, true);
       delete globalWindow.__demoPreemptEscape;
@@ -820,7 +894,9 @@ test("keeps popover open when Escape is preempted by a global handler", async ({
   await expect(popover).toBeHidden();
 });
 
-test("reports popover close reason telemetry for trigger, Escape, and outside pointer", async ({ page }) => {
+test("reports popover close reason telemetry for trigger, Escape, and outside pointer", async ({
+  page
+}) => {
   await page.goto("/");
 
   const trigger = page.getByRole("button", { name: "Open Popover" });
@@ -925,8 +1001,9 @@ test("keeps dropdown open when Escape is preempted by a global handler", async (
         event.preventDefault();
       }
     };
-    (window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }).__demoPreemptEscape =
-      preemptEscape;
+    (
+      window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }
+    ).__demoPreemptEscape = preemptEscape;
     document.addEventListener("keydown", preemptEscape, true);
   });
 
@@ -934,7 +1011,9 @@ test("keeps dropdown open when Escape is preempted by a global handler", async (
   await expect(menu).toBeVisible();
 
   await page.evaluate(() => {
-    const globalWindow = window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void };
+    const globalWindow = window as typeof window & {
+      __demoPreemptEscape?: (event: KeyboardEvent) => void;
+    };
     if (globalWindow.__demoPreemptEscape) {
       document.removeEventListener("keydown", globalWindow.__demoPreemptEscape, true);
       delete globalWindow.__demoPreemptEscape;
@@ -960,7 +1039,9 @@ test("tabs out of dropdown menu and moves focus to next control", async ({ page 
   await expect(nextButton).toBeFocused();
 });
 
-test("reports toast close reason telemetry for Escape, close button, and timeout", async ({ page }) => {
+test("reports toast close reason telemetry for Escape, close button, and timeout", async ({
+  page
+}) => {
   await page.goto("/");
 
   const trigger = page.getByRole("button", { name: "Trigger telemetry toast" });
@@ -1011,8 +1092,9 @@ test("keeps toast open when Escape is preempted by a global handler", async ({ p
         event.preventDefault();
       }
     };
-    (window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }).__demoPreemptEscape =
-      preemptEscape;
+    (
+      window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }
+    ).__demoPreemptEscape = preemptEscape;
     document.addEventListener("keydown", preemptEscape, true);
   });
 
@@ -1020,7 +1102,9 @@ test("keeps toast open when Escape is preempted by a global handler", async ({ p
   await expect(toast).toBeVisible();
 
   await page.evaluate(() => {
-    const globalWindow = window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void };
+    const globalWindow = window as typeof window & {
+      __demoPreemptEscape?: (event: KeyboardEvent) => void;
+    };
     if (globalWindow.__demoPreemptEscape) {
       document.removeEventListener("keydown", globalWindow.__demoPreemptEscape, true);
       delete globalWindow.__demoPreemptEscape;
@@ -1068,7 +1152,9 @@ test("renders silent toast with aria-live off for passive updates", async ({ pag
 test("keeps prompt toast open while toast-level escape guard is enabled", async ({ page }) => {
   await page.goto("/");
 
-  const guardSwitch = page.getByRole("switch", { name: "Guard prompt toast Escape at toast layer" });
+  const guardSwitch = page.getByRole("switch", {
+    name: "Guard prompt toast Escape at toast layer"
+  });
   await guardSwitch.click();
   await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
 
@@ -1106,7 +1192,9 @@ test("dismisses stacked toasts from top-most to oldest on Escape", async ({ page
   await expect(firstToast).toBeHidden();
 });
 
-test("prioritizes focused toast when dismissing stacked notifications with Escape", async ({ page }) => {
+test("prioritizes focused toast when dismissing stacked notifications with Escape", async ({
+  page
+}) => {
   await page.goto("/");
 
   await page.getByRole("button", { name: "Trigger stacked toasts" }).click();
@@ -1157,6 +1245,10 @@ test("updates ai section prompt and reasoning trace", async ({ page }) => {
   await expect(reasoningToggle).toHaveAttribute("aria-expanded", "true");
   await expect(aiSection.getByText("Generate form schema and OTP fallback path.")).toBeVisible();
 
-  await expect(aiSection.locator("code")).toContainText("export function OtpFallback()", { timeout: 5000 });
-  await expect(aiSection.locator('[aria-busy="true"]').filter({ hasText: "OtpFallback" })).toHaveCount(0);
+  await expect(aiSection.locator("code")).toContainText("export function OtpFallback()", {
+    timeout: 5000
+  });
+  await expect(
+    aiSection.locator('[aria-busy="true"]').filter({ hasText: "OtpFallback" })
+  ).toHaveCount(0);
 });
