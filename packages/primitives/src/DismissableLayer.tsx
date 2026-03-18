@@ -31,6 +31,24 @@ function isComposingKeyEvent(event: KeyboardEvent) {
   return event.isComposing || event.keyCode === 229;
 }
 
+function isPrimaryPointerDownEvent(event: PointerEvent) {
+  const button = typeof event.button === "number" ? event.button : 0;
+  if (button > 0) {
+    return false;
+  }
+
+  if (event.pointerType === "mouse" || event.pointerType === "") {
+    if (typeof event.buttons === "number" && event.buttons !== 0 && (event.buttons & 1) === 0) {
+      return false;
+    }
+    if (event.ctrlKey) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLayerProps>(function DismissableLayer(
   { children, onEscapeKeyDown, onPointerDownOutside, onDismiss, ...props },
   forwardedRef
@@ -75,6 +93,12 @@ export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLaye
     const onPointerDown = (event: PointerEvent) => {
       const element = localRef.current;
       if (!element || !isTopLayer(element)) {
+        return;
+      }
+      if (!isPrimaryPointerDownEvent(event)) {
+        return;
+      }
+      if (event.defaultPrevented) {
         return;
       }
 

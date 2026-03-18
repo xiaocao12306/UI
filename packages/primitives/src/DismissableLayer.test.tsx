@@ -31,6 +31,7 @@ function NestedDismissableLayers() {
 describe("DismissableLayer", () => {
   afterEach(() => {
     document.removeEventListener("keydown", preemptEscape, true);
+    document.removeEventListener("pointerdown", preemptPointerDown, true);
   });
 
   it("dismisses only the topmost layer on Escape", () => {
@@ -96,10 +97,57 @@ describe("DismissableLayer", () => {
     expect(onEscapeKeyDown).not.toHaveBeenCalled();
     expect(onDismiss).not.toHaveBeenCalled();
   });
+
+  it("skips outside-pointer callback and dismiss when pointerdown is preempted upstream", () => {
+    const onDismiss = vi.fn();
+    const onPointerDownOutside = vi.fn();
+
+    document.addEventListener("pointerdown", preemptPointerDown, true);
+    render(
+      <div>
+        <DismissableLayer onDismiss={onDismiss} onPointerDownOutside={onPointerDownOutside}>
+          <div>Layer body</div>
+        </DismissableLayer>
+        <button type="button">Outside target</button>
+      </div>
+    );
+
+    fireEvent.pointerDown(screen.getByRole("button", { name: "Outside target" }));
+
+    expect(onPointerDownOutside).not.toHaveBeenCalled();
+    expect(onDismiss).not.toHaveBeenCalled();
+  });
+
+  it("ignores non-primary pointer buttons for outside dismiss", () => {
+    const onDismiss = vi.fn();
+    const onPointerDownOutside = vi.fn();
+
+    render(
+      <div>
+        <DismissableLayer onDismiss={onDismiss} onPointerDownOutside={onPointerDownOutside}>
+          <div>Layer body</div>
+        </DismissableLayer>
+        <button type="button">Outside target</button>
+      </div>
+    );
+
+    const event = new Event("pointerdown", { bubbles: true, cancelable: true });
+    Object.defineProperty(event, "button", { configurable: true, value: 2 });
+    Object.defineProperty(event, "buttons", { configurable: true, value: 2 });
+    Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
+    screen.getByRole("button", { name: "Outside target" }).dispatchEvent(event);
+
+    expect(onPointerDownOutside).not.toHaveBeenCalled();
+    expect(onDismiss).not.toHaveBeenCalled();
+  });
 });
 
 function preemptEscape(event: KeyboardEvent) {
   if (event.key === "Escape") {
     event.preventDefault();
   }
+}
+
+function preemptPointerDown(event: PointerEvent) {
+  event.preventDefault();
 }
