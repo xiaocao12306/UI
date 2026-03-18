@@ -240,4 +240,30 @@ describe("Dropdown", () => {
     expect(onPointerDownOutside).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("menu", { name: "Policy" })).toBeInTheDocument();
   });
+
+  it("preserves outside pointer target focus when dismissing", () => {
+    render(
+      <div>
+        <Dropdown
+          label="Focus policy"
+          items={[
+            { key: "one", label: "One" },
+            { key: "two", label: "Two" }
+          ]}
+        />
+        <button type="button">Outside target</button>
+      </div>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Focus policy" }));
+    expect(screen.getByRole("menu", { name: "Focus policy" })).toBeInTheDocument();
+
+    const outsideTarget = screen.getByRole("button", { name: "Outside target" });
+    outsideTarget.focus();
+    expect(outsideTarget).toHaveFocus();
+    fireEvent.pointerDown(outsideTarget);
+
+    expect(screen.queryByRole("menu", { name: "Focus policy" })).toBeNull();
+    expect(outsideTarget).toHaveFocus();
+  });
 });
