@@ -234,6 +234,7 @@
 - Popover close-reason telemetry parity: added `onCloseReason` with structured reasons (`trigger-click` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
 - Dialog close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
 - Drawer close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
+- Demo dialog close-reason parity: added `dialog-close-reason-demo` telemetry indicator and Playwright regression for `close-button` / `escape-key` / `outside-pointer` branches.
 - Demo drawer close-reason parity: added `drawer-close-reason-demo` telemetry indicator and Playwright regression for `close-button` / `escape-key` / `outside-pointer` branches.
 - Storybook docs import guard: added `pnpm storybook:docs:check` and wired it into `storybook:test:ci` so missing `*Stories` imports in MDX fail fast before visual/interaction regression runs.
 - Storybook static metadata hygiene: `build-storybook` now normalizes `storybook-static/project.json` volatile timestamps (`generatedAt`, `userSince`) to stable values, reducing no-op static bundle churn in review diffs.
