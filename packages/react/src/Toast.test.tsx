@@ -218,6 +218,19 @@ describe("Toast", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("does not call escape hook when Escape event is already default prevented", () => {
+    const onEscapeKeyDown = vi.fn();
+
+    render(<Toast open title="Sticky" onEscapeKeyDown={onEscapeKeyDown} onOpenChange={() => {}} />);
+
+    const event = new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true });
+    event.preventDefault();
+    document.dispatchEvent(event);
+
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(screen.getByRole("status", { name: "Sticky" })).toBeInTheDocument();
+  });
+
   it("does not close on Escape while IME composition is active", () => {
     const onOpenChange = vi.fn();
 

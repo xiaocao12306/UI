@@ -117,6 +117,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep `closeOnEscape` aligned with task criticality; disable Escape only for must-read states.
 - Use `onEscapeKeyDown` when Escape policy must be toggled dynamically at runtime (e.g. approval checkpoints).
 - Ensure upper-layer shortcuts that `preventDefault()` on Escape can preempt toast dismiss when required.
+- When Escape is preempted upstream, avoid side effects in toast-level analytics/guards by relying on the built-in hook-skip behavior.
 - Ignore Escape dismissal while IME composition is active so CJK text confirmation inside toast actions does not close the notification unexpectedly.
 - For stacked notifications, rely on Escape handling that dismisses one toast per key press, prioritizing the latest or most recently interacted toast.
 - Verify timer pause behavior for both pointer hover and keyboard focus when `pauseOnHover` is enabled.
@@ -127,6 +128,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={ToastStories.EscapeStackOrder} />
 <Canvas of={ToastStories.FocusedToastEscapesFirst} />
 <Canvas of={ToastStories.EscapePreemptedByGlobalHandler} />
+<Canvas of={ToastStories.EscapePreemptedSkipsToastHook} />
 <Canvas of={ToastStories.EscapeGuardedByToastHandler} />
 <Canvas of={ToastStories.EscapeIgnoresImeComposition} />
 <Canvas of={ToastStories.LiveRegionOff} />

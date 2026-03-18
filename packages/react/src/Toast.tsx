@@ -167,6 +167,10 @@ export function Toast({
         return;
       }
 
+      if (event.defaultPrevented) {
+        return;
+      }
+
       onEscapeKeyDown?.(event);
       if (event.defaultPrevented) {
         return;

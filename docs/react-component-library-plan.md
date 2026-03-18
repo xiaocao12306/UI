@@ -260,7 +260,7 @@
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
-  - Release Gate 证据刷新（2026-03-18：demo E2E `41` + Storybook `152/152` + dry-run `react` unpacked `~296.8 kB`）
+  - Release Gate 证据刷新（2026-03-18：demo E2E `41` + Storybook `153/153` + dry-run `react` unpacked `~296.8 kB`）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
   - CommandPalette Escape 查询收口（新增 `clearQueryOnEscape` 默认行为：首次 Escape 清空 query，二次 Escape 再触发关闭）
@@ -290,6 +290,7 @@
   - Demo Tabs RTL 验收（新增 `RTL release workflow tabs` 场景 + Playwright ArrowLeft/ArrowRight 方向镜像回归）
   - Pagination RTL 键盘收口（`dir=\"rtl\"` 下 ArrowLeft/ArrowRight 快捷键语义镜像，保持视觉导航一致）
   - Demo Pagination RTL 验收（新增 `RTL release pagination` 场景 + Playwright ArrowLeft/ArrowRight 方向镜像回归）
+  - Toast Escape 抢占收口（上层 `preventDefault` 后不再触发 `onEscapeKeyDown`，避免审批流重复副作用）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

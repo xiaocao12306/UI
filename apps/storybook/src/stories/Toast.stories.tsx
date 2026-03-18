@@ -265,6 +265,44 @@ function EscapeImeCompositionDemo() {
   );
 }
 
+function EscapePreemptedSkipsHookDemo() {
+  const [open, setOpen] = React.useState(true);
+  const [hookCount, setHookCount] = React.useState(0);
+
+  React.useEffect(() => {
+    const onKeyDownCapture = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDownCapture, true);
+    return () => {
+      document.removeEventListener("keydown", onKeyDownCapture, true);
+    };
+  }, []);
+
+  return (
+    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Escape hook calls:{" "}
+        <strong data-testid="escape-hook-count" style={{ color: "var(--aurora-text-primary)" }}>
+          {hookCount}
+        </strong>
+      </p>
+      <Toast
+        open={open}
+        onOpenChange={setOpen}
+        duration={0}
+        title="Preempted escape skips toast hook"
+        description="Global escape preemption should prevent toast-level escape callback execution."
+        tone="info"
+        onEscapeKeyDown={() => setHookCount((count) => count + 1)}
+      />
+    </div>
+  );
+}
+
 export const EscapePreemptedByGlobalHandler: Story = {
   render: () => <EscapePreemptedDemo />,
   play: async ({ canvasElement }) => {
@@ -279,6 +317,19 @@ export const EscapePreemptedByGlobalHandler: Story = {
     await expect(canvas.getByRole("button", { name: "Enable global Escape handler" })).toBeInTheDocument();
     await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));
     await expect(canvas.queryByRole("status", { name: "Global Escape override" })).not.toBeInTheDocument();
+  }
+};
+
+export const EscapePreemptedSkipsToastHook: Story = {
+  render: () => <EscapePreemptedSkipsHookDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const doc = canvasElement.ownerDocument;
+
+    await expect(canvas.getByRole("status", { name: "Preempted escape skips toast hook" })).toBeInTheDocument();
+    fireEvent.keyDown(doc, { key: "Escape" });
+    await expect(canvas.getByTestId("escape-hook-count")).toHaveTextContent("0");
+    await expect(canvas.getByRole("status", { name: "Preempted escape skips toast hook" })).toBeInTheDocument();
   }
 };
 
