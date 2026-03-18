@@ -312,6 +312,7 @@
   - Storybook CommandPalette i18n 验收（新增 `LocalizedResultsLabel` 场景，锁定结果 listbox 本地化命名）
   - Storybook CommandPalette i18n 验收扩展（新增 `LocalizedDialogCopy` 场景，锁定 dialog heading + 搜索输入 + listbox 的本地化命名）
   - Storybook 文档引用门禁收口（新增 `storybook:docs:check`，校验 docs MDX 的 `*Stories` 引用都有 import，并纳入 `storybook:test:ci`）
+  - Storybook 静态元数据去噪（构建后自动归一化 `storybook-static/project.json` 的 `generatedAt/userSince`，减少时间戳抖动导致的噪音 diff）
   - 生产级验收清单落地（`docs/production-quality-checklist.md`）
   - Demo E2E 扩展（Dropdown 键盘打开、Toast Escape 关闭）
 - 进行中

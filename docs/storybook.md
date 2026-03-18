@@ -104,6 +104,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 说明：预览层通过 toolbar 全局切换 `core-light/core-dark/glass/neo-brutal`，用于验证 token 与主题一致性。
 生产级验收矩阵：`docs/production-quality-checklist.md`
 构建噪音控制：`.storybook/main.ts` 已设置 `vite.build.chunkSizeWarningLimit=2500`，避免 Storybook vendor chunk 的误导性超限告警干扰 CI 日志。
+静态产物去噪：`build-storybook` 结束后自动执行 `scripts/normalize-storybook-static-metadata.mjs`，将 `storybook-static/project.json` 中易波动字段（`generatedAt`、`userSince`）规范为稳定值，降低无意义 commit diff。
 
 ## Chromatic
 - 工作流：`.github/workflows/chromatic.yml`
