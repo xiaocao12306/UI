@@ -108,6 +108,51 @@ describe("Tabs", () => {
     expect(screen.getByRole("tab", { name: "One" })).toHaveFocus();
   });
 
+  it("ignores ArrowUp and ArrowDown in horizontal orientation", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    oneTab.focus();
+    fireEvent.keyDown(oneTab, { key: "ArrowDown" });
+    expect(oneTab).toHaveFocus();
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+
+    fireEvent.keyDown(oneTab, { key: "ArrowUp" });
+    expect(oneTab).toHaveFocus();
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+  });
+
+  it("ignores ArrowLeft and ArrowRight in vertical orientation", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        orientation="vertical"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    oneTab.focus();
+    fireEvent.keyDown(oneTab, { key: "ArrowRight" });
+    expect(oneTab).toHaveFocus();
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+
+    fireEvent.keyDown(oneTab, { key: "ArrowLeft" });
+    expect(oneTab).toHaveFocus();
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+  });
+
   it("keeps tabpanel elements mounted so aria-controls always points to an existing panel", () => {
     render(
       <Tabs

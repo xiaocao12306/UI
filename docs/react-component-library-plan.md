@@ -262,6 +262,7 @@
   - Table 空数据交互收口（无行时排序按钮禁用）并补单测 + Storybook 交互断言
   - Tabs 命名语义收口（`ariaLabelledBy` 支持外部标题命名 tablist，减少泛化标签）
   - Tabs 引用稳健性收口（tab/panel id 改为稳定索引映射，避免特殊字符 key 破坏 `aria-controls` 关联）
+  - Tabs 方向键边界补测（横向忽略 `ArrowUp/ArrowDown`、纵向忽略 `ArrowLeft/ArrowRight`，锁定无效键不触发切换）
   - Popover/Dropdown 关闭策略收口（`closeOnEscape`/`closeOnOutsidePointer` + dismiss 事件钩子，覆盖阻塞式流程）
   - Overlay 焦点策略收口（Popover/Dropdown 仅在键盘关闭时回焦 trigger，外部点击关闭保留指针目标焦点）
   - Storybook Dropdown 焦点策略回归补齐（Escape 回焦 trigger + outside pointer 目标焦点保留）
