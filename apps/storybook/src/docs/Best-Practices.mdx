@@ -175,11 +175,13 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - In RTL layouts, verify horizontal `ArrowLeft`/`ArrowRight` intent is mirrored so tab navigation matches visual reading flow.
 - Prefer `ariaLabelledBy` with a visible heading when tabs already have on-screen context labels; fall back to `ariaLabel` for standalone tab groups.
 - Use `activationMode="manual"` when arrow-key navigation should not immediately trigger expensive panel renders.
+- Use `loop={false}` when boundary tabs should trap Arrow navigation (for linear workflows where wrap-around can feel like a jump).
 - Keep manual tabs compatible with legacy `Spacebar` key values so activation remains consistent across browser engines.
 - Keep tab panels mounted and toggle `hidden` so tab `aria-controls` always points to a real panel.
 - Avoid duplicate telemetry from tabs by emitting `onValueChange` only on actual key transitions.
 
 <Canvas of={TabsStories.KeyboardNavigationGuide} />
+<Canvas of={TabsStories.NoLoopNavigation} />
 <Canvas of={TabsStories.RtlKeyboardNavigation} />
 <Canvas of={TabsStories.LabelledByHeading} />
 <Canvas of={TabsStories.ManualActivation} />

@@ -141,6 +141,32 @@ export const KeyboardNavigationGuide: Story = {
   }
 };
 
+export const NoLoopNavigation: Story = {
+  render: () => (
+    <div style={{ width: 620, display: "grid", gap: 12 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Set <code>loop=&#123;false&#125;</code> to keep Arrow navigation at tablist boundaries instead of wrapping.
+      </p>
+      <Tabs ariaLabel="No loop tabs" defaultValue="spec" loop={false} items={productTabs} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const releaseTab = canvas.getByRole("tab", { name: "Release" });
+
+    await userEvent.click(releaseTab);
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(releaseTab).toHaveFocus();
+    await expect(releaseTab).toHaveAttribute("aria-selected", "true");
+
+    await userEvent.click(specTab);
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(specTab).toHaveFocus();
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+  }
+};
+
 function LabelledByHeadingDemo() {
   const headingId = React.useId();
 

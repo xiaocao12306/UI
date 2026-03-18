@@ -15,17 +15,43 @@ export type TabsProps = {
   ariaLabelledBy?: string;
   orientation?: "horizontal" | "vertical";
   activationMode?: "automatic" | "manual";
+  loop?: boolean;
   onValueChange?: (value: string) => void;
 };
 
-function getNextEnabledIndex(items: TabItem[], startIndex: number, direction: 1 | -1) {
+function getNextEnabledIndex(items: TabItem[], startIndex: number, direction: 1 | -1, loop: boolean) {
   if (items.length === 0) {
     return -1;
   }
 
+  const fallbackIndex = items[startIndex]?.disabled ? -1 : startIndex;
   let index = startIndex;
   for (let i = 0; i < items.length; i += 1) {
-    index = (index + direction + items.length) % items.length;
+    index += direction;
+    if (loop) {
+      if (index < 0) {
+        index = items.length - 1;
+      } else if (index >= items.length) {
+        index = 0;
+      }
+    } else if (index < 0 || index >= items.length) {
+      return fallbackIndex;
+    }
+
+    if (!items[index]?.disabled) {
+      return index;
+    }
+  }
+
+  return fallbackIndex;
+}
+
+function getFirstEnabledIndex(items: TabItem[]) {
+  return items.findIndex((item) => !item.disabled);
+}
+
+function getLastEnabledIndex(items: TabItem[]) {
+  for (let index = items.length - 1; index >= 0; index -= 1) {
     if (!items[index]?.disabled) {
       return index;
     }
@@ -42,6 +68,7 @@ export function Tabs({
   ariaLabelledBy,
   orientation = "horizontal",
   activationMode = "automatic",
+  loop = true,
   onValueChange
 }: TabsProps) {
   const baseId = React.useId();
@@ -145,14 +172,14 @@ export function Tabs({
 
                 if (event.key === "Home") {
                   event.preventDefault();
-                  const firstIndex = getNextEnabledIndex(items, -1, 1);
+                  const firstIndex = getFirstEnabledIndex(items);
                   moveToIndex(firstIndex);
                   return;
                 }
 
                 if (event.key === "End") {
                   event.preventDefault();
-                  const lastIndex = getNextEnabledIndex(items, 0, -1);
+                  const lastIndex = getLastEnabledIndex(items);
                   moveToIndex(lastIndex);
                   return;
                 }
@@ -168,7 +195,7 @@ export function Tabs({
 
                 event.preventDefault();
 
-                const nextIndex = getNextEnabledIndex(items, index, moveDirection);
+                const nextIndex = getNextEnabledIndex(items, index, moveDirection, loop);
                 moveToIndex(nextIndex);
               }}
               style={{

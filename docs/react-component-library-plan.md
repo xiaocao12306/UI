@@ -232,6 +232,7 @@
   - Demo Table empty 验收场景（`emptyContent` + 禁用排序）与 Playwright 回归
   - Demo Dropdown 焦点策略场景（Escape 回焦 trigger / outside pointer 保持目标焦点 / Tab 自然前进）与 Playwright 回归
   - Tabs manual 模式键盘边界补强（`Home/End` 仅移动焦点，`Enter/Space` 才激活）并补单测 + Storybook 交互断言
+  - Tabs 回绕策略收口（新增 `loop`，支持 Arrow 到边界后停留不回绕，补齐单测 + Storybook `NoLoopNavigation`）
   - Toast Escape 事件优先级补测（`defaultPrevented` 分支单测，避免与上层快捷键处理冲突）
   - CommandPalette listbox 语义补强（`aria-posinset/aria-setsize`）并补回归测试
   - Table 空数据交互收口（无行时排序按钮禁用）并补单测 + Storybook 交互断言
@@ -260,7 +261,7 @@
   - Release Gate 验收复跑（`pnpm release:gate` 全链路通过并刷新 dry-run 包体积记录）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
-  - Release Gate 证据刷新（2026-03-18：demo E2E `51` + Storybook `164/164` + dry-run `react` unpacked `~301.3 kB`）
+  - Release Gate 证据刷新（2026-03-18：demo E2E `51` + Storybook `165/165` + dry-run `react` unpacked `~301.3 kB`）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
   - CommandPalette Escape 查询收口（新增 `clearQueryOnEscape` 默认行为：首次 Escape 清空 query，二次 Escape 再触发关闭）

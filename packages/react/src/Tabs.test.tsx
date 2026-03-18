@@ -34,6 +34,33 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
+  it("keeps focus and selection at boundaries when loop is disabled", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        loop={false}
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> },
+          { key: "three", label: "Three", content: <div>Panel Three</div> }
+        ]}
+      />
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    const threeTab = screen.getByRole("tab", { name: "Three" });
+
+    fireEvent.click(threeTab);
+    fireEvent.keyDown(threeTab, { key: "ArrowRight" });
+    expect(threeTab).toHaveFocus();
+    expect(screen.getByText("Panel Three")).toBeInTheDocument();
+
+    fireEvent.click(oneTab);
+    fireEvent.keyDown(oneTab, { key: "ArrowLeft" });
+    expect(oneTab).toHaveFocus();
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+  });
+
   it("uses RTL arrow semantics for horizontal keyboard navigation", () => {
     render(
       <div dir="rtl">
