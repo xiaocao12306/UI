@@ -94,6 +94,7 @@
 - Tabs cross-browser keyboard parity: manual activation now accepts legacy `Spacebar` key value, with dedicated unit regression coverage.
 - Tabs telemetry de-dup hardening: manual mode now ignores follow-up keyboard-generated click (`detail=0`) after key activation, preventing duplicate `onValueChange` emissions.
 - Storybook Tag stability hardening: `Core/Tag/MetadataRow` now has explicit play assertions to reduce interaction-runner navigation retry noise.
+- Storybook Toast stability hardening: `Feedback/Toast/ToneMatrix` now uses `duration={0}` so baseline stories stay deterministic during interaction-runner sweeps.
 - Pages delivery hardening: GitHub Pages artifact now ships Demo root + Storybook subpath (`/storybook`) in one deploy workflow.
 - Pages observability hardening: deploy workflow now writes Demo + Storybook external URLs into `GITHUB_STEP_SUMMARY`.
 - Release-gate baseline refresh: `pnpm release:gate` rerun passed on 2026-03-18 after latest Tabs/Table hardening, with dry-run tarballs still publishable.

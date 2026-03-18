@@ -40,13 +40,22 @@ function ToneMatrixDemo() {
         </Button>
       </div>
 
-      <Toast open={open} onOpenChange={setOpen} title="Info" description="Build queued." tone="info" position="top-left" />
+      <Toast
+        open={open}
+        onOpenChange={setOpen}
+        title="Info"
+        description="Build queued."
+        tone="info"
+        duration={0}
+        position="top-left"
+      />
       <Toast
         open={open}
         onOpenChange={setOpen}
         title="Success"
         description="Release published successfully."
         tone="success"
+        duration={0}
         position="top-right"
       />
       <Toast
@@ -55,6 +64,7 @@ function ToneMatrixDemo() {
         title="Warning"
         description="Publish is pending manual review."
         tone="warning"
+        duration={0}
         position="bottom-left"
       />
       <Toast
@@ -63,6 +73,7 @@ function ToneMatrixDemo() {
         title="Danger"
         description="Deploy failed due to secret mismatch."
         tone="danger"
+        duration={0}
         position="bottom-right"
       />
     </div>
