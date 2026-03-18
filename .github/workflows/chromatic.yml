@@ -4,7 +4,12 @@ on:
   pull_request:
     paths:
       - "apps/storybook/**"
+      - "apps/storybook/.storybook/**"
       - "packages/**"
+      - "scripts/normalize-storybook-static-metadata.mjs"
+      - "package.json"
+      - "pnpm-workspace.yaml"
+      - "turbo.json"
       - "pnpm-lock.yaml"
       - ".github/workflows/chromatic.yml"
   workflow_dispatch:
@@ -41,6 +46,7 @@ jobs:
         run: pnpm storybook:build
 
       - name: Publish to Chromatic
+        id: chromatic
         if: steps.token.outputs.enabled == 'true'
         uses: chromaui/action@v11
         with:
@@ -49,6 +55,19 @@ jobs:
           storybookBuildDir: storybook-static
           exitOnceUploaded: true
           autoAcceptChanges: main
+
+      - name: Chromatic Summary
+        if: steps.token.outputs.enabled == 'true' && always()
+        run: |
+          {
+            echo "## Chromatic Upload"
+            echo
+            echo "- status: \`${{ steps.chromatic.outcome }}\`"
+            echo "- build url: ${{ steps.chromatic.outputs.buildUrl || 'n/a' }}"
+            echo "- storybook url: ${{ steps.chromatic.outputs.storybookUrl || 'n/a' }}"
+            echo "- change count: ${{ steps.chromatic.outputs.changeCount || 'n/a' }}"
+            echo "- error count: ${{ steps.chromatic.outputs.errorCount || 'n/a' }}"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Skip Chromatic
         if: steps.token.outputs.enabled != 'true'

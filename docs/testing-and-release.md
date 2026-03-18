@@ -118,6 +118,7 @@ GitHub Actions workflow runs:
 
 Separate workflows:
 - Chromatic visual regression upload: `.github/workflows/chromatic.yml` (when `CHROMATIC_PROJECT_TOKEN` is configured)
+  - writes upload status/build URL/storybook URL/change/error counts into `GITHUB_STEP_SUMMARY`
 - release PR + npm publish: `.github/workflows/release.yml` (when `NPM_TOKEN` is configured)
 
 ## Release Readiness Checklist

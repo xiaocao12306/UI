@@ -131,6 +131,7 @@
   - Table 行标识收口（无 `rowKey` 时改为源索引稳定 key，避免排序后行节点抖动）
   - Dropdown typeahead 深化（多字符缓冲、重复按键循环、`textValue` 重音归一匹配）
   - 发布/视觉回归工作流可观测性增强（缺失 token 时写入 `GITHUB_STEP_SUMMARY` 指引）
+  - Chromatic 可观测性增强（上传成功/失败都写入 `status + build/storybook URL + change/error count`）
   - Dialog 焦点回收收口（默认关闭后恢复原焦点，支持 `restoreFocus=false` 关闭）
   - Drawer 焦点回收收口（默认关闭后恢复原焦点，支持 `restoreFocus=false` 关闭）
   - Popover/Dropdown 图标触发器可访问性补齐（`triggerAriaLabel`，覆盖 icon-only 交互）
