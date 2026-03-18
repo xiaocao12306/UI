@@ -203,6 +203,24 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
+  it("supports manual activation mode with legacy Spacebar key value", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        activationMode="manual"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    fireEvent.keyDown(screen.getByRole("tab", { name: "One" }), { key: "ArrowRight" });
+    fireEvent.keyDown(screen.getByRole("tab", { name: "Two" }), { key: "Spacebar" });
+
+    expect(screen.getByText("Panel Two")).toBeInTheDocument();
+  });
+
   it("keeps manual mode panel stable on Home/End until explicit activation", () => {
     render(
       <Tabs

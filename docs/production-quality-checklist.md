@@ -90,6 +90,7 @@
 - Data API docs parity: Component API + Best Practices now explicitly document Table sortable-header keyboard activation (`Enter/Space`) for integration teams.
 - Demo data-flow parity: Playwright now covers Table sort keyboard activation (`Enter`/`Space`) to match Storybook/unit keyboard sorting guarantees.
 - Demo tabs parity: Playwright now covers manual-activation `Space` path so Enter/Space semantics stay aligned with Tabs API contract.
+- Tabs cross-browser keyboard parity: manual activation now accepts legacy `Spacebar` key value, with dedicated unit regression coverage.
 - Dropdown unit focus-policy branch: added explicit outside-target focus retention assertion so pointer dismiss cannot regress into trigger focus theft.
 - Table empty-state sort coverage: sortable headers now disable when data is empty, with unit + Storybook play assertions to prevent no-op sort telemetry.
 - Tabs manual keyboard coverage: `Home/End` now has explicit unit + Storybook play assertions confirming focus movement does not activate panel until `Enter/Space`.

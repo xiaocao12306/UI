@@ -237,6 +237,7 @@
   - Data 文档语义收口（Component API / Best Practices 明确 Table `Enter/Space` 键盘排序语义）
   - Demo Data E2E 收口（Table 列排序补齐 `Enter/Space` 键盘激活回归）
   - Demo Tabs E2E 收口（manual 模式补齐 `Space` 激活回归，覆盖 Enter/Space 双路径）
+  - Tabs 键盘兼容收口（manual 模式补齐 legacy `Spacebar` key 兼容 + 单测回归）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板）
   - DismissableLayer 栈语义收口（嵌套 overlay 时仅顶层响应 Escape/外部点击，避免单次事件联动关闭多层）

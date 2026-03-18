@@ -119,7 +119,7 @@ export function Tabs({
                 setFocusedValue(item.key);
               }}
               onKeyDown={(event) => {
-                if (activationMode === "manual" && (event.key === "Enter" || event.key === " ")) {
+                if (activationMode === "manual" && isTabActivationKey(event.key)) {
                   event.preventDefault();
                   select(item.key);
                   return;
@@ -210,4 +210,8 @@ export function Tabs({
       })}
     </div>
   );
+}
+
+function isTabActivationKey(key: string) {
+  return key === "Enter" || key === " " || key === "Spacebar";
 }
