@@ -110,13 +110,16 @@ export function Pagination({
     } else if (event.key === "End") {
       event.preventDefault();
       goToPage(pageCount);
-    } else if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      goToPage(currentPage - 1);
-    } else if (event.key === "ArrowRight") {
-      event.preventDefault();
-      goToPage(currentPage + 1);
+      return;
     }
+
+    const arrowDelta = getPaginationArrowDelta(event.key, event.currentTarget);
+    if (arrowDelta === undefined) {
+      return;
+    }
+
+    event.preventDefault();
+    goToPage(currentPage + arrowDelta);
   };
 
   return (
@@ -213,6 +216,42 @@ export function Pagination({
       </ul>
     </nav>
   );
+}
+
+function getPaginationArrowDelta(key: string, target: HTMLButtonElement) {
+  if (key !== "ArrowLeft" && key !== "ArrowRight") {
+    return undefined;
+  }
+
+  return resolveDirectionAwareArrowDelta(key, isElementDirectionRtl(target));
+}
+
+function resolveDirectionAwareArrowDelta(key: "ArrowLeft" | "ArrowRight", isRtl: boolean) {
+  if (key === "ArrowRight") {
+    return isRtl ? -1 : 1;
+  }
+
+  return isRtl ? 1 : -1;
+}
+
+function isElementDirectionRtl(element: HTMLElement | null) {
+  if (!element) {
+    return false;
+  }
+
+  const nearestDirRoot = element.closest<HTMLElement>("[dir]");
+  if (nearestDirRoot?.dir === "rtl") {
+    return true;
+  }
+  if (nearestDirRoot?.dir === "ltr") {
+    return false;
+  }
+
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  return window.getComputedStyle(element).direction === "rtl";
 }
 
 function defaultGetItemAriaLabel(

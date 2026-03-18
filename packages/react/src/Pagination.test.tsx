@@ -82,6 +82,22 @@ describe("Pagination", () => {
     expect(onPageChange).toHaveBeenNthCalledWith(4, 5);
   });
 
+  it("mirrors ArrowLeft/ArrowRight keyboard shortcuts in rtl containers", () => {
+    const onPageChange = vi.fn();
+    render(
+      <div dir="rtl">
+        <Pagination page={4} pageCount={10} onPageChange={onPageChange} />
+      </div>
+    );
+
+    const activeButton = screen.getByRole("button", { name: "Current page, 4" });
+    fireEvent.keyDown(activeButton, { key: "ArrowRight" });
+    fireEvent.keyDown(activeButton, { key: "ArrowLeft" });
+
+    expect(onPageChange).toHaveBeenNthCalledWith(1, 3);
+    expect(onPageChange).toHaveBeenNthCalledWith(2, 5);
+  });
+
   it("supports custom aria label generators", () => {
     render(
       <Pagination

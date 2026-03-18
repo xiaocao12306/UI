@@ -12,6 +12,7 @@ import * as StreamingCodeBlockStories from '../stories/StreamingCodeBlock.storie
 import * as ToastStories from '../stories/Toast.stories';
 import * as TabsStories from '../stories/Tabs.stories';
 import * as TableStories from '../stories/Table.stories';
+import * as PaginationStories from '../stories/Pagination.stories';
 
 <Meta title="Docs/Best Practices" />
 
@@ -144,6 +145,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - During async refreshes, set `loading` so table emits `aria-busy` and temporarily suppresses stale row actions/sorting.
 - For empty datasets, use meaningful `emptyContent`; table announces it through polite live status narration.
 - For pagination i18n, generate `getItemAriaLabel` from the provided `page` argument; boundary previous/next labels are already clamped to valid page ranges.
+- In RTL layouts, verify Pagination ArrowLeft/ArrowRight keyboard shortcuts are mirrored so page movement follows visual direction.
 - Surface status semantics with tokens instead of custom ad-hoc colors.
 - Keep row actions predictable and keyboard reachable.
 - Ensure tabs support orientation-aware arrows (`Left/Right` or `Up/Down`) plus `Home/End`, and skip disabled entries.
@@ -162,3 +164,5 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={TableStories.SortTelemetry} />
 <Canvas of={TableStories.LocalizedSortLabels} />
 <Canvas of={TableStories.RowHeaderSemantics} />
+<Canvas of={PaginationStories.KeyboardShortcuts} />
+<Canvas of={PaginationStories.RtlKeyboardShortcuts} />

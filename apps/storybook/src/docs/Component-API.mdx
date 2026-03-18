@@ -372,8 +372,10 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `showFirstLast` | `boolean` | Toggle first/last jump buttons. |
 | `siblingCount` / `boundaryCount` | `number` | Controls visible number tokens before ellipsis. |
 | `getItemAriaLabel` | `(type, page) => string` | Customize pagination control narration for i18n; boundary `previous/next` pages are clamped to valid range. |
+| RTL keyboard parity | ArrowLeft/ArrowRight auto-flip | In `dir="rtl"` containers, horizontal arrow shortcuts mirror navigation intent to match visual flow. |
 
 <Canvas of={PaginationStories.KeyboardShortcuts} />
+<Canvas of={PaginationStories.RtlKeyboardShortcuts} />
 <Canvas of={PaginationStories.BoundaryAriaLabels} />
 
 ## Feedback

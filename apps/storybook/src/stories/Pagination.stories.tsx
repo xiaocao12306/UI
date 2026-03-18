@@ -79,6 +79,40 @@ export const KeyboardShortcuts: Story = {
   }
 };
 
+function RtlKeyboardShortcutsDemo() {
+  const [page, setPage] = React.useState(4);
+
+  return (
+    <div dir="rtl" style={{ width: 640, display: "grid", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ color: "var(--aurora-text-secondary)" }}>صفحه فعال</span>
+        <Badge tone="default" data-testid="rtl-page-value">
+          {page}
+        </Badge>
+      </div>
+      <Pagination page={page} pageCount={12} onPageChange={setPage} />
+    </div>
+  );
+}
+
+export const RtlKeyboardShortcuts: Story = {
+  render: () => <RtlKeyboardShortcutsDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const current = canvas.getByRole("button", { name: "Current page, 4" });
+
+    current.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(canvas.getByRole("button", { name: "Current page, 3" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("rtl-page-value")).toHaveTextContent("3");
+
+    canvas.getByRole("button", { name: "Current page, 3" }).focus();
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(canvas.getByRole("button", { name: "Current page, 4" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("rtl-page-value")).toHaveTextContent("4");
+  }
+};
+
 export const CompactRange: Story = {
   args: {
     page: 9,
