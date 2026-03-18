@@ -67,6 +67,49 @@ const readinessRows = [
   { component: "Dialog", status: "Stable", coverage: 88 },
   { component: "StreamingCodeBlock", status: "Beta", coverage: 73 }
 ];
+const mutedBodyStyle: React.CSSProperties = {
+  margin: 0,
+  color: "var(--aurora-text-secondary)",
+  fontSize: 14,
+  lineHeight: 1.55
+};
+const sectionSubheadingStyle: React.CSSProperties = { margin: 0, fontSize: 16, letterSpacing: "0.01em" };
+const sectionCardStyle: React.CSSProperties = {
+  border: "1px solid color-mix(in srgb, var(--aurora-border-default) 82%, transparent)",
+  borderRadius: "var(--aurora-radius-lg)",
+  background:
+    "linear-gradient(180deg, color-mix(in srgb, var(--aurora-surface-elevated) 88%, var(--aurora-surface-default) 12%), var(--aurora-surface-elevated))",
+  boxShadow: "var(--aurora-shadow-sm)",
+  padding: 18,
+  display: "grid",
+  gap: 14
+};
+const heroPanelStyle: React.CSSProperties = {
+  display: "grid",
+  gap: 16,
+  border: "1px solid color-mix(in srgb, var(--aurora-accent-default) 30%, var(--aurora-border-default))",
+  borderRadius: "var(--aurora-radius-lg)",
+  background:
+    "radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--aurora-accent-default) 16%, transparent), transparent 45%), linear-gradient(180deg, var(--aurora-surface-elevated), color-mix(in srgb, var(--aurora-surface-elevated) 70%, var(--aurora-surface-default) 30%))",
+  boxShadow: "var(--aurora-shadow-md)",
+  padding: "18px 18px 16px"
+};
+const sectionNavStyle: React.CSSProperties = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: 8,
+  padding: 10,
+  border: "1px solid color-mix(in srgb, var(--aurora-border-default) 80%, transparent)",
+  borderRadius: "var(--aurora-radius-md)",
+  background: "color-mix(in srgb, var(--aurora-surface-elevated) 92%, var(--aurora-surface-default))",
+  backdropFilter: "blur(4px)"
+};
+const keyboardHintStyle: React.CSSProperties = {
+  fontFamily: "var(--aurora-font-family-mono)",
+  border: "1px solid var(--aurora-border-default)",
+  borderRadius: 6,
+  padding: "2px 6px"
+};
 
 function Section({
   id,
@@ -82,20 +125,13 @@ function Section({
   return (
     <section id={id} style={{ display: "grid", gap: 12, scrollMarginTop: 84 }}>
       <header style={{ display: "grid", gap: 4 }}>
-        <h2 style={{ margin: 0, fontSize: 18 }}>{title}</h2>
-        {description ? <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>{description}</p> : null}
+        <p style={{ margin: 0, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--aurora-text-secondary)" }}>
+          {id.replaceAll("-", " ")}
+        </p>
+        <h2 style={{ margin: 0, fontSize: 20, letterSpacing: "-0.01em" }}>{title}</h2>
+        {description ? <p style={mutedBodyStyle}>{description}</p> : null}
       </header>
-      <div
-        style={{
-          border: "1px solid var(--aurora-border-default)",
-          borderRadius: "var(--aurora-radius-lg)",
-          background: "var(--aurora-surface-elevated)",
-          boxShadow: "var(--aurora-shadow-sm)",
-          padding: 16,
-          display: "grid",
-          gap: 14
-        }}
-      >
+      <div style={sectionCardStyle}>
         {children}
       </div>
     </section>
@@ -187,18 +223,25 @@ function App() {
       <GlobalStyles />
       <main
         style={{
-          maxWidth: 1100,
+          maxWidth: 1160,
           margin: "0 auto",
-          padding: 24,
+          padding: "24px clamp(16px, 3vw, 24px) 36px",
           display: "grid",
-          gap: 28,
+          gap: 30,
           fontFamily: "var(--aurora-font-family-base)",
-          color: "var(--aurora-text-primary)"
+          color: "var(--aurora-text-primary)",
+          background:
+            "radial-gradient(circle at 85% -10%, color-mix(in srgb, var(--aurora-accent-default) 12%, transparent), transparent 36%), radial-gradient(circle at 12% 24%, color-mix(in srgb, var(--aurora-border-default) 24%, transparent), transparent 38%)"
         }}
       >
-        <header style={{ display: "grid", gap: 10 }}>
+        <header style={heroPanelStyle}>
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-            <h1 style={{ margin: 0, fontSize: 32 }}>Aurora UI Demo</h1>
+            <div style={{ display: "grid", gap: 8 }}>
+              <p style={{ margin: 0, fontSize: 12, letterSpacing: "0.11em", textTransform: "uppercase", color: "var(--aurora-text-secondary)" }}>
+                Production React UI Library
+              </p>
+              <h1 style={{ margin: 0, fontSize: "clamp(28px, 4vw, 36px)", letterSpacing: "-0.03em" }}>Aurora UI Demo</h1>
+            </div>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
               <label htmlFor="theme-select" style={{ color: "var(--aurora-text-secondary)" }}>
                 Theme
@@ -216,20 +259,18 @@ function App() {
               </Select>
             </div>
           </div>
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+          <p style={{ ...mutedBodyStyle, maxWidth: 820 }}>
             Token-first React component library with AI interaction patterns. Current theme: <strong>{theme}</strong>
           </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <Badge tone="success">32 Storybook suites green</Badge>
+            <Badge>60 Demo E2E checks</Badge>
+            <Tag>Design-token driven</Tag>
+            <Tag>Overlay + AI ready</Tag>
+          </div>
           <nav
             aria-label="Demo sections"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 8,
-              padding: 10,
-              border: "1px solid var(--aurora-border-default)",
-              borderRadius: "var(--aurora-radius-md)",
-              background: "var(--aurora-surface-elevated)"
-            }}
+            style={sectionNavStyle}
           >
             {sectionLinks.map((item) => (
               <a
@@ -248,7 +289,8 @@ function App() {
                   background:
                     activeSection === item.id ? "color-mix(in srgb, var(--aurora-accent-default) 12%, transparent)" : "transparent",
                   borderRadius: 999,
-                  padding: "4px 10px"
+                  padding: "4px 12px",
+                  fontSize: 13
                 }}
               >
                 {item.label}
@@ -337,15 +379,15 @@ function App() {
               { key: "settings", label: "Settings", content: <p style={{ margin: 0 }}>Theme, access control, and preferences.</p> }
             ]}
           />
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+          <p style={mutedBodyStyle}>
             Tabs change telemetry:{" "}
             <strong data-testid="tabs-change-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
               {topTabsValue}
             </strong>
           </p>
           <div style={{ display: "grid", gap: 8 }}>
-            <h3 style={{ margin: 0, fontSize: 16 }}>Manual Activation Tabs</h3>
-            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            <h3 style={sectionSubheadingStyle}>Manual Activation Tabs</h3>
+            <p style={mutedBodyStyle}>
               Arrow keys move focus only; press Enter or Space to activate and render the target panel.
             </p>
             <Tabs
@@ -360,8 +402,8 @@ function App() {
             />
           </div>
           <div dir="rtl" style={{ display: "grid", gap: 8 }}>
-            <h3 style={{ margin: 0, fontSize: 16 }}>RTL Direction Tabs</h3>
-            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            <h3 style={sectionSubheadingStyle}>RTL Direction Tabs</h3>
+            <p style={mutedBodyStyle}>
               In RTL layouts, ArrowRight moves to the previous tab and ArrowLeft moves to the next tab.
             </p>
             <Tabs
@@ -375,8 +417,8 @@ function App() {
             />
           </div>
           <div style={{ display: "grid", gap: 8 }}>
-            <h3 style={{ margin: 0, fontSize: 16 }}>Vertical Orientation Tabs</h3>
-            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            <h3 style={sectionSubheadingStyle}>Vertical Orientation Tabs</h3>
+            <p style={mutedBodyStyle}>
               ArrowUp and ArrowDown drive focus + activation flow in vertical tablists.
             </p>
             <Tabs
@@ -391,8 +433,8 @@ function App() {
             />
           </div>
           <div style={{ display: "grid", gap: 8 }}>
-            <h3 style={{ margin: 0, fontSize: 16 }}>Manual Vertical Tabs</h3>
-            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            <h3 style={sectionSubheadingStyle}>Manual Vertical Tabs</h3>
+            <p style={mutedBodyStyle}>
               In manual vertical mode, ArrowUp/ArrowDown move focus only; Enter or Space activates the focused stage.
             </p>
             <Tabs
@@ -421,7 +463,7 @@ function App() {
             ]}
             data={tableRows}
           />
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+          <p style={mutedBodyStyle}>
             Table sort telemetry:{" "}
             <strong data-testid="table-sort-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
               {tableSortTelemetry}
@@ -436,7 +478,7 @@ function App() {
             </Button>
           </div>
           <div style={{ display: "grid", gap: 10 }}>
-            <h3 style={{ margin: 0, fontSize: 16 }}>Release Activity Feed</h3>
+            <h3 style={sectionSubheadingStyle}>Release Activity Feed</h3>
             <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 6 }}>
               {visibleFeed.map((entry) => (
                 <li key={entry} style={{ color: "var(--aurora-text-secondary)" }}>
@@ -452,11 +494,11 @@ function App() {
             />
           </div>
           <div dir="rtl" style={{ display: "grid", gap: 10 }}>
-            <h3 style={{ margin: 0, fontSize: 16 }}>RTL Pagination</h3>
-            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            <h3 style={sectionSubheadingStyle}>RTL Pagination</h3>
+            <p style={mutedBodyStyle}>
               In RTL layouts, ArrowRight moves to the previous page and ArrowLeft moves to the next page.
             </p>
-            <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            <p style={mutedBodyStyle}>
               Current RTL page:{" "}
               <strong data-testid="rtl-pagination-page" style={{ color: "var(--aurora-text-primary)" }}>
                 {rtlFeedPage}
@@ -502,7 +544,7 @@ function App() {
             label="Guard prompt toast Escape at toast layer"
             description="Uses Toast onEscapeKeyDown + preventDefault() while enabled."
           />
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+          <p style={mutedBodyStyle}>
             Toast close reason telemetry:{" "}
             <strong data-testid="toast-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
               {toastCloseReason}
@@ -548,25 +590,25 @@ function App() {
               Command Palette
             </Button>
           </div>
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+          <p style={mutedBodyStyle}>
             Popover close reason telemetry:{" "}
             <strong data-testid="popover-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
               {popoverCloseReason}
             </strong>
           </p>
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+          <p style={mutedBodyStyle}>
             Dropdown close reason telemetry:{" "}
             <strong data-testid="dropdown-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
               {dropdownCloseReason}
             </strong>
           </p>
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+          <p style={mutedBodyStyle}>
             Dialog close reason telemetry:{" "}
             <strong data-testid="dialog-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
               {dialogCloseReason}
             </strong>
           </p>
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+          <p style={mutedBodyStyle}>
             Drawer close reason telemetry:{" "}
             <strong data-testid="drawer-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
               {drawerCloseReason}
@@ -578,38 +620,17 @@ function App() {
             </label>
             <Input id="overlay-outside-target" placeholder="Click here to validate outside-dismiss focus." />
           </div>
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+          <p style={mutedBodyStyle}>
             Keyboard shortcut: press{" "}
-            <kbd
-              style={{
-                fontFamily: "var(--aurora-font-family-mono)",
-                border: "1px solid var(--aurora-border-default)",
-                borderRadius: 6,
-                padding: "2px 6px"
-              }}
-            >
+            <kbd style={keyboardHintStyle}>
               Ctrl
             </kbd>
             /
-            <kbd
-              style={{
-                fontFamily: "var(--aurora-font-family-mono)",
-                border: "1px solid var(--aurora-border-default)",
-                borderRadius: 6,
-                padding: "2px 6px"
-              }}
-            >
+            <kbd style={keyboardHintStyle}>
               Cmd
             </kbd>{" "}
             +{" "}
-            <kbd
-              style={{
-                fontFamily: "var(--aurora-font-family-mono)",
-                border: "1px solid var(--aurora-border-default)",
-                borderRadius: 6,
-                padding: "2px 6px"
-              }}
-            >
+            <kbd style={keyboardHintStyle}>
               K
             </kbd>{" "}
             to open Command Palette.
@@ -638,13 +659,13 @@ function App() {
             label="Escape clears palette query first"
             description="When enabled, first Escape clears the query and second Escape dismisses."
           />
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+          <p style={mutedBodyStyle}>
             Palette query telemetry:{" "}
             <strong data-testid="palette-query-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
               {paletteQueryTelemetry || "N/A"}
             </strong>
           </p>
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+          <p style={mutedBodyStyle}>
             Palette close reason telemetry:{" "}
             <strong data-testid="palette-close-reason-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
               {paletteCloseReason}
