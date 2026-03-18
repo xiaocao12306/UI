@@ -231,6 +231,39 @@ test("does not close command palette when disabled command is clicked", async ({
   await expect(palette.getByRole("status")).toContainText('No enabled commands match "archive".');
 });
 
+test("keeps command palette open when Escape is preempted by a global handler", async ({ page }) => {
+  await page.goto("/");
+
+  await page.evaluate(() => {
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+    (window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }).__demoPreemptEscape =
+      preemptEscape;
+    document.addEventListener("keydown", preemptEscape, true);
+  });
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await expect(palette).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeVisible();
+
+  await page.evaluate(() => {
+    const globalWindow = window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void };
+    if (globalWindow.__demoPreemptEscape) {
+      document.removeEventListener("keydown", globalWindow.__demoPreemptEscape, true);
+      delete globalWindow.__demoPreemptEscape;
+    }
+  });
+
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeHidden();
+});
+
 test("highlights active section in anchor nav", async ({ page }) => {
   await page.goto("/");
 
@@ -585,6 +618,40 @@ test("keeps outside pointer target focus after dropdown dismiss", async ({ page 
   await outsideTarget.click();
   await expect(page.getByRole("menu")).toBeHidden();
   await expect(outsideTarget).toBeFocused();
+});
+
+test("keeps dropdown open when Escape is preempted by a global handler", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  await trigger.click();
+  const menu = page.getByRole("menu", { name: "Actions" });
+  await expect(menu).toBeVisible();
+
+  await page.evaluate(() => {
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+    (window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }).__demoPreemptEscape =
+      preemptEscape;
+    document.addEventListener("keydown", preemptEscape, true);
+  });
+
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeVisible();
+
+  await page.evaluate(() => {
+    const globalWindow = window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void };
+    if (globalWindow.__demoPreemptEscape) {
+      document.removeEventListener("keydown", globalWindow.__demoPreemptEscape, true);
+      delete globalWindow.__demoPreemptEscape;
+    }
+  });
+
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
 });
 
 test("tabs out of dropdown menu and moves focus to next control", async ({ page }) => {
