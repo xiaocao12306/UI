@@ -106,7 +106,11 @@ describe("Popover", () => {
 
     document.addEventListener("keydown", preemptEscape, true);
     render(
-      <Popover triggerLabel="Preempted" onEscapeKeyDown={onEscapeKeyDown} onCloseReason={onCloseReason}>
+      <Popover
+        triggerLabel="Preempted"
+        onEscapeKeyDown={onEscapeKeyDown}
+        onCloseReason={onCloseReason}
+      >
         <p>Preempted content</p>
       </Popover>
     );
@@ -126,7 +130,11 @@ describe("Popover", () => {
     const onPointerDownOutside = vi.fn();
 
     render(
-      <Popover triggerLabel="Trigger close reason" onCloseReason={onCloseReason} onPointerDownOutside={onPointerDownOutside}>
+      <Popover
+        triggerLabel="Trigger close reason"
+        onCloseReason={onCloseReason}
+        onPointerDownOutside={onPointerDownOutside}
+      >
         <p>Popover content</p>
       </Popover>
     );
@@ -142,4 +150,30 @@ describe("Popover", () => {
     expect(onCloseReason).toHaveBeenCalledWith("trigger-click");
     expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
   });
+
+  it("ignores non-primary outside pointer interactions", () => {
+    const onCloseReason = vi.fn();
+
+    render(
+      <Popover triggerLabel="Ignore right click" onCloseReason={onCloseReason}>
+        <p>Popover content</p>
+      </Popover>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Ignore right click" });
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    dispatchNonPrimaryPointerDown(document.body);
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  });
 });
+
+function dispatchNonPrimaryPointerDown(target: EventTarget) {
+  const event = new Event("pointerdown", { bubbles: true, cancelable: true });
+  Object.defineProperty(event, "button", { configurable: true, value: 2 });
+  Object.defineProperty(event, "buttons", { configurable: true, value: 2 });
+  Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
+  target.dispatchEvent(event);
+}

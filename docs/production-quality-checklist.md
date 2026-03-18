@@ -1,6 +1,7 @@
 # Production Quality Checklist (Core + AI Components)
 
 ## Quality Gate (Must Pass)
+
 - Interaction states: hover / active / focus / disabled / loading / error / empty (as applicable)
 - Keyboard behavior: complete and deterministic
 - Accessibility: semantic roles, labels, `aria-*` wiring, dismiss paths
@@ -10,47 +11,49 @@
 
 ## Component Matrix
 
-| Component | Status | Storybook Entry | Key Tests |
-| --- | --- | --- | --- |
-| Button | production-refined | `Core/Button` | `Button.test.tsx` |
-| Tag | production-refined | `Core/Tag` | `Tag.test.tsx` |
-| Badge | production-refined | `Core/Badge` | `Badge.test.tsx` |
-| Input / FormField | production-refined | `Form/Input` | `Input.test.tsx`, `FormField.test.tsx` |
-| Select | production-refined | `Form/Select` | `Select.test.tsx` |
-| Textarea | production-refined | `Form/Textarea` | `Textarea.test.tsx` |
-| Checkbox | production-refined | `Form/Checkbox` | `Checkbox.test.tsx` |
-| RadioGroup | production-refined | `Form/RadioGroup` | `RadioGroup.test.tsx` |
-| Switch | production-refined | `Form/Switch` | `Switch.test.tsx` |
-| Combobox | production-refined | `Form/Combobox` | `Combobox.test.tsx` |
-| DatePicker | production-refined | `Form/DatePicker` | `DatePicker.test.tsx` |
-| Dialog | production-refined | `Overlay/Dialog` | `Dialog.test.tsx` |
-| Drawer | production-refined | `Overlay/Drawer` | `Drawer.test.tsx` |
-| Tooltip | production-refined | `Overlay/Tooltip` | `Tooltip.test.tsx` |
-| Popover | production-refined | `Overlay/Popover` | `Popover.test.tsx` |
-| Dropdown | production-refined | `Overlay/Dropdown` | `Dropdown.test.tsx` |
-| CommandPalette | production-refined | `AI/CommandPalette` | `CommandPalette.test.tsx` |
-| PromptInput | production-refined | `AI/PromptInput` | `PromptInput.test.tsx` |
-| MessageBubble | production-refined | `AI/MessageBubble` | `MessageBubble.test.tsx` |
-| ReasoningPanel | production-refined | `AI/ReasoningPanel` | `ReasoningPanel.test.tsx` |
-| StreamingCodeBlock | production-refined | `AI/StreamingCodeBlock` | `StreamingCodeBlock.test.tsx` |
-| Toast | production-refined | `Feedback/Toast` | `Toast.test.tsx` |
-| Progress | production-refined | `Feedback/Progress` | `Progress.test.tsx` |
-| Empty | production-refined | `Feedback/Empty` | `Empty.test.tsx` |
-| Skeleton | production-refined | `Feedback/Skeleton` | `Skeleton.test.tsx` |
-| LoadingDots | production-refined | `Feedback/LoadingDots` | `LoadingDots.test.tsx` |
-| StreamingText | production-refined | `Feedback/StreamingText` | `StreamingText.test.tsx` |
-| Alert | production-refined | `Feedback/Alert` | `Alert.test.tsx` |
-| Tabs | production-refined | `Data/Tabs` | `Tabs.test.tsx` |
-| Table | production-refined | `Data/Table` | `Table.test.tsx` |
-| Pagination | production-refined | `Data/Pagination` | `Pagination.test.tsx` |
+| Component          | Status             | Storybook Entry          | Key Tests                              |
+| ------------------ | ------------------ | ------------------------ | -------------------------------------- |
+| Button             | production-refined | `Core/Button`            | `Button.test.tsx`                      |
+| Tag                | production-refined | `Core/Tag`               | `Tag.test.tsx`                         |
+| Badge              | production-refined | `Core/Badge`             | `Badge.test.tsx`                       |
+| Input / FormField  | production-refined | `Form/Input`             | `Input.test.tsx`, `FormField.test.tsx` |
+| Select             | production-refined | `Form/Select`            | `Select.test.tsx`                      |
+| Textarea           | production-refined | `Form/Textarea`          | `Textarea.test.tsx`                    |
+| Checkbox           | production-refined | `Form/Checkbox`          | `Checkbox.test.tsx`                    |
+| RadioGroup         | production-refined | `Form/RadioGroup`        | `RadioGroup.test.tsx`                  |
+| Switch             | production-refined | `Form/Switch`            | `Switch.test.tsx`                      |
+| Combobox           | production-refined | `Form/Combobox`          | `Combobox.test.tsx`                    |
+| DatePicker         | production-refined | `Form/DatePicker`        | `DatePicker.test.tsx`                  |
+| Dialog             | production-refined | `Overlay/Dialog`         | `Dialog.test.tsx`                      |
+| Drawer             | production-refined | `Overlay/Drawer`         | `Drawer.test.tsx`                      |
+| Tooltip            | production-refined | `Overlay/Tooltip`        | `Tooltip.test.tsx`                     |
+| Popover            | production-refined | `Overlay/Popover`        | `Popover.test.tsx`                     |
+| Dropdown           | production-refined | `Overlay/Dropdown`       | `Dropdown.test.tsx`                    |
+| CommandPalette     | production-refined | `AI/CommandPalette`      | `CommandPalette.test.tsx`              |
+| PromptInput        | production-refined | `AI/PromptInput`         | `PromptInput.test.tsx`                 |
+| MessageBubble      | production-refined | `AI/MessageBubble`       | `MessageBubble.test.tsx`               |
+| ReasoningPanel     | production-refined | `AI/ReasoningPanel`      | `ReasoningPanel.test.tsx`              |
+| StreamingCodeBlock | production-refined | `AI/StreamingCodeBlock`  | `StreamingCodeBlock.test.tsx`          |
+| Toast              | production-refined | `Feedback/Toast`         | `Toast.test.tsx`                       |
+| Progress           | production-refined | `Feedback/Progress`      | `Progress.test.tsx`                    |
+| Empty              | production-refined | `Feedback/Empty`         | `Empty.test.tsx`                       |
+| Skeleton           | production-refined | `Feedback/Skeleton`      | `Skeleton.test.tsx`                    |
+| LoadingDots        | production-refined | `Feedback/LoadingDots`   | `LoadingDots.test.tsx`                 |
+| StreamingText      | production-refined | `Feedback/StreamingText` | `StreamingText.test.tsx`               |
+| Alert              | production-refined | `Feedback/Alert`         | `Alert.test.tsx`                       |
+| Tabs               | production-refined | `Data/Tabs`              | `Tabs.test.tsx`                        |
+| Table              | production-refined | `Data/Table`             | `Table.test.tsx`                       |
+| Pagination         | production-refined | `Data/Pagination`        | `Pagination.test.tsx`                  |
 
 ## Ongoing Maintenance Rules
+
 1. Any API change must update Storybook controls/docs and at least one interaction test.
 2. Any a11y behavior change must update role/name assertions in tests.
 3. Any visual state change should be checked in all 4 theme packs and Chromatic (if token configured).
 4. Release blocking condition: `pnpm verify` + `pnpm demo:e2e` + `pnpm storybook:test:ci` + `pnpm release:dry-run` all green (or run `pnpm release:gate`).
 
 ## Recent Closure Notes (2026-03-17)
+
 - CommandPalette: added `Home/End` keyboard paths, deterministic disabled-option skipping, explicit `aria-disabled` option semantics, and query telemetry + empty message Storybook example.
 - CommandPalette: live region narration now differentiates visible vs actionable results (`enabledCount`), and announces disabled-only matches as non-executable.
 - Toast: live region now wires `aria-labelledby/aria-describedby` by default and supports `ariaLabel` override for icon-only titles.
@@ -151,6 +154,7 @@
 - Overlay focus-policy hardening: Popover/Dropdown now restore trigger focus on Escape while preserving outside pointer target focus on pointer dismiss.
 - Overlay scroll-lock hardening: Dialog/Drawer now share reference-counted body scroll lock, preventing premature unlock when multiple modal surfaces overlap.
 - DismissableLayer stack hardening: nested overlays now dismiss from top layer first on Escape/outside pointer, preventing multi-layer cascade closes.
+- Overlay non-primary pointer hardening: right-click/non-primary pointerdown now no longer dismisses overlays, with Dialog/Popover/Dropdown regression coverage locking the branch.
 - Dialog nested overlay coverage: added `Dropdown in Dialog` Escape-order test + Storybook scenario to lock top-layer-first dismissal behavior.
 - Drawer nested overlay coverage: added `Dropdown in Drawer` Escape-order test + Storybook scenario to lock one-layer-per-Escape dismiss behavior.
 - Drawer focus-return parity: added `restoreFocus` API + unit/storybook interaction coverage to align close-focus policy with Dialog defaults.

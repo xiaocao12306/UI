@@ -412,4 +412,34 @@ describe("Dropdown", () => {
     expect(screen.queryByRole("menu", { name: "Focus policy" })).toBeNull();
     expect(outsideTarget).toHaveFocus();
   });
+
+  it("ignores non-primary outside pointer interactions", () => {
+    const onCloseReason = vi.fn();
+
+    render(
+      <Dropdown
+        label="Ignore right click"
+        onCloseReason={onCloseReason}
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Ignore right click" }));
+    expect(screen.getByRole("menu", { name: "Ignore right click" })).toBeInTheDocument();
+
+    dispatchNonPrimaryPointerDown(document.body);
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(screen.getByRole("menu", { name: "Ignore right click" })).toBeInTheDocument();
+  });
 });
+
+function dispatchNonPrimaryPointerDown(target: EventTarget) {
+  const event = new Event("pointerdown", { bubbles: true, cancelable: true });
+  Object.defineProperty(event, "button", { configurable: true, value: 2 });
+  Object.defineProperty(event, "buttons", { configurable: true, value: 2 });
+  Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
+  target.dispatchEvent(event);
+}

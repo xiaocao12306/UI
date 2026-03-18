@@ -42,7 +42,12 @@ describe("Dialog", () => {
 
   it("connects dialog description via aria-describedby", () => {
     render(
-      <Dialog open onOpenChange={() => {}} title="Accessibility Title" description="Dialog description">
+      <Dialog
+        open
+        onOpenChange={() => {}}
+        title="Accessibility Title"
+        description="Dialog description"
+      >
         <p>Body</p>
       </Dialog>
     );
@@ -95,7 +100,13 @@ describe("Dialog", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();
     render(
-      <Dialog open onOpenChange={onOpenChange} onCloseReason={onCloseReason} title="Pinned" closeOnEscape={false}>
+      <Dialog
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        title="Pinned"
+        closeOnEscape={false}
+      >
         <p>Body</p>
       </Dialog>
     );
@@ -110,7 +121,12 @@ describe("Dialog", () => {
     const onCloseReason = vi.fn();
 
     render(
-      <Dialog open onOpenChange={onOpenChange} onCloseReason={onCloseReason} title="Dismiss reasons">
+      <Dialog
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        title="Dismiss reasons"
+      >
         <p>Body</p>
       </Dialog>
     );
@@ -215,6 +231,26 @@ describe("Dialog", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("ignores non-primary outside pointer interactions", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+    render(
+      <Dialog
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        title="Ignore right click"
+      >
+        <p>Body</p>
+      </Dialog>
+    );
+
+    dispatchNonPrimaryPointerDown(document.body);
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Ignore right click" })).toBeInTheDocument();
+  });
+
   it("locks body scroll while open and restores when closed", () => {
     const { rerender } = render(
       <Dialog open onOpenChange={() => {}} title="Scroll lock">
@@ -311,7 +347,12 @@ describe("Dialog", () => {
           <button type="button" onClick={() => setOpen(true)}>
             Open dialog
           </button>
-          <Dialog open={open} onOpenChange={setOpen} title="Focus restore disabled" restoreFocus={false}>
+          <Dialog
+            open={open}
+            onOpenChange={setOpen}
+            title="Focus restore disabled"
+            restoreFocus={false}
+          >
             <p>Body</p>
           </Dialog>
         </div>
@@ -358,3 +399,11 @@ describe("Dialog", () => {
     expect(screen.queryByRole("dialog", { name: "Nested overlay dialog" })).toBeNull();
   });
 });
+
+function dispatchNonPrimaryPointerDown(target: EventTarget) {
+  const event = new Event("pointerdown", { bubbles: true, cancelable: true });
+  Object.defineProperty(event, "button", { configurable: true, value: 2 });
+  Object.defineProperty(event, "buttons", { configurable: true, value: 2 });
+  Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
+  target.dispatchEvent(event);
+}
