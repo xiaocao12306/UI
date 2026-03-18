@@ -244,7 +244,9 @@ export function Table<T>({
                   textAlign: "center"
                 }}
               >
-                {emptyContent}
+                <span role="status" aria-live="polite">
+                  {emptyContent}
+                </span>
               </td>
             </tr>
           ) : (

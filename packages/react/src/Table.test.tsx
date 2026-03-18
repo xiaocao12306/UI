@@ -71,6 +71,7 @@ describe("Table", () => {
     );
 
     expect(screen.getByText("No components")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("No components");
   });
 
   it("disables sortable controls when no rows are available", () => {

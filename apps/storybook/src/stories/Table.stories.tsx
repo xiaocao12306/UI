@@ -91,6 +91,7 @@ export const EmptyState: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByText("No release items yet.")).toBeInTheDocument();
+    await expect(canvas.getByRole("status")).toHaveTextContent("No release items yet.");
     await expect(canvas.getByRole("button", { name: "Issue sort ascending" })).toBeDisabled();
   }
 };
