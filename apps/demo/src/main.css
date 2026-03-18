@@ -78,6 +78,83 @@
   background: var(--aurora-accent-default);
 }
 
+.demo-section-stack {
+  display: grid;
+  gap: 14px;
+}
+
+.demo-two-column {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: start;
+}
+
+.demo-tabs-lab-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.demo-panel {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 10px;
+  border: 1px solid color-mix(in srgb, var(--aurora-border-default) 78%, transparent);
+  border-radius: var(--aurora-radius-md);
+  padding: 14px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--aurora-accent-default) 10%, transparent), transparent 42%),
+    color-mix(in srgb, var(--aurora-surface-elevated) 92%, var(--aurora-surface-default));
+  box-shadow: var(--aurora-shadow-sm);
+}
+
+.demo-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: min(180px, 55%);
+  height: 2px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--aurora-accent-default) 56%, transparent), transparent);
+  pointer-events: none;
+}
+
+.demo-panel-header {
+  display: grid;
+  gap: 4px;
+}
+
+.demo-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.demo-form-grid {
+  display: grid;
+  gap: 12px;
+  max-width: 460px;
+}
+
+.demo-control-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.demo-telemetry-grid {
+  display: grid;
+  gap: 8px;
+  border: 1px dashed color-mix(in srgb, var(--aurora-border-default) 72%, transparent);
+  border-radius: calc(var(--aurora-radius-md) - 2px);
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--aurora-surface-default) 78%, transparent);
+}
+
+.demo-telemetry-grid p {
+  margin: 0;
+}
+
 @media (max-width: 860px) {
   .demo-hero-overview {
     grid-template-columns: 1fr !important;
@@ -92,6 +169,16 @@
 @media (max-width: 640px) {
   .demo-main-layout {
     gap: 24px !important;
+  }
+
+  .demo-section-stack,
+  .demo-two-column,
+  .demo-tabs-lab-grid {
+    gap: 10px;
+  }
+
+  .demo-panel {
+    padding: 12px;
   }
 
   .demo-section-nav {

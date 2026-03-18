@@ -228,6 +228,12 @@ const sectionNavLinkStyle: React.CSSProperties = {
   transition:
     "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
 };
+const panelTitleStyle: React.CSSProperties = { margin: 0, fontSize: 15, letterSpacing: "-0.01em" };
+const panelDescriptionStyle: React.CSSProperties = { ...mutedBodyStyle, fontSize: 13 };
+const telemetryValueStyle: React.CSSProperties = {
+  color: "var(--aurora-text-primary)",
+  fontWeight: "var(--aurora-font-weight-semibold)"
+};
 
 function Section({
   id,
@@ -602,65 +608,89 @@ function App() {
             title="Basic Components"
             description="Core controls and form primitives with theme-driven tokens."
           >
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <Button>Primary</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
-            <Tag>Design Token</Tag>
-            <Badge>Default</Badge>
-            <Badge tone="success">Stable</Badge>
-            <Badge tone="danger">Breaking</Badge>
-          </div>
-          <div style={{ display: "grid", gap: 12, maxWidth: 420 }}>
-            <FormField label="Email" htmlFor="email" required description="Used for release notifications.">
-              <Input id="email" placeholder="name@company.com" />
-            </FormField>
-            <FormField label="Message" htmlFor="message">
-              <Textarea id="message" placeholder="Share your feedback..." />
-            </FormField>
-            <FormField label="Framework" htmlFor="framework">
-              <Select id="framework" defaultValue="react">
-                <option value="react">React</option>
-                <option value="vue">Vue</option>
-                <option value="svelte">Svelte</option>
-              </Select>
-            </FormField>
-            <FormField label="Framework Combobox" htmlFor="framework-combobox" description={`Current selection: ${framework}`}>
-              <Combobox
-                id="framework-combobox"
-                ariaLabel="Framework Combobox"
-                options={frameworkOptions}
-                value={framework}
-                onValueChange={setFramework}
-              />
-            </FormField>
-            <FormField label="Release Date" htmlFor="release-date" description={`Selected date: ${releaseDate}`}>
-              <DatePicker
-                id="release-date"
-                aria-label="Release Date"
-                value={releaseDate}
-                onValueChange={setReleaseDate}
-                min="2026-01-01"
-                max="2026-12-31"
-              />
-            </FormField>
-            <Checkbox label="Enable analytics" defaultChecked />
-            <RadioGroup
-              name="size"
-              value="m"
-              options={[
-                { label: "Small", value: "s" },
-                { label: "Medium", value: "m" },
-                { label: "Large", value: "l" }
-              ]}
-            />
-            <Switch
-              checked={switchChecked}
-              onCheckedChange={setSwitchChecked}
-              label="Live updates"
-              description="Automatically refresh release feed every 30 seconds."
-            />
-          </div>
+            <div className="demo-section-stack">
+              <div className="demo-panel">
+                <div className="demo-panel-header">
+                  <h3 style={panelTitleStyle}>Brand Token Snapshot</h3>
+                  <p style={panelDescriptionStyle}>Primary actions, status badges, and semantic tags should read consistently across themes.</p>
+                </div>
+                <div className="demo-action-row">
+                  <Button>Primary</Button>
+                  <Button variant="outline">Outline</Button>
+                  <Button variant="ghost">Ghost</Button>
+                  <Tag>Design Token</Tag>
+                  <Badge>Default</Badge>
+                  <Badge tone="success">Stable</Badge>
+                  <Badge tone="danger">Breaking</Badge>
+                </div>
+              </div>
+              <div className="demo-two-column">
+                <div className="demo-panel">
+                  <div className="demo-panel-header">
+                    <h3 style={panelTitleStyle}>Form Foundations</h3>
+                    <p style={panelDescriptionStyle}>Inputs are grouped as a production workflow instead of isolated component fragments.</p>
+                  </div>
+                  <div className="demo-form-grid">
+                    <FormField label="Email" htmlFor="email" required description="Used for release notifications.">
+                      <Input id="email" placeholder="name@company.com" />
+                    </FormField>
+                    <FormField label="Message" htmlFor="message">
+                      <Textarea id="message" placeholder="Share your feedback..." />
+                    </FormField>
+                    <FormField label="Framework" htmlFor="framework">
+                      <Select id="framework" defaultValue="react">
+                        <option value="react">React</option>
+                        <option value="vue">Vue</option>
+                        <option value="svelte">Svelte</option>
+                      </Select>
+                    </FormField>
+                    <FormField label="Framework Combobox" htmlFor="framework-combobox" description={`Current selection: ${framework}`}>
+                      <Combobox
+                        id="framework-combobox"
+                        ariaLabel="Framework Combobox"
+                        options={frameworkOptions}
+                        value={framework}
+                        onValueChange={setFramework}
+                      />
+                    </FormField>
+                    <FormField label="Release Date" htmlFor="release-date" description={`Selected date: ${releaseDate}`}>
+                      <DatePicker
+                        id="release-date"
+                        aria-label="Release Date"
+                        value={releaseDate}
+                        onValueChange={setReleaseDate}
+                        min="2026-01-01"
+                        max="2026-12-31"
+                      />
+                    </FormField>
+                  </div>
+                </div>
+                <div className="demo-panel">
+                  <div className="demo-panel-header">
+                    <h3 style={panelTitleStyle}>Preference Controls</h3>
+                    <p style={panelDescriptionStyle}>Selection controls are shown as policy toggles commonly used in production settings.</p>
+                  </div>
+                  <div className="demo-control-stack">
+                    <Checkbox label="Enable analytics" defaultChecked />
+                    <RadioGroup
+                      name="size"
+                      value="m"
+                      options={[
+                        { label: "Small", value: "s" },
+                        { label: "Medium", value: "m" },
+                        { label: "Large", value: "l" }
+                      ]}
+                    />
+                    <Switch
+                      checked={switchChecked}
+                      onCheckedChange={setSwitchChecked}
+                      label="Live updates"
+                      description="Automatically refresh release feed every 30 seconds."
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </Section>
 
           <Section
@@ -668,163 +698,188 @@ function App() {
             title="Data & Navigation"
             description="Common data surfaces and navigation containers."
           >
-          <Tabs
-            value={topTabsValue}
-            onValueChange={setTopTabsValue}
-            items={[
-              { key: "overview", label: "Overview", content: <p style={{ margin: 0 }}>Project health and adoption summary.</p> },
-              { key: "activity", label: "Activity", content: <p style={{ margin: 0 }}>Recent events, deploys, and alerts.</p> },
-              { key: "settings", label: "Settings", content: <p style={{ margin: 0 }}>Theme, access control, and preferences.</p> }
-            ]}
-          />
-          <p style={mutedBodyStyle}>
-            Tabs change telemetry:{" "}
-            <strong data-testid="tabs-change-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
-              {topTabsValue}
-            </strong>
-          </p>
-          <div style={{ display: "grid", gap: 8 }}>
-            <h3 style={sectionSubheadingStyle}>Manual Activation Tabs</h3>
-            <p style={mutedBodyStyle}>
-              Arrow keys move focus only; press Enter or Space to activate and render the target panel.
-            </p>
-            <Tabs
-              ariaLabel="Manual release workflow tabs"
-              activationMode="manual"
-              defaultValue="draft"
-              items={[
-                { key: "draft", label: "Draft", content: <p style={{ margin: 0 }}>Draft checklist and scoped API notes.</p> },
-                { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-team review and accessibility signoff.</p> },
-                { key: "ship", label: "Ship", content: <p style={{ margin: 0 }}>Tag release, publish packages, and announce changelog.</p> }
-              ]}
-            />
-          </div>
-          <div dir="rtl" style={{ display: "grid", gap: 8 }}>
-            <h3 style={sectionSubheadingStyle}>RTL Direction Tabs</h3>
-            <p style={mutedBodyStyle}>
-              In RTL layouts, ArrowRight moves to the previous tab and ArrowLeft moves to the next tab.
-            </p>
-            <Tabs
-              ariaLabel="RTL release workflow tabs"
-              defaultValue="spec"
-              items={[
-                { key: "spec", label: "Spec", content: <p style={{ margin: 0 }}>Specification scope and API contracts.</p> },
-                { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-functional review and QA checkpoints.</p> },
-                { key: "release", label: "Release", content: <p style={{ margin: 0 }}>Release checklist and rollout sequencing.</p> }
-              ]}
-            />
-          </div>
-          <div style={{ display: "grid", gap: 8 }}>
-            <h3 style={sectionSubheadingStyle}>Vertical Orientation Tabs</h3>
-            <p style={mutedBodyStyle}>
-              ArrowUp and ArrowDown drive focus + activation flow in vertical tablists.
-            </p>
-            <Tabs
-              ariaLabel="Vertical release stage tabs"
-              orientation="vertical"
-              defaultValue="backlog"
-              items={[
-                { key: "backlog", label: "Backlog", content: <p style={{ margin: 0 }}>Backlog scope and release intent.</p> },
-                { key: "in-progress", label: "In Progress", content: <p style={{ margin: 0 }}>Implementation and QA checkpoints.</p> },
-                { key: "completed", label: "Completed", content: <p style={{ margin: 0 }}>Ready for release notes and rollout.</p> }
-              ]}
-            />
-          </div>
-          <div style={{ display: "grid", gap: 8 }}>
-            <h3 style={sectionSubheadingStyle}>Manual Vertical Tabs</h3>
-            <p style={mutedBodyStyle}>
-              In manual vertical mode, ArrowUp/ArrowDown move focus only; Enter or Space activates the focused stage.
-            </p>
-            <Tabs
-              ariaLabel="Manual vertical release tabs"
-              orientation="vertical"
-              activationMode="manual"
-              defaultValue="backlog"
-              items={[
-                { key: "backlog", label: "Backlog", content: <p style={{ margin: 0 }}>Backlog scope and release intent.</p> },
-                { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Review and signoff notes.</p>, disabled: true },
-                { key: "ship", label: "Ship", content: <p style={{ margin: 0 }}>Ship checklist and release notes.</p> }
-              ]}
-            />
-          </div>
-          <div style={{ display: "grid", gap: 8 }}>
-            <h3 style={sectionSubheadingStyle}>No-Loop Keyboard Boundaries</h3>
-            <p style={mutedBodyStyle}>
-              With <code>loop=false</code>, Arrow keys stop at the first/last enabled tab and still skip disabled items.
-            </p>
-            <Tabs
-              ariaLabel="No-loop release tabs"
-              loop={false}
-              defaultValue="draft"
-              items={[
-                { key: "draft", label: "Draft", content: <p style={{ margin: 0 }}>Draft scope and implementation notes.</p> },
-                { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-team review and signoff.</p>, disabled: true },
-                { key: "release", label: "Release", content: <p style={{ margin: 0 }}>Release train and rollout sequencing.</p> }
-              ]}
-            />
-          </div>
-          <Table
-            caption="Component readiness metrics"
-            defaultSortKey="component"
-            onSortChange={(key, direction) => setTableSortTelemetry(`${key}:${direction}`)}
-            loading={tableLoading}
-            loadingContent="Syncing component readiness metrics..."
-            emptyContent="No component readiness metrics yet."
-            columns={[
-              { key: "component", header: "Component", sortable: true, rowHeader: true },
-              { key: "status", header: "Status", sortable: true },
-              { key: "coverage", header: "Coverage", sortable: true, render: (row) => `${row.coverage}%` }
-            ]}
-            data={tableRows}
-          />
-          <p style={mutedBodyStyle}>
-            Table sort telemetry:{" "}
-            <strong data-testid="table-sort-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
-              {tableSortTelemetry}
-            </strong>
-          </p>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <Button variant="outline" onClick={() => setTableLoading((value) => !value)}>
-              Toggle table loading
-            </Button>
-            <Button variant="outline" onClick={() => setTableEmpty((value) => !value)}>
-              Toggle table empty state
-            </Button>
-          </div>
-          <div style={{ display: "grid", gap: 10 }}>
-            <h3 style={sectionSubheadingStyle}>Release Activity Feed</h3>
-            <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 6 }}>
-              {visibleFeed.map((entry) => (
-                <li key={entry} style={{ color: "var(--aurora-text-secondary)" }}>
-                  {entry}
-                </li>
-              ))}
-            </ul>
-            <Pagination
-              ariaLabel="Release feed pagination"
-              page={feedPage}
-              pageCount={feedPageCount}
-              onPageChange={setFeedPage}
-            />
-          </div>
-          <div dir="rtl" style={{ display: "grid", gap: 10 }}>
-            <h3 style={sectionSubheadingStyle}>RTL Pagination</h3>
-            <p style={mutedBodyStyle}>
-              In RTL layouts, ArrowRight moves to the previous page and ArrowLeft moves to the next page.
-            </p>
-            <p style={mutedBodyStyle}>
-              Current RTL page:{" "}
-              <strong data-testid="rtl-pagination-page" style={{ color: "var(--aurora-text-primary)" }}>
-                {rtlFeedPage}
-              </strong>
-            </p>
-            <Pagination
-              ariaLabel="RTL release pagination"
-              page={rtlFeedPage}
-              pageCount={7}
-              onPageChange={setRtlFeedPage}
-            />
-          </div>
+            <div className="demo-section-stack">
+              <div className="demo-panel">
+                <div className="demo-panel-header">
+                  <h3 style={panelTitleStyle}>Navigation Baseline</h3>
+                  <p style={panelDescriptionStyle}>Default tabs are presented as a product summary strip with visible selection telemetry.</p>
+                </div>
+                <Tabs
+                  value={topTabsValue}
+                  onValueChange={setTopTabsValue}
+                  items={[
+                    { key: "overview", label: "Overview", content: <p style={{ margin: 0 }}>Project health and adoption summary.</p> },
+                    { key: "activity", label: "Activity", content: <p style={{ margin: 0 }}>Recent events, deploys, and alerts.</p> },
+                    { key: "settings", label: "Settings", content: <p style={{ margin: 0 }}>Theme, access control, and preferences.</p> }
+                  ]}
+                />
+                <div className="demo-telemetry-grid">
+                  <p style={mutedBodyStyle}>
+                    Tabs change telemetry:{" "}
+                    <strong data-testid="tabs-change-telemetry" style={telemetryValueStyle}>
+                      {topTabsValue}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+              <div className="demo-tabs-lab-grid">
+                <div className="demo-panel">
+                  <h3 style={sectionSubheadingStyle}>Manual Activation Tabs</h3>
+                  <p style={mutedBodyStyle}>
+                    Arrow keys move focus only; press Enter or Space to activate and render the target panel.
+                  </p>
+                  <Tabs
+                    ariaLabel="Manual release workflow tabs"
+                    activationMode="manual"
+                    defaultValue="draft"
+                    items={[
+                      { key: "draft", label: "Draft", content: <p style={{ margin: 0 }}>Draft checklist and scoped API notes.</p> },
+                      { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-team review and accessibility signoff.</p> },
+                      { key: "ship", label: "Ship", content: <p style={{ margin: 0 }}>Tag release, publish packages, and announce changelog.</p> }
+                    ]}
+                  />
+                </div>
+                <div dir="rtl" className="demo-panel">
+                  <h3 style={sectionSubheadingStyle}>RTL Direction Tabs</h3>
+                  <p style={mutedBodyStyle}>
+                    In RTL layouts, ArrowRight moves to the previous tab and ArrowLeft moves to the next tab.
+                  </p>
+                  <Tabs
+                    ariaLabel="RTL release workflow tabs"
+                    defaultValue="spec"
+                    items={[
+                      { key: "spec", label: "Spec", content: <p style={{ margin: 0 }}>Specification scope and API contracts.</p> },
+                      { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-functional review and QA checkpoints.</p> },
+                      { key: "release", label: "Release", content: <p style={{ margin: 0 }}>Release checklist and rollout sequencing.</p> }
+                    ]}
+                  />
+                </div>
+                <div className="demo-panel">
+                  <h3 style={sectionSubheadingStyle}>Vertical Orientation Tabs</h3>
+                  <p style={mutedBodyStyle}>
+                    ArrowUp and ArrowDown drive focus + activation flow in vertical tablists.
+                  </p>
+                  <Tabs
+                    ariaLabel="Vertical release stage tabs"
+                    orientation="vertical"
+                    defaultValue="backlog"
+                    items={[
+                      { key: "backlog", label: "Backlog", content: <p style={{ margin: 0 }}>Backlog scope and release intent.</p> },
+                      { key: "in-progress", label: "In Progress", content: <p style={{ margin: 0 }}>Implementation and QA checkpoints.</p> },
+                      { key: "completed", label: "Completed", content: <p style={{ margin: 0 }}>Ready for release notes and rollout.</p> }
+                    ]}
+                  />
+                </div>
+                <div className="demo-panel">
+                  <h3 style={sectionSubheadingStyle}>Manual Vertical Tabs</h3>
+                  <p style={mutedBodyStyle}>
+                    In manual vertical mode, ArrowUp/ArrowDown move focus only; Enter or Space activates the focused stage.
+                  </p>
+                  <Tabs
+                    ariaLabel="Manual vertical release tabs"
+                    orientation="vertical"
+                    activationMode="manual"
+                    defaultValue="backlog"
+                    items={[
+                      { key: "backlog", label: "Backlog", content: <p style={{ margin: 0 }}>Backlog scope and release intent.</p> },
+                      { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Review and signoff notes.</p>, disabled: true },
+                      { key: "ship", label: "Ship", content: <p style={{ margin: 0 }}>Ship checklist and release notes.</p> }
+                    ]}
+                  />
+                </div>
+                <div className="demo-panel">
+                  <h3 style={sectionSubheadingStyle}>No-Loop Keyboard Boundaries</h3>
+                  <p style={mutedBodyStyle}>
+                    With <code>loop=false</code>, Arrow keys stop at the first/last enabled tab and still skip disabled items.
+                  </p>
+                  <Tabs
+                    ariaLabel="No-loop release tabs"
+                    loop={false}
+                    defaultValue="draft"
+                    items={[
+                      { key: "draft", label: "Draft", content: <p style={{ margin: 0 }}>Draft scope and implementation notes.</p> },
+                      { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-team review and signoff.</p>, disabled: true },
+                      { key: "release", label: "Release", content: <p style={{ margin: 0 }}>Release train and rollout sequencing.</p> }
+                    ]}
+                  />
+                </div>
+              </div>
+              <div className="demo-two-column">
+                <div className="demo-panel">
+                  <div className="demo-panel-header">
+                    <h3 style={panelTitleStyle}>Readiness Table</h3>
+                    <p style={panelDescriptionStyle}>Sortable readiness data paired with state toggles for loading and empty branches.</p>
+                  </div>
+                  <Table
+                    caption="Component readiness metrics"
+                    defaultSortKey="component"
+                    onSortChange={(key, direction) => setTableSortTelemetry(`${key}:${direction}`)}
+                    loading={tableLoading}
+                    loadingContent="Syncing component readiness metrics..."
+                    emptyContent="No component readiness metrics yet."
+                    columns={[
+                      { key: "component", header: "Component", sortable: true, rowHeader: true },
+                      { key: "status", header: "Status", sortable: true },
+                      { key: "coverage", header: "Coverage", sortable: true, render: (row) => `${row.coverage}%` }
+                    ]}
+                    data={tableRows}
+                  />
+                  <div className="demo-telemetry-grid">
+                    <p style={mutedBodyStyle}>
+                      Table sort telemetry:{" "}
+                      <strong data-testid="table-sort-telemetry" style={telemetryValueStyle}>
+                        {tableSortTelemetry}
+                      </strong>
+                    </p>
+                  </div>
+                  <div className="demo-action-row">
+                    <Button variant="outline" onClick={() => setTableLoading((value) => !value)}>
+                      Toggle table loading
+                    </Button>
+                    <Button variant="outline" onClick={() => setTableEmpty((value) => !value)}>
+                      Toggle table empty state
+                    </Button>
+                  </div>
+                </div>
+                <div className="demo-panel">
+                  <div className="demo-panel-header">
+                    <h3 style={panelTitleStyle}>Release Activity Feed</h3>
+                    <p style={panelDescriptionStyle}>Chronological activity feed with compact pagination to mimic a product dashboard lane.</p>
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 6 }}>
+                    {visibleFeed.map((entry) => (
+                      <li key={entry} style={{ color: "var(--aurora-text-secondary)" }}>
+                        {entry}
+                      </li>
+                    ))}
+                  </ul>
+                  <Pagination
+                    ariaLabel="Release feed pagination"
+                    page={feedPage}
+                    pageCount={feedPageCount}
+                    onPageChange={setFeedPage}
+                  />
+                </div>
+              </div>
+              <div dir="rtl" className="demo-panel">
+                <h3 style={sectionSubheadingStyle}>RTL Pagination</h3>
+                <p style={mutedBodyStyle}>
+                  In RTL layouts, ArrowRight moves to the previous page and ArrowLeft moves to the next page.
+                </p>
+                <p style={mutedBodyStyle}>
+                  Current RTL page:{" "}
+                  <strong data-testid="rtl-pagination-page" style={telemetryValueStyle}>
+                    {rtlFeedPage}
+                  </strong>
+                </p>
+                <Pagination
+                  ariaLabel="RTL release pagination"
+                  page={rtlFeedPage}
+                  pageCount={7}
+                  onPageChange={setRtlFeedPage}
+                />
+              </div>
+            </div>
           </Section>
 
           <Section
@@ -832,56 +887,82 @@ function App() {
             title="Feedback & States"
             description="System status, loading skeletons, and streaming indicators."
           >
-          <Alert title="Network recovered" tone="success">
-            All queued jobs were synchronized.
-          </Alert>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            <Button variant="outline" onClick={() => setToastTelemetryOpen(true)}>
-              Trigger telemetry toast
-            </Button>
-            <Button variant="outline" onClick={() => setActionToastOpen(true)}>
-              Trigger action toast
-            </Button>
-            <Button variant="outline" onClick={() => setSilentToastOpen(true)}>
-              Trigger silent toast
-            </Button>
-            <Button variant="outline" onClick={() => setBlockingToastOpen(true)}>
-              Trigger blocking toast
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => setStackedToastOpen({ first: true, second: true })}
-            >
-              Trigger stacked toasts
-            </Button>
-          </div>
-          <Switch
-            checked={toastEscapeGuard}
-            onCheckedChange={setToastEscapeGuard}
-            label="Guard prompt toast Escape at toast layer"
-            description="Uses Toast onEscapeKeyDown + preventDefault() while enabled."
-          />
-          <p style={mutedBodyStyle}>
-            Toast close reason telemetry:{" "}
-            <strong data-testid="toast-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
-              {toastCloseReason}
-            </strong>
-          </p>
-          <p style={mutedBodyStyle}>
-            Action toast handled count:{" "}
-            <strong data-testid="action-toast-handled-count" style={{ color: "var(--aurora-text-primary)" }}>
-              {actionToastHandledCount}
-            </strong>
-          </p>
-          <Progress value={62} />
-          <div style={{ display: "grid", gap: 8, maxWidth: 320 }}>
-            <Skeleton height={14} />
-            <Skeleton height={14} width="80%" />
-            <Skeleton height={14} width="65%" />
-          </div>
-          <Empty title="No records found" description="Create your first workflow to start collecting events." action={<Button>Create workflow</Button>} />
-          <LoadingDots />
-          <StreamingText text="Streaming response in progress..." />
+            <div className="demo-section-stack">
+              <div className="demo-panel">
+                <div className="demo-panel-header">
+                  <h3 style={panelTitleStyle}>Notification States</h3>
+                  <p style={panelDescriptionStyle}>Toast variants are grouped as an operator control board with explicit branch triggers.</p>
+                </div>
+                <Alert title="Network recovered" tone="success">
+                  All queued jobs were synchronized.
+                </Alert>
+                <div className="demo-action-row">
+                  <Button variant="outline" onClick={() => setToastTelemetryOpen(true)}>
+                    Trigger telemetry toast
+                  </Button>
+                  <Button variant="outline" onClick={() => setActionToastOpen(true)}>
+                    Trigger action toast
+                  </Button>
+                  <Button variant="outline" onClick={() => setSilentToastOpen(true)}>
+                    Trigger silent toast
+                  </Button>
+                  <Button variant="outline" onClick={() => setBlockingToastOpen(true)}>
+                    Trigger blocking toast
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setStackedToastOpen({ first: true, second: true })}
+                  >
+                    Trigger stacked toasts
+                  </Button>
+                </div>
+              </div>
+              <div className="demo-panel">
+                <div className="demo-panel-header">
+                  <h3 style={panelTitleStyle}>Toast Diagnostics</h3>
+                  <p style={panelDescriptionStyle}>Guard toggles and telemetry are surfaced together for faster behavior verification.</p>
+                </div>
+                <Switch
+                  checked={toastEscapeGuard}
+                  onCheckedChange={setToastEscapeGuard}
+                  label="Guard prompt toast Escape at toast layer"
+                  description="Uses Toast onEscapeKeyDown + preventDefault() while enabled."
+                />
+                <div className="demo-telemetry-grid">
+                  <p style={mutedBodyStyle}>
+                    Toast close reason telemetry:{" "}
+                    <strong data-testid="toast-close-reason-demo" style={telemetryValueStyle}>
+                      {toastCloseReason}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Action toast handled count:{" "}
+                    <strong data-testid="action-toast-handled-count" style={telemetryValueStyle}>
+                      {actionToastHandledCount}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+              <div className="demo-two-column">
+                <div className="demo-panel">
+                  <h3 style={panelTitleStyle}>Loading Surfaces</h3>
+                  <p style={panelDescriptionStyle}>Progress and skeleton placeholders show state transitions in a compact, scannable column.</p>
+                  <Progress value={62} />
+                  <div style={{ display: "grid", gap: 8, maxWidth: 320 }}>
+                    <Skeleton height={14} />
+                    <Skeleton height={14} width="80%" />
+                    <Skeleton height={14} width="65%" />
+                  </div>
+                </div>
+                <div className="demo-panel">
+                  <h3 style={panelTitleStyle}>Empty And Streaming</h3>
+                  <p style={panelDescriptionStyle}>No-data messaging and live feedback are paired to reflect a real request lifecycle.</p>
+                  <Empty title="No records found" description="Create your first workflow to start collecting events." action={<Button>Create workflow</Button>} />
+                  <LoadingDots />
+                  <StreamingText text="Streaming response in progress..." />
+                </div>
+              </div>
+            </div>
           </Section>
 
           <Section
@@ -889,144 +970,186 @@ function App() {
             title="Overlays & Navigation"
             description="Layered surfaces with keyboard and pointer dismissal behavior."
           >
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <Tooltip content="Runs a dry-run build">
-              <Button variant="outline">Hover me</Button>
-            </Tooltip>
-            <Popover triggerLabel="Open Popover" onCloseReason={setPopoverCloseReason}>
-              <p style={{ margin: 0 }}>This popover is built with Aurora primitives.</p>
-            </Popover>
-            <Dropdown
-              label="Actions"
-              onCloseReason={setDropdownCloseReason}
-              items={[
-                { key: "a", label: "Duplicate" },
-                { key: "b", label: "Archive" },
-                { key: "c", label: "Delete" }
-              ]}
-            />
-            <Button onClick={() => setDialogOpen(true)}>Open Dialog</Button>
-            <Button variant="outline" onClick={() => setDrawerOpen(true)}>
-              Open Drawer
-            </Button>
-            <Button variant="ghost" onClick={() => setPaletteOpen(true)}>
-              Command Palette
-            </Button>
-          </div>
-          <p style={mutedBodyStyle}>
-            Popover close reason telemetry:{" "}
-            <strong data-testid="popover-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
-              {popoverCloseReason}
-            </strong>
-          </p>
-          <p style={mutedBodyStyle}>
-            Dropdown close reason telemetry:{" "}
-            <strong data-testid="dropdown-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
-              {dropdownCloseReason}
-            </strong>
-          </p>
-          <p style={mutedBodyStyle}>
-            Dialog close reason telemetry:{" "}
-            <strong data-testid="dialog-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
-              {dialogCloseReason}
-            </strong>
-          </p>
-          <p style={mutedBodyStyle}>
-            Drawer close reason telemetry:{" "}
-            <strong data-testid="drawer-close-reason-demo" style={{ color: "var(--aurora-text-primary)" }}>
-              {drawerCloseReason}
-            </strong>
-          </p>
-          <div style={{ display: "grid", gap: 6, maxWidth: 300 }}>
-            <label htmlFor="overlay-outside-target" style={{ color: "var(--aurora-text-secondary)", fontSize: 14 }}>
-              Overlay outside focus target
-            </label>
-            <Input id="overlay-outside-target" placeholder="Click here to validate outside-dismiss focus." />
-          </div>
-          <p style={mutedBodyStyle}>
-            Keyboard shortcut: press{" "}
-            <kbd style={keyboardHintStyle}>
-              Ctrl
-            </kbd>
-            /
-            <kbd style={keyboardHintStyle}>
-              Cmd
-            </kbd>{" "}
-            +{" "}
-            <kbd style={keyboardHintStyle}>
-              K
-            </kbd>{" "}
-            to open Command Palette.
-          </p>
-          <Switch
-            checked={paletteBlocking}
-            onCheckedChange={setPaletteBlocking}
-            label="Block palette dismiss gestures"
-            description="Disable Escape and outside-click dismissal for approval workflows."
-          />
-          <Switch
-            checked={paletteDismissGuard}
-            onCheckedChange={setPaletteDismissGuard}
-            label="Guard palette dismiss via event hooks"
-            description="Use onEscapeKeyDown/onPointerDownOutside with preventDefault() while enabled."
-          />
-          <Switch
-            checked={palettePersistent}
-            onCheckedChange={setPalettePersistent}
-            label="Keep palette open after command select"
-            description="Enable batch command execution without reopening the palette."
-          />
-          <Switch
-            checked={paletteEscapeClearsQuery}
-            onCheckedChange={setPaletteEscapeClearsQuery}
-            label="Escape clears palette query first"
-            description="When enabled, first Escape clears the query and second Escape dismisses."
-          />
-          <p style={mutedBodyStyle}>
-            Palette query telemetry:{" "}
-            <strong data-testid="palette-query-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
-              {paletteQueryTelemetry || "N/A"}
-            </strong>
-          </p>
-          <p style={mutedBodyStyle}>
-            Palette close reason telemetry:{" "}
-            <strong data-testid="palette-close-reason-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
-              {paletteCloseReason}
-            </strong>
-          </p>
-          <p style={mutedBodyStyle}>
-            Keyboard tip: use <kbd style={keyboardHintStyle}>PageDown</kbd> /{" "}
-            <kbd style={keyboardHintStyle}>PageUp</kbd> to jump across actionable commands.
-          </p>
+            <div className="demo-section-stack">
+              <div className="demo-panel">
+                <div className="demo-panel-header">
+                  <h3 style={panelTitleStyle}>Overlay Launchers</h3>
+                  <p style={panelDescriptionStyle}>Core overlay entries are grouped as a single action rail for rapid interaction checks.</p>
+                </div>
+                <div className="demo-action-row">
+                  <Tooltip content="Runs a dry-run build">
+                    <Button variant="outline">Hover me</Button>
+                  </Tooltip>
+                  <Popover triggerLabel="Open Popover" onCloseReason={setPopoverCloseReason}>
+                    <p style={{ margin: 0 }}>This popover is built with Aurora primitives.</p>
+                  </Popover>
+                  <Dropdown
+                    label="Actions"
+                    onCloseReason={setDropdownCloseReason}
+                    items={[
+                      { key: "a", label: "Duplicate" },
+                      { key: "b", label: "Archive" },
+                      { key: "c", label: "Delete" }
+                    ]}
+                  />
+                  <Button onClick={() => setDialogOpen(true)}>Open Dialog</Button>
+                  <Button variant="outline" onClick={() => setDrawerOpen(true)}>
+                    Open Drawer
+                  </Button>
+                  <Button variant="ghost" onClick={() => setPaletteOpen(true)}>
+                    Command Palette
+                  </Button>
+                </div>
+                <div style={{ display: "grid", gap: 6, maxWidth: 320, marginTop: 72 }}>
+                  <label htmlFor="overlay-outside-target" style={{ color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+                    Overlay outside focus target
+                  </label>
+                  <Input id="overlay-outside-target" placeholder="Click here to validate outside-dismiss focus." />
+                </div>
+              </div>
+              <div className="demo-panel">
+                <div className="demo-panel-header">
+                  <h3 style={panelTitleStyle}>Overlay Dismiss Telemetry</h3>
+                  <p style={panelDescriptionStyle}>Close reasons are consolidated into a diagnostics rail for faster regression spotting.</p>
+                </div>
+                <div className="demo-telemetry-grid">
+                  <p style={mutedBodyStyle}>
+                    Popover close reason telemetry:{" "}
+                    <strong data-testid="popover-close-reason-demo" style={telemetryValueStyle}>
+                      {popoverCloseReason}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Dropdown close reason telemetry:{" "}
+                    <strong data-testid="dropdown-close-reason-demo" style={telemetryValueStyle}>
+                      {dropdownCloseReason}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Dialog close reason telemetry:{" "}
+                    <strong data-testid="dialog-close-reason-demo" style={telemetryValueStyle}>
+                      {dialogCloseReason}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Drawer close reason telemetry:{" "}
+                    <strong data-testid="drawer-close-reason-demo" style={telemetryValueStyle}>
+                      {drawerCloseReason}
+                    </strong>
+                  </p>
+                </div>
+              </div>
+              <div className="demo-panel">
+                <div className="demo-panel-header">
+                  <h3 style={panelTitleStyle}>Command Palette Policy Controls</h3>
+                  <p style={panelDescriptionStyle}>Keyboard hints, guard toggles, and telemetry live in one place to reduce operator context switching.</p>
+                </div>
+                <p style={mutedBodyStyle}>
+                  Keyboard shortcut: press{" "}
+                  <kbd style={keyboardHintStyle}>
+                    Ctrl
+                  </kbd>
+                  /
+                  <kbd style={keyboardHintStyle}>
+                    Cmd
+                  </kbd>{" "}
+                  +{" "}
+                  <kbd style={keyboardHintStyle}>
+                    K
+                  </kbd>{" "}
+                  to open Command Palette.
+                </p>
+                <div className="demo-control-stack">
+                  <Switch
+                    checked={paletteBlocking}
+                    onCheckedChange={setPaletteBlocking}
+                    label="Block palette dismiss gestures"
+                    description="Disable Escape and outside-click dismissal for approval workflows."
+                  />
+                  <Switch
+                    checked={paletteDismissGuard}
+                    onCheckedChange={setPaletteDismissGuard}
+                    label="Guard palette dismiss via event hooks"
+                    description="Use onEscapeKeyDown/onPointerDownOutside with preventDefault() while enabled."
+                  />
+                  <Switch
+                    checked={palettePersistent}
+                    onCheckedChange={setPalettePersistent}
+                    label="Keep palette open after command select"
+                    description="Enable batch command execution without reopening the palette."
+                  />
+                  <Switch
+                    checked={paletteEscapeClearsQuery}
+                    onCheckedChange={setPaletteEscapeClearsQuery}
+                    label="Escape clears palette query first"
+                    description="When enabled, first Escape clears the query and second Escape dismisses."
+                  />
+                </div>
+                <div className="demo-telemetry-grid">
+                  <p style={mutedBodyStyle}>
+                    Palette query telemetry:{" "}
+                    <strong data-testid="palette-query-telemetry" style={telemetryValueStyle}>
+                      {paletteQueryTelemetry || "N/A"}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Palette close reason telemetry:{" "}
+                    <strong data-testid="palette-close-reason-telemetry" style={telemetryValueStyle}>
+                      {paletteCloseReason}
+                    </strong>
+                  </p>
+                </div>
+                <p style={mutedBodyStyle}>
+                  Keyboard tip: use <kbd style={keyboardHintStyle}>PageDown</kbd> /{" "}
+                  <kbd style={keyboardHintStyle}>PageUp</kbd> to jump across actionable commands.
+                </p>
+              </div>
+            </div>
           </Section>
 
           <Section id="ai-components" title="AI Components" description="Prompt, reasoning, and streaming response building blocks.">
-          <PromptInput
-            onSubmit={(prompt) => {
-              setSubmittedPrompt(prompt);
-              setToastOpen(true);
-            }}
-          />
-          <div style={{ display: "grid", gap: 10 }}>
-            <MessageBubble speaker="user">{submittedPrompt}</MessageBubble>
-            <MessageBubble speaker="assistant">
-              <StreamingText text="I can scaffold this flow with form validation and fallback rate-limiting." speed={12} />
-            </MessageBubble>
-          </div>
-          <ReasoningPanel
-            steps={[
-              "Parse user intent and identify required components.",
-              "Generate form schema and OTP fallback path.",
-              "Prepare integration checklist and edge-case validation."
-            ]}
-          />
-          <StreamingCodeBlock
-            language="tsx"
-            code={`export function OtpFallback() {
+            <div className="demo-section-stack">
+              <div className="demo-two-column">
+                <div className="demo-panel">
+                  <div className="demo-panel-header">
+                    <h3 style={panelTitleStyle}>Prompt Intake</h3>
+                    <p style={panelDescriptionStyle}>Prompt entry and live conversation are grouped as one customer-facing interaction lane.</p>
+                  </div>
+                  <PromptInput
+                    onSubmit={(prompt) => {
+                      setSubmittedPrompt(prompt);
+                      setToastOpen(true);
+                    }}
+                  />
+                  <div style={{ display: "grid", gap: 10 }}>
+                    <MessageBubble speaker="user">{submittedPrompt}</MessageBubble>
+                    <MessageBubble speaker="assistant">
+                      <StreamingText text="I can scaffold this flow with form validation and fallback rate-limiting." speed={12} />
+                    </MessageBubble>
+                  </div>
+                </div>
+                <div className="demo-panel">
+                  <div className="demo-panel-header">
+                    <h3 style={panelTitleStyle}>Reasoning And Output</h3>
+                    <p style={panelDescriptionStyle}>Model reasoning trail and generated code appear together to reflect productized AI responses.</p>
+                  </div>
+                  <ReasoningPanel
+                    steps={[
+                      "Parse user intent and identify required components.",
+                      "Generate form schema and OTP fallback path.",
+                      "Prepare integration checklist and edge-case validation."
+                    ]}
+                  />
+                  <StreamingCodeBlock
+                    language="tsx"
+                    code={`export function OtpFallback() {
   const [step, setStep] = useState("verify");
   return <div>{step}</div>;
 }`}
-          />
+                  />
+                </div>
+              </div>
+            </div>
           </Section>
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen} onCloseReason={setDialogCloseReason} title="Dialog Example">
