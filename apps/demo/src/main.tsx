@@ -84,6 +84,26 @@ const sectionCardStyle: React.CSSProperties = {
   display: "grid",
   gap: 14
 };
+const appShellStyle: React.CSSProperties = {
+  minHeight: "100vh",
+  background:
+    "radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--aurora-accent-default) 12%, transparent), transparent 42%), radial-gradient(circle at 100% 12%, color-mix(in srgb, var(--aurora-border-default) 24%, transparent), transparent 38%), linear-gradient(180deg, color-mix(in srgb, var(--aurora-surface-default) 94%, black 6%), var(--aurora-surface-default))",
+  padding: "14px clamp(10px, 2.4vw, 24px) 22px"
+};
+const mainLayoutStyle: React.CSSProperties = {
+  maxWidth: 1160,
+  margin: "0 auto",
+  padding: "24px clamp(16px, 3vw, 24px) 36px",
+  borderRadius: "min(22px, 3.6vw)",
+  border: "1px solid color-mix(in srgb, var(--aurora-border-default) 74%, transparent)",
+  boxShadow: "var(--aurora-shadow-md)",
+  display: "grid",
+  gap: 30,
+  fontFamily: "var(--aurora-font-family-base)",
+  color: "var(--aurora-text-primary)",
+  background:
+    "radial-gradient(circle at 85% -10%, color-mix(in srgb, var(--aurora-accent-default) 12%, transparent), transparent 36%), radial-gradient(circle at 12% 24%, color-mix(in srgb, var(--aurora-border-default) 24%, transparent), transparent 38%), color-mix(in srgb, var(--aurora-surface-default) 96%, transparent)"
+};
 const heroPanelStyle: React.CSSProperties = {
   display: "grid",
   gap: 16,
@@ -124,6 +144,17 @@ const heroStatCardStyle: React.CSSProperties = {
   display: "grid",
   gap: 4
 };
+const sectionNavLinkStyle: React.CSSProperties = {
+  color: "var(--aurora-text-primary)",
+  textDecoration: "none",
+  fontWeight: "var(--aurora-font-weight-medium)",
+  border: "1px solid var(--aurora-border-default)",
+  borderRadius: 999,
+  padding: "4px 12px",
+  fontSize: 13,
+  transition:
+    "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
+};
 
 function Section({
   id,
@@ -154,6 +185,138 @@ function Section({
       </div>
     </section>
   );
+}
+
+function SectionNavLink({
+  id,
+  label,
+  active,
+  onNavigate
+}: {
+  id: string;
+  label: string;
+  active: boolean;
+  onNavigate: () => void;
+}) {
+  const [hovered, setHovered] = React.useState(false);
+  const [focusVisible, setFocusVisible] = React.useState(false);
+  const focusIntentRef = React.useRef(true);
+
+  const activeBackground = "color-mix(in srgb, var(--aurora-accent-default) 14%, transparent)";
+  const idleBackground = hovered ? "color-mix(in srgb, var(--aurora-surface-elevated) 86%, var(--aurora-surface-default))" : "transparent";
+
+  return (
+    <a
+      href={`#${id}`}
+      aria-current={active ? "location" : undefined}
+      onClick={onNavigate}
+      onMouseEnter={() => {
+        setHovered(true);
+      }}
+      onMouseLeave={() => {
+        setHovered(false);
+      }}
+      onMouseDown={() => {
+        focusIntentRef.current = false;
+        setFocusVisible(false);
+      }}
+      onKeyDown={() => {
+        focusIntentRef.current = true;
+      }}
+      onFocus={(event) => {
+        setFocusVisible(resolveFocusVisibleState(event.currentTarget, focusIntentRef.current));
+      }}
+      onBlur={() => {
+        setFocusVisible(false);
+      }}
+      style={{
+        ...sectionNavLinkStyle,
+        border: active ? "1px solid var(--aurora-accent-default)" : "1px solid var(--aurora-border-default)",
+        background: active ? activeBackground : idleBackground,
+        boxShadow: focusVisible ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 42%, transparent)" : "none",
+        color: active || hovered ? "var(--aurora-text-primary)" : "var(--aurora-text-secondary)",
+        transform: hovered ? "translateY(-1px)" : "translateY(0)"
+      }}
+    >
+      {label}
+    </a>
+  );
+}
+
+function HeroStatCard({
+  label,
+  value,
+  description
+}: {
+  label: string;
+  value: string;
+  description: string;
+}) {
+  const [hovered, setHovered] = React.useState(false);
+  const [focusVisible, setFocusVisible] = React.useState(false);
+  const focusIntentRef = React.useRef(true);
+
+  return (
+    <article
+      tabIndex={0}
+      onMouseEnter={() => {
+        setHovered(true);
+      }}
+      onMouseLeave={() => {
+        setHovered(false);
+      }}
+      onMouseDown={() => {
+        focusIntentRef.current = false;
+        setFocusVisible(false);
+      }}
+      onKeyDown={() => {
+        focusIntentRef.current = true;
+      }}
+      onFocus={(event) => {
+        setFocusVisible(resolveFocusVisibleState(event.currentTarget, focusIntentRef.current));
+      }}
+      onBlur={() => {
+        setFocusVisible(false);
+      }}
+      style={{
+        ...heroStatCardStyle,
+        border:
+          hovered || focusVisible
+            ? "1px solid color-mix(in srgb, var(--aurora-accent-default) 52%, var(--aurora-border-default))"
+            : heroStatCardStyle.border,
+        boxShadow: focusVisible
+          ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 42%, transparent), var(--aurora-shadow-sm)"
+          : hovered
+            ? "var(--aurora-shadow-md)"
+            : "var(--aurora-shadow-sm)",
+        transform: hovered ? "translateY(-2px)" : "translateY(0)",
+        transition:
+          "transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
+      }}
+    >
+      <p
+        style={{
+          margin: 0,
+          fontSize: 11,
+          textTransform: "uppercase",
+          letterSpacing: "0.08em",
+          color: "var(--aurora-text-secondary)"
+        }}
+      >
+        {label}
+      </p>
+      <strong style={{ fontSize: 18, letterSpacing: "-0.02em" }}>{value}</strong>
+      <p style={{ ...mutedBodyStyle, fontSize: 12 }}>{description}</p>
+    </article>
+  );
+}
+
+function resolveFocusVisibleState(target: HTMLElement, fallback: boolean) {
+  try {
+    return target.matches(":focus-visible");
+  } catch {
+    return fallback;
+  }
 }
 
 function App() {
@@ -239,19 +402,8 @@ function App() {
   return (
     <AuroraProvider theme={theme}>
       <GlobalStyles />
-      <main
-        style={{
-          maxWidth: 1160,
-          margin: "0 auto",
-          padding: "24px clamp(16px, 3vw, 24px) 36px",
-          display: "grid",
-          gap: 30,
-          fontFamily: "var(--aurora-font-family-base)",
-          color: "var(--aurora-text-primary)",
-          background:
-            "radial-gradient(circle at 85% -10%, color-mix(in srgb, var(--aurora-accent-default) 12%, transparent), transparent 36%), radial-gradient(circle at 12% 24%, color-mix(in srgb, var(--aurora-border-default) 24%, transparent), transparent 38%)"
-        }}
-      >
+      <div style={appShellStyle}>
+      <main style={mainLayoutStyle}>
         <header style={heroPanelStyle}>
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
             <div style={{ display: "grid", gap: 8 }}>
@@ -287,79 +439,34 @@ function App() {
             <Tag>Overlay + AI ready</Tag>
           </div>
           <div style={heroStatsGridStyle}>
-            <article style={heroStatCardStyle}>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 11,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  color: "var(--aurora-text-secondary)"
-                }}
-              >
-                Quality Gate
-              </p>
-              <strong style={{ fontSize: 18, letterSpacing: "-0.02em" }}>release:gate ✅</strong>
-              <p style={{ ...mutedBodyStyle, fontSize: 12 }}>verify + demo:e2e + storybook:test:ci + release:dry-run</p>
-            </article>
-            <article style={heroStatCardStyle}>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 11,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  color: "var(--aurora-text-secondary)"
-                }}
-              >
-                Active Workstream
-              </p>
-              <strong style={{ fontSize: 18, letterSpacing: "-0.02em" }}>Production Refinement</strong>
-              <p style={{ ...mutedBodyStyle, fontSize: 12 }}>A11y parity, interaction resilience, and docs/release consistency.</p>
-            </article>
-            <article style={heroStatCardStyle}>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 11,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  color: "var(--aurora-text-secondary)"
-                }}
-              >
-                Theme Pack
-              </p>
-              <strong style={{ fontSize: 18, letterSpacing: "-0.02em" }}>{theme}</strong>
-              <p style={{ ...mutedBodyStyle, fontSize: 12 }}>Token-first surface, accent, and typography language.</p>
-            </article>
+            <HeroStatCard
+              label="Quality Gate"
+              value="release:gate ✅"
+              description="verify + demo:e2e + storybook:test:ci + release:dry-run"
+            />
+            <HeroStatCard
+              label="Active Workstream"
+              value="Production Refinement"
+              description="A11y parity, interaction resilience, and docs/release consistency."
+            />
+            <HeroStatCard
+              label="Theme Pack"
+              value={theme}
+              description="Token-first surface, accent, and typography language."
+            />
           </div>
           <nav
             aria-label="Demo sections"
             style={sectionNavStyle}
           >
             {sectionLinks.map((item) => (
-              <a
+              <SectionNavLink
                 key={item.id}
-                href={`#${item.id}`}
-                aria-current={activeSection === item.id ? "location" : undefined}
-                onClick={() => setActiveSection(item.id)}
-                style={{
-                  color: "var(--aurora-text-primary)",
-                  textDecoration: "none",
-                  fontWeight: "var(--aurora-font-weight-medium)",
-                  border:
-                    activeSection === item.id
-                      ? "1px solid var(--aurora-accent-default)"
-                      : "1px solid var(--aurora-border-default)",
-                  background:
-                    activeSection === item.id ? "color-mix(in srgb, var(--aurora-accent-default) 12%, transparent)" : "transparent",
-                  borderRadius: 999,
-                  padding: "4px 12px",
-                  fontSize: 13
-                }}
-              >
-                {item.label}
-              </a>
+                id={item.id}
+                label={item.label}
+                active={activeSection === item.id}
+                onNavigate={() => setActiveSection(item.id)}
+              />
             ))}
           </nav>
         </header>
@@ -891,6 +998,7 @@ function App() {
           position="top-left"
         />
       </main>
+      </div>
     </AuroraProvider>
   );
 }

@@ -284,6 +284,7 @@
   - Pagination Arrow 焦点连续性补测（`ArrowLeft/ArrowRight` 翻页后焦点保持在新当前页按钮，补齐回归断言）
   - Pagination 极值边界收口（`pageCount<=1` 提前返回，避免 `0/负数` 输入触发无意义分页计算）
   - Demo 品牌化视觉收口（Hero 面板、状态徽标与分区卡片统一层级，提升产品化观感一致性）
+  - Demo 成品化细节深化（全页背景容器、导航 pill 三态反馈、KPI 卡片 hover/focus 反馈统一）
   - Storybook 静态产物门禁收口（新增 `storybook:static:check`，执行 build + git diff 校验，新增 story 未同步静态产物会提前失败并给出修复提示）
   - Storybook 构建噪音收口（配置 `vite.build.chunkSizeWarningLimit=2500`，减少 vendor chunk 告警噪音）
   - Pages 交付收口（`.github/workflows/demo-pages.yml` 合并发布 Demo 根路径 + Storybook 子路径）
