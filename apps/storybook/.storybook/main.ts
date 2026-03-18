@@ -26,6 +26,10 @@ const config: StorybookConfig = {
           ...(existingConfig.resolve?.alias ?? {}),
           ...alias
         }
+      },
+      build: {
+        ...(existingConfig.build ?? {}),
+        chunkSizeWarningLimit: 2500
       }
     };
   }
