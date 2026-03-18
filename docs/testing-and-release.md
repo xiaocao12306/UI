@@ -86,7 +86,7 @@ Latest release gate run:
 - result: passed (`verify` + `demo:e2e` + `storybook:test:ci` + `release:dry-run`)
 - notes:
   - demo E2E total now `39` checks
-  - Storybook interaction suites refreshed to `32/32`, tests `147/147` all passed after latest pagination/date-picker story expansion
+  - Storybook interaction suites refreshed to `32/32`, tests `151/151` all passed after latest CommandPalette/Toast/Tabs/Table production hardening
   - release dry-run package size evidence refreshed (`react` unpacked size ~296.8 kB)
 
 ## GitHub Release Automation
