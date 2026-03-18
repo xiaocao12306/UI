@@ -649,6 +649,39 @@ test("updates release date with date picker", async ({ page }) => {
   await expect(page.getByText("Selected date: 2026-05-20")).toBeVisible();
 });
 
+test("keeps popover open when Escape is preempted by a global handler", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Popover" }).click();
+  const popover = page.getByRole("dialog", { name: "Popover content" });
+  await expect(popover).toBeVisible();
+
+  await page.evaluate(() => {
+    const preemptEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+    (window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void }).__demoPreemptEscape =
+      preemptEscape;
+    document.addEventListener("keydown", preemptEscape, true);
+  });
+
+  await page.keyboard.press("Escape");
+  await expect(popover).toBeVisible();
+
+  await page.evaluate(() => {
+    const globalWindow = window as typeof window & { __demoPreemptEscape?: (event: KeyboardEvent) => void };
+    if (globalWindow.__demoPreemptEscape) {
+      document.removeEventListener("keydown", globalWindow.__demoPreemptEscape, true);
+      delete globalWindow.__demoPreemptEscape;
+    }
+  });
+
+  await page.keyboard.press("Escape");
+  await expect(popover).toBeHidden();
+});
+
 test("opens dropdown using keyboard", async ({ page }) => {
   await page.goto("/");
 
