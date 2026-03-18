@@ -77,7 +77,7 @@ Latest dry-run record:
   - `changeset version`: `No unreleased changesets found, exiting.`
   - `@aurora-ui/tokens`: dry-run tarball size ~3.0 kB
   - `@aurora-ui/primitives`: dry-run tarball size ~14.0 kB
-  - `@aurora-ui/react`: dry-run tarball size ~54.1 kB (unpacked ~312.7 kB after latest Dropdown/CommandPalette/Popover telemetry + Table sort-guard refinements)
+  - `@aurora-ui/react`: dry-run tarball size ~54.3 kB (unpacked ~316.7 kB after latest overlay/demo telemetry and Tabs/Table telemetry refinements)
   - npm prints login warning in dry-run mode, but command exits successfully
   - CI summary now includes package size / unpacked size table via `GITHUB_STEP_SUMMARY`
 
@@ -86,15 +86,15 @@ Latest release gate run:
 - command: `pnpm release:gate`
 - result: passed (`verify` + `demo:e2e` + `storybook:test:ci` + `release:dry-run`)
 - notes:
-  - demo E2E total now `53` checks
-  - Storybook interaction suites refreshed to `32/32`, tests `170/170` all passed after latest Dropdown + CommandPalette + Popover close-reason telemetry + Table single-row sort guard coverage
+  - demo E2E total now `59` checks
+  - Storybook interaction suites refreshed to `32/32`, tests `172/172` all passed after latest Dialog/Drawer telemetry + Popover story typecheck hardening + telemetry story expansion
   - primitives regression: `pnpm --filter @aurora-ui/primitives exec vitest run src/DismissableLayer.test.tsx` passed after IME Escape + Escape preemption dismiss-guard hardening
   - react overlay regressions: `pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/Drawer.test.tsx` passed after IME Escape guard coverage expansion
-  - react preemption regressions: `pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/CommandPalette.test.tsx` passed after Escape-preemption callback-skip coverage expansion
+  - react preemption regressions: `pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/CommandPalette.test.tsx` passed after Escape-preemption callback-skip coverage expansion and close-reason lifecycle reset hardening
   - react preemption overlay expansion: `pnpm --filter @aurora-ui/react exec vitest run src/Popover.test.tsx src/Dropdown.test.tsx` passed after Escape-preemption callback-skip coverage expansion
   - react preemption overlay completion: `pnpm --filter @aurora-ui/react exec vitest run src/Drawer.test.tsx` passed after Escape-preemption callback-skip coverage expansion
-  - demo IME/legacy keyboard regressions: `pnpm demo:e2e` passed after adding Dialog+Drawer+Popover+CommandPalette+Dropdown+Toast Escape preemption coverage, CommandPalette+Toast IME Escape coverage, and Tabs/Table legacy `Spacebar` keyboard-path checks
-  - release dry-run package size evidence refreshed (`react` unpacked size ~312.7 kB)
+  - demo IME/legacy keyboard regressions: `pnpm demo:e2e` passed after adding Dialog/Drawer/Toast/CommandPalette close-reason telemetry checks plus Tabs/Table telemetry indicators and existing IME/legacy keyboard paths
+  - release dry-run package size evidence refreshed (`react` unpacked size ~316.7 kB)
 
 ## GitHub Release Automation
 Workflow: `.github/workflows/release.yml`
