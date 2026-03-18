@@ -218,6 +218,6 @@ Result summary:
 - npm auth: dry-run warning expected (`requires you to be logged in`) and does not block output
 - package tarball evidence:
   - `@aurora-ui/primitives@0.1.0`: package `14.4 kB`, unpacked `71.2 kB`
-  - `@aurora-ui/react@0.1.0`: package `57.5 kB`, unpacked `342.6 kB`
+  - `@aurora-ui/react@0.1.0`: package `60.3 kB`, unpacked `364.1 kB`
   - `@aurora-ui/tokens@0.1.0`: package `3.2 kB`, unpacked `17.0 kB`
 - post-run workspace hygiene: `release-dry-run` reverted temporary version-file edits automatically

@@ -322,6 +322,7 @@
   - Release Gate 证据刷新（2026-03-19：demo E2E `65` + Storybook `176/176` + dry-run `react` unpacked `342.6 kB`）
   - Release Gate 证据刷新（2026-03-19：demo E2E `69/69` + Storybook `177/177`，含 CommandPalette 翻页键与 Toast 动作语义新增回归）
   - Release Dry-Run 证据刷新（2026-03-19：`release:dry-run` 通过，`react` unpacked `342.6 kB` / `primitives` `71.2 kB` / `tokens` `17.0 kB`）
+  - Release Dry-Run 证据刷新（2026-03-19 latest：`release:dry-run` 通过，`react` package `60.3 kB` / unpacked `364.1 kB`，`primitives` unpacked `71.2 kB`，`tokens` unpacked `17.0 kB`）
   - Dropdown 单测分支补齐（outside pointer dismiss 不抢焦，保持外部目标焦点）
   - 集成示例文档补齐（`component-recipes` 增补 Dropdown 阻塞流 / CommandPalette 批量执行 / Table loading+empty 模板 + Overlay/Tabs/Table telemetry 模板）
   - CommandPalette Escape 查询收口（新增 `clearQueryOnEscape` 默认行为：首次 Escape 清空 query，二次 Escape 再触发关闭）

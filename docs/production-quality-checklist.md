@@ -247,6 +247,7 @@
 - Table live-sort narration hardening: added `getSortStatusText` to localize active sort-state live region updates, with unit + Storybook interaction coverage for ascending/descending transitions.
 - Release evidence refresh: reran `demo:e2e` (`65` passed) and `release:dry-run` (`react` unpacked `342.6 kB`) with Storybook interaction baseline `32/32` suites and `176/176` tests.
 - Release evidence refresh (2026-03-19 latest): reran `release:gate:ci` with `demo:e2e` `69/69` and Storybook interaction baseline `32/32` suites + `177/177` tests.
+- Release dry-run refresh (2026-03-19 latest): `release:dry-run` remains green with tarball evidence `@aurora-ui/react` package `60.3 kB` / unpacked `364.1 kB`.
 - Demo table narration parity: Playwright now asserts unsorted columns keep `aria-sort` absent while active sorted column toggles, matching unit/Storybook semantics.
 - Toast IME callback parity: Escape during composition no longer fires `onEscapeKeyDown`, preventing guarded flows from treating IME confirm/cancel as dismissal intent.
 - Demo RTL tabs parity: added dedicated Data section RTL tablist and Playwright ArrowRight/ArrowLeft regression to lock direction-aware keyboard navigation in real app flows.
