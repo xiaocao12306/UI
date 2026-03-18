@@ -510,4 +510,30 @@ describe("Toast", () => {
     fireEvent.mouseUp(closeButton);
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
+
+  it("applies close-button hover visuals and keyboard-intended focus fallback when focus-visible is unavailable", () => {
+    render(<Toast open title="Hover + fallback" duration={0} />);
+
+    const closeButton = screen.getByRole("button", { name: "Close toast" });
+    const defaultBackground = closeButton.style.background;
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is unsupported");
+    });
+
+    fireEvent.mouseEnter(closeButton);
+    expect(closeButton.style.background).not.toBe(defaultBackground);
+
+    fireEvent.mouseLeave(closeButton);
+    expect(closeButton.style.background).toBe(defaultBackground);
+
+    fireEvent.mouseDown(closeButton);
+    fireEvent.focus(closeButton);
+    expect(closeButton.style.boxShadow).toBe("none");
+
+    fireEvent.blur(closeButton);
+    fireEvent.keyDown(closeButton, { key: "Tab" });
+    fireEvent.focus(closeButton);
+    expect(closeButton.style.boxShadow).toContain("0 0 0 3px");
+    matchesSpy.mockRestore();
+  });
 });
