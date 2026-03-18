@@ -444,6 +444,19 @@ test("navigates data tabs with Home/End keys", async ({ page }) => {
   await expect(overviewPanel).not.toHaveAttribute("hidden");
 });
 
+test("updates tabs telemetry when active tab changes", async ({ page }) => {
+  await page.goto("/");
+
+  const telemetry = page.getByTestId("tabs-change-telemetry");
+  await expect(telemetry).toHaveText("overview");
+
+  await page.getByRole("tab", { name: "Activity" }).click();
+  await expect(telemetry).toHaveText("activity");
+
+  await page.getByRole("tab", { name: "Settings" }).click();
+  await expect(telemetry).toHaveText("settings");
+});
+
 test("mirrors horizontal tab arrows in rtl layout", async ({ page }) => {
   await page.goto("/");
 
@@ -482,6 +495,23 @@ test("sorts demo table from column headers", async ({ page }) => {
   await expect(componentColumn).toHaveAttribute("aria-sort", "descending");
   await expect(statusColumn).not.toHaveAttribute("aria-sort");
   await expect(firstRow).toContainText("StreamingCodeBlock");
+});
+
+test("updates table sort telemetry across click and keyboard sort paths", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table");
+  const telemetry = page.getByTestId("table-sort-telemetry");
+  const statusSortAscending = table.getByRole("button", { name: "Status sort ascending" });
+
+  await expect(telemetry).toHaveText("component:asc");
+  await statusSortAscending.click();
+  await expect(telemetry).toHaveText("status:asc");
+
+  const statusSortDescending = table.getByRole("button", { name: "Status sort descending" });
+  await statusSortDescending.focus();
+  await statusSortDescending.press("Enter");
+  await expect(telemetry).toHaveText("status:desc");
 });
 
 test("sorts demo table with keyboard activation", async ({ page }) => {

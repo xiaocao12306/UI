@@ -137,6 +137,8 @@ function App() {
   const [releaseDate, setReleaseDate] = React.useState("2026-03-17");
   const [feedPage, setFeedPage] = React.useState(1);
   const [rtlFeedPage, setRtlFeedPage] = React.useState(4);
+  const [topTabsValue, setTopTabsValue] = React.useState("overview");
+  const [tableSortTelemetry, setTableSortTelemetry] = React.useState("component:asc");
   const [tableLoading, setTableLoading] = React.useState(false);
   const [tableEmpty, setTableEmpty] = React.useState(false);
   const feedPageSize = 3;
@@ -326,13 +328,20 @@ function App() {
           description="Common data surfaces and navigation containers."
         >
           <Tabs
-            defaultValue="overview"
+            value={topTabsValue}
+            onValueChange={setTopTabsValue}
             items={[
               { key: "overview", label: "Overview", content: <p style={{ margin: 0 }}>Project health and adoption summary.</p> },
               { key: "activity", label: "Activity", content: <p style={{ margin: 0 }}>Recent events, deploys, and alerts.</p> },
               { key: "settings", label: "Settings", content: <p style={{ margin: 0 }}>Theme, access control, and preferences.</p> }
             ]}
           />
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            Tabs change telemetry:{" "}
+            <strong data-testid="tabs-change-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
+              {topTabsValue}
+            </strong>
+          </p>
           <div style={{ display: "grid", gap: 8 }}>
             <h3 style={{ margin: 0, fontSize: 16 }}>Manual Activation Tabs</h3>
             <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
@@ -400,6 +409,7 @@ function App() {
           <Table
             caption="Component readiness metrics"
             defaultSortKey="component"
+            onSortChange={(key, direction) => setTableSortTelemetry(`${key}:${direction}`)}
             loading={tableLoading}
             loadingContent="Syncing component readiness metrics..."
             emptyContent="No component readiness metrics yet."
@@ -410,6 +420,12 @@ function App() {
             ]}
             data={tableRows}
           />
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+            Table sort telemetry:{" "}
+            <strong data-testid="table-sort-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
+              {tableSortTelemetry}
+            </strong>
+          </p>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <Button variant="outline" onClick={() => setTableLoading((value) => !value)}>
               Toggle table loading
