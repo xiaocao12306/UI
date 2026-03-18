@@ -206,6 +206,17 @@ test("sorts demo table with keyboard activation", async ({ page }) => {
   await expect(firstRow).toContainText("Button");
 });
 
+test("keeps table identity column exposed as row headers across sorting", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
+  const componentSortButton = table.getByRole("button", { name: "Component sort descending" });
+
+  await expect(table.getByRole("rowheader", { name: "Button" })).toBeVisible();
+  await componentSortButton.click();
+  await expect(table.getByRole("rowheader", { name: "StreamingCodeBlock" })).toBeVisible();
+});
+
 test("toggles table loading state and disables sort controls", async ({ page }) => {
   await page.goto("/");
 
