@@ -245,7 +245,7 @@ export function Tabs({
 }
 
 function isTabActivationKey(key: string) {
-  return key === "Enter" || key === " " || key === "Spacebar";
+  return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
 }
 
 function getTabMoveDirection({

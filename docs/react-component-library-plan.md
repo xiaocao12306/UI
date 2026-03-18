@@ -255,6 +255,7 @@
   - Demo Data E2E 收口（Table 列排序补齐 `Enter/Space` 键盘激活回归）
   - Demo Tabs E2E 收口（manual 模式补齐 `Space` 激活回归，覆盖 Enter/Space 双路径）
   - Tabs 键盘兼容收口（manual 模式补齐 legacy `Spacebar` key 兼容 + 单测回归）
+  - Tabs 键盘兼容补强（manual 模式补齐现代 `Space` key 值兼容 + Storybook 交互回归）
   - Tabs 回调去重收口（manual 键盘激活后忽略 `detail=0` click，避免 `onValueChange` 重复触发）
   - Table 键盘兼容收口（sortable header 补齐 legacy `Spacebar` 激活单测回归）
   - Dropdown 键盘关闭收口（补齐 `Tab` 关闭菜单单测，保持与 demo/E2E 一致）

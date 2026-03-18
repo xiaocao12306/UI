@@ -64,14 +64,15 @@ export const Controlled: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const releaseTab = canvas.getByRole("tab", { name: "Release" });
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
 
     await userEvent.click(releaseTab);
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Publish with changesets");
+    await expect(releaseTab).toHaveFocus();
 
-    const tabList = canvas.getByRole("tablist", { name: "Tabs" });
-    tabList.focus();
     await userEvent.keyboard("{Home}");
-    await expect(canvas.getByRole("tab", { name: "Spec" })).toHaveAttribute("aria-selected", "true");
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+    await expect(specTab).toHaveFocus();
   }
 };
 
@@ -280,7 +281,7 @@ export const ManualActivation: Story = {
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
 
     releaseTab.focus();
-    await userEvent.keyboard("{Enter}");
+    await userEvent.keyboard("{Space}");
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Release stage.");
   }
 };
