@@ -237,6 +237,7 @@ function GuardedDismissPalette() {
         open={open}
         onOpenChange={setOpen}
         closeOnSelect={false}
+        clearQueryOnEscape={false}
         onEscapeKeyDown={(event) => {
           if (guardDismiss) {
             event.preventDefault();
@@ -256,6 +257,37 @@ function GuardedDismissPalette() {
           },
           { key: "approve", label: "Approve release" },
           { key: "reject", label: "Reject release" }
+        ]}
+      />
+    </div>
+  );
+}
+
+function EscapeClearsQueryFirstPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [query, setQuery] = React.useState("");
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Query telemetry:{" "}
+        <strong data-testid="query-value" style={{ color: "var(--aurora-text-primary)" }}>
+          {query || "N/A"}
+        </strong>
+      </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Palette state:{" "}
+        <strong data-testid="open-state" style={{ color: "var(--aurora-text-primary)" }}>
+          {open ? "open" : "closed"}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        onQueryChange={setQuery}
+        commands={[
+          { key: "publish-release", label: "Publish Release", keywords: ["release"] },
+          { key: "open-changelog", label: "Open Changelog", keywords: ["notes"] }
         ]}
       />
     </div>
@@ -388,5 +420,26 @@ export const GuardedDismissEvents: Story = {
 
     await userEvent.keyboard("{Escape}");
     await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
+  }
+};
+
+export const EscapeClearsQueryFirst: Story = {
+  render: () => <EscapeClearsQueryFirstPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "release");
+    await expect(canvas.getByTestId("query-value")).toHaveTextContent("release");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("query-value")).toHaveTextContent("N/A");
+    await expect(canvas.getByTestId("open-state")).toHaveTextContent("open");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("open-state")).toHaveTextContent("closed");
   }
 };

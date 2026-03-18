@@ -15,6 +15,7 @@ Aurora UI is a token-first React component library monorepo with accessibility-f
 - Production hardening highlights:
   - Table supports row-identity semantics via `columns[].rowHeader` (`<th scope="row">`).
   - CommandPalette and Toast both support runtime dismiss interception via event hooks (`onEscapeKeyDown`, `onPointerDownOutside`).
+  - CommandPalette now supports `clearQueryOnEscape` to clear search intent before dismissing overlay.
   - Release dry-run now writes package-size evidence into `GITHUB_STEP_SUMMARY`.
 
 ## Tech Stack

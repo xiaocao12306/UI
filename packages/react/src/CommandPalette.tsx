@@ -16,6 +16,7 @@ export type CommandPaletteProps = {
   onOpenChange: (open: boolean) => void;
   commands: CommandItem[];
   closeOnSelect?: boolean;
+  clearQueryOnEscape?: boolean;
   closeOnEscape?: boolean;
   closeOnOutsidePointer?: boolean;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
@@ -36,6 +37,7 @@ export function CommandPalette({
   onOpenChange,
   commands,
   closeOnSelect = true,
+  clearQueryOnEscape = true,
   closeOnEscape = true,
   closeOnOutsidePointer = true,
   onEscapeKeyDown,
@@ -167,6 +169,13 @@ export function CommandPalette({
             onQueryChange?.(event.target.value);
           }}
           onKeyDown={(event) => {
+            if (event.key === "Escape" && clearQueryOnEscape && query.length > 0) {
+              event.preventDefault();
+              setQuery("");
+              onQueryChange?.("");
+              return;
+            }
+
             if (event.key === "ArrowDown") {
               event.preventDefault();
               moveActiveIndex(1);

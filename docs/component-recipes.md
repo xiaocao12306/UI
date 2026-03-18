@@ -206,3 +206,27 @@ export function GuardedCommandPalette() {
   );
 }
 ```
+
+## 9) Command Palette Escape Clears Query First
+```tsx
+import * as React from "react";
+import { CommandPalette } from "@aurora-ui/react";
+
+export function SearchFirstPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [query, setQuery] = React.useState("");
+
+  return (
+    <CommandPalette
+      open={open}
+      onOpenChange={setOpen}
+      onQueryChange={setQuery}
+      clearQueryOnEscape
+      commands={[
+        { key: "publish", label: "Publish Release", keywords: ["release"] },
+        { key: "notes", label: "Open Release Notes", keywords: ["notes"] }
+      ]}
+    />
+  );
+}
+```

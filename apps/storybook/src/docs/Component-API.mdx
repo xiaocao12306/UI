@@ -484,6 +484,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `commands` | `CommandItem[]` | `disabled` commands remain visible but non-selectable. Use `textValue` for non-string labels and locale aliases. |
 | `closeOnSelect` | `boolean` | Defaults to `true`; set `false` for batch workflows that keep the palette open after each command. |
+| `clearQueryOnEscape` | `boolean` | Defaults to `true`; first Escape clears active query before dismiss is allowed, reducing accidental close during search refinement. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls whether overlay dismisses on Escape or outside pointer interactions for blocking approval flows. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | `(event) => void` | Low-level dismiss hooks; call `event.preventDefault()` for conditional approval guards while keeping default close policy enabled. |
 | `emptyMessage` | `ReactNode` | Custom empty-state guidance for no-match queries. |
@@ -499,6 +500,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={CommandPaletteStories.PersistentSelection} />
 <Canvas of={CommandPaletteStories.NonDismissible} />
 <Canvas of={CommandPaletteStories.GuardedDismissEvents} />
+<Canvas of={CommandPaletteStories.EscapeClearsQueryFirst} />
 
 ### PromptInput
 
