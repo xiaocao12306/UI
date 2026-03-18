@@ -231,6 +231,16 @@ describe("Toast", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("does not fire escape hook during IME composition", () => {
+    const onEscapeKeyDown = vi.fn();
+
+    render(<Toast open title="Composing" onEscapeKeyDown={onEscapeKeyDown} onOpenChange={() => {}} />);
+
+    fireEvent.keyDown(document, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(screen.getByRole("status", { name: "Composing" })).toBeInTheDocument();
+  });
+
   it("closes stacked toasts from top-most to oldest on Escape", () => {
     function StackedToasts() {
       const [firstOpen, setFirstOpen] = React.useState(true);
