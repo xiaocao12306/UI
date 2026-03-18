@@ -121,6 +121,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Use typed columns and stable row keys in data tables; fallback source-index keys exist for safety but explicit `rowKey` is preferred.
 - If `rowKey` uses `rowIndex`, treat it as source-data index; avoid deriving keys from sorted visual position.
 - For custom cell renderers, use `render(row, rowIndex, sourceIndex)` and pick the index intentionally (`rowIndex` for ranking UI, `sourceIndex` for source-linked IDs/telemetry).
+- Mark the primary identity column with `rowHeader` so screen readers can announce row context consistently.
 - Ensure each table has an accessible name through `caption` or `ariaLabel`; fallback `Data table` naming exists but should be treated as a safety net.
 - Prefer sortable columns with explicit `aria-sort` state for keyboard and screen-reader parity.
 - Validate sortable headers with both pointer and keyboard (`Enter`/`Space`) so non-pointer workflows stay first-class.
@@ -141,3 +142,4 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={TableStories.ReleaseChecklist} />
 <Canvas of={TableStories.SortTelemetry} />
 <Canvas of={TableStories.LocalizedSortLabels} />
+<Canvas of={TableStories.RowHeaderSemantics} />

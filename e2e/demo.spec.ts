@@ -216,12 +216,12 @@ test("toggles table loading state and disables sort controls", async ({ page }) 
   await expect(table).toHaveAttribute("aria-busy", "true");
   await expect(page.getByText("Syncing component readiness metrics...")).toBeVisible();
   await expect(table.getByRole("button", { name: "Component sort descending" })).toBeDisabled();
-  await expect(table.getByRole("cell", { name: "Button" })).toHaveCount(0);
+  await expect(table.getByRole("rowheader", { name: "Button" })).toHaveCount(0);
 
   await loadingToggle.click();
   await expect(table).not.toHaveAttribute("aria-busy");
   await expect(table.getByRole("button", { name: "Component sort descending" })).toBeEnabled();
-  await expect(table.getByRole("cell", { name: "Button" })).toBeVisible();
+  await expect(table.getByRole("rowheader", { name: "Button" })).toBeVisible();
 });
 
 test("shows empty table state and keeps sort controls disabled", async ({ page }) => {
@@ -233,10 +233,10 @@ test("shows empty table state and keeps sort controls disabled", async ({ page }
   await emptyToggle.click();
   await expect(page.getByText("No component readiness metrics yet.")).toBeVisible();
   await expect(table.getByRole("button", { name: "Component sort descending" })).toBeDisabled();
-  await expect(table.getByRole("cell", { name: "Button" })).toHaveCount(0);
+  await expect(table.getByRole("rowheader", { name: "Button" })).toHaveCount(0);
 
   await emptyToggle.click();
-  await expect(table.getByRole("cell", { name: "Button" })).toBeVisible();
+  await expect(table.getByRole("rowheader", { name: "Button" })).toBeVisible();
 });
 
 test("keeps manual tabs panel stable until Enter activation", async ({ page }) => {

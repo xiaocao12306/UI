@@ -377,7 +377,7 @@ function App() {
             loadingContent="Syncing component readiness metrics..."
             emptyContent="No component readiness metrics yet."
             columns={[
-              { key: "component", header: "Component", sortable: true },
+              { key: "component", header: "Component", sortable: true, rowHeader: true },
               { key: "status", header: "Status", sortable: true },
               { key: "coverage", header: "Coverage", sortable: true, render: (row) => `${row.coverage}%` }
             ]}

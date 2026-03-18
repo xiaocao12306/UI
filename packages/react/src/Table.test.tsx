@@ -23,6 +23,24 @@ describe("Table", () => {
     expect(screen.getByText("Dialog")).toBeInTheDocument();
   });
 
+  it("supports row-header cells for row identity semantics", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", rowHeader: true },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("rowheader", { name: "Button" })).toBeInTheDocument();
+    expect(screen.getByRole("rowheader", { name: "Dialog" })).toBeInTheDocument();
+  });
+
   it("falls back to a default accessible table name when caption and ariaLabel are absent", () => {
     render(
       <Table

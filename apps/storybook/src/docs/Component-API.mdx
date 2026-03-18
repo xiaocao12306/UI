@@ -332,6 +332,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `columns` | `TableColumn<T>[]` | `sortable` + optional `sortAccessor` for stable sorting behavior. |
+| `columns[].rowHeader` | `boolean` | Render row identity cells as `<th scope="row">` for better screen-reader row context. |
 | `columns[].render` | `(row, rowIndex, sourceIndex) => ReactNode` | `rowIndex` is sorted/visual position; `sourceIndex` preserves original data position. |
 | `data` | `T[]` | Empty arrays render `emptyContent`; ignored while `loading` is true. |
 | `rowKey` | `(row, rowIndex) => string` | Recommended stable row identity; `rowIndex` is the source-data index (not sorted visual index), so key derivation stays stable across sorting. |
@@ -348,6 +349,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={TableStories.SourceIndexRowKeyStability} />
 <Canvas of={TableStories.RenderIndexSemantics} />
 <Canvas of={TableStories.AccessibleNameWithoutCaption} />
+<Canvas of={TableStories.RowHeaderSemantics} />
 
 ### Pagination
 

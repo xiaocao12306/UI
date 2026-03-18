@@ -136,6 +136,28 @@ export const AccessibleNameFallback: Story = {
   }
 };
 
+export const RowHeaderSemantics: Story = {
+  render: () => (
+    <div style={{ width: 780 }}>
+      <Table
+        columns={[
+          { key: "component", header: "Component", rowHeader: true, sortable: true },
+          { key: "owner", header: "Owner", sortable: true },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={rows}
+        rowKey={(row) => row.id}
+        defaultSortKey="component"
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("rowheader", { name: "Button" })).toBeInTheDocument();
+    await expect(canvas.getByRole("rowheader", { name: "Dialog" })).toBeInTheDocument();
+  }
+};
+
 function SortTelemetryDemo() {
   const [sortState, setSortState] = React.useState("id asc");
 

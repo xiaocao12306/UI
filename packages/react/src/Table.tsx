@@ -8,6 +8,7 @@ export type TableColumn<T> = {
   header: React.ReactNode;
   width?: number | string;
   align?: TableAlign;
+  rowHeader?: boolean;
   render?: (row: T, rowIndex: number, sourceIndex: number) => React.ReactNode;
   sortable?: boolean;
   sortAccessor?: (row: T) => string | number | Date;
@@ -256,22 +257,32 @@ export function Table<T>({
                   key={rowKey ? rowKey(row, entry.sourceIndex) : fallbackKey}
                   style={{ background: index % 2 === 0 ? "transparent" : "var(--aurora-surface-elevated)" }}
                 >
-                {columns.map((column) => (
-                  <td
-                    key={String(column.key)}
-                    style={{
+                  {columns.map((column) => {
+                    const content = column.render
+                      ? column.render(row, index, entry.sourceIndex)
+                      : String((row as Record<string, unknown>)[String(column.key)] ?? "");
+                    const cellStyle: React.CSSProperties = {
                       padding: "10px 12px",
                       borderBottom: "1px solid var(--aurora-border-default)",
                       color: "var(--aurora-text-primary)",
                       fontSize: "var(--aurora-font-size-sm)",
                       textAlign: column.align ?? "left"
-                    }}
-                  >
-                    {column.render
-                      ? column.render(row, index, entry.sourceIndex)
-                      : String((row as Record<string, unknown>)[String(column.key)] ?? "")}
-                  </td>
-                ))}
+                    };
+
+                    if (column.rowHeader) {
+                      return (
+                        <th key={String(column.key)} scope="row" style={{ ...cellStyle, fontWeight: "var(--aurora-font-weight-medium)" }}>
+                          {content}
+                        </th>
+                      );
+                    }
+
+                    return (
+                      <td key={String(column.key)} style={cellStyle}>
+                        {content}
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             })
