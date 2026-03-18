@@ -107,6 +107,15 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   const variantStyles = variantStyleMap[variant];
   const stateStyle = interactionDisabled ? variantStyles.disabled : pressed ? variantStyles.active : hovered ? variantStyles.hover : null;
 
+  React.useEffect(() => {
+    if (!interactionDisabled) {
+      return;
+    }
+
+    setHovered(false);
+    setPressed(false);
+  }, [interactionDisabled]);
+
   return (
     <button
       ref={ref}
@@ -126,7 +135,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
           "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)",
         cursor: interactionDisabled ? "not-allowed" : "pointer",
         boxShadow: focused ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 45%, transparent)" : undefined,
-        transform: pressed ? "translateY(1px)" : undefined,
+        transform: !interactionDisabled && pressed ? "translateY(1px)" : undefined,
         opacity: interactionDisabled ? 0.72 : 1,
         ...sizeStyleMap[size],
         ...variantStyles.base,

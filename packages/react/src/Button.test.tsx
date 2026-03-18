@@ -45,4 +45,30 @@ describe("Button", () => {
     fireEvent.keyUp(button, { key: "Spacebar" });
     expect(button.getAttribute("style")).not.toContain("translateY(1px)");
   });
+
+  it("clears pressed visual state when loading toggles on", () => {
+    const { rerender } = render(<Button>Async Action</Button>);
+    const button = screen.getByRole("button", { name: "Async Action" });
+
+    fireEvent.keyDown(button, { key: " " });
+    expect(button.getAttribute("style")).toContain("translateY(1px)");
+
+    rerender(<Button loading>Async Action</Button>);
+    const loadingButton = screen.getByRole("button", { name: "Async Action" });
+    expect(loadingButton.getAttribute("style")).not.toContain("translateY(1px)");
+    expect(loadingButton).toHaveAttribute("data-loading", "true");
+  });
+
+  it("clears pressed visual state when disabled toggles on", () => {
+    const { rerender } = render(<Button>Disable During Press</Button>);
+    const button = screen.getByRole("button", { name: "Disable During Press" });
+
+    fireEvent.keyDown(button, { key: "Enter" });
+    expect(button.getAttribute("style")).toContain("translateY(1px)");
+
+    rerender(<Button disabled>Disable During Press</Button>);
+    const disabledButton = screen.getByRole("button", { name: "Disable During Press" });
+    expect(disabledButton.getAttribute("style")).not.toContain("translateY(1px)");
+    expect(disabledButton).toBeDisabled();
+  });
 });
