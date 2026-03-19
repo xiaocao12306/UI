@@ -74,10 +74,18 @@ const mutedBodyStyle: React.CSSProperties = {
   fontSize: 14,
   lineHeight: 1.55
 };
-const sectionSubheadingStyle: React.CSSProperties = { margin: 0, fontSize: 16, letterSpacing: "0.01em" };
+const sectionSubheadingStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 16,
+  letterSpacing: "0.01em"
+};
 const sectionStyle: React.CSSProperties = { display: "grid", gap: 12, scrollMarginTop: 84 };
 const sectionHeaderStyle: React.CSSProperties = { display: "grid", gap: 6 };
-const sectionHeadingRowStyle: React.CSSProperties = { display: "flex", alignItems: "center", gap: 10 };
+const sectionHeadingRowStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 10
+};
 const sectionEyebrowStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 11,
@@ -87,7 +95,8 @@ const sectionEyebrowStyle: React.CSSProperties = {
   padding: "3px 10px",
   borderRadius: 999,
   border: "1px solid color-mix(in srgb, var(--aurora-border-default) 72%, transparent)",
-  background: "color-mix(in srgb, var(--aurora-surface-elevated) 82%, var(--aurora-surface-default))"
+  background:
+    "color-mix(in srgb, var(--aurora-surface-elevated) 82%, var(--aurora-surface-default))"
 };
 const sectionCardStyle: React.CSSProperties = {
   border: "1px solid color-mix(in srgb, var(--aurora-border-default) 82%, transparent)",
@@ -124,7 +133,8 @@ const mainLayoutStyle: React.CSSProperties = {
 const heroPanelStyle: React.CSSProperties = {
   display: "grid",
   gap: 18,
-  border: "1px solid color-mix(in srgb, var(--aurora-accent-default) 30%, var(--aurora-border-default))",
+  border:
+    "1px solid color-mix(in srgb, var(--aurora-accent-default) 30%, var(--aurora-border-default))",
   borderRadius: "var(--aurora-radius-lg)",
   background:
     "radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--aurora-accent-default) 16%, transparent), transparent 45%), linear-gradient(180deg, var(--aurora-surface-elevated), color-mix(in srgb, var(--aurora-surface-elevated) 70%, var(--aurora-surface-default) 30%))",
@@ -146,7 +156,11 @@ const heroLabelStyle: React.CSSProperties = {
   textTransform: "uppercase",
   color: "var(--aurora-text-secondary)"
 };
-const heroTitleStyle: React.CSSProperties = { margin: 0, fontSize: "clamp(28px, 4vw, 38px)", letterSpacing: "-0.03em" };
+const heroTitleStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: "clamp(28px, 4vw, 38px)",
+  letterSpacing: "-0.03em"
+};
 const heroOverviewStyle: React.CSSProperties = {
   display: "grid",
   gap: 12,
@@ -161,7 +175,8 @@ const heroContextCardStyle: React.CSSProperties = {
   alignContent: "start",
   border: "1px solid color-mix(in srgb, var(--aurora-border-default) 84%, transparent)",
   borderRadius: "var(--aurora-radius-md)",
-  background: "color-mix(in srgb, var(--aurora-surface-elevated) 90%, var(--aurora-surface-default))",
+  background:
+    "color-mix(in srgb, var(--aurora-surface-elevated) 90%, var(--aurora-surface-default))",
   boxShadow: "var(--aurora-shadow-sm)",
   padding: "10px 12px"
 };
@@ -172,7 +187,11 @@ const heroContextLabelStyle: React.CSSProperties = {
   letterSpacing: "0.1em",
   color: "var(--aurora-text-secondary)"
 };
-const heroContextValueStyle: React.CSSProperties = { margin: 0, fontSize: 16, letterSpacing: "-0.01em" };
+const heroContextValueStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 16,
+  letterSpacing: "-0.01em"
+};
 const heroContextMetaStyle: React.CSSProperties = { ...mutedBodyStyle, fontSize: 13 };
 const sectionNavShellStyle: React.CSSProperties = { display: "grid", gap: 8 };
 const sectionNavLabelStyle: React.CSSProperties = {
@@ -189,7 +208,8 @@ const sectionNavStyle: React.CSSProperties = {
   padding: 10,
   border: "1px solid color-mix(in srgb, var(--aurora-border-default) 80%, transparent)",
   borderRadius: "var(--aurora-radius-md)",
-  background: "color-mix(in srgb, var(--aurora-surface-elevated) 92%, var(--aurora-surface-default))",
+  background:
+    "color-mix(in srgb, var(--aurora-surface-elevated) 92%, var(--aurora-surface-default))",
   backdropFilter: "blur(4px)"
 };
 const keyboardHintStyle: React.CSSProperties = {
@@ -205,7 +225,8 @@ const heroStatsGridStyle: React.CSSProperties = {
 };
 const heroStatCardStyle: React.CSSProperties = {
   borderRadius: "var(--aurora-radius-md)",
-  background: "color-mix(in srgb, var(--aurora-surface-elevated) 92%, var(--aurora-surface-default))",
+  background:
+    "color-mix(in srgb, var(--aurora-surface-elevated) 92%, var(--aurora-surface-default))",
   padding: "10px 12px",
   display: "grid",
   gap: 4
@@ -264,10 +285,18 @@ function Section({
           <p style={sectionEyebrowStyle}>{id.replaceAll("-", " ")}</p>
           <span aria-hidden="true" className="demo-section-heading-rule" />
         </div>
-        <h2 id={headingId} style={{ margin: 0, fontSize: "clamp(21px, 2.1vw, 24px)", letterSpacing: "-0.015em" }}>
+        <h2
+          id={headingId}
+          className="demo-section-title"
+          style={{ margin: 0, fontSize: "clamp(21px, 2.1vw, 24px)", letterSpacing: "-0.015em" }}
+        >
           {title}
         </h2>
-        {description ? <p style={mutedBodyStyle}>{description}</p> : null}
+        {description ? (
+          <p className="demo-section-description" style={mutedBodyStyle}>
+            {description}
+          </p>
+        ) : null}
       </header>
       <div className="demo-section-card" style={sectionCardStyle}>
         {children}
@@ -390,7 +419,9 @@ function App() {
   const [actionToastHandledCount, setActionToastHandledCount] = React.useState(0);
   const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
-  const [submittedPrompt, setSubmittedPrompt] = React.useState("Build a minimal auth flow with OTP fallback");
+  const [submittedPrompt, setSubmittedPrompt] = React.useState(
+    "Build a minimal auth flow with OTP fallback"
+  );
   const [framework, setFramework] = React.useState("react");
   const [releaseDate, setReleaseDate] = React.useState("2026-03-17");
   const [feedPage, setFeedPage] = React.useState(1);
@@ -554,7 +585,9 @@ function App() {
 
   const handleDropdownCloseReason = React.useCallback((reason: string) => {
     setDropdownCloseReason(reason);
-    setDropdownCloseTrace((current) => (current === "select" ? `select -> reason:${reason}` : `reason:${reason}`));
+    setDropdownCloseTrace((current) =>
+      current === "select" ? `select -> reason:${reason}` : `reason:${reason}`
+    );
   }, []);
 
   const handlePaletteOpenChange = React.useCallback((nextOpen: boolean) => {
@@ -572,7 +605,9 @@ function App() {
 
   const handlePaletteCloseReason = React.useCallback((reason: string) => {
     setPaletteCloseReason(reason);
-    setPaletteCloseTrace((current) => (current === "select" ? `select -> reason:${reason}` : `reason:${reason}`));
+    setPaletteCloseTrace((current) =>
+      current === "select" ? `select -> reason:${reason}` : `reason:${reason}`
+    );
   }, []);
 
   const handleToastTelemetryOpenChange = React.useCallback((nextOpen: boolean) => {
@@ -601,10 +636,12 @@ function App() {
           <header className="demo-hero" style={heroPanelStyle}>
             <div style={heroHeadlineStyle}>
               <div style={heroTitleBlockStyle}>
-                <p style={heroLabelStyle}>
+                <p className="demo-hero-kicker" style={heroLabelStyle}>
                   Production React UI Library
                 </p>
-                <h1 style={heroTitleStyle}>Aurora UI Demo</h1>
+                <h1 className="demo-hero-title" style={heroTitleStyle}>
+                  Aurora UI Demo
+                </h1>
               </div>
               <div className="demo-hero-theme-control">
                 <label htmlFor="theme-select" className="demo-hero-theme-label">
@@ -629,8 +666,9 @@ function App() {
             </div>
             <div className="demo-hero-overview" style={heroOverviewStyle}>
               <div style={heroOverviewCopyStyle}>
-                <p style={{ ...mutedBodyStyle, maxWidth: 820 }}>
-                  Token-first React component library with AI interaction patterns. Current theme: <strong>{theme}</strong>
+                <p className="demo-hero-summary" style={{ ...mutedBodyStyle, maxWidth: 820 }}>
+                  Token-first React component library with AI interaction patterns. Current theme:{" "}
+                  <strong>{theme}</strong>
                 </p>
                 <div className="demo-hero-badge-row" style={heroBadgeRowStyle}>
                   <Badge tone="success">Production-ready interactions</Badge>
@@ -639,10 +677,16 @@ function App() {
                   <Tag>Overlay + AI ready</Tag>
                 </div>
               </div>
-              <aside aria-label="Delivery focus" style={heroContextCardStyle}>
+              <aside
+                className="demo-hero-context"
+                aria-label="Delivery focus"
+                style={heroContextCardStyle}
+              >
                 <p style={heroContextLabelStyle}>Delivery Focus</p>
                 <p style={heroContextValueStyle}>Production Refinement</p>
-                <p style={heroContextMetaStyle}>A11y parity, interaction resilience, docs quality, and release confidence.</p>
+                <p style={heroContextMetaStyle}>
+                  A11y parity, interaction resilience, docs quality, and release confidence.
+                </p>
               </aside>
             </div>
             <div style={heroStatsGridStyle}>
@@ -699,7 +743,10 @@ function App() {
               <div className="demo-panel">
                 <div className="demo-panel-header">
                   <h3 style={panelTitleStyle}>Brand Token Snapshot</h3>
-                  <p style={panelDescriptionStyle}>Primary actions, status badges, and semantic tags should read consistently across themes.</p>
+                  <p style={panelDescriptionStyle}>
+                    Primary actions, status badges, and semantic tags should read consistently
+                    across themes.
+                  </p>
                 </div>
                 <div className="demo-action-row">
                   <Button>Primary</Button>
@@ -715,10 +762,18 @@ function App() {
                 <div className="demo-panel">
                   <div className="demo-panel-header">
                     <h3 style={panelTitleStyle}>Form Foundations</h3>
-                    <p style={panelDescriptionStyle}>Inputs are grouped as a production workflow instead of isolated component fragments.</p>
+                    <p style={panelDescriptionStyle}>
+                      Inputs are grouped as a production workflow instead of isolated component
+                      fragments.
+                    </p>
                   </div>
                   <div className="demo-form-grid">
-                    <FormField label="Email" htmlFor="email" required description="Used for release notifications.">
+                    <FormField
+                      label="Email"
+                      htmlFor="email"
+                      required
+                      description="Used for release notifications."
+                    >
                       <Input id="email" placeholder="name@company.com" />
                     </FormField>
                     <FormField label="Message" htmlFor="message">
@@ -731,7 +786,11 @@ function App() {
                         <option value="svelte">Svelte</option>
                       </Select>
                     </FormField>
-                    <FormField label="Framework Combobox" htmlFor="framework-combobox" description={`Current selection: ${framework}`}>
+                    <FormField
+                      label="Framework Combobox"
+                      htmlFor="framework-combobox"
+                      description={`Current selection: ${framework}`}
+                    >
                       <Combobox
                         id="framework-combobox"
                         ariaLabel="Framework Combobox"
@@ -740,7 +799,11 @@ function App() {
                         onValueChange={setFramework}
                       />
                     </FormField>
-                    <FormField label="Release Date" htmlFor="release-date" description={`Selected date: ${releaseDate}`}>
+                    <FormField
+                      label="Release Date"
+                      htmlFor="release-date"
+                      description={`Selected date: ${releaseDate}`}
+                    >
                       <DatePicker
                         id="release-date"
                         aria-label="Release Date"
@@ -755,7 +818,10 @@ function App() {
                 <div className="demo-panel">
                   <div className="demo-panel-header">
                     <h3 style={panelTitleStyle}>Preference Controls</h3>
-                    <p style={panelDescriptionStyle}>Selection controls are shown as policy toggles commonly used in production settings.</p>
+                    <p style={panelDescriptionStyle}>
+                      Selection controls are shown as policy toggles commonly used in production
+                      settings.
+                    </p>
                   </div>
                   <div className="demo-control-stack">
                     <Checkbox label="Enable analytics" defaultChecked />
@@ -789,15 +855,30 @@ function App() {
               <div className="demo-panel">
                 <div className="demo-panel-header">
                   <h3 style={panelTitleStyle}>Navigation Baseline</h3>
-                  <p style={panelDescriptionStyle}>Default tabs are presented as a product summary strip with visible selection telemetry.</p>
+                  <p style={panelDescriptionStyle}>
+                    Default tabs are presented as a product summary strip with visible selection
+                    telemetry.
+                  </p>
                 </div>
                 <Tabs
                   value={topTabsValue}
                   onValueChange={setTopTabsValue}
                   items={[
-                    { key: "overview", label: "Overview", content: <p style={{ margin: 0 }}>Project health and adoption summary.</p> },
-                    { key: "activity", label: "Activity", content: <p style={{ margin: 0 }}>Recent events, deploys, and alerts.</p> },
-                    { key: "settings", label: "Settings", content: <p style={{ margin: 0 }}>Theme, access control, and preferences.</p> }
+                    {
+                      key: "overview",
+                      label: "Overview",
+                      content: <p style={{ margin: 0 }}>Project health and adoption summary.</p>
+                    },
+                    {
+                      key: "activity",
+                      label: "Activity",
+                      content: <p style={{ margin: 0 }}>Recent events, deploys, and alerts.</p>
+                    },
+                    {
+                      key: "settings",
+                      label: "Settings",
+                      content: <p style={{ margin: 0 }}>Theme, access control, and preferences.</p>
+                    }
                   ]}
                 />
                 <div className="demo-telemetry-grid">
@@ -813,31 +894,67 @@ function App() {
                 <div className="demo-panel">
                   <h3 style={sectionSubheadingStyle}>Manual Activation Tabs</h3>
                   <p style={mutedBodyStyle}>
-                    Arrow keys move focus only; press Enter or Space to activate and render the target panel.
+                    Arrow keys move focus only; press Enter or Space to activate and render the
+                    target panel.
                   </p>
                   <Tabs
                     ariaLabel="Manual release workflow tabs"
                     activationMode="manual"
                     defaultValue="draft"
                     items={[
-                      { key: "draft", label: "Draft", content: <p style={{ margin: 0 }}>Draft checklist and scoped API notes.</p> },
-                      { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-team review and accessibility signoff.</p> },
-                      { key: "ship", label: "Ship", content: <p style={{ margin: 0 }}>Tag release, publish packages, and announce changelog.</p> }
+                      {
+                        key: "draft",
+                        label: "Draft",
+                        content: <p style={{ margin: 0 }}>Draft checklist and scoped API notes.</p>
+                      },
+                      {
+                        key: "review",
+                        label: "Review",
+                        content: (
+                          <p style={{ margin: 0 }}>Cross-team review and accessibility signoff.</p>
+                        )
+                      },
+                      {
+                        key: "ship",
+                        label: "Ship",
+                        content: (
+                          <p style={{ margin: 0 }}>
+                            Tag release, publish packages, and announce changelog.
+                          </p>
+                        )
+                      }
                     ]}
                   />
                 </div>
                 <div dir="rtl" className="demo-panel">
                   <h3 style={sectionSubheadingStyle}>RTL Direction Tabs</h3>
                   <p style={mutedBodyStyle}>
-                    In RTL layouts, ArrowRight moves to the previous tab and ArrowLeft moves to the next tab.
+                    In RTL layouts, ArrowRight moves to the previous tab and ArrowLeft moves to the
+                    next tab.
                   </p>
                   <Tabs
                     ariaLabel="RTL release workflow tabs"
                     defaultValue="spec"
                     items={[
-                      { key: "spec", label: "Spec", content: <p style={{ margin: 0 }}>Specification scope and API contracts.</p> },
-                      { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-functional review and QA checkpoints.</p> },
-                      { key: "release", label: "Release", content: <p style={{ margin: 0 }}>Release checklist and rollout sequencing.</p> }
+                      {
+                        key: "spec",
+                        label: "Spec",
+                        content: <p style={{ margin: 0 }}>Specification scope and API contracts.</p>
+                      },
+                      {
+                        key: "review",
+                        label: "Review",
+                        content: (
+                          <p style={{ margin: 0 }}>Cross-functional review and QA checkpoints.</p>
+                        )
+                      },
+                      {
+                        key: "release",
+                        label: "Release",
+                        content: (
+                          <p style={{ margin: 0 }}>Release checklist and rollout sequencing.</p>
+                        )
+                      }
                     ]}
                   />
                 </div>
@@ -851,16 +968,29 @@ function App() {
                     orientation="vertical"
                     defaultValue="backlog"
                     items={[
-                      { key: "backlog", label: "Backlog", content: <p style={{ margin: 0 }}>Backlog scope and release intent.</p> },
-                      { key: "in-progress", label: "In Progress", content: <p style={{ margin: 0 }}>Implementation and QA checkpoints.</p> },
-                      { key: "completed", label: "Completed", content: <p style={{ margin: 0 }}>Ready for release notes and rollout.</p> }
+                      {
+                        key: "backlog",
+                        label: "Backlog",
+                        content: <p style={{ margin: 0 }}>Backlog scope and release intent.</p>
+                      },
+                      {
+                        key: "in-progress",
+                        label: "In Progress",
+                        content: <p style={{ margin: 0 }}>Implementation and QA checkpoints.</p>
+                      },
+                      {
+                        key: "completed",
+                        label: "Completed",
+                        content: <p style={{ margin: 0 }}>Ready for release notes and rollout.</p>
+                      }
                     ]}
                   />
                 </div>
                 <div className="demo-panel">
                   <h3 style={sectionSubheadingStyle}>Manual Vertical Tabs</h3>
                   <p style={mutedBodyStyle}>
-                    In manual vertical mode, ArrowUp/ArrowDown move focus only; Enter or Space activates the focused stage.
+                    In manual vertical mode, ArrowUp/ArrowDown move focus only; Enter or Space
+                    activates the focused stage.
                   </p>
                   <Tabs
                     ariaLabel="Manual vertical release tabs"
@@ -868,25 +998,52 @@ function App() {
                     activationMode="manual"
                     defaultValue="backlog"
                     items={[
-                      { key: "backlog", label: "Backlog", content: <p style={{ margin: 0 }}>Backlog scope and release intent.</p> },
-                      { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Review and signoff notes.</p>, disabled: true },
-                      { key: "ship", label: "Ship", content: <p style={{ margin: 0 }}>Ship checklist and release notes.</p> }
+                      {
+                        key: "backlog",
+                        label: "Backlog",
+                        content: <p style={{ margin: 0 }}>Backlog scope and release intent.</p>
+                      },
+                      {
+                        key: "review",
+                        label: "Review",
+                        content: <p style={{ margin: 0 }}>Review and signoff notes.</p>,
+                        disabled: true
+                      },
+                      {
+                        key: "ship",
+                        label: "Ship",
+                        content: <p style={{ margin: 0 }}>Ship checklist and release notes.</p>
+                      }
                     ]}
                   />
                 </div>
                 <div className="demo-panel">
                   <h3 style={sectionSubheadingStyle}>No-Loop Keyboard Boundaries</h3>
                   <p style={mutedBodyStyle}>
-                    With <code>loop=false</code>, Arrow keys stop at the first/last enabled tab and still skip disabled items.
+                    With <code>loop=false</code>, Arrow keys stop at the first/last enabled tab and
+                    still skip disabled items.
                   </p>
                   <Tabs
                     ariaLabel="No-loop release tabs"
                     loop={false}
                     defaultValue="draft"
                     items={[
-                      { key: "draft", label: "Draft", content: <p style={{ margin: 0 }}>Draft scope and implementation notes.</p> },
-                      { key: "review", label: "Review", content: <p style={{ margin: 0 }}>Cross-team review and signoff.</p>, disabled: true },
-                      { key: "release", label: "Release", content: <p style={{ margin: 0 }}>Release train and rollout sequencing.</p> }
+                      {
+                        key: "draft",
+                        label: "Draft",
+                        content: <p style={{ margin: 0 }}>Draft scope and implementation notes.</p>
+                      },
+                      {
+                        key: "review",
+                        label: "Review",
+                        content: <p style={{ margin: 0 }}>Cross-team review and signoff.</p>,
+                        disabled: true
+                      },
+                      {
+                        key: "release",
+                        label: "Release",
+                        content: <p style={{ margin: 0 }}>Release train and rollout sequencing.</p>
+                      }
                     ]}
                   />
                 </div>
@@ -895,7 +1052,10 @@ function App() {
                 <div className="demo-panel">
                   <div className="demo-panel-header">
                     <h3 style={panelTitleStyle}>Readiness Table</h3>
-                    <p style={panelDescriptionStyle}>Sortable readiness data paired with state toggles for loading and empty branches.</p>
+                    <p style={panelDescriptionStyle}>
+                      Sortable readiness data paired with state toggles for loading and empty
+                      branches.
+                    </p>
                   </div>
                   <Table
                     caption="Component readiness metrics"
@@ -907,7 +1067,12 @@ function App() {
                     columns={[
                       { key: "component", header: "Component", sortable: true, rowHeader: true },
                       { key: "status", header: "Status", sortable: true },
-                      { key: "coverage", header: "Coverage", sortable: true, render: (row) => `${row.coverage}%` }
+                      {
+                        key: "coverage",
+                        header: "Coverage",
+                        sortable: true,
+                        render: (row) => `${row.coverage}%`
+                      }
                     ]}
                     data={tableRows}
                   />
@@ -931,7 +1096,10 @@ function App() {
                 <div className="demo-panel">
                   <div className="demo-panel-header">
                     <h3 style={panelTitleStyle}>Release Activity Feed</h3>
-                    <p style={panelDescriptionStyle}>Chronological activity feed with compact pagination to mimic a product dashboard lane.</p>
+                    <p style={panelDescriptionStyle}>
+                      Chronological activity feed with compact pagination to mimic a product
+                      dashboard lane.
+                    </p>
                   </div>
                   <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 6 }}>
                     {visibleFeed.map((entry) => (
@@ -951,7 +1119,8 @@ function App() {
               <div dir="rtl" className="demo-panel">
                 <h3 style={sectionSubheadingStyle}>RTL Pagination</h3>
                 <p style={mutedBodyStyle}>
-                  In RTL layouts, ArrowRight moves to the previous page and ArrowLeft moves to the next page.
+                  In RTL layouts, ArrowRight moves to the previous page and ArrowLeft moves to the
+                  next page.
                 </p>
                 <p style={mutedBodyStyle}>
                   Current RTL page:{" "}
@@ -978,7 +1147,10 @@ function App() {
               <div className="demo-panel">
                 <div className="demo-panel-header">
                   <h3 style={panelTitleStyle}>Notification States</h3>
-                  <p style={panelDescriptionStyle}>Toast variants are grouped as an operator control board with explicit branch triggers.</p>
+                  <p style={panelDescriptionStyle}>
+                    Toast variants are grouped as an operator control board with explicit branch
+                    triggers.
+                  </p>
                 </div>
                 <Alert title="Network recovered" tone="success">
                   All queued jobs were synchronized.
@@ -1007,7 +1179,10 @@ function App() {
               <div className="demo-panel">
                 <div className="demo-panel-header">
                   <h3 style={panelTitleStyle}>Toast Diagnostics</h3>
-                  <p style={panelDescriptionStyle}>Guard toggles and telemetry are surfaced together for faster behavior verification.</p>
+                  <p style={panelDescriptionStyle}>
+                    Guard toggles and telemetry are surfaced together for faster behavior
+                    verification.
+                  </p>
                 </div>
                 <Switch
                   checked={toastEscapeGuard}
@@ -1039,7 +1214,10 @@ function App() {
               <div className="demo-two-column">
                 <div className="demo-panel">
                   <h3 style={panelTitleStyle}>Loading Surfaces</h3>
-                  <p style={panelDescriptionStyle}>Progress and skeleton placeholders show state transitions in a compact, scannable column.</p>
+                  <p style={panelDescriptionStyle}>
+                    Progress and skeleton placeholders show state transitions in a compact,
+                    scannable column.
+                  </p>
                   <Progress value={62} />
                   <div style={{ display: "grid", gap: 8, maxWidth: 320 }}>
                     <Skeleton height={14} />
@@ -1049,8 +1227,15 @@ function App() {
                 </div>
                 <div className="demo-panel">
                   <h3 style={panelTitleStyle}>Empty And Streaming</h3>
-                  <p style={panelDescriptionStyle}>No-data messaging and live feedback are paired to reflect a real request lifecycle.</p>
-                  <Empty title="No records found" description="Create your first workflow to start collecting events." action={<Button>Create workflow</Button>} />
+                  <p style={panelDescriptionStyle}>
+                    No-data messaging and live feedback are paired to reflect a real request
+                    lifecycle.
+                  </p>
+                  <Empty
+                    title="No records found"
+                    description="Create your first workflow to start collecting events."
+                    action={<Button>Create workflow</Button>}
+                  />
                   <LoadingDots />
                   <StreamingText text="Streaming response in progress..." />
                 </div>
@@ -1067,7 +1252,10 @@ function App() {
               <div className="demo-panel">
                 <div className="demo-panel-header">
                   <h3 style={panelTitleStyle}>Overlay Launchers</h3>
-                  <p style={panelDescriptionStyle}>Core overlay entries are grouped as a single action rail for rapid interaction checks.</p>
+                  <p style={panelDescriptionStyle}>
+                    Core overlay entries are grouped as a single action rail for rapid interaction
+                    checks.
+                  </p>
                 </div>
                 <div className="demo-action-row">
                   <Tooltip content="Runs a dry-run build">
@@ -1085,7 +1273,11 @@ function App() {
                     onOpenChange={handleDropdownOpenChange}
                     onCloseReason={handleDropdownCloseReason}
                     items={[
-                      { key: "a", label: "Duplicate", onSelect: () => setDropdownCloseTrace("select") },
+                      {
+                        key: "a",
+                        label: "Duplicate",
+                        onSelect: () => setDropdownCloseTrace("select")
+                      },
                       { key: "b", label: "Archive" },
                       { key: "c", label: "Delete" }
                     ]}
@@ -1099,16 +1291,25 @@ function App() {
                   </Button>
                 </div>
                 <div style={{ display: "grid", gap: 6, maxWidth: 320, marginTop: 72 }}>
-                  <label htmlFor="overlay-outside-target" style={{ color: "var(--aurora-text-secondary)", fontSize: 14 }}>
+                  <label
+                    htmlFor="overlay-outside-target"
+                    style={{ color: "var(--aurora-text-secondary)", fontSize: 14 }}
+                  >
                     Overlay outside focus target
                   </label>
-                  <Input id="overlay-outside-target" placeholder="Click here to validate outside-dismiss focus." />
+                  <Input
+                    id="overlay-outside-target"
+                    placeholder="Click here to validate outside-dismiss focus."
+                  />
                 </div>
               </div>
               <div className="demo-panel">
                 <div className="demo-panel-header">
                   <h3 style={panelTitleStyle}>Overlay Dismiss Telemetry</h3>
-                  <p style={panelDescriptionStyle}>Close reasons are consolidated into a diagnostics rail for faster regression spotting.</p>
+                  <p style={panelDescriptionStyle}>
+                    Close reasons are consolidated into a diagnostics rail for faster regression
+                    spotting.
+                  </p>
                 </div>
                 <div className="demo-telemetry-grid">
                   <p style={mutedBodyStyle}>
@@ -1164,21 +1365,14 @@ function App() {
               <div className="demo-panel">
                 <div className="demo-panel-header">
                   <h3 style={panelTitleStyle}>Command Palette Policy Controls</h3>
-                  <p style={panelDescriptionStyle}>Keyboard hints, guard toggles, and telemetry live in one place to reduce operator context switching.</p>
+                  <p style={panelDescriptionStyle}>
+                    Keyboard hints, guard toggles, and telemetry live in one place to reduce
+                    operator context switching.
+                  </p>
                 </div>
                 <p style={mutedBodyStyle}>
-                  Keyboard shortcut: press{" "}
-                  <kbd style={keyboardHintStyle}>
-                    Ctrl
-                  </kbd>
-                  /
-                  <kbd style={keyboardHintStyle}>
-                    Cmd
-                  </kbd>{" "}
-                  +{" "}
-                  <kbd style={keyboardHintStyle}>
-                    K
-                  </kbd>{" "}
+                  Keyboard shortcut: press <kbd style={keyboardHintStyle}>Ctrl</kbd>/
+                  <kbd style={keyboardHintStyle}>Cmd</kbd> + <kbd style={keyboardHintStyle}>K</kbd>{" "}
                   to open Command Palette.
                 </p>
                 <div className="demo-control-stack">
@@ -1216,7 +1410,10 @@ function App() {
                   </p>
                   <p style={mutedBodyStyle}>
                     Palette close reason telemetry:{" "}
-                    <strong data-testid="palette-close-reason-telemetry" style={telemetryValueStyle}>
+                    <strong
+                      data-testid="palette-close-reason-telemetry"
+                      style={telemetryValueStyle}
+                    >
                       {paletteCloseReason}
                     </strong>
                   </p>
@@ -1235,13 +1432,20 @@ function App() {
             </div>
           </Section>
 
-          <Section id="ai-components" title="AI Components" description="Prompt, reasoning, and streaming response building blocks.">
+          <Section
+            id="ai-components"
+            title="AI Components"
+            description="Prompt, reasoning, and streaming response building blocks."
+          >
             <div className="demo-section-stack">
               <div className="demo-two-column">
                 <div className="demo-panel">
                   <div className="demo-panel-header">
                     <h3 style={panelTitleStyle}>Prompt Intake</h3>
-                    <p style={panelDescriptionStyle}>Prompt entry and live conversation are grouped as one customer-facing interaction lane.</p>
+                    <p style={panelDescriptionStyle}>
+                      Prompt entry and live conversation are grouped as one customer-facing
+                      interaction lane.
+                    </p>
                   </div>
                   <PromptInput
                     onSubmit={(prompt) => {
@@ -1252,14 +1456,20 @@ function App() {
                   <div style={{ display: "grid", gap: 10 }}>
                     <MessageBubble speaker="user">{submittedPrompt}</MessageBubble>
                     <MessageBubble speaker="assistant">
-                      <StreamingText text="I can scaffold this flow with form validation and fallback rate-limiting." speed={12} />
+                      <StreamingText
+                        text="I can scaffold this flow with form validation and fallback rate-limiting."
+                        speed={12}
+                      />
                     </MessageBubble>
                   </div>
                 </div>
                 <div className="demo-panel">
                   <div className="demo-panel-header">
                     <h3 style={panelTitleStyle}>Reasoning And Output</h3>
-                    <p style={panelDescriptionStyle}>Model reasoning trail and generated code appear together to reflect productized AI responses.</p>
+                    <p style={panelDescriptionStyle}>
+                      Model reasoning trail and generated code appear together to reflect
+                      productized AI responses.
+                    </p>
                   </div>
                   <ReasoningPanel
                     steps={[
@@ -1280,164 +1490,164 @@ function App() {
             </div>
           </Section>
 
-        <Dialog
-          open={dialogOpen}
-          onOpenChange={handleDialogOpenChange}
-          onCloseReason={handleDialogCloseReason}
-          title="Dialog Example"
-        >
-          <p style={{ margin: 0 }}>Modal built with FocusScope + DismissableLayer.</p>
-        </Dialog>
+          <Dialog
+            open={dialogOpen}
+            onOpenChange={handleDialogOpenChange}
+            onCloseReason={handleDialogCloseReason}
+            title="Dialog Example"
+          >
+            <p style={{ margin: 0 }}>Modal built with FocusScope + DismissableLayer.</p>
+          </Dialog>
 
-        <Drawer
-          open={drawerOpen}
-          onOpenChange={handleDrawerOpenChange}
-          title="Drawer Example"
-          description="Contextual panel for filters, details, and quick actions."
-          onCloseReason={handleDrawerCloseReason}
-        >
-          <p style={{ margin: 0 }}>This drawer can host contextual forms, filters, or details.</p>
-        </Drawer>
+          <Drawer
+            open={drawerOpen}
+            onOpenChange={handleDrawerOpenChange}
+            title="Drawer Example"
+            description="Contextual panel for filters, details, and quick actions."
+            onCloseReason={handleDrawerCloseReason}
+          >
+            <p style={{ margin: 0 }}>This drawer can host contextual forms, filters, or details.</p>
+          </Drawer>
 
-        <CommandPalette
-          open={paletteOpen}
-          onOpenChange={handlePaletteOpenChange}
-          closeOnSelect={!palettePersistent}
-          clearQueryOnEscape={paletteEscapeClearsQuery}
-          closeOnEscape={!paletteBlocking}
-          closeOnOutsidePointer={!paletteBlocking}
-          onQueryChange={setPaletteQueryTelemetry}
-          onCloseReason={handlePaletteCloseReason}
-          onEscapeKeyDown={(event) => {
-            if (paletteDismissGuard) {
-              event.preventDefault();
-            }
-          }}
-          onPointerDownOutside={(event) => {
-            if (paletteDismissGuard) {
-              event.preventDefault();
-            }
-          }}
-          commands={[
-            { key: "open-settings", label: "Open Settings", keywords: ["preferences", "config"] },
-            {
-              key: "open-dialog",
-              label: "Open Dialog",
-              keywords: ["modal", "overlay"],
-              onSelect: () => {
-                setPaletteCloseTrace("select");
-                setDialogOpen(true);
+          <CommandPalette
+            open={paletteOpen}
+            onOpenChange={handlePaletteOpenChange}
+            closeOnSelect={!palettePersistent}
+            clearQueryOnEscape={paletteEscapeClearsQuery}
+            closeOnEscape={!paletteBlocking}
+            closeOnOutsidePointer={!paletteBlocking}
+            onQueryChange={setPaletteQueryTelemetry}
+            onCloseReason={handlePaletteCloseReason}
+            onEscapeKeyDown={(event) => {
+              if (paletteDismissGuard) {
+                event.preventDefault();
               }
-            },
-            {
-              key: "open-drawer",
-              label: "Open Drawer",
-              keywords: ["panel", "sidebar"],
-              onSelect: () => {
-                setPaletteCloseTrace("select");
-                setDrawerOpen(true);
+            }}
+            onPointerDownOutside={(event) => {
+              if (paletteDismissGuard) {
+                event.preventDefault();
               }
-            },
-            {
-              key: "create-project",
-              label: "Create Project",
-              keywords: ["new", "workspace"],
-              onSelect: () => {
-                setPaletteCloseTrace("select");
-                setToastOpen(true);
-              }
-            },
-            {
-              key: "archive-workspace",
-              label: "Archive Workspace",
-              keywords: ["archive", "lock"],
-              disabled: true
-            },
-            { key: "run-tests", label: "Run Tests", keywords: ["ci", "quality"] }
-          ]}
-        />
+            }}
+            commands={[
+              { key: "open-settings", label: "Open Settings", keywords: ["preferences", "config"] },
+              {
+                key: "open-dialog",
+                label: "Open Dialog",
+                keywords: ["modal", "overlay"],
+                onSelect: () => {
+                  setPaletteCloseTrace("select");
+                  setDialogOpen(true);
+                }
+              },
+              {
+                key: "open-drawer",
+                label: "Open Drawer",
+                keywords: ["panel", "sidebar"],
+                onSelect: () => {
+                  setPaletteCloseTrace("select");
+                  setDrawerOpen(true);
+                }
+              },
+              {
+                key: "create-project",
+                label: "Create Project",
+                keywords: ["new", "workspace"],
+                onSelect: () => {
+                  setPaletteCloseTrace("select");
+                  setToastOpen(true);
+                }
+              },
+              {
+                key: "archive-workspace",
+                label: "Archive Workspace",
+                keywords: ["archive", "lock"],
+                disabled: true
+              },
+              { key: "run-tests", label: "Run Tests", keywords: ["ci", "quality"] }
+            ]}
+          />
 
-        <Toast
-          open={toastOpen}
-          onClose={() => setToastOpen(false)}
-          title="Prompt submitted"
-          description="Your AI request is now in the queue."
-          onEscapeKeyDown={(event) => {
-            if (toastEscapeGuard) {
-              event.preventDefault();
+          <Toast
+            open={toastOpen}
+            onClose={() => setToastOpen(false)}
+            title="Prompt submitted"
+            description="Your AI request is now in the queue."
+            onEscapeKeyDown={(event) => {
+              if (toastEscapeGuard) {
+                event.preventDefault();
+              }
+            }}
+          />
+          <Toast
+            open={toastTelemetryOpen}
+            onClose={() => handleToastTelemetryOpenChange(false)}
+            onOpenChange={handleToastTelemetryOpenChange}
+            onCloseReason={handleToastTelemetryCloseReason}
+            title="Telemetry toast"
+            description="Used to validate close-button / Escape / timeout branches."
+            duration={900}
+            closeLabel="Dismiss telemetry toast"
+            position="bottom-left"
+          />
+          <Toast
+            open={actionToastOpen}
+            onClose={() => setActionToastOpen(false)}
+            title="Release approval action required"
+            description="Review release blockers before publish."
+            duration={0}
+            position="top-left"
+            closeLabel="Dismiss approval action toast"
+            action={
+              <Button
+                size="sm"
+                onClick={() => {
+                  setActionToastHandledCount((current) => current + 1);
+                  setActionToastOpen(false);
+                }}
+              >
+                Acknowledge approval action
+              </Button>
             }
-          }}
-        />
-        <Toast
-          open={toastTelemetryOpen}
-          onClose={() => handleToastTelemetryOpenChange(false)}
-          onOpenChange={handleToastTelemetryOpenChange}
-          onCloseReason={handleToastTelemetryCloseReason}
-          title="Telemetry toast"
-          description="Used to validate close-button / Escape / timeout branches."
-          duration={900}
-          closeLabel="Dismiss telemetry toast"
-          position="bottom-left"
-        />
-        <Toast
-          open={actionToastOpen}
-          onClose={() => setActionToastOpen(false)}
-          title="Release approval action required"
-          description="Review release blockers before publish."
-          duration={0}
-          position="top-left"
-          closeLabel="Dismiss approval action toast"
-          action={
-            <Button
-              size="sm"
-              onClick={() => {
-                setActionToastHandledCount((current) => current + 1);
-                setActionToastOpen(false);
-              }}
-            >
-              Acknowledge approval action
-            </Button>
-          }
-        />
-        <Toast
-          open={silentToastOpen}
-          onClose={() => setSilentToastOpen(false)}
-          title="Background sync update"
-          description="Artifact metadata refreshed in background."
-          duration={0}
-          live="off"
-          closeLabel="Dismiss silent toast"
-          position="bottom-right"
-        />
-        <Toast
-          open={blockingToastOpen}
-          onClose={() => setBlockingToastOpen(false)}
-          title="Release approval required"
-          description="Escalate to owner before publishing. Escape is disabled in this toast."
-          tone="warning"
-          duration={0}
-          closeOnEscape={false}
-          closeLabel="Dismiss blocking notice"
-          ariaLabel="Release approval required notification"
-          position="top-right"
-        />
-        <Toast
-          open={stackedToastOpen.first}
-          onClose={() => setStackedToastOpen((current) => ({ ...current, first: false }))}
-          title="Sync started"
-          description="Baseline snapshot sync is queued."
-          duration={0}
-          position="top-left"
-        />
-        <Toast
-          open={stackedToastOpen.second}
-          onClose={() => setStackedToastOpen((current) => ({ ...current, second: false }))}
-          title="Sync completed"
-          description="All artifacts are available for review."
-          tone="success"
-          duration={0}
-          position="top-left"
-        />
+          />
+          <Toast
+            open={silentToastOpen}
+            onClose={() => setSilentToastOpen(false)}
+            title="Background sync update"
+            description="Artifact metadata refreshed in background."
+            duration={0}
+            live="off"
+            closeLabel="Dismiss silent toast"
+            position="bottom-right"
+          />
+          <Toast
+            open={blockingToastOpen}
+            onClose={() => setBlockingToastOpen(false)}
+            title="Release approval required"
+            description="Escalate to owner before publishing. Escape is disabled in this toast."
+            tone="warning"
+            duration={0}
+            closeOnEscape={false}
+            closeLabel="Dismiss blocking notice"
+            ariaLabel="Release approval required notification"
+            position="top-right"
+          />
+          <Toast
+            open={stackedToastOpen.first}
+            onClose={() => setStackedToastOpen((current) => ({ ...current, first: false }))}
+            title="Sync started"
+            description="Baseline snapshot sync is queued."
+            duration={0}
+            position="top-left"
+          />
+          <Toast
+            open={stackedToastOpen.second}
+            onClose={() => setStackedToastOpen((current) => ({ ...current, second: false }))}
+            title="Sync completed"
+            description="All artifacts are available for review."
+            tone="success"
+            duration={0}
+            position="top-left"
+          />
         </main>
       </div>
     </AuroraProvider>
