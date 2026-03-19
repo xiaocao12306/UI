@@ -205,15 +205,13 @@ const heroStatsGridStyle: React.CSSProperties = {
 };
 const heroStatCardStyle: React.CSSProperties = {
   borderRadius: "var(--aurora-radius-md)",
-  border: "1px solid color-mix(in srgb, var(--aurora-border-default) 76%, transparent)",
   background: "color-mix(in srgb, var(--aurora-surface-elevated) 92%, var(--aurora-surface-default))",
-  boxShadow: "var(--aurora-shadow-sm)",
   padding: "10px 12px",
   display: "grid",
   gap: 4
 };
 const sectionNavLinkStyle: React.CSSProperties = {
-  color: "var(--aurora-text-primary)",
+  color: "var(--aurora-text-secondary)",
   textDecoration: "none",
   fontWeight: "var(--aurora-font-weight-medium)",
   display: "inline-flex",
@@ -221,12 +219,9 @@ const sectionNavLinkStyle: React.CSSProperties = {
   justifyContent: "center",
   gap: 8,
   position: "relative",
-  border: "1px solid var(--aurora-border-default)",
   borderRadius: 999,
   padding: "6px 14px",
-  fontSize: 13,
-  transition:
-    "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
+  fontSize: 13
 };
 const panelTitleStyle: React.CSSProperties = { margin: 0, fontSize: 15, letterSpacing: "-0.01em" };
 const panelDescriptionStyle: React.CSSProperties = { ...mutedBodyStyle, fontSize: 13 };
@@ -292,54 +287,13 @@ function SectionNavLink({
   active: boolean;
   onNavigate: () => void;
 }) {
-  const [hovered, setHovered] = React.useState(false);
-  const [focusVisible, setFocusVisible] = React.useState(false);
-  const focusIntentRef = React.useRef(true);
-
-  const interactive = active || hovered || focusVisible;
-  const activeBackground =
-    "linear-gradient(180deg, color-mix(in srgb, var(--aurora-accent-default) 18%, transparent), color-mix(in srgb, var(--aurora-accent-default) 10%, transparent))";
-  const idleBackground = hovered
-    ? "color-mix(in srgb, var(--aurora-surface-elevated) 88%, var(--aurora-surface-default))"
-    : "transparent";
-
   return (
     <a
       className="demo-section-nav-pill"
       href={`#${id}`}
       aria-current={active ? "location" : undefined}
       onClick={onNavigate}
-      onMouseEnter={() => {
-        setHovered(true);
-      }}
-      onMouseLeave={() => {
-        setHovered(false);
-      }}
-      onMouseDown={() => {
-        focusIntentRef.current = false;
-        setFocusVisible(false);
-      }}
-      onKeyDown={() => {
-        focusIntentRef.current = true;
-      }}
-      onFocus={(event) => {
-        setFocusVisible(resolveFocusVisibleState(event.currentTarget, focusIntentRef.current));
-      }}
-      onBlur={() => {
-        setFocusVisible(false);
-      }}
-      style={{
-        ...sectionNavLinkStyle,
-        border: active ? "1px solid var(--aurora-accent-default)" : "1px solid var(--aurora-border-default)",
-        background: active ? activeBackground : idleBackground,
-        boxShadow: focusVisible
-          ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 42%, transparent)"
-          : interactive
-            ? "var(--aurora-shadow-sm)"
-            : "none",
-        color: active || hovered ? "var(--aurora-text-primary)" : "var(--aurora-text-secondary)",
-        transform: interactive ? "translateY(-1px)" : "translateY(0)"
-      }}
+      style={sectionNavLinkStyle}
     >
       {label}
     </a>
@@ -363,10 +317,6 @@ function HeroStatCard({
   value: string;
   description: string;
 }) {
-  const [hovered, setHovered] = React.useState(false);
-  const [focusVisible, setFocusVisible] = React.useState(false);
-  const focusIntentRef = React.useRef(true);
-
   return (
     <a
       className="demo-hero-stat-card"
@@ -376,45 +326,12 @@ function HeroStatCard({
       onClick={() => {
         onNavigate(targetId);
       }}
-      onMouseEnter={() => {
-        setHovered(true);
-      }}
-      onMouseLeave={() => {
-        setHovered(false);
-      }}
-      onMouseDown={() => {
-        focusIntentRef.current = false;
-        setFocusVisible(false);
-      }}
-      onKeyDown={() => {
-        focusIntentRef.current = true;
-      }}
-      onFocus={(event) => {
-        setFocusVisible(resolveFocusVisibleState(event.currentTarget, focusIntentRef.current));
-      }}
-      onBlur={() => {
-        setFocusVisible(false);
-      }}
       style={{
         ...heroStatCardStyle,
         textDecoration: "none",
         color: "inherit",
         textAlign: "left",
-        cursor: "pointer",
-        border:
-          active
-            ? "1px solid color-mix(in srgb, var(--aurora-accent-default) 62%, var(--aurora-border-default))"
-            : hovered || focusVisible
-            ? "1px solid color-mix(in srgb, var(--aurora-accent-default) 52%, var(--aurora-border-default))"
-            : heroStatCardStyle.border,
-        boxShadow: focusVisible
-          ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 42%, transparent), var(--aurora-shadow-sm)"
-          : active || hovered
-            ? "var(--aurora-shadow-md)"
-            : "var(--aurora-shadow-sm)",
-        transform: active || hovered ? "translateY(-2px)" : "translateY(0)",
-        transition:
-          "transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
+        cursor: "pointer"
       }}
     >
       <p
@@ -432,14 +349,6 @@ function HeroStatCard({
       <p style={{ ...mutedBodyStyle, fontSize: 12 }}>{description}</p>
     </a>
   );
-}
-
-function resolveFocusVisibleState(target: HTMLElement, fallback: boolean) {
-  try {
-    return target.matches(":focus-visible");
-  } catch {
-    return fallback;
-  }
 }
 
 function App() {
