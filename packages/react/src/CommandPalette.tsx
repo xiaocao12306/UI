@@ -70,13 +70,6 @@ export function CommandPalette({
   const listId = React.useId();
   const statusId = React.useId();
   const listRef = React.useRef<HTMLDivElement>(null);
-  const searchKeyShortcuts = React.useMemo(() => {
-    const shortcuts = ["ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp", "Enter"];
-    if (closeOnEscape || clearQueryOnEscape) {
-      shortcuts.push("Escape");
-    }
-    return shortcuts.join(" ");
-  }, [clearQueryOnEscape, closeOnEscape]);
 
   const markCloseReason = React.useCallback(
     (reason: CommandPaletteCloseReason) => {
@@ -141,6 +134,16 @@ export function CommandPalette({
     [filtered]
   );
   const hasResults = filtered.length > 0;
+  const searchKeyShortcuts = React.useMemo(() => {
+    const shortcuts = ["ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp"];
+    if (enabledCount > 0) {
+      shortcuts.push("Enter");
+    }
+    if (closeOnEscape || clearQueryOnEscape) {
+      shortcuts.push("Escape");
+    }
+    return shortcuts.join(" ");
+  }, [clearQueryOnEscape, closeOnEscape, enabledCount]);
 
   const resultsStatusText = React.useMemo(
     () =>

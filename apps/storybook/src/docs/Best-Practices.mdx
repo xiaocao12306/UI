@@ -117,6 +117,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Treat `onQueryChange("")` on palette close as the telemetry reset signal so external state mirrors the internal query lifecycle.
 - Keep live-region narration aligned with actionable commands (enabled matches), not just visible results.
 - Keep disabled command entries non-executable and keep palette state unchanged on disabled clicks.
+- Keep command-palette `aria-keyshortcuts` aligned with actionable state: when filtered results contain no enabled command, omit `Enter` from shortcut hints.
 - For batched command execution, set `closeOnSelect={false}` so users can run multiple actions without reopening the palette.
 - Treat repeated `Enter` keydown (`event.repeat`) as no-op for command execution so long-press does not trigger duplicate actions or telemetry noise.
 - Use `PageUp` / `PageDown` for long command sets so keyboard users can jump actionable options in larger steps.

@@ -504,6 +504,7 @@ describe("CommandPalette", () => {
 
     const input = screen.getByRole("combobox", { name: "Search commands" });
     expect(input).not.toHaveAttribute("aria-activedescendant");
+    expect(input).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp Home End PageDown PageUp Escape");
 
     fireEvent.keyDown(input, { key: "ArrowDown" });
     fireEvent.keyDown(input, { key: "ArrowUp" });
@@ -1005,10 +1006,12 @@ describe("CommandPalette", () => {
       />
     );
 
-    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.change(input, {
       target: { value: "release" }
     });
     expect(screen.getByRole("status")).toHaveTextContent('No enabled commands match "release".');
+    expect(input).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp Home End PageDown PageUp Escape");
   });
 
   it("supports custom result status narration", () => {

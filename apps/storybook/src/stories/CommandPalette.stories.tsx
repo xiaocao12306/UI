@@ -615,6 +615,7 @@ export const DisabledOnlyResults: Story = {
     await userEvent.clear(input);
     await userEvent.type(input, "release");
     await expect(canvas.getByRole("status")).toHaveTextContent('No enabled commands match "release".');
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp Home End PageDown PageUp Escape");
   }
 };
 

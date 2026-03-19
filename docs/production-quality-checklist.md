@@ -303,6 +303,7 @@
 - CommandPalette dismiss-order parity: component tests now lock `escape-key` / `outside-pointer` branches to `onCloseReason -> onOpenChange(false)` callback order.
 - CommandPalette close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `item-select` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismissal tracking.
 - CommandPalette enter-repeat parity: repeated `Enter` keydown (`event.repeat=true`) now no-ops command execution to avoid duplicate action dispatch and telemetry noise during key long-press.
+- CommandPalette shortcut-hint precision parity: when current filtered results contain no enabled command, combobox `aria-keyshortcuts` now omits `Enter` to avoid advertising unavailable execution paths.
 - Storybook command-palette close-trace parity: `CloseReasonTelemetry` now asserts deterministic callback order (`item-select`: `select -> reason -> open:false`; other dismiss paths: `reason -> open:false`).
 - Demo query telemetry parity: added `palette-query-telemetry` indicator + Playwright regression to ensure command-palette close actions reset telemetry back to `N/A`.
 - Demo command-palette close-reason parity: added `palette-close-reason-telemetry` indicator and Playwright regression for `escape-key` / `item-select` / `close-button` / `outside-pointer` branches.
