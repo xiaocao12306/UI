@@ -167,6 +167,11 @@ export const ActionRequiredDanger: Story = {
 function CloseReasonTelemetryDemo() {
   const [open, setOpen] = React.useState(true);
   const [lastReason, setLastReason] = React.useState("none");
+  const [closeTrace, setCloseTrace] = React.useState("N/A");
+
+  const appendTrace = React.useCallback((step: string) => {
+    setCloseTrace((current) => (current === "N/A" ? step : `${current} -> ${step}`));
+  }, []);
 
   return (
     <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
@@ -176,16 +181,39 @@ function CloseReasonTelemetryDemo() {
           {lastReason}
         </strong>
       </p>
-      <Button variant="outline" onClick={() => setOpen(true)}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Close trace:{" "}
+        <strong data-testid="toast-close-trace" style={{ color: "var(--aurora-text-primary)" }}>
+          {closeTrace}
+        </strong>
+      </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Timeout reason is documented but not asserted in play due timing instability.
+      </p>
+      <Button
+        variant="outline"
+        onClick={() => {
+          setCloseTrace("N/A");
+          setOpen(true);
+        }}
+      >
         Reopen Toast
       </Button>
       <Toast
         open={open}
-        onOpenChange={setOpen}
+        onOpenChange={(nextOpen) => {
+          setOpen(nextOpen);
+          if (!nextOpen) {
+            appendTrace("open:false");
+          }
+        }}
         duration={0}
         title="Close reason telemetry"
         description="Track whether this toast closed from click, Escape, or timeout."
-        onCloseReason={(reason) => setLastReason(reason)}
+        onCloseReason={(reason) => {
+          setLastReason(reason);
+          appendTrace(`reason:${reason}`);
+        }}
       />
     </div>
   );
@@ -196,12 +224,15 @@ export const CloseReasonTelemetry: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
     await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("none");
+    await expect(canvas.getByTestId("toast-close-trace")).toHaveTextContent("N/A");
     await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));
     await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("close-button");
+    await expect(canvas.getByTestId("toast-close-trace")).toHaveTextContent("reason:close-button -> open:false");
 
     await userEvent.click(canvas.getByRole("button", { name: "Reopen Toast" }));
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("escape-key");
+    await expect(canvas.getByTestId("toast-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
   }
 };
 

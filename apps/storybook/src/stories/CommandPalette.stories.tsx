@@ -96,6 +96,11 @@ function QueryTelemetryPalette() {
 function CloseReasonTelemetryPalette() {
   const [open, setOpen] = React.useState(true);
   const [lastReason, setLastReason] = React.useState("none");
+  const [closeTrace, setCloseTrace] = React.useState("N/A");
+
+  const appendTrace = React.useCallback((step: string) => {
+    setCloseTrace((current) => (current === "N/A" ? step : `${current} -> ${step}`));
+  }, []);
 
   return (
     <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10, justifyItems: "start" }}>
@@ -105,16 +110,46 @@ function CloseReasonTelemetryPalette() {
           {lastReason}
         </strong>
       </p>
-      <button type="button" onClick={() => setOpen(true)}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Close trace:{" "}
+        <strong data-testid="command-close-trace" style={{ color: "var(--aurora-text-primary)" }}>
+          {closeTrace}
+        </strong>
+      </p>
+      <button
+        type="button"
+        onClick={() => {
+          setCloseTrace("N/A");
+          setOpen(true);
+        }}
+      >
         Reopen Palette
       </button>
       <CommandPalette
         open={open}
-        onOpenChange={setOpen}
-        onCloseReason={(reason) => setLastReason(reason)}
+        onOpenChange={(nextOpen) => {
+          setOpen(nextOpen);
+          if (!nextOpen) {
+            appendTrace("open:false");
+          }
+        }}
+        onCloseReason={(reason) => {
+          setLastReason(reason);
+          appendTrace(`reason:${reason}`);
+        }}
         commands={[
-          { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
-          { key: "run-e2e", label: "Run E2E Smoke", keywords: ["playwright", "test"] }
+          {
+            key: "create-spec",
+            label: "Create Spec",
+            keywords: ["doc", "plan"],
+            onSelect: () => appendTrace("select")
+          },
+          {
+            key: "run-e2e",
+            label: "Run E2E Smoke",
+            keywords: ["playwright", "test"],
+            onSelect: () => appendTrace("select")
+          }
         ]}
       />
     </div>
@@ -480,23 +515,28 @@ export const CloseReasonTelemetry: Story = {
     const doc = canvasElement.ownerDocument;
 
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("none");
+    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent("N/A");
     await userEvent.click(await canvas.findByRole("option", { name: "Create Spec" }));
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("item-select");
+    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent("select -> reason:item-select -> open:false");
 
     await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("escape-key");
+    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
 
     await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
     await userEvent.click(doc.body);
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("outside-pointer");
+    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent("reason:outside-pointer -> open:false");
 
     await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
     await userEvent.click(canvas.getByRole("button", { name: "Close dialog" }));
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("close-button");
+    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent("reason:close-button -> open:false");
   }
 };
 
