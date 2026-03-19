@@ -65,6 +65,29 @@ export const ReleaseChecklist: Story = {
   )
 };
 
+export const DescendingDefaultSortDirection: Story = {
+  render: () => (
+    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
+      <Table
+        caption="Release readiness board"
+        columns={columns}
+        data={rows}
+        rowKey={(row) => row.id}
+        defaultSortKey="id"
+        defaultSortDirection="desc"
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const issueHeader = canvas.getByRole("columnheader", { name: /Issue/ });
+    const firstRowHeader = canvas.getAllByRole("rowheader")[0];
+    await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
+    await expect(firstRowHeader).toHaveTextContent("DLG-210");
+    await expect(canvas.getByRole("button", { name: "Issue sort ascending" })).toBeInTheDocument();
+  }
+};
+
 export const WithRowAction: Story = {
   render: () => {
     const actionColumns: Array<TableColumn<ReleaseRow>> = [

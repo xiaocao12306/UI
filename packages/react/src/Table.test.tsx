@@ -329,6 +329,35 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledWith("name", "desc");
   });
 
+  it("applies descending initial order when defaultSortDirection is desc", () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        defaultSortDirection="desc"
+        onSortChange={onSortChange}
+      />
+    );
+
+    const nameHeader = screen.getByRole("columnheader", { name: /Name/ });
+    expect(nameHeader).toHaveAttribute("aria-sort", "descending");
+    expect(screen.getAllByRole("row")[1]).toHaveTextContent("Dialog");
+
+    fireEvent.click(screen.getByRole("button", { name: "Name sort ascending" }));
+    expect(onSortChange).toHaveBeenCalledWith("name", "asc");
+    expect(nameHeader).toHaveAttribute("aria-sort", "ascending");
+    expect(screen.getAllByRole("row")[1]).toHaveTextContent("Button");
+  });
+
   it("clears stale sort state when active sort column becomes non-sortable", () => {
     const data = [
       { name: "Dialog", score: 80 },
