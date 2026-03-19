@@ -92,6 +92,37 @@ export const KeyboardToggle: Story = {
   }
 };
 
+function GuardedClickSwitch() {
+  const [checked, setChecked] = React.useState(false);
+
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 380px)" gap={12}>
+      <Switch
+        label="Guarded toggle"
+        description="Consumer blocks pointer toggle via onClick.preventDefault()."
+        checked={checked}
+        onCheckedChange={setChecked}
+        onClick={(event) => {
+          event.preventDefault();
+        }}
+      />
+      <Badge tone={checked ? "success" : "default"}>{checked ? "Enabled" : "Blocked"}</Badge>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const ClickPreventDefaultGuard: Story = {
+  render: () => <GuardedClickSwitch />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const control = canvas.getByRole("switch", { name: "Guarded toggle" });
+
+    await userEvent.click(control);
+    await expect(control).toHaveAttribute("aria-checked", "false");
+    await expect(canvas.getByText("Blocked")).toBeInTheDocument();
+  }
+};
+
 export const PointerPrimaryOnly: Story = {
   args: {
     defaultChecked: false,

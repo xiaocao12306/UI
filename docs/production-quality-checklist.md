@@ -432,4 +432,5 @@
 - Button focus-intent parity: non-primary `mousedown/pointerdown` now preserves focus-visible state while primary pointer still clears it, with dedicated unit coverage.
 - Drawer close-button focus-intent parity: non-primary close-button `mousedown` now preserves focus-visible state while primary pointer keeps prior behavior, with dedicated unit coverage.
 - Toast close-button focus-intent coverage: added unit regression ensuring non-primary close-button `mousedown` keeps focus-visible ring state while primary pointer behavior remains unchanged.
+- Switch click-guard parity: added unit + Storybook regression to lock `onClick(event.preventDefault())` pointer-guard behavior so consumer-level approval gates can block toggle mutation deterministically.
 - Release-gate parity refresh: `pnpm release:gate:ci` rerun passed on 2026-03-19 after Button/Input/FormField/Tabs/Table/CommandPalette primary-pointer and a11y refinements (verify + coverage + demo e2e 71/71 + demo dist sync + storybook interaction 202/202).

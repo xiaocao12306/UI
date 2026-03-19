@@ -33,6 +33,26 @@ describe("Switch", () => {
     expect(onCheckedChange).toHaveBeenCalledWith(true);
   });
 
+  it("does not toggle when click handler prevents default", () => {
+    const onCheckedChange = vi.fn();
+    render(
+      <Switch
+        label="Guarded toggle"
+        checked={false}
+        onCheckedChange={onCheckedChange}
+        onClick={(event) => {
+          event.preventDefault();
+        }}
+      />
+    );
+
+    const control = screen.getByRole("switch", { name: "Guarded toggle" });
+    fireEvent.click(control);
+
+    expect(control).toHaveAttribute("aria-checked", "false");
+    expect(onCheckedChange).not.toHaveBeenCalled();
+  });
+
   it("applies pressed state only for primary mouse button", () => {
     render(<Switch label="Pointer semantics" defaultChecked={false} />);
     const control = screen.getByRole("switch", { name: "Pointer semantics" });
