@@ -268,6 +268,7 @@
 - Release evidence refresh (2026-03-19 latest): reran `release:gate:ci` and以 run summary 作为 Storybook tests/suites 的唯一审阅来源（不在文档手工维护计数）。
 - CI demo-gate observability parity: `ci.yml` now writes `Demo Quality Gate` summary (demo:e2e + demo:dist:check pass/fail snapshot) into `GITHUB_STEP_SUMMARY`.
 - Release dry-run refresh (2026-03-19 latest): `release:dry-run` remains green with tarball evidence `@aurora-ui/react` package `61.7 kB` / unpacked `372.9 kB`, `@aurora-ui/primitives` package `14.4 kB` / unpacked `71.2 kB`, `@aurora-ui/tokens` package `3.2 kB` / unpacked `17.0 kB`.
+- Release dry-run refresh (2026-03-19 latest+1): `release:dry-run` remains green with tarball evidence `@aurora-ui/react` package `64.1 kB` / unpacked `393.1 kB`, `@aurora-ui/primitives` package `14.5 kB` / unpacked `71.7 kB`, `@aurora-ui/tokens` package `3.2 kB` / unpacked `17.3 kB`.
 - Demo table narration parity: Playwright now asserts unsorted columns keep `aria-sort` absent while active sorted column toggles, matching unit/Storybook semantics.
 - Toast IME callback parity: Escape during composition no longer fires `onEscapeKeyDown`, preventing guarded flows from treating IME confirm/cancel as dismissal intent.
 - Demo RTL tabs parity: added dedicated Data section RTL tablist and Playwright ArrowRight/ArrowLeft regression to lock direction-aware keyboard navigation in real app flows.
