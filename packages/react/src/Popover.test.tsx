@@ -53,6 +53,33 @@ describe("Popover", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("opens via ArrowDown and focuses the first focusable content", () => {
+    render(
+      <Popover triggerLabel="Keyboard open">
+        <button type="button">Primary action</button>
+      </Popover>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Keyboard open" });
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Primary action" })).toHaveFocus();
+  });
+
+  it("focuses popover container when no focusable content exists", () => {
+    render(
+      <Popover triggerLabel="No focusables">
+        <p>Read-only details</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "No focusables" }));
+    const dialog = screen.getByRole("dialog", { name: "Popover content" });
+    expect(dialog).toHaveFocus();
+  });
+
   it("supports icon trigger naming via triggerAriaLabel", () => {
     render(
       <Popover triggerLabel="⋯" triggerAriaLabel="More info">
