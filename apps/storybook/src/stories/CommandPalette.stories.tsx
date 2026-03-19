@@ -2,6 +2,11 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, CommandPalette, type CommandItem } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
+import {
+  StoryFullscreenFrame,
+  storyEmphasisTextStyle,
+  storyMutedTextStyle
+} from "./storyShowcase";
 
 const commands: CommandItem[] = [
   { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
@@ -51,10 +56,10 @@ function TriggeredKeyboardFirstPalette() {
   const [selectedAction, setSelectedAction] = React.useState("none");
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame align="start">
+      <p style={storyMutedTextStyle}>
         Last keyboard action:{" "}
-        <strong data-testid="keyboard-first-selected" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="keyboard-first-selected" style={storyEmphasisTextStyle}>
           {selectedAction}
         </strong>
       </p>
@@ -79,7 +84,7 @@ function TriggeredKeyboardFirstPalette() {
           }
         ]}
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -100,13 +105,13 @@ function AiFlowPalette() {
   }));
 
   return (
-    <div style={{ minHeight: 420, padding: 20 }}>
-      <p style={{ marginTop: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
         Last AI action:{" "}
-        <strong style={{ color: "var(--aurora-text-primary)" }}>{lastAction}</strong>
+        <strong style={storyEmphasisTextStyle}>{lastAction}</strong>
       </p>
       <CommandPalette open={open} onOpenChange={setOpen} commands={actionCommands} />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -115,10 +120,10 @@ function QueryTelemetryPalette() {
   const [query, setQuery] = React.useState("");
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
         Latest query telemetry:{" "}
-        <strong data-testid="query-telemetry" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="query-telemetry" style={storyEmphasisTextStyle}>
           {query || "N/A"}
         </strong>
       </p>
@@ -136,7 +141,7 @@ function QueryTelemetryPalette() {
             : `${enabledCount}/${visibleCount} actionable AI workflow match${visibleCount === 1 ? "" : "es"} for ${nextQuery}`
         }
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -150,16 +155,16 @@ function CloseReasonTelemetryPalette() {
   }, []);
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame align="start">
+      <p style={storyMutedTextStyle}>
         Last close reason:{" "}
-        <strong data-testid="command-close-reason" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="command-close-reason" style={storyEmphasisTextStyle}>
           {lastReason}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Close trace:{" "}
-        <strong data-testid="command-close-trace" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="command-close-trace" style={storyEmphasisTextStyle}>
           {closeTrace}
         </strong>
       </p>
@@ -200,7 +205,7 @@ function CloseReasonTelemetryPalette() {
           }
         ]}
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -225,10 +230,10 @@ function DisabledCommandGuardPalette() {
   const [executedCount, setExecutedCount] = React.useState(0);
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
         Executed commands:{" "}
-        <strong data-testid="executed-count" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="executed-count" style={storyEmphasisTextStyle}>
           {executedCount}
         </strong>
       </p>
@@ -252,7 +257,7 @@ function DisabledCommandGuardPalette() {
         ]}
         placeholder="Try searching publish..."
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -282,10 +287,10 @@ function PersistentSelectionPalette() {
   const [selectedCount, setSelectedCount] = React.useState(0);
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
         Batch actions selected:{" "}
-        <strong data-testid="selection-count" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="selection-count" style={storyEmphasisTextStyle}>
           {selectedCount}
         </strong>
       </p>
@@ -306,7 +311,7 @@ function PersistentSelectionPalette() {
           }
         ]}
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -314,8 +319,8 @@ function NonDismissiblePalette() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame align="start">
+      <p style={storyMutedTextStyle}>
         Palette stays open until action selection or explicit toggle.
       </p>
       <Button size="sm" variant="outline" onClick={() => setOpen((value) => !value)}>
@@ -333,7 +338,7 @@ function NonDismissiblePalette() {
           { key: "reject", label: "Reject release" }
         ]}
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -342,13 +347,13 @@ function GuardedDismissPalette() {
   const [guardDismiss, setGuardDismiss] = React.useState(true);
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame align="start">
+      <p style={storyMutedTextStyle}>
         Dismiss guard can intercept Escape/outside dismiss until the flow is explicitly unlocked.
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Guard state:{" "}
-        <strong data-testid="guard-state" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="guard-state" style={storyEmphasisTextStyle}>
           {guardDismiss ? "enabled" : "disabled"}
         </strong>
       </p>
@@ -382,7 +387,7 @@ function GuardedDismissPalette() {
           { key: "reject", label: "Reject release" }
         ]}
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -391,16 +396,16 @@ function EscapeClearsQueryFirstPalette() {
   const [query, setQuery] = React.useState("");
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
         Query telemetry:{" "}
-        <strong data-testid="query-value" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="query-value" style={storyEmphasisTextStyle}>
           {query || "N/A"}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Palette state:{" "}
-        <strong data-testid="open-state" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="open-state" style={storyEmphasisTextStyle}>
           {open ? "open" : "closed"}
         </strong>
       </p>
@@ -413,7 +418,7 @@ function EscapeClearsQueryFirstPalette() {
           { key: "open-changelog", label: "Open Changelog", keywords: ["notes"] }
         ]}
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -422,10 +427,10 @@ function EscapeShortcutHintPrecisionPalette() {
   const [query, setQuery] = React.useState("");
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
         Query telemetry:{" "}
-        <strong data-testid="escape-hint-query" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="escape-hint-query" style={storyEmphasisTextStyle}>
           {query || "N/A"}
         </strong>
       </p>
@@ -440,7 +445,7 @@ function EscapeShortcutHintPrecisionPalette() {
           { key: "open-changelog", label: "Open Changelog", keywords: ["notes"] }
         ]}
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -449,10 +454,10 @@ function RefinedSearchKeepsActiveCommandPalette() {
   const [lastAction, setLastAction] = React.useState("none");
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
         Last command:{" "}
-        <strong data-testid="last-command" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="last-command" style={storyEmphasisTextStyle}>
           {lastAction}
         </strong>
       </p>
@@ -476,7 +481,7 @@ function RefinedSearchKeepsActiveCommandPalette() {
           }
         ]}
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -510,22 +515,22 @@ function ImeCompositionGuardPalette() {
   const [queryValue, setQueryValue] = React.useState("");
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
         Executed commands:{" "}
-        <strong data-testid="ime-selection-count" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="ime-selection-count" style={storyEmphasisTextStyle}>
           {selectedCount}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Query value:{" "}
-        <strong data-testid="ime-query-value" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="ime-query-value" style={storyEmphasisTextStyle}>
           {queryValue || "N/A"}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Palette state:{" "}
-        <strong data-testid="ime-open-state" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="ime-open-state" style={storyEmphasisTextStyle}>
           {open ? "open" : "closed"}
         </strong>
       </p>
@@ -543,7 +548,7 @@ function ImeCompositionGuardPalette() {
           }
         ]}
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -565,10 +570,10 @@ function EscapePreemptedPalette() {
   }, []);
 
   return (
-    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
         Escape hook calls:{" "}
-        <strong data-testid="command-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="command-escape-calls" style={storyEmphasisTextStyle}>
           {escapeCalls}
         </strong>
       </p>
@@ -581,7 +586,7 @@ function EscapePreemptedPalette() {
           { key: "run-e2e", label: "Run E2E Smoke" }
         ]}
       />
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
