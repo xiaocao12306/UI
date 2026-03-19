@@ -29,6 +29,31 @@ describe("Dialog", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("emits close callbacks in deterministic order for close-button and Escape dismiss", () => {
+    const events: string[] = [];
+    render(
+      <Dialog
+        open
+        onOpenChange={(nextOpen) => {
+          events.push(`open:${String(nextOpen)}`);
+        }}
+        onCloseReason={(reason) => {
+          events.push(`reason:${reason}`);
+        }}
+        title="Close order"
+      >
+        <p>Body</p>
+      </Dialog>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
+    expect(events).toEqual(["reason:close-button", "open:false"]);
+
+    events.length = 0;
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(events).toEqual(["reason:escape-key", "open:false"]);
+  });
+
   it("connects dialog with title via aria-labelledby", () => {
     render(
       <Dialog open onOpenChange={() => {}} title="Accessibility Title">

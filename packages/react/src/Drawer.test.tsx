@@ -37,6 +37,31 @@ describe("Drawer", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("emits close callbacks in deterministic order for close-button and outside-pointer dismiss", () => {
+    const events: string[] = [];
+    render(
+      <Drawer
+        open
+        title="Close order drawer"
+        onOpenChange={(nextOpen) => {
+          events.push(`open:${String(nextOpen)}`);
+        }}
+        onCloseReason={(reason) => {
+          events.push(`reason:${reason}`);
+        }}
+      >
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Close drawer" }));
+    expect(events).toEqual(["reason:close-button", "open:false"]);
+
+    events.length = 0;
+    fireEvent.pointerDown(document.body);
+    expect(events).toEqual(["reason:outside-pointer", "open:false"]);
+  });
+
   it("supports non-dismissible escape and outside-pointer branches", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();

@@ -238,6 +238,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `showCloseButton` / `closeLabel` | `boolean` / `string` | Close affordance visibility and accessible label text. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Inspect or cancel dismiss intent before `onOpenChange(false)`. |
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for dialog-dismiss analytics and workflow tracing. |
+| close lifecycle order | `onCloseReason -> onOpenChange(false)` | Close-button/Escape/outside-pointer paths use deterministic callback order for telemetry and reducer side effects. |
 | IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`isComposing` / `keyCode=229`) to prevent accidental close while confirming CJK input. |
 | Escape priority | preempted events skip dialog hook/dismiss | If higher-level handlers already `preventDefault()` Escape, dialog stays open and does not fire `onEscapeKeyDown`. |
 | nested dismiss order | top layer first | Nested overlay stacks (for example dropdown inside dialog) dismiss one layer per Escape/outside interaction. |
@@ -259,6 +260,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `restoreFocus` | `boolean` | Controls whether focus returns to previously focused element when drawer closes. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Fine-grained dismiss policy for blocking flows. |
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for close-button vs dismiss-gesture analytics. |
+| close lifecycle order | `onCloseReason -> onOpenChange(false)` | Close-button/Escape/outside-pointer paths keep callback order deterministic for telemetry reducers. |
 | `showCloseButton` | `boolean` | Allows explicit in-panel action-only dismissal. |
 | Escape priority | preempted events skip drawer hook/dismiss | If higher-level handlers already `preventDefault()` Escape, drawer stays open and does not fire `onEscapeKeyDown`. |
 | nested dismiss order | top layer first | Nested overlays inside drawer dismiss one layer per Escape/outside interaction. |
