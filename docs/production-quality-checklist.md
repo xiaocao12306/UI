@@ -251,6 +251,7 @@
 - Dropdown Storybook parity: added `TabDismissToNextControl` interaction scenario so Tab-close focus handoff is covered in visual regression chain.
 - CommandPalette dismiss guard hardening: added `onEscapeKeyDown/onPointerDownOutside` hooks so approval flows can block dismiss conditionally via `event.preventDefault()`, with unit + Storybook interaction coverage.
 - Toast dismiss guard hardening: added `onEscapeKeyDown` hook so individual notifications can conditionally intercept Escape and coordinate with approval workflows.
+- Table keyboard activation dedupe hardening: sortable headers now ignore synthesized keyboard-origin click (`detail=0`) after handled `Enter/Space` keydown so one keyboard action maps to one sort change + telemetry event; covered by dedicated unit regression and API/best-practices docs updates.
 - Tabs vertical-manual parity: added dedicated unit/Storybook/demo E2E coverage so ArrowUp/ArrowDown focus movement stays decoupled from activation until Enter/Space.
 - Table row-identity semantics: added `columns[].rowHeader` support with Storybook + unit coverage so key rows can expose `<th scope="row">` context for assistive tech.
 - Demo toast guard parity: added runtime toggle for `Toast onEscapeKeyDown` interception and Playwright regression confirming Escape is blocked/unblocked by toast-level guard state.

@@ -405,6 +405,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | modifier-key guard | ignores `Ctrl/Meta/Alt + Enter/Space` | Preserves host app/browser modified-key shortcuts and prevents accidental sort toggles from combined key commands. |
 | sort-button focus intent policy | primary pointer clears focus-visible | Non-primary pointer interactions keep keyboard-intent ring state; primary pointer down clears focus-visible and applies pressed offset lifecycle. |
 | activation repeat guard | ignores repeated keydown | Holding sort activation keys (`Enter` / `Space`, `event.repeat=true`) does not trigger repeated sort toggles, preventing telemetry jitter and accidental direction flips. |
+| keyboard-click dedupe | ignores synthesized keyboard-origin click (`detail=0`) after handled activation keydown | Prevents duplicate sort toggles/telemetry when environments emit both keydown and follow-up click for the same keyboard action. |
 | `aria-sort` exposure | active sorted header only | Unsorted headers (including sortable ones) omit `aria-sort`, reducing screen-reader noise and matching ARIA table guidance. |
 | loading sort semantics | clears `aria-sort` during `loading` | Loading mode suppresses stale sort semantics and leaves `aria-sort` unset until data rows are interactive again. |
 

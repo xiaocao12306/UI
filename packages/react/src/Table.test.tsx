@@ -481,6 +481,37 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledTimes(2);
   });
 
+  it("deduplicates synthesized keyboard-origin click after Enter activation", () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        onSortChange={onSortChange}
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    fireEvent.keyDown(sortButton, { key: "Enter" });
+    expect(onSortChange).toHaveBeenCalledTimes(1);
+    expect(onSortChange).toHaveBeenLastCalledWith("name", "desc");
+
+    fireEvent.click(sortButton, { detail: 0 });
+    expect(onSortChange).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(sortButton, { detail: 1 });
+    expect(onSortChange).toHaveBeenCalledTimes(2);
+    expect(onSortChange).toHaveBeenLastCalledWith("name", "asc");
+  });
+
   it("ignores modified sortable-header activation keys", () => {
     const onSortChange = vi.fn();
 

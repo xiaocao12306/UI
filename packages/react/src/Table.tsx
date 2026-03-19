@@ -84,6 +84,8 @@ export function Table<T>({
     ? undefined
     : (ariaLabel ?? (caption ? undefined : "Data table"));
   const sortButtonRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
+  const keyboardActivationSortKeyRef = React.useRef<string | null>(null);
+  const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const sortFocusIntentRef = React.useRef(true);
   const [hoveredSortKey, setHoveredSortKey] = React.useState<string | null>(null);
   const [pressedSortKey, setPressedSortKey] = React.useState<string | null>(null);
@@ -112,6 +114,21 @@ export function Table<T>({
       document.removeEventListener("touchstart", markPointerIntent, true);
     };
   }, []);
+
+  const clearKeyboardActivationLatch = React.useCallback(() => {
+    keyboardActivationSortKeyRef.current = null;
+    if (keyboardActivationResetTimerRef.current !== null) {
+      window.clearTimeout(keyboardActivationResetTimerRef.current);
+      keyboardActivationResetTimerRef.current = null;
+    }
+  }, []);
+
+  React.useEffect(
+    () => () => {
+      clearKeyboardActivationLatch();
+    },
+    [clearKeyboardActivationLatch]
+  );
 
   const [sortState, setSortState] = React.useState<{
     key: string;
@@ -344,7 +361,16 @@ export function Table<T>({
                       aria-label={sortAriaLabel}
                       aria-keyshortcuts={sortDisabled ? undefined : "Enter Space"}
                       disabled={sortDisabled}
-                      onClick={activateSort}
+                      onClick={(event) => {
+                        const clickFromKeyboardActivation =
+                          event.detail === 0 && keyboardActivationSortKeyRef.current === key;
+                        clearKeyboardActivationLatch();
+                        if (clickFromKeyboardActivation) {
+                          return;
+                        }
+
+                        activateSort();
+                      }}
                       onMouseEnter={() => {
                         if (sortDisabled) {
                           return;
@@ -420,6 +446,14 @@ export function Table<T>({
                         if (event.repeat) {
                           return;
                         }
+                        keyboardActivationSortKeyRef.current = key;
+                        if (keyboardActivationResetTimerRef.current !== null) {
+                          window.clearTimeout(keyboardActivationResetTimerRef.current);
+                        }
+                        keyboardActivationResetTimerRef.current = window.setTimeout(() => {
+                          keyboardActivationSortKeyRef.current = null;
+                          keyboardActivationResetTimerRef.current = null;
+                        }, 0);
                         activateSort();
                       }}
                       style={{
