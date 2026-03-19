@@ -97,6 +97,7 @@ When debugging gate failures, narrow down in this order:
 ```bash
 pnpm storybook:coverage:report
 pnpm storybook:docs:check
+pnpm storybook:docs:parity:check
 pnpm storybook:play:check
 pnpm storybook:static:check
 pnpm storybook:a11y:skip-check
@@ -111,6 +112,7 @@ pnpm storybook:build
 pnpm storybook:coverage:report
 pnpm storybook:coverage:check
 pnpm storybook:docs:check
+pnpm storybook:docs:parity:check
 pnpm storybook:play:check
 pnpm storybook:static:check
 pnpm storybook:a11y:skip-check
