@@ -453,6 +453,7 @@ function App() {
   const [paletteEscapeClearsQuery, setPaletteEscapeClearsQuery] = React.useState(true);
   const [paletteQueryTelemetry, setPaletteQueryTelemetry] = React.useState("");
   const [paletteCloseReason, setPaletteCloseReason] = React.useState("none");
+  const [paletteCloseTrace, setPaletteCloseTrace] = React.useState("none");
   const [popoverCloseReason, setPopoverCloseReason] = React.useState("none");
   const [popoverCloseTrace, setPopoverCloseTrace] = React.useState("none");
   const [dropdownCloseReason, setDropdownCloseReason] = React.useState("none");
@@ -462,6 +463,7 @@ function App() {
   const [drawerCloseReason, setDrawerCloseReason] = React.useState("none");
   const [drawerCloseTrace, setDrawerCloseTrace] = React.useState("none");
   const [toastCloseReason, setToastCloseReason] = React.useState("none");
+  const [toastCloseTrace, setToastCloseTrace] = React.useState("none");
   const [actionToastHandledCount, setActionToastHandledCount] = React.useState(0);
   const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
   const [switchChecked, setSwitchChecked] = React.useState(true);
@@ -582,6 +584,42 @@ function App() {
   const handleDropdownCloseReason = React.useCallback((reason: string) => {
     setDropdownCloseReason(reason);
     setDropdownCloseTrace((current) => (current === "select" ? `select -> reason:${reason}` : `reason:${reason}`));
+  }, []);
+
+  const handlePaletteOpenChange = React.useCallback((nextOpen: boolean) => {
+    setPaletteOpen(nextOpen);
+    if (!nextOpen) {
+      setPaletteCloseTrace((current) => {
+        if (current !== "none" && !current.endsWith("open:false")) {
+          return `${current} -> open:false`;
+        }
+
+        return current;
+      });
+    }
+  }, []);
+
+  const handlePaletteCloseReason = React.useCallback((reason: string) => {
+    setPaletteCloseReason(reason);
+    setPaletteCloseTrace((current) => (current === "select" ? `select -> reason:${reason}` : `reason:${reason}`));
+  }, []);
+
+  const handleToastTelemetryOpenChange = React.useCallback((nextOpen: boolean) => {
+    setToastTelemetryOpen(nextOpen);
+    if (!nextOpen) {
+      setToastCloseTrace((current) => {
+        if (current.startsWith("reason:") && !current.endsWith("open:false")) {
+          return `${current} -> open:false`;
+        }
+
+        return current;
+      });
+    }
+  }, []);
+
+  const handleToastTelemetryCloseReason = React.useCallback((reason: string) => {
+    setToastCloseReason(reason);
+    setToastCloseTrace(`reason:${reason}`);
   }, []);
 
   return (
@@ -1010,6 +1048,12 @@ function App() {
                     </strong>
                   </p>
                   <p style={mutedBodyStyle}>
+                    Toast close trace:{" "}
+                    <strong data-testid="toast-close-trace-demo" style={telemetryValueStyle}>
+                      {toastCloseTrace}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
                     Action toast handled count:{" "}
                     <strong data-testid="action-toast-handled-count" style={telemetryValueStyle}>
                       {actionToastHandledCount}
@@ -1201,6 +1245,12 @@ function App() {
                       {paletteCloseReason}
                     </strong>
                   </p>
+                  <p style={mutedBodyStyle}>
+                    Palette close trace:{" "}
+                    <strong data-testid="palette-close-trace-demo" style={telemetryValueStyle}>
+                      {paletteCloseTrace}
+                    </strong>
+                  </p>
                 </div>
                 <p style={mutedBodyStyle}>
                   Keyboard tip: use <kbd style={keyboardHintStyle}>PageDown</kbd> /{" "}
@@ -1276,13 +1326,13 @@ function App() {
 
         <CommandPalette
           open={paletteOpen}
-          onOpenChange={setPaletteOpen}
+          onOpenChange={handlePaletteOpenChange}
           closeOnSelect={!palettePersistent}
           clearQueryOnEscape={paletteEscapeClearsQuery}
           closeOnEscape={!paletteBlocking}
           closeOnOutsidePointer={!paletteBlocking}
           onQueryChange={setPaletteQueryTelemetry}
-          onCloseReason={setPaletteCloseReason}
+          onCloseReason={handlePaletteCloseReason}
           onEscapeKeyDown={(event) => {
             if (paletteDismissGuard) {
               event.preventDefault();
@@ -1299,19 +1349,28 @@ function App() {
               key: "open-dialog",
               label: "Open Dialog",
               keywords: ["modal", "overlay"],
-              onSelect: () => setDialogOpen(true)
+              onSelect: () => {
+                setPaletteCloseTrace("select");
+                setDialogOpen(true);
+              }
             },
             {
               key: "open-drawer",
               label: "Open Drawer",
               keywords: ["panel", "sidebar"],
-              onSelect: () => setDrawerOpen(true)
+              onSelect: () => {
+                setPaletteCloseTrace("select");
+                setDrawerOpen(true);
+              }
             },
             {
               key: "create-project",
               label: "Create Project",
               keywords: ["new", "workspace"],
-              onSelect: () => setToastOpen(true)
+              onSelect: () => {
+                setPaletteCloseTrace("select");
+                setToastOpen(true);
+              }
             },
             {
               key: "archive-workspace",
@@ -1336,8 +1395,9 @@ function App() {
         />
         <Toast
           open={toastTelemetryOpen}
-          onClose={() => setToastTelemetryOpen(false)}
-          onCloseReason={setToastCloseReason}
+          onClose={() => handleToastTelemetryOpenChange(false)}
+          onOpenChange={handleToastTelemetryOpenChange}
+          onCloseReason={handleToastTelemetryCloseReason}
           title="Telemetry toast"
           description="Used to validate close-button / Escape / timeout branches."
           duration={900}
