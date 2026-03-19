@@ -55,6 +55,7 @@ pnpm storybook:a11y:skip-check
 pnpm storybook:play:check
 pnpm storybook:docs:check
 pnpm storybook:docs:parity:check
+pnpm storybook:docs:structure:check
 pnpm docs:commands:check
 pnpm storybook:static:check
 pnpm storybook:test:grep "Table.stories.tsx"
@@ -84,8 +85,10 @@ Demo dist gate behavior:
   - Fix: run `pnpm storybook:coverage:report` to inspect issue counts/details; then fix docs/story references and rerun `pnpm storybook:coverage:check`.
 - Signature: `[storybook-docs-import-check] error: ... missing story imports ...` or `... invalid story refs ...`
   - Fix: add missing `*Stories` imports in `apps/storybook/src/docs/*.mdx`, or export the referenced story from `apps/storybook/src/stories/*.stories.tsx`, then rerun `pnpm storybook:docs:check`.
+- Signature: `[storybook-docs-structure-check] error: missing required docs headings ...`
+  - Fix: add missing required headings in `apps/storybook/src/docs/Component-API.mdx` / `apps/storybook/src/docs/Best-Practices.mdx`, then rerun `pnpm storybook:docs:structure:check`.
 - Signature: `[docs-command-check] error: missing required command references: ...`
-  - Fix: sync command snippets in `README.md` / `docs/storybook.md` / `docs/testing-and-release.md` (especially `storybook:docs:parity:check` and `release:gate:ci` coverage chain), then rerun `pnpm docs:commands:check`.
+  - Fix: sync command snippets in `README.md` / `docs/storybook.md` / `docs/testing-and-release.md` (especially `storybook:docs:parity:check` / `storybook:docs:structure:check` and `release:gate:ci` coverage chain), then rerun `pnpm docs:commands:check`.
 - Signature: `[storybook-play-coverage-check] error: ... story file(s) missing play hooks.`
   - Fix: add at least one exported story with `play` per listed story file, then rerun `pnpm storybook:play:check`.
 - Signature: `[storybook-static-check] error: storybook-static is out of sync with current sources.`
@@ -296,7 +299,7 @@ This runs:
 2. `pnpm coverage:gate`
 3. `pnpm demo:e2e`
 4. `pnpm demo:dist:check`
-5. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:docs:parity:check` + `docs:commands:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`）
+5. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:docs:parity:check` + `storybook:docs:structure:check` + `docs:commands:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`）
 
 Full local pre-release gate (includes tarball evidence):
 
