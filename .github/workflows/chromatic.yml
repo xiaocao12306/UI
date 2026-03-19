@@ -58,8 +58,12 @@ jobs:
           {
             echo "## Chromatic Mode"
             echo
+            echo "- trigger: \`${{ github.event_name }}\`"
+            echo "- ref: \`${{ github.ref_name }}\`"
             echo "- enforce mode: \`${{ steps.token.outputs.enforce }}\`"
             echo "- chromatic token configured: \`${{ steps.token.outputs.enabled }}\`"
+            echo "- local preflight: \`pnpm release:preflight -- --scope=chromatic\`"
+            echo "- docs: \`docs/secrets.md\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Build Storybook
@@ -94,6 +98,9 @@ jobs:
         if: steps.token.outputs.enabled != 'true' && steps.token.outputs.enforce == 'true'
         run: |
           echo "::error title=Chromatic Enforced::CHROMATIC_PROJECT_TOKEN is required when enforce=true."
+          echo "Fix path: GitHub -> Settings -> Secrets and variables -> Actions -> New repository secret"
+          echo "Secret name: CHROMATIC_PROJECT_TOKEN"
+          echo "Local check: pnpm release:preflight -- --scope=chromatic"
           {
             echo "## Chromatic Upload Failed"
             echo
@@ -105,6 +112,8 @@ jobs:
             echo "- change count: n/a"
             echo "- error count: n/a"
             echo "- action: add repository secret \`CHROMATIC_PROJECT_TOKEN\`."
+            echo "- github settings: \`Settings -> Secrets and variables -> Actions\`"
+            echo "- local verify: \`pnpm release:preflight -- --scope=chromatic\`"
             echo "- guide: \`docs/secrets.md\`"
           } >> "$GITHUB_STEP_SUMMARY"
           exit 1
@@ -115,11 +124,13 @@ jobs:
           echo "::warning title=Chromatic Skipped::CHROMATIC_PROJECT_TOKEN is missing; visual regression upload is skipped."
           echo "Configure secret path: GitHub -> Settings -> Secrets and variables -> Actions -> New repository secret"
           echo "Secret name: CHROMATIC_PROJECT_TOKEN"
+          echo "Local check: pnpm release:preflight -- --scope=chromatic"
           echo "Reference: docs/secrets.md"
           {
             echo "## Chromatic Upload Skipped"
             echo
             echo "- status: \`skipped\`"
+            echo "- mode: \`enforce=false\`"
             echo "- reason: \`CHROMATIC_PROJECT_TOKEN\` is not configured."
             echo "- build url: n/a"
             echo "- storybook url: n/a"
@@ -127,5 +138,7 @@ jobs:
             echo "- error count: n/a"
             echo "- effect: Storybook visual regression baseline/upload is skipped for this run."
             echo "- fix: add repository secret \`CHROMATIC_PROJECT_TOKEN\`."
+            echo "- github settings: \`Settings -> Secrets and variables -> Actions\`"
+            echo "- local verify: \`pnpm release:preflight -- --scope=chromatic\`"
             echo "- guide: \`docs/secrets.md\`"
           } >> "$GITHUB_STEP_SUMMARY"

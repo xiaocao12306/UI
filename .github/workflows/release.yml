@@ -128,20 +128,30 @@ jobs:
           {
             echo "## Publish Mode"
             echo
+            echo "- trigger: \`${{ github.event_name }}\`"
+            echo "- ref: \`${{ github.ref_name }}\`"
             echo "- enforce mode: \`${{ steps.npm-token.outputs.enforce }}\`"
             echo "- npm token configured: \`${{ steps.npm-token.outputs.enabled }}\`"
+            echo "- local preflight: \`pnpm release:preflight -- --scope=publish\`"
+            echo "- docs: \`docs/secrets.md\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail Publish (enforced mode)
         if: steps.npm-token.outputs.enabled != 'true' && steps.npm-token.outputs.enforce == 'true'
         run: |
           echo "::error title=Release Enforced::NPM_TOKEN is required when enforce=true."
+          echo "Fix path: GitHub -> Settings -> Secrets and variables -> Actions -> New repository secret"
+          echo "Secret name: NPM_TOKEN"
+          echo "Local check: pnpm release:preflight -- --scope=publish"
           {
             echo "## npm Publish Failed"
             echo
+            echo "- status: \`failed\`"
             echo "- mode: \`enforce=true\`"
             echo "- reason: \`NPM_TOKEN\` is not configured."
             echo "- action: add repository secret \`NPM_TOKEN\`."
+            echo "- github settings: \`Settings -> Secrets and variables -> Actions\`"
+            echo "- local verify: \`pnpm release:preflight -- --scope=publish\`"
             echo "- guide: \`docs/secrets.md\`"
           } >> "$GITHUB_STEP_SUMMARY"
           exit 1
@@ -174,12 +184,17 @@ jobs:
           echo "::warning title=Release Publish Skipped::NPM_TOKEN is missing; Changesets PR automation will run but npm publish is skipped."
           echo "Configure secret path: GitHub -> Settings -> Secrets and variables -> Actions -> New repository secret"
           echo "Secret name: NPM_TOKEN"
+          echo "Local check: pnpm release:preflight -- --scope=publish"
           echo "Reference: docs/secrets.md"
           {
             echo "## npm Publish Skipped"
             echo
+            echo "- status: \`skipped\`"
+            echo "- mode: \`enforce=false\`"
             echo "- reason: \`NPM_TOKEN\` is not configured."
             echo "- effect: release PR automation runs, but package publish step is skipped."
             echo "- fix: add repository secret \`NPM_TOKEN\`."
+            echo "- github settings: \`Settings -> Secrets and variables -> Actions\`"
+            echo "- local verify: \`pnpm release:preflight -- --scope=publish\`"
             echo "- guide: \`docs/secrets.md\`"
           } >> "$GITHUB_STEP_SUMMARY"

@@ -175,8 +175,32 @@ pnpm storybook:test:grep "Table.stories.tsx"
 
 - 工作流：`.github/workflows/chromatic.yml`
 - 接入文档：`docs/chromatic.md`
-- 默认模式（`enforce=false`）：若仓库未配置 `CHROMATIC_PROJECT_TOKEN`，工作流会自动跳过上传并提示配置方式
-- 审核模式（`workflow_dispatch` + `enforce=true`）：缺失 token 会升级为硬失败，避免发布验收误判为已完成视觉回归
+- 本地预检命令：
+
+```bash
+pnpm release:preflight -- --scope=chromatic
+```
+
+- 本地手动上传（可选，需已配置环境变量）：
+
+```bash
+export CHROMATIC_PROJECT_TOKEN=<your-token>
+pnpm storybook:build
+pnpm chromatic
+```
+
+- 默认模式（`enforce=false`）：若仓库未配置 `CHROMATIC_PROJECT_TOKEN`，工作流 soft-skip 上传并输出 warning + summary。
+- 审核模式（`workflow_dispatch` + `enforce=true`）：缺失 token 会升级为硬失败，避免发布验收误判为已完成视觉回归。
+- 手动触发 enforce（GitHub CLI）：
+
+```bash
+gh workflow run chromatic.yml -f enforce=true
+```
+
+- 缺失 token 的可观测输出：
+  - annotation: `Chromatic Skipped::CHROMATIC_PROJECT_TOKEN is missing; visual regression upload is skipped.`
+  - annotation(enforce): `Chromatic Enforced::CHROMATIC_PROJECT_TOKEN is required when enforce=true.`
+  - summary: `Chromatic Mode` 与 `Chromatic Upload Skipped/Failed`，包含 mode、reason、GitHub secrets 路径、`pnpm release:preflight -- --scope=chromatic` 修复命令。
 
 ## 外部预览
 

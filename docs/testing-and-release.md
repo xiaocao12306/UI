@@ -30,6 +30,8 @@ pnpm release:gate:ci
 pnpm release:dry-run
 ```
 
+说明：`pnpm release:dry-run` 只验证可发布包与产物，不会执行真实 npm 发布。
+
 One-command pre-release gate:
 
 ```bash
@@ -123,6 +125,18 @@ Expected behavior:
 - `release:preflight -- --scope=publish`: checks `NPM_TOKEN` only
 - any missing token in selected scope: command prints `MISSING` line(s), points to `docs/secrets.md`, and exits with code `1`
 
+Common signatures:
+
+- `MISSING CHROMATIC_PROJECT_TOKEN - Chromatic visual regression upload`
+- `MISSING NPM_TOKEN - Changesets npm publish`
+- `Some required secrets are missing for scope "...".`
+
+Fix path:
+
+1. add repository secret in `Settings -> Secrets and variables -> Actions`
+2. rerun the matching preflight scope
+3. rerun release gate (`pnpm release:gate:ci`) or dry-run (`pnpm release:dry-run`)
+
 ## Versioning
 
 Use Changesets:
@@ -151,6 +165,13 @@ Expected behavior:
 - any version-file edits from `changeset version` are automatically reverted before script exit
 - command exits non-zero if any step fails (`changeset version` or any package dry-run)
 
+Dry-run vs real publish:
+
+- `pnpm release:dry-run`: local/package-level verification only, no publish side-effect.
+- `.github/workflows/release.yml` with `NPM_TOKEN`: real publish path (`changesets/action` + `pnpm release`).
+- missing `NPM_TOKEN` + `enforce=false`: release PR automation runs, publish skipped.
+- missing `NPM_TOKEN` + `enforce=true`: workflow hard-fails before publish path.
+
 Underlying commands (for troubleshooting):
 
 ```bash
@@ -173,6 +194,24 @@ Behavior:
 - uses npm provenance (`id-token: write`) during publish
 - when `NPM_TOKEN` is missing, workflow emits explicit warning annotation and writes skip details into `GITHUB_STEP_SUMMARY` with setup path (`docs/secrets.md`)
 - supports `workflow_dispatch` input `enforce=true` to fail hard when `NPM_TOKEN` is missing (manual release audit mode)
+
+Manual enforce run (GitHub CLI):
+
+```bash
+gh workflow run release.yml -f enforce=true
+```
+
+Token-missing signatures in workflow logs:
+
+- warning: `Release Publish Skipped::NPM_TOKEN is missing; Changesets PR automation will run but npm publish is skipped.`
+- error(enforce): `Release Enforced::NPM_TOKEN is required when enforce=true.`
+
+Workflow observability (summary):
+
+- `Release Gate (CI)`: verify/coverage/demo/storybook gate snapshot.
+- `Release Dry-Run Summary`: status, failed-step label, publishable package table.
+- `Publish Mode`: trigger/ref/enforce/token state and local preflight command.
+- `npm Publish Skipped` or `npm Publish Failed`: reason, effect, fix path, secrets doc link.
 
 Dry-run workflow: `.github/workflows/release-dry-run.yml`
 
@@ -222,6 +261,12 @@ Separate workflows:
 - release PR + npm publish: `.github/workflows/release.yml` (when `NPM_TOKEN` is configured)
   - supports `workflow_dispatch` input `enforce=true` to hard-fail on missing `NPM_TOKEN`
   - default behavior remains soft-skip (`enforce=false`) when token is absent
+
+Manual Chromatic enforce run (GitHub CLI):
+
+```bash
+gh workflow run chromatic.yml -f enforce=true
+```
 
 ## Release Readiness Checklist
 

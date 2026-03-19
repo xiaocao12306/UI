@@ -17,6 +17,8 @@ pnpm release:preflight -- --scope=publish
 - `release:preflight -- --scope=chromatic`：仅检查 `CHROMATIC_PROJECT_TOKEN`
 - `release:preflight -- --scope=publish`：仅检查 `NPM_TOKEN`
 
+如果看到 `MISSING ...`，先不要继续执行发布链路；先补 secret 后重跑预检。
+
 ## CHROMATIC_PROJECT_TOKEN
 
 用途：启用 `.github/workflows/chromatic.yml` 的快照上传。
@@ -44,6 +46,17 @@ pnpm chromatic
 - 日常 PR：保持默认 `enforce=false`，缺失 token 时 soft-skip（不阻塞主 CI）。
 - 发布前人工验收：手动触发 `workflow_dispatch` 并设置 `enforce=true`，将 `CHROMATIC_PROJECT_TOKEN` 缺失升级为硬失败。
 
+可执行触发命令（GitHub CLI）：
+
+```bash
+gh workflow run chromatic.yml -f enforce=true
+```
+
+缺失 token 的预期日志签名：
+
+- soft-skip：`Chromatic Skipped::CHROMATIC_PROJECT_TOKEN is missing; visual regression upload is skipped.`
+- enforce fail：`Chromatic Enforced::CHROMATIC_PROJECT_TOKEN is required when enforce=true.`
+
 ## NPM_TOKEN
 
 用途：启用 `.github/workflows/release.yml` 的 npm publish。
@@ -68,10 +81,28 @@ pnpm chromatic
 - 日常自动触发：保持默认 `enforce=false`，缺失 token 时允许软跳过 publish，避免阻塞非发布类迭代。
 - 发布前人工验收：手动触发 `workflow_dispatch` 并设置 `enforce=true`，将 `NPM_TOKEN` 缺失升级为硬失败，避免误以为完成了真实发布。
 
+可执行触发命令（GitHub CLI）：
+
+```bash
+gh workflow run release.yml -f enforce=true
+```
+
+缺失 token 的预期日志签名：
+
+- soft-skip：`Release Publish Skipped::NPM_TOKEN is missing; Changesets PR automation will run but npm publish is skipped.`
+- enforce fail：`Release Enforced::NPM_TOKEN is required when enforce=true.`
+
 统一可审阅口径：
 
 - `chromatic.yml` 与 `release.yml` 都会在 `GITHUB_STEP_SUMMARY` 输出 `enforce mode` 与 token 配置状态。
 - token 缺失时 summary 会附修复路径：`docs/secrets.md`。
+
+建议排障顺序：
+
+1. 本地：`pnpm release:preflight -- --scope=chromatic|publish`
+2. CI：看 annotation（warning/error）是否为 token 缺失
+3. CI：看 `GITHUB_STEP_SUMMARY` 中 `Chromatic Mode` / `Publish Mode` 与 `Skipped/Failed` 原因
+4. 修复 secret 后重新触发 workflow
 
 安全建议：
 

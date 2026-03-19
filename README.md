@@ -150,20 +150,22 @@ pnpm chromatic
 - dry-run workflow: `.github/workflows/release-dry-run.yml`
 - changeset gate workflow: `.github/workflows/changeset-required.yml`
 - release PR generation uses Changesets on `main`
-- npm publish runs only when `NPM_TOKEN` is configured
-- secrets setup guide: `docs/secrets.md`
 - local changeset gate: `pnpm changeset:required` (checks package diffs include `.changeset/*.md`)
-- release workflow runs `pnpm release:gate:ci` and `pnpm release:dry-run` before any publish step
-- local preflight:
+- local secrets preflight:
   - `pnpm release:preflight` (`CHROMATIC_PROJECT_TOKEN` + `NPM_TOKEN`)
   - `pnpm release:preflight -- --scope=chromatic` (`CHROMATIC_PROJECT_TOKEN` only)
   - `pnpm release:preflight -- --scope=publish` (`NPM_TOKEN` only)
 - local CI-equivalent gate: `pnpm release:gate:ci` (`verify + coverage:gate + demo:e2e + demo:dist:check + storybook:test:ci`)
-- local publish dry-run: `pnpm release:dry-run` (runs `changeset version` + auto-discovered publishable packages `npm publish --dry-run`)
+- local publish dry-run: `pnpm release:dry-run` (runs `changeset version` + auto-discovered package `npm publish --dry-run`)
   - requires clean working tree and auto-reverts dry-run version file edits
 - full pre-release gate: `pnpm release:gate` (`release:gate:ci` + `release:dry-run`)
-- workflow evidence should be read from each run's `GITHUB_STEP_SUMMARY` (storybook gate snapshot, token mode, dry-run package table)
-- `Release Dry Run` workflow always emits a summary (including checkout/setup/install failure paths) with failed-step labeling for faster triage
+- real publish is only in `.github/workflows/release.yml` when `NPM_TOKEN` exists
+- Chromatic upload is only in `.github/workflows/chromatic.yml` when `CHROMATIC_PROJECT_TOKEN` exists
+- `workflow_dispatch` supports `enforce=true`:
+  - `chromatic.yml`: missing `CHROMATIC_PROJECT_TOKEN` fails hard
+  - `release.yml`: missing `NPM_TOKEN` fails hard
+- workflow evidence should be read from each run's `GITHUB_STEP_SUMMARY` (mode/token state, skip reason, dry-run package table)
+- secrets setup and rotation guide: `docs/secrets.md`
 
 Shortest release gate flow:
 
@@ -172,6 +174,20 @@ pnpm release:preflight
 pnpm release:gate:ci
 pnpm release:dry-run
 ```
+
+Manual enforce runs (release audit mode):
+
+```bash
+gh workflow run chromatic.yml -f enforce=true
+gh workflow run release.yml -f enforce=true
+```
+
+Token-missing troubleshooting quick signatures:
+
+- `Chromatic Enforced::CHROMATIC_PROJECT_TOKEN is required when enforce=true.`
+- `Chromatic Skipped::CHROMATIC_PROJECT_TOKEN is missing; visual regression upload is skipped.`
+- `Release Enforced::NPM_TOKEN is required when enforce=true.`
+- `Release Publish Skipped::NPM_TOKEN is missing; Changesets PR automation will run but npm publish is skipped.`
 
 `release:gate:ci` 展开命令：
 
