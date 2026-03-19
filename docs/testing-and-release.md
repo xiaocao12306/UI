@@ -175,9 +175,9 @@ Dry-run vs real publish:
 - missing `NPM_TOKEN` + `enforce=false`: release PR automation runs, publish skipped.
 - missing `NPM_TOKEN` + `enforce=true`: workflow hard-fails before publish path.
 
-Latest local evidence (2026-03-19 latest+1):
+Latest local evidence (2026-03-19 latest+2):
 
-- `@aurora-ui/react`: package `64.1 kB`, unpacked `393.1 kB`
+- `@aurora-ui/react`: package `64.3 kB`, unpacked `394.8 kB`
 - `@aurora-ui/primitives`: package `14.5 kB`, unpacked `71.7 kB`
 - `@aurora-ui/tokens`: package `3.2 kB`, unpacked `17.3 kB`
 
