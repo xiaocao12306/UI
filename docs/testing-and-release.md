@@ -35,7 +35,7 @@ Storybook static gate behavior:
 - `storybook:static:check` rebuilds `apps/storybook/storybook-static` before interaction tests.
 - stale static diff is treated as error and blocks the command (run `pnpm storybook:build` and commit updated static files).
 - `storybook:test:ci` uses repository-local `scripts/serve-storybook-static.mjs` to host static output before running `@storybook/test-runner`.
-- Storybook test-runner additionally executes `axe-playwright` checks per story (`apps/storybook/.storybook/test-runner.ts`, current rule profile excludes `color-contrast` until token contrast matrix is fully hardened).
+- Storybook test-runner additionally executes `axe-playwright` checks per story (`apps/storybook/.storybook/test-runner.ts`), with `color-contrast` restricted to a maintained story-id skip list instead of global disable.
 
 Demo dist gate behavior:
 

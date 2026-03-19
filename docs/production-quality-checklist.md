@@ -130,7 +130,7 @@
 - Pagination boundary hardening: `pageCount<=1` now short-circuits before token/range math, with regression coverage for `0` and negative page counts.
 - Storybook static-sync gate hardening: `storybook:static:check` now rebuilds static output and fails on `git status` diff so stale static artifacts are blocked before interaction tests.
 - Storybook play-coverage gate hardening: `storybook:play:check` now enforces at least one `play` interaction per `*.stories.*` file, with `MessageBubble` interactive assertion补齐到 32/32 story files.
-- Storybook a11y gate hardening: `@storybook/test-runner` now executes `axe-playwright` in `preVisit/postVisit`, enabling per-story WCAG regression checks (current rule profile excludes `color-contrast`).
+- Storybook a11y gate hardening: `@storybook/test-runner` now executes `axe-playwright` in `preVisit/postVisit`, and `color-contrast` is scoped to a tracked story-id skip list instead of global disable.
 - Vitest coverage gate hardening: added `coverage:gate` with hard thresholds (lines/statements `>=90%`, branches/functions `>=85%`) and wired it into CI + release gate to block coverage regressions.
 - Demo dist-sync gate hardening: `demo:dist:check` now rebuilds demo dist and fails on `git status` diff so stale public-preview artifacts are blocked before release gate completion.
 - Demo visual productization hardening: updated hero panel, badge rail, nav pill styling, and section card surfaces for stronger brand hierarchy and commercial polish.

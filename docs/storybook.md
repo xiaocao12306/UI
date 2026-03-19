@@ -43,7 +43,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `storybook:play:check`：校验 `apps/storybook/src/stories/*.stories.*` 每个故事文件至少包含 1 个 `play` 交互场景，防止“仅静态展示、无可回归断言”的文件漏网
   - `storybook:static:check`：先执行 `build-storybook`，再通过 `git status -- apps/storybook/storybook-static` 校验静态产物是否同步；有 diff 会直接失败并提示提交静态更新
   - `storybook:test`：针对已运行的 Storybook URL 执行交互测试
-  - `apps/storybook/.storybook/test-runner.ts`：在 `preVisit/postVisit` 注入 `axe-playwright`，为每个 story 执行 WCAG 扫描（当前临时关闭 `color-contrast` 规则，避免主题 token 对比度调优前的噪音误报）
+  - `apps/storybook/.storybook/test-runner.ts`：在 `preVisit/postVisit` 注入 `axe-playwright`，为每个 story 执行 WCAG 扫描；`color-contrast` 仅对已登记的低对比 story id 做定向豁免，其余 story 仍执行完整规则
 - `storybook:test:ci`：先执行 `storybook:coverage:check` + `storybook:docs:check` + `storybook:play:check` + `storybook:static:check`，再在本地静态产物（`storybook-static`）上通过 `scripts/serve-storybook-static.mjs` 启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
 - 可审阅性约定：Storybook tests/suites 计数不在文档中手工维护，统一以 CI run 的 `GITHUB_STEP_SUMMARY`（`Storybook Interaction Gate`）为准。
 - 当前已覆盖 play 场景：
