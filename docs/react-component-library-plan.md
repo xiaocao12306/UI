@@ -534,6 +534,7 @@
   - Tabs/Table 焦点兜底收口（全局键鼠意图跟踪 + `:focus-visible` fallback，补齐 keyboard-after-pointer 单测与 Storybook 验收）
   - 发布门禁文档可执行性收口（README / `docs/secrets.md` / `docs/storybook.md` / `docs/testing-and-release.md` 补齐 token 缺失签名、`enforce` 模式与本地 preflight 排障路径）
   - CommandPalette 无可执行结果键盘语义收口（移除无效导航快捷键提示并保留原生 `Home/End/Page` 输入行为，补齐 unit + Storybook `DisabledOnlyResults` 验收）
+  - Toast 关闭按钮非主键边界收口（close button 仅主键 `mousedown/up` 触发 pressed 视觉，规避右键触发误压态；补齐 unit + Storybook `CloseButtonPrimaryPointerOnly`）
   - Table 禁用态交互视觉收口（排序控件在 loading/不可操作分支自动清理 hover/pressed/focus 残留，补齐 unit + Storybook `LoadingDisablesResetsSortVisualState`）
   - Tabs 禁用态交互视觉收口（运行时禁用 tab 自动清理 hover/pressed/focus 残留，补齐 unit + Storybook `DisabledTabVisualReset`）
 - 进行中
