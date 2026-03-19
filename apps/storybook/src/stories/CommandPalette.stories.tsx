@@ -19,7 +19,8 @@ const meta = {
     layout: "fullscreen",
     docs: {
       description: {
-        component: "CommandPalette is optimized for AI workflow shortcuts with keyword filtering and action callbacks."
+        component:
+          "CommandPalette is optimized for AI workflow shortcuts with keyword filtering and action callbacks."
       }
     }
   },
@@ -52,13 +53,20 @@ function AiFlowPalette() {
   const actionCommands: CommandItem[] = commands.map((item) => ({
     ...item,
     onSelect: () =>
-      setLastAction(typeof item.textValue === "string" ? item.textValue : typeof item.label === "string" ? item.label : item.key)
+      setLastAction(
+        typeof item.textValue === "string"
+          ? item.textValue
+          : typeof item.label === "string"
+            ? item.label
+            : item.key
+      )
   }));
 
   return (
     <div style={{ minHeight: 420, padding: 20 }}>
       <p style={{ marginTop: 0, color: "var(--aurora-text-secondary)" }}>
-        Last AI action: <strong style={{ color: "var(--aurora-text-primary)" }}>{lastAction}</strong>
+        Last AI action:{" "}
+        <strong style={{ color: "var(--aurora-text-primary)" }}>{lastAction}</strong>
       </p>
       <CommandPalette open={open} onOpenChange={setOpen} commands={actionCommands} />
     </div>
@@ -80,7 +88,9 @@ function QueryTelemetryPalette() {
       <CommandPalette
         open={open}
         onOpenChange={setOpen}
-        commands={[{ key: "open-changelog", label: "Open Changelog", keywords: ["release", "notes"] }]}
+        commands={[
+          { key: "open-changelog", label: "Open Changelog", keywords: ["release", "notes"] }
+        ]}
         emptyMessage="No matching AI workflow command."
         onQueryChange={setQuery}
         getResultsStatusText={({ query: nextQuery, visibleCount, enabledCount }) =>
@@ -246,8 +256,16 @@ function PersistentSelectionPalette() {
         onOpenChange={setOpen}
         closeOnSelect={false}
         commands={[
-          { key: "run-lint", label: "Run Lint", onSelect: () => setSelectedCount((count) => count + 1) },
-          { key: "run-tests", label: "Run Tests", onSelect: () => setSelectedCount((count) => count + 1) }
+          {
+            key: "run-lint",
+            label: "Run Lint",
+            onSelect: () => setSelectedCount((count) => count + 1)
+          },
+          {
+            key: "run-tests",
+            label: "Run Tests",
+            onSelect: () => setSelectedCount((count) => count + 1)
+          }
         ]}
       />
     </div>
@@ -361,6 +379,33 @@ function EscapeClearsQueryFirstPalette() {
   );
 }
 
+function EscapeShortcutHintPrecisionPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [query, setQuery] = React.useState("");
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Query telemetry:{" "}
+        <strong data-testid="escape-hint-query" style={{ color: "var(--aurora-text-primary)" }}>
+          {query || "N/A"}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        closeOnEscape={false}
+        clearQueryOnEscape
+        onQueryChange={setQuery}
+        commands={[
+          { key: "publish-release", label: "Publish Release", keywords: ["release"] },
+          { key: "open-changelog", label: "Open Changelog", keywords: ["notes"] }
+        ]}
+      />
+    </div>
+  );
+}
+
 function RefinedSearchKeepsActiveCommandPalette() {
   const [open, setOpen] = React.useState(true);
   const [lastAction, setLastAction] = React.useState("none");
@@ -379,8 +424,18 @@ function RefinedSearchKeepsActiveCommandPalette() {
         closeOnSelect={false}
         commands={[
           { key: "scan-code", label: "Scan Code", keywords: ["scan"] },
-          { key: "search-docs", label: "Search Docs", keywords: ["search"], onSelect: () => setLastAction("search-docs") },
-          { key: "send-report", label: "Send Report", keywords: ["send"], onSelect: () => setLastAction("send-report") }
+          {
+            key: "search-docs",
+            label: "Search Docs",
+            keywords: ["search"],
+            onSelect: () => setLastAction("search-docs")
+          },
+          {
+            key: "send-report",
+            label: "Send Report",
+            keywords: ["send"],
+            onSelect: () => setLastAction("send-report")
+          }
         ]}
       />
     </div>
@@ -443,7 +498,11 @@ function ImeCompositionGuardPalette() {
         closeOnSelect={false}
         commands={[
           { key: "open-settings", label: "Open Settings" },
-          { key: "deploy", label: "Deploy Project", onSelect: () => setSelectedCount((value) => value + 1) }
+          {
+            key: "deploy",
+            label: "Deploy Project",
+            onSelect: () => setSelectedCount((value) => value + 1)
+          }
         ]}
       />
     </div>
@@ -533,25 +592,33 @@ export const CloseReasonTelemetry: Story = {
     await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent("N/A");
     await userEvent.click(await canvas.findByRole("option", { name: "Create Spec" }));
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("item-select");
-    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent("select -> reason:item-select -> open:false");
+    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent(
+      "select -> reason:item-select -> open:false"
+    );
 
     await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("escape-key");
-    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
+    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent(
+      "reason:escape-key -> open:false"
+    );
 
     await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
     await userEvent.click(doc.body);
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("outside-pointer");
-    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent("reason:outside-pointer -> open:false");
+    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent(
+      "reason:outside-pointer -> open:false"
+    );
 
     await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
     await userEvent.click(canvas.getByRole("button", { name: "Close dialog" }));
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("close-button");
-    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent("reason:close-button -> open:false");
+    await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent(
+      "reason:close-button -> open:false"
+    );
   }
 };
 
@@ -568,7 +635,9 @@ export const EmptyStateAriaControlsLifecycle: Story = {
 
     await userEvent.clear(input);
     await userEvent.type(input, "no-match");
-    await expect(canvas.queryByRole("listbox", { name: "Command results" })).not.toBeInTheDocument();
+    await expect(
+      canvas.queryByRole("listbox", { name: "Command results" })
+    ).not.toBeInTheDocument();
     await expect(input).not.toHaveAttribute("aria-controls");
 
     await userEvent.clear(input);
@@ -591,7 +660,9 @@ export const LocalizedResultsLabel: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
-    await expect(await canvas.findByRole("listbox", { name: "AI workflow commands" })).toBeInTheDocument();
+    await expect(
+      await canvas.findByRole("listbox", { name: "AI workflow commands" })
+    ).toBeInTheDocument();
   }
 };
 
@@ -628,8 +699,13 @@ export const DisabledOnlyResults: Story = {
 
     await userEvent.clear(input);
     await userEvent.type(input, "release");
-    await expect(canvas.getByRole("status")).toHaveTextContent('No enabled commands match "release".');
-    await expect(input).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp Home End PageDown PageUp Escape");
+    await expect(canvas.getByRole("status")).toHaveTextContent(
+      'No enabled commands match "release".'
+    );
+    await expect(input).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Escape"
+    );
   }
 };
 
@@ -669,7 +745,10 @@ export const PersistentSelection: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
     const input = await canvas.findByRole("combobox", { name: "Search commands" });
-    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-0")
+    );
 
     fireEvent.keyDown(input, { key: "Enter", repeat: false });
     await waitFor(() => {
@@ -750,6 +829,34 @@ export const EscapeClearsQueryFirst: Story = {
   }
 };
 
+export const EscapeShortcutHintPrecision: Story = {
+  render: () => <EscapeShortcutHintPrecisionPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await expect(input).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Enter"
+    );
+
+    await userEvent.type(input, "release");
+    await expect(canvas.getByTestId("escape-hint-query")).toHaveTextContent("release");
+    await expect(input).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
+    );
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("escape-hint-query")).toHaveTextContent("N/A");
+    await expect(input).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Enter"
+    );
+  }
+};
+
 export const RefinedSearchKeepsActiveCommand: Story = {
   render: () => <RefinedSearchKeepsActiveCommandPalette />,
   play: async ({ canvasElement }) => {
@@ -757,10 +864,16 @@ export const RefinedSearchKeepsActiveCommand: Story = {
     const input = await canvas.findByRole("combobox", { name: "Search commands" });
 
     await userEvent.type(input, "search");
-    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-0")
+    );
 
     await userEvent.clear(input);
-    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-1")
+    );
     const activeId = input.getAttribute("aria-activedescendant");
     expect(activeId).toBeTruthy();
     const activeOption = canvasElement.ownerDocument.getElementById(activeId!);
@@ -782,12 +895,21 @@ export const PagedKeyboardNavigation: Story = {
       "ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
     );
 
-    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-0")
+    );
     await userEvent.keyboard("{PageDown}");
-    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-6"));
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-6")
+    );
 
     await userEvent.keyboard("{PageUp}");
-    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-0")
+    );
   }
 };
 
@@ -798,7 +920,10 @@ export const ImeCompositionGuard: Story = {
     const input = await canvas.findByRole("combobox", { name: "Search commands" });
     await userEvent.click(input);
 
-    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-0")
+    );
     await userEvent.type(input, "deploy");
     await expect(canvas.getByTestId("ime-query-value")).toHaveTextContent("deploy");
 
@@ -821,7 +946,9 @@ export const EscapePreemptedByGlobalHandler: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
 
-    await expect(await canvas.findByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(
+      await canvas.findByRole("dialog", { name: "Command Palette" })
+    ).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
     await expect(canvas.getByTestId("command-escape-calls")).toHaveTextContent("0");
