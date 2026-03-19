@@ -95,6 +95,51 @@ export const FocusReturn: Story = {
   }
 };
 
+function FocusTrapKeyboardCycleDialog() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <div style={{ display: "grid", gap: 12 }}>
+      <button type="button">Outside before dialog</button>
+      <Dialog open={open} onOpenChange={setOpen} title="Focus trap dialog">
+        <div style={{ display: "grid", gap: 10 }}>
+          <p style={{ margin: 0 }}>Tab and Shift+Tab should cycle within the dialog.</p>
+          <Button>Primary dialog action</Button>
+          <Button variant="outline">Secondary dialog action</Button>
+        </div>
+      </Dialog>
+      <button type="button">Outside after dialog</button>
+    </div>
+  );
+}
+
+export const FocusTrapKeyboardCycle: Story = {
+  render: () => <FocusTrapKeyboardCycleDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const closeButton = await body.findByRole("button", { name: "Close dialog" });
+    const primaryAction = body.getByRole("button", { name: "Primary dialog action" });
+    const secondaryAction = body.getByRole("button", { name: "Secondary dialog action" });
+    const outsideAfter = body.getByRole("button", { name: "Outside after dialog" });
+
+    closeButton.focus();
+    await expect(closeButton).toHaveFocus();
+
+    await userEvent.tab();
+    await expect(primaryAction).toHaveFocus();
+
+    await userEvent.tab();
+    await expect(secondaryAction).toHaveFocus();
+
+    await userEvent.tab();
+    await expect(closeButton).toHaveFocus();
+    await expect(outsideAfter).not.toHaveFocus();
+
+    await userEvent.tab({ shift: true });
+    await expect(secondaryAction).toHaveFocus();
+  }
+};
+
 export const OpenByDefault: Story = {
   render: () => <InitiallyOpenDialog />
 };

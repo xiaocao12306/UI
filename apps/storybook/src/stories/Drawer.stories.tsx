@@ -228,6 +228,51 @@ export const FocusReturn: Story = {
   }
 };
 
+function FocusTrapKeyboardCycleDrawerDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <div style={{ minHeight: 420, padding: 16, display: "grid", gap: 10, justifyItems: "start" }}>
+      <button type="button">Outside before drawer</button>
+      <Drawer open={open} onOpenChange={setOpen} title="Focus trap drawer">
+        <div style={{ display: "grid", gap: 10 }}>
+          <p style={{ margin: 0 }}>Tab and Shift+Tab should cycle within the drawer.</p>
+          <Button>Primary drawer action</Button>
+          <Button variant="outline">Secondary drawer action</Button>
+        </div>
+      </Drawer>
+      <button type="button">Outside after drawer</button>
+    </div>
+  );
+}
+
+export const FocusTrapKeyboardCycle: Story = {
+  render: () => <FocusTrapKeyboardCycleDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const closeButton = await body.findByRole("button", { name: "Close drawer" });
+    const primaryAction = body.getByRole("button", { name: "Primary drawer action" });
+    const secondaryAction = body.getByRole("button", { name: "Secondary drawer action" });
+    const outsideAfter = body.getByRole("button", { name: "Outside after drawer" });
+
+    closeButton.focus();
+    await expect(closeButton).toHaveFocus();
+
+    await userEvent.tab();
+    await expect(primaryAction).toHaveFocus();
+
+    await userEvent.tab();
+    await expect(secondaryAction).toHaveFocus();
+
+    await userEvent.tab();
+    await expect(closeButton).toHaveFocus();
+    await expect(outsideAfter).not.toHaveFocus();
+
+    await userEvent.tab({ shift: true });
+    await expect(secondaryAction).toHaveFocus();
+  }
+};
+
 function FocusReturnDisabledDrawerDemo() {
   const [open, setOpen] = React.useState(false);
 

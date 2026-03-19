@@ -407,3 +407,4 @@
 - Overlay branch parity: added `Drawer` body-scroll-lock regressions (open/close + multi-modal coexistence) and `Dropdown` controlled/defaultOpen regressions to lock controlled-state contract and prevent close-behavior drift.
 - Overlay focus-trap parity: added Dialog/Drawer `Tab` + `Shift+Tab` cycle regressions to ensure focus remains trapped inside modal surfaces and cannot escape to page-level controls while open.
 - Demo dist gate recovery: refreshed `apps/demo/dist` after `release:gate:ci` detected stale artifacts, then revalidated `pnpm demo:dist:check` to restore deployable static preview parity.
+- Overlay Storybook focus-trap parity: added `Dialog/Drawer` `FocusTrapKeyboardCycle` stories with `Tab/Shift+Tab` loop assertions so modal focus containment now has visual/interaction regression coverage beyond unit tests.
