@@ -416,10 +416,12 @@
   - Tabs 手动激活 AT 收口（修复 `click(detail=0)` 过度拦截：辅助技术触发点击可激活 tab，同时保持键盘激活去重）
   - CommandPalette i18n 收口（新增 `closeLabel`，支持关闭按钮可访问名称本地化，并补齐 Storybook `LocalizedDialogCopy` 断言）
   - CommandPalette 回调契约收口（单测锁定 `item-select` 路径 `onSelect -> onCloseReason -> onOpenChange(false)` 与 close-button 路径 `onCloseReason -> onOpenChange(false)`）
+  - CommandPalette 关闭顺序单测收口（补齐 `escape-key/outside-pointer` 分支，锁定 `onCloseReason -> onOpenChange(false)` 顺序契约）
   - CommandPalette 长列表键盘可见区收口（高亮 option 随 `activeIndex` 自动 `scrollIntoView`，避免“选中不可见”）
   - CommandPalette 长列表翻页键收口（新增 `PageUp/PageDown` 按 5 条可执行项跳转并跳过禁用项，降低高密列表操作成本）
   - Demo CommandPalette 翻页键验收（新增键盘提示文案 + Playwright `PageUp/PageDown` 回归，锁定禁用项跳过行为）
   - Toast 关闭回调契约收口（单测锁定 `onCloseReason -> onClose -> onOpenChange(false)` 顺序，并同步 Component API / Best Practices）
+  - Toast 关闭顺序单测收口（补齐 `escape-key/timeout` 分支，锁定与 close-button 一致的 `onCloseReason -> onClose -> onOpenChange(false)` 顺序契约）
   - Storybook Toast 回调顺序验收（`CloseReasonTelemetry` 增加 close trace，锁定 `onCloseReason` 先于 `onOpenChange(false)`，并保持 `onClose` 介于两者之间）
   - Toast 动作语义收口（`action` 存在时切换为 `dialog/alertdialog` 语义，避免可交互通知被当作纯 live-region）
   - Demo Toast 动作语义验收（新增 action toast 场景 + Playwright 回归，锁定 `dialog` 语义与业务按钮闭环）

@@ -286,12 +286,14 @@
 - CommandPalette i18n copy semantics: added `title` / `description` / `searchAriaLabel` so dialog heading, helper copy, and combobox naming can be localized without forking component markup.
 - CommandPalette query lifecycle parity: closing the palette now emits `onQueryChange("")` so external telemetry/state resets with internal query clearing, with unit + Storybook interaction coverage.
 - CommandPalette close lifecycle parity: callback order is now contract-locked by tests/docs (`item-select`: `onSelect -> onCloseReason -> onOpenChange(false)`; close-button: `onCloseReason -> onOpenChange(false)`).
+- CommandPalette dismiss-order parity: component tests now lock `escape-key` / `outside-pointer` branches to `onCloseReason -> onOpenChange(false)` callback order.
 - CommandPalette close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `item-select` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismissal tracking.
 - Storybook command-palette close-trace parity: `CloseReasonTelemetry` now asserts deterministic callback order (`item-select`: `select -> reason -> open:false`; other dismiss paths: `reason -> open:false`).
 - Demo query telemetry parity: added `palette-query-telemetry` indicator + Playwright regression to ensure command-palette close actions reset telemetry back to `N/A`.
 - Demo command-palette close-reason parity: added `palette-close-reason-telemetry` indicator and Playwright regression for `escape-key` / `item-select` / `close-button` / `outside-pointer` branches.
 - Demo command-palette close-trace parity: added `palette-close-trace-demo` and Playwright assertions for deterministic close order (`item-select`: `select -> reason -> open:false`; other dismiss paths: `reason -> open:false`).
 - Toast close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `escape-key` / `timeout`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismissal tracking.
+- Toast dismiss-order parity: component tests now lock `close-button` / `escape-key` / `timeout` branches to `onCloseReason -> onClose -> onOpenChange(false)` callback order.
 - Storybook toast close-trace parity: `CloseReasonTelemetry` now asserts `onCloseReason` precedes `onOpenChange(false)` (with `onClose` between) so dismiss sequencing stays deterministic.
 - Demo toast close-reason parity: added `toast-close-reason-demo` indicator and Playwright regression for `escape-key` / `close-button` / `timeout` branches.
 - Demo toast close-trace parity: added `toast-close-trace-demo` and Playwright assertions locking `reason -> open:false` sequencing.
