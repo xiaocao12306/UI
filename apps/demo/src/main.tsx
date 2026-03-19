@@ -231,6 +231,17 @@ const sectionNavLinkStyle: React.CSSProperties = {
 const panelTitleStyle: React.CSSProperties = { margin: 0, fontSize: 15, letterSpacing: "-0.01em" };
 const panelDescriptionStyle: React.CSSProperties = { ...mutedBodyStyle, fontSize: 13 };
 const telemetryValueStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  minHeight: 22,
+  padding: "1px 9px",
+  borderRadius: 999,
+  border: "1px solid color-mix(in srgb, var(--aurora-border-default) 84%, transparent)",
+  background: "color-mix(in srgb, var(--aurora-surface-elevated) 76%, transparent)",
+  fontFamily: '"IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace',
+  fontSize: 12,
+  letterSpacing: "0.01em",
+  lineHeight: "18px",
   color: "var(--aurora-text-primary)",
   fontWeight: "var(--aurora-font-weight-semibold)"
 };
