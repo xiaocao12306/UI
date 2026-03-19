@@ -142,4 +142,76 @@ describe("Tooltip", () => {
     expect(onFocus).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole("tooltip")).toBeNull();
   });
+
+  it("respects preventDefault from trigger close handlers", () => {
+    const onMouseLeave = vi.fn((event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault());
+    const onBlur = vi.fn((event: React.FocusEvent<HTMLButtonElement>) => event.preventDefault());
+    const onKeyDown = vi.fn((event: React.KeyboardEvent<HTMLButtonElement>) => event.preventDefault());
+
+    render(
+      <Tooltip content="Tooltip content" delayDuration={0} closeDelay={0}>
+        <button type="button" onMouseLeave={onMouseLeave} onBlur={onBlur} onKeyDown={onKeyDown}>
+          Guarded close trigger
+        </button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Guarded close trigger" });
+    fireEvent.focus(trigger);
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+
+    fireEvent.keyDown(trigger, { key: "Escape" });
+    fireEvent.blur(trigger);
+    fireEvent.mouseLeave(trigger);
+
+    expect(onKeyDown).toHaveBeenCalledTimes(1);
+    expect(onBlur).toHaveBeenCalledTimes(1);
+    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+  });
+
+  it("applies side and sideOffset positioning styles", () => {
+    render(
+      <Tooltip content="Tooltip content" side="right" sideOffset={14} delayDuration={0} closeDelay={0}>
+        <button type="button">Positioned trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Positioned trigger" });
+    fireEvent.focus(trigger);
+
+    const tooltip = screen.getByRole("tooltip");
+    expect(tooltip.style.left).toBe("calc(100% + 14px)");
+    expect(tooltip.style.top).toBe("50%");
+    expect(tooltip.style.transform).toBe("translateY(-50%)");
+  });
+
+  it("keeps tooltip open when close timer is cancelled by re-entering tooltip content", () => {
+    vi.useFakeTimers();
+
+    render(
+      <Tooltip content="Tooltip content" delayDuration={0} closeDelay={120}>
+        <button type="button">Hover bridge</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Hover bridge" });
+    fireEvent.focus(trigger);
+    const tooltip = screen.getByRole("tooltip");
+
+    fireEvent.mouseLeave(trigger);
+    fireEvent.mouseEnter(tooltip);
+    act(() => {
+      vi.advanceTimersByTime(120);
+    });
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+
+    fireEvent.mouseLeave(tooltip);
+    act(() => {
+      vi.advanceTimersByTime(120);
+    });
+    expect(screen.queryByRole("tooltip")).toBeNull();
+
+    vi.useRealTimers();
+  });
 });
