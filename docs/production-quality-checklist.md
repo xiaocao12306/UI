@@ -297,6 +297,7 @@
 - Table shortcut-hint parity: `aria-keyshortcuts` is now exposed only when sortable headers are actually actionable; loading/empty/single-row disabled states omit the shortcut hint.
 - Table activation-repeat parity: sortable headers now ignore repeated activation keydown (`event.repeat=true`) for `Enter` / `Space` so keyboard long-press does not generate duplicate sort toggles/telemetry.
 - Table loading-sort semantics parity: loading mode now clears header `aria-sort` so assistive tech does not announce stale sorted state while rows and sort controls are non-interactive.
+- Table loading-label parity: when sort state exists, loading mode now preserves sortable-header next-direction label (`aria-label`) while keeping controls disabled and `aria-sort` suppressed.
 - CommandPalette activedescendant parity: combobox now sanitizes active option references during query/command updates so `aria-activedescendant` never points to missing or disabled options.
 - Demo section-nav parity: `activeSection` now tracks viewport sections via `IntersectionObserver`, so hero cards and nav pills stay aligned during scroll (not only hash changes).
 - Gate observability parity: CI/Release workflows now upload Storybook/Demo/Release gate raw logs as artifacts and include Storybook coverage issue counters in summaries for faster triage.

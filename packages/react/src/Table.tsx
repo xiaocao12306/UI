@@ -223,13 +223,15 @@ export function Table<T>({
             {columns.map((column) => {
               const key = String(column.key);
               const sortable = Boolean(column.sortable);
-              const sorted = !loading && sortable && sortState?.key === key && sortedEntries.length > 1 ? sortState.direction : undefined;
+              const hasMultiRowData = sortedEntries.length > 1;
+              const currentSortDirection = sortable && sortState?.key === key && hasMultiRowData ? sortState.direction : undefined;
+              const sorted = !loading ? currentSortDirection : undefined;
               const ariaSort = sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined;
               const textAlign = column.align ?? "left";
               const headerLabel = typeof column.header === "string" ? column.header : key;
-              const nextDirection: TableSortDirection = sorted === "asc" ? "desc" : "asc";
+              const nextDirection: TableSortDirection = currentSortDirection === "asc" ? "desc" : "asc";
               const sortAriaLabel = getSortAriaLabel({ columnKey: key, columnHeader: headerLabel, nextDirection });
-              const sortDisabled = loading || sortedEntries.length <= 1;
+              const sortDisabled = loading || !hasMultiRowData;
               const hovered = hoveredSortKey === key;
               const pressed = pressedSortKey === key;
               const focusVisible = focusVisibleSortKey === key;

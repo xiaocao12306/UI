@@ -191,6 +191,7 @@ describe("Table", () => {
 
     const loadingNameHeader = screen.getByRole("columnheader", { name: /Name/ });
     expect(loadingNameHeader).not.toHaveAttribute("aria-sort");
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toBeDisabled();
 
     rerender(
       <Table
@@ -208,6 +209,7 @@ describe("Table", () => {
 
     const nameHeader = screen.getByRole("columnheader", { name: /Name/ });
     expect(nameHeader).toHaveAttribute("aria-sort", "ascending");
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toBeEnabled();
   });
 
   it("accepts ariaLabel to provide an explicit table name without caption", () => {
@@ -645,7 +647,7 @@ describe("Table", () => {
     expect(screen.getByRole("status")).toHaveTextContent("当前排序：Name（desc）");
   });
 
-  it("disables sortable header controls while loading", () => {
+  it("disables sortable header controls while loading and preserves next-direction label", () => {
     const onSortChange = vi.fn();
 
     render(
@@ -664,7 +666,7 @@ describe("Table", () => {
       />
     );
 
-    const sortButton = screen.getByRole("button", { name: "Name sort ascending" });
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
     expect(sortButton).toBeDisabled();
     fireEvent.click(sortButton);
     expect(onSortChange).not.toHaveBeenCalled();
