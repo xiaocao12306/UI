@@ -49,7 +49,7 @@ export const VariantMatrix: Story = {
 
 export const StateMatrix: Story = {
   render: () => (
-    <div style={{ width: 780, display: "grid", gap: 16 }}>
+    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 16 }}>
       <div style={{ display: "grid", gap: 8 }}>
         <strong>Default + Disabled</strong>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -96,7 +96,7 @@ function KeyboardActivationDemo() {
   const [loading, setLoading] = React.useState(true);
 
   return (
-    <div style={{ width: 520, display: "grid", gap: 12 }}>
+    <div style={{ width: "min(100%, 520px)", display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
         Activation count: <strong data-testid="activation-count">{count}</strong>
       </p>

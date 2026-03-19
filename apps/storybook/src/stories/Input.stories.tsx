@@ -27,7 +27,7 @@ export const Default: Story = {};
 
 export const AiPromptStyle: Story = {
   render: () => (
-    <div style={{ width: 520, display: "grid", gap: 8 }}>
+    <div style={{ width: "min(100%, 520px)", display: "grid", gap: 8 }}>
       <label htmlFor="prompt" style={{ fontWeight: 600 }}>
         Prompt Draft
       </label>
@@ -44,7 +44,7 @@ export const AiPromptStyle: Story = {
 
 export const StateMatrix: Story = {
   render: () => (
-    <div style={{ width: 560, display: "grid", gap: 12 }}>
+    <div style={{ width: "min(100%, 560px)", display: "grid", gap: 12 }}>
       <FormField label="Default" description="Hover and focus to verify border and ring states.">
         <Input placeholder="Type project name..." />
       </FormField>
@@ -74,7 +74,7 @@ function ValidationFlowDemo() {
   const invalid = touched && value.trim().length === 0;
 
   return (
-    <div style={{ width: 560, display: "grid", gap: 10 }}>
+    <div style={{ width: "min(100%, 560px)", display: "grid", gap: 10 }}>
       <FormField label="Prompt" error={invalid ? "Prompt is required." : undefined}>
         <Input
           aria-label="Prompt input"
@@ -112,7 +112,7 @@ export const ValidationFlow: Story = {
 
 export const InvalidTokenSemantics: Story = {
   render: () => (
-    <div style={{ width: 520, display: "grid", gap: 8 }}>
+    <div style={{ width: "min(100%, 520px)", display: "grid", gap: 8 }}>
       <FormField label="Grammar review">
         <Input aria-label="Grammar review input" aria-invalid="grammar" defaultValue="Needs grammar check" />
       </FormField>

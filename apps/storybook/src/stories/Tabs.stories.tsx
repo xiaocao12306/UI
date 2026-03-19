@@ -50,7 +50,7 @@ function ControlledTabsDemo() {
   const [value, setValue] = React.useState("build");
 
   return (
-    <div style={{ width: 620, display: "grid", gap: 10 }}>
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span style={{ color: "var(--aurora-text-secondary)" }}>Current stage</span>
         <Badge tone="default">{value}</Badge>
@@ -144,7 +144,7 @@ export const AllTabsDisabled: Story = {
 
 export const KeyboardNavigationGuide: Story = {
   render: () => (
-    <div style={{ width: 620, display: "grid", gap: 12 }}>
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
         Keyboard: horizontal tabs use ArrowLeft/ArrowRight, vertical tabs use ArrowUp/ArrowDown.
         Home jumps to first enabled tab, End jumps to last enabled tab.
@@ -183,7 +183,7 @@ export const KeyboardNavigationGuide: Story = {
 
 export const NoLoopNavigation: Story = {
   render: () => (
-    <div style={{ width: 620, display: "grid", gap: 12 }}>
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
         Set <code>loop=&#123;false&#125;</code> to keep Arrow navigation at tablist boundaries
         instead of wrapping.
@@ -212,7 +212,7 @@ function LabelledByHeadingDemo() {
   const headingId = React.useId();
 
   return (
-    <div style={{ width: 620, display: "grid", gap: 10 }}>
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 10 }}>
       <h3 id={headingId} style={{ margin: 0 }}>
         Release Stages
       </h3>
@@ -231,7 +231,7 @@ export const LabelledByHeading: Story = {
 
 export const Vertical: Story = {
   render: () => (
-    <div style={{ width: 620 }}>
+    <div style={{ width: "min(100%, 620px)" }}>
       <Tabs
         ariaLabel="Vertical workflow tabs"
         orientation="vertical"
@@ -261,7 +261,7 @@ export const Vertical: Story = {
 
 export const RtlKeyboardNavigation: Story = {
   render: () => (
-    <div dir="rtl" style={{ width: 620, display: "grid", gap: 12 }}>
+    <div dir="rtl" style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
         In RTL layouts, horizontal ArrowRight moves to the previous tab and ArrowLeft moves to the
         next tab.
@@ -289,7 +289,7 @@ export const RtlKeyboardNavigation: Story = {
 
 export const ManualActivation: Story = {
   render: () => (
-    <div style={{ width: 620, display: "grid", gap: 12 }}>
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
         Manual mode keeps panel selection stable while arrows move focus; press Enter or Space to
         activate.
@@ -335,7 +335,7 @@ export const ManualActivation: Story = {
 
 export const ManualVerticalActivation: Story = {
   render: () => (
-    <div style={{ width: 620, display: "grid", gap: 12 }}>
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
         Vertical + manual mode keeps selection stable while ArrowUp/ArrowDown move focus;
         Enter/Space activates.
@@ -386,7 +386,7 @@ function ChangeTelemetryDemo() {
   const [changes, setChanges] = React.useState(0);
 
   return (
-    <div style={{ width: 620, display: "grid", gap: 10 }}>
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span style={{ color: "var(--aurora-text-secondary)" }}>Value change events</span>
         <Badge tone="default" data-testid="change-count">

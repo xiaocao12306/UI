@@ -53,7 +53,7 @@ type Story = StoryObj<typeof meta>;
 
 export const ReleaseChecklist: Story = {
   render: () => (
-    <div style={{ width: 780, display: "grid", gap: 10 }}>
+    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
       <Table
         caption="Release readiness board"
         columns={columns}
@@ -92,7 +92,7 @@ export const WithRowAction: Story = {
 
 export const EmptyState: Story = {
   render: () => (
-    <div style={{ width: 780 }}>
+    <div style={{ width: "min(100%, 780px)" }}>
       <Table columns={columns} data={[]} emptyContent="No release items yet." />
     </div>
   ),
@@ -108,7 +108,7 @@ export const EmptyState: Story = {
 
 export const SingleRowSortDisabled: Story = {
   render: () => (
-    <div style={{ width: 780 }}>
+    <div style={{ width: "min(100%, 780px)" }}>
       <Table
         columns={columns}
         data={[{ id: "BTN-102", component: "Button", owner: "Design System", status: "ready" }]}
@@ -127,7 +127,7 @@ export const SingleRowSortDisabled: Story = {
 
 export const LoadingState: Story = {
   render: () => (
-    <div style={{ width: 780 }}>
+    <div style={{ width: "min(100%, 780px)" }}>
       <Table
         columns={columns}
         data={rows}
@@ -154,7 +154,7 @@ export const LoadingState: Story = {
 
 export const AccessibleNameWithoutCaption: Story = {
   render: () => (
-    <div style={{ width: 780 }}>
+    <div style={{ width: "min(100%, 780px)" }}>
       <Table
         ariaLabel="Release checklist table"
         columns={columns}
@@ -173,7 +173,7 @@ export const AccessibleNameWithoutCaption: Story = {
 
 export const AccessibleNameFallback: Story = {
   render: () => (
-    <div style={{ width: 780 }}>
+    <div style={{ width: "min(100%, 780px)" }}>
       <Table columns={columns} data={rows} rowKey={(row) => row.id} />
     </div>
   ),
@@ -185,7 +185,7 @@ export const AccessibleNameFallback: Story = {
 
 export const AccessibleNameLabelledByHeading: Story = {
   render: () => (
-    <div style={{ width: 780, display: "grid", gap: 10 }}>
+    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
       <h3 id="release-board-heading" style={{ margin: 0 }}>
         Release board metrics
       </h3>
@@ -208,7 +208,7 @@ export const AccessibleNameLabelledByHeading: Story = {
 
 export const RowHeaderSemantics: Story = {
   render: () => (
-    <div style={{ width: 780 }}>
+    <div style={{ width: "min(100%, 780px)" }}>
       <Table
         columns={[
           { key: "component", header: "Component", rowHeader: true, sortable: true },
@@ -232,7 +232,7 @@ function SortTelemetryDemo() {
   const [sortState, setSortState] = React.useState("id asc");
 
   return (
-    <div style={{ width: 780, display: "grid", gap: 8 }}>
+    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 8 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
         Active sort: <strong style={{ color: "var(--aurora-text-primary)" }}>{sortState}</strong>
       </p>
@@ -279,7 +279,7 @@ export const SortTelemetry: Story = {
 
 export const LocalizedSortLabels: Story = {
   render: () => (
-    <div style={{ width: 780 }}>
+    <div style={{ width: "min(100%, 780px)" }}>
       <Table
         columns={columns}
         data={rows}
@@ -311,7 +311,7 @@ export const InvalidDefaultSortKeyFallback: Story = {
     ];
 
     return (
-      <div style={{ width: 620 }}>
+      <div style={{ width: "min(100%, 620px)" }}>
         <Table columns={nonSortableStatusColumns} data={rows} defaultSortKey="status" />
       </div>
     );
@@ -355,7 +355,7 @@ const statefulColumns: Array<TableColumn<StatefulRow>> = [
 
 export const FallbackRowKeyStability: Story = {
   render: () => (
-    <div style={{ width: 720 }}>
+    <div style={{ width: "min(100%, 720px)" }}>
       <Table columns={statefulColumns} data={statefulRows} defaultSortKey="component" />
     </div>
   ),
@@ -371,7 +371,7 @@ export const FallbackRowKeyStability: Story = {
 
 export const SourceIndexRowKeyStability: Story = {
   render: () => (
-    <div style={{ width: 720 }}>
+    <div style={{ width: "min(100%, 720px)" }}>
       <Table
         columns={statefulColumns}
         data={statefulRows}
@@ -400,7 +400,7 @@ const indexSemanticsRows: IndexSemanticsRow[] = [
 
 export const RenderIndexSemantics: Story = {
   render: () => (
-    <div style={{ width: 720, display: "grid", gap: 8 }}>
+    <div style={{ width: "min(100%, 720px)", display: "grid", gap: 8 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
         `render(row, rowIndex, sourceIndex)` exposes both sorted row position and source-data
         position.
