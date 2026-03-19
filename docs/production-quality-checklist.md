@@ -421,3 +421,5 @@
 - Toast close-button pointer parity: close-button pressed visuals now only respond to primary-button pointer paths, preventing right-click interactions from entering pressed state.
 - Table disabled-state interaction parity: sortable headers now clear pressed/focus visuals when loading or otherwise non-actionable, with unit + Storybook `LoadingDisablesResetsSortVisualState` coverage.
 - Tabs disabled-state interaction parity: runtime-disabled tabs now clear hover/pressed/focus visuals, with unit + Storybook `DisabledTabVisualReset` coverage.
+- Tabs primary-pointer parity: tab pressed offset now only activates on primary-button mouse paths, with unit + Storybook `PrimaryPointerOnlyPressedState` coverage.
+- Table primary-pointer parity: sortable-header pressed offset now only activates on primary-button mouse paths, with unit + Storybook `PrimaryPointerOnlySortPress` coverage.

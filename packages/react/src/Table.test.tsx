@@ -573,6 +573,35 @@ describe("Table", () => {
     expect(sortButton.style.transform).toBe("translateY(0)");
   });
 
+  it("ignores non-primary pointer buttons for sortable-header pressed state", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    fireEvent.mouseDown(sortButton, { button: 2 });
+    expect(sortButton.style.transform).toBe("translateY(0)");
+
+    fireEvent.mouseDown(sortButton, { button: 0 });
+    expect(sortButton.style.transform).toBe("translateY(1px)");
+
+    fireEvent.mouseUp(sortButton, { button: 2 });
+    expect(sortButton.style.transform).toBe("translateY(1px)");
+
+    fireEvent.mouseUp(sortButton, { button: 0 });
+    expect(sortButton.style.transform).toBe("translateY(0)");
+  });
+
   it("resets pressed and focus visual states when sortable controls become disabled", () => {
     const { rerender } = render(
       <Table

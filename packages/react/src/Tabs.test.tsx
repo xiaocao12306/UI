@@ -793,6 +793,31 @@ describe("Tabs", () => {
     expect(twoTab.style.transform).toBe("translateY(0)");
   });
 
+  it("ignores non-primary pointer buttons for pressed offset lifecycle", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    fireEvent.mouseDown(twoTab, { button: 2 });
+    expect(twoTab.style.transform).toBe("translateY(0)");
+
+    fireEvent.mouseDown(twoTab, { button: 0 });
+    expect(twoTab.style.transform).toBe("translateY(1px)");
+
+    fireEvent.mouseUp(twoTab, { button: 2 });
+    expect(twoTab.style.transform).toBe("translateY(1px)");
+
+    fireEvent.mouseUp(twoTab, { button: 0 });
+    expect(twoTab.style.transform).toBe("translateY(0)");
+  });
+
   it("resets pressed and focus visual states when interacted tab becomes disabled", () => {
     const { rerender } = render(
       <Tabs

@@ -247,7 +247,7 @@ export function Tabs({
                 setHoveredTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
                 setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
               }}
-              onMouseDown={() => {
+              onMouseDown={(event) => {
                 if (disabled) {
                   return;
                 }
@@ -256,10 +256,14 @@ export function Tabs({
                 setFocusVisibleTabKey((currentKey) =>
                   currentKey === item.key ? null : currentKey
                 );
-                setPressedTabKey(item.key);
+                if (event.button === 0) {
+                  setPressedTabKey(item.key);
+                }
               }}
-              onMouseUp={() => {
-                setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+              onMouseUp={(event) => {
+                if (event.button === 0) {
+                  setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                }
               }}
               onFocus={() => {
                 setFocusedValue(item.key);

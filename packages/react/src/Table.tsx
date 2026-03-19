@@ -356,7 +356,7 @@ export function Table<T>({
                         setHoveredSortKey((currentKey) => (currentKey === key ? null : currentKey));
                         setPressedSortKey((currentKey) => (currentKey === key ? null : currentKey));
                       }}
-                      onMouseDown={() => {
+                      onMouseDown={(event) => {
                         if (sortDisabled) {
                           return;
                         }
@@ -365,10 +365,16 @@ export function Table<T>({
                         setFocusVisibleSortKey((currentKey) =>
                           currentKey === key ? null : currentKey
                         );
-                        setPressedSortKey(key);
+                        if (event.button === 0) {
+                          setPressedSortKey(key);
+                        }
                       }}
-                      onMouseUp={() => {
-                        setPressedSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                      onMouseUp={(event) => {
+                        if (event.button === 0) {
+                          setPressedSortKey((currentKey) =>
+                            currentKey === key ? null : currentKey
+                          );
+                        }
                       }}
                       onFocus={() => {
                         if (sortDisabled) {

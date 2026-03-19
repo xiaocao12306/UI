@@ -540,6 +540,8 @@
   - Toast 关闭按钮非主键边界收口（close button 仅主键 `mousedown/up` 触发 pressed 视觉，规避右键触发误压态；补齐 unit + Storybook `CloseButtonPrimaryPointerOnly`）
   - Table 禁用态交互视觉收口（排序控件在 loading/不可操作分支自动清理 hover/pressed/focus 残留，补齐 unit + Storybook `LoadingDisablesResetsSortVisualState`）
   - Tabs 禁用态交互视觉收口（运行时禁用 tab 自动清理 hover/pressed/focus 残留，补齐 unit + Storybook `DisabledTabVisualReset`）
+  - Tabs 主键按压语义收口（tab `pressed` 视觉仅响应主键 `mousedown/up`，补齐 unit + Storybook `PrimaryPointerOnlyPressedState`）
+  - Table 主键按压语义收口（sortable header `pressed` 视觉仅响应主键 `mousedown/up`，补齐 unit + Storybook `PrimaryPointerOnlySortPress`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

@@ -173,6 +173,46 @@ export const DisabledTabVisualReset: Story = {
   }
 };
 
+export const PrimaryPointerOnlyPressedState: Story = {
+  render: function RenderPrimaryPointerOnlyPressedState() {
+    const [activeKey, setActiveKey] = React.useState("spec");
+    const [changeCount, setChangeCount] = React.useState(0);
+
+    return (
+      <div style={{ width: "min(100%, 620px)", display: "grid", gap: 10 }}>
+        <p style={storyHelperTextStyle}>
+          Active tab: <strong data-testid="primary-pointer-active">{activeKey}</strong> | Change
+          count: <strong data-testid="primary-pointer-count">{changeCount}</strong>
+        </p>
+        <Tabs
+          ariaLabel="Primary pointer tabs"
+          value={activeKey}
+          items={productTabs}
+          onValueChange={(nextKey) => {
+            setActiveKey(nextKey);
+            setChangeCount((current) => current + 1);
+          }}
+        />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+    const activeValue = canvas.getByTestId("primary-pointer-active");
+    const changeCount = canvas.getByTestId("primary-pointer-count");
+
+    fireEvent.mouseDown(buildTab, { button: 2 });
+    fireEvent.mouseUp(buildTab, { button: 2 });
+    await expect(activeValue).toHaveTextContent("spec");
+    await expect(changeCount).toHaveTextContent("0");
+
+    await userEvent.click(buildTab);
+    await expect(activeValue).toHaveTextContent("build");
+    await expect(changeCount).toHaveTextContent("1");
+  }
+};
+
 export const WithDisabledTab: Story = {
   render: () => (
     <Tabs

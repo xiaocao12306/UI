@@ -279,6 +279,38 @@ export const LoadingDisablesResetsSortVisualState: Story = {
   }
 };
 
+export const PrimaryPointerOnlySortPress: Story = {
+  render: function RenderPrimaryPointerOnlySortPress() {
+    const [sortState, setSortState] = React.useState("id asc");
+
+    return (
+      <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
+        <p style={storyMutedTextStyle}>
+          Active sort: <strong data-testid="primary-pointer-sort-state">{sortState}</strong>
+        </p>
+        <Table
+          columns={columns}
+          data={rows}
+          defaultSortKey="id"
+          onSortChange={(key, direction) => setSortState(`${key} ${direction}`)}
+        />
+      </StoryShowcaseFrame>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const sortButton = canvas.getByRole("button", { name: "Issue sort descending" });
+    const sortState = canvas.getByTestId("primary-pointer-sort-state");
+
+    fireEvent.mouseDown(sortButton, { button: 2 });
+    fireEvent.mouseUp(sortButton, { button: 2 });
+    await expect(sortState).toHaveTextContent("id asc");
+
+    await userEvent.click(sortButton);
+    await expect(sortState).toHaveTextContent("id desc");
+  }
+};
+
 export const AccessibleNameWithoutCaption: Story = {
   render: () => (
     <div style={{ width: "min(100%, 780px)" }}>
