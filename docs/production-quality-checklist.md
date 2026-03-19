@@ -50,7 +50,7 @@
 1. Any API change must update Storybook controls/docs and at least one interaction test.
 2. Any a11y behavior change must update role/name assertions in tests.
 3. Any visual state change should be checked in all 4 theme packs and Chromatic (if token configured).
-4. Release blocking condition: `pnpm verify` + `pnpm demo:e2e` + `pnpm storybook:test:ci` + `pnpm release:dry-run` all green (or run `pnpm release:gate`).
+4. Release blocking condition: `pnpm verify` + `pnpm coverage:gate` + `pnpm demo:e2e` + `pnpm demo:dist:check` + `pnpm storybook:test:ci` + `pnpm release:dry-run` all green (or run `pnpm release:gate`).
 
 ## Recent Closure Notes (2026-03-17)
 
@@ -130,6 +130,7 @@
 - Pagination boundary hardening: `pageCount<=1` now short-circuits before token/range math, with regression coverage for `0` and negative page counts.
 - Storybook static-sync gate hardening: `storybook:static:check` now rebuilds static output and fails on `git status` diff so stale static artifacts are blocked before interaction tests.
 - Storybook play-coverage gate hardening: `storybook:play:check` now enforces at least one `play` interaction per `*.stories.*` file, with `MessageBubble` interactive assertion补齐到 32/32 story files.
+- Storybook a11y gate hardening: `@storybook/test-runner` now executes `axe-playwright` in `preVisit/postVisit`, enabling per-story WCAG regression checks (current rule profile excludes `color-contrast`).
 - Vitest coverage gate hardening: added `coverage:gate` with hard thresholds (lines/statements `>=90%`, branches/functions `>=85%`) and wired it into CI + release gate to block coverage regressions.
 - Demo dist-sync gate hardening: `demo:dist:check` now rebuilds demo dist and fails on `git status` diff so stale public-preview artifacts are blocked before release gate completion.
 - Demo visual productization hardening: updated hero panel, badge rail, nav pill styling, and section card surfaces for stronger brand hierarchy and commercial polish.

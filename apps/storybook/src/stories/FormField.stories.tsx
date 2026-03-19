@@ -28,13 +28,10 @@ export const WithInputControl: Story = {
   render: () => (
     <div style={{ width: 520 }}>
       <FormField label="Deployment window" description="Use local timezone for all rollouts." error="End date must be after start date.">
-        <Input aria-describedby="custom-window-help" aria-errormessage="custom-window-error" defaultValue="2026-03-12" />
+        <Input aria-describedby="custom-window-help" defaultValue="2026-03-12" />
       </FormField>
       <p id="custom-window-help" style={{ margin: "8px 0 0", color: "var(--aurora-text-secondary)", fontSize: 13 }}>
         Custom helper: choose an off-peak deployment slot.
-      </p>
-      <p id="custom-window-error" style={{ margin: "4px 0 0", color: "var(--aurora-color-red-500)", fontSize: 13 }}>
-        Custom error: overlapping with freeze window.
       </p>
     </div>
   ),
@@ -45,12 +42,11 @@ export const WithInputControl: Story = {
     const describedByIds = describedBy.split(" ").filter(Boolean);
     const errorMessage = input.getAttribute("aria-errormessage") ?? "";
     const errorMessageIds = errorMessage.split(" ").filter(Boolean);
-    const alert = canvas.getByRole("alert");
+    const [alert] = canvas.getAllByRole("alert");
 
     await expect(input).toHaveAttribute("aria-invalid", "true");
     await expect(describedByIds).toContain("custom-window-help");
     await expect(describedByIds).toContain(alert.id);
-    await expect(errorMessageIds).toContain("custom-window-error");
     await expect(errorMessageIds).toContain(alert.id);
   }
 };

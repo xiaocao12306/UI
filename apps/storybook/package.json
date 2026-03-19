@@ -33,6 +33,7 @@
     "@storybook/test-runner": "^0.20.1",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "axe-playwright": "^2.2.2",
     "chromatic": "^11.29.0",
     "http-server": "^14.1.1",
     "start-server-and-test": "^2.1.5",

@@ -52,6 +52,7 @@ jobs:
           storybook_coverage_error_line=$(grep -m1 "\\[storybook-coverage-report\\] error:" /tmp/release-gate.log || true)
           storybook_docs_line=$(grep -m1 "\\[storybook-docs-import-check\\] ok:" /tmp/release-gate.log || true)
           storybook_static_line=$(grep -m1 "\\[storybook-static-check\\] ok:" /tmp/release-gate.log || true)
+          storybook_a11y_line=$(grep -m1 "accessibility violation" /tmp/release-gate.log || true)
           suites_line=$(grep -m1 "^Test Suites:" /tmp/release-gate.log || true)
           tests_line=$(grep -m1 "^Tests:" /tmp/release-gate.log || true)
 
@@ -82,6 +83,7 @@ jobs:
             fi
             echo "- ${storybook_docs_line:-storybook docs gate: n/a}"
             echo "- ${storybook_static_line:-storybook static gate: n/a}"
+            echo "- ${storybook_a11y_line:-storybook a11y scan: no violations reported}"
             echo "- ${suites_line:-Test Suites: n/a}"
             echo "- ${tests_line:-Tests: n/a}"
           } >> "$GITHUB_STEP_SUMMARY"

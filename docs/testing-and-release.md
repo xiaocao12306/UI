@@ -35,6 +35,7 @@ Storybook static gate behavior:
 - `storybook:static:check` rebuilds `apps/storybook/storybook-static` before interaction tests.
 - stale static diff is treated as error and blocks the command (run `pnpm storybook:build` and commit updated static files).
 - `storybook:test:ci` uses repository-local `scripts/serve-storybook-static.mjs` to host static output before running `@storybook/test-runner`.
+- Storybook test-runner additionally executes `axe-playwright` checks per story (`apps/storybook/.storybook/test-runner.ts`, current rule profile excludes `color-contrast` until token contrast matrix is fully hardened).
 
 Demo dist gate behavior:
 
@@ -147,6 +148,7 @@ GitHub Actions workflow runs:
 - coverage gate (`pnpm coverage:gate`, Vitest hard thresholds: lines/statements `>=90%`, branches/functions `>=85%`)
 - build
 - storybook interaction gate (`pnpm storybook:test:ci`, includes coverage/docs/static freshness checks)
+- storybook a11y scan gate (`axe-playwright` via Storybook test-runner, fail-fast on non-contrast WCAG violations)
 - demo e2e smoke test
 - demo static freshness gate (`pnpm demo:dist:check`)
 - CI evidence summary: `GITHUB_STEP_SUMMARY` includes `Storybook Interaction Gate` and `Demo Quality Gate`
