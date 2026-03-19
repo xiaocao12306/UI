@@ -504,6 +504,10 @@ test("jumps command palette active option with PageDown/PageUp while skipping di
   const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
   const searchInput = palette.getByRole("combobox", { name: "Search commands" });
   await expect(palette).toBeVisible();
+  await expect(searchInput).toHaveAttribute(
+    "aria-keyshortcuts",
+    "ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
+  );
 
   await expect(palette.getByRole("option", { name: "Open Settings" })).toHaveAttribute("aria-selected", "true");
   await searchInput.press("PageDown");
