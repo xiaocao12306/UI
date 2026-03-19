@@ -365,6 +365,9 @@ export function CommandPalette({
 
             if (event.key === "Enter" && safeActiveIndex >= 0) {
               event.preventDefault();
+              if (event.repeat) {
+                return;
+              }
               selectItem(safeActiveIndex);
             }
           }}

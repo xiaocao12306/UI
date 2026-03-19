@@ -660,6 +660,32 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("ignores repeated Enter keydown to avoid duplicate command execution", () => {
+    const onCreate = vi.fn();
+    const onOpenChange = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        closeOnSelect={false}
+        onOpenChange={onOpenChange}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "create-project", label: "Create Project", onSelect: onCreate }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "Enter", repeat: false });
+    expect(onCreate).toHaveBeenCalledTimes(1);
+
+    fireEvent.keyDown(input, { key: "Enter", repeat: true });
+    expect(onCreate).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
   it("keeps active option visible while navigating long result lists", () => {
     const originalScrollIntoView = HTMLElement.prototype.scrollIntoView;
     const scrollIntoView = vi.fn();

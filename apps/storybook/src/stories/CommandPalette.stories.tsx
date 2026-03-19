@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { CommandPalette, type CommandItem } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 
 const commands: CommandItem[] = [
   { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
@@ -653,10 +653,18 @@ export const PersistentSelection: Story = {
   render: () => <PersistentSelectionPalette />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
-    const runLint = await canvas.findByRole("option", { name: "Run Lint" });
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
 
-    await userEvent.click(runLint);
-    await expect(canvas.getByTestId("selection-count")).toHaveTextContent("1");
+    fireEvent.keyDown(input, { key: "Enter", repeat: false });
+    await waitFor(() => {
+      expect(canvas.getByTestId("selection-count")).toHaveTextContent("1");
+    });
+
+    fireEvent.keyDown(input, { key: "Enter", repeat: true });
+    await waitFor(() => {
+      expect(canvas.getByTestId("selection-count")).toHaveTextContent("1");
+    });
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   }
 };
