@@ -833,6 +833,27 @@ describe("Toast", () => {
     matchesSpy.mockRestore();
   });
 
+  it("preserves close-button focus ring on non-primary pointer down", () => {
+    render(<Toast open title="Secondary pointer" duration={0} />);
+
+    const closeButton = screen.getByRole("button", { name: "Close toast" });
+    const nativeMatches = closeButton.matches.bind(closeButton);
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        return true;
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.mouseDown(closeButton, { button: 2 });
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+    matchesSpy.mockRestore();
+  });
+
   it("applies pressed transform only for primary-button pointer down and clears on pointer up", () => {
     render(<Toast open title="Pressable" duration={0} />);
 
