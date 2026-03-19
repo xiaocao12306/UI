@@ -116,7 +116,9 @@ export const ActionRequired: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+    const dialog = canvas.getByRole("dialog");
+    await expect(dialog).toBeInTheDocument();
+    await expect(dialog).not.toHaveAttribute("aria-keyshortcuts");
     await userEvent.click(canvas.getByRole("button", { name: "Close blocking notice" }));
     await expect(canvas.queryByRole("dialog")).not.toBeInTheDocument();
     await userEvent.click(canvas.getByRole("button", { name: "Reopen" }));
@@ -223,6 +225,7 @@ export const CloseReasonTelemetry: Story = {
   render: () => <CloseReasonTelemetryDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
+    await expect(canvas.getByRole("status", { name: "Close reason telemetry" })).toHaveAttribute("aria-keyshortcuts", "Escape");
     await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("none");
     await expect(canvas.getByTestId("toast-close-trace")).toHaveTextContent("N/A");
     await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));

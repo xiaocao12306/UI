@@ -123,6 +123,7 @@ describe("Toast", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();
     render(<Toast open title="Escapable" onOpenChange={onOpenChange} onCloseReason={onCloseReason} />);
+    expect(screen.getByRole("status", { name: "Escapable" })).toHaveAttribute("aria-keyshortcuts", "Escape");
 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onOpenChange).toHaveBeenCalledWith(false);
@@ -337,6 +338,7 @@ describe("Toast", () => {
     const onOpenChange = vi.fn();
 
     render(<Toast open title="Sticky" closeOnEscape={false} onOpenChange={onOpenChange} />);
+    expect(screen.getByRole("status", { name: "Sticky" })).not.toHaveAttribute("aria-keyshortcuts");
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onOpenChange).not.toHaveBeenCalled();
   });
