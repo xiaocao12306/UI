@@ -22,6 +22,18 @@ const productTabs: TabItem[] = [
   }
 ];
 
+const storyHelperTextStyle: React.CSSProperties = {
+  margin: 0,
+  color: "var(--aurora-text-secondary)",
+  fontSize: 13,
+  lineHeight: 1.55
+};
+
+const storyTelemetryLabelStyle: React.CSSProperties = {
+  color: "var(--aurora-text-secondary)",
+  fontSize: 13
+};
+
 const meta = {
   title: "Data/Tabs",
   component: Tabs,
@@ -52,7 +64,7 @@ function ControlledTabsDemo() {
   return (
     <div style={{ width: "min(100%, 620px)", display: "grid", gap: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ color: "var(--aurora-text-secondary)" }}>Current stage</span>
+        <span style={storyTelemetryLabelStyle}>Current stage</span>
         <Badge tone="default">{value}</Badge>
       </div>
       <Tabs items={productTabs} value={value} onValueChange={setValue} />
@@ -145,7 +157,7 @@ export const AllTabsDisabled: Story = {
 export const KeyboardNavigationGuide: Story = {
   render: () => (
     <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyHelperTextStyle}>
         Keyboard: horizontal tabs use ArrowLeft/ArrowRight, vertical tabs use ArrowUp/ArrowDown.
         Home jumps to first enabled tab, End jumps to last enabled tab.
       </p>
@@ -184,7 +196,7 @@ export const KeyboardNavigationGuide: Story = {
 export const NoLoopNavigation: Story = {
   render: () => (
     <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyHelperTextStyle}>
         Set <code>loop=&#123;false&#125;</code> to keep Arrow navigation at tablist boundaries
         instead of wrapping.
       </p>
@@ -262,7 +274,7 @@ export const Vertical: Story = {
 export const RtlKeyboardNavigation: Story = {
   render: () => (
     <div dir="rtl" style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyHelperTextStyle}>
         In RTL layouts, horizontal ArrowRight moves to the previous tab and ArrowLeft moves to the
         next tab.
       </p>
@@ -290,7 +302,7 @@ export const RtlKeyboardNavigation: Story = {
 export const ManualActivation: Story = {
   render: () => (
     <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyHelperTextStyle}>
         Manual mode keeps panel selection stable while arrows move focus; press Enter or Space to
         activate.
       </p>
@@ -336,7 +348,7 @@ export const ManualActivation: Story = {
 export const ManualVerticalActivation: Story = {
   render: () => (
     <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyHelperTextStyle}>
         Vertical + manual mode keeps selection stable while ArrowUp/ArrowDown move focus;
         Enter/Space activates.
       </p>
@@ -388,7 +400,7 @@ function ChangeTelemetryDemo() {
   return (
     <div style={{ width: "min(100%, 620px)", display: "grid", gap: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ color: "var(--aurora-text-secondary)" }}>Value change events</span>
+        <span style={storyTelemetryLabelStyle}>Value change events</span>
         <Badge tone="default" data-testid="change-count">
           {changes}
         </Badge>

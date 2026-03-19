@@ -34,6 +34,13 @@ const columns: Array<TableColumn<ReleaseRow>> = [
   }
 ];
 
+const storyHelperTextStyle: React.CSSProperties = {
+  margin: 0,
+  color: "var(--aurora-text-secondary)",
+  fontSize: 13,
+  lineHeight: 1.55
+};
+
 const meta = {
   title: "Data/Table",
   tags: ["autodocs"],
@@ -256,7 +263,7 @@ function SortTelemetryDemo() {
 
   return (
     <div style={{ width: "min(100%, 780px)", display: "grid", gap: 8 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyHelperTextStyle}>
         Active sort: <strong style={{ color: "var(--aurora-text-primary)" }}>{sortState}</strong>
       </p>
       <Table
@@ -424,7 +431,7 @@ const indexSemanticsRows: IndexSemanticsRow[] = [
 export const RenderIndexSemantics: Story = {
   render: () => (
     <div style={{ width: "min(100%, 720px)", display: "grid", gap: 8 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyHelperTextStyle}>
         `render(row, rowIndex, sourceIndex)` exposes both sorted row position and source-data
         position.
       </p>
