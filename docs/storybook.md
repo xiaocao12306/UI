@@ -21,6 +21,7 @@ pnpm storybook:coverage:check
 pnpm storybook:static:check
 pnpm storybook:a11y:skip-check
 pnpm storybook:test
+pnpm storybook:test:grep "Table.stories.tsx"
 pnpm storybook:test:ci
 ```
 
@@ -45,6 +46,7 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `storybook:static:check`：先执行 `build-storybook`，再通过 `git status -- apps/storybook/storybook-static` 校验静态产物是否同步；有 diff 会直接失败并提示提交静态更新
   - `storybook:a11y:skip-check`：校验 `test-runner.ts` 中 `color-contrast` 豁免 story id 的去重/排序/存在性（基于 `storybook-static/index.json`），支持空白名单并可作为“零豁免”持续门禁
   - `storybook:test`：针对已运行的 Storybook URL 执行交互测试
+  - `storybook:test:grep`：针对本地 `storybook-static` 启动临时服务并按 `--testPathPattern` 仅运行指定 story 文件回归（例如 `pnpm storybook:test:grep "Table.stories.tsx"`）
   - `apps/storybook/.storybook/test-runner.ts`：在 `preVisit/postVisit` 注入 `axe-playwright`，为每个 story 执行 WCAG 扫描；`color-contrast` 默认全量执行，仅在白名单存在时对登记 story id 做定向豁免
 - `storybook:test:ci`：先执行 `storybook:coverage:check` + `storybook:docs:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`，再在本地静态产物（`storybook-static`）上通过 `scripts/serve-storybook-static.mjs` 启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
 - 可审阅性约定：Storybook tests/suites 计数不在文档中手工维护，统一以 CI run 的 `GITHUB_STEP_SUMMARY`（`Storybook Interaction Gate`）为准。

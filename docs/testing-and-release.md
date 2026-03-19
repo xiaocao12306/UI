@@ -27,6 +27,7 @@ pnpm storybook:a11y:skip-check
 pnpm storybook:play:check
 pnpm storybook:docs:check
 pnpm storybook:static:check
+pnpm storybook:test:grep "Table.stories.tsx"
 pnpm storybook:build
 pnpm storybook:test:ci
 ```

@@ -138,6 +138,7 @@
 - Storybook button contrast debt reduction: verified `core-button--variant-matrix` passes WCAG contrast without exemptions and removed it from the test-runner skip list.
 - Storybook table contrast debt reduction: removed disabled-sort opacity in `Table` headers to preserve readable contrast, then retired all remaining table skip-list exemptions.
 - Storybook skip-list governance hardening: `storybook:a11y:skip-check` now accepts an empty skip list so CI can enforce a true zero-exemption baseline.
+- Storybook focused-regression tooling: added `storybook:test:grep` to run `test-storybook` against a single story file via local static server, reducing iteration time for targeted fixes.
 - Vitest coverage gate hardening: added `coverage:gate` with hard thresholds (lines/statements `>=90%`, branches/functions `>=85%`) and wired it into CI + release gate to block coverage regressions.
 - Demo dist-sync gate hardening: `demo:dist:check` now rebuilds demo dist and fails on `git status` diff so stale public-preview artifacts are blocked before release gate completion.
 - Demo visual productization hardening: updated hero panel, badge rail, nav pill styling, and section card surfaces for stronger brand hierarchy and commercial polish.

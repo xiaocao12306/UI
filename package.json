@@ -25,6 +25,7 @@
     "storybook:smoke": "pnpm --filter @aurora-ui/storybook-app storybook:smoke",
     "storybook:build": "pnpm --filter @aurora-ui/storybook-app build-storybook",
     "storybook:test": "pnpm --filter @aurora-ui/storybook-app storybook:test",
+    "storybook:test:grep": "node scripts/run-storybook-test-grep.mjs",
     "storybook:docs:check": "node scripts/check-storybook-docs-imports.mjs",
     "storybook:play:check": "node scripts/check-story-play-coverage.mjs",
     "storybook:coverage:report": "node scripts/storybook-coverage-report.mjs",

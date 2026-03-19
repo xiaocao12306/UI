@@ -446,6 +446,7 @@
   - Storybook Button 对比度豁免回收（验证 `core-button--variant-matrix` 无需例外并从白名单移除）
   - Storybook Table 对比度豁免回收（移除 sortable header 禁用态透明度衰减并收回全部 `data-table--*` 白名单）
   - Storybook a11y 零豁免基线（`colorContrastSkipStoryIds` 归零，`storybook:a11y:skip-check` 支持并校验空白名单）
+  - Storybook 定向回归工具补齐（新增 `storybook:test:grep`，可基于 `testPathPattern` 单文件回归，加速组件修复验证）
   - Vitest 覆盖率门禁收口（新增 `coverage:gate` + 硬阈值 lines/statements `>=90%`、branches/functions `>=85%`，并接入 CI/Release Gate）
   - Table 空/单行排序语义收口（`defaultSortKey` 在无有效排序条件时不再暴露 `aria-sort` 与排序播报，避免禁用态误导）
   - Table 排序交互状态收口（sortable header 补齐 hover/active/focus-visible 反馈，并显式暴露 `aria-keyshortcuts="Enter Space"`）

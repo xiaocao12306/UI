@@ -87,6 +87,7 @@ pnpm storybook:play:check
 pnpm storybook:static:check
 pnpm storybook:a11y:skip-check
 pnpm storybook:test
+pnpm storybook:test:grep "Table.stories.tsx"
 pnpm storybook:test:ci
 pnpm chromatic
 ```
