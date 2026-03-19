@@ -2,6 +2,15 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Select } from "@aurora-ui/react";
 import { expect, userEvent, within } from "@storybook/test";
+import { StoryShowcaseFrame, storyMutedTextStyle } from "./storyShowcase";
+
+function SelectShowcase({ children, gap = 10 }: { children: React.ReactNode; gap?: number }) {
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 360px)" gap={gap}>
+      {children}
+    </StoryShowcaseFrame>
+  );
+}
 
 const meta = {
   title: "Form/Select",
@@ -25,7 +34,7 @@ function ControlledSelectDemo() {
   const [framework, setFramework] = React.useState("react");
 
   return (
-    <div style={{ width: 340, display: "grid", gap: 10 }}>
+    <SelectShowcase>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span style={{ color: "var(--aurora-text-primary)" }}>Selected</span>
         <Badge>{framework}</Badge>
@@ -35,7 +44,7 @@ function ControlledSelectDemo() {
         <option value="vue">Vue</option>
         <option value="svelte">Svelte</option>
       </Select>
-    </div>
+    </SelectShowcase>
   );
 }
 
@@ -51,7 +60,7 @@ export const Controlled: Story = {
 
 export const InvalidState: Story = {
   render: () => (
-    <div style={{ width: 340, display: "grid", gap: 8 }}>
+    <SelectShowcase gap={8}>
       <Select aria-label="Environment select" invalid defaultValue="" aria-describedby="environment-error">
         <option value="" disabled>
           Select environment
@@ -62,14 +71,13 @@ export const InvalidState: Story = {
       <p
         id="environment-error"
         style={{
-          margin: 0,
-          color: "color-mix(in srgb, var(--aurora-color-red-500) 86%, var(--aurora-text-primary))",
-          fontSize: 13
+          ...storyMutedTextStyle,
+          color: "color-mix(in srgb, var(--aurora-color-red-500) 86%, var(--aurora-text-primary))"
         }}
       >
         Environment is required before deployment.
       </p>
-    </div>
+    </SelectShowcase>
   )
 };
 
