@@ -591,7 +591,7 @@ describe("CommandPalette", () => {
     expect(activeOption).not.toHaveAttribute("aria-disabled", "true");
   });
 
-  it("keeps combobox aria-controls only while the result listbox is present", () => {
+  it("keeps combobox popup semantics aligned with result listbox visibility", () => {
     render(
       <CommandPalette
         open
@@ -604,14 +604,17 @@ describe("CommandPalette", () => {
     const listbox = screen.getByRole("listbox", { name: "Command results" });
     const listboxId = listbox.getAttribute("id");
     expect(listboxId).toBeTruthy();
+    expect(input).toHaveAttribute("aria-expanded", "true");
     expect(input).toHaveAttribute("aria-controls", listboxId!);
 
     fireEvent.change(input, { target: { value: "no-match" } });
     expect(screen.queryByRole("listbox", { name: "Command results" })).toBeNull();
+    expect(input).toHaveAttribute("aria-expanded", "false");
     expect(input).not.toHaveAttribute("aria-controls");
 
     fireEvent.change(input, { target: { value: "settings" } });
     const restoredListbox = screen.getByRole("listbox", { name: "Command results" });
+    expect(input).toHaveAttribute("aria-expanded", "true");
     expect(input).toHaveAttribute("aria-controls", restoredListbox.getAttribute("id"));
   });
 

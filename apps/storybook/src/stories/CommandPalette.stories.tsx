@@ -631,6 +631,7 @@ export const EmptyStateAriaControlsLifecycle: Story = {
     const initialListbox = canvas.getByRole("listbox", { name: "Command results" });
     const initialListboxId = initialListbox.getAttribute("id");
     await expect(initialListboxId).toBeTruthy();
+    await expect(input).toHaveAttribute("aria-expanded", "true");
     await expect(input).toHaveAttribute("aria-controls", initialListboxId!);
 
     await userEvent.clear(input);
@@ -638,10 +639,12 @@ export const EmptyStateAriaControlsLifecycle: Story = {
     await expect(
       canvas.queryByRole("listbox", { name: "Command results" })
     ).not.toBeInTheDocument();
+    await expect(input).toHaveAttribute("aria-expanded", "false");
     await expect(input).not.toHaveAttribute("aria-controls");
 
     await userEvent.clear(input);
     const restoredListbox = await canvas.findByRole("listbox", { name: "Command results" });
+    await expect(input).toHaveAttribute("aria-expanded", "true");
     await expect(input).toHaveAttribute("aria-controls", restoredListbox.getAttribute("id"));
   }
 };

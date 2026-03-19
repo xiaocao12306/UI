@@ -312,7 +312,7 @@ export function CommandPalette({
         <Input
           ref={inputRef}
           role="combobox"
-          aria-expanded={open}
+          aria-expanded={hasResults}
           aria-haspopup="listbox"
           aria-autocomplete="list"
           aria-controls={hasResults ? listId : undefined}
