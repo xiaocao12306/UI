@@ -295,7 +295,9 @@
 - Popover close-reason telemetry parity: added `onCloseReason` with structured reasons (`trigger-click` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
 - Popover close lifecycle parity: callback order is now contract-locked by tests/docs (`onCloseReason -> onOpenChange(false)`) for trigger/Escape/outside dismiss paths.
 - Dialog close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
+- Dialog close lifecycle parity: callback order is now contract-locked by tests/docs (`onCloseReason -> onOpenChange(false)`) for close-button/Escape/outside dismiss paths.
 - Drawer close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
+- Drawer close lifecycle parity: callback order is now contract-locked by tests/docs (`onCloseReason -> onOpenChange(false)`) for close-button/Escape/outside dismiss paths.
 - Demo dialog close-reason parity: added `dialog-close-reason-demo` telemetry indicator and Playwright regression for `close-button` / `escape-key` / `outside-pointer` branches.
 - Demo drawer close-reason parity: added `drawer-close-reason-demo` telemetry indicator and Playwright regression for `close-button` / `escape-key` / `outside-pointer` branches.
 - Demo tabs telemetry parity: added `tabs-change-telemetry` indicator and Playwright regression to lock active tab value updates.

@@ -343,7 +343,9 @@
   - Popover 关闭原因遥测收口（新增 `onCloseReason`，回传 `trigger-click/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Popover 回调契约收口（补单测锁定关闭路径 `onCloseReason -> onOpenChange(false)` 顺序，避免遥测与状态副作用乱序）
   - Dialog 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
+  - Dialog 回调契约收口（补单测锁定关闭路径 `onCloseReason -> onOpenChange(false)` 顺序，避免遥测与状态更新乱序）
   - Drawer 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
+  - Drawer 回调契约收口（补单测锁定关闭路径 `onCloseReason -> onOpenChange(false)` 顺序，避免遥测与状态更新乱序）
   - Demo Dialog 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 close-button / Escape / outside-pointer）
   - Demo Drawer 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 close-button / Escape / outside-pointer）
   - Button 键盘兼容收口（补齐 legacy `Spacebar` 激活键值，统一 pressed 态反馈分支）
