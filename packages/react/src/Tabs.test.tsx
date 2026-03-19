@@ -887,6 +887,44 @@ describe("Tabs", () => {
     matchesSpy.mockRestore();
   });
 
+  it("restores fallback focus ring when re-entering via user tab navigation", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <div>
+        <button type="button">Before tabs</button>
+        <Tabs
+          defaultValue="one"
+          items={[
+            { key: "one", label: "One", content: <div>Panel One</div> },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />
+      </div>
+    );
+
+    const beforeButton = screen.getByRole("button", { name: "Before tabs" });
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    const nativeMatches = oneTab.matches.bind(oneTab);
+    const matchesSpy = vi.spyOn(oneTab, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        throw new Error("focus-visible is not supported in this environment");
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.mouseDown(oneTab);
+    fireEvent.focus(oneTab);
+    expect(oneTab.style.boxShadow).toBe("none");
+
+    await user.click(beforeButton);
+    await user.tab();
+    expect(oneTab).toHaveFocus();
+    expect(oneTab.style.boxShadow).toContain("0 0 0 3px");
+    matchesSpy.mockRestore();
+  });
+
   it("tracks keyboard focus intent in ownerDocument for cross-document tab renders", () => {
     const iframe = document.createElement("iframe");
     document.body.appendChild(iframe);
