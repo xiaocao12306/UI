@@ -591,6 +591,7 @@
   - 发布门禁命令口径收口（`chromatic.yml` / `release.yml` 缺失 token 的 summary 与提示统一使用 `release:preflight:chromatic` / `release:preflight:publish` 别名，降低复制执行成本）
   - CommandPalette 键冲突告警收口（开发态新增 `commands[].key` 重复值告警，降低 `aria-activedescendant` 与执行遥测漂移风险；补齐 `CommandPalette.test.tsx` 与 Storybook 文档说明）
   - Dropdown 键冲突告警收口（开发态新增 `items[].key` 重复值告警，避免 roving focus 与关闭原因遥测歧义；补齐 `Dropdown.test.tsx` 与 Storybook 文档说明）
+  - Combobox 选项值冲突收口（开发态新增 `options[].value` 重复值告警，避免 selected/active 语义歧义；补齐 `Combobox.test.tsx` 与 Storybook 文档说明）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

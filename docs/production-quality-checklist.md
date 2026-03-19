@@ -432,6 +432,7 @@
 - CommandPalette disabled-result parity: when filtered results contain no enabled options, combobox keeps native `Home/End/Page` behavior and shortcut hints now only advertise actionable keys.
 - CommandPalette key-diagnostics parity: development builds now warn when `commands[].key` values are duplicated, preventing ambiguous active-option identity and close/select telemetry mapping.
 - Dropdown key-diagnostics parity: development builds now warn when `items[].key` values are duplicated, preventing ambiguous roving-focus targets and close-reason telemetry mapping.
+- Combobox value-diagnostics parity: development builds now warn when `options[].value` values are duplicated, preventing ambiguous selected-value and active-option semantics.
 - Toast close-button pointer parity: close-button pressed visuals now only respond to primary-button pointer paths, preventing right-click interactions from entering pressed state.
 - Table disabled-state interaction parity: sortable headers now clear pressed/focus visuals when loading or otherwise non-actionable, with unit + Storybook `LoadingDisablesResetsSortVisualState` coverage.
 - Tabs disabled-state interaction parity: runtime-disabled tabs now clear hover/pressed/focus visuals, with unit + Storybook `DisabledTabVisualReset` coverage.

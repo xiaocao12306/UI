@@ -53,6 +53,7 @@ export function Combobox({
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const [query, setQuery] = React.useState("");
   const [internalValue, setInternalValue] = React.useState(defaultValue);
+  const warnedDuplicateValuesSignatureRef = React.useRef<string | null>(null);
   const currentValue = value ?? internalValue;
 
   const selectedOption = React.useMemo(() => options.find((item) => item.value === currentValue), [currentValue, options]);
@@ -62,6 +63,38 @@ export function Combobox({
       setQuery(selectedOption?.label ?? "");
     }
   }, [open, selectedOption]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const duplicateValues = new Set<string>();
+    const seenValues = new Set<string>();
+    options.forEach((option) => {
+      if (seenValues.has(option.value)) {
+        duplicateValues.add(option.value);
+      }
+      seenValues.add(option.value);
+    });
+
+    if (duplicateValues.size === 0) {
+      warnedDuplicateValuesSignatureRef.current = null;
+      return;
+    }
+
+    const signature = Array.from(duplicateValues).sort().join("|");
+    if (warnedDuplicateValuesSignatureRef.current === signature) {
+      return;
+    }
+    warnedDuplicateValuesSignatureRef.current = signature;
+
+    console.warn(
+      `[Combobox] Duplicate option values detected: ${Array.from(duplicateValues)
+        .map((item) => `"${item}"`)
+        .join(", ")}. Values should be unique to keep selection and active option semantics deterministic.`
+    );
+  }, [options]);
 
   React.useEffect(() => {
     if (disabled) {

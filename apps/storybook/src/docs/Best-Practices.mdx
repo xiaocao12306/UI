@@ -51,6 +51,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For tooltip-enhanced controls that already have helper text, keep `aria-describedby` lifecycle clean: append tooltip ID only while visible and remove it on close.
 - Avoid `autoFocus`; use intentional focus management when opening overlays.
 - For value-selection combobox/listbox patterns, map `aria-selected` to the committed value, not temporary active focus.
+- Keep `Combobox.options[].value` unique and stable; development builds now warn on duplicate values to prevent selected/active state ambiguity.
 - For command-palette `aria-activedescendant` flows, keep `aria-selected` on the active option so screen readers announce current keyboard focus target.
 - For `aria-activedescendant` combobox flows, keep listbox options out of tab order and preserve input focus during pointer selection.
 - Keep combobox `aria-controls` conditional on popup visibility to avoid dangling listbox references.

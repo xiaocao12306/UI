@@ -20,6 +20,31 @@ describe("Combobox", () => {
     expect(screen.queryByRole("option", { name: "React" })).toBeNull();
   });
 
+  it("warns when duplicate combobox option values are provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Combobox
+          options={[
+            { value: "react", label: "React core" },
+            { value: "react", label: "React legacy" }
+          ]}
+          onValueChange={() => {}}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining('Duplicate option values detected: "react"')
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("selects option on click and closes popup", () => {
     const onValueChange = vi.fn();
     render(<Combobox options={options} onValueChange={onValueChange} />);

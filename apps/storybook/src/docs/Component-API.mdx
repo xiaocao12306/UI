@@ -172,7 +172,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 | Prop | Type | Notes |
 | --- | --- | --- |
-| `options` | `ComboboxOption[]` | Supports disabled entries and keyword filtering. |
+| `options` | `ComboboxOption[]` | Supports disabled entries and keyword filtering. Development builds warn when option values are duplicated. |
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled modes are both available. |
 | `onValueChange` | `(value: string) => void` | Fires when user confirms option by click or Enter. |
 | `emptyMessage` | `ReactNode` | Custom no-result content for search miss scenarios. |
