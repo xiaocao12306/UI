@@ -444,6 +444,9 @@
   - Release Gate 复验（2026-03-19 latest：修复 Popover telemetry E2E 断言目标并同步 demo dist 后，`release:gate:ci` 全链路恢复通过）
   - Demo 导航语义收口（新增 IntersectionObserver 同步 `activeSection`，滚动浏览时 Hero/分区导航高亮保持一致）
   - Demo 文案可读性收口（Telemetry 胶囊补齐窄屏换行与最大宽度约束，避免 trace 文本挤压）
+  - Demo 主题配置收口（Theme Select 改为复用 `availableThemes` 单源渲染，避免新增主题时漏改）
+  - Demo 交互状态收口（SectionNav/HeroStatCard 从事件驱动状态机切换为 CSS `:hover/:focus-visible/[aria-current]`，减少重渲染与状态分叉）
+  - Demo 动效可访问性收口（新增 `prefers-reduced-motion` 分支，导航与卡片交互在低动态偏好下关闭位移动效）
   - CI/Release 日志可观测性收口（Storybook coverage 问题计数写入 summary，并上传 gate logs artifact 便于失败复盘）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）

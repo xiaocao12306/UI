@@ -283,6 +283,9 @@
 - Table shortcut-hint parity: `aria-keyshortcuts` is now exposed only when sortable headers are actually actionable; loading/empty/single-row disabled states omit the shortcut hint.
 - Demo section-nav parity: `activeSection` now tracks viewport sections via `IntersectionObserver`, so hero cards and nav pills stay aligned during scroll (not only hash changes).
 - Gate observability parity: CI/Release workflows now upload Storybook/Demo/Release gate raw logs as artifacts and include Storybook coverage issue counters in summaries for faster triage.
+- Demo interaction-state parity: section nav and hero stat cards now use CSS state selectors (`:hover`, `:focus-visible`, `[aria-current]`) instead of component-local hover/focus state machines.
+- Demo reduced-motion parity: `prefers-reduced-motion` now disables transform-driven nav/card motion, preserving readability for motion-sensitive users.
+- Demo theme-source parity: theme selector options now render from `availableThemes`, eliminating duplicate hardcoded option drift.
 - CommandPalette keyboard-discoverability parity: search combobox now exposes `aria-keyshortcuts` metadata (`ArrowDown/ArrowUp/Home/End/PageDown/PageUp/Enter/Escape`) with unit + Storybook + demo E2E coverage.
 - Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.
