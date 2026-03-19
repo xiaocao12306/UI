@@ -483,3 +483,4 @@
 - Storybook gate parity refresh (2026-03-20 latest+5): reran `pnpm storybook:test:ci` after Overlay showcase refactor and confirmed full pass (coverage/docs/parity/structure/play/static/a11y gates + storybook interaction 213/213).
 - Storybook form/feedback showcase parity: `Select` + `Alert/Empty/Progress` stories now share `StoryShowcaseFrame` shells, reducing duplicated width wrappers and keeping visual hierarchy consistent.
 - Release-gate parity refresh (2026-03-20 latest+6): reran `pnpm release:gate:ci` after Select/Feedback showcase refactor + static sync and confirmed full pass (verify + coverage + demo e2e 73/73 + demo dist sync + storybook interaction 213/213).
+- Tooltip branch-coverage parity: added unit regressions for trigger close-path `preventDefault` guards, `side/sideOffset` positioning contract, and closeDelay cancellation when pointer re-enters tooltip content.
