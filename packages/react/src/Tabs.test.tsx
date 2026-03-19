@@ -818,6 +818,35 @@ describe("Tabs", () => {
     expect(twoTab.style.transform).toBe("translateY(0)");
   });
 
+  it("keeps focus-visible ring on non-primary pointer down and clears only for primary pointer", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    const matchesSpy = vi.spyOn(twoTab, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(twoTab);
+    expect(twoTab.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.mouseDown(twoTab, { button: 2 });
+    expect(twoTab.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.mouseDown(twoTab, { button: 0 });
+    expect(twoTab.style.boxShadow).toBe("none");
+
+    matchesSpy.mockRestore();
+  });
+
   it("resets pressed and focus visual states when interacted tab becomes disabled", () => {
     const { rerender } = render(
       <Tabs

@@ -252,13 +252,15 @@ export function Tabs({
                   return;
                 }
 
+                if (event.button !== 0) {
+                  return;
+                }
+
                 focusIntentRef.current = false;
                 setFocusVisibleTabKey((currentKey) =>
                   currentKey === item.key ? null : currentKey
                 );
-                if (event.button === 0) {
-                  setPressedTabKey(item.key);
-                }
+                setPressedTabKey(item.key);
               }}
               onMouseUp={(event) => {
                 if (event.button === 0) {

@@ -184,9 +184,11 @@ export const PrimaryPointerOnlyPressedState: Story = {
           Active tab: <strong data-testid="primary-pointer-active">{activeKey}</strong> | Change
           count: <strong data-testid="primary-pointer-count">{changeCount}</strong>
         </p>
+        <button type="button">Before tabs</button>
         <Tabs
           ariaLabel="Primary pointer tabs"
           value={activeKey}
+          activationMode="manual"
           items={productTabs}
           onValueChange={(nextKey) => {
             setActiveKey(nextKey);
@@ -198,12 +200,22 @@ export const PrimaryPointerOnlyPressedState: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const beforeButton = canvas.getByRole("button", { name: "Before tabs" });
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
     const buildTab = canvas.getByRole("tab", { name: "Build" });
     const activeValue = canvas.getByTestId("primary-pointer-active");
     const changeCount = canvas.getByTestId("primary-pointer-count");
 
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(specTab).toHaveFocus();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(buildTab).toHaveFocus();
+    await expect(buildTab.style.boxShadow).toContain("0 0 0 3px");
+
     fireEvent.mouseDown(buildTab, { button: 2 });
     fireEvent.mouseUp(buildTab, { button: 2 });
+    await expect(buildTab.style.boxShadow).toContain("0 0 0 3px");
     await expect(activeValue).toHaveTextContent("spec");
     await expect(changeCount).toHaveTextContent("0");
 

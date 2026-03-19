@@ -361,13 +361,15 @@ export function Table<T>({
                           return;
                         }
 
+                        if (event.button !== 0) {
+                          return;
+                        }
+
                         sortFocusIntentRef.current = false;
                         setFocusVisibleSortKey((currentKey) =>
                           currentKey === key ? null : currentKey
                         );
-                        if (event.button === 0) {
-                          setPressedSortKey(key);
-                        }
+                        setPressedSortKey(key);
                       }}
                       onMouseUp={(event) => {
                         if (event.button === 0) {

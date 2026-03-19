@@ -288,6 +288,7 @@ export const PrimaryPointerOnlySortPress: Story = {
         <p style={storyMutedTextStyle}>
           Active sort: <strong data-testid="primary-pointer-sort-state">{sortState}</strong>
         </p>
+        <button type="button">Before table</button>
         <Table
           columns={columns}
           data={rows}
@@ -299,11 +300,18 @@ export const PrimaryPointerOnlySortPress: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const beforeButton = canvas.getByRole("button", { name: "Before table" });
     const sortButton = canvas.getByRole("button", { name: "Issue sort descending" });
     const sortState = canvas.getByTestId("primary-pointer-sort-state");
 
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(sortButton).toHaveFocus();
+    await expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
+
     fireEvent.mouseDown(sortButton, { button: 2 });
     fireEvent.mouseUp(sortButton, { button: 2 });
+    await expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
     await expect(sortState).toHaveTextContent("id asc");
 
     await userEvent.click(sortButton);

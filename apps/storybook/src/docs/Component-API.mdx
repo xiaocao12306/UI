@@ -362,6 +362,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `activationMode` | `'automatic' \| 'manual'` | Automatic mode switches panels on arrow navigation; manual mode requires `Enter`/`Space` (including legacy `Spacebar`) to activate focused tab. |
 | manual activation key hints | `aria-keyshortcuts="Enter Space"` | In manual mode, enabled tabs expose keyboard shortcut metadata so QA/AT tooling can discover activation keys; disabled tabs omit the hint. |
 | manual activation repeat guard | ignores repeated keydown | Manual-mode activation ignores repeated `Enter`/`Space` (`event.repeat=true`) so long-press does not emit duplicate tab-change events. |
+| focus intent policy | primary pointer clears focus-visible | Non-primary pointer interactions keep keyboard-intent ring state; primary pointer down clears focus-visible and drives pressed offset lifecycle. |
 | `loop` | `boolean` | Defaults to `true`; set `false` to stop Arrow navigation at first/last enabled tab instead of wrapping. |
 | `onValueChange` | `(value: string) => void` | Fires only for enabled tabs and only when active key changes. |
 | tab relation | mounted `tabpanel` set + `hidden` toggle | Keeps every `aria-controls` target valid while showing only active content panel. |
@@ -374,6 +375,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={TabsStories.ManualActivation} />
 <Canvas of={TabsStories.ManualFocusResetOnBlur} />
 <Canvas of={TabsStories.ManualVerticalActivation} />
+<Canvas of={TabsStories.PrimaryPointerOnlyPressedState} />
 <Canvas of={TabsStories.ChangeTelemetry} />
 <Canvas of={TabsStories.ControlsReferenceMountedPanels} />
 
@@ -399,6 +401,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | sort interaction guard | loading/empty/single-row auto-disabled | Sort buttons disable automatically when sorting would be no-op (`loading`, zero rows, or one row), and no sorted-state narration is emitted in those branches. |
 | sortable header keyboard | `Enter` / `Space` / legacy `Spacebar` | Sort buttons support pointer + keyboard activation with the same direction toggling semantics across browser key-value variants. |
 | sortable header key hints | `aria-keyshortcuts="Enter Space"` | Enabled sort buttons expose explicit keyboard hints and focus-visible ring semantics for deterministic keyboard QA; disabled sort controls omit the hint. |
+| sort-button focus intent policy | primary pointer clears focus-visible | Non-primary pointer interactions keep keyboard-intent ring state; primary pointer down clears focus-visible and applies pressed offset lifecycle. |
 | activation repeat guard | ignores repeated keydown | Holding sort activation keys (`Enter` / `Space`, `event.repeat=true`) does not trigger repeated sort toggles, preventing telemetry jitter and accidental direction flips. |
 | `aria-sort` exposure | active sorted header only | Unsorted headers (including sortable ones) omit `aria-sort`, reducing screen-reader noise and matching ARIA table guidance. |
 | loading sort semantics | clears `aria-sort` during `loading` | Loading mode suppresses stale sort semantics and leaves `aria-sort` unset until data rows are interactive again. |
@@ -408,6 +411,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={TableStories.LoadingState} />
 <Canvas of={TableStories.EmptyState} />
 <Canvas of={TableStories.SingleRowSortDisabled} />
+<Canvas of={TableStories.PrimaryPointerOnlySortPress} />
 <Canvas of={TableStories.KeyboardReachableScrollContainer} />
 <Canvas of={TableStories.WithRowAction} />
 <Canvas of={TableStories.InvalidDefaultSortKeyFallback} />

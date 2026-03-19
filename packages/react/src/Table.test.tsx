@@ -602,6 +602,39 @@ describe("Table", () => {
     expect(sortButton.style.transform).toBe("translateY(0)");
   });
 
+  it("keeps sort focus-visible ring on non-primary pointer down and clears only for primary pointer", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    const matchesSpy = vi.spyOn(sortButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(sortButton);
+    expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.mouseDown(sortButton, { button: 2 });
+    expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.mouseDown(sortButton, { button: 0 });
+    expect(sortButton.style.boxShadow).toBe("none");
+
+    matchesSpy.mockRestore();
+  });
+
   it("resets pressed and focus visual states when sortable controls become disabled", () => {
     const { rerender } = render(
       <Table
