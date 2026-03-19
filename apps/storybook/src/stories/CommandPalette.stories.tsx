@@ -738,6 +738,12 @@ export const RefinedSearchKeepsActiveCommand: Story = {
 
     await userEvent.clear(input);
     await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
+    const activeId = input.getAttribute("aria-activedescendant");
+    expect(activeId).toBeTruthy();
+    const activeOption = canvasElement.ownerDocument.getElementById(activeId!);
+    await expect(activeOption).toBeInTheDocument();
+    await expect(activeOption).toHaveAttribute("role", "option");
+    await expect(activeOption).not.toHaveAttribute("aria-disabled", "true");
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   }
 };

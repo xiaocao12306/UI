@@ -165,6 +165,18 @@ export function CommandPalette({
   );
   const firstEnabledIndex = enabledIndices[0] ?? -1;
   const lastEnabledIndex = enabledIndices[enabledIndices.length - 1] ?? -1;
+  const safeActiveIndex = React.useMemo(() => {
+    if (activeIndex < 0) {
+      return -1;
+    }
+
+    const activeCommand = filtered[activeIndex];
+    if (!activeCommand || activeCommand.disabled) {
+      return -1;
+    }
+
+    return activeIndex;
+  }, [activeIndex, filtered]);
 
   React.useEffect(() => {
     if (filtered.length === 0) {
@@ -187,21 +199,21 @@ export function CommandPalette({
   }, [filtered, firstEnabledIndex]);
 
   React.useEffect(() => {
-    if (activeIndex < 0) {
+    if (safeActiveIndex < 0) {
       activeCommandKeyRef.current = null;
       return;
     }
 
-    activeCommandKeyRef.current = filtered[activeIndex]?.key ?? null;
-  }, [activeIndex, filtered]);
+    activeCommandKeyRef.current = filtered[safeActiveIndex]?.key ?? null;
+  }, [filtered, safeActiveIndex]);
 
   React.useEffect(() => {
-    if (!open || activeIndex < 0) {
+    if (!open || safeActiveIndex < 0) {
       return;
     }
 
     const list = listRef.current;
-    const activeOption = document.getElementById(`${listId}-option-${activeIndex}`);
+    const activeOption = document.getElementById(`${listId}-option-${safeActiveIndex}`);
     if (!list || !activeOption || !list.contains(activeOption)) {
       return;
     }
@@ -209,7 +221,7 @@ export function CommandPalette({
     if (typeof activeOption.scrollIntoView === "function") {
       activeOption.scrollIntoView({ block: "nearest" });
     }
-  }, [activeIndex, listId, open]);
+  }, [listId, open, safeActiveIndex]);
 
   const selectItem = React.useCallback(
     (index: number) => {
@@ -231,7 +243,7 @@ export function CommandPalette({
       return;
     }
 
-    let index = activeIndex < 0 ? (direction === 1 ? -1 : 0) : activeIndex;
+    let index = safeActiveIndex < 0 ? (direction === 1 ? -1 : 0) : safeActiveIndex;
     for (let i = 0; i < filtered.length; i += 1) {
       index = (index + direction + filtered.length) % filtered.length;
       if (!filtered[index]?.disabled) {
@@ -246,7 +258,7 @@ export function CommandPalette({
       return;
     }
 
-    const currentEnabledPosition = enabledIndices.indexOf(activeIndex);
+    const currentEnabledPosition = enabledIndices.indexOf(safeActiveIndex);
     if (currentEnabledPosition < 0) {
       setActiveIndex(direction === 1 ? firstEnabledIndex : lastEnabledIndex);
       return;
@@ -294,7 +306,7 @@ export function CommandPalette({
           aria-haspopup="listbox"
           aria-autocomplete="list"
           aria-controls={hasResults ? listId : undefined}
-          aria-activedescendant={activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
+          aria-activedescendant={safeActiveIndex >= 0 ? `${listId}-option-${safeActiveIndex}` : undefined}
           aria-describedby={statusId}
           aria-keyshortcuts={searchKeyShortcuts}
           placeholder={placeholder}
@@ -351,9 +363,9 @@ export function CommandPalette({
               return;
             }
 
-            if (event.key === "Enter" && activeIndex >= 0) {
+            if (event.key === "Enter" && safeActiveIndex >= 0) {
               event.preventDefault();
-              selectItem(activeIndex);
+              selectItem(safeActiveIndex);
             }
           }}
           aria-label={searchAriaLabel}
@@ -385,7 +397,7 @@ export function CommandPalette({
             style={{ maxHeight: 280, overflow: "auto", display: "grid", gap: 4 }}
           >
             {filtered.map((item, index) => {
-              const active = index === activeIndex;
+              const active = index === safeActiveIndex;
               return (
                 <div
                   key={item.key}

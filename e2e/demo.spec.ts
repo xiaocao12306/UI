@@ -495,6 +495,38 @@ test("does not close command palette when disabled command is clicked", async ({
   await expect(palette.getByRole("status")).toContainText('No enabled commands match "archive".');
 });
 
+test("keeps command palette activedescendant mapped to an enabled option after query refine", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  const searchInput = palette.getByRole("combobox", { name: "Search commands" });
+  await expect(palette).toBeVisible();
+
+  await searchInput.fill("open");
+  await expect(searchInput).toHaveAttribute("aria-activedescendant", /option-/);
+
+  await searchInput.fill("settings");
+  const activeId = await searchInput.getAttribute("aria-activedescendant");
+  expect(activeId).toBeTruthy();
+
+  const activeOptionMeta = await page.evaluate((id) => {
+    if (!id) {
+      return { exists: false, disabled: "true" };
+    }
+    const option = document.getElementById(id);
+    return {
+      exists: Boolean(option),
+      disabled: option?.getAttribute("aria-disabled") ?? null
+    };
+  }, activeId);
+
+  expect(activeOptionMeta.exists).toBeTruthy();
+  expect(activeOptionMeta.disabled).not.toBe("true");
+});
+
 test("jumps command palette active option with PageDown/PageUp while skipping disabled commands", async ({
   page
 }) => {

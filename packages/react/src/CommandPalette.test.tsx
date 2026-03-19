@@ -517,6 +517,47 @@ describe("CommandPalette", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("keeps aria-activedescendant bound to an existing enabled option after command updates", () => {
+    const initialCommands = [
+      { key: "open-settings", label: "Open Settings" },
+      { key: "run-tests", label: "Run Tests" }
+    ];
+
+    const { rerender } = render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={initialCommands}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
+
+    rerender(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "run-tests", label: "Run Tests", disabled: true }
+        ]}
+      />
+    );
+
+    const activeId = input.getAttribute("aria-activedescendant");
+    expect(activeId ?? "").not.toContain("option-1");
+    if (!activeId) {
+      return;
+    }
+
+    const activeOption = document.getElementById(activeId);
+    expect(activeOption).toBeTruthy();
+    expect(activeOption).toHaveAttribute("role", "option");
+    expect(activeOption).not.toHaveAttribute("aria-disabled", "true");
+  });
+
   it("keeps combobox aria-controls only while the result listbox is present", () => {
     render(
       <CommandPalette
