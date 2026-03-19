@@ -1,6 +1,6 @@
 # Component Recipes
 
-## 1) Button + Input (Prompt Bar)
+## 1. Prompt Bar (Button + Input)
 ```tsx
 import { Button, Input } from "@aurora-ui/react";
 
@@ -14,7 +14,7 @@ export function PromptBar() {
 }
 ```
 
-## 2) Dialog Form Flow
+## 2. Draft Dialog Form Flow
 ```tsx
 import * as React from "react";
 import { Button, Dialog, Input, Textarea } from "@aurora-ui/react";
@@ -37,7 +37,7 @@ export function DraftDialog() {
 }
 ```
 
-## 3) Command Palette with Actions
+## 3. Command Palette Actions
 ```tsx
 import * as React from "react";
 import { CommandPalette } from "@aurora-ui/react";
@@ -58,7 +58,7 @@ export function AppCommands() {
 }
 ```
 
-## 4) Theme Wrapper
+## 4. Theme Provider Wrapper
 ```tsx
 import { AuroraProvider, GlobalStyles } from "@aurora-ui/react";
 
@@ -72,7 +72,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 }
 ```
 
-## 5) Blocking Dropdown Approval Flow
+## 5. Blocking Approval Dropdown
 ```tsx
 import * as React from "react";
 import { Button, Dropdown, type DropdownItem } from "@aurora-ui/react";
@@ -105,7 +105,7 @@ export function ApprovalMenu() {
 }
 ```
 
-## 6) Command Palette Batch Mode
+## 6. Command Palette Batch Mode
 ```tsx
 import * as React from "react";
 import { CommandPalette } from "@aurora-ui/react";
@@ -129,7 +129,7 @@ export function BatchCommands() {
 }
 ```
 
-## 7) Table Loading + Empty States
+## 7. Table Loading and Empty States
 ```tsx
 import * as React from "react";
 import { Button, Table } from "@aurora-ui/react";
@@ -167,7 +167,7 @@ export function ReadinessTable() {
 }
 ```
 
-## 8) Command Palette Conditional Dismiss Guard
+## 8. Command Palette Dismiss Guard
 ```tsx
 import * as React from "react";
 import { Button, CommandPalette } from "@aurora-ui/react";
@@ -207,7 +207,7 @@ export function GuardedCommandPalette() {
 }
 ```
 
-## 9) Command Palette Escape Clears Query First
+## 9. Command Palette Escape-First Query Clear
 ```tsx
 import * as React from "react";
 import { CommandPalette } from "@aurora-ui/react";
@@ -231,7 +231,7 @@ export function SearchFirstPalette() {
 }
 ```
 
-## 10) Silent Toast for Passive Background Updates
+## 10. Silent Background Toast
 ```tsx
 import * as React from "react";
 import { Button, Toast } from "@aurora-ui/react";
@@ -258,7 +258,7 @@ export function SilentBackgroundToast() {
 }
 ```
 
-## 11) Keyboard Discoverability Pattern (Tabs + CommandPalette + Toast)
+## 11. Keyboard Discoverability Pattern (Tabs + Palette + Toast)
 ```tsx
 import * as React from "react";
 import { Button, CommandPalette, Tabs, Toast, type TabItem } from "@aurora-ui/react";
@@ -311,7 +311,7 @@ export function KeyboardDiscoverabilityDemo() {
 }
 ```
 
-## 12) Overlay Close Reason Telemetry Template
+## 12. Overlay Close Reason Trace Template
 ```tsx
 import * as React from "react";
 import { Dialog } from "@aurora-ui/react";
@@ -338,7 +338,7 @@ export function OverlayCloseTelemetry() {
 }
 ```
 
-## 11) Overlay Close-Reason Telemetry Panel
+## 13. Overlay Close-Reason Telemetry Panel
 ```tsx
 import * as React from "react";
 import { Button, CommandPalette, Dialog, Drawer, Popover, Toast } from "@aurora-ui/react";
@@ -393,7 +393,7 @@ export function OverlayTelemetryPanel() {
 }
 ```
 
-## 12) Tabs + Table Telemetry Binding
+## 14. Tabs and Table Telemetry Binding
 ```tsx
 import * as React from "react";
 import { Table, Tabs, type TableSortDirection } from "@aurora-ui/react";
