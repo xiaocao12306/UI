@@ -258,6 +258,102 @@ export function SilentBackgroundToast() {
 }
 ```
 
+## 11. Overlay Close Reason Telemetry
+```tsx
+import * as React from "react";
+import { Button, Dialog, type DialogCloseReason } from "@aurora-ui/react";
+
+export function DialogCloseTrace() {
+  const [open, setOpen] = React.useState(false);
+  const [trace, setTrace] = React.useState<DialogCloseReason | "none">("none");
+
+  return (
+    <div style={{ display: "grid", gap: 8 }}>
+      <Button onClick={() => setOpen(true)}>Open review dialog</Button>
+      <p style={{ margin: 0 }}>Last close reason: {trace}</p>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Release Review"
+        description="Close by button, Escape, or outside pointer."
+        onCloseReason={(reason) => setTrace(reason)}
+      >
+        <p style={{ margin: 0 }}>Track close-path telemetry for workflow analytics.</p>
+      </Dialog>
+    </div>
+  );
+}
+```
+
+## 12. Tabs Manual Activation Telemetry
+```tsx
+import * as React from "react";
+import { Tabs } from "@aurora-ui/react";
+
+const releaseTabs = [
+  { key: "planning", label: "Planning", content: "Define scope and risk." },
+  { key: "qa", label: "QA", content: "Run regression and accessibility checks." },
+  { key: "publish", label: "Publish", content: "Ship artifacts and notify teams." }
+];
+
+export function TabsTelemetry() {
+  const [value, setValue] = React.useState("planning");
+
+  return (
+    <div style={{ display: "grid", gap: 8 }}>
+      <p style={{ margin: 0 }}>Active tab: {value}</p>
+      <Tabs
+        ariaLabel="Release workflow tabs"
+        activationMode="manual"
+        value={value}
+        items={releaseTabs}
+        onValueChange={setValue}
+      />
+    </div>
+  );
+}
+```
+
+## 13. Table Sort Telemetry with i18n Narration
+```tsx
+import * as React from "react";
+import { Table, type TableSortDirection } from "@aurora-ui/react";
+
+const columns = [
+  { key: "name", header: "Name", sortable: true, rowHeader: true },
+  { key: "score", header: "Score", sortable: true }
+];
+
+const rows = [
+  { name: "Button", score: 92 },
+  { name: "Dialog", score: 88 },
+  { name: "CommandPalette", score: 90 }
+];
+
+export function TableSortTelemetry() {
+  const [sortTrace, setSortTrace] = React.useState("none");
+
+  return (
+    <div style={{ display: "grid", gap: 8 }}>
+      <p style={{ margin: 0 }}>Sort trace: {sortTrace}</p>
+      <Table
+        caption="Readiness table"
+        columns={columns}
+        data={rows}
+        defaultSortKey="name"
+        getSortAriaLabel={({ columnHeader, nextDirection }) =>
+          `${columnHeader}，切换为${nextDirection === "asc" ? "升序" : "降序"}`
+        }
+        getSortStatusText={({ columnHeader, direction }) =>
+          `当前按 ${columnHeader} ${direction === "asc" ? "升序" : "降序"} 排序`
+        }
+        onSortChange={(key, direction: TableSortDirection) => setSortTrace(`${key}:${direction}`)}
+      />
+    </div>
+  );
+}
+```
+
 ## 11. Keyboard Discoverability Pattern (Tabs + Palette + Toast)
 ```tsx
 import * as React from "react";

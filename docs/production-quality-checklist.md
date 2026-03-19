@@ -439,3 +439,4 @@
 - Release-gate parity refresh: `pnpm release:gate:ci` rerun passed on 2026-03-19 after Button/Input/FormField/Tabs/Table/CommandPalette primary-pointer and a11y refinements (verify + coverage + demo e2e 71/71 + demo dist sync + storybook interaction 202/202).
 - Release-gate parity refresh (latest+2): after syncing demo dist artifacts, `pnpm release:gate:ci` rerun passed on 2026-03-19 (verify + coverage + demo e2e 71/71 + demo dist sync + storybook interaction 206/206).
 - Release dry-run parity refresh (latest+2): `pnpm release:dry-run` rerun passed on 2026-03-19 with tarball evidence `@aurora-ui/react` package `64.3 kB` / unpacked `394.8 kB`, `@aurora-ui/primitives` package `14.5 kB` / unpacked `71.7 kB`, `@aurora-ui/tokens` package `3.2 kB` / unpacked `17.3 kB`.
+- Integration recipe parity: `docs/component-recipes.md` now includes production telemetry templates for overlay close reasons, manual-tabs activation, and localized table sort narration + telemetry.
