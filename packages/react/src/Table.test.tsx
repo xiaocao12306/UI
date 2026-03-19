@@ -610,6 +610,53 @@ describe("Table", () => {
     matchesSpy.mockRestore();
   });
 
+  it("tracks sort-button keyboard focus intent in ownerDocument for cross-document table renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+
+    const { getByRole } = render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+      />,
+      { container: secondaryContainer, baseElement: secondaryDocument.body }
+    );
+
+    const sortButton = getByRole("button", { name: "Name sort ascending" });
+    const matchesSpy = vi.spyOn(sortButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      fireEvent.mouseDown(sortButton);
+      fireEvent.focus(sortButton);
+      expect(sortButton.style.boxShadow).toBe("none");
+
+      fireEvent.blur(sortButton);
+      secondaryDocument.dispatchEvent(new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true }));
+      fireEvent.focus(sortButton);
+      expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("applies pressed offset while pointer is active on sortable headers", () => {
     render(
       <Table

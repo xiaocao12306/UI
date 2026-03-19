@@ -560,6 +560,7 @@
   - Storybook Toast 焦点语义文档收口（Component API / Best Practices 增补 `CloseButtonPrimaryPointerOnly` 场景与主键焦点策略说明）
   - Switch click guard 契约补测（消费者 `onClick.preventDefault()` 可阻断 pointer toggle，补齐 unit + Storybook `ClickPreventDefaultGuard` 场景）
   - Tabs/Table 主键焦点语义收口（非主键 `mousedown` 不再清理 tab/sort-button `focus-visible`，补齐 unit + Storybook `PrimaryPointerOnly*` 场景）
+  - Tabs/Table 跨文档焦点意图收口（键盘/指针意图监听改为绑定 `ownerDocument`，补齐 iframe 场景 unit 回归，保证多文档容器中的 `focus-visible` 语义稳定）
   - CommandPalette 修饰键导航收口（`Ctrl/Meta/Alt + Home/End/Page/Enter` 保留原生输入行为，补齐 unit + Storybook `PagedKeyboardNavigation` 回归）
   - Tabs/Table 修饰键语义收口（`Ctrl/Meta/Alt` 组合键不触发 tabs 导航激活与 table 排序，补齐 unit + Storybook `KeyboardNavigationGuide`/`SortTelemetry` 回归）
   - Table 键盘激活去重收口（sortable header 在处理 `Enter/Space` 后忽略同一动作合成 `click(detail=0)`，避免重复排序与遥测抖动；补齐 unit 回归并同步 API/Best-Practices 文档）

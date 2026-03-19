@@ -84,6 +84,7 @@ export function Table<T>({
     ? undefined
     : (ariaLabel ?? (caption ? undefined : "Data table"));
   const sortButtonRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const keyboardActivationSortKeyRef = React.useRef<string | null>(null);
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const sortFocusIntentRef = React.useRef(true);
@@ -92,6 +93,7 @@ export function Table<T>({
   const [focusVisibleSortKey, setFocusVisibleSortKey] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+    const ownerDocument = scrollContainerRef.current?.ownerDocument ?? document;
     const markKeyboardIntent = (event: KeyboardEvent) => {
       if (event.metaKey || event.altKey || event.ctrlKey) {
         return;
@@ -102,16 +104,16 @@ export function Table<T>({
       sortFocusIntentRef.current = false;
     };
 
-    document.addEventListener("keydown", markKeyboardIntent, true);
-    document.addEventListener("pointerdown", markPointerIntent, true);
-    document.addEventListener("mousedown", markPointerIntent, true);
-    document.addEventListener("touchstart", markPointerIntent, true);
+    ownerDocument.addEventListener("keydown", markKeyboardIntent, true);
+    ownerDocument.addEventListener("pointerdown", markPointerIntent, true);
+    ownerDocument.addEventListener("mousedown", markPointerIntent, true);
+    ownerDocument.addEventListener("touchstart", markPointerIntent, true);
 
     return () => {
-      document.removeEventListener("keydown", markKeyboardIntent, true);
-      document.removeEventListener("pointerdown", markPointerIntent, true);
-      document.removeEventListener("mousedown", markPointerIntent, true);
-      document.removeEventListener("touchstart", markPointerIntent, true);
+      ownerDocument.removeEventListener("keydown", markKeyboardIntent, true);
+      ownerDocument.removeEventListener("pointerdown", markPointerIntent, true);
+      ownerDocument.removeEventListener("mousedown", markPointerIntent, true);
+      ownerDocument.removeEventListener("touchstart", markPointerIntent, true);
     };
   }, []);
 
@@ -249,6 +251,7 @@ export function Table<T>({
 
   return (
     <div
+      ref={scrollContainerRef}
       data-aurora-table-scroll-container=""
       tabIndex={hasActionableSortControls ? undefined : 0}
       aria-label={

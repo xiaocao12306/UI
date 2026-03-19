@@ -146,6 +146,7 @@ export function Tabs({
   }, [items, value]);
 
   React.useEffect(() => {
+    const ownerDocument = tabListRef.current?.ownerDocument ?? document;
     const markKeyboardIntent = (event: KeyboardEvent) => {
       if (event.metaKey || event.altKey || event.ctrlKey) {
         return;
@@ -156,16 +157,16 @@ export function Tabs({
       focusIntentRef.current = false;
     };
 
-    document.addEventListener("keydown", markKeyboardIntent, true);
-    document.addEventListener("pointerdown", markPointerIntent, true);
-    document.addEventListener("mousedown", markPointerIntent, true);
-    document.addEventListener("touchstart", markPointerIntent, true);
+    ownerDocument.addEventListener("keydown", markKeyboardIntent, true);
+    ownerDocument.addEventListener("pointerdown", markPointerIntent, true);
+    ownerDocument.addEventListener("mousedown", markPointerIntent, true);
+    ownerDocument.addEventListener("touchstart", markPointerIntent, true);
 
     return () => {
-      document.removeEventListener("keydown", markKeyboardIntent, true);
-      document.removeEventListener("pointerdown", markPointerIntent, true);
-      document.removeEventListener("mousedown", markPointerIntent, true);
-      document.removeEventListener("touchstart", markPointerIntent, true);
+      ownerDocument.removeEventListener("keydown", markKeyboardIntent, true);
+      ownerDocument.removeEventListener("pointerdown", markPointerIntent, true);
+      ownerDocument.removeEventListener("mousedown", markPointerIntent, true);
+      ownerDocument.removeEventListener("touchstart", markPointerIntent, true);
     };
   }, []);
 

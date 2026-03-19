@@ -220,6 +220,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Guard against synthesized keyboard-origin click (`detail=0`) after handled sort keydown so one keyboard action maps to one telemetry event.
 - Keep sortable-header focus-visible feedback and `aria-keyshortcuts="Enter Space"` in place so keyboard affordance stays explicit in QA and audits.
 - Keep tab and sortable-header focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible rings.
+- For iframe/multi-document hosts, keep tab/sort focus-intent tracking bound to each component `ownerDocument` so keyboard focus-visible semantics remain stable outside the top-level document.
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - Use `getSortStatusText` to localize active-sort live narration so keyboard and pointer sorting changes remain equally discoverable to assistive tech users.
 - During async refreshes, set `loading` so table emits `aria-busy` and temporarily suppresses stale row actions/sorting.

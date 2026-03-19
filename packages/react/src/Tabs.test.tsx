@@ -857,6 +857,50 @@ describe("Tabs", () => {
     matchesSpy.mockRestore();
   });
 
+  it("tracks keyboard focus intent in ownerDocument for cross-document tab renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+
+    const { getByRole } = render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />,
+      { container: secondaryContainer, baseElement: secondaryDocument.body }
+    );
+
+    const oneTab = getByRole("tab", { name: "One" });
+    const matchesSpy = vi.spyOn(oneTab, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      fireEvent.mouseDown(oneTab);
+      fireEvent.focus(oneTab);
+      expect(oneTab.style.boxShadow).toBe("none");
+
+      fireEvent.blur(oneTab);
+      secondaryDocument.dispatchEvent(new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true }));
+      fireEvent.focus(oneTab);
+      expect(oneTab.style.boxShadow).toContain("0 0 0 3px");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("applies pressed offset only while pointer is active", () => {
     render(
       <Tabs
