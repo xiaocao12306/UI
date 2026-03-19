@@ -348,6 +348,7 @@
   - Drawer 回调契约收口（补单测锁定关闭路径 `onCloseReason -> onOpenChange(false)` 顺序，避免遥测与状态更新乱序）
   - Demo Dialog 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 close-button / Escape / outside-pointer）
   - Demo Drawer 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 close-button / Escape / outside-pointer）
+  - Demo Dialog/Drawer 关闭顺序验收（新增 close trace telemetry + Playwright 回归，锁定 `reason -> open:false` 顺序）
   - Button 键盘兼容收口（补齐 legacy `Spacebar` 激活键值，统一 pressed 态反馈分支）
   - Button 运行时状态收口（按下态切换到 `loading/disabled` 时立即清理 pressed 偏移视觉）
   - Button 焦点反馈收口（仅 `focus-visible` 显示焦点环，避免鼠标点击触发键盘焦点样式）

@@ -301,6 +301,7 @@
 - Drawer close lifecycle parity: callback order is now contract-locked by tests/docs (`onCloseReason -> onOpenChange(false)`) for close-button/Escape/outside dismiss paths.
 - Demo dialog close-reason parity: added `dialog-close-reason-demo` telemetry indicator and Playwright regression for `close-button` / `escape-key` / `outside-pointer` branches.
 - Demo drawer close-reason parity: added `drawer-close-reason-demo` telemetry indicator and Playwright regression for `close-button` / `escape-key` / `outside-pointer` branches.
+- Demo dialog/drawer close-trace parity: added `dialog-close-trace-demo` / `drawer-close-trace-demo` telemetry indicators and Playwright assertions for `reason -> open:false` callback order.
 - Demo tabs telemetry parity: added `tabs-change-telemetry` indicator and Playwright regression to lock active tab value updates.
 - Demo table sort telemetry parity: added `table-sort-telemetry` indicator and Playwright regression for click/keyboard sort-path updates.
 - Component recipes telemetry parity: `docs/component-recipes.md` now includes reusable Overlay close-reason and Tabs/Table telemetry templates for direct product integration.
