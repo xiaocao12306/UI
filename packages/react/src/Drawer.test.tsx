@@ -321,6 +321,31 @@ describe("Drawer", () => {
     matchesSpy.mockRestore();
   });
 
+  it("preserves close-button focus ring on non-primary pointer down", () => {
+    render(
+      <Drawer open onOpenChange={() => {}} title="Secondary pointer drawer">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Close drawer" });
+    const nativeMatches = closeButton.matches.bind(closeButton);
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        return true;
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.mouseDown(closeButton, { button: 2 });
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+    matchesSpy.mockRestore();
+  });
+
   it("applies pressed transform only for primary-button close-button pointer paths", () => {
     render(
       <Drawer open onOpenChange={() => {}} title="Pressable drawer">

@@ -429,4 +429,5 @@
 - Switch primary-pointer parity: switch pressed visuals now only respond to primary-button mouse paths (`data-pressed`), with unit + Storybook `PointerPrimaryOnly` coverage.
 - Input focus-intent parity: non-primary `mousedown/pointerdown` now preserves focus-visible state while primary pointer still clears it, with unit + Storybook `InteractionA11yParity` coverage.
 - Button focus-intent parity: non-primary `mousedown/pointerdown` now preserves focus-visible state while primary pointer still clears it, with dedicated unit coverage.
+- Drawer close-button focus-intent parity: non-primary close-button `mousedown` now preserves focus-visible state while primary pointer keeps prior behavior, with dedicated unit coverage.
 - Release-gate parity refresh: `pnpm release:gate:ci` rerun passed on 2026-03-19 after Button/Input/FormField/Tabs/Table/CommandPalette primary-pointer and a11y refinements (verify + coverage + demo e2e 71/71 + demo dist sync + storybook interaction 202/202).
