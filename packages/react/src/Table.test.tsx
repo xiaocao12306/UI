@@ -41,6 +41,35 @@ describe("Table", () => {
     expect(screen.getByRole("rowheader", { name: "Dialog" })).toBeInTheDocument();
   });
 
+  it("warns when rowKey returns duplicate values", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            { key: "name", header: "Name" },
+            { key: "status", header: "Status" }
+          ]}
+          data={[
+            { name: "Button", status: "Stable" },
+            { name: "Dialog", status: "Stable" }
+          ]}
+          rowKey={() => "duplicate-key"}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining('Duplicate row keys detected: "duplicate-key"')
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("falls back to a default accessible table name when caption and ariaLabel are absent", () => {
     render(
       <Table

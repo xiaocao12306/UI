@@ -86,6 +86,7 @@
 - CommandPalette search hardening: `commands[].textValue` now supports non-string labels, and matching is accent-insensitive (`cafe` matches `Café`).
 - Table i18n hardening: `getSortAriaLabel` now enables localized sortable-header narration while preserving `aria-sort` behavior.
 - Table loading hardening: `loading/loadingContent` now sets `aria-busy`, suppresses stale rows/empty-state rendering, and disables sort controls during refresh windows.
+- Table row-key diagnostics hardening: development builds now warn when `rowKey` returns duplicate values, reducing silent row-identity collisions in sorted/interactive tables.
 - Table row-key hardening: `rowKey(row, rowIndex)` now receives source-data index (not sorted visual index), preventing index-derived key churn during sort toggles.
 - Table render-index hardening: `columns[].render(row, rowIndex, sourceIndex)` now exposes visual index + source index together, so sorted rankings and source-linked telemetry can stay deterministic.
 - Table header semantics hardening: non-sortable columns no longer expose `aria-sort`, preventing screen readers from announcing inert headers as sortable.

@@ -586,6 +586,7 @@
   - Release Dry-Run 证据刷新（2026-03-20 latest+1：`release:dry-run` 通过，`react` package `67.1 kB` / unpacked `410.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
   - Toast 隐藏标签页计时收口（自动关闭计时在 `document.visibilityState=hidden` 时暂停，恢复可见后按剩余时长继续；补齐 `Toast.test.tsx` 回归与 Storybook API/Best-Practices 文档契约）
   - Tabs 移除态就近回退收口（当前页签被动态移除时，非受控模式从历史索引回退到最近可用页签；补齐 `Tabs.test.tsx` 回归与 Storybook `RemovedActiveTabFallback` 交互验收）
+  - Table 行标识告警收口（开发态新增 `rowKey` 重复值告警，帮助提前捕获排序/渲染中的键冲突；补齐 `Table.test.tsx` 回归与 Storybook API/Best-Practices 文档说明）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

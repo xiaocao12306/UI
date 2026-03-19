@@ -88,6 +88,7 @@ export function Table<T>({
   const keyboardActivationSortKeyRef = React.useRef<string | null>(null);
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const sortFocusIntentRef = React.useRef(true);
+  const warnedDuplicateRowKeysSignatureRef = React.useRef<string | null>(null);
   const [hoveredSortKey, setHoveredSortKey] = React.useState<string | null>(null);
   const [pressedSortKey, setPressedSortKey] = React.useState<string | null>(null);
   const [focusVisibleSortKey, setFocusVisibleSortKey] = React.useState<string | null>(null);
@@ -160,6 +161,50 @@ export function Table<T>({
 
     setSortState(nextInitialSortState);
   }, [columns, defaultSortDirection, defaultSortKey, sortState]);
+
+  const sourceRowKeys = React.useMemo(
+    () =>
+      data.map((row, sourceIndex) => {
+        if (!rowKey) {
+          return String(sourceIndex);
+        }
+
+        return String(rowKey(row, sourceIndex));
+      }),
+    [data, rowKey]
+  );
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production" || !rowKey) {
+      return;
+    }
+
+    const duplicates = new Set<string>();
+    const seen = new Set<string>();
+    sourceRowKeys.forEach((key) => {
+      if (seen.has(key)) {
+        duplicates.add(key);
+      }
+      seen.add(key);
+    });
+
+    if (duplicates.size === 0) {
+      warnedDuplicateRowKeysSignatureRef.current = null;
+      return;
+    }
+
+    const signature = Array.from(duplicates).sort().join("|");
+    if (warnedDuplicateRowKeysSignatureRef.current === signature) {
+      return;
+    }
+    warnedDuplicateRowKeysSignatureRef.current = signature;
+
+    console.warn(
+      `[Table] Duplicate row keys detected: ${Array.from(duplicates)
+        .map((key) => `"${key}"`)
+        .join(", ")}. Ensure rowKey returns a unique, stable value for each source row.`
+    );
+  }, [rowKey, sourceRowKeys]);
 
   const sortedEntries = React.useMemo(() => {
     const sourceEntries = data.map((row, sourceIndex) => ({ row, sourceIndex }));
@@ -534,10 +579,11 @@ export function Table<T>({
             sortedEntries.map((entry, index) => {
               const row = entry.row;
               const fallbackKey = String(entry.sourceIndex);
+              const resolvedRowKey = rowKey ? rowKey(row, entry.sourceIndex) : fallbackKey;
 
               return (
                 <tr
-                  key={rowKey ? rowKey(row, entry.sourceIndex) : fallbackKey}
+                  key={resolvedRowKey}
                   style={{
                     background: index % 2 === 0 ? "transparent" : "var(--aurora-surface-elevated)"
                   }}
