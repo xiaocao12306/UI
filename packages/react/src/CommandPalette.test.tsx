@@ -104,6 +104,10 @@ describe("CommandPalette", () => {
     const statusId = status.getAttribute("id");
     expect(statusId).toBeTruthy();
     expect(input).toHaveAttribute("aria-describedby", statusId!);
+    expect(input).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
+    );
 
     fireEvent.change(input, { target: { value: "project" } });
     expect(status).toHaveTextContent('1 command found for "project".');

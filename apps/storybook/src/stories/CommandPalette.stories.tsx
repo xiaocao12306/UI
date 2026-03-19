@@ -742,6 +742,10 @@ export const PagedKeyboardNavigation: Story = {
     const canvas = within(canvasElement.ownerDocument.body);
     const input = await canvas.findByRole("combobox", { name: "Search commands" });
     await userEvent.click(input);
+    await expect(input).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
+    );
 
     await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
     await userEvent.keyboard("{PageDown}");
