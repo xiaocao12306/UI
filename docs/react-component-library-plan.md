@@ -562,6 +562,7 @@
   - Storybook CommandPalette 品牌控件收口（触发/重开/阻塞切换按钮统一为 `Button` 组件，保留 outside target 为原生按钮用于 dismiss 边界验证，定向 runner 通过）
   - Toast 多文档栈隔离收口（按 `ownerDocument` 维护 Escape/视觉栈与监听器，避免多 root/iframe 场景串扰；补齐 unit 并复验 `Toast.stories.tsx`）
   - Storybook Table 展示框架收口（Empty/Loading/AccessibleName 等故事统一切换至 `StoryShowcaseFrame`，强化文档页视觉节奏一致性并通过定向 runner）
+  - Tabs 受控值可观测性收口（受控 `value` 指向缺失/禁用 key 时开发态输出 warning 并维持 first-enabled fallback，另补 duplicate key warning 与单测）
   - 集成示例文档深化（`component-recipes` 新增 Overlay close telemetry / Tabs manual telemetry / Table i18n sort telemetry 模板）
   - Release Gate 证据刷新（2026-03-19：`release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 202/202）
   - Release Gate 证据刷新（2026-03-19 latest+2：修复 demo dist 同步后 `release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 206/206）

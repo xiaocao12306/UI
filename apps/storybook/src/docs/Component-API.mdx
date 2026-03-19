@@ -366,6 +366,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | focus intent policy | primary pointer clears focus-visible | Non-primary pointer interactions keep keyboard-intent ring state; primary pointer down clears focus-visible and drives pressed offset lifecycle. |
 | `loop` | `boolean` | Defaults to `true`; set `false` to stop Arrow navigation at first/last enabled tab instead of wrapping. |
 | `onValueChange` | `(value: string) => void` | Fires only for enabled tabs and only when active key changes. |
+| controlled-value diagnostics | dev warning on missing/disabled `value` | Controlled mode falls back to first enabled tab when incoming `value` is missing/disabled, and emits a development warning to surface upstream state drift early. |
 | tab relation | mounted `tabpanel` set + `hidden` toggle | Keeps every `aria-controls` target valid while showing only active content panel. |
 
 <Canvas of={TabsStories.KeyboardNavigationGuide} />

@@ -290,19 +290,77 @@ describe("Tabs", () => {
   });
 
   it("falls back to first enabled tab when controlled value is invalid or disabled", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const items = [
       { key: "one", label: "One", content: <div>Panel One</div> },
       { key: "two", label: "Two", content: <div>Panel Two</div>, disabled: true },
       { key: "three", label: "Three", content: <div>Panel Three</div> }
     ];
 
-    const { rerender } = render(<Tabs value="unknown" items={items} />);
-    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByText("Panel One")).toBeInTheDocument();
+    try {
+      const { rerender } = render(<Tabs value="unknown" items={items} />);
+      expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("aria-selected", "true");
+      expect(screen.getByText("Panel One")).toBeInTheDocument();
 
-    rerender(<Tabs value="two" items={items} />);
-    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByText("Panel One")).toBeInTheDocument();
+      rerender(<Tabs value="two" items={items} />);
+      expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("aria-selected", "true");
+      expect(screen.getByText("Panel One")).toBeInTheDocument();
+      expect(warnSpy).toHaveBeenCalledTimes(2);
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("warns once per signature when controlled value is invalid or disabled", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const items = [
+      { key: "one", label: "One", content: <div>Panel One</div> },
+      { key: "two", label: "Two", content: <div>Panel Two</div>, disabled: true },
+      { key: "three", label: "Three", content: <div>Panel Three</div> }
+    ];
+
+    try {
+      const { rerender } = render(<Tabs value="unknown" items={items} />);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining('Controlled value "unknown" does not reference an enabled tab')
+      );
+
+      rerender(<Tabs value="unknown" items={items} />);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+
+      rerender(<Tabs value="two" items={items} />);
+      expect(warnSpy).toHaveBeenCalledTimes(2);
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining('Controlled value "two" does not reference an enabled tab')
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("warns when duplicate tab keys are provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Tabs
+          items={[
+            { key: "one", label: "One", content: <div>Panel One</div> },
+            { key: "one", label: "One Duplicate", content: <div>Panel Duplicate</div> }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining('Duplicate item keys detected: "one"')
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
   });
 
   it("falls back to first enabled tab when active tab becomes disabled after rerender", () => {

@@ -81,12 +81,69 @@ export function Tabs({
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const keyboardActivationTabKeyRef = React.useRef<string | null>(null);
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
+  const warnedInvalidControlledValueRef = React.useRef<string | null>(null);
+  const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
   const focusIntentRef = React.useRef(true);
   const firstEnabledKey = items.find((item) => !item.disabled)?.key;
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
   const [hoveredTabKey, setHoveredTabKey] = React.useState<string | null>(null);
   const [pressedTabKey, setPressedTabKey] = React.useState<string | null>(null);
   const [focusVisibleTabKey, setFocusVisibleTabKey] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const duplicateKeys = new Set<string>();
+    const seenKeys = new Set<string>();
+    items.forEach((item) => {
+      if (seenKeys.has(item.key)) {
+        duplicateKeys.add(item.key);
+      }
+      seenKeys.add(item.key);
+    });
+
+    if (duplicateKeys.size === 0) {
+      warnedDuplicateKeysSignatureRef.current = null;
+      return;
+    }
+
+    const signature = Array.from(duplicateKeys).sort().join("|");
+    if (warnedDuplicateKeysSignatureRef.current === signature) {
+      return;
+    }
+    warnedDuplicateKeysSignatureRef.current = signature;
+
+    console.warn(
+      `[Tabs] Duplicate item keys detected: ${Array.from(duplicateKeys)
+        .map((key) => `"${key}"`)
+        .join(", ")}. Keys should be unique to keep aria bindings and focus behavior deterministic.`
+    );
+  }, [items]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production" || value === undefined) {
+      return;
+    }
+
+    const hasMatchingEnabledItem = items.some((item) => item.key === value && !item.disabled);
+    if (hasMatchingEnabledItem) {
+      warnedInvalidControlledValueRef.current = null;
+      return;
+    }
+
+    const reason = items.some((item) => item.key === value) ? "disabled" : "missing";
+    const signature = `${value}::${reason}`;
+    if (warnedInvalidControlledValueRef.current === signature) {
+      return;
+    }
+    warnedInvalidControlledValueRef.current = signature;
+
+    console.warn(
+      `[Tabs] Controlled value "${value}" does not reference an enabled tab (${reason}); falling back to the first enabled tab.`
+    );
+  }, [items, value]);
 
   React.useEffect(() => {
     const markKeyboardIntent = (event: KeyboardEvent) => {

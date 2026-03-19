@@ -257,6 +257,7 @@
 - CommandPalette Storybook brand hardening: trigger/reopen/blocking toggle controls now reuse Aurora `Button` variants (outside-target boundary probes stay native), improving visual consistency without weakening dismiss-behavior coverage.
 - Toast multi-document stack hardening: Escape and visual stack registries are now partitioned by `ownerDocument`, preventing cross-root/iframe dismissal interference while preserving stack-order semantics in each document context.
 - Table Storybook presentation hardening: Empty/Loading/Accessible-name and stability stories now share `StoryShowcaseFrame` shells, reducing per-story layout drift and improving docs-page visual consistency for QA walkthroughs.
+- Tabs controlled-value diagnostics hardening: development builds now warn when controlled `value` points to missing/disabled keys (while preserving first-enabled fallback), and duplicate item keys emit deterministic warnings to catch aria/focus drift early.
 - Tabs vertical-manual parity: added dedicated unit/Storybook/demo E2E coverage so ArrowUp/ArrowDown focus movement stays decoupled from activation until Enter/Space.
 - Table row-identity semantics: added `columns[].rowHeader` support with Storybook + unit coverage so key rows can expose `<th scope="row">` context for assistive tech.
 - Demo toast guard parity: added runtime toggle for `Toast onEscapeKeyDown` interception and Playwright regression confirming Escape is blocked/unblocked by toast-level guard state.
