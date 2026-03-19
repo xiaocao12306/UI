@@ -138,6 +138,10 @@ function DismissGuardPopoverDemo() {
 }
 
 export const DismissGuardHooks: Story = {
+  args: {
+    triggerLabel: "Guarded popover",
+    children: <p style={{ margin: 0 }}>Dismiss hooks can block Escape/outside close paths.</p>
+  },
   render: () => <DismissGuardPopoverDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
