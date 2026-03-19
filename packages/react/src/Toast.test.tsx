@@ -552,6 +552,43 @@ describe("Toast", () => {
     });
   });
 
+  it("reassigns Escape shortcut when the top toast unmounts outside close callbacks", async () => {
+    function StackedToasts() {
+      const [baseOpen, setBaseOpen] = React.useState(true);
+      const [topMounted, setTopMounted] = React.useState(true);
+
+      return (
+        <>
+          <button type="button" onClick={() => setTopMounted(false)}>
+            Unmount top toast
+          </button>
+          <Toast open={baseOpen} title="Base" duration={0} onOpenChange={setBaseOpen} />
+          {topMounted ? <Toast open title="Top" duration={0} onOpenChange={() => {}} /> : null}
+        </>
+      );
+    }
+
+    render(<StackedToasts />);
+
+    const baseToast = screen.getByRole("status", { name: "Base" });
+    const topToast = screen.getByRole("status", { name: "Top" });
+
+    await waitFor(() => {
+      expect(baseToast).not.toHaveAttribute("aria-keyshortcuts");
+      expect(topToast).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Unmount top toast" }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole("status", { name: "Top" })).toBeNull();
+      expect(screen.getByRole("status", { name: "Base" })).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("status", { name: "Base" })).toBeNull();
+  });
+
   it("adds visible offset for older toasts in the same viewport corner", async () => {
     function StackedToasts() {
       const [firstOpen, setFirstOpen] = React.useState(true);

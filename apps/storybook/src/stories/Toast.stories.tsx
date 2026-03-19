@@ -190,7 +190,7 @@ function CloseReasonTelemetryDemo() {
         </strong>
       </p>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        Timeout reason is documented but not asserted in play due timing instability.
+        Timeout branch is validated in a dedicated story: `TimeoutCloseReason`.
       </p>
       <Button
         variant="outline"
@@ -238,6 +238,54 @@ export const CloseReasonTelemetry: Story = {
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("escape-key");
     await expect(canvas.getByTestId("toast-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
+  }
+};
+
+function TimeoutCloseReasonDemo() {
+  const [open, setOpen] = React.useState(true);
+  const [lastReason, setLastReason] = React.useState("none");
+
+  return (
+    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last close reason:{" "}
+        <strong data-testid="toast-timeout-reason" style={{ color: "var(--aurora-text-primary)" }}>
+          {lastReason}
+        </strong>
+      </p>
+      <Button
+        variant="outline"
+        onClick={() => {
+          setLastReason("none");
+          setOpen(true);
+        }}
+      >
+        Reopen Timed Toast
+      </Button>
+      <Toast
+        open={open}
+        onOpenChange={setOpen}
+        duration={300}
+        title="Timeout close telemetry"
+        description="This toast should close via timeout and emit timeout reason."
+        onCloseReason={setLastReason}
+      />
+    </div>
+  );
+}
+
+export const TimeoutCloseReason: Story = {
+  render: () => <TimeoutCloseReasonDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await expect(
+      await canvas.findByRole("status", { name: "Timeout close telemetry" })
+    ).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(canvas.queryByRole("status", { name: "Timeout close telemetry" })).not.toBeInTheDocument();
+    });
+    await expect(canvas.getByTestId("toast-timeout-reason")).toHaveTextContent("timeout");
   }
 };
 
