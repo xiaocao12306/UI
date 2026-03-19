@@ -544,6 +544,8 @@
   - Table 主键按压语义收口（sortable header `pressed` 视觉仅响应主键 `mousedown/up`，补齐 unit + Storybook `PrimaryPointerOnlySortPress`）
   - CommandPalette 选项按压语义收口（option `mousedown` 仅主键 `preventDefault`，保留非主键 pointer 语义；补齐 unit + Storybook `OptionMouseDownPolicy`）
   - Drawer 关闭按钮主键按压收口（close button `pressed` 视觉仅响应主键 `mousedown/up`，补齐 unit + Storybook `CloseButtonPrimaryPointerOnly`）
+  - Dialog 关闭按钮主键焦点语义收口（close button 非主键 `mousedown` 不再清理 `focus-visible`，补齐 unit + Storybook `FocusIntentPrimaryPointerOnly`）
+  - Switch 主键按压语义收口（switch `pressed` 视觉仅响应主键 `mousedown/up`，新增 `data-pressed` 回归标记并补齐 unit + Storybook `PointerPrimaryOnly`）
   - Release Gate 证据刷新（2026-03-19：`release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 202/202）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）

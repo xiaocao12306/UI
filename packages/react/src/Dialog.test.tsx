@@ -122,6 +122,34 @@ describe("Dialog", () => {
     matchesSpy.mockRestore();
   });
 
+  it("keeps close-button focus-visible state on non-primary mouse down", () => {
+    render(
+      <Dialog open onOpenChange={() => {}} title="Focus intent dialog">
+        <p>Body</p>
+      </Dialog>
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    const nativeMatches = closeButton.matches.bind(closeButton);
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        return true;
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.mouseDown(closeButton, { button: 1 });
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.mouseDown(closeButton, { button: 0 });
+    expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+    matchesSpy.mockRestore();
+  });
+
   it("keeps Tab/Shift+Tab focus cycling inside dialog", async () => {
     const user = userEvent.setup();
 

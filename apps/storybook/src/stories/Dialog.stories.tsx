@@ -140,6 +140,41 @@ export const FocusTrapKeyboardCycle: Story = {
   }
 };
 
+function FocusIntentPrimaryPointerDialog() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen} title="Focus intent pointer policy">
+      <p style={{ margin: 0 }}>
+        Non-primary mouse down should not clear close-button focus-visible feedback.
+      </p>
+    </Dialog>
+  );
+}
+
+export const FocusIntentPrimaryPointerOnly: Story = {
+  render: () => <FocusIntentPrimaryPointerDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const closeButton = await body.findByRole("button", { name: "Close dialog" });
+
+    await userEvent.tab();
+    await expect(closeButton).toHaveFocus();
+    await expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    const secondaryMouseDown = new MouseEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+      button: 1
+    });
+    closeButton.dispatchEvent(secondaryMouseDown);
+    await expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    await userEvent.pointer([{ target: closeButton, keys: "[MouseLeft>]" }]);
+    await expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+  }
+};
+
 export const OpenByDefault: Story = {
   render: () => <InitiallyOpenDialog />
 };

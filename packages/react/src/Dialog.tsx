@@ -152,7 +152,10 @@ export function Dialog({
                     onMouseLeave={() => {
                       setCloseButtonHovered(false);
                     }}
-                    onMouseDown={() => {
+                    onMouseDown={(event) => {
+                      if (event.button !== 0) {
+                        return;
+                      }
                       closeButtonFocusIntentRef.current = false;
                       setCloseButtonFocusVisible(false);
                     }}

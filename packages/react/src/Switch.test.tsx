@@ -33,6 +33,23 @@ describe("Switch", () => {
     expect(onCheckedChange).toHaveBeenCalledWith(true);
   });
 
+  it("applies pressed state only for primary mouse button", () => {
+    render(<Switch label="Pointer semantics" defaultChecked={false} />);
+    const control = screen.getByRole("switch", { name: "Pointer semantics" });
+
+    fireEvent.mouseDown(control, { button: 1 });
+    expect(control).not.toHaveAttribute("data-pressed");
+
+    fireEvent.mouseDown(control, { button: 0 });
+    expect(control).toHaveAttribute("data-pressed", "true");
+
+    fireEvent.mouseUp(control, { button: 1 });
+    expect(control).toHaveAttribute("data-pressed", "true");
+
+    fireEvent.mouseUp(control, { button: 0 });
+    expect(control).not.toHaveAttribute("data-pressed");
+  });
+
   it("does not toggle when disabled", () => {
     const onCheckedChange = vi.fn();
     render(<Switch label="Readonly mode" checked onCheckedChange={onCheckedChange} disabled />);

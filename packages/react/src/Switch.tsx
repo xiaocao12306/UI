@@ -93,6 +93,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       disabled={disabled}
       data-state={currentChecked ? "checked" : "unchecked"}
       data-invalid={isInvalid ? "true" : undefined}
+      data-pressed={pressed ? "true" : undefined}
       style={{
         border: "none",
         margin: 0,
@@ -134,11 +135,15 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         onMouseLeave?.(event);
       }}
       onMouseDown={(event) => {
-        setPressed(true);
+        if (!disabled && event.button === 0) {
+          setPressed(true);
+        }
         onMouseDown?.(event);
       }}
       onMouseUp={(event) => {
-        setPressed(false);
+        if (event.button === 0) {
+          setPressed(false);
+        }
         onMouseUp?.(event);
       }}
       onKeyDown={(event) => {

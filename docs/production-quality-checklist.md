@@ -425,4 +425,6 @@
 - Table primary-pointer parity: sortable-header pressed offset now only activates on primary-button mouse paths, with unit + Storybook `PrimaryPointerOnlySortPress` coverage.
 - CommandPalette option-pointer parity: option `mousedown` now prevents default only for primary-button paths, preserving non-primary pointer semantics with unit + Storybook `OptionMouseDownPolicy` coverage.
 - Drawer close-button pointer parity: close-button pressed visuals now only respond to primary-button pointer paths, with unit + Storybook `CloseButtonPrimaryPointerOnly` coverage.
+- Dialog close-button focus-intent parity: non-primary `mousedown` no longer clears close-button focus-visible intent, with unit + Storybook `FocusIntentPrimaryPointerOnly` coverage.
+- Switch primary-pointer parity: switch pressed visuals now only respond to primary-button mouse paths (`data-pressed`), with unit + Storybook `PointerPrimaryOnly` coverage.
 - Release-gate parity refresh: `pnpm release:gate:ci` rerun passed on 2026-03-19 after Button/Input/FormField/Tabs/Table/CommandPalette primary-pointer and a11y refinements (verify + coverage + demo e2e 71/71 + demo dist sync + storybook interaction 202/202).

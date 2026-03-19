@@ -2,6 +2,7 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Switch } from "@aurora-ui/react";
 import { expect, userEvent, within } from "@storybook/test";
+import { StoryShowcaseFrame } from "./storyShowcase";
 
 const meta = {
   title: "Form/Switch",
@@ -29,7 +30,7 @@ function ControlledSwitch() {
   const [checked, setChecked] = React.useState(true);
 
   return (
-    <div style={{ width: 360, display: "grid", gap: 12 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 380px)" gap={12}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span style={{ color: "var(--aurora-text-primary)" }}>Current state</span>
         <Badge tone={checked ? "success" : "danger"}>{checked ? "Enabled" : "Paused"}</Badge>
@@ -40,7 +41,7 @@ function ControlledSwitch() {
         checked={checked}
         onCheckedChange={setChecked}
       />
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -58,7 +59,7 @@ export const Controlled: Story = {
 
 export const InvalidAndDisabled: Story = {
   render: () => (
-    <div style={{ width: 360, display: "grid", gap: 12 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 380px)" gap={12}>
       <Switch
         label="Incident bypass"
         description="Resolve validation warnings before enabling bypass."
@@ -71,7 +72,7 @@ export const InvalidAndDisabled: Story = {
         disabled
         defaultChecked
       />
-    </div>
+    </StoryShowcaseFrame>
   )
 };
 
@@ -88,5 +89,23 @@ export const KeyboardToggle: Story = {
     control.focus();
     await userEvent.keyboard("[Space]");
     await expect(control).toHaveAttribute("aria-checked", "true");
+  }
+};
+
+export const PointerPrimaryOnly: Story = {
+  args: {
+    defaultChecked: false,
+    label: "Pointer priority",
+    description: "Primary button press should expose and release pressed visuals."
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const control = canvas.getByRole("switch", { name: "Pointer priority" });
+
+    await userEvent.pointer([{ target: control, keys: "[MouseLeft>]" }]);
+    await expect(control).toHaveAttribute("data-pressed", "true");
+
+    await userEvent.unhover(control);
+    await expect(control).not.toHaveAttribute("data-pressed");
   }
 };
