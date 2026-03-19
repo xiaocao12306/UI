@@ -279,6 +279,7 @@
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.
 - Storybook modal close-trace parity: Dialog + Drawer `CloseReasonTelemetry` now exposes close trace and play assertions to lock `onCloseReason -> onOpenChange(false)` callback order in interaction baselines.
 - Storybook popover preemption parity: Popover now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps surface open and skips hook side effects.
+- Storybook popover/dropdown close-trace parity: `CloseReasonTelemetry` now asserts callback order (`Popover`: `reason -> open:false`; `Dropdown item-select`: `select -> reason -> open:false`; other dismiss paths: `reason -> open:false`).
 - Demo preemption parity: Playwright now validates global Escape preemption for Dialog + Drawer + Popover + CommandPalette + Dropdown + Toast, ensuring overlays stay open under app-level shortcut interception.
 - CommandPalette empty-state semantics: combobox now removes `aria-controls` when no filtered results exist, and listbox mounts only with actual options to avoid empty-state dangling references.
 - CommandPalette i18n semantics: added `resultsAriaLabel` so command result listbox naming can be localized while preserving default `Command results` fallback.

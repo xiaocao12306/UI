@@ -387,6 +387,7 @@
   - Storybook CommandPalette 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
   - Storybook Dialog/Drawer 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
   - Storybook Popover 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
+  - Storybook Popover/Dropdown 回调顺序验收（`CloseReasonTelemetry` 增加 close trace，锁定 `onCloseReason -> onOpenChange(false)`；Dropdown item-select 额外锁定 `onSelect` 前置）
   - Storybook Dialog/Drawer 回调顺序验收（`CloseReasonTelemetry` 增加 close trace，锁定 `onCloseReason -> onOpenChange(false)`）
   - Demo Escape 抢占验收扩展（Dialog/Drawer/Popover/CommandPalette/Dropdown/Toast 新增 Playwright 回归，锁定全局抢占后保持打开，解除抢占后恢复正常关闭）
   - CommandPalette 空态语义收口（无匹配结果时移除 combobox `aria-controls` 并卸载 listbox，避免空态悬空引用）
