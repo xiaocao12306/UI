@@ -583,6 +583,7 @@
   - Release Gate 证据刷新（2026-03-20 latest+2：修复 Popover Storybook 类型与静态产物同步后 `pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 73/73 + demo dist + storybook interaction 211/211）
   - Release Gate 证据刷新（2026-03-20 latest+3：修复 Tabs 渲染期 ref 读取与 Storybook 静态产物同步后 `pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 73/73 + demo dist + storybook interaction 212/212）
   - Release Gate 证据刷新（2026-03-20 latest+4：Tabs/Toast Storybook 展示框架收口后 `pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 73/73 + demo dist + storybook interaction 213/213）
+  - Release Gate 证据刷新（2026-03-20 latest+6：Select + Feedback Storybook 展示收口后 `pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 73/73 + demo dist + storybook interaction 213/213）
   - Release Dry-Run 证据刷新（2026-03-19 latest+2：`release:dry-run` 通过，`react` package `64.3 kB` / unpacked `394.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
   - Release Dry-Run 证据刷新（2026-03-20 latest：`release:dry-run` 通过，`react` package `66.7 kB` / unpacked `408.0 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
   - Release Dry-Run 证据刷新（2026-03-20 latest+1：`release:dry-run` 通过，`react` package `67.1 kB` / unpacked `410.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
@@ -599,6 +600,7 @@
   - Storybook 文档结构门禁收口（新增 `storybook:docs:structure:check` 并接入 `storybook:test:ci`，强制 `Component-API/Best-Practices` 必备章节存在）
   - Storybook 展示框架一致性收口（Tabs/Toast 统一 `StoryShowcaseFrame`/`StoryFullscreenFrame` 壳层并抽离 telemetry 文案样式，降低故事内联样式噪音并保持 runner 断言稳定）
   - Storybook Overlay 展示框架一致性收口（Popover/Tooltip 统一 `StoryShowcaseFrame` 壳层与 telemetry/helper 文案样式，Overlay 组观感与信息层级进一步对齐）
+  - Storybook 表单/反馈展示框架一致性收口（Select + Alert/Empty/Progress 统一 `StoryShowcaseFrame` 容器，降低重复宽度壳层与内联布局噪音）
   - Storybook Gate 证据刷新（2026-03-20 latest+5：Overlay 展示收口后 `pnpm storybook:test:ci` 复验通过，含 coverage/docs/parity/structure/play/static/a11y gate + interaction 213/213）
   - Demo 诊断层级收口（Telemetry 胶囊与区块背景降权，优先突出组件主交互与内容层级）
 - 进行中
