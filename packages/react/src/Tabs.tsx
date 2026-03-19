@@ -242,6 +242,9 @@ export function Tabs({
               onKeyDown={(event) => {
                 focusIntentRef.current = true;
                 if (activationMode === "manual" && isTabActivationKey(event.key)) {
+                  if (isComposingActivationEvent(event)) {
+                    return;
+                  }
                   event.preventDefault();
                   if (event.repeat) {
                     return;
@@ -362,6 +365,15 @@ export function Tabs({
 
 function isTabActivationKey(key: string) {
   return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
+}
+
+function isComposingActivationEvent(event: React.KeyboardEvent<HTMLButtonElement>) {
+  const nativeEvent = event.nativeEvent;
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }
 
 function getTabMoveDirection({

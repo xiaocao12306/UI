@@ -375,6 +375,30 @@ describe("Tabs", () => {
     expect(onValueChange).toHaveBeenCalledWith("two");
   });
 
+  it("ignores manual activation keys during IME composition", () => {
+    const onValueChange = vi.fn();
+    render(
+      <Tabs
+        value="one"
+        activationMode="manual"
+        onValueChange={onValueChange}
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    fireEvent.keyDown(twoTab, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(twoTab, { key: " ", isComposing: true, keyCode: 229, which: 229 });
+    expect(onValueChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(twoTab, { key: "Enter" });
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange).toHaveBeenCalledWith("two");
+  });
+
   it("allows manual mode detail=0 click activation when not preceded by keyboard activation", () => {
     const onValueChange = vi.fn();
     render(
