@@ -268,6 +268,32 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel One")).toBeInTheDocument();
   });
 
+  it("falls back to first enabled tab when active tab becomes disabled after rerender", () => {
+    const baseItems = [
+      { key: "one", label: "One", content: <div>Panel One</div> },
+      { key: "two", label: "Two", content: <div>Panel Two</div> }
+    ];
+
+    const { rerender } = render(<Tabs defaultValue="one" items={baseItems} />);
+    fireEvent.click(screen.getByRole("tab", { name: "Two" }));
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Panel Two")).toBeInTheDocument();
+
+    rerender(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div>, disabled: true }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Two" })).toBeDisabled();
+  });
+
   it("marks tablist disabled when no enabled tabs are available", () => {
     render(
       <Tabs
