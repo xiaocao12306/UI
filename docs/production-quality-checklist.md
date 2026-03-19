@@ -277,6 +277,7 @@
 - CommandPalette page-jump parity: long lists now support `PageUp/PageDown` jumps across actionable options while preserving disabled-option skip semantics.
 - Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.
+- Storybook modal close-trace parity: Dialog + Drawer `CloseReasonTelemetry` now exposes close trace and play assertions to lock `onCloseReason -> onOpenChange(false)` callback order in interaction baselines.
 - Storybook popover preemption parity: Popover now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps surface open and skips hook side effects.
 - Demo preemption parity: Playwright now validates global Escape preemption for Dialog + Drawer + Popover + CommandPalette + Dropdown + Toast, ensuring overlays stay open under app-level shortcut interception.
 - CommandPalette empty-state semantics: combobox now removes `aria-controls` when no filtered results exist, and listbox mounts only with actual options to avoid empty-state dangling references.
