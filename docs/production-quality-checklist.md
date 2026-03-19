@@ -252,6 +252,8 @@
 - CommandPalette dismiss guard hardening: added `onEscapeKeyDown/onPointerDownOutside` hooks so approval flows can block dismiss conditionally via `event.preventDefault()`, with unit + Storybook interaction coverage.
 - Toast dismiss guard hardening: added `onEscapeKeyDown` hook so individual notifications can conditionally intercept Escape and coordinate with approval workflows.
 - Table keyboard activation dedupe hardening: sortable headers now ignore synthesized keyboard-origin click (`detail=0`) after handled `Enter/Space` keydown so one keyboard action maps to one sort change + telemetry event; covered by dedicated unit regression and API/best-practices docs updates.
+- Release enforce preflight hardening: `release.yml` now fail-fast checks `NPM_TOKEN` for `workflow_dispatch + enforce=true` before heavy quality gates, with explicit `docs/secrets.md` + `pnpm release:preflight:publish` remediation output.
+- Docs command-parity hardening: README/Storybook/Release docs now converge on root aliases (`demo:dev/demo:build`, `release:preflight:chromatic|publish`) and mark GitHub Pages as primary Storybook external link with rawcdn fallback.
 - Tabs vertical-manual parity: added dedicated unit/Storybook/demo E2E coverage so ArrowUp/ArrowDown focus movement stays decoupled from activation until Enter/Space.
 - Table row-identity semantics: added `columns[].rowHeader` support with Storybook + unit coverage so key rows can expose `<th scope="row">` context for assistive tech.
 - Demo toast guard parity: added runtime toggle for `Toast onEscapeKeyDown` interception and Playwright regression confirming Escape is blocked/unblocked by toast-level guard state.

@@ -170,16 +170,16 @@ Dry-run vs real publish:
 
 - `pnpm release:dry-run`: local/package-level verification only, no publish side-effect.
 - 推荐顺序（PR/本地预检）：`pnpm changeset:required` -> `pnpm release:dry-run`
-- 推荐顺序（发布前演练）：`pnpm release:preflight -- --scope=publish` -> `pnpm release:gate`
+- 推荐顺序（发布前演练）：`pnpm release:preflight:publish` -> `pnpm release:gate`
 - `.github/workflows/release.yml` with `NPM_TOKEN`: real publish path (`changesets/action` + `pnpm release`).
 - missing `NPM_TOKEN` + `enforce=false`: release PR automation runs, publish skipped.
 - missing `NPM_TOKEN` + `enforce=true`: workflow hard-fails before publish path.
 
-Latest local evidence (2026-03-19 latest+2):
+Dry-run evidence format sample（非实时快照）:
 
-- `@aurora-ui/react`: package `64.3 kB`, unpacked `394.8 kB`
-- `@aurora-ui/primitives`: package `14.5 kB`, unpacked `71.7 kB`
-- `@aurora-ui/tokens`: package `3.2 kB`, unpacked `17.3 kB`
+- `@aurora-ui/react`: package `<size>`, unpacked `<size>`
+- `@aurora-ui/primitives`: package `<size>`, unpacked `<size>`
+- `@aurora-ui/tokens`: package `<size>`, unpacked `<size>`
 
 Underlying commands (for troubleshooting):
 
@@ -296,7 +296,7 @@ This runs:
 2. `pnpm coverage:gate`
 3. `pnpm demo:e2e`
 4. `pnpm demo:dist:check`
-5. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:docs:parity:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`）
+5. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:docs:parity:check` + `docs:commands:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`）
 
 Full local pre-release gate (includes tarball evidence):
 

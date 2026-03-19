@@ -65,13 +65,13 @@ pnpm release:gate:ci
 ## Run Demo
 
 ```bash
-pnpm --filter @aurora-ui/demo dev
+pnpm demo:dev
 ```
 
 Build demo output:
 
 ```bash
-pnpm --filter @aurora-ui/demo build
+pnpm demo:build
 ```
 
 Run demo smoke E2E:
@@ -126,10 +126,10 @@ pnpm chromatic
 
 ## Storybook External Link
 
-- Immediate static preview:
-  - `https://rawcdn.githack.com/xiaocao12306/UI/main/apps/storybook/storybook-static/index.html`
-- GitHub Pages preview (when Pages enabled):
+- Primary preview (GitHub Pages, recommended):
   - `https://xiaocao12306.github.io/UI/storybook/`
+- Fallback preview (rawcdn static artifact):
+  - `https://rawcdn.githack.com/xiaocao12306/UI/main/apps/storybook/storybook-static/index.html`
 - To refresh this link after Storybook changes:
   - `pnpm storybook:build`
   - `git add apps/storybook/storybook-static && git commit -m "构建(静态站): 刷新 Storybook 产物" && git push`
@@ -153,8 +153,8 @@ pnpm chromatic
 - local changeset gate: `pnpm changeset:required` (checks package diffs include `.changeset/*.md`)
 - local secrets preflight:
   - `pnpm release:preflight` (`CHROMATIC_PROJECT_TOKEN` + `NPM_TOKEN`)
-  - `pnpm release:preflight -- --scope=chromatic` (`CHROMATIC_PROJECT_TOKEN` only)
-  - `pnpm release:preflight -- --scope=publish` (`NPM_TOKEN` only)
+  - `pnpm release:preflight:chromatic` (`CHROMATIC_PROJECT_TOKEN` only; same as `pnpm release:preflight -- --scope=chromatic`)
+  - `pnpm release:preflight:publish` (`NPM_TOKEN` only; same as `pnpm release:preflight -- --scope=publish`)
 - local CI-equivalent gate: `pnpm release:gate:ci` (`verify + coverage:gate + demo:e2e + demo:dist:check + storybook:test:ci`)
 - local publish dry-run: `pnpm release:dry-run` (runs `changeset version` + auto-discovered package `npm publish --dry-run`)
   - requires clean working tree and auto-reverts dry-run version file edits

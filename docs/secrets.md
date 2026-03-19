@@ -9,13 +9,16 @@
 
 ```bash
 pnpm release:preflight
-pnpm release:preflight -- --scope=chromatic
-pnpm release:preflight -- --scope=publish
+pnpm release:preflight:chromatic
+pnpm release:preflight:publish
+# 等价写法：
+# pnpm release:preflight -- --scope=chromatic
+# pnpm release:preflight -- --scope=publish
 ```
 
 - `release:preflight`：检查 `CHROMATIC_PROJECT_TOKEN + NPM_TOKEN`
-- `release:preflight -- --scope=chromatic`：仅检查 `CHROMATIC_PROJECT_TOKEN`
-- `release:preflight -- --scope=publish`：仅检查 `NPM_TOKEN`
+- `release:preflight:chromatic`：仅检查 `CHROMATIC_PROJECT_TOKEN`
+- `release:preflight:publish`：仅检查 `NPM_TOKEN`
 
 如果看到 `MISSING ...`，先不要继续执行发布链路；先补 secret 后重跑预检。
 
@@ -99,7 +102,7 @@ gh workflow run release.yml -f enforce=true
 
 建议排障顺序：
 
-1. 本地：`pnpm release:preflight -- --scope=chromatic|publish`
+1. 本地：`pnpm release:preflight:chromatic` / `pnpm release:preflight:publish`
 2. CI：看 annotation（warning/error）是否为 token 缺失
 3. CI：看 `GITHUB_STEP_SUMMARY` 中 `Chromatic Mode` / `Publish Mode` 与 `Skipped/Failed` 原因
 4. 修复 secret 后重新触发 workflow
