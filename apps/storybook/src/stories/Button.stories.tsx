@@ -11,7 +11,8 @@ const meta = {
     layout: "centered",
     docs: {
       description: {
-        component: "Button variant and size are fully token-driven; switch theme from toolbar to verify semantic mapping."
+        component:
+          "Button variant and size are fully token-driven; switch theme from toolbar to verify semantic mapping."
       }
     }
   },
@@ -83,7 +84,8 @@ export const StateMatrix: Story = {
       </div>
 
       <small style={{ color: "var(--aurora-text-secondary)" }}>
-        Keyboard focus and pressed states are interactive in canvas: use Tab / Enter / Space to validate.
+        Keyboard focus and pressed states are interactive in canvas: use Tab / Enter / Space to
+        validate.
       </small>
     </div>
   )
@@ -100,7 +102,15 @@ function KeyboardActivationDemo() {
       </p>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
         <Button onClick={() => setCount((value) => value + 1)}>Run Action</Button>
-        <Button loading={loading} onClick={() => setCount((value) => value + 10)}>
+        <Button
+          variant="outline"
+          loading={loading}
+          style={{
+            color: "var(--aurora-text-primary)",
+            borderColor: "var(--aurora-border-strong)"
+          }}
+          onClick={() => setCount((value) => value + 10)}
+        >
           Background Task
         </Button>
         <Button variant="outline" onClick={() => setLoading((value) => !value)}>

@@ -11,9 +11,21 @@ export type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
 };
 
 const sizeStyleMap: Record<ButtonSize, React.CSSProperties> = {
-  sm: { height: "var(--aurora-button-height-sm)", fontSize: "var(--aurora-font-size-sm)", padding: "0 12px" },
-  md: { height: "var(--aurora-button-height-md)", fontSize: "var(--aurora-font-size-md)", padding: "0 14px" },
-  lg: { height: "var(--aurora-button-height-lg)", fontSize: "var(--aurora-font-size-md)", padding: "0 18px" }
+  sm: {
+    height: "var(--aurora-button-height-sm)",
+    fontSize: "var(--aurora-font-size-sm)",
+    padding: "0 12px"
+  },
+  md: {
+    height: "var(--aurora-button-height-md)",
+    fontSize: "var(--aurora-font-size-md)",
+    padding: "0 14px"
+  },
+  lg: {
+    height: "var(--aurora-button-height-lg)",
+    fontSize: "var(--aurora-font-size-md)",
+    padding: "0 18px"
+  }
 };
 
 type VariantStateStyles = {
@@ -37,8 +49,9 @@ const variantStyleMap: Record<ButtonVariant, VariantStateStyles> = {
       background: "color-mix(in srgb, var(--aurora-button-solid-bg-hover) 88%, black)"
     },
     disabled: {
-      background: "color-mix(in srgb, var(--aurora-button-solid-bg) 60%, var(--aurora-surface-elevated))",
-      color: "color-mix(in srgb, var(--aurora-button-solid-text) 72%, transparent)"
+      background:
+        "color-mix(in srgb, var(--aurora-button-solid-bg) 60%, var(--aurora-surface-elevated))",
+      color: "var(--aurora-text-primary)"
     }
   },
   ghost: {
@@ -107,7 +120,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   const focusVisibleIntentRef = React.useRef(true);
   const interactionDisabled = disabled || loading;
   const variantStyles = variantStyleMap[variant];
-  const stateStyle = interactionDisabled ? variantStyles.disabled : pressed ? variantStyles.active : hovered ? variantStyles.hover : null;
+  const stateStyle = interactionDisabled
+    ? variantStyles.disabled
+    : pressed
+      ? variantStyles.active
+      : hovered
+        ? variantStyles.hover
+        : null;
 
   React.useEffect(() => {
     if (!interactionDisabled) {
@@ -136,9 +155,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         transition:
           "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)",
         cursor: interactionDisabled ? "not-allowed" : "pointer",
-        boxShadow: focusVisible ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 45%, transparent)" : undefined,
+        boxShadow: focusVisible
+          ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 45%, transparent)"
+          : undefined,
         transform: !interactionDisabled && pressed ? "translateY(1px)" : undefined,
-        opacity: interactionDisabled ? 0.72 : 1,
         ...sizeStyleMap[size],
         ...variantStyles.base,
         ...stateStyle,
@@ -173,7 +193,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         onMouseUp?.(event);
       }}
       onFocus={(event) => {
-        setFocusVisible(resolveFocusVisibleState(event.currentTarget, focusVisibleIntentRef.current));
+        setFocusVisible(
+          resolveFocusVisibleState(event.currentTarget, focusVisibleIntentRef.current)
+        );
         onFocus?.(event);
       }}
       onBlur={(event) => {
