@@ -420,6 +420,49 @@ describe("Toast", () => {
     }
   });
 
+  it("pauses auto dismiss while document is hidden and resumes with remaining duration", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+    let visibilityState: DocumentVisibilityState = "visible";
+    const visibilitySpy = vi
+      .spyOn(document, "visibilityState", "get")
+      .mockImplementation(() => visibilityState);
+
+    try {
+      render(<Toast open title="Hidden tab pause" duration={1500} onOpenChange={onOpenChange} />);
+
+      act(() => {
+        vi.advanceTimersByTime(700);
+      });
+
+      act(() => {
+        visibilityState = "hidden";
+        document.dispatchEvent(new Event("visibilitychange"));
+      });
+      act(() => {
+        vi.advanceTimersByTime(3000);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+
+      act(() => {
+        visibilityState = "visible";
+        document.dispatchEvent(new Event("visibilitychange"));
+      });
+      act(() => {
+        vi.advanceTimersByTime(799);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    } finally {
+      visibilitySpy.mockRestore();
+      vi.useRealTimers();
+    }
+  });
+
   it("does not pause on focus when pauseOnHover is disabled", () => {
     vi.useFakeTimers();
     const onOpenChange = vi.fn();

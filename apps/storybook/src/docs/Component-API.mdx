@@ -547,7 +547,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `tone` | `'info' \| 'success' \| 'warning' \| 'danger'` | Drives semantics: non-action toasts use `status/alert`; actionable toasts use `dialog/alertdialog` by tone. |
 | `duration` | `number` | Auto-dismiss delay in ms; `0` disables timer. If `action` is provided and `duration` is omitted, timer defaults to persistent (`0`) to avoid expiring actionable notices. |
 | `live` | `'polite' \| 'assertive' \| 'off'` | Optional live-region politeness override for notification noise control. |
-| `pauseOnHover` | `boolean` | Suspends timer while hovered or while focus stays inside toast controls. |
+| `pauseOnHover` | `boolean` | Suspends timer while hovered or while focus stays inside toast controls. Auto-dismiss also pauses when the document tab is hidden and resumes with remaining time when visible again. |
 | `position` | `'bottom-right' \| 'bottom-left' \| 'top-right' \| 'top-left'` | Controls viewport anchor for stack placement and Escape-priority grouping. |
 | `closeOnEscape` | `boolean` | Optional keyboard dismiss path; Escape is consumed so stacked toasts dismiss one at a time. |
 | dismiss key hints | `aria-keyshortcuts="Escape"` (top escapable toast only) | In stacked layouts, only the current top escapable toast exposes Escape shortcut metadata so QA/AT tooling is not misled by pinned/non-closeable notifications. |

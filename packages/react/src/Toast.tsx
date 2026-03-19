@@ -201,12 +201,13 @@ export function Toast({
   const hasAction = React.Children.toArray(action).length > 0;
   const resolvedDuration = duration ?? (hasAction ? 0 : 4000);
   const remainingDurationRef = React.useRef(resolvedDuration);
+  const [documentHidden, setDocumentHidden] = React.useState(false);
   const [pauseState, setPauseState] = React.useState({ hover: false, focus: false });
   const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
   const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
   const [showEscapeKeyShortcuts, setShowEscapeKeyShortcuts] = React.useState(false);
-  const paused = pauseOnHover && (pauseState.hover || pauseState.focus);
+  const paused = documentHidden || (pauseOnHover && (pauseState.hover || pauseState.focus));
   const titleId = React.useId();
   const descriptionId = React.useId();
 
@@ -261,8 +262,26 @@ export function Toast({
   React.useEffect(() => {
     if (!open) {
       setPauseState({ hover: false, focus: false });
+      setDocumentHidden(false);
     }
     closeRequestedRef.current = false;
+  }, [open]);
+
+  React.useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const ownerDocument = rootRef.current?.ownerDocument ?? document;
+    const syncVisibilityState = () => {
+      setDocumentHidden(ownerDocument.visibilityState === "hidden");
+    };
+
+    syncVisibilityState();
+    ownerDocument.addEventListener("visibilitychange", syncVisibilityState);
+    return () => {
+      ownerDocument.removeEventListener("visibilitychange", syncVisibilityState);
+    };
   }, [open]);
 
   React.useEffect(() => {
@@ -384,7 +403,7 @@ export function Toast({
   }, [clearCloseTimer, open, resolvedDuration, startCloseTimer]);
 
   React.useEffect(() => {
-    if (!open || resolvedDuration <= 0 || !pauseOnHover) {
+    if (!open || resolvedDuration <= 0) {
       return;
     }
 

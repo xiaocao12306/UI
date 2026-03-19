@@ -185,6 +185,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - When `closeOnEscape` toggles at runtime, verify stacked `aria-keyshortcuts` hints move to the current top escapable toast with no stale shortcut exposure.
 - Keep stacked toasts in the same corner so built-in visual offset preserves message legibility for older notifications.
 - Verify timer pause behavior for both pointer hover and keyboard focus when `pauseOnHover` is enabled.
+- Verify timed toasts pause in hidden browser tabs and resume from remaining time after visibility returns.
 - Use `onCloseReason` for deterministic telemetry (`close-button` / `escape-key` / `timeout`) instead of inferring dismiss origin from side effects.
 - When combining `onCloseReason`, `onClose`, and `onOpenChange`, consume them as ordered lifecycle hooks (`onCloseReason` -> `onClose` -> `onOpenChange(false)`), not parallel duplicate side effects.
 - Keep toast close-button focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible feedback.
