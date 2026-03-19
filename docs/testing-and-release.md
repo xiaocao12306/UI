@@ -132,7 +132,8 @@ Dry-run workflow: `.github/workflows/release-dry-run.yml`
 - enables workflow-level `concurrency` (same ref cancels in-progress old runs)
 - validates publishable tarballs without requiring `NPM_TOKEN`
 - writes tarball size summary (`package size` / `unpacked size`) into `GITHUB_STEP_SUMMARY` for reviewer-facing release evidence
-- when `release:dry-run` step executes and fails, summary records `status=failed` and failed step label to speed up triage
+- always writes `Release Dry Run Summary` (even when install/setup failed before dry-run execution)
+- summary includes `install` + `release:dry-run` outcomes and resolved failed-step label (`install` / `release:dry-run` / `none`) for triage
 
 Required repository secrets:
 

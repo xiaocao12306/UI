@@ -6,6 +6,7 @@
 Aurora UI is a token-first React component library monorepo with accessibility-focused primitives, AI interaction components, and a demo site.
 
 ## Current Status
+
 - Workspace build: passing (`lint`, `typecheck`, `test`, `build`)
 - Package layers:
   - `@aurora-ui/tokens`: layered tokens + theme variable generator
@@ -19,6 +20,7 @@ Aurora UI is a token-first React component library monorepo with accessibility-f
   - Release dry-run now writes package-size evidence into `GITHUB_STEP_SUMMARY`.
 
 ## Tech Stack
+
 - React 19 + TypeScript 5
 - pnpm workspace + Turborepo
 - tsup package build pipeline
@@ -27,6 +29,7 @@ Aurora UI is a token-first React component library monorepo with accessibility-f
 - Changesets + GitHub Actions
 
 ## Monorepo Structure
+
 - `packages/tokens`: global/semantic/component tokens + theme packs
 - `packages/primitives`: headless building blocks
 - `packages/react`: business-ready UI components
@@ -44,6 +47,7 @@ Aurora UI is a token-first React component library monorepo with accessibility-f
 - `docs/ai-components-guide.md`: AI component composition guide
 
 ## Quick Start
+
 ```bash
 pnpm install
 pnpm lint
@@ -59,16 +63,19 @@ pnpm release:gate:ci
 ```
 
 ## Run Demo
+
 ```bash
 pnpm --filter @aurora-ui/demo dev
 ```
 
 Build demo output:
+
 ```bash
 pnpm --filter @aurora-ui/demo build
 ```
 
 Run demo smoke E2E:
+
 ```bash
 pnpm exec playwright install chromium
 pnpm demo:e2e
@@ -77,6 +84,7 @@ pnpm demo:e2e:grep "toggles table loading state and disables sort controls"
 ```
 
 ## Run Storybook
+
 ```bash
 pnpm storybook:dev
 pnpm storybook:build
@@ -93,6 +101,7 @@ pnpm chromatic
 ```
 
 ## Storybook External Link
+
 - Immediate static preview:
   - `https://rawcdn.githack.com/xiaocao12306/UI/main/apps/storybook/storybook-static/index.html`
 - GitHub Pages preview (when Pages enabled):
@@ -102,6 +111,7 @@ pnpm chromatic
   - `git add apps/storybook/storybook-static && git commit -m "构建(静态站): 刷新 Storybook 产物" && git push`
 
 ## Commit 规范
+
 - 统一格式：`类型(范围): 中文说明`
 - 推荐类型：`功能` / `修复` / `文档` / `测试` / `构建` / `重构` / `工程`
 - 示例：
@@ -111,6 +121,7 @@ pnpm chromatic
   - `构建(静态站): 刷新 Storybook 产物`
 
 ## Release Workflow
+
 - automated workflow: `.github/workflows/release.yml`
 - dry-run workflow: `.github/workflows/release-dry-run.yml`
 - release PR generation uses Changesets on `main`
@@ -125,8 +136,10 @@ pnpm chromatic
   - requires clean working tree and auto-reverts dry-run version file edits
 - full pre-release gate: `pnpm release:gate` (`release:gate:ci` + `release:dry-run`)
 - workflow evidence should be read from each run's `GITHUB_STEP_SUMMARY` (storybook gate snapshot, token mode, dry-run package table)
+- `Release Dry Run` workflow always emits a summary (including install/setup failure paths) with failed-step labeling for faster triage
 
 ## Demo External Link
+
 - GitHub Pages workflow: `.github/workflows/demo-pages.yml`
 - GitHub Pages now publishes:
   - demo root: `https://xiaocao12306.github.io/UI/`
@@ -137,6 +150,7 @@ pnpm chromatic
 - If Pages is not enabled yet, the workflow will skip deploy without failing CI.
 
 ## Package Usage (Example)
+
 ```tsx
 import { AuroraProvider, Button, Input, Dialog } from "@aurora-ui/react";
 
@@ -154,5 +168,6 @@ export function App() {
 ```
 
 ## Notes
+
 - CI release gate baseline uses Node 22 (recommended for local parity).
 - Node 18+ remains supported for local development; Demo uses Vite 5 for Node 18 compatibility.

@@ -38,5 +38,33 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm release:dry-run
+      - id: install
+        run: pnpm install --frozen-lockfile
+
+      - id: dry_run
+        continue-on-error: true
+        run: pnpm release:dry-run
+
+      - name: Dry Run Summary
+        if: always()
+        run: |
+          install_outcome="${{ steps.install.outcome }}"
+          dry_run_outcome="${{ steps.dry_run.outcome }}"
+
+          {
+            echo "## Release Dry Run Summary"
+            echo ""
+            echo "- install: ${install_outcome}"
+            echo "- release:dry-run: ${dry_run_outcome}"
+            if [ "${dry_run_outcome}" = "failure" ]; then
+              echo "- failed step: release:dry-run"
+            elif [ "${install_outcome}" = "failure" ]; then
+              echo "- failed step: install"
+            else
+              echo "- failed step: none"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail When Dry Run Fails
+        if: steps.dry_run.outcome == 'failure'
+        run: exit 1
