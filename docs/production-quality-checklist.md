@@ -285,6 +285,7 @@
 - Storybook onboarding parity: `Getting Started` now provides domain-based catalog map and direct API/Best-Practices reading path.
 - Table empty/single-row semantics parity: `defaultSortKey` no longer exposes misleading sorted state when sort controls are disabled.
 - Demo table empty-state parity: E2E assertions now cover both ascending/descending sort-label branches to match semantic fallback behavior.
+- Demo table loading-state parity: E2E sort-control locator now accepts both `ascending/descending` accessible-name branches, matching loading-mode `aria-sort` suppression behavior and preventing false negatives in release gate runs.
 - Toast viewport-stack parity: same-corner notifications now apply deterministic visual offsets so older notices remain readable behind the latest toast.
 - Storybook toast-stack parity: added `StackedViewportOffset` interaction assertions to lock stack-offset behavior in visual regression baselines.
 - Toast actionable-role parity: toasts with `action` now expose `dialog/alertdialog` semantics (`aria-modal="false"`) while passive notifications keep `status/alert`.

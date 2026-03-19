@@ -772,7 +772,7 @@ test("toggles table loading state and disables sort controls", async ({ page }) 
 
   const table = page.getByRole("table", { name: "Component readiness metrics" });
   const loadingToggle = page.getByRole("button", { name: "Toggle table loading" });
-  const sortButton = table.getByRole("button", { name: "Component sort descending" });
+  const sortButton = table.getByRole("button", { name: /Component sort (ascending|descending)/ });
 
   await loadingToggle.click();
   await expect(table).toHaveAttribute("aria-busy", "true");

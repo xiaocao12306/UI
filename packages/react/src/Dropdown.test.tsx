@@ -104,7 +104,7 @@ describe("Dropdown", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Keyboard Select" }));
-    const menu = screen.getByRole("menu", { name: "Keyboard Select" });
+    screen.getByRole("menu", { name: "Keyboard Select" });
     const enterItem = screen.getByRole("menuitem", { name: "Run Enter" });
     expect(enterItem).toHaveFocus();
 
