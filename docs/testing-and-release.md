@@ -38,6 +38,10 @@ Demo dist gate behavior:
 
 - `demo:dist:check` rebuilds `apps/demo/dist` before release gate checks.
 - stale dist diff is treated as error and blocks the command (run `pnpm demo:build` and commit updated dist files).
+- common failure signature:
+  - `[demo-dist-check] error: demo dist is out of sync with current sources.`
+  - changed entries usually include `apps/demo/dist/index.html` + hashed bundle rename in `apps/demo/dist/assets/`.
+  - fix sequence: `pnpm demo:build` -> `git add apps/demo/dist` -> commit -> rerun `pnpm demo:dist:check` or `pnpm release:gate:ci`.
 
 ## E2E (Playwright)
 
