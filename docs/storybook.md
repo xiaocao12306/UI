@@ -35,6 +35,26 @@ pnpm --filter @aurora-ui/storybook-app storybook:test
 pnpm --filter @aurora-ui/storybook-app storybook:test:ci
 ```
 
+## 最短命令流（本地门禁）
+
+本地执行与 CI 一致的 Storybook 门禁，最短路径：
+
+```bash
+pnpm exec playwright install chromium
+pnpm storybook:test:ci
+```
+
+需要排障时，按以下顺序缩小范围：
+
+```bash
+pnpm storybook:coverage:report
+pnpm storybook:docs:check
+pnpm storybook:play:check
+pnpm storybook:static:check
+pnpm storybook:a11y:skip-check
+pnpm storybook:test:grep "Table.stories.tsx"
+```
+
 ## Interaction Runner
 
 - 工具：`@storybook/test-runner`
@@ -50,6 +70,17 @@ pnpm --filter @aurora-ui/storybook-app storybook:test:ci
   - `apps/storybook/.storybook/test-runner.ts`：在 `preVisit/postVisit` 注入 `axe-playwright`，为每个 story 执行 WCAG 扫描；`color-contrast` 默认全量执行，仅在白名单存在时对登记 story id 做定向豁免
 - `storybook:test:ci`：先执行 `storybook:coverage:check` + `storybook:docs:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`，再在本地静态产物（`storybook-static`）上通过 `scripts/serve-storybook-static.mjs` 启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
 - 可审阅性约定：Storybook tests/suites 计数不在文档中手工维护，统一以 CI run 的 `GITHUB_STEP_SUMMARY`（`Storybook Interaction Gate`）为准。
+- 常见失败签名与修复：
+  - `[storybook-coverage-report] error: strict mode failed with ... gating issue(s).`
+    - 修复：先运行 `pnpm storybook:coverage:report` 看问题计数与清单，修复 docs/story 引用后再跑 `pnpm storybook:coverage:check`
+  - `[storybook-docs-import-check] error: ... missing story imports ...` / `... invalid story refs ...`
+    - 修复：补齐 `apps/storybook/src/docs/*.mdx` 的 `*Stories` import，或补齐/更正 `apps/storybook/src/stories/*.stories.tsx` 导出，再跑 `pnpm storybook:docs:check`
+  - `[storybook-play-coverage-check] error: ... missing play hooks.`
+    - 修复：为列出的 story 文件至少补 1 个带 `play` 的导出故事，再跑 `pnpm storybook:play:check`
+  - `[storybook-static-check] error: storybook-static is out of sync with current sources.`
+    - 修复：执行 `pnpm storybook:build` 并提交 `apps/storybook/storybook-static`，再跑 `pnpm storybook:static:check`
+  - `[storybook-a11y-skip-check] error: ...`
+    - 修复：修正 `apps/storybook/.storybook/test-runner.ts` 中 skip 列表（排序、去重、story id 必须存在），确保 `apps/storybook/storybook-static/index.json` 最新，再跑 `pnpm storybook:a11y:skip-check`
 - 当前已覆盖 play 场景：
   - `Core/Button` 键盘激活 + loading 禁用分支
   - `Core/Tag` MetadataRow/AI context 可见性断言

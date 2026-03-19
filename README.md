@@ -85,6 +85,26 @@ pnpm demo:e2e:grep "toggles table loading state and disables sort controls"
 
 ## Run Storybook
 
+Shortest local gate flow:
+
+```bash
+pnpm exec playwright install chromium
+pnpm storybook:test:ci
+```
+
+When debugging gate failures, narrow down in this order:
+
+```bash
+pnpm storybook:coverage:report
+pnpm storybook:docs:check
+pnpm storybook:play:check
+pnpm storybook:static:check
+pnpm storybook:a11y:skip-check
+pnpm storybook:test:grep "Table.stories.tsx"
+```
+
+Full Storybook command list:
+
 ```bash
 pnpm storybook:dev
 pnpm storybook:build
@@ -137,6 +157,14 @@ pnpm chromatic
 - full pre-release gate: `pnpm release:gate` (`release:gate:ci` + `release:dry-run`)
 - workflow evidence should be read from each run's `GITHUB_STEP_SUMMARY` (storybook gate snapshot, token mode, dry-run package table)
 - `Release Dry Run` workflow always emits a summary (including checkout/setup/install failure paths) with failed-step labeling for faster triage
+
+Shortest release gate flow:
+
+```bash
+pnpm release:preflight
+pnpm release:gate:ci
+pnpm release:dry-run
+```
 
 ## Demo External Link
 

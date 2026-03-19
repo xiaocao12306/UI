@@ -12,6 +12,29 @@ pnpm coverage:gate
 pnpm build
 ```
 
+## Shortest Command Flows
+
+Storybook gate (local CI-equivalent):
+
+```bash
+pnpm exec playwright install chromium
+pnpm storybook:test:ci
+```
+
+Release gate (before publish):
+
+```bash
+pnpm release:preflight
+pnpm release:gate:ci
+pnpm release:dry-run
+```
+
+One-command pre-release gate:
+
+```bash
+pnpm release:gate
+```
+
 ## Package-Level Checks
 
 Examples:
@@ -47,6 +70,23 @@ Demo dist gate behavior:
   - `[demo-dist-check] error: demo dist is out of sync with current sources.`
   - changed entries usually include `apps/demo/dist/index.html` + hashed bundle rename in `apps/demo/dist/assets/`.
   - fix sequence: `pnpm demo:build` -> `git add apps/demo/dist` -> commit -> rerun `pnpm demo:dist:check` or `pnpm release:gate:ci`.
+
+## Common Failure Signatures -> Fix
+
+- Signature: `[storybook-coverage-report] error: strict mode failed with ... gating issue(s).`
+  - Fix: run `pnpm storybook:coverage:report` to inspect issue counts/details; then fix docs/story references and rerun `pnpm storybook:coverage:check`.
+- Signature: `[storybook-docs-import-check] error: ... missing story imports ...` or `... invalid story refs ...`
+  - Fix: add missing `*Stories` imports in `apps/storybook/src/docs/*.mdx`, or export the referenced story from `apps/storybook/src/stories/*.stories.tsx`, then rerun `pnpm storybook:docs:check`.
+- Signature: `[storybook-play-coverage-check] error: ... story file(s) missing play hooks.`
+  - Fix: add at least one exported story with `play` per listed story file, then rerun `pnpm storybook:play:check`.
+- Signature: `[storybook-static-check] error: storybook-static is out of sync with current sources.`
+  - Fix: run `pnpm storybook:build`, commit `apps/storybook/storybook-static`, rerun `pnpm storybook:static:check`.
+- Signature: `[storybook-a11y-skip-check] error: ...`
+  - Fix: update `apps/storybook/.storybook/test-runner.ts` skip set (sorted, unique, existing story ids), ensure `apps/storybook/storybook-static/index.json` is fresh, rerun `pnpm storybook:a11y:skip-check`.
+- Signature: `[demo-dist-check] error: demo dist is out of sync with current sources.`
+  - Fix: run `pnpm demo:build`, commit `apps/demo/dist`, rerun `pnpm demo:dist:check`.
+- Signature: `Step failed: preflight clean-working-tree check` (from `pnpm release:dry-run`)
+  - Fix: clean or commit local changes (`git status --porcelain` must be empty), rerun `pnpm release:dry-run`.
 
 ## E2E (Playwright)
 
