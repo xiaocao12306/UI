@@ -44,6 +44,28 @@ describe("Toast", () => {
     expect(events).toEqual(["reason:close-button", "close", "open:false"]);
   });
 
+  it("emits close callbacks in deterministic order for escape dismiss", () => {
+    const events: string[] = [];
+    render(
+      <Toast
+        open
+        title="Escapable"
+        onCloseReason={(reason) => {
+          events.push(`reason:${reason}`);
+        }}
+        onClose={() => {
+          events.push("close");
+        }}
+        onOpenChange={(nextOpen) => {
+          events.push(`open:${String(nextOpen)}`);
+        }}
+      />
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(events).toEqual(["reason:escape-key", "close", "open:false"]);
+  });
+
   it("supports explicit live-region label override", () => {
     render(<Toast open title={<span aria-hidden>✅</span>} ariaLabel="Sync completed notification" />);
 
@@ -163,6 +185,38 @@ describe("Toast", () => {
       expect(onClose).toHaveBeenCalledTimes(1);
       expect(onOpenChange).toHaveBeenCalledWith(false);
       expect(onCloseReason).toHaveBeenCalledWith("timeout");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("emits close callbacks in deterministic order for timeout dismiss", () => {
+    vi.useFakeTimers();
+    const events: string[] = [];
+
+    try {
+      render(
+        <Toast
+          open
+          title="Timed"
+          duration={1200}
+          onCloseReason={(reason) => {
+            events.push(`reason:${reason}`);
+          }}
+          onClose={() => {
+            events.push("close");
+          }}
+          onOpenChange={(nextOpen) => {
+            events.push(`open:${String(nextOpen)}`);
+          }}
+        />
+      );
+
+      act(() => {
+        vi.advanceTimersByTime(1200);
+      });
+
+      expect(events).toEqual(["reason:timeout", "close", "open:false"]);
     } finally {
       vi.useRealTimers();
     }

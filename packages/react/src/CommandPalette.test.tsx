@@ -373,6 +373,42 @@ describe("CommandPalette", () => {
     expect(events).toEqual(["reason:close-button", "open:false"]);
   });
 
+  it("emits escape and outside-pointer callbacks in deterministic order", () => {
+    const events: string[] = [];
+    const onOpenChange = (nextOpen: boolean) => {
+      events.push(`open:${String(nextOpen)}`);
+    };
+
+    const { rerender } = render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={(reason) => {
+          events.push(`reason:${reason}`);
+        }}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(events).toEqual(["reason:escape-key", "open:false"]);
+
+    events.length = 0;
+    rerender(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={(reason) => {
+          events.push(`reason:${reason}`);
+        }}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    fireEvent.pointerDown(document.body);
+    expect(events).toEqual(["reason:outside-pointer", "open:false"]);
+  });
+
   it("supports localized close-button accessible label", () => {
     render(
       <CommandPalette
