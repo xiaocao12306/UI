@@ -494,6 +494,11 @@
   - Storybook Gate 复验（2026-03-19 latest+3：`storybook:test:ci` 通过，32 suites / 180 tests）
   - Demo dist 同步复验（`Button` 修复后刷新 `apps/demo/dist`，`demo:dist:check` 恢复通过）
   - Verify/Coverage 复验（2026-03-19 latest+4：`pnpm verify` + `pnpm coverage:gate` 通过）
+  - Toast 堆叠优先级回归补齐（新增 hover 提权后 Escape 关闭顺序单测，锁定 hover/focus 双路径一致行为）
+  - Tabs IME 激活保护收口（manual 模式在组合输入阶段忽略 `Enter/Space` 激活，避免 CJK 输入法确认误触发）
+  - Table IME 排序保护收口（sortable header 在组合输入阶段忽略 `Enter/Space` 排序激活，避免确认键误排序）
+  - Table 默认降序契约补齐（新增 `defaultSortDirection=\"desc\"` 单测 + Storybook `DescendingDefaultSortDirection` 场景）
+  - Release Gate 复验（2026-03-19 latest+5：`demo:dist:check` + `storybook:test:ci` 通过，32 suites / 181 tests）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

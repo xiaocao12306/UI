@@ -378,3 +378,8 @@
 - Storybook gate parity refresh: after Button contrast repair, `pnpm storybook:test:ci` returned green on 2026-03-19 (`32` suites / `180` tests).
 - Demo dist parity refresh: after Button contrast changes, demo static artifacts were rebuilt and `pnpm demo:dist:check` returned green.
 - Verify/coverage parity refresh: `pnpm verify` and `pnpm coverage:gate` both revalidated as green after latest Button/Tabs/Table/Storybook updates.
+- Toast stack-priority parity: added hover-driven stack promotion regression so Escape dismiss order is locked for both hover and focus priority paths.
+- Tabs IME-guard parity: manual activation now ignores Enter/Space during composition (`isComposing`/`keyCode=229`) to prevent CJK confirmation from triggering tab activation.
+- Table IME-guard parity: sortable-header keyboard activation now ignores Enter/Space during composition (`isComposing`/`keyCode=229`) to prevent CJK confirmation from triggering accidental sort.
+- Table default-direction parity: added `defaultSortDirection=\"desc\"` unit + Storybook interaction coverage to lock descending-first initialization contract.
+- Storybook gate latest refresh: after Table descending-default coverage update, `pnpm storybook:test:ci` revalidated green on 2026-03-19 (`32` suites / `181` tests).
