@@ -58,6 +58,56 @@ describe("Table", () => {
     expect(screen.getByRole("table", { name: "Data table" })).toBeInTheDocument();
   });
 
+  it("keeps scroll container keyboard reachable when sortable controls are unavailable", async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <div>
+        <Table
+          columns={[
+            { key: "name", header: "Name" },
+            { key: "status", header: "Status" }
+          ]}
+          data={[
+            { name: "Button", status: "Stable" },
+            { name: "Dialog", status: "Stable" }
+          ]}
+        />
+        <button type="button">After table</button>
+      </div>
+    );
+
+    const scrollContainer = container.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement;
+    expect(scrollContainer).toHaveAttribute("tabindex", "0");
+
+    await user.tab();
+    expect(scrollContainer).toHaveFocus();
+
+    await user.tab();
+    expect(screen.getByRole("button", { name: "After table" })).toHaveFocus();
+  });
+
+  it("does not add extra scroll-container tab stop when sortable controls are actionable", () => {
+    const { container } = render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    const scrollContainer = container.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement;
+    expect(scrollContainer).not.toHaveAttribute("tabindex");
+  });
+
   it("renders empty state when no rows", () => {
     render(
       <Table

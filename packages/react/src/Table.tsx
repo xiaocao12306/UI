@@ -179,10 +179,22 @@ export function Table<T>({
       direction: sortState.direction
     });
   }, [columns, getSortStatusText, loading, sortState, sortedEntries.length]);
+  const hasActionableSortControls =
+    !loading && sortedEntries.length > 1 && columns.some((column) => column.sortable);
   const tableColSpan = Math.max(columns.length, 1);
 
   return (
     <div
+      data-aurora-table-scroll-container=""
+      tabIndex={hasActionableSortControls ? undefined : 0}
+      aria-label={
+        hasActionableSortControls
+          ? undefined
+          : ariaLabelledBy
+            ? undefined
+            : resolvedAriaLabel ?? "Data table scroll container"
+      }
+      aria-labelledby={hasActionableSortControls ? undefined : ariaLabelledBy}
       style={{
         border: "1px solid var(--aurora-border-default)",
         borderRadius: "var(--aurora-radius-md)",
