@@ -523,16 +523,17 @@
 
 .demo-telemetry-grid {
   display: grid;
-  gap: 8px;
-  border: 1px solid color-mix(in srgb, var(--aurora-border-default) 74%, transparent);
+  gap: 6px;
+  border: 1px solid color-mix(in srgb, var(--aurora-border-default) 68%, transparent);
   border-radius: calc(var(--aurora-radius-md) - 2px);
-  padding: 10px 12px;
+  padding: 8px 10px;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--aurora-surface-elevated) 58%, transparent),
-    color-mix(in srgb, var(--aurora-surface-default) 86%, transparent)
+    color-mix(in srgb, var(--aurora-surface-elevated) 42%, transparent),
+    color-mix(in srgb, var(--aurora-surface-default) 90%, transparent)
   );
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--aurora-text-primary) 6%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--aurora-text-primary) 4%, transparent);
+  font-size: 12px;
 }
 
 .demo-telemetry-grid p {
@@ -541,7 +542,7 @@
   align-items: center;
   gap: 6px;
   margin: 0;
-  padding: 3px 0;
+  padding: 2px 0;
   min-width: 0;
 }
 

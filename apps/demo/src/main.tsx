@@ -248,22 +248,22 @@ const panelDescriptionStyle: React.CSSProperties = { ...mutedBodyStyle, fontSize
 const telemetryValueStyle: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
-  minHeight: 22,
+  minHeight: 20,
   maxWidth: "100%",
-  padding: "2px 10px",
+  padding: "1px 8px",
   borderRadius: 999,
-  border: "1px solid color-mix(in srgb, var(--aurora-accent-default) 30%, var(--aurora-border-default))",
+  border: "1px solid color-mix(in srgb, var(--aurora-border-default) 78%, transparent)",
   background:
-    "linear-gradient(180deg, color-mix(in srgb, var(--aurora-accent-default) 14%, transparent), color-mix(in srgb, var(--aurora-surface-elevated) 80%, transparent))",
-  boxShadow: "inset 0 1px 0 color-mix(in srgb, var(--aurora-text-primary) 8%, transparent)",
+    "linear-gradient(180deg, color-mix(in srgb, var(--aurora-surface-elevated) 84%, transparent), color-mix(in srgb, var(--aurora-surface-default) 92%, transparent))",
+  boxShadow: "inset 0 1px 0 color-mix(in srgb, var(--aurora-text-primary) 5%, transparent)",
   fontFamily: "var(--aurora-font-family-mono)",
-  fontSize: 12,
+  fontSize: 11,
   letterSpacing: "0.01em",
-  lineHeight: "18px",
+  lineHeight: "16px",
   whiteSpace: "normal",
   overflowWrap: "anywhere",
-  color: "var(--aurora-text-primary)",
-  fontWeight: "var(--aurora-font-weight-semibold)"
+  color: "color-mix(in srgb, var(--aurora-text-primary) 92%, var(--aurora-text-secondary))",
+  fontWeight: "var(--aurora-font-weight-medium)"
 };
 
 function Section({
