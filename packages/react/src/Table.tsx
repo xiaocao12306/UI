@@ -332,14 +332,15 @@ export function Table<T>({
                           : hovered
                             ? "color-mix(in srgb, var(--aurora-surface-elevated) 86%, var(--aurora-surface-default))"
                             : "transparent",
-                        color: "inherit",
                         font: "inherit",
                         cursor: sortDisabled ? "not-allowed" : "pointer",
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 6,
                         padding: "2px 6px",
-                        opacity: sortDisabled ? 0.64 : 1,
+                        color: sortDisabled
+                          ? "color-mix(in srgb, var(--aurora-text-secondary) 88%, var(--aurora-text-primary))"
+                          : "inherit",
                         boxShadow: focusVisible
                           ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 42%, transparent)"
                           : "none",

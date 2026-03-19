@@ -444,6 +444,8 @@
   - Storybook 表单对比度豁免回收（提升 `FormField` 错误文案默认对比度并收回 Input/FormField/Select/Textarea/DatePicker/Checkbox/Switch 的白名单豁免）
   - Storybook Alert 对比度豁免回收（提升 `feedback.*.text` 在亮/暗主题可读性并收回 `feedback-alert--default` / `feedback-alert--dismissible` / `feedback-alert--tone-matrix` 白名单）
   - Storybook Button 对比度豁免回收（验证 `core-button--variant-matrix` 无需例外并从白名单移除）
+  - Storybook Table 对比度豁免回收（移除 sortable header 禁用态透明度衰减并收回全部 `data-table--*` 白名单）
+  - Storybook a11y 零豁免基线（`colorContrastSkipStoryIds` 归零，`storybook:a11y:skip-check` 支持并校验空白名单）
   - Vitest 覆盖率门禁收口（新增 `coverage:gate` + 硬阈值 lines/statements `>=90%`、branches/functions `>=85%`，并接入 CI/Release Gate）
   - Table 空/单行排序语义收口（`defaultSortKey` 在无有效排序条件时不再暴露 `aria-sort` 与排序播报，避免禁用态误导）
   - Table 排序交互状态收口（sortable header 补齐 hover/active/focus-visible 反馈，并显式暴露 `aria-keyshortcuts="Enter Space"`）

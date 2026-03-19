@@ -21,10 +21,6 @@ function parseSkipIds(content) {
   }
 
   const ids = [...setMatch[1].matchAll(/"([^"]+)"/g)].map((match) => match[1]);
-  if (ids.length === 0) {
-    fail("skip list is empty; if no exemptions are needed, remove this check from CI chain.");
-  }
-
   return ids;
 }
 

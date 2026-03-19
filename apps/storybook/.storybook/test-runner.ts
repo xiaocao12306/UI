@@ -1,16 +1,7 @@
 import type { TestRunnerConfig } from "@storybook/test-runner";
 import { checkA11y, configureAxe, injectAxe } from "axe-playwright";
 
-const colorContrastSkipStoryIds = new Set([
-  "data-table--accessible-name-fallback",
-  "data-table--accessible-name-labelled-by-heading",
-  "data-table--accessible-name-without-caption",
-  "data-table--localized-sort-labels",
-  "data-table--release-checklist",
-  "data-table--single-row-sort-disabled",
-  "data-table--sort-telemetry",
-  "data-table--with-row-action"
-]);
+const colorContrastSkipStoryIds = new Set([]);
 
 const config: TestRunnerConfig = {
   async preVisit(page) {
