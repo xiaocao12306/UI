@@ -226,7 +226,7 @@ This runs:
 2. `pnpm coverage:gate`
 3. `pnpm demo:e2e`
 4. `pnpm demo:dist:check`
-5. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`）
+5. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:docs:parity:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`）
 
 Full local pre-release gate (includes tarball evidence):
 
@@ -243,7 +243,7 @@ This appends: 6. `pnpm release:dry-run`
 建议审阅顺序：
 
 1. `CI` workflow：查看 `Storybook Interaction Gate` + `Demo Quality Gate` summary（coverage/docs/static/test + demo e2e/dist gate 快照）。
-2. `Release Dry Run` workflow：查看包体积表、失败步骤、恢复文件计数。
+2. `Release Dry Run` workflow：先看失败步骤；仅当 `release:dry-run` 步骤实际执行时再看包体积表与恢复文件计数（若停在 checkout/setup/install，则以 workflow phase outcome 为准）。
 3. `Chromatic Visual Tests` workflow：查看 mode/token 状态、build/storybook URL、change/error 计数。
 4. `Release` workflow：查看 `Release Gate (CI)` summary（verify + demo e2e run/result + demo dist + storybook gate）以及 `Publish Mode` summary（`enforce`/token 状态）。
 5. 失败排障：下载 workflow artifacts（`storybook-gate-logs` / `demo-quality-gate-logs` / `release-gate-logs`）查看原始日志与首条失败签名。

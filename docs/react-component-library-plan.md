@@ -465,6 +465,7 @@
   - Demo 交互状态收口（SectionNav/HeroStatCard 从事件驱动状态机切换为 CSS `:hover/:focus-visible/[aria-current]`，减少重渲染与状态分叉）
   - Demo 动效可访问性收口（新增 `prefers-reduced-motion` 分支，导航与卡片交互在低动态偏好下关闭位移动效）
   - CI/Release 日志可观测性收口（Storybook coverage 问题计数写入 summary，并上传 gate logs artifact 便于失败复盘）
+  - Chromatic summary 字段收口（skip/fail 分支补齐统一 status/build/storybook/change/error 字段，避免与上传分支证据口径漂移）
   - Demo Hero 主题控制器成品化（主题切换区升级为 capsule 容器 + 当前主题徽标 + 移动端换行适配，提升首屏品牌层次）
   - Table 键盘长按收口（sortable header 在 `Enter/Space` repeat 场景忽略重复 keydown，避免排序/遥测抖动）
   - Table loading 排序语义收口（`loading` 场景清理 header `aria-sort`，避免播报陈旧排序状态误导）

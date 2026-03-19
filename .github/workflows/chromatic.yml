@@ -97,8 +97,13 @@ jobs:
           {
             echo "## Chromatic Upload Failed"
             echo
+            echo "- status: \`failed\`"
             echo "- mode: \`enforce=true\`"
             echo "- reason: \`CHROMATIC_PROJECT_TOKEN\` is not configured."
+            echo "- build url: n/a"
+            echo "- storybook url: n/a"
+            echo "- change count: n/a"
+            echo "- error count: n/a"
             echo "- action: add repository secret \`CHROMATIC_PROJECT_TOKEN\`."
             echo "- guide: \`docs/secrets.md\`"
           } >> "$GITHUB_STEP_SUMMARY"
@@ -114,7 +119,12 @@ jobs:
           {
             echo "## Chromatic Upload Skipped"
             echo
+            echo "- status: \`skipped\`"
             echo "- reason: \`CHROMATIC_PROJECT_TOKEN\` is not configured."
+            echo "- build url: n/a"
+            echo "- storybook url: n/a"
+            echo "- change count: n/a"
+            echo "- error count: n/a"
             echo "- effect: Storybook visual regression baseline/upload is skipped for this run."
             echo "- fix: add repository secret \`CHROMATIC_PROJECT_TOKEN\`."
             echo "- guide: \`docs/secrets.md\`"

@@ -75,6 +75,7 @@
 - Storybook docs gate parity: docs check now validates both `*Stories` imports and `of={XStories.Y}` export existence before interaction runner.
 - Toast timer continuity parity: hover/focus pauses now resume auto-dismiss with remaining time instead of resetting full duration.
 - Chromatic gate parity: workflow now supports soft-skip (default) and enforce hard-fail mode (`workflow_dispatch` + `enforce=true`) for release audits.
+- Chromatic summary parity: skip/fail branches now emit the same summary fields as upload runs (`status`, `build/storybook url`, `change/error count`) with `n/a` placeholders for missing token cases.
 - Table natural-sort parity: sortable string columns now use `Intl.Collator` for numeric/case-friendly ordering (`a2 < A10 < A11`).
 - Tabs key-boundary parity: non-applicable arrow keys are now explicitly covered by regression tests (no focus or panel drift).
 - CommandPalette lint parity: option click path now carries keyboard listener fallback to satisfy strict a11y lint gates.
