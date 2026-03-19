@@ -126,13 +126,15 @@ export const LoadingState: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const table = canvas.getByRole("table", { name: "Data table" });
-    const sortButton = canvas.getByRole("button", { name: "Issue sort descending" });
+    const sortButton = canvas.getByRole("button", { name: "Issue sort ascending" });
+    const issueHeader = canvas.getByRole("columnheader", { name: /Issue/ });
 
     await expect(table).toHaveAttribute("aria-busy", "true");
     await expect(canvas.getByText("Syncing release feed...")).toBeInTheDocument();
     await expect(canvas.queryByRole("rowheader", { name: "BTN-102" })).not.toBeInTheDocument();
     await expect(sortButton).toBeDisabled();
     await expect(sortButton).not.toHaveAttribute("aria-keyshortcuts");
+    await expect(issueHeader).not.toHaveAttribute("aria-sort");
   }
 };
 

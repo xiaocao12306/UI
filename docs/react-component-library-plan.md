@@ -452,6 +452,7 @@
   - Demo 动效可访问性收口（新增 `prefers-reduced-motion` 分支，导航与卡片交互在低动态偏好下关闭位移动效）
   - CI/Release 日志可观测性收口（Storybook coverage 问题计数写入 summary，并上传 gate logs artifact 便于失败复盘）
   - Table 键盘长按收口（sortable header 在 `Enter/Space` repeat 场景忽略重复 keydown，避免排序/遥测抖动）
+  - Table loading 排序语义收口（`loading` 场景清理 header `aria-sort`，避免播报陈旧排序状态误导）
   - CommandPalette 引用稳健性收口（`aria-activedescendant` 仅引用现存可执行 option，过滤/命令更新时避免悬空或禁用项引用）
   - CommandPalette 键盘长按收口（`Enter` repeat 场景忽略重复触发，避免批量执行模式下重复命令与遥测抖动）
   - CommandPalette 键盘提示精度收口（无可执行命令时移除 `Enter` 键提示，避免 AT/QA 误判可执行路径）

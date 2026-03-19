@@ -202,6 +202,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - Use `getSortStatusText` to localize active-sort live narration so keyboard and pointer sorting changes remain equally discoverable to assistive tech users.
 - During async refreshes, set `loading` so table emits `aria-busy` and temporarily suppresses stale row actions/sorting.
+- During `loading`, clear `aria-sort` from headers so assistive narration does not announce stale sorted state while data is temporarily non-interactive.
 - For empty datasets, use meaningful `emptyContent`; table announces it through polite live status narration.
 - Treat single-row tables as non-sortable UI at runtime; built-in sort controls are auto-disabled to prevent no-op telemetry and redundant keyboard stops.
 - For pagination i18n, generate `getItemAriaLabel` from the provided `page` argument; boundary previous/next labels are already clamped to valid page ranges.

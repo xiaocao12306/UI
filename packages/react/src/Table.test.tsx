@@ -173,6 +173,43 @@ describe("Table", () => {
     expect(screen.queryByRole("cell", { name: "Button" })).toBeNull();
   });
 
+  it("suppresses aria-sort while loading even when sort state exists, then restores when loading ends", () => {
+    const { rerender } = render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+        defaultSortKey="name"
+        loading
+      />
+    );
+
+    const loadingNameHeader = screen.getByRole("columnheader", { name: /Name/ });
+    expect(loadingNameHeader).not.toHaveAttribute("aria-sort");
+
+    rerender(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    const nameHeader = screen.getByRole("columnheader", { name: /Name/ });
+    expect(nameHeader).toHaveAttribute("aria-sort", "ascending");
+  });
+
   it("accepts ariaLabel to provide an explicit table name without caption", () => {
     render(
       <Table
@@ -627,7 +664,7 @@ describe("Table", () => {
       />
     );
 
-    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    const sortButton = screen.getByRole("button", { name: "Name sort ascending" });
     expect(sortButton).toBeDisabled();
     fireEvent.click(sortButton);
     expect(onSortChange).not.toHaveBeenCalled();

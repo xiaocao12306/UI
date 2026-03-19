@@ -223,7 +223,7 @@ export function Table<T>({
             {columns.map((column) => {
               const key = String(column.key);
               const sortable = Boolean(column.sortable);
-              const sorted = sortable && sortState?.key === key && sortedEntries.length > 1 ? sortState.direction : undefined;
+              const sorted = !loading && sortable && sortState?.key === key && sortedEntries.length > 1 ? sortState.direction : undefined;
               const ariaSort = sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined;
               const textAlign = column.align ?? "left";
               const headerLabel = typeof column.header === "string" ? column.header : key;
