@@ -543,6 +543,7 @@
   - Tabs 主键按压语义收口（tab `pressed` 视觉仅响应主键 `mousedown/up`，补齐 unit + Storybook `PrimaryPointerOnlyPressedState`）
   - Table 主键按压语义收口（sortable header `pressed` 视觉仅响应主键 `mousedown/up`，补齐 unit + Storybook `PrimaryPointerOnlySortPress`）
   - CommandPalette 选项按压语义收口（option `mousedown` 仅主键 `preventDefault`，保留非主键 pointer 语义；补齐 unit + Storybook `OptionMouseDownPolicy`）
+  - Release Gate 证据刷新（2026-03-19：`release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 202/202）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
