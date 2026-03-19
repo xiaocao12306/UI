@@ -793,6 +793,30 @@ export const DisabledCommandGuard: Story = {
   }
 };
 
+export const OptionMouseDownPolicy: Story = {
+  render: () => <OpenPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const option = await canvas.findByRole("option", { name: "Create Spec" });
+
+    const secondaryMouseDown = new MouseEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+      button: 2
+    });
+    option.dispatchEvent(secondaryMouseDown);
+    expect(secondaryMouseDown.defaultPrevented).toBe(false);
+
+    const primaryMouseDown = new MouseEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+      button: 0
+    });
+    option.dispatchEvent(primaryMouseDown);
+    expect(primaryMouseDown.defaultPrevented).toBe(true);
+  }
+};
+
 export const TextValueAndAccentSearch: Story = {
   render: () => <TextValueAndAccentSearchPalette />,
   play: async ({ canvasElement }) => {

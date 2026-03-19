@@ -449,6 +449,9 @@ export function CommandPalette({
                   aria-setsize={filtered.length}
                   tabIndex={-1}
                   onMouseDown={(event) => {
+                    if (event.button !== 0) {
+                      return;
+                    }
                     // Keep combobox input focus while selecting listbox options.
                     event.preventDefault();
                   }}

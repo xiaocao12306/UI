@@ -349,6 +349,37 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
+  it("only prevents option mousedown default on primary button", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "open-theme", label: "Open Theme Pack" }
+        ]}
+      />
+    );
+
+    const option = screen.getByRole("option", { name: "Open Settings" });
+
+    const secondaryMouseDown = new MouseEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+      button: 2
+    });
+    option.dispatchEvent(secondaryMouseDown);
+    expect(secondaryMouseDown.defaultPrevented).toBe(false);
+
+    const primaryMouseDown = new MouseEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+      button: 0
+    });
+    option.dispatchEvent(primaryMouseDown);
+    expect(primaryMouseDown.defaultPrevented).toBe(true);
+  });
+
   it("forwards escape and outside-pointer dismiss events", () => {
     const onEscapeKeyDown = vi.fn();
     const onPointerDownOutside = vi.fn();

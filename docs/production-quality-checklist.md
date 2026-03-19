@@ -423,3 +423,4 @@
 - Tabs disabled-state interaction parity: runtime-disabled tabs now clear hover/pressed/focus visuals, with unit + Storybook `DisabledTabVisualReset` coverage.
 - Tabs primary-pointer parity: tab pressed offset now only activates on primary-button mouse paths, with unit + Storybook `PrimaryPointerOnlyPressedState` coverage.
 - Table primary-pointer parity: sortable-header pressed offset now only activates on primary-button mouse paths, with unit + Storybook `PrimaryPointerOnlySortPress` coverage.
+- CommandPalette option-pointer parity: option `mousedown` now prevents default only for primary-button paths, preserving non-primary pointer semantics with unit + Storybook `OptionMouseDownPolicy` coverage.
