@@ -394,6 +394,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `columns` | `TableColumn<T>[]` | `sortable` + optional `sortAccessor` for stable sorting behavior. |
+| `columns[].sortLabel` | `string` | Optional narration label for sortable headers when `header` uses non-text UI (icons/custom markup). |
 | `columns[].rowHeader` | `boolean` | Render row identity cells as `<th scope="row">` for better screen-reader row context. |
 | `columns[].render` | `(row, rowIndex, sourceIndex) => ReactNode` | `rowIndex` is sorted/visual position; `sourceIndex` preserves original data position. |
 | `data` | `T[]` | Empty arrays render `emptyContent`; ignored while `loading` is true. |
@@ -418,6 +419,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 <Canvas of={TableStories.SortTelemetry} />
 <Canvas of={TableStories.LocalizedSortLabels} />
+<Canvas of={TableStories.SortLabelForCustomHeader} />
 <Canvas of={TableStories.LoadingState} />
 <Canvas of={TableStories.EmptyState} />
 <Canvas of={TableStories.SingleRowSortDisabled} />

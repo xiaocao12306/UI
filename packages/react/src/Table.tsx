@@ -6,6 +6,7 @@ export type TableSortDirection = "asc" | "desc";
 export type TableColumn<T> = {
   key: keyof T | string;
   header: React.ReactNode;
+  sortLabel?: string;
   width?: number | string;
   align?: TableAlign;
   rowHeader?: boolean;
@@ -62,6 +63,14 @@ function resolveInitialSortState<T>(
     key: string;
     direction: TableSortDirection;
   };
+}
+
+function resolveColumnSortLabel<T>(column: TableColumn<T>, fallbackKey: string) {
+  if (typeof column.sortLabel === "string" && column.sortLabel.trim().length > 0) {
+    return column.sortLabel.trim();
+  }
+
+  return typeof column.header === "string" ? column.header : fallbackKey;
 }
 
 export function Table<T>({
@@ -270,10 +279,7 @@ export function Table<T>({
       return "";
     }
 
-    const columnHeader =
-      typeof activeSortColumn.header === "string"
-        ? activeSortColumn.header
-        : String(activeSortColumn.key);
+    const columnHeader = resolveColumnSortLabel(activeSortColumn, String(activeSortColumn.key));
     return getSortStatusText({
       columnKey: sortState.key,
       columnHeader,
@@ -362,7 +368,7 @@ export function Table<T>({
               const sorted = !loading && hasMultiRowData ? activeSortDirection : undefined;
               const ariaSort = sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined;
               const textAlign = column.align ?? "left";
-              const headerLabel = typeof column.header === "string" ? column.header : key;
+              const headerLabel = resolveColumnSortLabel(column, key);
               const nextDirection: TableSortDirection =
                 activeSortDirection === "asc" ? "desc" : "asc";
               const sortAriaLabel = getSortAriaLabel({

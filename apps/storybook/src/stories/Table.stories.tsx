@@ -529,6 +529,38 @@ export const LocalizedSortLabels: Story = {
   }
 };
 
+export const SortLabelForCustomHeader: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
+      <Table
+        columns={[
+          {
+            key: "releasedAt",
+            header: <span aria-hidden="true">📅</span>,
+            sortLabel: "Release date",
+            sortable: true
+          },
+          { key: "component", header: "Component", sortable: true },
+          { key: "owner", header: "Owner" }
+        ]}
+        data={[
+          { releasedAt: "2026-03-19", component: "Dialog", owner: "Platform UI" },
+          { releasedAt: "2026-01-10", component: "Button", owner: "Design System" }
+        ]}
+        defaultSortKey="releasedAt"
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Release date ascending.");
+    const descendingButton = canvas.getByRole("button", { name: "Release date sort descending" });
+    await userEvent.click(descendingButton);
+    await expect(canvas.getByRole("button", { name: "Release date sort ascending" })).toBeInTheDocument();
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Release date descending.");
+  }
+};
+
 export const InvalidDefaultSortKeyFallback: Story = {
   render: () => {
     const nonSortableStatusColumns: Array<TableColumn<ReleaseRow>> = [

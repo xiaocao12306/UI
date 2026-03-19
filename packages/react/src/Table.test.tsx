@@ -964,6 +964,34 @@ describe("Table", () => {
     expect(screen.getByRole("button", { name: "按升序排序：Name" })).toBeInTheDocument();
   });
 
+  it("uses sortLabel for sortable narration when header content is non-text", () => {
+    render(
+      <Table
+        columns={[
+          {
+            key: "releasedAt",
+            header: <span aria-hidden="true">📅</span>,
+            sortLabel: "Release date",
+            sortable: true
+          },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { releasedAt: "2026-03-19", status: "Ready" },
+          { releasedAt: "2026-01-10", status: "In review" }
+        ]}
+        defaultSortKey="releasedAt"
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("Sorted by Release date ascending.");
+
+    const sortButton = screen.getByRole("button", { name: "Release date sort descending" });
+    fireEvent.click(sortButton);
+    expect(screen.getByRole("button", { name: "Release date sort ascending" })).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Sorted by Release date descending.");
+  });
+
   it("sorts date values correctly when sortable accessor returns Date", () => {
     render(
       <Table
