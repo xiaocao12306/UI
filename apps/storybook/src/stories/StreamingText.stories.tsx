@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { StreamingText } from "@aurora-ui/react";
 import { expect, within } from "@storybook/test";
+import { StoryShowcaseFrame } from "./storyShowcase";
 
 const sample = "Aurora UI streaming response is rendering.";
 
@@ -52,8 +53,8 @@ export const MultilineCursor: Story = {
     showCursorWhenDone: true
   },
   render: (args) => (
-    <div style={{ width: 360 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 380px)">
       <StreamingText {...args} />
-    </div>
+    </StoryShowcaseFrame>
   )
 };

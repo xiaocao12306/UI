@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect, within } from "@storybook/test";
 import { MessageBubble } from "@aurora-ui/react";
+import { StoryFullscreenFrame } from "./storyShowcase";
 
 const meta = {
   title: "AI/MessageBubble",
@@ -34,12 +35,12 @@ export const Default: Story = {
 
 export const Conversation: Story = {
   render: () => (
-    <div style={{ minHeight: 320, padding: 16, display: "grid", gap: 10 }}>
+    <StoryFullscreenFrame minHeight={320}>
       <MessageBubble speaker="system">Model switched to release-planning mode.</MessageBubble>
       <MessageBubble speaker="user">Generate a concise changelog for v0.2.</MessageBubble>
       <MessageBubble speaker="assistant">
         Changelog drafted with highlights, breaking changes, and migration tips.
       </MessageBubble>
-    </div>
+    </StoryFullscreenFrame>
   )
 };

@@ -2,6 +2,23 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { PromptInput } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
+import { StoryShowcaseFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
+
+const promptTelemetryTextStyle: React.CSSProperties = {
+  ...storyMutedTextStyle
+};
+
+const promptTelemetryValueStyle: React.CSSProperties = {
+  ...storyEmphasisTextStyle
+};
+
+function PromptInputShowcase({ children }: { children: React.ReactNode }) {
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 640px)">
+      {children}
+    </StoryShowcaseFrame>
+  );
+}
 
 const meta = {
   title: "AI/PromptInput",
@@ -32,12 +49,12 @@ function InteractivePromptInput() {
   const [submissionCount, setSubmissionCount] = React.useState(0);
 
   return (
-    <div style={{ width: 620, display: "grid", gap: 10 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        Last submitted prompt: <strong style={{ color: "var(--aurora-text-primary)" }}>{lastPrompt}</strong>
+    <PromptInputShowcase>
+      <p style={promptTelemetryTextStyle}>
+        Last submitted prompt: <strong style={promptTelemetryValueStyle}>{lastPrompt}</strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        Submission count: <strong style={{ color: "var(--aurora-text-primary)" }}>{submissionCount}</strong>
+      <p style={promptTelemetryTextStyle}>
+        Submission count: <strong style={promptTelemetryValueStyle}>{submissionCount}</strong>
       </p>
       <PromptInput
         submitting={submitting}
@@ -48,7 +65,7 @@ function InteractivePromptInput() {
           window.setTimeout(() => setSubmitting(false), 600);
         }}
       />
-    </div>
+    </PromptInputShowcase>
   );
 }
 
@@ -89,7 +106,7 @@ function MultiActionFeedbackPromptInput() {
   const [updates, setUpdates] = React.useState<string[]>([]);
 
   return (
-    <div style={{ width: 620, display: "grid", gap: 10 }}>
+    <PromptInputShowcase>
       <PromptInput
         submitting={submitting}
         placeholder="Draft release note and publish checklist..."
@@ -104,10 +121,10 @@ function MultiActionFeedbackPromptInput() {
           }, 360);
         }}
       />
-      <ol aria-label="AI action feedback" style={{ margin: 0, paddingLeft: 20, color: "var(--aurora-text-secondary)" }}>
+      <ol aria-label="AI action feedback" style={{ ...promptTelemetryTextStyle, paddingLeft: 20 }}>
         {updates.length > 0 ? updates.map((item) => <li key={item}>{item}</li>) : <li>No actions yet.</li>}
       </ol>
-    </div>
+    </PromptInputShowcase>
   );
 }
 
