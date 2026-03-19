@@ -715,16 +715,19 @@ test("toggles table loading state and disables sort controls", async ({ page }) 
 
   const table = page.getByRole("table", { name: "Component readiness metrics" });
   const loadingToggle = page.getByRole("button", { name: "Toggle table loading" });
+  const sortButton = table.getByRole("button", { name: "Component sort descending" });
 
   await loadingToggle.click();
   await expect(table).toHaveAttribute("aria-busy", "true");
   await expect(page.getByText("Syncing component readiness metrics...")).toBeVisible();
-  await expect(table.getByRole("button", { name: "Component sort descending" })).toBeDisabled();
+  await expect(sortButton).toBeDisabled();
+  await expect(sortButton).not.toHaveAttribute("aria-keyshortcuts");
   await expect(table.getByRole("rowheader", { name: "Button" })).toHaveCount(0);
 
   await loadingToggle.click();
   await expect(table).not.toHaveAttribute("aria-busy");
-  await expect(table.getByRole("button", { name: "Component sort descending" })).toBeEnabled();
+  await expect(sortButton).toBeEnabled();
+  await expect(sortButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
   await expect(table.getByRole("rowheader", { name: "Button" })).toBeVisible();
 });
 
@@ -733,13 +736,17 @@ test("shows empty table state and keeps sort controls disabled", async ({ page }
 
   const table = page.getByRole("table", { name: "Component readiness metrics" });
   const emptyToggle = page.getByRole("button", { name: "Toggle table empty state" });
+  const sortButton = table.getByRole("button", { name: /Component sort (ascending|descending)/ });
 
   await emptyToggle.click();
   await expect(page.getByText("No component readiness metrics yet.")).toBeVisible();
-  await expect(table.getByRole("button", { name: /Component sort (ascending|descending)/ })).toBeDisabled();
+  await expect(sortButton).toBeDisabled();
+  await expect(sortButton).not.toHaveAttribute("aria-keyshortcuts");
   await expect(table.getByRole("rowheader", { name: "Button" })).toHaveCount(0);
 
   await emptyToggle.click();
+  await expect(sortButton).toBeEnabled();
+  await expect(sortButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
   await expect(table.getByRole("rowheader", { name: "Button" })).toBeVisible();
 });
 

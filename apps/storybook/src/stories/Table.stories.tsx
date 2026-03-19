@@ -90,9 +90,11 @@ export const EmptyState: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const sortButton = canvas.getByRole("button", { name: "Issue sort ascending" });
     await expect(canvas.getByText("No release items yet.")).toBeInTheDocument();
     await expect(canvas.getByRole("status")).toHaveTextContent("No release items yet.");
-    await expect(canvas.getByRole("button", { name: "Issue sort ascending" })).toBeDisabled();
+    await expect(sortButton).toBeDisabled();
+    await expect(sortButton).not.toHaveAttribute("aria-keyshortcuts");
   }
 };
 
@@ -124,11 +126,13 @@ export const LoadingState: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const table = canvas.getByRole("table", { name: "Data table" });
+    const sortButton = canvas.getByRole("button", { name: "Issue sort descending" });
 
     await expect(table).toHaveAttribute("aria-busy", "true");
     await expect(canvas.getByText("Syncing release feed...")).toBeInTheDocument();
     await expect(canvas.queryByRole("rowheader", { name: "BTN-102" })).not.toBeInTheDocument();
-    await expect(canvas.getByRole("button", { name: "Issue sort descending" })).toBeDisabled();
+    await expect(sortButton).toBeDisabled();
+    await expect(sortButton).not.toHaveAttribute("aria-keyshortcuts");
   }
 };
 

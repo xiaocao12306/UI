@@ -266,7 +266,7 @@ export function Table<T>({
                         sortButtonRefs.current[key] = node;
                       }}
                       aria-label={sortAriaLabel}
-                      aria-keyshortcuts="Enter Space"
+                      aria-keyshortcuts={sortDisabled ? undefined : "Enter Space"}
                       disabled={sortDisabled}
                       onClick={activateSort}
                       onMouseEnter={() => {

@@ -344,6 +344,21 @@ describe("Table", () => {
     expect(screen.getByRole("button", { name: "Name sort descending" })).toHaveAttribute("aria-keyshortcuts", "Enter Space");
   });
 
+  it("omits sortable-header keyboard hints when sorting is disabled", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[]}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Name sort ascending" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Name sort ascending" })).not.toHaveAttribute("aria-keyshortcuts");
+  });
+
   it("shows sort-button focus ring only for keyboard-intended focus", () => {
     render(
       <Table

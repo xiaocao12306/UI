@@ -280,6 +280,7 @@
 - CommandPalette page-jump parity: long lists now support `PageUp/PageDown` jumps across actionable options while preserving disabled-option skip semantics.
 - CommandPalette shortcut-hint parity: when both `closeOnEscape` and `clearQueryOnEscape` are disabled, combobox `aria-keyshortcuts` now drops `Escape` to avoid advertising unavailable behavior.
 - Tabs shortcut-hint parity: manual mode now advertises `aria-keyshortcuts` only on enabled tabs; disabled tabs omit shortcut metadata to avoid false activation affordances.
+- Table shortcut-hint parity: `aria-keyshortcuts` is now exposed only when sortable headers are actually actionable; loading/empty/single-row disabled states omit the shortcut hint.
 - CommandPalette keyboard-discoverability parity: search combobox now exposes `aria-keyshortcuts` metadata (`ArrowDown/ArrowUp/Home/End/PageDown/PageUp/Enter/Escape`) with unit + Storybook + demo E2E coverage.
 - Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.
