@@ -405,6 +405,37 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
+  it("exposes Enter/Space keyboard shortcuts metadata in manual activation mode", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        activationMode="manual"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  });
+
+  it("does not expose manual-only keyboard shortcut metadata in automatic mode", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("tab", { name: "One" })).not.toHaveAttribute("aria-keyshortcuts");
+    expect(screen.getByRole("tab", { name: "Two" })).not.toHaveAttribute("aria-keyshortcuts");
+  });
+
   it("supports manual activation mode with Space", () => {
     render(
       <Tabs

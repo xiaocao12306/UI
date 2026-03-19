@@ -268,6 +268,8 @@ export const ManualActivation: Story = {
 
     await userEvent.click(specTab);
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+    await expect(specTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    await expect(releaseTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 
     await userEvent.keyboard("{ArrowRight}");
     await expect(canvas.getByRole("tab", { name: "Build" })).toHaveFocus();
@@ -312,6 +314,8 @@ export const ManualVerticalActivation: Story = {
 
     await userEvent.click(backlogTab);
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Backlog scope and release intent.");
+    await expect(backlogTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    await expect(shipTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 
     await userEvent.keyboard("{ArrowDown}");
     await expect(shipTab).toHaveFocus();
