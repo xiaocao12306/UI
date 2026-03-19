@@ -127,7 +127,9 @@ describe("CommandPalette", () => {
 
     const input = screen.getByRole("combobox", { name: "Search commands" });
     fireEvent.change(input, { target: { value: "deploy" } });
-    expect(screen.getByRole("status")).toHaveTextContent('1 of 2 matching command available for "deploy".');
+    expect(screen.getByRole("status")).toHaveTextContent(
+      '1 of 2 matching command available for "deploy".'
+    );
   });
 
   it("closes on escape key through dialog dismiss", () => {
@@ -230,6 +232,37 @@ describe("CommandPalette", () => {
     );
 
     expect(screen.getByRole("combobox", { name: "Search commands" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Enter"
+    );
+  });
+
+  it("shows Escape keyboard hint only while query clear-on-escape is actionable", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        closeOnEscape={false}
+        clearQueryOnEscape
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    expect(input).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Enter"
+    );
+
+    fireEvent.change(input, { target: { value: "settings" } });
+    expect(input).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
+    );
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(input).toHaveValue("");
+    expect(input).toHaveAttribute(
       "aria-keyshortcuts",
       "ArrowDown ArrowUp Home End PageDown PageUp Enter"
     );
@@ -504,7 +537,10 @@ describe("CommandPalette", () => {
 
     const input = screen.getByRole("combobox", { name: "Search commands" });
     expect(input).not.toHaveAttribute("aria-activedescendant");
-    expect(input).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp Home End PageDown PageUp Escape");
+    expect(input).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Escape"
+    );
 
     fireEvent.keyDown(input, { key: "ArrowDown" });
     fireEvent.keyDown(input, { key: "ArrowUp" });
@@ -525,11 +561,7 @@ describe("CommandPalette", () => {
     ];
 
     const { rerender } = render(
-      <CommandPalette
-        open
-        onOpenChange={() => {}}
-        commands={initialCommands}
-      />
+      <CommandPalette open onOpenChange={() => {}} commands={initialCommands} />
     );
 
     const input = screen.getByRole("combobox", { name: "Search commands" });
@@ -1051,7 +1083,10 @@ describe("CommandPalette", () => {
       target: { value: "release" }
     });
     expect(screen.getByRole("status")).toHaveTextContent('No enabled commands match "release".');
-    expect(input).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp Home End PageDown PageUp Escape");
+    expect(input).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Escape"
+    );
   });
 
   it("supports custom result status narration", () => {

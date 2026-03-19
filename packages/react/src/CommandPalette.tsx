@@ -38,7 +38,11 @@ export type CommandPaletteProps = {
   }) => string;
 };
 
-export type CommandPaletteCloseReason = "close-button" | "item-select" | "escape-key" | "outside-pointer";
+export type CommandPaletteCloseReason =
+  | "close-button"
+  | "item-select"
+  | "escape-key"
+  | "outside-pointer";
 
 export function CommandPalette({
   open,
@@ -139,11 +143,11 @@ export function CommandPalette({
     if (enabledCount > 0) {
       shortcuts.push("Enter");
     }
-    if (closeOnEscape || clearQueryOnEscape) {
+    if (closeOnEscape || (clearQueryOnEscape && query.length > 0)) {
       shortcuts.push("Escape");
     }
     return shortcuts.join(" ");
-  }, [clearQueryOnEscape, closeOnEscape, enabledCount]);
+  }, [clearQueryOnEscape, closeOnEscape, enabledCount, query.length]);
 
   const resultsStatusText = React.useMemo(
     () =>
@@ -190,7 +194,9 @@ export function CommandPalette({
 
     const preferredKey = activeCommandKeyRef.current;
     if (preferredKey) {
-      const preferredIndex = filtered.findIndex((command) => !command.disabled && command.key === preferredKey);
+      const preferredIndex = filtered.findIndex(
+        (command) => !command.disabled && command.key === preferredKey
+      );
       if (preferredIndex >= 0) {
         setActiveIndex(preferredIndex);
         return;
@@ -198,7 +204,8 @@ export function CommandPalette({
     }
 
     setActiveIndex(firstEnabledIndex);
-    activeCommandKeyRef.current = firstEnabledIndex >= 0 ? filtered[firstEnabledIndex]?.key ?? null : null;
+    activeCommandKeyRef.current =
+      firstEnabledIndex >= 0 ? (filtered[firstEnabledIndex]?.key ?? null) : null;
   }, [filtered, firstEnabledIndex]);
 
   React.useEffect(() => {
@@ -309,7 +316,9 @@ export function CommandPalette({
           aria-haspopup="listbox"
           aria-autocomplete="list"
           aria-controls={hasResults ? listId : undefined}
-          aria-activedescendant={safeActiveIndex >= 0 ? `${listId}-option-${safeActiveIndex}` : undefined}
+          aria-activedescendant={
+            safeActiveIndex >= 0 ? `${listId}-option-${safeActiveIndex}` : undefined
+          }
           aria-describedby={statusId}
           aria-keyshortcuts={searchKeyShortcuts}
           placeholder={placeholder}
@@ -435,7 +444,12 @@ export function CommandPalette({
                       return;
                     }
 
-                    if (event.key === "Enter" || event.key === " " || event.key === "Space" || event.key === "Spacebar") {
+                    if (
+                      event.key === "Enter" ||
+                      event.key === " " ||
+                      event.key === "Space" ||
+                      event.key === "Spacebar"
+                    ) {
                       event.preventDefault();
                       selectItem(index);
                     }
@@ -461,9 +475,7 @@ export function CommandPalette({
             })}
           </div>
         ) : (
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-            {emptyMessage}
-          </p>
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>{emptyMessage}</p>
         )}
       </div>
     </Dialog>
