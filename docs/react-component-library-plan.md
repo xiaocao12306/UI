@@ -532,6 +532,10 @@
   - Toast timeout 验收补齐（新增 `TimeoutCloseReason` 故事断言自动关闭与 `reason=timeout`，并补齐顶部 toast 外部卸载后的 Escape 栈重分配单测）
   - 文档命令一致性门禁强化（`docs:commands:check` 改为解析 `package.json` 实际 gate 链路并逐文档校验关键命令）
   - Tabs/Table 焦点兜底收口（全局键鼠意图跟踪 + `:focus-visible` fallback，补齐 keyboard-after-pointer 单测与 Storybook 验收）
+  - 发布门禁文档可执行性收口（README / `docs/secrets.md` / `docs/storybook.md` / `docs/testing-and-release.md` 补齐 token 缺失签名、`enforce` 模式与本地 preflight 排障路径）
+  - CommandPalette 无可执行结果键盘语义收口（移除无效导航快捷键提示并保留原生 `Home/End/Page` 输入行为，补齐 unit + Storybook `DisabledOnlyResults` 验收）
+  - Table 禁用态交互视觉收口（排序控件在 loading/不可操作分支自动清理 hover/pressed/focus 残留，补齐 unit + Storybook `LoadingDisablesResetsSortVisualState`）
+  - Tabs 禁用态交互视觉收口（运行时禁用 tab 自动清理 hover/pressed/focus 残留，补齐 unit + Storybook `DisabledTabVisualReset`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

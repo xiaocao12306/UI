@@ -415,3 +415,7 @@
 - Toast timeout/stack parity: added Storybook `TimeoutCloseReason` play assertion for `reason=timeout`, plus unit coverage that top-toast external unmount correctly reassigns `aria-keyshortcuts=\"Escape\"` to the remaining toast.
 - Docs command-governance parity: `docs:commands:check` now derives required commands from `storybook:test:ci` and `release:gate:ci` scripts in `package.json`, then enforces README/Storybook/Testing docs command parity against real gate chains.
 - Tabs/Table focus-visibility parity: both components now track global keyboard-vs-pointer intent so `:focus-visible` fallback still shows focus ring after pointer interaction when users re-enter with Tab, with unit + Storybook `KeyboardFocusRingAfterPointer` coverage.
+- Release token-guidance parity: workflow summaries and docs now align on enforce/soft-skip behavior, preflight commands, and missing-token signatures for `CHROMATIC_PROJECT_TOKEN` / `NPM_TOKEN`.
+- CommandPalette disabled-result parity: when filtered results contain no enabled options, combobox keeps native `Home/End/Page` behavior and shortcut hints now only advertise actionable keys.
+- Table disabled-state interaction parity: sortable headers now clear pressed/focus visuals when loading or otherwise non-actionable, with unit + Storybook `LoadingDisablesResetsSortVisualState` coverage.
+- Tabs disabled-state interaction parity: runtime-disabled tabs now clear hover/pressed/focus visuals, with unit + Storybook `DisabledTabVisualReset` coverage.
