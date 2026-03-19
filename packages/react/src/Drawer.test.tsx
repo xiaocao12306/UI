@@ -321,7 +321,7 @@ describe("Drawer", () => {
     matchesSpy.mockRestore();
   });
 
-  it("applies pressed transform on close button pointer down and clears on pointer up", () => {
+  it("applies pressed transform only for primary-button close-button pointer paths", () => {
     render(
       <Drawer open onOpenChange={() => {}} title="Pressable drawer">
         <p>Drawer content</p>
@@ -329,10 +329,16 @@ describe("Drawer", () => {
     );
 
     const closeButton = screen.getByRole("button", { name: "Close drawer" });
-    fireEvent.mouseDown(closeButton);
+    fireEvent.mouseDown(closeButton, { button: 2 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.mouseDown(closeButton, { button: 0 });
     expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
 
-    fireEvent.mouseUp(closeButton);
+    fireEvent.mouseUp(closeButton, { button: 2 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+
+    fireEvent.mouseUp(closeButton, { button: 0 });
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 

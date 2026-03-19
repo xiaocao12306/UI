@@ -107,6 +107,41 @@ export const NonDismissible: Story = {
   }
 };
 
+function CloseButtonPrimaryPointerOnlyDrawerDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <div style={{ minHeight: 420, padding: 16, display: "grid", gap: 10, justifyItems: "start" }}>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Reopen Drawer
+      </Button>
+      <Drawer
+        open={open}
+        onOpenChange={setOpen}
+        title="Primary pointer close affordance"
+        description="Close button should only show pressed state for primary pointer interactions."
+      >
+        <p style={{ margin: 0 }}>Validate close-button pressed feedback with primary pointer only.</p>
+      </Drawer>
+    </div>
+  );
+}
+
+export const CloseButtonPrimaryPointerOnly: Story = {
+  render: () => <CloseButtonPrimaryPointerOnlyDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const closeButton = await body.findByRole("button", { name: "Close drawer" });
+
+    fireEvent.mouseDown(closeButton, { button: 2 });
+    await expect(closeButton.style.transform).toContain("translateY(0");
+
+    fireEvent.mouseDown(closeButton);
+    fireEvent.mouseUp(closeButton);
+    await expect(closeButton.style.transform).toContain("translateY(0");
+  }
+};
+
 function CloseReasonTelemetryDrawerDemo() {
   const [open, setOpen] = React.useState(false);
   const [lastReason, setLastReason] = React.useState("none");

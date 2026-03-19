@@ -152,13 +152,17 @@ export function Drawer({
                       setCloseButtonHovered(false);
                       setCloseButtonPressed(false);
                     }}
-                    onMouseDown={() => {
+                    onMouseDown={(event) => {
                       closeButtonFocusIntentRef.current = false;
                       setCloseButtonFocusVisible(false);
-                      setCloseButtonPressed(true);
+                      if (event.button === 0) {
+                        setCloseButtonPressed(true);
+                      }
                     }}
-                    onMouseUp={() => {
-                      setCloseButtonPressed(false);
+                    onMouseUp={(event) => {
+                      if (event.button === 0) {
+                        setCloseButtonPressed(false);
+                      }
                     }}
                     onKeyDown={() => {
                       closeButtonFocusIntentRef.current = true;
