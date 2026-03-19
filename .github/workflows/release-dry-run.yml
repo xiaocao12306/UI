@@ -10,6 +10,7 @@ on:
       - "package.json"
       - "pnpm-workspace.yaml"
       - "pnpm-lock.yaml"
+      - ".github/workflows/release.yml"
       - ".github/workflows/release-dry-run.yml"
   workflow_dispatch:
 

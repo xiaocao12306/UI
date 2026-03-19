@@ -122,11 +122,11 @@ Behavior:
 Dry-run workflow: `.github/workflows/release-dry-run.yml`
 
 - runs `pnpm release:dry-run` on PRs that touch package/release related files
-- path trigger coverage includes `.changeset/**`, `packages/**`, `scripts/**`, `pnpm-workspace.yaml`, lockfile and workflow itself
+- path trigger coverage includes `.changeset/**`, `packages/**`, `scripts/**`, `pnpm-workspace.yaml`, lockfile, `release.yml`, and dry-run workflow itself
 - enables workflow-level `concurrency` (same ref cancels in-progress old runs)
 - validates publishable tarballs without requiring `NPM_TOKEN`
 - writes tarball size summary (`package size` / `unpacked size`) into `GITHUB_STEP_SUMMARY` for reviewer-facing release evidence
-- on failure, summary still records `status=failed` and the failed step label to speed up triage
+- when `release:dry-run` step executes and fails, summary records `status=failed` and failed step label to speed up triage
 
 Required repository secrets:
 

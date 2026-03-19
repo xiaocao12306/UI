@@ -50,9 +50,12 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm exec playwright install chromium
 pnpm demo:e2e
-# or run all in one:
+# code-only gate:
 pnpm verify
+# CI-equivalent release gate:
+pnpm release:gate:ci
 ```
 
 ## Run Demo
@@ -77,6 +80,8 @@ pnpm storybook:dev
 pnpm storybook:build
 pnpm storybook:coverage:report
 pnpm storybook:coverage:check
+pnpm storybook:docs:check
+pnpm storybook:static:check
 pnpm storybook:test
 pnpm storybook:test:ci
 pnpm chromatic
@@ -144,5 +149,5 @@ export function App() {
 ```
 
 ## Notes
-- The repo currently targets Node 18+.
-- Demo currently uses Vite 5 for Node 18 compatibility.
+- CI release gate baseline uses Node 22 (recommended for local parity).
+- Node 18+ remains supported for local development; Demo uses Vite 5 for Node 18 compatibility.
