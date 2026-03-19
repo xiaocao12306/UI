@@ -833,10 +833,13 @@ describe("Toast", () => {
     matchesSpy.mockRestore();
   });
 
-  it("applies pressed transform on close button pointer down and clears on pointer up", () => {
+  it("applies pressed transform only for primary-button pointer down and clears on pointer up", () => {
     render(<Toast open title="Pressable" duration={0} />);
 
     const closeButton = screen.getByRole("button", { name: "Close toast" });
+    fireEvent.mouseDown(closeButton, { button: 2 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
     fireEvent.mouseDown(closeButton);
     expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
 

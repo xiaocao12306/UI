@@ -84,6 +84,41 @@ export const ToneMatrix: Story = {
   render: () => <ToneMatrixDemo />
 };
 
+function CloseButtonPrimaryPointerOnlyDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        Reopen Toast
+      </Button>
+      <Toast
+        open={open}
+        onOpenChange={setOpen}
+        duration={0}
+        title="Primary pointer close affordance"
+        description="Close button should only show pressed state for primary pointer interactions."
+        tone="info"
+      />
+    </div>
+  );
+}
+
+export const CloseButtonPrimaryPointerOnly: Story = {
+  render: () => <CloseButtonPrimaryPointerOnlyDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const closeButton = canvas.getByRole("button", { name: "Close toast" });
+
+    fireEvent.mouseDown(closeButton, { button: 2 });
+    await expect(closeButton.style.transform).toContain("translateY(0");
+
+    fireEvent.mouseDown(closeButton);
+    fireEvent.mouseUp(closeButton);
+    await expect(closeButton.style.transform).toContain("translateY(0");
+  }
+};
+
 function ActionRequiredToastDemo() {
   const [open, setOpen] = React.useState(true);
 

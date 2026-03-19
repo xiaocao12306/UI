@@ -438,12 +438,18 @@ export function Toast({
             setCloseButtonHovered(false);
             setCloseButtonPressed(false);
           }}
-          onMouseDown={() => {
+          onMouseDown={(event) => {
+            if (event.button !== 0) {
+              return;
+            }
             closeButtonFocusIntentRef.current = false;
             setCloseButtonFocusVisible(false);
             setCloseButtonPressed(true);
           }}
-          onMouseUp={() => {
+          onMouseUp={(event) => {
+            if (event.button !== 0) {
+              return;
+            }
             setCloseButtonPressed(false);
           }}
           onKeyDown={() => {
