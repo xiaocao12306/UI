@@ -837,6 +837,7 @@ describe("CommandPalette", () => {
 
   it("keeps palette open after selection when closeOnSelect is false", () => {
     const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
     const onCreate = vi.fn();
 
     render(
@@ -844,6 +845,7 @@ describe("CommandPalette", () => {
         open
         closeOnSelect={false}
         onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
         commands={[
           { key: "open-settings", label: "Open Settings" },
           { key: "create-project", label: "Create Project", onSelect: onCreate }
@@ -855,6 +857,7 @@ describe("CommandPalette", () => {
 
     expect(onCreate).toHaveBeenCalledTimes(1);
     expect(onOpenChange).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
