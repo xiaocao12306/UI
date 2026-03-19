@@ -439,6 +439,7 @@
   - Demo Table 空态 E2E 分支收口（排序按钮断言兼容 `ascending/descending` 标签，覆盖空态语义分支）
   - 集成示例文档深化（`component-recipes` 增补 keyboard-discoverability 与 overlay close telemetry 模板）
   - CommandPalette 键盘提示语义收口（当 `closeOnEscape=false` 且 `clearQueryOnEscape=false` 时移除 `Escape` 键盘提示，避免 AT/QA 误导）
+  - Tabs 禁用项键盘提示语义收口（manual 模式仅启用 tab 暴露 `aria-keyshortcuts`，禁用项移除提示避免可激活误导）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

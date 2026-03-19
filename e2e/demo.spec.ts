@@ -823,12 +823,15 @@ test("keeps manual vertical tabs panel stable until Enter activation", async ({ 
 
   const manualVerticalTablist = page.getByRole("tablist", { name: "Manual vertical release tabs" });
   const backlogTab = manualVerticalTablist.getByRole("tab", { name: "Backlog" });
+  const reviewTab = manualVerticalTablist.getByRole("tab", { name: "Review" });
   const shipTab = manualVerticalTablist.getByRole("tab", { name: "Ship" });
   const backlogPanel = page.locator(`#${await backlogTab.getAttribute("aria-controls")}`);
   const shipPanel = page.locator(`#${await shipTab.getAttribute("aria-controls")}`);
 
   await expect(backlogTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
   await expect(shipTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await expect(reviewTab).toHaveAttribute("aria-disabled", "true");
+  await expect(reviewTab).not.toHaveAttribute("aria-keyshortcuts");
 
   await backlogTab.focus();
   await backlogTab.press("ArrowDown");

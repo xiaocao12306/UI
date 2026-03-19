@@ -346,7 +346,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `orientation` | `'horizontal' \| 'vertical'` | Keyboard map follows orientation (`Left/Right` or `Up/Down`) with shared `Home/End` behavior. |
 | RTL keyboard parity | horizontal ArrowLeft/ArrowRight auto-flip | In `dir="rtl"` containers, horizontal arrow intent is mirrored so navigation follows visual reading direction. |
 | `activationMode` | `'automatic' \| 'manual'` | Automatic mode switches panels on arrow navigation; manual mode requires `Enter`/`Space` (including legacy `Spacebar`) to activate focused tab. |
-| manual activation key hints | `aria-keyshortcuts="Enter Space"` | In manual mode, tabs expose keyboard shortcut metadata so QA/AT tooling can discover the activation keys directly from semantics. |
+| manual activation key hints | `aria-keyshortcuts="Enter Space"` | In manual mode, enabled tabs expose keyboard shortcut metadata so QA/AT tooling can discover activation keys; disabled tabs omit the hint. |
 | `loop` | `boolean` | Defaults to `true`; set `false` to stop Arrow navigation at first/last enabled tab instead of wrapping. |
 | `onValueChange` | `(value: string) => void` | Fires only for enabled tabs and only when active key changes. |
 | tab relation | mounted `tabpanel` set + `hidden` toggle | Keeps every `aria-controls` target valid while showing only active content panel. |

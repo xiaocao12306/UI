@@ -310,12 +310,15 @@ export const ManualVerticalActivation: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const backlogTab = canvas.getByRole("tab", { name: "Backlog" });
+    const reviewTab = canvas.getByRole("tab", { name: "Review" });
     const shipTab = canvas.getByRole("tab", { name: "Ship" });
 
     await userEvent.click(backlogTab);
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Backlog scope and release intent.");
     await expect(backlogTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     await expect(shipTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    await expect(reviewTab).toHaveAttribute("aria-disabled", "true");
+    await expect(reviewTab).not.toHaveAttribute("aria-keyshortcuts");
 
     await userEvent.keyboard("{ArrowDown}");
     await expect(shipTab).toHaveFocus();

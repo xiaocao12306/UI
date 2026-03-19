@@ -412,13 +412,15 @@ describe("Tabs", () => {
         activationMode="manual"
         items={[
           { key: "one", label: "One", content: <div>Panel One</div> },
-          { key: "two", label: "Two", content: <div>Panel Two</div> }
+          { key: "two", label: "Two", content: <div>Panel Two</div> },
+          { key: "three", label: "Three", content: <div>Panel Three</div>, disabled: true }
         ]}
       />
     );
 
     expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    expect(screen.getByRole("tab", { name: "Three" })).not.toHaveAttribute("aria-keyshortcuts");
   });
 
   it("does not expose manual-only keyboard shortcut metadata in automatic mode", () => {

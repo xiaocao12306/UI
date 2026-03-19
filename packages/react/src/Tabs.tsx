@@ -164,7 +164,7 @@ export function Tabs({
               aria-selected={selected}
               aria-controls={`${baseId}-panel-${index}`}
               aria-disabled={disabled || undefined}
-              aria-keyshortcuts={activationMode === "manual" ? "Enter Space" : undefined}
+              aria-keyshortcuts={activationMode === "manual" && !disabled ? "Enter Space" : undefined}
               tabIndex={focusTargetValue === item.key ? 0 : -1}
               disabled={disabled}
               onClick={(event) => {
