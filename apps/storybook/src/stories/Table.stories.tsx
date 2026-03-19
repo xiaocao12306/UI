@@ -162,6 +162,36 @@ export const SingleRowSortDisabled: Story = {
   }
 };
 
+export const KeyboardReachableScrollContainer: Story = {
+  render: () => (
+    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
+      <Table
+        columns={[
+          { key: "id", header: "Issue" },
+          { key: "component", header: "Component" },
+          { key: "owner", header: "Owner" },
+          { key: "status", header: "Status" }
+        ]}
+        data={rows}
+      />
+      <button type="button">After table</button>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const scrollContainer = canvasElement.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement | null;
+    await expect(scrollContainer).not.toBeNull();
+    await expect(scrollContainer).toHaveAttribute("tabindex", "0");
+
+    await userEvent.tab();
+    await expect(scrollContainer).toHaveFocus();
+    await userEvent.tab();
+    await expect(canvas.getByRole("button", { name: "After table" })).toHaveFocus();
+  }
+};
+
 export const LoadingState: Story = {
   render: () => (
     <div style={{ width: "min(100%, 780px)" }}>
@@ -287,6 +317,12 @@ export const SortTelemetry: Story = {
   render: () => <SortTelemetryDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const scrollContainer = canvasElement.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement | null;
+    await expect(scrollContainer).not.toBeNull();
+    await expect(scrollContainer).not.toHaveAttribute("tabindex");
+
     const issueSort = canvas.getByRole("button", { name: "Issue sort descending" });
     await expect(issueSort).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 

@@ -352,6 +352,47 @@ export const ManualActivation: Story = {
   }
 };
 
+export const ManualFocusResetOnBlur: Story = {
+  render: () => (
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
+      <p style={storyHelperTextStyle}>
+        In manual mode, moving focus with arrows does not change selection. After leaving the
+        tablist, roving focus returns to the selected tab for the next keyboard entry.
+      </p>
+      <Tabs
+        ariaLabel="Manual blur reset tabs"
+        activationMode="manual"
+        defaultValue="spec"
+        items={[
+          { key: "spec", label: "Spec", content: "Specification stage." },
+          { key: "build", label: "Build", content: "Build stage." },
+          { key: "release", label: "Release", content: "Release stage." }
+        ]}
+      />
+      <button type="button">Outside focus target</button>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+    const outsideButton = canvas.getByRole("button", { name: "Outside focus target" });
+
+    await userEvent.click(specTab);
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(buildTab).toHaveFocus();
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+    await expect(buildTab).toHaveAttribute("aria-selected", "false");
+    await expect(specTab).toHaveAttribute("tabindex", "-1");
+    await expect(buildTab).toHaveAttribute("tabindex", "0");
+
+    await userEvent.click(outsideButton);
+    await expect(outsideButton).toHaveFocus();
+    await expect(specTab).toHaveAttribute("tabindex", "0");
+    await expect(buildTab).toHaveAttribute("tabindex", "-1");
+  }
+};
+
 export const ImeCompositionGuard: Story = {
   render: () => (
     <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
