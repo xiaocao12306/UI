@@ -499,6 +499,10 @@
   - Table IME 排序保护收口（sortable header 在组合输入阶段忽略 `Enter/Space` 排序激活，避免确认键误排序）
   - Table 默认降序契约补齐（新增 `defaultSortDirection=\"desc\"` 单测 + Storybook `DescendingDefaultSortDirection` 场景）
   - Release Gate 复验（2026-03-19 latest+5：`demo:dist:check` + `storybook:test:ci` 通过，32 suites / 181 tests）
+  - CommandPalette 非关闭选择契约补齐（`closeOnSelect=false` 场景锁定不触发 `onCloseReason`/`onOpenChange(false)`）
+  - Toast 位置切换堆叠迁移补齐（新增运行时 `position` 切换回归，锁定视觉 offset 与 Escape 栈同步迁移）
+  - Tabs 激活项禁用回退补齐（新增 rerender 回归，锁定当前激活 tab 被禁用后回退到首个可用 tab）
+  - Storybook 文案样式收口（Tabs/Table 说明与遥测区块统一辅助文案样式，减少内联风格分叉）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

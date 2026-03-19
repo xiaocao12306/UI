@@ -383,3 +383,7 @@
 - Table IME-guard parity: sortable-header keyboard activation now ignores Enter/Space during composition (`isComposing`/`keyCode=229`) to prevent CJK confirmation from triggering accidental sort.
 - Table default-direction parity: added `defaultSortDirection=\"desc\"` unit + Storybook interaction coverage to lock descending-first initialization contract.
 - Storybook gate latest refresh: after Table descending-default coverage update, `pnpm storybook:test:ci` revalidated green on 2026-03-19 (`32` suites / `181` tests).
+- CommandPalette persistent-selection parity: `closeOnSelect={false}` regression now explicitly locks that item selection does not emit close callbacks (`onCloseReason` / `onOpenChange(false)`).
+- Toast position-migration parity: runtime `position` switches now have stack-migration regression coverage to keep visual offset and Escape-priority stacks synchronized.
+- Tabs rerender-fallback parity: active tab disablement after rerender now has regression coverage to lock fallback to the first enabled tab.
+- Storybook narrative-style parity: Tabs/Table docs stories now reuse consistent helper/telemetry text styling to reduce visual grammar drift in API acceptance panels.
