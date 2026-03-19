@@ -31,6 +31,7 @@ pnpm release:dry-run
 ```
 
 说明：`pnpm release:dry-run` 只验证可发布包与产物，不会执行真实 npm 发布。
+说明：`pnpm release:gate` 也不会执行真实 npm 发布；真实发布仅在 `.github/workflows/release.yml` 且 `NPM_TOKEN` 可用时发生。
 
 One-command pre-release gate:
 
@@ -168,6 +169,8 @@ Expected behavior:
 Dry-run vs real publish:
 
 - `pnpm release:dry-run`: local/package-level verification only, no publish side-effect.
+- 推荐顺序（PR/本地预检）：`pnpm changeset:required` -> `pnpm release:dry-run`
+- 推荐顺序（发布前演练）：`pnpm release:preflight -- --scope=publish` -> `pnpm release:gate`
 - `.github/workflows/release.yml` with `NPM_TOKEN`: real publish path (`changesets/action` + `pnpm release`).
 - missing `NPM_TOKEN` + `enforce=false`: release PR automation runs, publish skipped.
 - missing `NPM_TOKEN` + `enforce=true`: workflow hard-fails before publish path.

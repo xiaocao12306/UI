@@ -158,7 +158,9 @@ pnpm chromatic
 - local CI-equivalent gate: `pnpm release:gate:ci` (`verify + coverage:gate + demo:e2e + demo:dist:check + storybook:test:ci`)
 - local publish dry-run: `pnpm release:dry-run` (runs `changeset version` + auto-discovered package `npm publish --dry-run`)
   - requires clean working tree and auto-reverts dry-run version file edits
+  - verifies publishable tarball only, no real publish side-effect
 - full pre-release gate: `pnpm release:gate` (`release:gate:ci` + `release:dry-run`)
+- `release:gate` also has no real publish side-effect
 - real publish is only in `.github/workflows/release.yml` when `NPM_TOKEN` exists
 - Chromatic upload is only in `.github/workflows/chromatic.yml` when `CHROMATIC_PROJECT_TOKEN` exists
 - `workflow_dispatch` supports `enforce=true`:
@@ -170,6 +172,7 @@ pnpm chromatic
 Shortest release gate flow:
 
 ```bash
+pnpm changeset:required
 pnpm release:preflight
 pnpm release:gate:ci
 pnpm release:dry-run

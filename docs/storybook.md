@@ -126,6 +126,39 @@ pnpm storybook:test:grep "Table.stories.tsx"
   - `Data/Tabs` 点击切换 + Home/End 键导航（含禁用项跳过）+ manual/vertical 模式键盘路径 + `ImeCompositionGuard`（组合输入阶段 Enter/Space 忽略）
   - `Data/Table` 键盘/点击排序切换与 `aria-sort` 状态同步 + `ImeCompositionGuard`（组合输入阶段 Enter/Space 忽略）
 
+## 文档结构基线（Component API / Best Practices）
+
+规范文件：
+
+- `apps/storybook/src/docs/Component-API.mdx`
+- `apps/storybook/src/docs/Best-Practices.mdx`
+
+`Component-API.mdx` 建议固定结构（每个组件一组）：
+
+1. 组件定位（何时使用 / 何时不用）
+2. Import 与最小可运行示例
+3. API（props、默认值、受控/非受控行为）
+4. Accessibility 语义（role、aria、命名来源）
+5. Keyboard 行为（Enter/Space/Escape/Arrow/Home/End 等）
+6. 状态矩阵（hover/focus/active/disabled/loading/error/empty）
+7. 回调契约（如 `onCloseReason`、`onOpenChange` 的触发时机）
+
+`Best-Practices.mdx` 建议固定结构：
+
+1. Do / Don't 对照
+2. 常见误用与边界（focus 管理、键盘陷阱、读屏命名）
+3. 与 release gate 的映射（本建议由哪个门禁脚本兜底）
+4. 组件间组合建议（Overlay + Form + Table + Toast 等）
+
+文档改动后推荐最短校验：
+
+```bash
+pnpm storybook:docs:check
+pnpm storybook:docs:parity:check
+pnpm docs:commands:check
+pnpm storybook:coverage:check
+```
+
 ## 当前已覆盖故事
 
 - `Core/Button`

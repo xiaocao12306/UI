@@ -516,6 +516,9 @@
   - Dropdown 全禁用 Storybook 验收（新增 `AllItemsDisabledKeyboardNoop`，锁定 Arrow/Home/End/Enter 在禁用列表中保持 no-op）
   - Demo 主题视觉契约收口（`AuroraProvider` 暴露 `data-aurora-theme`，Playwright 断言主题切换/刷新后 CSS 变量真实变更，避免仅文案切换的伪通过）
   - 文档门禁口径收口（README / testing-and-release / storybook 文档统一补齐 `storybook:docs:parity:check` 与 `release:gate:ci` 的 `coverage:gate` 说明）
+  - Storybook 文档结构收口（`Component API / Best Practices` 增补固定章节模板：定位、API、a11y、键盘、状态矩阵、回调契约、Do/Don't 与 gate 映射）
+  - Chromatic token 缺失提示收口（`chromatic.yml` skip/fail summary 增补 secrets 路径、本地 preflight 与 `gh workflow run chromatic.yml -f enforce=true` 重跑指引）
+  - npm dry-run 指引一致性收口（README 与 testing-and-release 对齐 `changeset:required -> release:dry-run` 与 `release:gate/release:dry-run` 无真实发布副作用口径）
   - Toast 可操作通知时长收口（`action` 且未传 `duration` 时默认持久化，显式 `duration` 仍可自动关闭；补齐单测与 Storybook API/Best Practices 文档）
   - Tabs manual 焦点回收收口（tablist 失焦后 roving tabindex 回到当前已选 tab，避免返回组件时焦点落在未激活页签）
   - Table 滚动容器可达性收口（无可用排序控件时自动提供滚动容器键盘焦点入口，确保横向溢出场景可达）
