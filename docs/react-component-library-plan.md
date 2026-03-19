@@ -581,6 +581,7 @@
   - Release Gate 证据刷新（2026-03-20 latest：`pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 73/73 + demo dist + storybook interaction 206/206）
   - Release Gate 证据刷新（2026-03-20 latest+1：Button icon-only a11y 收口后 `pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 73/73 + demo dist + storybook interaction 207/207）
   - Release Gate 证据刷新（2026-03-20 latest+2：修复 Popover Storybook 类型与静态产物同步后 `pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 73/73 + demo dist + storybook interaction 211/211）
+  - Release Gate 证据刷新（2026-03-20 latest+3：修复 Tabs 渲染期 ref 读取与 Storybook 静态产物同步后 `pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 73/73 + demo dist + storybook interaction 212/212）
   - Release Dry-Run 证据刷新（2026-03-19 latest+2：`release:dry-run` 通过，`react` package `64.3 kB` / unpacked `394.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
   - Release Dry-Run 证据刷新（2026-03-20 latest：`release:dry-run` 通过，`react` package `66.7 kB` / unpacked `408.0 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
   - Release Dry-Run 证据刷新（2026-03-20 latest+1：`release:dry-run` 通过，`react` package `67.1 kB` / unpacked `410.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
