@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Tabs } from "./Tabs";
@@ -560,6 +560,43 @@ describe("Tabs", () => {
 
     fireEvent.keyDown(screen.getByRole("tab", { name: "Two" }), { key: "Enter" });
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
+  });
+
+  it("resets manual roving focus target back to selected tab after leaving tablist", async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <Tabs
+          defaultValue="one"
+          activationMode="manual"
+          items={[
+            { key: "one", label: "One", content: <div>Panel One</div> },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />
+        <button type="button">Outside</button>
+      </>
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    await user.tab();
+    await user.keyboard("{ArrowRight}");
+    expect(twoTab).toHaveFocus();
+    expect(oneTab).toHaveAttribute("aria-selected", "true");
+    expect(twoTab).toHaveAttribute("aria-selected", "false");
+    expect(oneTab).toHaveAttribute("tabindex", "-1");
+    expect(twoTab).toHaveAttribute("tabindex", "0");
+
+    const outsideButton = screen.getByRole("button", { name: "Outside" });
+    act(() => {
+      outsideButton.focus();
+    });
+    expect(outsideButton).toHaveFocus();
+    await waitFor(() => {
+      expect(oneTab).toHaveAttribute("tabindex", "0");
+      expect(twoTab).toHaveAttribute("tabindex", "-1");
+    });
   });
 
   it("exposes Enter/Space keyboard shortcuts metadata in manual activation mode", () => {

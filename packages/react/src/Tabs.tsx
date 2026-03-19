@@ -147,6 +147,14 @@ export function Tabs({
         aria-labelledby={ariaLabelledBy}
         aria-orientation={orientation}
         aria-disabled={firstEnabledKey ? undefined : true}
+        onBlurCapture={(event) => {
+          const nextFocused = event.relatedTarget as Node | null;
+          if (nextFocused && event.currentTarget.contains(nextFocused)) {
+            return;
+          }
+
+          setFocusedValue(currentValue);
+        }}
         style={{
           display: "flex",
           gap: 6,

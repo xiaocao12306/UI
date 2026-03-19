@@ -517,6 +517,7 @@
   - Demo 主题视觉契约收口（`AuroraProvider` 暴露 `data-aurora-theme`，Playwright 断言主题切换/刷新后 CSS 变量真实变更，避免仅文案切换的伪通过）
   - 文档门禁口径收口（README / testing-and-release / storybook 文档统一补齐 `storybook:docs:parity:check` 与 `release:gate:ci` 的 `coverage:gate` 说明）
   - Toast 可操作通知时长收口（`action` 且未传 `duration` 时默认持久化，显式 `duration` 仍可自动关闭；补齐单测与 Storybook API/Best Practices 文档）
+  - Tabs manual 焦点回收收口（tablist 失焦后 roving tabindex 回到当前已选 tab，避免返回组件时焦点落在未激活页签）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
