@@ -525,6 +525,7 @@
   - Dialog/Drawer 焦点圈定补测（`Tab`/`Shift+Tab` 循环焦点保持在弹层内部，防止焦点逃逸到外部页面）
   - Demo dist 门禁修复（`release:gate:ci` 复验中发现 dist 漂移后已刷新并提交 `apps/demo/dist`，`demo:dist:check` 恢复通过）
   - Overlay Storybook 焦点圈定验收（新增 `Dialog/Drawer FocusTrapKeyboardCycle` 场景与 play 断言，定向 runner 通过）
+  - Toast 默认时长契约补测（无 `action` 且未传 `duration` 时默认 4000ms 自动关闭，和 action 默认持久化策略形成对称约束）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

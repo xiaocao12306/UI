@@ -209,6 +209,32 @@ describe("Toast", () => {
     }
   });
 
+  it("auto dismisses passive toast after default 4000ms when duration is omitted", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    try {
+      render(
+        <Toast open title="Passive default timer" onOpenChange={onOpenChange} onCloseReason={onCloseReason} />
+      );
+
+      act(() => {
+        vi.advanceTimersByTime(3999);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+      expect(onCloseReason).not.toHaveBeenCalled();
+
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onCloseReason).toHaveBeenCalledWith("timeout");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("emits close callbacks in deterministic order for timeout dismiss", () => {
     vi.useFakeTimers();
     const events: string[] = [];
