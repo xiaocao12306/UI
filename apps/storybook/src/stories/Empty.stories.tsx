@@ -1,6 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Empty } from "@aurora-ui/react";
 import { expect, within } from "@storybook/test";
+import type { ReactNode } from "react";
+import { StoryShowcaseFrame } from "./storyShowcase";
+
+function EmptyShowcase({ children, maxWidth = "min(100%, 420px)", gap = 10 }: { children: ReactNode; maxWidth?: string; gap?: number }) {
+  return (
+    <StoryShowcaseFrame maxWidth={maxWidth} gap={gap}>
+      {children}
+    </StoryShowcaseFrame>
+  );
+}
 
 const meta = {
   title: "Feedback/Empty",
@@ -25,9 +35,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => (
-    <div style={{ width: 360 }}>
+    <EmptyShowcase maxWidth="min(100%, 360px)">
       <Empty {...args} />
-    </div>
+    </EmptyShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -42,9 +52,9 @@ export const WithAction: Story = {
     action: <Button size="sm">Create release</Button>
   },
   render: (args) => (
-    <div style={{ width: 360 }}>
+    <EmptyShowcase maxWidth="min(100%, 360px)">
       <Empty {...args} />
-    </div>
+    </EmptyShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -54,11 +64,11 @@ export const WithAction: Story = {
 
 export const ToneMatrix: Story = {
   render: () => (
-    <div style={{ width: 420, display: "grid", gap: 12 }}>
+    <EmptyShowcase gap={12}>
       <Empty title="Default" description="Baseline empty state." />
       <Empty title="Info" description="No synced records yet." tone="info" />
       <Empty title="Warning" description="No eligible items for this filter." tone="warning" />
       <Empty title="Danger" description="No data returned due to request failure." tone="danger" />
-    </div>
+    </EmptyShowcase>
   )
 };

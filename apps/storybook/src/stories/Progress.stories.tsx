@@ -1,6 +1,24 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Progress } from "@aurora-ui/react";
 import { expect, within } from "@storybook/test";
+import type { ReactNode } from "react";
+import { StoryShowcaseFrame } from "./storyShowcase";
+
+function ProgressShowcase({
+  children,
+  maxWidth = "min(100%, 360px)",
+  gap = 10
+}: {
+  children: ReactNode;
+  maxWidth?: string;
+  gap?: number;
+}) {
+  return (
+    <StoryShowcaseFrame maxWidth={maxWidth} gap={gap}>
+      {children}
+    </StoryShowcaseFrame>
+  );
+}
 
 const meta = {
   title: "Feedback/Progress",
@@ -27,9 +45,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => (
-    <div style={{ width: 320 }}>
+    <ProgressShowcase maxWidth="min(100%, 320px)">
       <Progress {...args} />
-    </div>
+    </ProgressShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -41,12 +59,12 @@ export const Default: Story = {
 
 export const ToneMatrix: Story = {
   render: () => (
-    <div style={{ width: 360, display: "grid", gap: 12 }}>
+    <ProgressShowcase gap={12}>
       <Progress value={28} tone="default" label="Default progress" showValueLabel />
       <Progress value={46} tone="success" label="Success progress" showValueLabel />
       <Progress value={64} tone="warning" label="Warning progress" showValueLabel />
       <Progress value={82} tone="danger" label="Danger progress" showValueLabel />
-    </div>
+    </ProgressShowcase>
   )
 };
 
@@ -57,9 +75,9 @@ export const Indeterminate: Story = {
     showValueLabel: true
   },
   render: (args) => (
-    <div style={{ width: 320 }}>
+    <ProgressShowcase maxWidth="min(100%, 320px)">
       <Progress {...args} />
-    </div>
+    </ProgressShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

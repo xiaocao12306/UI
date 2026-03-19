@@ -2,6 +2,15 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Alert, Button } from "@aurora-ui/react";
 import { expect, userEvent, within } from "@storybook/test";
+import { StoryShowcaseFrame } from "./storyShowcase";
+
+function AlertShowcase({ children }: { children: React.ReactNode }) {
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 560px)">
+      {children}
+    </StoryShowcaseFrame>
+  );
+}
 
 const meta = {
   title: "Feedback/Alert",
@@ -30,12 +39,12 @@ export const Default: Story = {};
 
 export const ToneMatrix: Story = {
   render: () => (
-    <div style={{ width: 540, display: "grid", gap: 10 }}>
+    <AlertShowcase>
       <Alert tone="info" title="Info" description="Build is waiting for CI capacity." />
       <Alert tone="success" title="Success" description="Release published successfully." />
       <Alert tone="warning" title="Warning" description="Manual approval is required." />
       <Alert tone="danger" title="Danger" description="Rollback triggered due to failed migration." />
-    </div>
+    </AlertShowcase>
   )
 };
 
@@ -43,7 +52,7 @@ function DismissibleAlertDemo() {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <div style={{ width: 540, display: "grid", gap: 10 }}>
+    <AlertShowcase>
       <Button variant="outline" onClick={() => setOpen(true)}>
         Reopen
       </Button>
@@ -56,7 +65,7 @@ function DismissibleAlertDemo() {
           closeLabel="Dismiss pending action"
         />
       ) : null}
-    </div>
+    </AlertShowcase>
   );
 }
 
