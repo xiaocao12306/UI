@@ -132,6 +132,7 @@
 - Storybook play-coverage gate hardening: `storybook:play:check` now enforces at least one `play` interaction per `*.stories.*` file, with `MessageBubble` interactive assertion补齐到 32/32 story files.
 - Storybook a11y gate hardening: `@storybook/test-runner` now executes `axe-playwright` in `preVisit/postVisit`, and `color-contrast` is scoped to a tracked story-id skip list instead of global disable.
 - Storybook color-contrast debt reduction: Badge/Tag contrast styles were hardened and related skip-list entries (`core-badge--tone-matrix`, `core-badge--ai-interaction-status`, `core-tag--ai-context-markers`) removed from test-runner exemptions.
+- Storybook skip-list governance gate: added `storybook:a11y:skip-check` to enforce skip-id dedup/order/existence against `storybook-static/index.json`, preventing stale or drifting a11y exemptions.
 - Vitest coverage gate hardening: added `coverage:gate` with hard thresholds (lines/statements `>=90%`, branches/functions `>=85%`) and wired it into CI + release gate to block coverage regressions.
 - Demo dist-sync gate hardening: `demo:dist:check` now rebuilds demo dist and fails on `git status` diff so stale public-preview artifacts are blocked before release gate completion.
 - Demo visual productization hardening: updated hero panel, badge rail, nav pill styling, and section card surfaces for stronger brand hierarchy and commercial polish.

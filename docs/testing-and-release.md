@@ -23,6 +23,7 @@ pnpm demo:e2e
 pnpm demo:dist:check
 pnpm storybook:coverage:report
 pnpm storybook:coverage:check
+pnpm storybook:a11y:skip-check
 pnpm storybook:play:check
 pnpm storybook:docs:check
 pnpm storybook:static:check
@@ -182,7 +183,7 @@ This runs:
 2. `pnpm coverage:gate`
 3. `pnpm demo:e2e`
 4. `pnpm demo:dist:check`
-5. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:play:check` + `storybook:static:check`）
+5. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`）
 
 Full local pre-release gate (includes tarball evidence):
 
