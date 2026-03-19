@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect, within } from "@storybook/test";
 import { MessageBubble } from "@aurora-ui/react";
 
 const meta = {
@@ -22,7 +23,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("article", { name: "Assistant message" })).toHaveTextContent(
+      "Here is the generated summary."
+    );
+  }
+};
 
 export const Conversation: Story = {
   render: () => (

@@ -437,6 +437,7 @@
   - Storybook Toast 堆叠可见性验收（新增 `StackedViewportOffset` 场景，断言旧通知偏移与新通知贴边）
   - Demo 首屏门禁文案收口（移除易过期的硬编码验收数字，改为稳定门禁状态表达）
   - Storybook 入口文档收口（`Getting Started` 改为分域导航 + 阅读路径，补齐 Catalog/API/Best Practices 跳转）
+  - Storybook 交互门禁收口（新增 `storybook:play:check`，要求每个 `*.stories.*` 至少 1 个 `play` 回归；补齐 `MessageBubble` 交互断言）
   - Table 空/单行排序语义收口（`defaultSortKey` 在无有效排序条件时不再暴露 `aria-sort` 与排序播报，避免禁用态误导）
   - Table 排序交互状态收口（sortable header 补齐 hover/active/focus-visible 反馈，并显式暴露 `aria-keyshortcuts="Enter Space"`）
   - Demo Table 空态 E2E 分支收口（排序按钮断言兼容 `ascending/descending` 标签，覆盖空态语义分支）
