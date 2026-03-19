@@ -370,3 +370,5 @@
 - Demo hero polish parity: first-screen hierarchy, section card surfaces, and mobile navigation readability were further refined without changing interaction contracts.
 - Storybook table single-row parity: `SingleRowSortDisabled` interaction assertion now aligns with `Issue sort descending` disabled-label semantics after table label-stability hardening.
 - Storybook gate recovery parity: after syncing the single-row assertion and static baseline, `pnpm storybook:test:ci` returned to green (`32` suites / `179` tests) on 2026-03-19.
+- Tabs all-disabled semantics parity: tablist now exposes `aria-disabled=\"true\"` when no enabled tabs exist, with unit coverage to lock disabled focus/shortcut behavior.
+- Storybook tabs edge parity: added `AllTabsDisabled` interaction scenario so no-enabled-tab semantics are validated in visual/interaction baseline.
