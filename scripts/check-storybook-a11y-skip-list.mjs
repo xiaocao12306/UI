@@ -15,7 +15,9 @@ function fail(message) {
 }
 
 function parseSkipIds(content) {
-  const setMatch = content.match(/const colorContrastSkipStoryIds = new Set\(\[([\s\S]*?)\]\);/);
+  const setMatch = content.match(
+    /const\s+colorContrastSkipStoryIds\s*=\s*new\s+Set(?:<[^>]+>)?\s*\(\s*\[([\s\S]*?)\]\s*\)\s*;/
+  );
   if (!setMatch) {
     fail("could not locate colorContrastSkipStoryIds set in test-runner.ts");
   }
