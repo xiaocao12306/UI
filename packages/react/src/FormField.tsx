@@ -13,6 +13,7 @@ export type FormFieldProps = {
 
 export function FormField({ label, htmlFor, description, error, required, disabled, children }: FormFieldProps) {
   const generatedInputId = React.useId();
+  const labelId = React.useId();
   const describedById = React.useId();
   const errorId = React.useId();
   const canCloneControl = React.isValidElement(children) && typeof children.type !== "symbol";
@@ -20,9 +21,13 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const childControlId = canCloneControl ? (childProps?.id as string | undefined) : undefined;
   const controlId = htmlFor ?? childControlId ?? (canCloneControl ? generatedInputId : undefined);
   const isInvalid = Boolean(error);
+  const childDisabled = typeof childProps?.disabled === "boolean" ? childProps.disabled : undefined;
+  const mergedDisabled = Boolean(disabled || childDisabled);
   const childDescribedBy = childProps?.["aria-describedby"] as string | undefined;
   const childErrorMessage = childProps?.["aria-errormessage"] as string | undefined;
   const childInvalid = childProps?.["aria-invalid"] as React.AriaAttributes["aria-invalid"] | undefined;
+  const childLabelledBy = childProps?.["aria-labelledby"] as string | undefined;
+  const childAriaLabel = childProps?.["aria-label"] as string | undefined;
   const childRequired = resolveRequiredState(
     typeof childProps?.required === "boolean" ? childProps.required : undefined,
     childProps?.["aria-required"] as React.AriaAttributes["aria-required"] | undefined
@@ -32,26 +37,36 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const mergedInvalidAria = isInvalid ? true : childInvalidAria;
   const mergedDescribedBy = mergeAriaReferenceIds(childDescribedBy, description ? describedById : undefined, error ? errorId : undefined);
   const mergedErrorMessage = mergeAriaReferenceIds(childErrorMessage, error ? errorId : undefined);
+  const mergedLabelledBy = childAriaLabel
+    ? childLabelledBy
+    : mergeAriaReferenceIds(childLabelledBy, labelId);
 
   const control =
     canCloneControl
       ? React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
           id: controlId,
+          "aria-labelledby": mergedLabelledBy,
           "aria-describedby": mergedDescribedBy,
           "aria-errormessage": mergedErrorMessage,
           "aria-invalid": mergedInvalidAria,
           "aria-required": mergedRequired || undefined,
           required: mergedRequired || undefined,
-          disabled: disabled || childProps?.disabled
+          disabled: mergedDisabled || undefined
         })
       : children;
 
   return (
-    <div style={{ display: "grid", gap: 6 }} aria-disabled={disabled || undefined}>
+    <div
+      style={{ display: "grid", gap: 6 }}
+      aria-disabled={mergedDisabled || undefined}
+      data-invalid={isInvalid ? "true" : undefined}
+      data-disabled={mergedDisabled ? "true" : undefined}
+    >
       <label
+        id={labelId}
         htmlFor={controlId}
         style={{
-          color: disabled
+          color: mergedDisabled
             ? "color-mix(in srgb, var(--aurora-text-primary) 60%, transparent)"
             : "var(--aurora-text-primary)",
           fontSize: "var(--aurora-font-size-sm)",
@@ -62,7 +77,11 @@ export function FormField({ label, htmlFor, description, error, required, disabl
         }}
       >
         {label}
-        {mergedRequired ? <span style={{ color: "var(--aurora-color-red-500)" }}>*</span> : null}
+        {mergedRequired ? (
+          <span aria-hidden="true" style={{ color: "var(--aurora-color-red-500)" }}>
+            *
+          </span>
+        ) : null}
       </label>
 
       <div>{control}</div>
@@ -71,7 +90,7 @@ export function FormField({ label, htmlFor, description, error, required, disabl
         <small
           id={describedById}
           style={{
-            color: disabled
+            color: mergedDisabled
               ? "color-mix(in srgb, var(--aurora-text-secondary) 70%, transparent)"
               : "var(--aurora-text-secondary)"
           }}

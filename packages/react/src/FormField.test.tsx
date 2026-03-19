@@ -16,6 +16,7 @@ describe("FormField", () => {
     expect(screen.getByRole("alert")).toHaveTextContent("Invalid email");
     expect(screen.getByLabelText(/Email/)).toHaveAttribute("aria-invalid", "true");
     expect(screen.getByLabelText(/Email/)).toHaveAttribute("required");
+    expect(screen.getByText("Email").closest("div")).toHaveAttribute("data-invalid", "true");
   });
 
   it("associates control with generated id when htmlFor is not provided", () => {
@@ -53,7 +54,10 @@ describe("FormField", () => {
       </FormField>
     );
 
-    expect(screen.getByRole("textbox", { name: "Disabled field" })).toBeDisabled();
+    const input = screen.getByRole("textbox", { name: "Disabled field" });
+    expect(input).toBeDisabled();
+    expect(screen.getByText("Disabled field").closest("div")).toHaveAttribute("aria-disabled", "true");
+    expect(screen.getByText("Disabled field").closest("div")).toHaveAttribute("data-disabled", "true");
   });
 
   it("preserves child invalid semantics when no field error exists", () => {
@@ -111,7 +115,50 @@ describe("FormField", () => {
     const input = screen.getByRole("textbox", { name: /API key/ });
     expect(input).toHaveAttribute("required");
     expect(input).toHaveAttribute("aria-required", "true");
-    expect(screen.getByText("*")).toBeInTheDocument();
+    expect(screen.getByText("*")).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("merges generated label id with child aria-labelledby", () => {
+    render(
+      <>
+        <span id="custom-labelledby">Custom name</span>
+        <FormField label="Build target">
+          <Input aria-labelledby="custom-labelledby" />
+        </FormField>
+      </>
+    );
+
+    const input = screen.getAllByRole("textbox")[0];
+    const label = screen.getByText("Build target").closest("label");
+    const labelledBy = input.getAttribute("aria-labelledby") ?? "";
+
+    expect(label).toHaveAttribute("id");
+    expect(labelledBy.split(" ")).toContain("custom-labelledby");
+    expect(label?.id ? labelledBy.split(" ").includes(label.id) : false).toBe(true);
+  });
+
+  it("keeps explicit aria-label naming without forcing generated aria-labelledby", () => {
+    render(
+      <FormField label="Internal label">
+        <Input aria-label="Custom control name" />
+      </FormField>
+    );
+
+    const input = screen.getByRole("textbox", { name: "Custom control name" });
+    expect(input).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("reflects child disabled semantics on the field wrapper", () => {
+    render(
+      <FormField label="Inherited disabled state">
+        <Input disabled />
+      </FormField>
+    );
+
+    const wrapper = screen.getByText("Inherited disabled state").closest("div");
+    expect(screen.getByRole("textbox", { name: "Inherited disabled state" })).toBeDisabled();
+    expect(wrapper).toHaveAttribute("aria-disabled", "true");
+    expect(wrapper).toHaveAttribute("data-disabled", "true");
   });
 
   it("treats aria-required false as optional", () => {

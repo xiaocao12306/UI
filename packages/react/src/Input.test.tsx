@@ -49,4 +49,74 @@ describe("Input", () => {
     render(<Input aria-label="Disabled field" disabled />);
     expect(screen.getByRole("textbox", { name: "Disabled field" })).toBeDisabled();
   });
+
+  it("forwards readonly semantics to the native input", () => {
+    render(<Input aria-label="Read only field" readOnly />);
+    const input = screen.getByRole("textbox", { name: "Read only field" });
+
+    expect(input).toHaveAttribute("readonly");
+
+    fireEvent.mouseDown(input, { button: 0 });
+    expect(input).not.toHaveAttribute("data-active");
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(input).not.toHaveAttribute("data-active");
+  });
+
+  it("tracks hover and active interaction states", () => {
+    render(<Input aria-label="Stateful field" />);
+    const input = screen.getByRole("textbox", { name: "Stateful field" });
+
+    fireEvent.mouseEnter(input);
+    expect(input).toHaveAttribute("data-hovered", "true");
+
+    fireEvent.mouseDown(input, { button: 0 });
+    expect(input).toHaveAttribute("data-active", "true");
+
+    fireEvent.mouseUp(input, { button: 0 });
+    expect(input).not.toHaveAttribute("data-active");
+
+    fireEvent.mouseLeave(input);
+    expect(input).not.toHaveAttribute("data-hovered");
+  });
+
+  it("tracks keyboard focus-visible and enter active state", () => {
+    render(<Input aria-label="Keyboard field" />);
+    const input = screen.getByRole("textbox", { name: "Keyboard field" });
+
+    fireEvent.keyDown(input, { key: "Tab" });
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(input).toHaveAttribute("data-active", "true");
+
+    fireEvent.keyUp(input, { key: "Enter" });
+    expect(input).not.toHaveAttribute("data-active");
+  });
+
+  it("suppresses hover and active states when disabled", () => {
+    render(<Input aria-label="Disabled interactions" disabled />);
+    const input = screen.getByRole("textbox", { name: "Disabled interactions" });
+
+    fireEvent.mouseEnter(input);
+    fireEvent.mouseDown(input, { button: 0 });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(input).toHaveAttribute("data-disabled", "true");
+    expect(input).not.toHaveAttribute("data-hovered");
+    expect(input).not.toHaveAttribute("data-active");
+  });
+
+  it("uses invalid focus-visible ring token for keyboard focus", () => {
+    render(<Input aria-label="Invalid focus ring" invalid />);
+    const input = screen.getByRole("textbox", { name: "Invalid focus ring" });
+
+    fireEvent.keyDown(input, { key: "Tab" });
+    fireEvent.focus(input);
+
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+    expect(input.style.borderColor).toBe("var(--aurora-color-red-500)");
+    expect(input.style.boxShadow).toContain("--aurora-color-red-500");
+  });
 });

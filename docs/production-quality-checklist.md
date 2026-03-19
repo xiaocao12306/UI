@@ -318,6 +318,7 @@
 - CommandPalette empty-state semantics: combobox now removes `aria-controls` when no filtered results exist, and listbox mounts only with actual options to avoid empty-state dangling references.
 - CommandPalette i18n semantics: added `resultsAriaLabel` so command result listbox naming can be localized while preserving default `Command results` fallback.
 - CommandPalette i18n copy semantics: added `title` / `description` / `searchAriaLabel` so dialog heading, helper copy, and combobox naming can be localized without forking component markup.
+- Input/FormField state + a11y closure: Input now forwards native `readOnly`, tracks deterministic `hover/active/focus-visible/disabled/invalid` data states (including keyboard `Enter` press path), and FormField now merges label IDs into child `aria-labelledby` while propagating disabled semantics to wrapper state.
 - CommandPalette query lifecycle parity: closing the palette now emits `onQueryChange("")` so external telemetry/state resets with internal query clearing, with unit + Storybook interaction coverage.
 - CommandPalette close lifecycle parity: callback order is now contract-locked by tests/docs (`item-select`: `onSelect -> onCloseReason -> onOpenChange(false)`; close-button: `onCloseReason -> onOpenChange(false)`).
 - CommandPalette dismiss-order parity: component tests now lock `escape-key` / `outside-pointer` branches to `onCloseReason -> onOpenChange(false)` callback order.

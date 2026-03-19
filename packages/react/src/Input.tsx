@@ -16,38 +16,66 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
     onBlur,
     onMouseEnter,
     onMouseLeave,
+    onMouseDown,
+    onMouseUp,
+    onKeyDown,
+    onKeyUp,
+    onPointerDown,
     "aria-invalid": ariaInvalid,
     ...props
   },
   ref
 ) {
   const [focused, setFocused] = React.useState(false);
+  const [focusVisible, setFocusVisible] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
+  const [active, setActive] = React.useState(false);
+  const focusVisibleIntentRef = React.useRef(false);
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
+  const isInteractionDisabled = Boolean(disabled);
+
+  React.useEffect(() => {
+    if (!isInteractionDisabled) {
+      return;
+    }
+
+    setFocused(false);
+    setFocusVisible(false);
+    setHovered(false);
+    setActive(false);
+  }, [isInteractionDisabled]);
 
   return (
     <input
       ref={ref}
       disabled={disabled}
+      readOnly={readOnly}
       data-aurora-input="true"
       aria-invalid={resolvedInvalidAria}
       data-invalid={isInvalid ? "true" : undefined}
       data-focused={focused ? "true" : undefined}
+      data-focus-visible={focusVisible ? "true" : undefined}
+      data-hovered={hovered ? "true" : undefined}
+      data-active={active ? "true" : undefined}
+      data-disabled={isInteractionDisabled ? "true" : undefined}
       style={{
         ...fieldBaseStyle,
         transition:
-          "border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)",
-        borderColor: isInvalid
+          "border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)",
+        borderColor: isInteractionDisabled
+          ? "var(--aurora-input-border)"
+          : isInvalid
           ? "var(--aurora-color-red-500)"
-          : focused
+          : focused || active
             ? "var(--aurora-border-strong)"
-            : hovered && !disabled
+            : hovered
               ? "var(--aurora-border-strong)"
               : "var(--aurora-input-border)",
-        boxShadow: focused
+        boxShadow: focused && focusVisible && !isInteractionDisabled
           ? `0 0 0 3px ${isInvalid ? "color-mix(in srgb, var(--aurora-color-red-500) 25%, transparent)" : "color-mix(in srgb, var(--aurora-input-focus-ring) 38%, transparent)"}`
           : "none",
+        transform: active && !readOnly && !isInteractionDisabled ? "translateY(1px)" : undefined,
         background: disabled
           ? "color-mix(in srgb, var(--aurora-input-bg) 80%, var(--aurora-surface-elevated))"
           : readOnly
@@ -61,21 +89,71 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
       }}
       onFocus={(event) => {
         setFocused(true);
+        setFocusVisible(resolveFocusVisibleState(event.currentTarget, focusVisibleIntentRef.current));
         onFocus?.(event);
       }}
       onBlur={(event) => {
         setFocused(false);
+        setFocusVisible(false);
+        setActive(false);
         onBlur?.(event);
       }}
       onMouseEnter={(event) => {
-        setHovered(true);
+        if (!isInteractionDisabled) {
+          setHovered(true);
+        }
         onMouseEnter?.(event);
       }}
       onMouseLeave={(event) => {
         setHovered(false);
+        setActive(false);
         onMouseLeave?.(event);
+      }}
+      onMouseDown={(event) => {
+        focusVisibleIntentRef.current = false;
+        setFocusVisible(false);
+        if (!isInteractionDisabled && !readOnly && event.button === 0) {
+          setActive(true);
+        }
+        onMouseDown?.(event);
+      }}
+      onPointerDown={(event) => {
+        focusVisibleIntentRef.current = false;
+        setFocusVisible(false);
+        onPointerDown?.(event);
+      }}
+      onMouseUp={(event) => {
+        if (event.button === 0) {
+          setActive(false);
+        }
+        onMouseUp?.(event);
+      }}
+      onKeyDown={(event) => {
+        focusVisibleIntentRef.current = true;
+        if (!isInteractionDisabled && !readOnly && isInputActivationKey(event.key)) {
+          setActive(true);
+        }
+        onKeyDown?.(event);
+      }}
+      onKeyUp={(event) => {
+        if (isInputActivationKey(event.key)) {
+          setActive(false);
+        }
+        onKeyUp?.(event);
       }}
       {...props}
     />
   );
 });
+
+function isInputActivationKey(key: string) {
+  return key === "Enter";
+}
+
+function resolveFocusVisibleState(target: HTMLInputElement, fallback: boolean) {
+  try {
+    return target.matches(":focus-visible") || fallback;
+  } catch {
+    return fallback;
+  }
+}
