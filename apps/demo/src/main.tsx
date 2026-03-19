@@ -239,7 +239,7 @@ const telemetryValueStyle: React.CSSProperties = {
   borderRadius: 999,
   border: "1px solid color-mix(in srgb, var(--aurora-border-default) 84%, transparent)",
   background: "color-mix(in srgb, var(--aurora-surface-elevated) 76%, transparent)",
-  fontFamily: '"IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace',
+  fontFamily: "var(--aurora-font-family-mono)",
   fontSize: 12,
   letterSpacing: "0.01em",
   lineHeight: "18px",
