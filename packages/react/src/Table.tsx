@@ -44,6 +44,7 @@ const tableStringCollator = new Intl.Collator(undefined, {
   numeric: true,
   sensitivity: "base"
 });
+const keyboardSortClickDedupeWindowMs = 400;
 
 function resolveInitialSortState<T>(
   columns: Array<TableColumn<T>>,
@@ -95,6 +96,7 @@ export function Table<T>({
   const sortButtonRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const keyboardActivationSortKeyRef = React.useRef<string | null>(null);
+  const keyboardActivationTimestampRef = React.useRef(0);
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const sortFocusIntentRef = React.useRef(true);
   const warnedDuplicateRowKeysSignatureRef = React.useRef<string | null>(null);
@@ -129,6 +131,7 @@ export function Table<T>({
 
   const clearKeyboardActivationLatch = React.useCallback(() => {
     keyboardActivationSortKeyRef.current = null;
+    keyboardActivationTimestampRef.current = 0;
     if (keyboardActivationResetTimerRef.current !== null) {
       window.clearTimeout(keyboardActivationResetTimerRef.current);
       keyboardActivationResetTimerRef.current = null;
@@ -416,8 +419,12 @@ export function Table<T>({
                       aria-keyshortcuts={sortDisabled ? undefined : "Enter Space"}
                       disabled={sortDisabled}
                       onClick={(event) => {
+                        const keyboardActivationAgeMs = Date.now() - keyboardActivationTimestampRef.current;
                         const clickFromKeyboardActivation =
-                          event.detail === 0 && keyboardActivationSortKeyRef.current === key;
+                          event.detail === 0 &&
+                          keyboardActivationSortKeyRef.current === key &&
+                          keyboardActivationTimestampRef.current > 0 &&
+                          keyboardActivationAgeMs <= keyboardSortClickDedupeWindowMs;
                         clearKeyboardActivationLatch();
                         if (clickFromKeyboardActivation) {
                           return;
@@ -501,13 +508,13 @@ export function Table<T>({
                           return;
                         }
                         keyboardActivationSortKeyRef.current = key;
+                        keyboardActivationTimestampRef.current = Date.now();
                         if (keyboardActivationResetTimerRef.current !== null) {
                           window.clearTimeout(keyboardActivationResetTimerRef.current);
                         }
                         keyboardActivationResetTimerRef.current = window.setTimeout(() => {
-                          keyboardActivationSortKeyRef.current = null;
-                          keyboardActivationResetTimerRef.current = null;
-                        }, 0);
+                          clearKeyboardActivationLatch();
+                        }, keyboardSortClickDedupeWindowMs);
                         activateSort();
                       }}
                       style={{

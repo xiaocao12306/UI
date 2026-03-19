@@ -541,6 +541,44 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenLastCalledWith("name", "asc");
   });
 
+  it("deduplicates delayed synthesized keyboard-origin click within dedupe window", () => {
+    vi.useFakeTimers();
+    const onSortChange = vi.fn();
+
+    try {
+      render(
+        <Table
+          columns={[
+            { key: "name", header: "Name", sortable: true },
+            { key: "score", header: "Score", sortable: true }
+          ]}
+          data={[
+            { name: "Dialog", score: 80 },
+            { name: "Button", score: 95 }
+          ]}
+          defaultSortKey="name"
+          onSortChange={onSortChange}
+        />
+      );
+
+      const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+      fireEvent.keyDown(sortButton, { key: "Enter" });
+      expect(onSortChange).toHaveBeenCalledTimes(1);
+      expect(onSortChange).toHaveBeenLastCalledWith("name", "desc");
+
+      vi.advanceTimersByTime(200);
+      fireEvent.click(sortButton, { detail: 0 });
+      expect(onSortChange).toHaveBeenCalledTimes(1);
+
+      vi.advanceTimersByTime(401);
+      fireEvent.click(sortButton, { detail: 1 });
+      expect(onSortChange).toHaveBeenCalledTimes(2);
+      expect(onSortChange).toHaveBeenLastCalledWith("name", "asc");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("ignores modified sortable-header activation keys", () => {
     const onSortChange = vi.fn();
 
