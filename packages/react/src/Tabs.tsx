@@ -19,7 +19,12 @@ export type TabsProps = {
   onValueChange?: (value: string) => void;
 };
 
-function getNextEnabledIndex(items: TabItem[], startIndex: number, direction: 1 | -1, loop: boolean) {
+function getNextEnabledIndex(
+  items: TabItem[],
+  startIndex: number,
+  direction: 1 | -1,
+  loop: boolean
+) {
   if (items.length === 0) {
     return -1;
   }
@@ -84,9 +89,13 @@ export function Tabs({
   const [focusVisibleTabKey, setFocusVisibleTabKey] = React.useState<string | null>(null);
 
   const currentRawValue = value ?? internalValue;
-  const currentValue = items.some((item) => item.key === currentRawValue && !item.disabled) ? currentRawValue : firstEnabledKey;
+  const currentValue = items.some((item) => item.key === currentRawValue && !item.disabled)
+    ? currentRawValue
+    : firstEnabledKey;
   const [focusedValue, setFocusedValue] = React.useState<string | undefined>(currentValue);
-  const focusTargetValue = items.some((item) => item.key === focusedValue && !item.disabled) ? focusedValue : currentValue;
+  const focusTargetValue = items.some((item) => item.key === focusedValue && !item.disabled)
+    ? focusedValue
+    : currentValue;
 
   React.useEffect(() => {
     if (value === undefined && currentValue !== internalValue) {
@@ -137,6 +146,7 @@ export function Tabs({
         aria-label={ariaLabelledBy ? undefined : ariaLabel}
         aria-labelledby={ariaLabelledBy}
         aria-orientation={orientation}
+        aria-disabled={firstEnabledKey ? undefined : true}
         style={{
           display: "flex",
           gap: 6,
@@ -164,13 +174,17 @@ export function Tabs({
               aria-selected={selected}
               aria-controls={`${baseId}-panel-${index}`}
               aria-disabled={disabled || undefined}
-              aria-keyshortcuts={activationMode === "manual" && !disabled ? "Enter Space" : undefined}
+              aria-keyshortcuts={
+                activationMode === "manual" && !disabled ? "Enter Space" : undefined
+              }
               tabIndex={focusTargetValue === item.key ? 0 : -1}
               disabled={disabled}
               onClick={(event) => {
                 setFocusedValue(item.key);
                 const clickFromKeyboardActivation =
-                  activationMode === "manual" && event.detail === 0 && keyboardActivationTabKeyRef.current === item.key;
+                  activationMode === "manual" &&
+                  event.detail === 0 &&
+                  keyboardActivationTabKeyRef.current === item.key;
                 clearKeyboardActivationLatch();
                 if (clickFromKeyboardActivation) {
                   return;
@@ -194,7 +208,9 @@ export function Tabs({
                 }
 
                 focusIntentRef.current = false;
-                setFocusVisibleTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                setFocusVisibleTabKey((currentKey) =>
+                  currentKey === item.key ? null : currentKey
+                );
                 setPressedTabKey(item.key);
               }}
               onMouseUp={() => {
@@ -203,16 +219,24 @@ export function Tabs({
               onFocus={() => {
                 setFocusedValue(item.key);
                 if (disabled) {
-                  setFocusVisibleTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                  setFocusVisibleTabKey((currentKey) =>
+                    currentKey === item.key ? null : currentKey
+                  );
                   return;
                 }
 
                 setFocusVisibleTabKey((currentKey) =>
-                  resolveFocusVisibleState(tabRefs.current[index], focusIntentRef.current) ? item.key : currentKey === item.key ? null : currentKey
+                  resolveFocusVisibleState(tabRefs.current[index], focusIntentRef.current)
+                    ? item.key
+                    : currentKey === item.key
+                      ? null
+                      : currentKey
                 );
               }}
               onBlur={() => {
-                setFocusVisibleTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                setFocusVisibleTabKey((currentKey) =>
+                  currentKey === item.key ? null : currentKey
+                );
                 setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
               }}
               onKeyDown={(event) => {
@@ -289,7 +313,7 @@ export function Tabs({
                     ? "color-mix(in srgb, var(--aurora-surface-elevated) 70%, var(--aurora-surface-default))"
                     : hovered
                       ? "color-mix(in srgb, var(--aurora-surface-elevated) 86%, var(--aurora-surface-default))"
-                  : "var(--aurora-surface-default)",
+                      : "var(--aurora-surface-default)",
                 color: disabled
                   ? "color-mix(in srgb, var(--aurora-text-secondary) 64%, transparent)"
                   : "var(--aurora-text-primary)",

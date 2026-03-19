@@ -210,7 +210,9 @@ describe("Tabs", () => {
     expect(acceptanceTab.id).toMatch(/-tab-\d+$/);
 
     const roadmapPanel = document.getElementById(roadmapTab.getAttribute("aria-controls") ?? "");
-    const acceptancePanel = document.getElementById(acceptanceTab.getAttribute("aria-controls") ?? "");
+    const acceptancePanel = document.getElementById(
+      acceptanceTab.getAttribute("aria-controls") ?? ""
+    );
     expect(roadmapPanel).not.toBeNull();
     expect(acceptancePanel).not.toBeNull();
     expect(roadmapPanel).toHaveAttribute("aria-labelledby", roadmapTab.id);
@@ -264,6 +266,30 @@ describe("Tabs", () => {
     rerender(<Tabs value="two" items={items} />);
     expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("aria-selected", "true");
     expect(screen.getByText("Panel One")).toBeInTheDocument();
+  });
+
+  it("marks tablist disabled when no enabled tabs are available", () => {
+    render(
+      <Tabs
+        activationMode="manual"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div>, disabled: true },
+          { key: "two", label: "Two", content: <div>Panel Two</div>, disabled: true }
+        ]}
+      />
+    );
+
+    const tabList = screen.getByRole("tablist", { name: "Tabs" });
+    expect(tabList).toHaveAttribute("aria-disabled", "true");
+
+    const allTabs = screen.getAllByRole("tab");
+    expect(allTabs).toHaveLength(2);
+    allTabs.forEach((tab) => {
+      expect(tab).toBeDisabled();
+      expect(tab).not.toHaveAttribute("aria-keyshortcuts");
+      expect(tab).toHaveAttribute("tabindex", "-1");
+      expect(tab).toHaveAttribute("aria-selected", "false");
+    });
   });
 
   it("does not emit value change when selecting the already active tab", () => {
@@ -462,8 +488,14 @@ describe("Tabs", () => {
       />
     );
 
-    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("aria-keyshortcuts", "Enter Space");
-    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space"
+    );
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space"
+    );
     expect(screen.getByRole("tab", { name: "Three" })).not.toHaveAttribute("aria-keyshortcuts");
   });
 
