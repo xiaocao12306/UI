@@ -142,6 +142,7 @@ export const NonDismissable: Story = {
 function CloseReasonTelemetryDialog() {
   const [open, setOpen] = React.useState(false);
   const [lastReason, setLastReason] = React.useState("none");
+  const [lastTrace, setLastTrace] = React.useState("none");
 
   return (
     <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
@@ -164,12 +165,26 @@ function CloseReasonTelemetryDialog() {
           {lastReason}
         </strong>
       </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last close trace:{" "}
+        <strong data-testid="dialog-close-trace" style={{ color: "var(--aurora-text-primary)" }}>
+          {lastTrace}
+        </strong>
+      </p>
       <Button onClick={() => setOpen(true)}>Open Telemetry Dialog</Button>
       <Dialog
         open={open}
-        onOpenChange={setOpen}
+        onOpenChange={(nextOpen) => {
+          setOpen(nextOpen);
+          if (!nextOpen) {
+            setLastTrace((current) => `${current} -> open:false`);
+          }
+        }}
         title="Close Reason Telemetry"
-        onCloseReason={(reason) => setLastReason(reason)}
+        onCloseReason={(reason) => {
+          setLastReason(reason);
+          setLastTrace(`reason:${reason}`);
+        }}
       >
         <p style={{ margin: 0 }}>Track close-button, Escape, and outside-pointer dismiss reasons.</p>
       </Dialog>
@@ -185,21 +200,25 @@ export const CloseReasonTelemetry: Story = {
     const outsideTarget = canvas.getByTestId("dialog-outside-target");
 
     await expect(canvas.getByTestId("dialog-close-reason")).toHaveTextContent("none");
+    await expect(canvas.getByTestId("dialog-close-trace")).toHaveTextContent("none");
 
     await userEvent.click(canvas.getByRole("button", { name: "Open Telemetry Dialog" }));
     await expect(await body.findByRole("dialog", { name: "Close Reason Telemetry" })).toBeInTheDocument();
     await userEvent.click(body.getByRole("button", { name: "Close dialog" }));
     await expect(canvas.getByTestId("dialog-close-reason")).toHaveTextContent("close-button");
+    await expect(canvas.getByTestId("dialog-close-trace")).toHaveTextContent("reason:close-button -> open:false");
 
     await userEvent.click(canvas.getByRole("button", { name: "Open Telemetry Dialog" }));
     await expect(await body.findByRole("dialog", { name: "Close Reason Telemetry" })).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByTestId("dialog-close-reason")).toHaveTextContent("escape-key");
+    await expect(canvas.getByTestId("dialog-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
 
     await userEvent.click(canvas.getByRole("button", { name: "Open Telemetry Dialog" }));
     await expect(await body.findByRole("dialog", { name: "Close Reason Telemetry" })).toBeInTheDocument();
     await userEvent.pointer({ target: outsideTarget, keys: "[MouseLeft]" });
     await expect(canvas.getByTestId("dialog-close-reason")).toHaveTextContent("outside-pointer");
+    await expect(canvas.getByTestId("dialog-close-trace")).toHaveTextContent("reason:outside-pointer -> open:false");
   }
 };
 
