@@ -251,6 +251,34 @@ describe("Dialog", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("does not emit close reason when dismissal handlers prevent default", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+    const onEscapeKeyDown = vi.fn((event: KeyboardEvent) => event.preventDefault());
+    const onPointerDownOutside = vi.fn((event: PointerEvent) => event.preventDefault());
+
+    render(
+      <Dialog
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        onEscapeKeyDown={onEscapeKeyDown}
+        onPointerDownOutside={onPointerDownOutside}
+        title="Guarded dismiss"
+      >
+        <p>Body</p>
+      </Dialog>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    fireEvent.pointerDown(document.body);
+
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onPointerDownOutside).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
   it("skips escape callback and dismiss when Escape is preempted upstream", () => {
     const onOpenChange = vi.fn();
     const onEscapeKeyDown = vi.fn();

@@ -219,6 +219,74 @@ export const NonDismissable: Story = {
   }
 };
 
+function DismissGuardDialog() {
+  const [open, setOpen] = React.useState(true);
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+  const [outsideCalls, setOutsideCalls] = React.useState(0);
+
+  return (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <button
+        type="button"
+        data-testid="dialog-guard-outside-target"
+        aria-label="Dialog guard outside target"
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: 1,
+          height: 1,
+          opacity: 0
+        }}
+      />
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Escape guard calls:{" "}
+        <strong data-testid="dialog-guard-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Outside guard calls:{" "}
+        <strong data-testid="dialog-guard-outside-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {outsideCalls}
+        </strong>
+      </p>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Guarded dismissal dialog"
+        onEscapeKeyDown={(event) => {
+          event.preventDefault();
+          setEscapeCalls((count) => count + 1);
+        }}
+        onPointerDownOutside={(event) => {
+          event.preventDefault();
+          setOutsideCalls((count) => count + 1);
+        }}
+      >
+        <p style={{ margin: 0 }}>Dismiss hooks can block Escape and outside pointer close paths.</p>
+      </Dialog>
+    </div>
+  );
+}
+
+export const DismissGuardHooks: Story = {
+  render: () => <DismissGuardDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const outsideTarget = body.getByTestId("dialog-guard-outside-target");
+
+    await expect(await body.findByRole("dialog", { name: "Guarded dismissal dialog" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    await expect(body.getByRole("dialog", { name: "Guarded dismissal dialog" })).toBeInTheDocument();
+    await expect(body.getByTestId("dialog-guard-escape-calls")).toHaveTextContent("1");
+
+    await userEvent.click(outsideTarget);
+    await expect(body.getByRole("dialog", { name: "Guarded dismissal dialog" })).toBeInTheDocument();
+    await expect(body.getByTestId("dialog-guard-outside-calls")).toHaveTextContent("1");
+  }
+};
+
 function CloseReasonTelemetryDialog() {
   const [open, setOpen] = React.useState(false);
   const [lastReason, setLastReason] = React.useState("none");
