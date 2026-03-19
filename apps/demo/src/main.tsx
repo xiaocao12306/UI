@@ -1270,54 +1270,61 @@ function App() {
                 <div className="demo-panel-header">
                   <h3 style={panelTitleStyle}>Overlay Launchers</h3>
                   <p style={panelDescriptionStyle}>
-                    Core overlay entries are grouped as a single action rail for rapid interaction
-                    checks.
+                    Launch controls and outside-dismiss focus target are split into clear groups for
+                    faster regression checks.
                   </p>
                 </div>
-                <div className="demo-action-row">
-                  <Tooltip content="Runs a dry-run build">
-                    <Button variant="outline">Hover me</Button>
-                  </Tooltip>
-                  <Popover
-                    triggerLabel="Open Popover"
-                    onOpenChange={handlePopoverOpenChange}
-                    onCloseReason={handlePopoverCloseReason}
-                  >
-                    <p style={{ margin: 0 }}>This popover is built with Aurora primitives.</p>
-                  </Popover>
-                  <Dropdown
-                    label="Actions"
-                    onOpenChange={handleDropdownOpenChange}
-                    onCloseReason={handleDropdownCloseReason}
-                    items={[
-                      {
-                        key: "a",
-                        label: "Duplicate",
-                        onSelect: () => setDropdownCloseTrace("select")
-                      },
-                      { key: "b", label: "Archive" },
-                      { key: "c", label: "Delete" }
-                    ]}
-                  />
-                  <Button onClick={() => setDialogOpen(true)}>Open Dialog</Button>
-                  <Button variant="outline" onClick={() => setDrawerOpen(true)}>
-                    Open Drawer
-                  </Button>
-                  <Button variant="ghost" onClick={() => setPaletteOpen(true)}>
-                    Command Palette
-                  </Button>
-                </div>
-                <div style={{ display: "grid", gap: 6, maxWidth: 320, marginTop: 72 }}>
-                  <label
-                    htmlFor="overlay-outside-target"
-                    style={{ color: "var(--aurora-text-secondary)", fontSize: 14 }}
-                  >
-                    Overlay outside focus target
-                  </label>
-                  <Input
-                    id="overlay-outside-target"
-                    placeholder="Click here to validate outside-dismiss focus."
-                  />
+                <div className="demo-overlay-groups">
+                  <div className="demo-overlay-group">
+                    <p className="demo-overlay-group-label" style={mutedBodyStyle}>
+                      Overlay launch controls
+                    </p>
+                    <div className="demo-action-row">
+                      <Tooltip content="Runs a dry-run build">
+                        <Button variant="outline">Hover me</Button>
+                      </Tooltip>
+                      <Popover
+                        triggerLabel="Open Popover"
+                        onOpenChange={handlePopoverOpenChange}
+                        onCloseReason={handlePopoverCloseReason}
+                      >
+                        <p style={{ margin: 0 }}>This popover is built with Aurora primitives.</p>
+                      </Popover>
+                      <Dropdown
+                        label="Actions"
+                        onOpenChange={handleDropdownOpenChange}
+                        onCloseReason={handleDropdownCloseReason}
+                        items={[
+                          {
+                            key: "a",
+                            label: "Duplicate",
+                            onSelect: () => setDropdownCloseTrace("select")
+                          },
+                          { key: "b", label: "Archive" },
+                          { key: "c", label: "Delete" }
+                        ]}
+                      />
+                      <Button onClick={() => setDialogOpen(true)}>Open Dialog</Button>
+                      <Button variant="outline" onClick={() => setDrawerOpen(true)}>
+                        Open Drawer
+                      </Button>
+                      <Button variant="ghost" onClick={() => setPaletteOpen(true)}>
+                        Command Palette
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="demo-overlay-group demo-overlay-focus-target">
+                    <p className="demo-overlay-group-label" style={mutedBodyStyle}>
+                      Outside dismiss focus target
+                    </p>
+                    <label htmlFor="overlay-outside-target" className="demo-overlay-focus-label">
+                      Overlay outside focus target
+                    </label>
+                    <Input
+                      id="overlay-outside-target"
+                      placeholder="Click here to validate outside-dismiss focus."
+                    />
+                  </div>
                 </div>
               </div>
               <div className="demo-panel">

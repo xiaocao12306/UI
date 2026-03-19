@@ -510,6 +510,29 @@
   gap: 8px;
 }
 
+.demo-overlay-groups {
+  display: grid;
+  gap: 10px;
+}
+
+.demo-overlay-group {
+  display: grid;
+  gap: 8px;
+}
+
+.demo-overlay-group-label {
+  margin: 0;
+}
+
+.demo-overlay-focus-target {
+  max-width: 340px;
+}
+
+.demo-overlay-focus-label {
+  color: var(--aurora-text-secondary);
+  font-size: 13px;
+}
+
 .demo-form-grid {
   display: grid;
   gap: 12px;
