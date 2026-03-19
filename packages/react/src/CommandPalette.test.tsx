@@ -218,6 +218,23 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
+  it("removes Escape keyboard hint when Escape behaviors are fully disabled", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        closeOnEscape={false}
+        clearQueryOnEscape={false}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    expect(screen.getByRole("combobox", { name: "Search commands" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Enter"
+    );
+  });
+
   it("ignores non-primary outside pointer interactions", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();

@@ -70,6 +70,13 @@ export function CommandPalette({
   const listId = React.useId();
   const statusId = React.useId();
   const listRef = React.useRef<HTMLDivElement>(null);
+  const searchKeyShortcuts = React.useMemo(() => {
+    const shortcuts = ["ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp", "Enter"];
+    if (closeOnEscape || clearQueryOnEscape) {
+      shortcuts.push("Escape");
+    }
+    return shortcuts.join(" ");
+  }, [clearQueryOnEscape, closeOnEscape]);
 
   const markCloseReason = React.useCallback(
     (reason: CommandPaletteCloseReason) => {
@@ -289,7 +296,7 @@ export function CommandPalette({
           aria-controls={hasResults ? listId : undefined}
           aria-activedescendant={activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
           aria-describedby={statusId}
-          aria-keyshortcuts="ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
+          aria-keyshortcuts={searchKeyShortcuts}
           placeholder={placeholder}
           value={query}
           onChange={(event) => {

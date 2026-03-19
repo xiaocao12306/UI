@@ -269,6 +269,7 @@ function NonDismissiblePalette() {
       <CommandPalette
         open={open}
         onOpenChange={setOpen}
+        clearQueryOnEscape={false}
         closeOnEscape={false}
         closeOnOutsidePointer={false}
         commands={[
@@ -665,13 +666,18 @@ export const NonDismissible: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
     await userEvent.click(await canvas.findByRole("button", { name: "Open blocking palette" }));
-    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    const dialog = canvas.getByRole("dialog", { name: "Command Palette" });
+    await expect(dialog).toBeInTheDocument();
+    await expect(canvas.getByRole("combobox", { name: "Search commands" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Enter"
+    );
 
     await userEvent.keyboard("{Escape}");
-    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(dialog).toBeInTheDocument();
 
     await userEvent.click(canvas.getByRole("button", { name: "Outside target" }));
-    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(dialog).toBeInTheDocument();
   }
 };
 
