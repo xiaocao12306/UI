@@ -437,6 +437,7 @@
   - Table 空/单行排序语义收口（`defaultSortKey` 在无有效排序条件时不再暴露 `aria-sort` 与排序播报，避免禁用态误导）
   - Table 排序交互状态收口（sortable header 补齐 hover/active/focus-visible 反馈，并显式暴露 `aria-keyshortcuts="Enter Space"`）
   - Demo Table 空态 E2E 分支收口（排序按钮断言兼容 `ascending/descending` 标签，覆盖空态语义分支）
+  - 集成示例文档深化（`component-recipes` 增补 keyboard-discoverability 与 overlay close telemetry 模板）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

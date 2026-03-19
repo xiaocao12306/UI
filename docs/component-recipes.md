@@ -258,6 +258,86 @@ export function SilentBackgroundToast() {
 }
 ```
 
+## 11) Keyboard Discoverability Pattern (Tabs + CommandPalette + Toast)
+```tsx
+import * as React from "react";
+import { Button, CommandPalette, Tabs, Toast, type TabItem } from "@aurora-ui/react";
+
+const workflowTabs: TabItem[] = [
+  { key: "draft", label: "Draft", content: "Draft stage checks", description: "Authoring and copy review" },
+  { key: "release", label: "Release", content: "Release stage checks", description: "QA and deployment" }
+];
+
+export function KeyboardDiscoverabilityDemo() {
+  const [paletteOpen, setPaletteOpen] = React.useState(false);
+  const [toastOpen, setToastOpen] = React.useState(false);
+
+  return (
+    <div style={{ display: "grid", gap: 12 }}>
+      <p style={{ margin: 0 }}>
+        Manual tabs advertise <code>Enter</code>/<code>Space</code>, command palette lists navigation shortcuts,
+        and dismissable toast advertises <code>Escape</code> through <code>aria-keyshortcuts</code>.
+      </p>
+
+      <Tabs ariaLabel="Release workflow tabs" items={workflowTabs} defaultValue="draft" activationMode="manual" />
+
+      <div style={{ display: "flex", gap: 8 }}>
+        <Button variant="outline" onClick={() => setPaletteOpen(true)}>
+          Open command palette
+        </Button>
+        <Button variant="outline" onClick={() => setToastOpen(true)}>
+          Trigger escapable toast
+        </Button>
+      </div>
+
+      <CommandPalette
+        open={paletteOpen}
+        onOpenChange={setPaletteOpen}
+        commands={[
+          { key: "publish", label: "Publish release", keywords: ["deploy", "ship"] },
+          { key: "rollback", label: "Rollback release", keywords: ["recover"] }
+        ]}
+      />
+
+      <Toast
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        title="Release checks ready"
+        description="Press Escape to dismiss this notification."
+        duration={0}
+      />
+    </div>
+  );
+}
+```
+
+## 12) Overlay Close Reason Telemetry Template
+```tsx
+import * as React from "react";
+import { Dialog } from "@aurora-ui/react";
+
+export function OverlayCloseTelemetry() {
+  const [open, setOpen] = React.useState(false);
+  const [trace, setTrace] = React.useState<string[]>([]);
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        setTrace((prev) => [...prev, `open:${String(next)}`]);
+        setOpen(next);
+      }}
+      onCloseReason={(reason) => {
+        setTrace((prev) => [...prev, `reason:${reason}`]);
+      }}
+      title="Close reason telemetry"
+    >
+      <pre aria-label="overlay close trace">{trace.join(" -> ") || "N/A"}</pre>
+    </Dialog>
+  );
+}
+```
+
 ## 11) Overlay Close-Reason Telemetry Panel
 ```tsx
 import * as React from "react";
