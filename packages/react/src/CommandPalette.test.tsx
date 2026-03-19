@@ -202,6 +202,42 @@ describe("CommandPalette", () => {
     });
   });
 
+  it("does not reclaim focus after open when users move focus manually", async () => {
+    const onOpenChange = vi.fn();
+    const { rerender } = render(
+      <CommandPalette
+        open={false}
+        onOpenChange={onOpenChange}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    rerender(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole("combobox", { name: "Search commands" })).toHaveFocus();
+    });
+
+    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    act(() => {
+      closeButton.focus();
+    });
+    expect(closeButton).toHaveFocus();
+
+    await act(async () => {
+      await new Promise((resolve) => {
+        window.setTimeout(resolve, 0);
+      });
+    });
+    expect(closeButton).toHaveFocus();
+  });
+
   it("supports immediate keyboard query and Enter selection after opening from closed state", async () => {
     const onOpenChange = vi.fn();
     const onRunE2E = vi.fn();
@@ -378,6 +414,35 @@ describe("CommandPalette", () => {
     });
     option.dispatchEvent(primaryMouseDown);
     expect(primaryMouseDown.defaultPrevented).toBe(true);
+  });
+
+  it("prevents primary touch pointerdown default on options to keep combobox focus", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "open-theme", label: "Open Theme Pack" }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    const option = screen.getByRole("option", { name: "Open Settings" });
+    input.focus();
+    expect(input).toHaveFocus();
+
+    const touchPointerDown = new Event("pointerdown", {
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(touchPointerDown, "button", { configurable: true, value: 0 });
+    Object.defineProperty(touchPointerDown, "pointerType", { configurable: true, value: "touch" });
+
+    option.dispatchEvent(touchPointerDown);
+    expect(touchPointerDown.defaultPrevented).toBe(true);
+    expect(input).toHaveFocus();
   });
 
   it("forwards escape and outside-pointer dismiss events", () => {

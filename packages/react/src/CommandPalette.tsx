@@ -105,15 +105,7 @@ export function CommandPalette({
   );
 
   React.useEffect(() => {
-    if (open) {
-      const focusTimeout = globalThis.setTimeout(() => {
-        inputRef.current?.focus();
-      }, 0);
-      wasOpenRef.current = open;
-      return () => {
-        globalThis.clearTimeout(focusTimeout);
-      };
-    } else if (wasOpenRef.current) {
+    if (!open && wasOpenRef.current) {
       setQuery((currentQuery) => {
         if (currentQuery.length > 0) {
           onQueryChange?.("");
@@ -452,6 +444,13 @@ export function CommandPalette({
                   aria-posinset={index + 1}
                   aria-setsize={filtered.length}
                   tabIndex={-1}
+                  onPointerDown={(event) => {
+                    if (event.pointerType === "mouse" || event.button !== 0) {
+                      return;
+                    }
+                    // Keep combobox input focus while selecting listbox options.
+                    event.preventDefault();
+                  }}
                   onMouseDown={(event) => {
                     if (event.button !== 0) {
                       return;
