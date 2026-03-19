@@ -1,4 +1,24 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+const surfaceDefaultByTheme = {
+  "core-light": "#ffffff",
+  "core-dark": "#0b1220",
+  glass: "#ffffff",
+  "neo-brutal": "#fffde7"
+} as const;
+
+async function readProviderTheme(page: Page) {
+  return page.locator("[data-aurora-provider]").getAttribute("data-aurora-theme");
+}
+
+async function readProviderCssVariable(page: Page, variableName: string) {
+  return page
+    .locator("[data-aurora-provider]")
+    .evaluate(
+      (node, variable) => getComputedStyle(node as HTMLElement).getPropertyValue(variable).trim(),
+      variableName
+    );
+}
 
 test("renders demo homepage", async ({ page }) => {
   await page.goto("/");
@@ -10,8 +30,17 @@ test("renders demo homepage", async ({ page }) => {
 test("switches theme from selector", async ({ page }) => {
   await page.goto("/");
 
+  await expect(await readProviderTheme(page)).toBe("core-light");
+  await expect(await readProviderCssVariable(page, "--aurora-surface-default")).toBe(
+    surfaceDefaultByTheme["core-light"]
+  );
+
   await page.getByLabel("Theme").selectOption("core-dark");
   await expect(page.getByText("Current theme: core-dark")).toBeVisible();
+  await expect(await readProviderTheme(page)).toBe("core-dark");
+  await expect(await readProviderCssVariable(page, "--aurora-surface-default")).toBe(
+    surfaceDefaultByTheme["core-dark"]
+  );
 });
 
 test("persists selected theme after reload", async ({ page }) => {
@@ -21,6 +50,10 @@ test("persists selected theme after reload", async ({ page }) => {
   await page.reload();
 
   await expect(page.getByText("Current theme: glass")).toBeVisible();
+  await expect(await readProviderTheme(page)).toBe("glass");
+  await expect(await readProviderCssVariable(page, "--aurora-surface-default")).toBe(
+    surfaceDefaultByTheme.glass
+  );
 });
 
 test("toggles live updates switch via pointer and keyboard", async ({ page }) => {

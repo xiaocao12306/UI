@@ -8,5 +8,13 @@ type AuroraProviderProps = {
 
 export function AuroraProvider({ children, theme = "core-light" }: AuroraProviderProps) {
   const style = React.useMemo(() => createThemeVariables(theme), [theme]);
-  return <div style={style as React.CSSProperties}>{children}</div>;
+  return (
+    <div
+      data-aurora-provider=""
+      data-aurora-theme={theme}
+      style={style as React.CSSProperties}
+    >
+      {children}
+    </div>
+  );
 }
