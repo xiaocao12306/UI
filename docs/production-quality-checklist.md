@@ -410,3 +410,4 @@
 - Overlay Storybook focus-trap parity: added `Dialog/Drawer` `FocusTrapKeyboardCycle` stories with `Tab/Shift+Tab` loop assertions so modal focus containment now has visual/interaction regression coverage beyond unit tests.
 - Toast default-timer parity: added regression ensuring passive toasts still auto-dismiss at the default 4000ms when `duration` is omitted, complementing actionable-toast persistent default behavior.
 - Dropdown controlled-contract parity: added Storybook `ControlledOpenContract` interaction scenario to lock controlled `open` behavior where dismiss paths emit close callbacks but visual close waits for parent rerender.
+- Table deferred-schema default-sort parity: when columns rerender from non-sortable to sortable, matching `defaultSortKey` is now re-applied automatically, with unit + Storybook `DeferredColumnsDefaultSortRecovery` coverage.

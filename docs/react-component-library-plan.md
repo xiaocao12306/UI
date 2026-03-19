@@ -527,6 +527,7 @@
   - Overlay Storybook 焦点圈定验收（新增 `Dialog/Drawer FocusTrapKeyboardCycle` 场景与 play 断言，定向 runner 通过）
   - Toast 默认时长契约补测（无 `action` 且未传 `duration` 时默认 4000ms 自动关闭，和 action 默认持久化策略形成对称约束）
   - Dropdown 受控关闭契约验收（新增 `ControlledOpenContract` 场景，锁定受控模式下关闭仅发起请求、由父层 rerender 决定最终收起）
+  - Table 异步列默认排序收口（列配置后变更为 sortable 时可恢复 `defaultSortKey`，新增 `DeferredColumnsDefaultSortRecovery` 故事与单测）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

@@ -448,6 +448,57 @@ export const InvalidDefaultSortKeyFallback: Story = {
   }
 };
 
+function DeferredColumnsDefaultSortRecoveryDemo() {
+  const [statusSortable, setStatusSortable] = React.useState(false);
+
+  const deferredColumns = React.useMemo<Array<TableColumn<ReleaseRow>>>(
+    () => [
+      { key: "component", header: "Component", sortable: true, rowHeader: true },
+      { key: "status", header: "Status", sortable: statusSortable, width: 140 }
+    ],
+    [statusSortable]
+  );
+
+  return (
+    <div style={{ width: "min(100%, 700px)", display: "grid", gap: 8 }}>
+      <p style={storyHelperTextStyle}>
+        Async column schema can enable a previously unavailable default sort key after rerender.
+      </p>
+      <p style={storyHelperTextStyle}>
+        Status column sortable:{" "}
+        <strong data-testid="table-status-sortable" style={{ color: "var(--aurora-text-primary)" }}>
+          {statusSortable ? "yes" : "no"}
+        </strong>
+      </p>
+      <button type="button" onClick={() => setStatusSortable(true)}>
+        Load status sortable schema
+      </button>
+      <Table columns={deferredColumns} data={rows} rowKey={(row) => row.id} defaultSortKey="status" />
+    </div>
+  );
+}
+
+export const DeferredColumnsDefaultSortRecovery: Story = {
+  render: () => <DeferredColumnsDefaultSortRecoveryDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const loadSchemaButton = canvas.getByRole("button", { name: "Load status sortable schema" });
+    const statusHeader = canvas.getByRole("columnheader", { name: "Status" });
+
+    await expect(canvas.getByTestId("table-status-sortable")).toHaveTextContent("no");
+    await expect(statusHeader).not.toHaveAttribute("aria-sort");
+    await expect(canvas.getAllByRole("rowheader")[0]).toHaveTextContent("Button");
+    await expect(canvas.queryByRole("status")).not.toBeInTheDocument();
+
+    await userEvent.click(loadSchemaButton);
+    await expect(canvas.getByTestId("table-status-sortable")).toHaveTextContent("yes");
+    await expect(statusHeader).toHaveAttribute("aria-sort", "ascending");
+    await expect(canvas.getByRole("button", { name: "Status sort descending" })).toBeEnabled();
+    await expect(canvas.getAllByRole("rowheader")[0]).toHaveTextContent("PromptInput");
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Status ascending.");
+  }
+};
+
 type StatefulRow = ReleaseRow & { note: string };
 
 const statefulRows: StatefulRow[] = rows.map((row) => ({ ...row, note: "" }));

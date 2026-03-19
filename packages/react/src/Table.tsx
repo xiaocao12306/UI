@@ -105,6 +105,19 @@ export function Table<T>({
     }
   }, [columns, sortState]);
 
+  React.useEffect(() => {
+    if (sortState) {
+      return;
+    }
+
+    const nextInitialSortState = resolveInitialSortState(columns, defaultSortKey, defaultSortDirection);
+    if (!nextInitialSortState) {
+      return;
+    }
+
+    setSortState(nextInitialSortState);
+  }, [columns, defaultSortDirection, defaultSortKey, sortState]);
+
   const sortedEntries = React.useMemo(() => {
     const sourceEntries = data.map((row, sourceIndex) => ({ row, sourceIndex }));
     if (!sortState) {

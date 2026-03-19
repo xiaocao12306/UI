@@ -910,6 +910,45 @@ describe("Table", () => {
     expect(screen.getAllByRole("cell")[0]).toHaveTextContent("Dialog");
   });
 
+  it("re-applies default sort when a matching sortable column becomes available after rerender", () => {
+    const data = [
+      { name: "Dialog", status: "review" },
+      { name: "Button", status: "blocked" }
+    ];
+    const { rerender } = render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true, rowHeader: true },
+          { key: "status", header: "Status" }
+        ]}
+        data={data}
+        defaultSortKey="status"
+      />
+    );
+
+    const statusHeaderBeforeUpgrade = screen.getByRole("columnheader", { name: "Status" });
+    expect(statusHeaderBeforeUpgrade).not.toHaveAttribute("aria-sort");
+    expect(screen.getAllByRole("rowheader")[0]).toHaveTextContent("Dialog");
+    expect(screen.queryByRole("status")).toBeNull();
+
+    rerender(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true, rowHeader: true },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={data}
+        defaultSortKey="status"
+      />
+    );
+
+    const statusHeaderAfterUpgrade = screen.getByRole("columnheader", { name: "Status" });
+    expect(statusHeaderAfterUpgrade).toHaveAttribute("aria-sort", "ascending");
+    expect(screen.getByRole("button", { name: "Status sort descending" })).toBeEnabled();
+    expect(screen.getAllByRole("rowheader")[0]).toHaveTextContent("Button");
+    expect(screen.getByRole("status")).toHaveTextContent("Sorted by Status ascending.");
+  });
+
   it("keeps equal sort values in source order for deterministic rendering", () => {
     render(
       <Table
