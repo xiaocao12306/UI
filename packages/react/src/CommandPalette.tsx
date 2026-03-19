@@ -145,14 +145,14 @@ export function CommandPalette({
   );
   const hasResults = filtered.length > 0;
   const searchKeyShortcuts = React.useMemo(() => {
-    const shortcuts = ["ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp"];
+    const shortcuts: string[] = [];
     if (enabledCount > 0) {
-      shortcuts.push("Enter");
+      shortcuts.push("ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp", "Enter");
     }
     if (closeOnEscape || (clearQueryOnEscape && query.length > 0)) {
       shortcuts.push("Escape");
     }
-    return shortcuts.join(" ");
+    return shortcuts.length > 0 ? shortcuts.join(" ") : undefined;
   }, [clearQueryOnEscape, closeOnEscape, enabledCount, query.length]);
 
   const resultsStatusText = React.useMemo(
@@ -347,36 +347,54 @@ export function CommandPalette({
             }
 
             if (event.key === "ArrowDown") {
+              if (enabledCount === 0) {
+                return;
+              }
               event.preventDefault();
               moveActiveIndex(1);
               return;
             }
 
             if (event.key === "ArrowUp") {
+              if (enabledCount === 0) {
+                return;
+              }
               event.preventDefault();
               moveActiveIndex(-1);
               return;
             }
 
             if (event.key === "Home") {
+              if (enabledCount === 0) {
+                return;
+              }
               event.preventDefault();
               setActiveIndex(firstEnabledIndex);
               return;
             }
 
             if (event.key === "End") {
+              if (enabledCount === 0) {
+                return;
+              }
               event.preventDefault();
               setActiveIndex(lastEnabledIndex);
               return;
             }
 
             if (event.key === "PageDown") {
+              if (enabledCount === 0) {
+                return;
+              }
               event.preventDefault();
               moveActiveIndexByPage(1);
               return;
             }
 
             if (event.key === "PageUp") {
+              if (enabledCount === 0) {
+                return;
+              }
               event.preventDefault();
               moveActiveIndexByPage(-1);
               return;

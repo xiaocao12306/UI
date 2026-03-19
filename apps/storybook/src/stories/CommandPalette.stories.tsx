@@ -765,10 +765,13 @@ export const DisabledOnlyResults: Story = {
     await expect(canvas.getByRole("status")).toHaveTextContent(
       'No enabled commands match "release".'
     );
-    await expect(input).toHaveAttribute(
-      "aria-keyshortcuts",
-      "ArrowDown ArrowUp Home End PageDown PageUp Escape"
-    );
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "Escape");
+
+    for (const key of ["ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp"]) {
+      const keyEvent = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+      input.dispatchEvent(keyEvent);
+      await expect(keyEvent.defaultPrevented).toBe(false);
+    }
   }
 };
 

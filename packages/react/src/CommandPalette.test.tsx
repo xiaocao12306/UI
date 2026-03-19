@@ -601,7 +601,7 @@ describe("CommandPalette", () => {
     expect(input).not.toHaveAttribute("aria-activedescendant");
     expect(input).toHaveAttribute(
       "aria-keyshortcuts",
-      "ArrowDown ArrowUp Home End PageDown PageUp Escape"
+      "Escape"
     );
 
     fireEvent.keyDown(input, { key: "ArrowDown" });
@@ -1153,8 +1153,30 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("status")).toHaveTextContent('No enabled commands match "release".');
     expect(input).toHaveAttribute(
       "aria-keyshortcuts",
-      "ArrowDown ArrowUp Home End PageDown PageUp Escape"
+      "Escape"
     );
+  });
+
+  it("does not prevent native input key behavior when filtered results have no enabled commands", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "archive", label: "Archive workspace", disabled: true },
+          { key: "delete", label: "Delete workspace", disabled: true }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    const navigationKeys = ["ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp"];
+
+    for (const key of navigationKeys) {
+      const keyEvent = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+      input.dispatchEvent(keyEvent);
+      expect(keyEvent.defaultPrevented).toBe(false);
+    }
   });
 
   it("supports custom result status narration", () => {
