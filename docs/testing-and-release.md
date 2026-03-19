@@ -164,6 +164,7 @@ Behavior:
 
 - always runs Changesets version PR automation on `main`
 - runs `pnpm release:gate:ci` (`verify + coverage:gate + demo:e2e + demo:dist:check + storybook:test:ci`) before any version/publish step
+- runs `pnpm release:dry-run` in the same workflow before version/publish step and uploads `release-dry-run-logs` artifact
 - publishes npm packages only when `NPM_TOKEN` is configured
 - uses npm provenance (`id-token: write`) during publish
 - when `NPM_TOKEN` is missing, workflow emits explicit warning annotation and writes skip details into `GITHUB_STEP_SUMMARY` with setup path (`docs/secrets.md`)
@@ -256,5 +257,5 @@ This appends: 6. `pnpm release:dry-run`
 1. `CI` workflow：查看 `Storybook Interaction Gate` + `Demo Quality Gate` summary（coverage/docs/static/test + demo e2e/dist gate 快照）。
 2. `Release Dry Run` workflow：先看失败步骤；仅当 `release:dry-run` 步骤实际执行时再看包体积表与恢复文件计数（若停在 checkout/setup/install，则以 workflow phase outcome 为准）。
 3. `Chromatic Visual Tests` workflow：查看 mode/token 状态、build/storybook URL、change/error 计数。
-4. `Release` workflow：查看 `Release Gate (CI)` summary（verify + demo e2e run/result + demo dist + storybook gate）以及 `Publish Mode` summary（`enforce`/token 状态）。
-5. 失败排障：下载 workflow artifacts（`storybook-gate-logs` / `demo-quality-gate-logs` / `release-gate-logs`）查看原始日志与首条失败签名。
+4. `Release` workflow：查看 `Release Gate (CI)` summary（verify + demo e2e run/result + demo dist + storybook gate）、`Release Dry-Run Summary` 与 `Publish Mode` summary（`enforce`/token 状态）。
+5. 失败排障：下载 workflow artifacts（`storybook-gate-logs` / `demo-quality-gate-logs` / `release-gate-logs` / `release-dry-run-logs`）查看原始日志与首条失败签名。

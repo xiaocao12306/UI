@@ -151,6 +151,7 @@ pnpm chromatic
 - npm publish runs only when `NPM_TOKEN` is configured
 - secrets setup guide: `docs/secrets.md`
 - local changeset gate: `pnpm changeset:required` (checks package diffs include `.changeset/*.md`)
+- release workflow runs `pnpm release:gate:ci` and `pnpm release:dry-run` before any publish step
 - local preflight:
   - `pnpm release:preflight` (`CHROMATIC_PROJECT_TOKEN` + `NPM_TOKEN`)
   - `pnpm release:preflight -- --scope=chromatic` (`CHROMATIC_PROJECT_TOKEN` only)

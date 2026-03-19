@@ -393,3 +393,4 @@
 - Storybook manager-brand parity: added `.storybook/manager.ts` custom theme (`Aurora UI` title, token-aligned palette, Plex Sans/Mono typography) to replace default Storybook chrome for production-facing docs polish.
 - Theme-source parity: exported `themeNames` from `@aurora-ui/tokens` and switched Storybook toolbar + demo selector to consume a shared theme list, then revalidated theme E2E (`switches theme from selector` / `persists selected theme after reload`) to prevent config drift.
 - Changeset gate parity: added `scripts/check-changeset-required.mjs`, `pnpm changeset:required`, and PR workflow `.github/workflows/changeset-required.yml` so package changes without `.changeset/*.md` fail before release stage.
+- Release workflow dry-run parity: `.github/workflows/release.yml` now executes `pnpm release:dry-run` before publish automation and uploads `release-dry-run-logs` to keep dry-run evidence in the primary release pipeline.

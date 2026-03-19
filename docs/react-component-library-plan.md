@@ -509,6 +509,7 @@
   - Storybook 管理端品牌化（新增 `.storybook/manager.ts`，统一 `Aurora UI` 品牌标题、字体与中控面板配色）
   - 主题枚举来源收口（`@aurora-ui/tokens` 新增 `themeNames`，Storybook toolbar 与 Demo selector 统一消费，避免主题配置漂移）
   - Changeset 门禁补齐（新增 `changeset:required` 脚本 + PR 工作流，包变更缺失 `.changeset/*.md` 提前失败）
+  - Release 主链路 dry-run 收口（`release.yml` 在发布前执行 `pnpm release:dry-run` 并上传 `release-dry-run-logs`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
