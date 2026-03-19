@@ -53,6 +53,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `variant` | `'solid' \| 'ghost' \| 'outline'` | Semantic visual variants without hardcoded color usage. |
 | `size` | `'sm' \| 'md' \| 'lg'` | Token-aligned button density. |
 | `loading` / `loadingText` | `boolean` / `ReactNode` | Locks interactions, sets `aria-busy`, and shows deterministic loading copy. |
+| focus intent policy | primary pointer clears focus-visible | Non-primary pointer interactions keep focus ring state; primary pointer resets keyboard-intent ring before press feedback. |
 | native button props | `ButtonHTMLAttributes` | Supports `type`, `disabled`, `onClick`, keyboard handlers. |
 
 ### Tag
@@ -86,6 +87,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `invalid` | `boolean` | Applies `aria-invalid` and error-token border/ring styles; incoming `aria-invalid="grammar|spelling"` is preserved. |
 | `readOnly` / `disabled` | `boolean` | Preserves semantic behavior and visual state boundaries. |
 | `aria-describedby` | `string` | Recommended for helper/error narration in forms. |
+| focus intent policy | primary pointer clears focus-visible | Non-primary `mousedown/pointerdown` keeps keyboard-intent focus ring state, while primary pointer keeps prior active/pressed behavior. |
 | native input props | `InputHTMLAttributes` | Includes `value`, `defaultValue`, `onChange`, `type`, and autocomplete controls. |
 
 <Canvas of={InputStories.InvalidTokenSemantics} />
@@ -239,6 +241,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Inspect or cancel dismiss intent before `onOpenChange(false)`. |
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for dialog-dismiss analytics and workflow tracing. |
 | close lifecycle order | `onCloseReason -> onOpenChange(false)` | Close-button/Escape/outside-pointer paths use deterministic callback order for telemetry and reducer side effects. |
+| close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer down keeps keyboard-intent ring state to avoid accidental ring loss during context/right-click interactions. |
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside dialog | Modal focus scope keeps keyboard focus inside dialog controls while open. |
 | IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`isComposing` / `keyCode=229`) to prevent accidental close while confirming CJK input. |
 | Escape priority | preempted events skip dialog hook/dismiss | If higher-level handlers already `preventDefault()` Escape, dialog stays open and does not fire `onEscapeKeyDown`. |
@@ -264,6 +267,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for close-button vs dismiss-gesture analytics. |
 | close lifecycle order | `onCloseReason -> onOpenChange(false)` | Close-button/Escape/outside-pointer paths keep callback order deterministic for telemetry reducers. |
 | `showCloseButton` | `boolean` | Allows explicit in-panel action-only dismissal. |
+| close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer down keeps keyboard-intent ring state to avoid accidental ring loss during context/right-click interactions. |
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside drawer | Modal focus scope keeps keyboard focus inside drawer controls while open. |
 | Escape priority | preempted events skip drawer hook/dismiss | If higher-level handlers already `preventDefault()` Escape, drawer stays open and does not fire `onEscapeKeyDown`. |
 | nested dismiss order | top layer first | Nested overlays inside drawer dismiss one layer per Escape/outside interaction. |
