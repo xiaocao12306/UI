@@ -342,6 +342,10 @@ export function Table<T>({
                           return;
                         }
 
+                        if (isComposingSortActivationEvent(event)) {
+                          return;
+                        }
+
                         event.preventDefault();
                         if (event.repeat) {
                           return;
@@ -495,6 +499,15 @@ function defaultGetSortStatusText({
 
 function isSortActivationKey(key: string) {
   return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
+}
+
+function isComposingSortActivationEvent(event: React.KeyboardEvent<HTMLButtonElement>) {
+  const nativeEvent = event.nativeEvent;
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }
 
 function resolveFocusVisibleState(target: HTMLButtonElement | null, fallback: boolean) {

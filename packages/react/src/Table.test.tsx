@@ -596,6 +596,34 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledTimes(1);
   });
 
+  it("ignores sortable-header activation keys during IME composition", () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        onSortChange={onSortChange}
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    fireEvent.keyDown(sortButton, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(sortButton, { key: " ", isComposing: true, keyCode: 229, which: 229 });
+    expect(onSortChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(sortButton, { key: "Enter" });
+    expect(onSortChange).toHaveBeenCalledTimes(1);
+    expect(onSortChange).toHaveBeenCalledWith("name", "desc");
+  });
+
   it("supports localized sort aria labels via getSortAriaLabel", () => {
     render(
       <Table
