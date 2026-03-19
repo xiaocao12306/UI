@@ -448,6 +448,7 @@
   - Demo 交互状态收口（SectionNav/HeroStatCard 从事件驱动状态机切换为 CSS `:hover/:focus-visible/[aria-current]`，减少重渲染与状态分叉）
   - Demo 动效可访问性收口（新增 `prefers-reduced-motion` 分支，导航与卡片交互在低动态偏好下关闭位移动效）
   - CI/Release 日志可观测性收口（Storybook coverage 问题计数写入 summary，并上传 gate logs artifact 便于失败复盘）
+  - Table 键盘长按收口（sortable header 在 `Space` repeat 场景忽略重复 keydown，避免排序/遥测抖动）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

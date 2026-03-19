@@ -382,6 +382,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | sort interaction guard | loading/empty/single-row auto-disabled | Sort buttons disable automatically when sorting would be no-op (`loading`, zero rows, or one row), and no sorted-state narration is emitted in those branches. |
 | sortable header keyboard | `Enter` / `Space` / legacy `Spacebar` | Sort buttons support pointer + keyboard activation with the same direction toggling semantics across browser key-value variants. |
 | sortable header key hints | `aria-keyshortcuts="Enter Space"` | Enabled sort buttons expose explicit keyboard hints and focus-visible ring semantics for deterministic keyboard QA; disabled sort controls omit the hint. |
+| space repeat guard | ignores repeated keydown | Holding `Space` (`event.repeat=true`) on sort headers does not trigger repeated sort toggles, preventing telemetry jitter and accidental direction flips. |
 | `aria-sort` exposure | active sorted header only | Unsorted headers (including sortable ones) omit `aria-sort`, reducing screen-reader noise and matching ARIA table guidance. |
 
 <Canvas of={TableStories.SortTelemetry} />

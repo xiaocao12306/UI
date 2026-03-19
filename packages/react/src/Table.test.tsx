@@ -461,6 +461,33 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledWith("name", "desc");
   });
 
+  it("ignores repeated Space keydown events on sortable headers", () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        onSortChange={onSortChange}
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    fireEvent.keyDown(sortButton, { key: " ", repeat: false });
+    expect(onSortChange).toHaveBeenCalledTimes(1);
+    expect(onSortChange).toHaveBeenLastCalledWith("name", "desc");
+
+    fireEvent.keyDown(sortButton, { key: " ", repeat: true });
+    expect(onSortChange).toHaveBeenCalledTimes(1);
+  });
+
   it("supports localized sort aria labels via getSortAriaLabel", () => {
     render(
       <Table

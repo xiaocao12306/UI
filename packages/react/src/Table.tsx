@@ -317,6 +317,9 @@ export function Table<T>({
                         }
 
                         event.preventDefault();
+                        if (event.repeat) {
+                          return;
+                        }
                         activateSort();
                       }}
                       style={{

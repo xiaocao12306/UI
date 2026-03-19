@@ -681,6 +681,31 @@ test("sorts demo table with keyboard activation", async ({ page }) => {
   await expect(firstRow).toContainText("Button");
 });
 
+test("ignores repeated Space keydown when sorting demo table", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table");
+  const telemetry = page.getByTestId("table-sort-telemetry");
+  const componentColumn = table.getByRole("columnheader", { name: /Component/ });
+  const componentSortButton = table.getByRole("button", { name: /Component/ });
+  const firstRow = table.locator("tbody tr").first();
+
+  await componentSortButton.focus();
+  await componentSortButton.press("Enter");
+  await expect(componentColumn).toHaveAttribute("aria-sort", "descending");
+  await expect(firstRow).toContainText("StreamingCodeBlock");
+  await expect(telemetry).toHaveText("component:desc");
+
+  await componentSortButton.evaluate((element) => {
+    const event = new KeyboardEvent("keydown", { key: " ", repeat: true, bubbles: true });
+    element.dispatchEvent(event);
+  });
+
+  await expect(componentColumn).toHaveAttribute("aria-sort", "descending");
+  await expect(firstRow).toContainText("StreamingCodeBlock");
+  await expect(telemetry).toHaveText("component:desc");
+});
+
 test("sorts demo table with legacy Spacebar key event", async ({ page }) => {
   await page.goto("/");
 

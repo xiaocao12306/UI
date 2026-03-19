@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Table, type TableColumn } from "@aurora-ui/react";
 import * as React from "react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 type ReleaseRow = {
   id: string;
@@ -233,6 +233,10 @@ export const SortTelemetry: Story = {
     await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
 
     issueSortAsc.focus();
+    fireEvent.keyDown(issueSortAsc, { key: "Space", repeat: true });
+    await expect(canvas.getByText("id desc")).toBeInTheDocument();
+    await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
+
     await userEvent.keyboard("{Space}");
     await expect(canvas.getByText("id asc")).toBeInTheDocument();
     await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
