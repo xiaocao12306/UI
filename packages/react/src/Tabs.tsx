@@ -19,6 +19,13 @@ export type TabsProps = {
   onValueChange?: (value: string) => void;
 };
 
+function buildKeyIndexMap(items: TabItem[]) {
+  return items.reduce<Record<string, number>>((accumulator, item, index) => {
+    accumulator[item.key] = index;
+    return accumulator;
+  }, {});
+}
+
 function getNextEnabledIndex(
   items: TabItem[],
   startIndex: number,
@@ -111,8 +118,10 @@ export function Tabs({
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const warnedInvalidControlledValueRef = React.useRef<string | null>(null);
   const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
-  const lastKnownIndexByKeyRef = React.useRef<Map<string, number>>(new Map());
   const focusIntentRef = React.useRef(true);
+  const [recentKeyIndexMap, setRecentKeyIndexMap] = React.useState<Record<string, number>>(() =>
+    buildKeyIndexMap(items)
+  );
   const firstEnabledKey = items.find((item) => !item.disabled)?.key;
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
   const [hoveredTabKey, setHoveredTabKey] = React.useState<string | null>(null);
@@ -152,10 +161,7 @@ export function Tabs({
   }, [items]);
 
   React.useEffect(() => {
-    const lastKnownIndexByKey = lastKnownIndexByKeyRef.current;
-    items.forEach((item, index) => {
-      lastKnownIndexByKey.set(item.key, index);
-    });
+    setRecentKeyIndexMap(buildKeyIndexMap(items));
   }, [items]);
 
   React.useEffect(() => {
@@ -216,7 +222,7 @@ export function Tabs({
     if (value === undefined && currentRawValue && !currentItem) {
       return getNearestEnabledKey(
         items,
-        lastKnownIndexByKeyRef.current.get(currentRawValue),
+        recentKeyIndexMap[currentRawValue],
         firstEnabledKey
       );
     }
