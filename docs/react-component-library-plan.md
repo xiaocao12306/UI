@@ -552,6 +552,7 @@
   - Button icon-only 可访问性收口（无可读文本且缺失 `aria-label`/`aria-labelledby` 时开发态告警，补齐 unit + Storybook `IconOnlyAccessibleName` 与 API/Best-Practices 文档）
   - Popover/Dropdown dismiss guard 契约收口（`onEscapeKeyDown`/`onPointerDownOutside` 的 `event.preventDefault()` 可在开启默认关闭策略时阻断关闭；补齐 unit + Storybook `DismissGuardHooks` + API/Best-Practices 文档）
   - Dialog dismiss guard 契约补齐（补充 `onPointerDownOutside` + `onEscapeKeyDown` preventDefault 阻断关闭回归，新增 Storybook `DismissGuardHooks` 与 API 文档示例）
+  - Drawer dismiss guard 故事面补齐（新增 Storybook `DismissGuardHooks`，将已存在的 unit guard 契约纳入可视回归与 API 文档）
   - Button 主键焦点语义收口（非主键 `mousedown/pointerdown` 不再清理 `focus-visible`，补齐 unit 回归）
   - Drawer 关闭按钮主键焦点语义收口（非主键 `mousedown` 不再清理 `focus-visible`，补齐 unit 回归）
   - Toast 关闭按钮焦点语义补测（新增非主键 `mousedown` 保留 `focus-visible` 的 unit 回归，锁定关闭按钮主键焦点策略）

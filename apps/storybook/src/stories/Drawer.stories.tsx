@@ -107,6 +107,74 @@ export const NonDismissible: Story = {
   }
 };
 
+function DismissGuardDrawerDemo() {
+  const [open, setOpen] = React.useState(true);
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+  const [outsideCalls, setOutsideCalls] = React.useState(0);
+
+  return (
+    <div style={{ minHeight: 420, padding: 16, display: "grid", gap: 10, justifyItems: "start" }}>
+      <button
+        type="button"
+        data-testid="drawer-guard-outside-target"
+        aria-label="Drawer guard outside target"
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: 1,
+          height: 1,
+          opacity: 0
+        }}
+      />
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Escape guard calls:{" "}
+        <strong data-testid="drawer-guard-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Outside guard calls:{" "}
+        <strong data-testid="drawer-guard-outside-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {outsideCalls}
+        </strong>
+      </p>
+      <Drawer
+        open={open}
+        onOpenChange={setOpen}
+        title="Guarded drawer"
+        onEscapeKeyDown={(event) => {
+          event.preventDefault();
+          setEscapeCalls((count) => count + 1);
+        }}
+        onPointerDownOutside={(event) => {
+          event.preventDefault();
+          setOutsideCalls((count) => count + 1);
+        }}
+      >
+        <p style={{ margin: 0 }}>Dismiss hooks can block Escape and outside pointer close paths.</p>
+      </Drawer>
+    </div>
+  );
+}
+
+export const DismissGuardHooks: Story = {
+  render: () => <DismissGuardDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const outsideTarget = body.getByTestId("drawer-guard-outside-target");
+
+    await expect(await body.findByRole("dialog", { name: "Guarded drawer" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    await expect(body.getByRole("dialog", { name: "Guarded drawer" })).toBeInTheDocument();
+    await expect(body.getByTestId("drawer-guard-escape-calls")).toHaveTextContent("1");
+
+    await userEvent.click(outsideTarget);
+    await expect(body.getByRole("dialog", { name: "Guarded drawer" })).toBeInTheDocument();
+    await expect(body.getByTestId("drawer-guard-outside-calls")).toHaveTextContent("1");
+  }
+};
+
 function CloseButtonPrimaryPointerOnlyDrawerDemo() {
   const [open, setOpen] = React.useState(true);
 

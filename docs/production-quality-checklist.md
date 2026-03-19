@@ -440,6 +440,7 @@
 - Button icon-only a11y parity: development builds now warn when button content is icon-only without `aria-label`/`aria-labelledby`, with unit + Storybook + API/Best-Practices docs coverage.
 - Popover/Dropdown dismiss-guard parity: overlay dismiss hooks now carry explicit regression coverage for `event.preventDefault()` guard paths while default close policy remains enabled, with unit + Storybook + docs examples.
 - Dialog dismiss-guard parity: dialog now has explicit regression coverage for `onEscapeKeyDown/onPointerDownOutside` `event.preventDefault()` guard paths while default dismiss policy remains enabled, with unit + Storybook + API docs coverage.
+- Drawer dismiss-guard parity: drawer `event.preventDefault()` guard flows are now visible in Storybook (`DismissGuardHooks`) in addition to unit coverage, keeping hook-based approval gates in the visual regression baseline.
 - Button focus-intent parity: non-primary `mousedown/pointerdown` now preserves focus-visible state while primary pointer still clears it, with dedicated unit coverage.
 - Drawer close-button focus-intent parity: non-primary close-button `mousedown` now preserves focus-visible state while primary pointer keeps prior behavior, with dedicated unit coverage.
 - Toast close-button focus-intent coverage: added unit regression ensuring non-primary close-button `mousedown` keeps focus-visible ring state while primary pointer behavior remains unchanged.
