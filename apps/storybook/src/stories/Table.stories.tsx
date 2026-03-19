@@ -126,7 +126,7 @@ export const LoadingState: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const table = canvas.getByRole("table", { name: "Data table" });
-    const sortButton = canvas.getByRole("button", { name: "Issue sort ascending" });
+    const sortButton = canvas.getByRole("button", { name: "Issue sort descending" });
     const issueHeader = canvas.getByRole("columnheader", { name: /Issue/ });
 
     await expect(table).toHaveAttribute("aria-busy", "true");
