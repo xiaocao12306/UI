@@ -118,6 +118,7 @@
 - Tabs cross-browser keyboard parity: manual activation now accepts legacy `Spacebar` key value, with dedicated unit regression coverage.
 - Tabs keyboard parity extension: manual activation now also accepts modern `Space` key value, and Storybook manual-flow interactions explicitly validate the Space activation path.
 - Tabs panel-focus parity: active `tabpanel` now exposes `tabIndex=0` while inactive panels stay `-1`, ensuring keyboard users can reliably enter panel content.
+- Tabs removal fallback hardening: when the currently selected tab is removed at runtime, uncontrolled tabs now fall back to the nearest enabled tab by historical index (instead of always jumping to first), with unit + Storybook interaction coverage.
 - Tabs telemetry de-dup hardening: manual mode now ignores follow-up keyboard-generated click (`detail=0`) after key activation, preventing duplicate `onValueChange` emissions.
 - Tabs keyboard-discoverability hardening: manual mode now exposes `aria-keyshortcuts="Enter Space"` on tabs, with unit + Storybook interaction coverage.
 - Demo Tabs keyboard-discoverability parity: Playwright manual-mode flows now assert `aria-keyshortcuts="Enter Space"` on actionable tabs.

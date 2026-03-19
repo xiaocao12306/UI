@@ -389,6 +389,36 @@ describe("Tabs", () => {
     expect(screen.getByRole("tab", { name: "Two" })).toBeDisabled();
   });
 
+  it("falls back to nearest enabled tab when active tab is removed after rerender", () => {
+    const { rerender } = render(
+      <Tabs
+        defaultValue="build"
+        items={[
+          { key: "spec", label: "Spec", content: <div>Spec panel</div> },
+          { key: "build", label: "Build", content: <div>Build panel</div> },
+          { key: "release", label: "Release", content: <div>Release panel</div> }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("tab", { name: "Build" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Build panel")).toBeInTheDocument();
+
+    rerender(
+      <Tabs
+        defaultValue="build"
+        items={[
+          { key: "spec", label: "Spec", content: <div>Spec panel</div> },
+          { key: "release", label: "Release", content: <div>Release panel</div> }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("tab", { name: "Release" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Release panel")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Release" })).toHaveAttribute("tabindex", "0");
+  });
+
   it("marks tablist disabled when no enabled tabs are available", () => {
     render(
       <Tabs

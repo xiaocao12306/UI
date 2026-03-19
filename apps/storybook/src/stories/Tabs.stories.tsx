@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Badge, Tabs, type TabItem } from "@aurora-ui/react";
+import { Badge, Button, Tabs, type TabItem } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const productTabs: TabItem[] = [
@@ -113,6 +113,30 @@ function DisableVisualResetTabsDemo() {
   );
 }
 
+function RemoveActiveTabFallbackDemo() {
+  const [removeBuildTab, setRemoveBuildTab] = React.useState(false);
+
+  const items: TabItem[] = removeBuildTab
+    ? [
+        { key: "spec", label: "Spec", content: "Spec stage remains available." },
+        { key: "release", label: "Release", content: "Release stage becomes the nearest fallback." }
+      ]
+    : [
+        { key: "spec", label: "Spec", content: "Spec stage remains available." },
+        { key: "build", label: "Build", content: "Build stage is active before removal." },
+        { key: "release", label: "Release", content: "Release stage becomes the nearest fallback." }
+      ];
+
+  return (
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
+      <Button size="sm" variant="outline" onClick={() => setRemoveBuildTab(true)}>
+        Remove Build tab
+      </Button>
+      <Tabs ariaLabel="Removal fallback tabs" defaultValue="build" items={items} />
+    </div>
+  );
+}
+
 export const Controlled: Story = {
   render: () => <ControlledTabsDemo />,
   play: async ({ canvasElement }) => {
@@ -170,6 +194,24 @@ export const DisabledTabVisualReset: Story = {
     await expect(disabledBuildTab).toBeDisabled();
     await expect(disabledBuildTab.style.transform).toContain("translateY(0");
     await expect(disabledBuildTab.style.boxShadow).toBe("none");
+  }
+};
+
+export const RemovedActiveTabFallback: Story = {
+  render: () => <RemoveActiveTabFallbackDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const removeButton = canvas.getByRole("button", { name: "Remove Build tab" });
+
+    await expect(canvas.getByRole("tab", { name: "Build" })).toHaveAttribute("aria-selected", "true");
+    await userEvent.click(removeButton);
+
+    const releaseTab = canvas.getByRole("tab", { name: "Release" });
+    await expect(releaseTab).toHaveAttribute("aria-selected", "true");
+    await expect(releaseTab).toHaveAttribute("tabindex", "0");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+      "Release stage becomes the nearest fallback."
+    );
   }
 };
 

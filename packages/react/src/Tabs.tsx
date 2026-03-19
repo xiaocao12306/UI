@@ -65,6 +65,34 @@ function getLastEnabledIndex(items: TabItem[]) {
   return -1;
 }
 
+function getNearestEnabledKey(items: TabItem[], anchorIndex: number | undefined, fallbackKey: string | undefined) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return fallbackKey;
+  }
+
+  if (typeof anchorIndex !== "number" || Number.isNaN(anchorIndex)) {
+    return fallbackKey;
+  }
+
+  for (let distance = 0; distance < items.length; distance += 1) {
+    const rightIndex = anchorIndex + distance;
+    if (rightIndex >= 0 && rightIndex < items.length && !items[rightIndex]?.disabled) {
+      return items[rightIndex]?.key ?? fallbackKey;
+    }
+
+    if (distance === 0) {
+      continue;
+    }
+
+    const leftIndex = anchorIndex - distance;
+    if (leftIndex >= 0 && leftIndex < items.length && !items[leftIndex]?.disabled) {
+      return items[leftIndex]?.key ?? fallbackKey;
+    }
+  }
+
+  return fallbackKey;
+}
+
 export function Tabs({
   items,
   value,
@@ -83,6 +111,7 @@ export function Tabs({
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const warnedInvalidControlledValueRef = React.useRef<string | null>(null);
   const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
+  const lastKnownIndexByKeyRef = React.useRef<Map<string, number>>(new Map());
   const focusIntentRef = React.useRef(true);
   const firstEnabledKey = items.find((item) => !item.disabled)?.key;
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
@@ -120,6 +149,13 @@ export function Tabs({
         .map((key) => `"${key}"`)
         .join(", ")}. Keys should be unique to keep aria bindings and focus behavior deterministic.`
     );
+  }, [items]);
+
+  React.useEffect(() => {
+    const lastKnownIndexByKey = lastKnownIndexByKeyRef.current;
+    items.forEach((item, index) => {
+      lastKnownIndexByKey.set(item.key, index);
+    });
   }, [items]);
 
   React.useEffect(() => {
@@ -171,9 +207,22 @@ export function Tabs({
   }, []);
 
   const currentRawValue = value ?? internalValue;
-  const currentValue = items.some((item) => item.key === currentRawValue && !item.disabled)
-    ? currentRawValue
-    : firstEnabledKey;
+  const currentItem = items.find((item) => item.key === currentRawValue);
+  const currentValue = (() => {
+    if (currentItem && !currentItem.disabled) {
+      return currentRawValue;
+    }
+
+    if (value === undefined && currentRawValue && !currentItem) {
+      return getNearestEnabledKey(
+        items,
+        lastKnownIndexByKeyRef.current.get(currentRawValue),
+        firstEnabledKey
+      );
+    }
+
+    return firstEnabledKey;
+  })();
   const [focusedValue, setFocusedValue] = React.useState<string | undefined>(currentValue);
   const focusTargetValue = items.some((item) => item.key === focusedValue && !item.disabled)
     ? focusedValue
