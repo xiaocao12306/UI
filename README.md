@@ -83,7 +83,9 @@ pnpm storybook:build
 pnpm storybook:coverage:report
 pnpm storybook:coverage:check
 pnpm storybook:docs:check
+pnpm storybook:play:check
 pnpm storybook:static:check
+pnpm storybook:a11y:skip-check
 pnpm storybook:test
 pnpm storybook:test:ci
 pnpm chromatic
