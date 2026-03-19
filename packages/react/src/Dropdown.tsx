@@ -112,6 +112,7 @@ export function Dropdown({
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const itemRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const typeaheadStateRef = React.useRef<{ query: string; timestamp: number }>({ query: "", timestamp: 0 });
+  const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
   const triggerId = React.useId();
   const menuId = React.useId();
 
@@ -135,6 +136,38 @@ export function Dropdown({
     },
     [onCloseReason, setOpen]
   );
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const duplicateKeys = new Set<string>();
+    const seenKeys = new Set<string>();
+    items.forEach((item) => {
+      if (seenKeys.has(item.key)) {
+        duplicateKeys.add(item.key);
+      }
+      seenKeys.add(item.key);
+    });
+
+    if (duplicateKeys.size === 0) {
+      warnedDuplicateKeysSignatureRef.current = null;
+      return;
+    }
+
+    const signature = Array.from(duplicateKeys).sort().join("|");
+    if (warnedDuplicateKeysSignatureRef.current === signature) {
+      return;
+    }
+    warnedDuplicateKeysSignatureRef.current = signature;
+
+    console.warn(
+      `[Dropdown] Duplicate item keys detected: ${Array.from(duplicateKeys)
+        .map((key) => `"${key}"`)
+        .join(", ")}. Keys should be unique to keep focus and close telemetry deterministic.`
+    );
+  }, [items]);
 
   React.useEffect(() => {
     if (!isOpen) {

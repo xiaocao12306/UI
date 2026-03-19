@@ -319,7 +319,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 | Prop | Type | Notes |
 | --- | --- | --- |
-| `items` | `DropdownItem[]` | Each item supports `disabled` and `onSelect`. |
+| `items` | `DropdownItem[]` | Each item supports `disabled` and `onSelect`. Development builds warn when item keys are duplicated. |
 | `items[].textValue` | `string` | Optional buffered typeahead search text for non-string labels or locale-specific/accent-normalized matching. |
 | `triggerAriaLabel` | `string` | Accessible name override for icon-only trigger button content. |
 | `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Works in both controlled and uncontrolled menu flows. |

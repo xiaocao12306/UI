@@ -32,6 +32,31 @@ describe("Dropdown", () => {
     expect(screen.queryByRole("menu")).toBeNull();
   });
 
+  it("warns when duplicate dropdown item keys are provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dropdown
+          label="Duplicate keys"
+          items={[
+            { key: "deploy", label: "Deploy now" },
+            { key: "deploy", label: "Deploy later" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining('Duplicate item keys detected: "deploy"')
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("closes on escape key and outside pointer", () => {
     const onCloseReason = vi.fn();
 
