@@ -10,10 +10,7 @@ const colorContrastSkipStoryIds = new Set([
   "data-table--release-checklist",
   "data-table--single-row-sort-disabled",
   "data-table--sort-telemetry",
-  "data-table--with-row-action",
-  "feedback-alert--default",
-  "feedback-alert--dismissible",
-  "feedback-alert--tone-matrix"
+  "data-table--with-row-action"
 ]);
 
 const config: TestRunnerConfig = {
