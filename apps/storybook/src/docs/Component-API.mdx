@@ -516,6 +516,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `pauseOnHover` | `boolean` | Suspends timer while hovered or while focus stays inside toast controls. |
 | `position` | `'bottom-right' \| 'bottom-left' \| 'top-right' \| 'top-left'` | Controls viewport anchor for stack placement and Escape-priority grouping. |
 | `closeOnEscape` | `boolean` | Optional keyboard dismiss path; Escape is consumed so stacked toasts dismiss one at a time. |
+| dismiss key hints | `aria-keyshortcuts="Escape"` (when enabled) | Escape-dismissable toasts expose keyboard shortcut metadata directly on toast root for QA/AT discoverability. |
 | `onEscapeKeyDown` | `(event: KeyboardEvent) => void` | Optional toast-level Escape hook; call `event.preventDefault()` to keep toast open in guarded flows. |
 | actionable role mapping | `action` => `dialog/alertdialog` | When `action` is provided, toast exposes interactive surface semantics (`aria-modal="false"`) instead of live-region-only status roles. |
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'timeout') => void` | Emits a structured close reason for analytics and workflow telemetry. |

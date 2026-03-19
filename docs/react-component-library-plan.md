@@ -425,6 +425,7 @@
   - Demo CommandPalette 翻页键验收（新增键盘提示文案 + Playwright `PageUp/PageDown` 回归，锁定禁用项跳过行为）
   - Toast 关闭回调契约收口（单测锁定 `onCloseReason -> onClose -> onOpenChange(false)` 顺序，并同步 Component API / Best Practices）
   - Toast 关闭顺序单测收口（补齐 `escape-key/timeout` 分支，锁定与 close-button 一致的 `onCloseReason -> onClose -> onOpenChange(false)` 顺序契约）
+  - Toast 键盘提示语义收口（Escape 可关闭场景暴露 `aria-keyshortcuts=\"Escape\"`，补齐 unit + Storybook + Demo E2E 断言）
   - Storybook Toast 回调顺序验收（`CloseReasonTelemetry` 增加 close trace，锁定 `onCloseReason` 先于 `onOpenChange(false)`，并保持 `onClose` 介于两者之间）
   - Toast 动作语义收口（`action` 存在时切换为 `dialog/alertdialog` 语义，避免可交互通知被当作纯 live-region）
   - Demo Toast 动作语义验收（新增 action toast 场景 + Playwright 回归，锁定 `dialog` 语义与业务按钮闭环）
