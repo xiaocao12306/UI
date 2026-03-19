@@ -275,6 +275,102 @@ export const CloseReasonTelemetry: Story = {
   }
 };
 
+function ControlledContractDropdown() {
+  const [open, setOpen] = React.useState(true);
+  const [pendingClose, setPendingClose] = React.useState(false);
+  const [closeRequests, setCloseRequests] = React.useState(0);
+  const [lastReason, setLastReason] = React.useState("none");
+
+  return (
+    <div style={{ display: "grid", gap: 8, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Close requests:{" "}
+        <strong data-testid="dropdown-controlled-close-requests" style={{ color: "var(--aurora-text-primary)" }}>
+          {closeRequests}
+        </strong>
+      </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Pending parent close:{" "}
+        <strong data-testid="dropdown-controlled-pending-close" style={{ color: "var(--aurora-text-primary)" }}>
+          {pendingClose ? "yes" : "no"}
+        </strong>
+      </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last close reason:{" "}
+        <strong data-testid="dropdown-controlled-last-reason" style={{ color: "var(--aurora-text-primary)" }}>
+          {lastReason}
+        </strong>
+      </p>
+      <Dropdown
+        label="Controlled Contract Menu"
+        open={open}
+        onOpenChange={(nextOpen) => {
+          if (nextOpen) {
+            setOpen(true);
+            setPendingClose(false);
+            return;
+          }
+
+          if (pendingClose) {
+            return;
+          }
+
+          setCloseRequests((current) => current + 1);
+          setPendingClose(true);
+        }}
+        onCloseReason={setLastReason}
+        items={[
+          { key: "duplicate", label: "Duplicate" },
+          { key: "rename", label: "Rename" },
+          { key: "archive", label: "Archive" }
+        ]}
+      />
+      <button
+        type="button"
+        onClick={() => {
+          setOpen(false);
+          setPendingClose(false);
+        }}
+      >
+        Apply close request
+      </button>
+    </div>
+  );
+}
+
+export const ControlledOpenContract: Story = {
+  render: () => <ControlledContractDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Controlled Contract Menu" });
+    const applyCloseButton = canvas.getByRole("button", { name: "Apply close request" });
+
+    await expect(canvas.getByRole("menu", { name: "Controlled Contract Menu" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-controlled-close-requests")).toHaveTextContent("0");
+    await expect(canvas.getByTestId("dropdown-controlled-pending-close")).toHaveTextContent("no");
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Controlled Contract Menu" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-controlled-last-reason")).toHaveTextContent("trigger-click");
+    await expect(canvas.getByTestId("dropdown-controlled-close-requests")).toHaveTextContent("1");
+    await expect(canvas.getByTestId("dropdown-controlled-pending-close")).toHaveTextContent("yes");
+
+    await userEvent.click(applyCloseButton);
+    await expect(canvas.queryByRole("menu", { name: "Controlled Contract Menu" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-controlled-pending-close")).toHaveTextContent("no");
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Controlled Contract Menu" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("menu", { name: "Controlled Contract Menu" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-controlled-last-reason")).toHaveTextContent("escape-key");
+    await expect(canvas.getByTestId("dropdown-controlled-close-requests")).toHaveTextContent("2");
+
+    await userEvent.click(applyCloseButton);
+    await expect(canvas.queryByRole("menu", { name: "Controlled Contract Menu" })).not.toBeInTheDocument();
+  }
+};
+
 export const TypeaheadNavigation: Story = {
   args: {
     label: "Quick Actions",
