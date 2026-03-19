@@ -146,9 +146,11 @@ pnpm chromatic
 
 - automated workflow: `.github/workflows/release.yml`
 - dry-run workflow: `.github/workflows/release-dry-run.yml`
+- changeset gate workflow: `.github/workflows/changeset-required.yml`
 - release PR generation uses Changesets on `main`
 - npm publish runs only when `NPM_TOKEN` is configured
 - secrets setup guide: `docs/secrets.md`
+- local changeset gate: `pnpm changeset:required` (checks package diffs include `.changeset/*.md`)
 - local preflight:
   - `pnpm release:preflight` (`CHROMATIC_PROJECT_TOKEN` + `NPM_TOKEN`)
   - `pnpm release:preflight -- --scope=chromatic` (`CHROMATIC_PROJECT_TOKEN` only)

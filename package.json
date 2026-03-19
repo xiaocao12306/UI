@@ -44,6 +44,7 @@
     "format": "prettier --write .",
     "check-format": "prettier --check .",
     "changeset": "changeset",
+    "changeset:required": "node scripts/check-changeset-required.mjs --base origin/main",
     "version-packages": "changeset version",
     "release:preflight": "node scripts/release-preflight.mjs",
     "release:preflight:chromatic": "node scripts/release-preflight.mjs --scope=chromatic",

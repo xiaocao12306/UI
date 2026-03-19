@@ -1,0 +1,40 @@
+name: Changeset Required
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "packages/**"
+      - ".changeset/**"
+      - "scripts/check-changeset-required.mjs"
+      - ".github/workflows/changeset-required.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  changeset-required:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch base branch
+        if: github.event_name == 'pull_request'
+        run: git fetch --no-tags --prune origin "${{ github.base_ref }}"
+
+      - name: Check changeset presence
+        run: |
+          base_ref="origin/main"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base_ref="origin/${{ github.base_ref }}"
+          fi
+          node scripts/check-changeset-required.mjs --base "$base_ref" --head "HEAD"

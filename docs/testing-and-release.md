@@ -24,6 +24,7 @@ pnpm storybook:test:ci
 Release gate (before publish):
 
 ```bash
+pnpm changeset:required
 pnpm release:preflight
 pnpm release:gate:ci
 pnpm release:dry-run
@@ -44,6 +45,7 @@ pnpm --filter @aurora-ui/react test
 pnpm --filter @aurora-ui/demo build
 pnpm demo:e2e
 pnpm demo:dist:check
+pnpm changeset:required
 pnpm storybook:coverage:report
 pnpm storybook:coverage:check
 pnpm storybook:a11y:skip-check
@@ -87,6 +89,8 @@ Demo dist gate behavior:
   - Fix: run `pnpm demo:build`, commit `apps/demo/dist`, rerun `pnpm demo:dist:check`.
 - Signature: `Step failed: preflight clean-working-tree check` (from `pnpm release:dry-run`)
   - Fix: clean or commit local changes (`git status --porcelain` must be empty), rerun `pnpm release:dry-run`.
+- Signature: `[changeset-required] error: package changes detected without a changeset file.`
+  - Fix: run `pnpm changeset` to create `.changeset/*.md`, commit it with package changes, rerun `pnpm changeset:required`.
 
 ## E2E (Playwright)
 
@@ -174,6 +178,13 @@ Dry-run workflow: `.github/workflows/release-dry-run.yml`
 - writes tarball size summary (`package size` / `unpacked size`) into `GITHUB_STEP_SUMMARY` for reviewer-facing release evidence
 - always writes `Release Dry Run Summary` (including setup/install failure paths before dry-run execution)
 - summary includes `checkout` / `setup-pnpm` / `setup-node` / `install` / `release:dry-run` outcomes and resolved failed-step label for triage
+
+Changeset required workflow: `.github/workflows/changeset-required.yml`
+
+- runs on PRs touching `packages/**` or `.changeset/**`
+- compares `origin/<base-branch>...HEAD`
+- fails when package files changed but no `.changeset/*.md` is included
+- local equivalent command: `pnpm changeset:required`
 
 Required repository secrets:
 
