@@ -152,6 +152,36 @@ describe("Popover", () => {
     expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
   });
 
+  it("emits close callbacks in deterministic order for trigger and Escape dismiss", () => {
+    const events: string[] = [];
+    render(
+      <Popover
+        triggerLabel="Order"
+        onCloseReason={(reason) => {
+          events.push(`reason:${reason}`);
+        }}
+        onOpenChange={(nextOpen) => {
+          events.push(`open:${String(nextOpen)}`);
+        }}
+      >
+        <p>Popover content</p>
+      </Popover>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Order" });
+    fireEvent.click(trigger);
+    events.length = 0;
+
+    fireEvent.click(trigger);
+    expect(events).toEqual(["reason:trigger-click", "open:false"]);
+
+    fireEvent.click(trigger);
+    events.length = 0;
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(events).toEqual(["reason:escape-key", "open:false"]);
+  });
+
   it("ignores non-primary outside pointer interactions", () => {
     const onCloseReason = vi.fn();
 

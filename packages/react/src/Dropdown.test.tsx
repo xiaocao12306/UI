@@ -360,6 +360,44 @@ describe("Dropdown", () => {
     expect(screen.queryByRole("menu", { name: "Trigger Pointer" })).toBeNull();
   });
 
+  it("emits close callbacks in deterministic order for item-select and Tab dismiss", () => {
+    const events: string[] = [];
+    render(
+      <Dropdown
+        label="Order"
+        onCloseReason={(reason) => {
+          events.push(`reason:${reason}`);
+        }}
+        onOpenChange={(nextOpen) => {
+          events.push(`open:${String(nextOpen)}`);
+        }}
+        items={[
+          {
+            key: "one",
+            label: "One",
+            onSelect: () => {
+              events.push("select");
+            }
+          },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "Order" });
+    fireEvent.click(trigger);
+    events.length = 0;
+
+    fireEvent.click(screen.getByRole("menuitem", { name: "One" }));
+    expect(events).toEqual(["select", "reason:item-select", "open:false"]);
+
+    fireEvent.click(trigger);
+    events.length = 0;
+
+    fireEvent.keyDown(screen.getByRole("menu", { name: "Order" }), { key: "Tab" });
+    expect(events).toEqual(["reason:tab-key", "open:false"]);
+  });
+
   it("closes menu on Tab without forcing trigger focus", () => {
     const onCloseReason = vi.fn();
 

@@ -80,6 +80,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - When app-level shortcuts preempt Escape with `preventDefault()`, keep popover-level Escape hooks side-effect free and rely on built-in preemption skip behavior.
 - Use popover `onCloseReason` for deterministic telemetry (`trigger-click` / `escape-key` / `outside-pointer`) instead of inferring dismiss origin from focus and pointer side effects.
 - Use dropdown `onCloseReason` for deterministic telemetry (`trigger-click` / `item-select` / `escape-key` / `outside-pointer` / `tab-key`) instead of inferring close origin from focus/state side effects.
+- Keep popover/dropdown close callbacks ordered and single-purpose: close paths should emit `onCloseReason` before `onOpenChange(false)`, while dropdown `item-select` should run `onSelect` before close callbacks.
 - Keep dropdown `Tab` behavior aligned with document order: close menu and continue focus to next control.
 - For icon-only popover/dropdown triggers, always provide `triggerAriaLabel` to preserve an explicit control name.
 - Command palette and combobox-style overlays should keep text input as the primary focus anchor for navigation.

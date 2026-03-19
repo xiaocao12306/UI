@@ -283,6 +283,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Configures whether keyboard/pointer dismiss gestures are allowed for non-blocking vs blocking workflows. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Observe or cancel dismiss intents before close policy resolves. |
 | `onCloseReason` | `(reason: 'trigger-click' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for trigger-toggle vs dismiss-gesture analytics. |
+| close lifecycle order | `onCloseReason -> onOpenChange(false)` | Trigger/Escape/outside-pointer dismiss paths share deterministic close callback order for telemetry reducers. |
 | `align` / `sideOffset` | `'start' \| 'end'` / `number` | Horizontal alignment and vertical spacing from trigger. |
 | `contentLabel` | `string` | Accessible name for popover dialog content region. |
 | trigger relation | conditional `aria-controls` | Trigger references content ID only while open to avoid dangling ARIA links. |
@@ -308,6 +309,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Allows keeping menu open on Escape/outside pointer for blocking approval flows. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Observe or cancel dismiss gestures before close policy resolves. |
 | `onCloseReason` | `(reason: 'trigger-click' \| 'item-select' \| 'escape-key' \| 'outside-pointer' \| 'tab-key') => void` | Emits structured close telemetry so analytics does not infer dismiss origin from side effects. |
+| close lifecycle order | `item-select: onSelect -> onCloseReason -> onOpenChange(false)`; other dismiss paths: `onCloseReason -> onOpenChange(false)` | Keep action side effects and close telemetry deterministic across menu interactions. |
 | menu naming | trigger-linked `aria-labelledby` | Menu inherits an accessible name from trigger content for screen-reader context. |
 | trigger relation | conditional `aria-controls` | Trigger points to menu ID only when expanded. |
 | keyboard behavior | Arrow / Home / End / Escape / Tab / Typeahead | Roving-focus menu navigation with deterministic close policy, buffered multi-character typeahead, repeated-key cycling, and trigger focus restore on Escape. |
