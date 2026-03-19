@@ -61,6 +61,20 @@ const toastVisualStacks: Record<ToastPosition, HTMLElement[]> = {
   "top-right": [],
   "top-left": []
 };
+const toastStackListeners = new Set<() => void>();
+
+function notifyToastStackChanged() {
+  toastStackListeners.forEach((listener) => {
+    listener();
+  });
+}
+
+function subscribeToastStack(listener: () => void) {
+  toastStackListeners.add(listener);
+  return () => {
+    toastStackListeners.delete(listener);
+  };
+}
 
 function pushToastToStack(element: HTMLElement) {
   const existingIndex = toastEscapeStack.lastIndexOf(element);
@@ -68,12 +82,14 @@ function pushToastToStack(element: HTMLElement) {
     toastEscapeStack.splice(existingIndex, 1);
   }
   toastEscapeStack.push(element);
+  notifyToastStackChanged();
 }
 
 function removeToastFromStack(element: HTMLElement) {
   const existingIndex = toastEscapeStack.lastIndexOf(element);
   if (existingIndex >= 0) {
     toastEscapeStack.splice(existingIndex, 1);
+    notifyToastStackChanged();
   }
 }
 
@@ -157,9 +173,21 @@ export function Toast({
   const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
   const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
+  const [showEscapeKeyShortcuts, setShowEscapeKeyShortcuts] = React.useState(false);
   const paused = pauseOnHover && (pauseState.hover || pauseState.focus);
   const titleId = React.useId();
   const descriptionId = React.useId();
+
+  const updateEscapeKeyShortcutsVisibility = React.useCallback(() => {
+    const element = rootRef.current;
+    setShowEscapeKeyShortcuts(Boolean(open && closeOnEscape && element && isTopCloseableToast(element)));
+  }, [closeOnEscape, open]);
+
+  React.useEffect(() => {
+    updateEscapeKeyShortcutsVisibility();
+  }, [updateEscapeKeyShortcutsVisibility]);
+
+  React.useEffect(() => subscribeToastStack(updateEscapeKeyShortcutsVisibility), [updateEscapeKeyShortcutsVisibility]);
 
   React.useEffect(() => {
     const element = rootRef.current;
@@ -339,7 +367,7 @@ export function Toast({
       aria-modal={hasAction ? "false" : undefined}
       aria-live={ariaLive}
       aria-atomic="true"
-      aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
+      aria-keyshortcuts={showEscapeKeyShortcuts ? "Escape" : undefined}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabel ? undefined : titleId}
       aria-describedby={description ? descriptionId : undefined}

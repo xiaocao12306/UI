@@ -120,6 +120,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For batched command execution, set `closeOnSelect={false}` so users can run multiple actions without reopening the palette.
 - Use `PageUp` / `PageDown` for long command sets so keyboard users can jump actionable options in larger steps.
 - Keep `clearQueryOnEscape` enabled so first Escape clears query intent before full palette dismissal; disable only when product expects immediate close.
+- After query updates or command-set refreshes, keep command-palette `aria-activedescendant` valid by pointing only to a currently mounted, enabled option; clear it when no executable option remains.
 - For blocking approvals, set `closeOnEscape={false}` and `closeOnOutsidePointer={false}` so command confirmation cannot be dismissed accidentally.
 - For conditional approval guards, prefer `onEscapeKeyDown/onPointerDownOutside` + `event.preventDefault()` so dismiss policy can be unlocked at runtime.
 - When app-level shortcuts preempt Escape with `preventDefault()`, rely on built-in callback-skip behavior so command-level escape hooks stay side-effect free.
@@ -188,6 +189,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Expose `aria-sort` only on the actively sorted header so assistive narration reflects current sort state without repeating neutral columns.
 - Keep non-sortable headers free of `aria-sort` so assistive tech does not announce inert columns as interactive.
 - Validate sortable headers with both pointer and keyboard (`Enter`/`Space`, including legacy `Spacebar`) so non-pointer workflows stay first-class.
+- Treat long-press `Space`/`Spacebar` keyboard repeat (`event.repeat`) on sortable headers as no-op after the first toggle to prevent sort churn and telemetry jitter.
 - Keep sortable-header focus-visible feedback and `aria-keyshortcuts="Enter Space"` in place so keyboard affordance stays explicit in QA and audits.
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - Use `getSortStatusText` to localize active-sort live narration so keyboard and pointer sorting changes remain equally discoverable to assistive tech users.

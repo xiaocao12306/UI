@@ -417,6 +417,37 @@ describe("Toast", () => {
     expect(screen.queryByRole("status", { name: "First" })).toBeNull();
   });
 
+  it("exposes Escape shortcut only for the current top escapable toast", async () => {
+    function StackedToasts() {
+      const [firstOpen, setFirstOpen] = React.useState(true);
+      const [secondOpen, setSecondOpen] = React.useState(true);
+
+      return (
+        <>
+          <Toast open={firstOpen} title="First" duration={0} onOpenChange={setFirstOpen} />
+          <Toast open={secondOpen} title="Second" duration={0} onOpenChange={setSecondOpen} />
+        </>
+      );
+    }
+
+    render(<StackedToasts />);
+
+    const first = screen.getByRole("status", { name: "First" });
+    const second = screen.getByRole("status", { name: "Second" });
+
+    await waitFor(() => {
+      expect(first).not.toHaveAttribute("aria-keyshortcuts");
+      expect(second).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    await waitFor(() => {
+      expect(screen.queryByRole("status", { name: "Second" })).toBeNull();
+      expect(screen.getByRole("status", { name: "First" })).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
+  });
+
   it("adds visible offset for older toasts in the same viewport corner", async () => {
     function StackedToasts() {
       const [firstOpen, setFirstOpen] = React.useState(true);
@@ -537,6 +568,8 @@ describe("Toast", () => {
     }
 
     render(<StackedToasts />);
+    expect(screen.getByRole("status", { name: "Escapable" })).toHaveAttribute("aria-keyshortcuts", "Escape");
+    expect(screen.getByRole("status", { name: "Pinned" })).not.toHaveAttribute("aria-keyshortcuts");
 
     fireEvent.keyDown(document, { key: "Escape" });
 

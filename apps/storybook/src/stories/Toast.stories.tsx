@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Toast } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 
 const meta = {
   title: "Feedback/Toast",
@@ -225,7 +225,9 @@ export const CloseReasonTelemetry: Story = {
   render: () => <CloseReasonTelemetryDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
-    await expect(canvas.getByRole("status", { name: "Close reason telemetry" })).toHaveAttribute("aria-keyshortcuts", "Escape");
+    await waitFor(() => {
+      expect(canvas.getByRole("status", { name: "Close reason telemetry" })).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
     await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("none");
     await expect(canvas.getByTestId("toast-close-trace")).toHaveTextContent("N/A");
     await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));
@@ -275,7 +277,24 @@ function EscapeStackOrderDemo() {
 }
 
 export const EscapeStackOrder: Story = {
-  render: () => <EscapeStackOrderDemo />
+  render: () => <EscapeStackOrderDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+
+    const first = await canvas.findByRole("status", { name: "First notice" });
+    const second = await canvas.findByRole("status", { name: "Second notice" });
+    await waitFor(() => {
+      expect(first).not.toHaveAttribute("aria-keyshortcuts");
+      expect(second).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
+
+    await userEvent.click(within(second).getByRole("button", { name: "Close toast" }));
+
+    await expect(canvas.queryByRole("status", { name: "Second notice" })).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(canvas.getByRole("status", { name: "First notice" })).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
+  }
 };
 
 function StackedViewportOffsetDemo() {
