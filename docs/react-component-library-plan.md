@@ -551,6 +551,7 @@
   - Button 主键焦点语义收口（非主键 `mousedown/pointerdown` 不再清理 `focus-visible`，补齐 unit 回归）
   - Drawer 关闭按钮主键焦点语义收口（非主键 `mousedown` 不再清理 `focus-visible`，补齐 unit 回归）
   - Toast 关闭按钮焦点语义补测（新增非主键 `mousedown` 保留 `focus-visible` 的 unit 回归，锁定关闭按钮主键焦点策略）
+  - Storybook Toast 焦点语义文档收口（Component API / Best Practices 增补 `CloseButtonPrimaryPointerOnly` 场景与主键焦点策略说明）
   - Switch click guard 契约补测（消费者 `onClick.preventDefault()` 可阻断 pointer toggle，补齐 unit + Storybook `ClickPreventDefaultGuard` 场景）
   - Release Gate 证据刷新（2026-03-19：`release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 202/202）
 - 进行中

@@ -547,6 +547,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Escape priority | preempted events skip toast hook | If higher-level handlers already `preventDefault()` Escape, toast does not run `onEscapeKeyDown` or close. |
 | stacked Escape order | top-priority toast first | In multi-toast layouts, Escape dismisses the top toast (latest opened or most recently focused/hovered). |
 | stacked viewport layout | per-position visual offset | Same-corner toast stacks apply deterministic offset so older notifications remain visible under the latest toast. |
+| close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer interactions keep keyboard-intent ring state to avoid accidental focus-ring loss during context/right-click paths. |
 | `closeLabel` | `string` | Customize close-button accessible name for i18n. |
 | `ariaLabel` | `string` | Optional live-region accessible name override for icon-only or non-text titles. |
 
@@ -557,6 +558,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={ToastStories.EscapeShortcutSync} />
 <Canvas of={ToastStories.StackedViewportOffset} />
 <Canvas of={ToastStories.FocusedToastEscapesFirst} />
+<Canvas of={ToastStories.CloseButtonPrimaryPointerOnly} />
 <Canvas of={ToastStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={ToastStories.EscapePreemptedSkipsToastHook} />
 <Canvas of={ToastStories.EscapeGuardedByToastHandler} />
