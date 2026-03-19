@@ -368,3 +368,5 @@
 - Table disabled-sort label parity: when dataset shrinks to empty/single-row, sortable headers keep prior next-direction label while still suppressing `aria-sort`.
 - Storybook/release gate docs parity: README + Storybook + testing docs now expose shortest local gate flows and failure-signature troubleshooting mappings.
 - Demo hero polish parity: first-screen hierarchy, section card surfaces, and mobile navigation readability were further refined without changing interaction contracts.
+- Storybook table single-row parity: `SingleRowSortDisabled` interaction assertion now aligns with `Issue sort descending` disabled-label semantics after table label-stability hardening.
+- Storybook gate recovery parity: after syncing the single-row assertion and static baseline, `pnpm storybook:test:ci` returned to green (`32` suites / `179` tests) on 2026-03-19.

@@ -484,6 +484,8 @@
   - Table 禁用排序标签稳定性收口（empty/single-row 场景保持既有排序方向的 next-direction 文案，不再回退漂移）
   - 文档门禁路径收口（README + Storybook + Testing 文档补齐最短命令流与常见失败签名排障）
   - Demo 首屏成品化深化（Hero/Section/Panel 视觉层次与移动端信息密度优化，并同步刷新 `apps/demo/dist`）
+  - Storybook Table 单行验收修复（`SingleRowSortDisabled` 断言对齐 `Issue sort descending`，修复门禁回归漂移）
+  - Storybook Gate 复绿（2026-03-19 latest+2：`storybook:test:ci` 通过，32 suites / 179 tests）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
