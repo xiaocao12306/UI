@@ -521,6 +521,29 @@ describe("Toast", () => {
     expect(screen.queryByRole("status", { name: "First" })).toBeNull();
   });
 
+  it("isolates Escape dismissal stacks per owner document", () => {
+    const onMainOpenChange = vi.fn();
+    const onSecondaryOpenChange = vi.fn();
+    const secondaryDocument = document.implementation.createHTMLDocument("secondary");
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+
+    render(<Toast open title="Main document toast" duration={0} onOpenChange={onMainOpenChange} />);
+    render(<Toast open title="Secondary document toast" duration={0} onOpenChange={onSecondaryOpenChange} />, {
+      container: secondaryContainer,
+      baseElement: secondaryDocument.body
+    });
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onMainOpenChange).toHaveBeenCalledTimes(1);
+    expect(onMainOpenChange).toHaveBeenCalledWith(false);
+    expect(onSecondaryOpenChange).not.toHaveBeenCalled();
+
+    secondaryDocument.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(onSecondaryOpenChange).toHaveBeenCalledTimes(1);
+    expect(onSecondaryOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it("exposes Escape shortcut only for the current top escapable toast", async () => {
     function StackedToasts() {
       const [firstOpen, setFirstOpen] = React.useState(true);

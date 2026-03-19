@@ -560,6 +560,7 @@
   - Release enforce token fail-fast 收口（`release.yml` 在 `workflow_dispatch + enforce=true` 且缺失 `NPM_TOKEN` 时提前失败，输出 `docs/secrets.md` 与 `release:preflight:publish` 修复路径）
   - 文档命令口径收口（README/docs 统一 `demo:dev/demo:build` 与 `release:preflight:*` 别名，Storybook 外链明确 Pages 主链路 + rawcdn 备用链路）
   - Storybook CommandPalette 品牌控件收口（触发/重开/阻塞切换按钮统一为 `Button` 组件，保留 outside target 为原生按钮用于 dismiss 边界验证，定向 runner 通过）
+  - Toast 多文档栈隔离收口（按 `ownerDocument` 维护 Escape/视觉栈与监听器，避免多 root/iframe 场景串扰；补齐 unit 并复验 `Toast.stories.tsx`）
   - 集成示例文档深化（`component-recipes` 新增 Overlay close telemetry / Tabs manual telemetry / Table i18n sort telemetry 模板）
   - Release Gate 证据刷新（2026-03-19：`release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 202/202）
   - Release Gate 证据刷新（2026-03-19 latest+2：修复 demo dist 同步后 `release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 206/206）

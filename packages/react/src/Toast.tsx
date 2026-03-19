@@ -53,48 +53,75 @@ const positionStyleMap: Record<ToastPosition, React.CSSProperties> = {
   "top-left": { left: 16, top: 16 }
 };
 
-const toastEscapeStack: HTMLElement[] = [];
-const toastVisualStackOffset = 14;
-const toastVisualStacks: Record<ToastPosition, HTMLElement[]> = {
-  "bottom-right": [],
-  "bottom-left": [],
-  "top-right": [],
-  "top-left": []
+type ToastDocumentState = {
+  escapeStack: HTMLElement[];
+  visualStacks: Record<ToastPosition, HTMLElement[]>;
+  listeners: Set<() => void>;
 };
-const toastStackListeners = new Set<() => void>();
 
-function notifyToastStackChanged() {
-  toastStackListeners.forEach((listener) => {
+const toastVisualStackOffset = 14;
+const toastStateByDocument = new WeakMap<Document, ToastDocumentState>();
+
+function createToastVisualStacks(): Record<ToastPosition, HTMLElement[]> {
+  return {
+    "bottom-right": [],
+    "bottom-left": [],
+    "top-right": [],
+    "top-left": []
+  };
+}
+
+function getToastDocumentState(ownerDocument: Document): ToastDocumentState {
+  const existingState = toastStateByDocument.get(ownerDocument);
+  if (existingState) {
+    return existingState;
+  }
+
+  const nextState: ToastDocumentState = {
+    escapeStack: [],
+    visualStacks: createToastVisualStacks(),
+    listeners: new Set()
+  };
+  toastStateByDocument.set(ownerDocument, nextState);
+  return nextState;
+}
+
+function notifyToastStackChanged(ownerDocument: Document) {
+  const state = getToastDocumentState(ownerDocument);
+  state.listeners.forEach((listener) => {
     listener();
   });
 }
 
-function subscribeToastStack(listener: () => void) {
-  toastStackListeners.add(listener);
+function subscribeToastStack(ownerDocument: Document, listener: () => void) {
+  const state = getToastDocumentState(ownerDocument);
+  state.listeners.add(listener);
   return () => {
-    toastStackListeners.delete(listener);
+    state.listeners.delete(listener);
   };
 }
 
-function pushToastToStack(element: HTMLElement) {
-  const existingIndex = toastEscapeStack.lastIndexOf(element);
+function pushToastToStack(ownerDocument: Document, element: HTMLElement) {
+  const state = getToastDocumentState(ownerDocument);
+  const existingIndex = state.escapeStack.lastIndexOf(element);
   if (existingIndex >= 0) {
-    toastEscapeStack.splice(existingIndex, 1);
+    state.escapeStack.splice(existingIndex, 1);
   }
-  toastEscapeStack.push(element);
-  notifyToastStackChanged();
+  state.escapeStack.push(element);
+  notifyToastStackChanged(ownerDocument);
 }
 
-function removeToastFromStack(element: HTMLElement) {
-  const existingIndex = toastEscapeStack.lastIndexOf(element);
+function removeToastFromStack(ownerDocument: Document, element: HTMLElement) {
+  const state = getToastDocumentState(ownerDocument);
+  const existingIndex = state.escapeStack.lastIndexOf(element);
   if (existingIndex >= 0) {
-    toastEscapeStack.splice(existingIndex, 1);
-    notifyToastStackChanged();
+    state.escapeStack.splice(existingIndex, 1);
+    notifyToastStackChanged(ownerDocument);
   }
 }
 
-function updateToastVisualStackStyles(position: ToastPosition) {
-  const stack = toastVisualStacks[position];
+function updateToastVisualStackStyles(state: ToastDocumentState, position: ToastPosition) {
+  const stack = state.visualStacks[position];
   const direction = position.startsWith("bottom") ? -1 : 1;
   stack.forEach((entry, index) => {
     const distanceFromTop = stack.length - 1 - index;
@@ -102,18 +129,20 @@ function updateToastVisualStackStyles(position: ToastPosition) {
   });
 }
 
-function pushToastToVisualStack(element: HTMLElement, position: ToastPosition) {
-  const stack = toastVisualStacks[position];
+function pushToastToVisualStack(ownerDocument: Document, element: HTMLElement, position: ToastPosition) {
+  const state = getToastDocumentState(ownerDocument);
+  const stack = state.visualStacks[position];
   const existingIndex = stack.lastIndexOf(element);
   if (existingIndex >= 0) {
     stack.splice(existingIndex, 1);
   }
   stack.push(element);
-  updateToastVisualStackStyles(position);
+  updateToastVisualStackStyles(state, position);
 }
 
-function removeToastFromVisualStack(element: HTMLElement, position: ToastPosition) {
-  const stack = toastVisualStacks[position];
+function removeToastFromVisualStack(ownerDocument: Document, element: HTMLElement, position: ToastPosition) {
+  const state = getToastDocumentState(ownerDocument);
+  const stack = state.visualStacks[position];
   const existingIndex = stack.lastIndexOf(element);
   element.style.removeProperty("--aurora-toast-stack-offset");
   if (existingIndex < 0) {
@@ -121,12 +150,13 @@ function removeToastFromVisualStack(element: HTMLElement, position: ToastPositio
   }
 
   stack.splice(existingIndex, 1);
-  updateToastVisualStackStyles(position);
+  updateToastVisualStackStyles(state, position);
 }
 
-function isTopCloseableToast(element: HTMLElement) {
-  for (let index = toastEscapeStack.length - 1; index >= 0; index -= 1) {
-    const entry = toastEscapeStack[index];
+function isTopCloseableToast(ownerDocument: Document, element: HTMLElement) {
+  const state = getToastDocumentState(ownerDocument);
+  for (let index = state.escapeStack.length - 1; index >= 0; index -= 1) {
+    const entry = state.escapeStack[index];
     if (entry?.dataset.closeOnEscape !== "true") {
       continue;
     }
@@ -182,14 +212,28 @@ export function Toast({
 
   const updateEscapeKeyShortcutsVisibility = React.useCallback(() => {
     const element = rootRef.current;
-    setShowEscapeKeyShortcuts(Boolean(open && closeOnEscape && element && isTopCloseableToast(element)));
+    setShowEscapeKeyShortcuts(
+      Boolean(
+        open &&
+          closeOnEscape &&
+          element &&
+          isTopCloseableToast(element.ownerDocument, element)
+      )
+    );
   }, [closeOnEscape, open]);
 
   React.useEffect(() => {
     updateEscapeKeyShortcutsVisibility();
   }, [updateEscapeKeyShortcutsVisibility]);
 
-  React.useEffect(() => subscribeToastStack(updateEscapeKeyShortcutsVisibility), [updateEscapeKeyShortcutsVisibility]);
+  React.useEffect(() => {
+    const ownerDocument = rootRef.current?.ownerDocument;
+    if (!ownerDocument) {
+      return;
+    }
+
+    return subscribeToastStack(ownerDocument, updateEscapeKeyShortcutsVisibility);
+  }, [updateEscapeKeyShortcutsVisibility]);
 
   React.useEffect(() => {
     const element = rootRef.current;
@@ -197,11 +241,12 @@ export function Toast({
       return;
     }
 
-    pushToastToStack(element);
-    pushToastToVisualStack(element, position);
+    const ownerDocument = element.ownerDocument;
+    pushToastToStack(ownerDocument, element);
+    pushToastToVisualStack(ownerDocument, element, position);
     return () => {
-      removeToastFromStack(element);
-      removeToastFromVisualStack(element, position);
+      removeToastFromStack(ownerDocument, element);
+      removeToastFromVisualStack(ownerDocument, element, position);
     };
   }, [open, position]);
 
@@ -210,7 +255,7 @@ export function Toast({
       return;
     }
 
-    notifyToastStackChanged();
+    notifyToastStackChanged(rootRef.current.ownerDocument);
   }, [closeOnEscape, open]);
 
   React.useEffect(() => {
@@ -260,8 +305,9 @@ export function Toast({
     if (!open || !element) {
       return;
     }
-    pushToastToStack(element);
-    pushToastToVisualStack(element, position);
+    const ownerDocument = element.ownerDocument;
+    pushToastToStack(ownerDocument, element);
+    pushToastToVisualStack(ownerDocument, element, position);
   }, [open, position]);
 
   const startCloseTimer = React.useCallback(
@@ -342,7 +388,7 @@ export function Toast({
       }
 
       const element = rootRef.current;
-      if (!element || !isTopCloseableToast(element)) {
+      if (!element || !isTopCloseableToast(element.ownerDocument, element)) {
         return;
       }
 
@@ -359,9 +405,10 @@ export function Toast({
       closeByEscape();
     };
 
-    document.addEventListener("keydown", onKeyDown);
+    const ownerDocument = rootRef.current?.ownerDocument ?? document;
+    ownerDocument.addEventListener("keydown", onKeyDown);
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
+      ownerDocument.removeEventListener("keydown", onKeyDown);
     };
   }, [closeByEscape, closeOnEscape, onEscapeKeyDown, open]);
 

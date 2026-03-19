@@ -255,6 +255,7 @@
 - Release enforce preflight hardening: `release.yml` now fail-fast checks `NPM_TOKEN` for `workflow_dispatch + enforce=true` before heavy quality gates, with explicit `docs/secrets.md` + `pnpm release:preflight:publish` remediation output.
 - Docs command-parity hardening: README/Storybook/Release docs now converge on root aliases (`demo:dev/demo:build`, `release:preflight:chromatic|publish`) and mark GitHub Pages as primary Storybook external link with rawcdn fallback.
 - CommandPalette Storybook brand hardening: trigger/reopen/blocking toggle controls now reuse Aurora `Button` variants (outside-target boundary probes stay native), improving visual consistency without weakening dismiss-behavior coverage.
+- Toast multi-document stack hardening: Escape and visual stack registries are now partitioned by `ownerDocument`, preventing cross-root/iframe dismissal interference while preserving stack-order semantics in each document context.
 - Tabs vertical-manual parity: added dedicated unit/Storybook/demo E2E coverage so ArrowUp/ArrowDown focus movement stays decoupled from activation until Enter/Space.
 - Table row-identity semantics: added `columns[].rowHeader` support with Storybook + unit coverage so key rows can expose `<th scope="row">` context for assistive tech.
 - Demo toast guard parity: added runtime toggle for `Toast onEscapeKeyDown` interception and Playwright regression confirming Escape is blocked/unblocked by toast-level guard state.
