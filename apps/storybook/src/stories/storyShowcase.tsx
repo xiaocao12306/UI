@@ -46,11 +46,13 @@ export function StoryShowcaseFrame({
 export function StoryFullscreenFrame({
   children,
   minHeight = 420,
-  align = "stretch"
+  align = "stretch",
+  gap = 10
 }: {
   children: React.ReactNode;
   minHeight?: number;
   align?: "stretch" | "start";
+  gap?: number;
 }) {
   return (
     <div
@@ -58,7 +60,7 @@ export function StoryFullscreenFrame({
         minHeight,
         padding: "clamp(14px, 2.4vw, 24px)",
         display: "grid",
-        gap: 10,
+        gap,
         justifyItems: align,
         ...baseSurfaceStyle
       }}

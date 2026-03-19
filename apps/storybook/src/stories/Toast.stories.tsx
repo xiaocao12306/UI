@@ -2,6 +2,31 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Toast } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
+import { StoryFullscreenFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
+
+const toastTelemetryTextStyle: React.CSSProperties = {
+  ...storyMutedTextStyle
+};
+
+const toastTelemetryValueStyle: React.CSSProperties = {
+  ...storyEmphasisTextStyle
+};
+
+function ToastShowcase({
+  children,
+  minHeight = 260,
+  align = "stretch"
+}: {
+  children: React.ReactNode;
+  minHeight?: number;
+  align?: "stretch" | "start";
+}) {
+  return (
+    <StoryFullscreenFrame minHeight={minHeight} align={align} gap={8}>
+      {children}
+    </StoryFullscreenFrame>
+  );
+}
 
 const meta = {
   title: "Feedback/Toast",
@@ -33,7 +58,7 @@ function ToneMatrixDemo() {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <div style={{ minHeight: 460, padding: 16, display: "grid", gap: 8 }}>
+    <ToastShowcase minHeight={460}>
       <div style={{ display: "flex", gap: 8 }}>
         <Button variant="outline" onClick={() => setOpen(true)}>
           Reopen Toasts
@@ -76,7 +101,7 @@ function ToneMatrixDemo() {
         duration={0}
         position="bottom-right"
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -88,7 +113,7 @@ function CloseButtonPrimaryPointerOnlyDemo() {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+    <ToastShowcase align="start">
       <Button variant="outline" onClick={() => setOpen(true)}>
         Reopen Toast
       </Button>
@@ -100,7 +125,7 @@ function CloseButtonPrimaryPointerOnlyDemo() {
         description="Close button should only show pressed state for primary pointer interactions."
         tone="info"
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -123,7 +148,7 @@ function ActionRequiredToastDemo() {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <div style={{ minHeight: 260, padding: 16 }}>
+    <ToastShowcase>
       <Button variant="outline" onClick={() => setOpen(true)}>
         Reopen
       </Button>
@@ -142,7 +167,7 @@ function ActionRequiredToastDemo() {
           </Button>
         }
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -165,7 +190,7 @@ function DangerActionToastDemo() {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <div style={{ minHeight: 260, padding: 16 }}>
+    <ToastShowcase>
       <Button variant="outline" onClick={() => setOpen(true)}>
         Reopen
       </Button>
@@ -184,7 +209,7 @@ function DangerActionToastDemo() {
           </Button>
         }
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -211,20 +236,20 @@ function CloseReasonTelemetryDemo() {
   }, []);
 
   return (
-    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <ToastShowcase align="start">
+      <p style={toastTelemetryTextStyle}>
         Last close reason:{" "}
-        <strong data-testid="toast-close-reason" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="toast-close-reason" style={toastTelemetryValueStyle}>
           {lastReason}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={toastTelemetryTextStyle}>
         Close trace:{" "}
-        <strong data-testid="toast-close-trace" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="toast-close-trace" style={toastTelemetryValueStyle}>
           {closeTrace}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={toastTelemetryTextStyle}>
         Timeout branch is validated in a dedicated story: `TimeoutCloseReason`.
       </p>
       <Button
@@ -252,7 +277,7 @@ function CloseReasonTelemetryDemo() {
           appendTrace(`reason:${reason}`);
         }}
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -281,10 +306,10 @@ function TimeoutCloseReasonDemo() {
   const [lastReason, setLastReason] = React.useState("none");
 
   return (
-    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <ToastShowcase align="start">
+      <p style={toastTelemetryTextStyle}>
         Last close reason:{" "}
-        <strong data-testid="toast-timeout-reason" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="toast-timeout-reason" style={toastTelemetryValueStyle}>
           {lastReason}
         </strong>
       </p>
@@ -305,7 +330,7 @@ function TimeoutCloseReasonDemo() {
         description="This toast should close via timeout and emit timeout reason."
         onCloseReason={setLastReason}
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -328,7 +353,7 @@ function EscapeStackOrderDemo() {
   const [openState, setOpenState] = React.useState({ first: true, second: true });
 
   return (
-    <div style={{ minHeight: 260, padding: 16 }}>
+    <ToastShowcase>
       <Button variant="outline" onClick={() => setOpenState({ first: true, second: true })}>
         Reopen Stack
       </Button>
@@ -355,7 +380,7 @@ function EscapeStackOrderDemo() {
         duration={0}
         position="bottom-right"
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -385,7 +410,7 @@ function EscapeShortcutSyncDemo() {
   const [topCloseOnEscape, setTopCloseOnEscape] = React.useState(true);
 
   return (
-    <div style={{ minHeight: 280, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+    <ToastShowcase minHeight={280} align="start">
       <Button variant="outline" onClick={() => setOpenState({ first: true, second: true })}>
         Reopen Stack
       </Button>
@@ -416,7 +441,7 @@ function EscapeShortcutSyncDemo() {
         duration={0}
         position="top-left"
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -455,7 +480,7 @@ function StackedViewportOffsetDemo() {
   const [openState, setOpenState] = React.useState({ first: true, second: true });
 
   return (
-    <div style={{ minHeight: 280, padding: 16 }}>
+    <ToastShowcase minHeight={280}>
       <Button variant="outline" onClick={() => setOpenState({ first: true, second: true })}>
         Reopen stack
       </Button>
@@ -481,7 +506,7 @@ function StackedViewportOffsetDemo() {
         duration={0}
         position="bottom-right"
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -499,12 +524,12 @@ export const StackedViewportOffset: Story = {
 
 export const FocusedToastEscapesFirst: Story = {
   render: () => (
-    <div style={{ minHeight: 280, padding: 16, display: "grid", gap: 8 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <ToastShowcase minHeight={280}>
+      <p style={toastTelemetryTextStyle}>
         Focus or hover any older toast to promote it to top priority before pressing Escape.
       </p>
       <EscapeStackOrderDemo />
-    </div>
+    </ToastShowcase>
   )
 };
 
@@ -530,7 +555,7 @@ function EscapePreemptedDemo() {
   }, [preemptEscape]);
 
   return (
-    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+    <ToastShowcase align="start">
       <Button variant="outline" onClick={() => setOpen(true)}>
         Reopen Toast
       </Button>
@@ -545,7 +570,7 @@ function EscapePreemptedDemo() {
         description="When upper-layer handlers preempt Escape, toast should stay open."
         tone="info"
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -554,7 +579,7 @@ function EscapeGuardedByToastDemo() {
   const [guardEscape, setGuardEscape] = React.useState(true);
 
   return (
-    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+    <ToastShowcase align="start">
       <Button variant="outline" onClick={() => setOpen(true)}>
         Reopen Toast
       </Button>
@@ -574,7 +599,7 @@ function EscapeGuardedByToastDemo() {
           }
         }}
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -582,7 +607,7 @@ function EscapeImeCompositionDemo() {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+    <ToastShowcase align="start">
       <Button variant="outline" onClick={() => setOpen(true)}>
         Reopen Toast
       </Button>
@@ -595,7 +620,7 @@ function EscapeImeCompositionDemo() {
         tone="info"
         action={<input aria-label="Inline response" placeholder="Type with IME..." />}
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
@@ -617,10 +642,10 @@ function EscapePreemptedSkipsHookDemo() {
   }, []);
 
   return (
-    <div style={{ minHeight: 260, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <ToastShowcase align="start">
+      <p style={toastTelemetryTextStyle}>
         Escape hook calls:{" "}
-        <strong data-testid="escape-hook-count" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="escape-hook-count" style={toastTelemetryValueStyle}>
           {hookCount}
         </strong>
       </p>
@@ -633,7 +658,7 @@ function EscapePreemptedSkipsHookDemo() {
         tone="info"
         onEscapeKeyDown={() => setHookCount((count) => count + 1)}
       />
-    </div>
+    </ToastShowcase>
   );
 }
 
