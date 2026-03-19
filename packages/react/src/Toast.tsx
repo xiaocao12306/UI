@@ -265,6 +265,35 @@ export function Toast({
     closeRequestedRef.current = false;
   }, [open]);
 
+  React.useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const ownerDocument = rootRef.current?.ownerDocument ?? document;
+    const markKeyboardIntent = (event: KeyboardEvent) => {
+      if (event.metaKey || event.altKey || event.ctrlKey) {
+        return;
+      }
+      closeButtonFocusIntentRef.current = true;
+    };
+    const markPointerIntent = () => {
+      closeButtonFocusIntentRef.current = false;
+    };
+
+    ownerDocument.addEventListener("keydown", markKeyboardIntent, true);
+    ownerDocument.addEventListener("pointerdown", markPointerIntent, true);
+    ownerDocument.addEventListener("mousedown", markPointerIntent, true);
+    ownerDocument.addEventListener("touchstart", markPointerIntent, true);
+
+    return () => {
+      ownerDocument.removeEventListener("keydown", markKeyboardIntent, true);
+      ownerDocument.removeEventListener("pointerdown", markPointerIntent, true);
+      ownerDocument.removeEventListener("mousedown", markPointerIntent, true);
+      ownerDocument.removeEventListener("touchstart", markPointerIntent, true);
+    };
+  }, [open]);
+
   const clearCloseTimer = React.useCallback(() => {
     if (timeoutRef.current !== null) {
       window.clearTimeout(timeoutRef.current);

@@ -557,6 +557,7 @@
   - Button 主键焦点语义收口（非主键 `mousedown/pointerdown` 不再清理 `focus-visible`，补齐 unit 回归）
   - Drawer 关闭按钮主键焦点语义收口（非主键 `mousedown` 不再清理 `focus-visible`，补齐 unit 回归）
   - Toast 关闭按钮焦点语义补测（新增非主键 `mousedown` 保留 `focus-visible` 的 unit 回归，锁定关闭按钮主键焦点策略）
+  - Toast 键盘重入焦点收口（新增 document 级键盘/指针意图跟踪，确保 pointer 后通过 `Tab` 返回时 `focus-visible` fallback 可恢复；补齐 unit 回归）
   - Storybook Toast 焦点语义文档收口（Component API / Best Practices 增补 `CloseButtonPrimaryPointerOnly` 场景与主键焦点策略说明）
   - Switch click guard 契约补测（消费者 `onClick.preventDefault()` 可阻断 pointer toggle，补齐 unit + Storybook `ClickPreventDefaultGuard` 场景）
   - Tabs/Table 主键焦点语义收口（非主键 `mousedown` 不再清理 tab/sort-button `focus-visible`，补齐 unit + Storybook `PrimaryPointerOnly*` 场景）

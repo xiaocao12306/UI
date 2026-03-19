@@ -445,6 +445,7 @@
 - Button focus-intent parity: non-primary `mousedown/pointerdown` now preserves focus-visible state while primary pointer still clears it, with dedicated unit coverage.
 - Drawer close-button focus-intent parity: non-primary close-button `mousedown` now preserves focus-visible state while primary pointer keeps prior behavior, with dedicated unit coverage.
 - Toast close-button focus-intent coverage: added unit regression ensuring non-primary close-button `mousedown` keeps focus-visible ring state while primary pointer behavior remains unchanged.
+- Toast keyboard re-entry focus parity: close-button now tracks keyboard/pointer intent at document scope so fallback focus-visible styling is restored when users return via `Tab` after pointer interaction, with dedicated unit regression coverage.
 - Toast focus-intent docs parity: Component API + Best Practices now include `CloseButtonPrimaryPointerOnly` Storybook scenario and explicit close-button primary-pointer focus guidance for QA/a11y audits.
 - Switch click-guard parity: added unit + Storybook regression to lock `onClick(event.preventDefault())` pointer-guard behavior so consumer-level approval gates can block toggle mutation deterministically.
 - Tabs/Table focus-intent parity: non-primary `mousedown` no longer clears tab/sort-button focus-visible state, with unit + Storybook `PrimaryPointerOnly*` regression coverage for keyboard-intent continuity.
