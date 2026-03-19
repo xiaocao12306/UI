@@ -89,6 +89,81 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Two" })).toHaveFocus();
   });
 
+  it("supports Enter/Space keyboard activation for menu items", () => {
+    const onEnterSelect = vi.fn();
+    const onSpaceSelect = vi.fn();
+
+    render(
+      <Dropdown
+        label="Keyboard Select"
+        items={[
+          { key: "enter", label: "Run Enter", onSelect: onEnterSelect },
+          { key: "space", label: "Run Space", onSelect: onSpaceSelect }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Keyboard Select" }));
+    const menu = screen.getByRole("menu", { name: "Keyboard Select" });
+    const enterItem = screen.getByRole("menuitem", { name: "Run Enter" });
+    expect(enterItem).toHaveFocus();
+
+    fireEvent.keyDown(enterItem, { key: "Enter" });
+    expect(onEnterSelect).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("menu", { name: "Keyboard Select" })).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Keyboard Select" }));
+    const reopenedMenu = screen.getByRole("menu", { name: "Keyboard Select" });
+    fireEvent.keyDown(reopenedMenu, { key: "ArrowDown" });
+    const spaceItem = screen.getByRole("menuitem", { name: "Run Space" });
+    expect(spaceItem).toHaveFocus();
+    fireEvent.keyDown(spaceItem, { key: "Spacebar" });
+    expect(onSpaceSelect).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("menu", { name: "Keyboard Select" })).toBeNull();
+  });
+
+  it("ignores repeated activation keydown for menu items", () => {
+    const onSelect = vi.fn();
+
+    render(
+      <Dropdown
+        label="Repeat Guard"
+        items={[
+          { key: "run", label: "Run", onSelect },
+          { key: "archive", label: "Archive" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Repeat Guard" }));
+    const runItem = screen.getByRole("menuitem", { name: "Run" });
+    expect(runItem).toHaveFocus();
+
+    fireEvent.keyDown(runItem, { key: "Enter", repeat: true });
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(screen.getByRole("menu", { name: "Repeat Guard" })).toBeInTheDocument();
+
+    fireEvent.keyDown(runItem, { key: "Enter" });
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("menu", { name: "Repeat Guard" })).toBeNull();
+  });
+
+  it("exposes activation key hints only for actionable menu items", () => {
+    render(
+      <Dropdown
+        label="Shortcut Hints"
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two", disabled: true }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Shortcut Hints" }));
+    expect(screen.getByRole("menuitem", { name: "One" })).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    expect(screen.getByRole("menuitem", { name: "Two" })).not.toHaveAttribute("aria-keyshortcuts");
+  });
+
   it("supports typeahead navigation and skips disabled matches", () => {
     render(
       <Dropdown

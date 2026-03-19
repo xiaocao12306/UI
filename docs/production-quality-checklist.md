@@ -313,6 +313,9 @@
 - Toast dismiss-order parity: component tests now lock `close-button` / `escape-key` / `timeout` branches to `onCloseReason -> onClose -> onOpenChange(false)` callback order.
 - Toast keyboard-discoverability parity: Escape-dismissable toasts now expose `aria-keyshortcuts="Escape"` with unit + Storybook + demo E2E coverage.
 - Toast keyboard-hint precision parity: stacked notifications now expose `aria-keyshortcuts="Escape"` only on the current top escapable toast, preventing hints on pinned/non-closeable entries.
+- Dropdown item-keyboard parity: menu items now support explicit keyboard activation (`Enter` / `Space` / legacy `Spacebar`) with deterministic close behavior, reducing browser-specific click synthesis variance.
+- Dropdown activation-repeat parity: repeated item activation keydown (`event.repeat=true`) now no-ops selection to prevent long-press duplicate action dispatch and telemetry jitter.
+- Dropdown shortcut-hint precision parity: actionable menu items now expose `aria-keyshortcuts="Enter Space"` while disabled entries omit hints to avoid AT/QA false affordance.
 - Storybook toast close-trace parity: `CloseReasonTelemetry` now asserts `onCloseReason` precedes `onOpenChange(false)` (with `onClose` between) so dismiss sequencing stays deterministic.
 - Demo toast close-reason parity: added `toast-close-reason-demo` indicator and Playwright regression for `escape-key` / `close-button` / `timeout` branches.
 - Demo toast close-trace parity: added `toast-close-trace-demo` and Playwright assertions locking `reason -> open:false` sequencing.

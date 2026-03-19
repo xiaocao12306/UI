@@ -90,6 +90,10 @@ function getTypeaheadIndex(items: DropdownItem[], currentIndex: number, query: s
   return -1;
 }
 
+function isDropdownItemActivationKey(key: string) {
+  return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
+}
+
 export function Dropdown({
   label,
   triggerAriaLabel,
@@ -304,10 +308,25 @@ export function Dropdown({
                     disabled={item.disabled}
                     tabIndex={isActive ? 0 : -1}
                     aria-disabled={item.disabled || undefined}
+                    aria-keyshortcuts={item.disabled ? undefined : "Enter Space"}
                     onMouseEnter={() => {
                       if (!item.disabled) {
                         setActiveIndex(index);
                       }
+                    }}
+                    onKeyDown={(event) => {
+                      if (!isDropdownItemActivationKey(event.key)) {
+                        return;
+                      }
+
+                      event.preventDefault();
+                      if (item.disabled || event.repeat) {
+                        return;
+                      }
+
+                      item.onSelect?.();
+                      closeWithReason("item-select");
+                      triggerRef.current?.focus();
                     }}
                     onClick={() => {
                       if (item.disabled) {

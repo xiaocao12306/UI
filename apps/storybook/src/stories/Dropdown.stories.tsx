@@ -151,7 +151,10 @@ function SelectionTelemetryDropdown() {
   return (
     <div style={{ display: "grid", gap: 8 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        Selected action: <strong>{selected}</strong>
+        Selected action:{" "}
+        <strong data-testid="dropdown-selected-action" style={{ color: "var(--aurora-text-primary)" }}>
+          {selected}
+        </strong>
       </p>
       <Dropdown label="Release Actions" items={telemetryItems} />
     </div>
@@ -163,14 +166,24 @@ export const SelectionTelemetry: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = await canvas.findByRole("button", { name: "Release Actions" });
+    await expect(canvas.getByTestId("dropdown-selected-action")).toHaveTextContent("none");
 
     await userEvent.click(trigger);
     await expect(canvas.getByRole("menu")).toBeInTheDocument();
+    const duplicateItem = canvas.getByRole("menuitem", { name: "Duplicate" });
+    const archiveItem = canvas.getByRole("menuitem", { name: "Archive" });
+    await expect(duplicateItem).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    await expect(archiveItem).not.toHaveAttribute("aria-keyshortcuts");
+
     await userEvent.keyboard("{End}");
-    await expect(canvas.getByRole("menuitem", { name: "Delete" })).toHaveFocus();
+    const deleteItem = canvas.getByRole("menuitem", { name: "Delete" });
+    await expect(deleteItem).toHaveFocus();
+    fireEvent.keyDown(deleteItem, { key: "Enter", repeat: true });
+    await expect(canvas.getByRole("menu")).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-selected-action")).toHaveTextContent("none");
     await userEvent.keyboard("{Enter}");
     await expect(canvas.queryByRole("menu")).not.toBeInTheDocument();
-    await expect(canvas.getByText("Delete")).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-selected-action")).toHaveTextContent("Delete");
 
     trigger.focus();
     await userEvent.keyboard("{ArrowDown}");

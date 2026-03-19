@@ -454,6 +454,9 @@
   - CommandPalette 键盘提示精度收口（无可执行命令时移除 `Enter` 键提示，避免 AT/QA 误判可执行路径）
   - Tabs 键盘长按收口（manual 模式 `Enter/Space` repeat 场景忽略重复触发，避免 tab 切换遥测抖动）
   - Toast 键盘提示精度收口（堆叠通知仅当前可 Escape 关闭的顶层 toast 暴露 `aria-keyshortcuts="Escape"`，避免 AT/QA 误判不可关闭通知）
+  - Dropdown 菜单项键盘激活收口（补齐 `Enter/Space/Spacebar` 显式激活路径并统一关闭语义）
+  - Dropdown 键盘长按收口（菜单项激活在 `event.repeat=true` 场景忽略重复 keydown，避免重复执行与遥测抖动）
+  - Dropdown 键盘提示精度收口（仅可执行菜单项暴露 `aria-keyshortcuts="Enter Space"`，禁用项移除提示避免 AT/QA 误导）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
