@@ -136,7 +136,7 @@ pnpm chromatic
   - requires clean working tree and auto-reverts dry-run version file edits
 - full pre-release gate: `pnpm release:gate` (`release:gate:ci` + `release:dry-run`)
 - workflow evidence should be read from each run's `GITHUB_STEP_SUMMARY` (storybook gate snapshot, token mode, dry-run package table)
-- `Release Dry Run` workflow always emits a summary (including install/setup failure paths) with failed-step labeling for faster triage
+- `Release Dry Run` workflow always emits a summary (including checkout/setup/install failure paths) with failed-step labeling for faster triage
 
 ## Demo External Link
 

@@ -26,13 +26,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - id: checkout
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      - id: setup_pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: 10.8.1
 
-      - uses: actions/setup-node@v4
+      - id: setup_node
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
@@ -45,26 +48,42 @@ jobs:
         continue-on-error: true
         run: pnpm release:dry-run
 
-      - name: Dry Run Summary
+      - id: summary
+        name: Dry Run Summary
         if: always()
         run: |
+          checkout_outcome="${{ steps.checkout.outcome }}"
+          setup_pnpm_outcome="${{ steps.setup_pnpm.outcome }}"
+          setup_node_outcome="${{ steps.setup_node.outcome }}"
           install_outcome="${{ steps.install.outcome }}"
           dry_run_outcome="${{ steps.dry_run.outcome }}"
+          failed_step="none"
+
+          if [ "${checkout_outcome}" = "failure" ]; then
+            failed_step="checkout"
+          elif [ "${setup_pnpm_outcome}" = "failure" ]; then
+            failed_step="setup-pnpm"
+          elif [ "${setup_node_outcome}" = "failure" ]; then
+            failed_step="setup-node"
+          elif [ "${install_outcome}" = "failure" ]; then
+            failed_step="install"
+          elif [ "${dry_run_outcome}" = "failure" ]; then
+            failed_step="release:dry-run"
+          fi
 
           {
             echo "## Release Dry Run Summary"
             echo ""
+            echo "- checkout: ${checkout_outcome}"
+            echo "- setup-pnpm: ${setup_pnpm_outcome}"
+            echo "- setup-node: ${setup_node_outcome}"
             echo "- install: ${install_outcome}"
             echo "- release:dry-run: ${dry_run_outcome}"
-            if [ "${dry_run_outcome}" = "failure" ]; then
-              echo "- failed step: release:dry-run"
-            elif [ "${install_outcome}" = "failure" ]; then
-              echo "- failed step: install"
-            else
-              echo "- failed step: none"
-            fi
+            echo "- failed step: ${failed_step}"
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Fail When Dry Run Fails
-        if: steps.dry_run.outcome == 'failure'
+          echo "failed_step=${failed_step}" >> "$GITHUB_OUTPUT"
+
+      - name: Fail When Dry Run Gate Fails
+        if: always() && steps.summary.outputs.failed_step != 'none'
         run: exit 1

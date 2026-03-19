@@ -323,7 +323,7 @@
   - Release Gate 复验（2026-03-19：完成 DismissableLayer 指针边界修复与 Demo 成品化后，`release:gate:ci` 全链路通过，详细 tests/suites 以 run summary 为准）
   - Release Gate 门禁增强（新增 `storybook:test:ci`，发布前强制 Storybook 交互回归）
   - Release Dry-Run 可观测性收口（`scripts/release-dry-run.mjs` 输出包体积表到 `GITHUB_STEP_SUMMARY`）
-  - Release Dry-Run 失败摘要收口（`release-dry-run.yml` 在 install/dry-run 任一路径失败时都输出 summary 并标记 failed step）
+  - Release Dry-Run 失败摘要收口（`release-dry-run.yml` 在 checkout/setup/install/dry-run 任一路径失败时都输出 summary 并标记 failed step）
   - Release Gate 证据刷新（2026-03-19：demo E2E + Storybook interaction + dry-run evidence 已沉淀到 workflow `GITHUB_STEP_SUMMARY`）
   - Release Gate 证据刷新（2026-03-19：含 CommandPalette 翻页键与 Toast 动作语义新增回归；具体计数以 run summary 为准）
   - Release Dry-Run 证据刷新（2026-03-19：`release:dry-run` 通过，`react` unpacked `342.6 kB` / `primitives` `71.2 kB` / `tokens` `17.0 kB`）
