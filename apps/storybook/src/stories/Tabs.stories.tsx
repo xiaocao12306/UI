@@ -7,7 +7,8 @@ const productTabs: TabItem[] = [
   {
     key: "spec",
     label: "Spec",
-    content: "Token contract, component API, and test strategy are captured here before implementation."
+    content:
+      "Token contract, component API, and test strategy are captured here before implementation."
   },
   {
     key: "build",
@@ -103,12 +104,50 @@ export const WithDisabledTab: Story = {
   )
 };
 
+export const AllTabsDisabled: Story = {
+  render: () => (
+    <Tabs
+      ariaLabel="All disabled release tabs"
+      activationMode="manual"
+      items={[
+        {
+          key: "spec",
+          label: "Spec",
+          content: "Specification stage is disabled.",
+          disabled: true
+        },
+        {
+          key: "release",
+          label: "Release",
+          content: "Release stage is disabled.",
+          disabled: true
+        }
+      ]}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const tabList = canvas.getByRole("tablist", { name: "All disabled release tabs" });
+    await expect(tabList).toHaveAttribute("aria-disabled", "true");
+
+    const allTabs = canvas.getAllByRole("tab");
+    await expect(allTabs).toHaveLength(2);
+
+    allTabs.forEach((tab) => {
+      expect(tab).toBeDisabled();
+      expect(tab).not.toHaveAttribute("aria-keyshortcuts");
+      expect(tab).toHaveAttribute("aria-selected", "false");
+      expect(tab).toHaveAttribute("tabindex", "-1");
+    });
+  }
+};
+
 export const KeyboardNavigationGuide: Story = {
   render: () => (
     <div style={{ width: 620, display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        Keyboard: horizontal tabs use ArrowLeft/ArrowRight, vertical tabs use ArrowUp/ArrowDown. Home jumps to first
-        enabled tab, End jumps to last enabled tab.
+        Keyboard: horizontal tabs use ArrowLeft/ArrowRight, vertical tabs use ArrowUp/ArrowDown.
+        Home jumps to first enabled tab, End jumps to last enabled tab.
       </p>
       <Tabs
         ariaLabel="Keyboard guide tabs"
@@ -146,7 +185,8 @@ export const NoLoopNavigation: Story = {
   render: () => (
     <div style={{ width: 620, display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        Set <code>loop=&#123;false&#125;</code> to keep Arrow navigation at tablist boundaries instead of wrapping.
+        Set <code>loop=&#123;false&#125;</code> to keep Arrow navigation at tablist boundaries
+        instead of wrapping.
       </p>
       <Tabs ariaLabel="No loop tabs" defaultValue="spec" loop={false} items={productTabs} />
     </div>
@@ -212,7 +252,10 @@ export const Vertical: Story = {
     const specTab = canvas.getByRole("tab", { name: "Spec" });
     await userEvent.click(specTab);
     await userEvent.keyboard("{ArrowDown}");
-    await expect(canvas.getByRole("tab", { name: "Release" })).toHaveAttribute("aria-selected", "true");
+    await expect(canvas.getByRole("tab", { name: "Release" })).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
   }
 };
 
@@ -220,7 +263,8 @@ export const RtlKeyboardNavigation: Story = {
   render: () => (
     <div dir="rtl" style={{ width: 620, display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        In RTL layouts, horizontal ArrowRight moves to the previous tab and ArrowLeft moves to the next tab.
+        In RTL layouts, horizontal ArrowRight moves to the previous tab and ArrowLeft moves to the
+        next tab.
       </p>
       <Tabs ariaLabel="RTL workflow tabs" defaultValue="spec" items={productTabs} />
     </div>
@@ -247,7 +291,8 @@ export const ManualActivation: Story = {
   render: () => (
     <div style={{ width: 620, display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        Manual mode keeps panel selection stable while arrows move focus; press Enter or Space to activate.
+        Manual mode keeps panel selection stable while arrows move focus; press Enter or Space to
+        activate.
       </p>
       <Tabs
         ariaLabel="Manual activation tabs"
@@ -292,7 +337,8 @@ export const ManualVerticalActivation: Story = {
   render: () => (
     <div style={{ width: 620, display: "grid", gap: 12 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        Vertical + manual mode keeps selection stable while ArrowUp/ArrowDown move focus; Enter/Space activates.
+        Vertical + manual mode keeps selection stable while ArrowUp/ArrowDown move focus;
+        Enter/Space activates.
       </p>
       <Tabs
         ariaLabel="Manual vertical release tabs"
@@ -314,7 +360,9 @@ export const ManualVerticalActivation: Story = {
     const shipTab = canvas.getByRole("tab", { name: "Ship" });
 
     await userEvent.click(backlogTab);
-    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Backlog scope and release intent.");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+      "Backlog scope and release intent."
+    );
     await expect(backlogTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     await expect(shipTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     await expect(reviewTab).toHaveAttribute("aria-disabled", "true");
@@ -322,10 +370,14 @@ export const ManualVerticalActivation: Story = {
 
     await userEvent.keyboard("{ArrowDown}");
     await expect(shipTab).toHaveFocus();
-    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Backlog scope and release intent.");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+      "Backlog scope and release intent."
+    );
 
     await userEvent.keyboard("{Enter}");
-    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Ship checklist and release notes.");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+      "Ship checklist and release notes."
+    );
   }
 };
 
