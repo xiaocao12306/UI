@@ -94,7 +94,7 @@ function writeSummary() {
   }
 
   const lines = [
-    "## Release Dry-Run Summary",
+    "## Release Dry Run Summary",
     "",
     `- status: \`${dryRunStatus}\``,
     ...(failedStepLabel ? [`- failed step: \`${failedStepLabel}\``] : []),

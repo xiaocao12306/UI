@@ -16,6 +16,10 @@ permissions:
   pull-requests: write
   id-token: write
 
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -30,7 +34,6 @@ jobs:
           node-version: 22
           cache: pnpm
           registry-url: https://registry.npmjs.org
-      - run: pnpm install --frozen-lockfile
       - name: Fail Fast (enforced publish token precheck)
         if: github.event_name == 'workflow_dispatch' && inputs.enforce == true && secrets.NPM_TOKEN == ''
         run: |
@@ -50,6 +53,7 @@ jobs:
             echo "- guide: \`docs/secrets.md\`"
           } >> "$GITHUB_STEP_SUMMARY"
           exit 1
+      - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
       - name: Run Release Quality Gate
         run: |

@@ -564,8 +564,13 @@
   - Storybook Table 展示框架收口（Empty/Loading/AccessibleName 等故事统一切换至 `StoryShowcaseFrame`，强化文档页视觉节奏一致性并通过定向 runner）
   - Tabs 受控值可观测性收口（受控 `value` 指向缺失/禁用 key 时开发态输出 warning 并维持 first-enabled fallback，另补 duplicate key warning 与单测）
   - 集成示例文档深化（`component-recipes` 新增 Overlay close telemetry / Tabs manual telemetry / Table i18n sort telemetry 模板）
+  - Release workflow 并发互斥收口（新增 `concurrency` 组，避免并行 push/dispatch 触发发布链路竞态）
+  - Release enforce fail-fast 前置收口（`workflow_dispatch + enforce=true` 且缺失 `NPM_TOKEN` 时在 install 前直接失败并输出修复路径）
+  - 文档命令门禁覆盖扩展（`docs:commands:check` 新增 `docs/secrets.md` 强制校验：`release:preflight:*` 与 `gh workflow run * -f enforce=true` 命令）
+  - Release dry-run summary 命名收口（workflow/docs/script 统一使用 `Release Dry Run Summary`）
   - Release Gate 证据刷新（2026-03-19：`release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 202/202）
   - Release Gate 证据刷新（2026-03-19 latest+2：修复 demo dist 同步后 `release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 206/206）
+  - Release Gate 证据刷新（2026-03-20 latest：`pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 73/73 + demo dist + storybook interaction 206/206）
   - Release Dry-Run 证据刷新（2026-03-19 latest+2：`release:dry-run` 通过，`react` package `64.3 kB` / unpacked `394.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）

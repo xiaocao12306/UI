@@ -218,7 +218,7 @@ Token-missing signatures in workflow logs:
 Workflow observability (summary):
 
 - `Release Gate (CI)`: verify/coverage/demo/storybook gate snapshot.
-- `Release Dry-Run Summary`: status, failed-step label, publishable package table.
+- `Release Dry Run Summary`: status, failed-step label, publishable package table.
 - `Publish Mode`: trigger/ref/enforce/token state and local preflight command.
 - `npm Publish Skipped` or `npm Publish Failed`: reason, effect, fix path, secrets doc link.
 
@@ -315,5 +315,5 @@ This appends: 6. `pnpm release:dry-run`
 1. `CI` workflow：查看 `Storybook Interaction Gate` + `Demo Quality Gate` summary（coverage/docs/static/test + demo e2e/dist gate 快照）。
 2. `Release Dry Run` workflow：先看失败步骤；仅当 `release:dry-run` 步骤实际执行时再看包体积表与恢复文件计数（若停在 checkout/setup/install，则以 workflow phase outcome 为准）。
 3. `Chromatic Visual Tests` workflow：查看 mode/token 状态、build/storybook URL、change/error 计数。
-4. `Release` workflow：查看 `Release Gate (CI)` summary（verify + demo e2e run/result + demo dist + storybook gate）、`Release Dry-Run Summary` 与 `Publish Mode` summary（`enforce`/token 状态）。
+4. `Release` workflow：查看 `Release Gate (CI)` summary（verify + demo e2e run/result + demo dist + storybook gate）、`Release Dry Run Summary` 与 `Publish Mode` summary（`enforce`/token 状态）。
 5. 失败排障：下载 workflow artifacts（`storybook-gate-logs` / `demo-quality-gate-logs` / `release-gate-logs` / `release-dry-run-logs`）查看原始日志与首条失败签名。

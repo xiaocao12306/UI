@@ -5,6 +5,24 @@ import { resolve } from "node:path";
 
 const docsGateFiles = ["README.md", "docs/storybook.md", "docs/testing-and-release.md"];
 const releaseGateDocsFiles = ["README.md", "docs/testing-and-release.md"];
+const secretsDocsChecks = [
+  {
+    label: "chromatic preflight alias",
+    includes: "pnpm release:preflight:chromatic"
+  },
+  {
+    label: "publish preflight alias",
+    includes: "pnpm release:preflight:publish"
+  },
+  {
+    label: "chromatic enforce dispatch",
+    includes: "gh workflow run chromatic.yml -f enforce=true"
+  },
+  {
+    label: "release enforce dispatch",
+    includes: "gh workflow run release.yml -f enforce=true"
+  }
+];
 
 async function main() {
   const packageJsonPath = resolve(process.cwd(), "package.json");
@@ -34,7 +52,11 @@ async function main() {
         label: `release gate command: ${command}`,
         includes: `pnpm ${command}`
       }))
-    }))
+    })),
+    {
+      file: "docs/secrets.md",
+      requirements: secretsDocsChecks
+    }
   ];
 
   const missing = [];
