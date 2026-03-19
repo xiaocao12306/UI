@@ -55,6 +55,26 @@ describe("Button", () => {
     matchesSpy.mockRestore();
   });
 
+  it("preserves focus ring on non-primary pointer down", () => {
+    render(<Button>Secondary Pointer Focus</Button>);
+    const button = screen.getByRole("button", { name: "Secondary Pointer Focus" });
+    const nativeMatches = button.matches.bind(button);
+    const matchesSpy = vi.spyOn(button, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        return true;
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.focus(button);
+    expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.mouseDown(button, { button: 2 });
+    expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+    matchesSpy.mockRestore();
+  });
+
   it("supports legacy Spacebar key value for pressed-state feedback", () => {
     render(<Button>Legacy Spacebar</Button>);
     const button = screen.getByRole("button", { name: "Legacy Spacebar" });

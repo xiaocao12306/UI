@@ -547,6 +547,7 @@
   - Dialog 关闭按钮主键焦点语义收口（close button 非主键 `mousedown` 不再清理 `focus-visible`，补齐 unit + Storybook `FocusIntentPrimaryPointerOnly`）
   - Switch 主键按压语义收口（switch `pressed` 视觉仅响应主键 `mousedown/up`，新增 `data-pressed` 回归标记并补齐 unit + Storybook `PointerPrimaryOnly`）
   - Input 主键焦点语义收口（非主键 `mousedown/pointerdown` 不再清理 `focus-visible`，补齐 unit + Storybook `InteractionA11yParity` 回归）
+  - Button 主键焦点语义收口（非主键 `mousedown/pointerdown` 不再清理 `focus-visible`，补齐 unit 回归）
   - Release Gate 证据刷新（2026-03-19：`release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 202/202）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
