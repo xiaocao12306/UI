@@ -3,41 +3,40 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-const checks = [
-  {
-    file: "README.md",
-    requirements: [
-      {
-        label: "storybook docs parity command",
-        includes: "pnpm storybook:docs:parity:check"
-      },
-      {
-        label: "release gate chain with coverage",
-        includes: "verify + coverage:gate + demo:e2e + demo:dist:check + storybook:test:ci"
-      }
-    ]
-  },
-  {
-    file: "docs/testing-and-release.md",
-    requirements: [
-      {
-        label: "storybook docs parity command",
-        includes: "pnpm storybook:docs:parity:check"
-      }
-    ]
-  },
-  {
-    file: "docs/storybook.md",
-    requirements: [
-      {
-        label: "storybook docs parity command",
-        includes: "pnpm storybook:docs:parity:check"
-      }
-    ]
-  }
-];
+const docsGateFiles = ["README.md", "docs/storybook.md", "docs/testing-and-release.md"];
+const releaseGateDocsFiles = ["README.md", "docs/testing-and-release.md"];
 
 async function main() {
+  const packageJsonPath = resolve(process.cwd(), "package.json");
+  const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
+
+  const storybookGateScript = packageJson.scripts?.["storybook:test:ci"];
+  const releaseGateScript = packageJson.scripts?.["release:gate:ci"];
+
+  if (!storybookGateScript || !releaseGateScript) {
+    throw new Error("missing required scripts in package.json: storybook:test:ci / release:gate:ci");
+  }
+
+  const storybookGateCommands = extractPnpmScriptCommands(storybookGateScript);
+  const releaseGateCommands = extractPnpmScriptCommands(releaseGateScript);
+
+  const checks = [
+    ...docsGateFiles.map((file) => ({
+      file,
+      requirements: storybookGateCommands.map((command) => ({
+        label: `storybook gate command: ${command}`,
+        includes: `pnpm ${command}`
+      }))
+    })),
+    ...releaseGateDocsFiles.map((file) => ({
+      file,
+      requirements: releaseGateCommands.map((command) => ({
+        label: `release gate command: ${command}`,
+        includes: `pnpm ${command}`
+      }))
+    }))
+  ];
+
   const missing = [];
 
   for (const check of checks) {
@@ -75,3 +74,32 @@ main().catch((error) => {
   console.error(`[docs-command-check] error: ${error instanceof Error ? error.message : String(error)}`);
   process.exit(1);
 });
+
+function extractPnpmScriptCommands(script) {
+  const commands = new Set();
+
+  for (const segment of script
+    .split("&&")
+    .map((item) => item.trim())
+    .filter(Boolean)) {
+    if (!segment.startsWith("pnpm ")) {
+      continue;
+    }
+
+    const tokens = segment.split(/\s+/);
+    if (tokens[1] === "--filter") {
+      const filteredCommand = tokens[3];
+      if (filteredCommand) {
+        commands.add(filteredCommand);
+      }
+      continue;
+    }
+
+    const command = tokens[1];
+    if (command) {
+      commands.add(command);
+    }
+  }
+
+  return Array.from(commands);
+}

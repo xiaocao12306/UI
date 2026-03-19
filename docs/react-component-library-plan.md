@@ -530,6 +530,7 @@
   - Table 异步列默认排序收口（列配置后变更为 sortable 时可恢复 `defaultSortKey`，新增 `DeferredColumnsDefaultSortRecovery` 故事与单测）
   - CommandPalette 首帧键盘可用性收口（弹层支持 `data-autofocus` 目标，`open=false -> true` 自动聚焦搜索框并可直接 Enter 执行）
   - Toast timeout 验收补齐（新增 `TimeoutCloseReason` 故事断言自动关闭与 `reason=timeout`，并补齐顶部 toast 外部卸载后的 Escape 栈重分配单测）
+  - 文档命令一致性门禁强化（`docs:commands:check` 改为解析 `package.json` 实际 gate 链路并逐文档校验关键命令）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

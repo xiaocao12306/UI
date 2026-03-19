@@ -173,6 +173,16 @@ pnpm release:gate:ci
 pnpm release:dry-run
 ```
 
+`release:gate:ci` 展开命令：
+
+```bash
+pnpm verify
+pnpm coverage:gate
+pnpm demo:e2e
+pnpm demo:dist:check
+pnpm storybook:test:ci
+```
+
 ## Demo External Link
 
 - GitHub Pages workflow: `.github/workflows/demo-pages.yml`
