@@ -114,8 +114,8 @@ pnpm storybook:test:grep "Table.stories.tsx"
   - `Feedback/Progress` determinate/indeterminate 语义路径
   - `Feedback/Alert` dismiss 分支与 live region 语义路径
   - `Feedback/Toast` 关闭与重开流程 + Escape 栈顺序/全局快捷键抢占分支
-  - `Data/Tabs` 点击切换 + Home/End 键导航（含禁用项跳过）+ manual/vertical 模式键盘路径
-  - `Data/Table` 键盘/点击排序切换与 `aria-sort` 状态同步
+  - `Data/Tabs` 点击切换 + Home/End 键导航（含禁用项跳过）+ manual/vertical 模式键盘路径 + `ImeCompositionGuard`（组合输入阶段 Enter/Space 忽略）
+  - `Data/Table` 键盘/点击排序切换与 `aria-sort` 状态同步 + `ImeCompositionGuard`（组合输入阶段 Enter/Space 忽略）
 
 ## 当前已覆盖故事
 
@@ -154,7 +154,7 @@ pnpm storybook:test:grep "Table.stories.tsx"
 - `Docs/Component API`
 - `Docs/Component Catalog`
 - `Docs/Best Practices`
-- 核心边界示例：`CommandPalette/QueryTelemetry`、`CommandPalette/CloseReasonTelemetry`（含 close trace）、`CommandPalette/DisabledCommandGuard`、`CommandPalette/GuardedDismissEvents`、`CommandPalette/EscapeClearsQueryFirst`、`CommandPalette/EscapePreemptedByGlobalHandler`、`CommandPalette/EmptyStateAriaControlsLifecycle`、`CommandPalette/LocalizedResultsLabel`、`CommandPalette/LocalizedDialogCopy`、`Toast/ActionRequired`、`Toast/CloseReasonTelemetry`（含 close trace）、`Toast/EscapePreemptedByGlobalHandler`、`Toast/EscapeGuardedByToastHandler`、`Dialog/CloseReasonTelemetry`（含 close trace）、`Dialog/EscapeIgnoresImeComposition`、`Dialog/EscapePreemptedByGlobalHandler`、`Drawer/CloseReasonTelemetry`（含 close trace）、`Drawer/EscapeIgnoresImeComposition`、`Drawer/EscapePreemptedByGlobalHandler`、`Popover/CloseReasonTelemetry`（含 close trace）、`Popover/EscapePreemptedByGlobalHandler`、`Dropdown/CloseReasonTelemetry`（含 close trace）、`Dropdown/EscapePreemptedByGlobalHandler`、`Dropdown/TabDismissToNextControl`、`Tabs/KeyboardNavigationGuide`、`Tabs/ManualVerticalActivation`、`Table/SortTelemetry`（含键盘排序）、`Table/SingleRowSortDisabled`、`Table/RowHeaderSemantics`
+- 核心边界示例：`CommandPalette/QueryTelemetry`、`CommandPalette/CloseReasonTelemetry`（含 close trace）、`CommandPalette/DisabledCommandGuard`、`CommandPalette/GuardedDismissEvents`、`CommandPalette/EscapeClearsQueryFirst`、`CommandPalette/EscapePreemptedByGlobalHandler`、`CommandPalette/EmptyStateAriaControlsLifecycle`、`CommandPalette/LocalizedResultsLabel`、`CommandPalette/LocalizedDialogCopy`、`Toast/ActionRequired`、`Toast/CloseReasonTelemetry`（含 close trace）、`Toast/EscapePreemptedByGlobalHandler`、`Toast/EscapeGuardedByToastHandler`、`Dialog/CloseReasonTelemetry`（含 close trace）、`Dialog/EscapeIgnoresImeComposition`、`Dialog/EscapePreemptedByGlobalHandler`、`Drawer/CloseReasonTelemetry`（含 close trace）、`Drawer/EscapeIgnoresImeComposition`、`Drawer/EscapePreemptedByGlobalHandler`、`Popover/CloseReasonTelemetry`（含 close trace）、`Popover/EscapePreemptedByGlobalHandler`、`Dropdown/CloseReasonTelemetry`（含 close trace）、`Dropdown/EscapePreemptedByGlobalHandler`、`Dropdown/TabDismissToNextControl`、`Tabs/KeyboardNavigationGuide`、`Tabs/ManualVerticalActivation`、`Tabs/ImeCompositionGuard`、`Table/SortTelemetry`（含键盘排序）、`Table/SingleRowSortDisabled`、`Table/RowHeaderSemantics`、`Table/ImeCompositionGuard`
 
 说明：预览层通过 toolbar 全局切换 `core-light/core-dark/glass/neo-brutal`，用于验证 token 与主题一致性。
 生产级验收矩阵：`docs/production-quality-checklist.md`

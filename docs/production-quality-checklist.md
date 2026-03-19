@@ -387,3 +387,5 @@
 - Toast position-migration parity: runtime `position` switches now have stack-migration regression coverage to keep visual offset and Escape-priority stacks synchronized.
 - Tabs rerender-fallback parity: active tab disablement after rerender now has regression coverage to lock fallback to the first enabled tab.
 - Storybook narrative-style parity: Tabs/Table docs stories now reuse consistent helper/telemetry text styling to reduce visual grammar drift in API acceptance panels.
+- Storybook IME baseline parity: added `Tabs/ImeCompositionGuard` + `Table/ImeCompositionGuard` play assertions so composition-phase Enter/Space no-op contracts are locked in interaction baselines.
+- Storybook IME regression refresh: `pnpm storybook:test:grep "Tabs.stories.tsx|Table.stories.tsx"` revalidated green on 2026-03-19 (`31` tests).

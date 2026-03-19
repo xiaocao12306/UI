@@ -41,6 +41,13 @@ const storyHelperTextStyle: React.CSSProperties = {
   lineHeight: 1.55
 };
 
+function dispatchImeKeyDown(element: HTMLElement, key: string) {
+  const event = new KeyboardEvent("keydown", { key, bubbles: true });
+  Object.defineProperty(event, "isComposing", { value: true });
+  Object.defineProperty(event, "keyCode", { value: 229 });
+  element.dispatchEvent(event);
+}
+
 const meta = {
   title: "Data/Table",
   tags: ["autodocs"],
@@ -304,6 +311,53 @@ export const SortTelemetry: Story = {
     await expect(canvas.getByText("id asc")).toBeInTheDocument();
     await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
     await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Issue ascending.");
+  }
+};
+
+function ImeCompositionGuardDemo() {
+  const [sortState, setSortState] = React.useState("id asc");
+
+  return (
+    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 8 }}>
+      <p style={storyHelperTextStyle}>
+        IME composition guards Enter and Space so sortable headers do not toggle while users confirm
+        CJK input.
+      </p>
+      <p style={storyHelperTextStyle}>
+        Active sort: <strong style={{ color: "var(--aurora-text-primary)" }}>{sortState}</strong>
+      </p>
+      <Table
+        columns={columns}
+        data={rows}
+        defaultSortKey="id"
+        onSortChange={(key, direction) => setSortState(`${key} ${direction}`)}
+      />
+    </div>
+  );
+}
+
+export const ImeCompositionGuard: Story = {
+  render: () => <ImeCompositionGuardDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const issueHeader = canvas.getByRole("columnheader", { name: /Issue/ });
+    const issueSortDesc = canvas.getByRole("button", { name: "Issue sort descending" });
+
+    await expect(canvas.getByText("id asc")).toBeInTheDocument();
+    await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
+
+    dispatchImeKeyDown(issueSortDesc, "Enter");
+    await expect(canvas.getByText("id asc")).toBeInTheDocument();
+    await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
+
+    dispatchImeKeyDown(issueSortDesc, "Space");
+    await expect(canvas.getByText("id asc")).toBeInTheDocument();
+    await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
+
+    issueSortDesc.focus();
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByText("id desc")).toBeInTheDocument();
+    await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
   }
 };
 

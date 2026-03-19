@@ -34,6 +34,13 @@ const storyTelemetryLabelStyle: React.CSSProperties = {
   fontSize: 13
 };
 
+function dispatchImeKeyDown(element: HTMLElement, key: string) {
+  const event = new KeyboardEvent("keydown", { key, bubbles: true });
+  Object.defineProperty(event, "isComposing", { value: true });
+  Object.defineProperty(event, "keyCode", { value: 229 });
+  element.dispatchEvent(event);
+}
+
 const meta = {
   title: "Data/Tabs",
   component: Tabs,
@@ -342,6 +349,53 @@ export const ManualActivation: Story = {
     releaseTab.focus();
     await userEvent.keyboard("{Space}");
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Release stage.");
+  }
+};
+
+export const ImeCompositionGuard: Story = {
+  render: () => (
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
+      <p style={storyHelperTextStyle}>
+        In manual mode, Enter and Space are ignored while IME composition is active, so CJK
+        confirmation does not activate a tab by accident.
+      </p>
+      <Tabs
+        ariaLabel="Manual activation IME guard tabs"
+        activationMode="manual"
+        defaultValue="spec"
+        items={[
+          { key: "spec", label: "Spec", content: "Specification stage." },
+          { key: "build", label: "Build", content: "Build stage." },
+          { key: "release", label: "Release", content: "Release stage." }
+        ]}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+
+    await userEvent.click(specTab);
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(buildTab).toHaveFocus();
+    await expect(buildTab).toHaveAttribute("aria-selected", "false");
+
+    dispatchImeKeyDown(buildTab, "Enter");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+    await expect(buildTab).toHaveAttribute("aria-selected", "false");
+
+    dispatchImeKeyDown(buildTab, "Space");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+    await expect(buildTab).toHaveAttribute("aria-selected", "false");
+
+    buildTab.focus();
+    await expect(buildTab).toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
+    await expect(buildTab).toHaveAttribute("aria-selected", "true");
   }
 };
 
