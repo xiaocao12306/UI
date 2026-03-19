@@ -414,6 +414,7 @@ function PagedKeyboardNavigationPalette() {
 function ImeCompositionGuardPalette() {
   const [open, setOpen] = React.useState(true);
   const [selectedCount, setSelectedCount] = React.useState(0);
+  const [queryValue, setQueryValue] = React.useState("");
 
   return (
     <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10 }}>
@@ -423,9 +424,22 @@ function ImeCompositionGuardPalette() {
           {selectedCount}
         </strong>
       </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Query value:{" "}
+        <strong data-testid="ime-query-value" style={{ color: "var(--aurora-text-primary)" }}>
+          {queryValue || "N/A"}
+        </strong>
+      </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Palette state:{" "}
+        <strong data-testid="ime-open-state" style={{ color: "var(--aurora-text-primary)" }}>
+          {open ? "open" : "closed"}
+        </strong>
+      </p>
       <CommandPalette
         open={open}
         onOpenChange={setOpen}
+        onQueryChange={setQueryValue}
         closeOnSelect={false}
         commands={[
           { key: "open-settings", label: "Open Settings" },
@@ -785,10 +799,16 @@ export const ImeCompositionGuard: Story = {
     await userEvent.click(input);
 
     await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+    await userEvent.type(input, "deploy");
+    await expect(canvas.getByTestId("ime-query-value")).toHaveTextContent("deploy");
 
+    fireEvent.keyDown(input, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
     fireEvent.keyDown(input, { key: "ArrowDown", isComposing: true, keyCode: 229, which: 229 });
     fireEvent.keyDown(input, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
     await expect(canvas.getByTestId("ime-selection-count")).toHaveTextContent("0");
+    await expect(canvas.getByTestId("ime-query-value")).toHaveTextContent("deploy");
+    await expect(canvas.getByTestId("ime-open-state")).toHaveTextContent("open");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
 
     await userEvent.keyboard("{ArrowDown}");
     await userEvent.keyboard("{Enter}");

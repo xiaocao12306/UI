@@ -760,6 +760,46 @@ describe("CommandPalette", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("ignores Escape query reset and dismiss while IME composition is active", () => {
+    const onOpenChange = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onEscapeKeyDown={onEscapeKeyDown}
+        onCloseReason={onCloseReason}
+        commands={[
+          { key: "open-settings", label: "Open Settings", keywords: ["settings"] },
+          { key: "deploy", label: "Deploy Project", keywords: ["deploy"] }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.change(input, { target: { value: "deploy" } });
+    expect(input).toHaveValue("deploy");
+
+    fireEvent.keyDown(input, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    expect(input).toHaveValue("deploy");
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(input).toHaveValue("");
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenCalledWith("escape-key");
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it("keeps palette open after selection when closeOnSelect is false", () => {
     const onOpenChange = vi.fn();
     const onCreate = vi.fn();

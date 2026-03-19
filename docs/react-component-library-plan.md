@@ -456,6 +456,7 @@
   - CommandPalette 引用稳健性收口（`aria-activedescendant` 仅引用现存可执行 option，过滤/命令更新时避免悬空或禁用项引用）
   - CommandPalette 键盘长按收口（`Enter` repeat 场景忽略重复触发，避免批量执行模式下重复命令与遥测抖动）
   - CommandPalette 键盘提示精度收口（无可执行命令时移除 `Enter` 键提示，避免 AT/QA 误判可执行路径）
+  - CommandPalette IME Escape 收口（组合输入阶段忽略 Escape 的 query reset/dismiss 分支，避免 CJK 确认时误清空查询或关闭面板）
   - Tabs 键盘长按收口（manual 模式 `Enter/Space` repeat 场景忽略重复触发，避免 tab 切换遥测抖动）
   - Toast 键盘提示精度收口（堆叠通知仅当前可 Escape 关闭的顶层 toast 暴露 `aria-keyshortcuts="Escape"`，避免 AT/QA 误判不可关闭通知）
   - Toast 键盘长按收口（`Escape` repeat 场景忽略重复 keydown，避免一次长按关闭多条通知与遥测抖动）

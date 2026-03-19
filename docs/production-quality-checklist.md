@@ -245,6 +245,7 @@
 - Demo command-palette guard parity: added runtime `onEscapeKeyDown/onPointerDownOutside` toggle and Playwright regression for block/unblock dismiss behavior.
 - Release dry-run observability: `release-dry-run` now writes package-size evidence into `GITHUB_STEP_SUMMARY` for CI reviewers.
 - CommandPalette IME safety hardening: composition mode now bypasses Arrow/Enter command handlers (`isComposing` + legacy `keyCode=229`) so CJK text confirmation does not trigger accidental command execution.
+- CommandPalette IME Escape parity: composition mode now keeps Escape query-reset/dismiss paths inactive, with unit + Storybook `ImeCompositionGuard` assertions to prevent accidental clear/close during CJK confirmation.
 - Toast IME safety hardening: Escape dismiss now ignores composition mode (`isComposing` + `keyCode=229`) to prevent accidental close while confirming CJK input inside toast action controls.
 - Tabs RTL keyboard hardening: horizontal arrow semantics now follow container direction (`dir=\"rtl\"` mirrors ArrowLeft/ArrowRight), with unit + Storybook interaction coverage.
 - Table sort narration hardening: `aria-sort` now appears only on the actively sorted column; unsorted headers omit the attribute to reduce screen-reader noise and align with ARIA guidance.
