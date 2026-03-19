@@ -374,3 +374,5 @@
 - Storybook tabs edge parity: added `AllTabsDisabled` interaction scenario so no-enabled-tab semantics are validated in visual/interaction baseline.
 - Button contrast parity: disabled-state global opacity attenuation was removed and `KeyboardActivation` story action-button styling was adjusted to keep WCAG contrast in interaction/a11y sweeps.
 - Storybook gate parity refresh: after Button contrast repair, `pnpm storybook:test:ci` returned green on 2026-03-19 (`32` suites / `180` tests).
+- Demo dist parity refresh: after Button contrast changes, demo static artifacts were rebuilt and `pnpm demo:dist:check` returned green.
+- Verify/coverage parity refresh: `pnpm verify` and `pnpm coverage:gate` both revalidated as green after latest Button/Tabs/Table/Storybook updates.

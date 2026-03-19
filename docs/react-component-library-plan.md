@@ -490,6 +490,8 @@
   - Storybook Tabs 边界验收补齐（新增 `AllTabsDisabled` 场景并纳入交互回归）
   - Button 对比度修复（移除禁用态透明度衰减并强化 Storybook `KeyboardActivation` 场景可读性）
   - Storybook Gate 复验（2026-03-19 latest+3：`storybook:test:ci` 通过，32 suites / 180 tests）
+  - Demo dist 同步复验（`Button` 修复后刷新 `apps/demo/dist`，`demo:dist:check` 恢复通过）
+  - Verify/Coverage 复验（2026-03-19 latest+4：`pnpm verify` + `pnpm coverage:gate` 通过）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
