@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { CommandPalette, type CommandItem } from "@aurora-ui/react";
+import { Button, CommandPalette, type CommandItem } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 
 const commands: CommandItem[] = [
@@ -58,9 +58,9 @@ function TriggeredKeyboardFirstPalette() {
           {selectedAction}
         </strong>
       </p>
-      <button type="button" onClick={() => setOpen(true)}>
+      <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
         Open keyboard palette
-      </button>
+      </Button>
       <CommandPalette
         open={open}
         onOpenChange={setOpen}
@@ -163,15 +163,16 @@ function CloseReasonTelemetryPalette() {
           {closeTrace}
         </strong>
       </p>
-      <button
-        type="button"
+      <Button
+        size="sm"
+        variant="outline"
         onClick={() => {
           setCloseTrace("N/A");
           setOpen(true);
         }}
       >
         Reopen Palette
-      </button>
+      </Button>
       <CommandPalette
         open={open}
         onOpenChange={(nextOpen) => {
@@ -317,9 +318,9 @@ function NonDismissiblePalette() {
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
         Palette stays open until action selection or explicit toggle.
       </p>
-      <button type="button" onClick={() => setOpen((value) => !value)}>
+      <Button size="sm" variant="outline" onClick={() => setOpen((value) => !value)}>
         {open ? "Close blocking palette" : "Open blocking palette"}
-      </button>
+      </Button>
       <button type="button">Outside target</button>
       <CommandPalette
         open={open}
@@ -351,9 +352,9 @@ function GuardedDismissPalette() {
           {guardDismiss ? "enabled" : "disabled"}
         </strong>
       </p>
-      <button type="button" onClick={() => setOpen((value) => !value)}>
+      <Button size="sm" variant="outline" onClick={() => setOpen((value) => !value)}>
         {open ? "Close guarded palette" : "Open guarded palette"}
-      </button>
+      </Button>
       <button type="button">Outside target</button>
       <CommandPalette
         open={open}
