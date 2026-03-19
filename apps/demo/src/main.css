@@ -163,6 +163,30 @@
   align-items: center;
   gap: 6px;
   margin: 0;
+  min-width: 0;
+}
+
+.demo-telemetry-grid p > * {
+  min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-section-nav-pill,
+  .demo-section-nav-pill::before,
+  .demo-hero-stat-card,
+  .demo-panel,
+  .demo-section-card {
+    transition: none !important;
+  }
+
+  .demo-section-nav-pill,
+  .demo-hero-stat-card {
+    transform: none !important;
+  }
+
+  html:focus-within {
+    scroll-behavior: auto;
+  }
 }
 
 @media (max-width: 860px) {

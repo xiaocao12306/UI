@@ -234,6 +234,7 @@ const telemetryValueStyle: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   minHeight: 22,
+  maxWidth: "100%",
   padding: "1px 9px",
   borderRadius: 999,
   border: "1px solid color-mix(in srgb, var(--aurora-border-default) 84%, transparent)",
@@ -242,6 +243,8 @@ const telemetryValueStyle: React.CSSProperties = {
   fontSize: 12,
   letterSpacing: "0.01em",
   lineHeight: "18px",
+  whiteSpace: "normal",
+  overflowWrap: "anywhere",
   color: "var(--aurora-text-primary)",
   fontWeight: "var(--aurora-font-weight-semibold)"
 };
@@ -527,6 +530,54 @@ function App() {
     };
   }, []);
 
+  React.useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") {
+      return;
+    }
+
+    const sectionNodes = sectionLinks
+      .map((item) => document.getElementById(item.id))
+      .filter((node): node is HTMLElement => node instanceof HTMLElement);
+    if (sectionNodes.length === 0) {
+      return;
+    }
+
+    const visibilityById = new Map<string, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = (entry.target as HTMLElement).id;
+          visibilityById.set(id, entry.isIntersecting ? entry.intersectionRatio : 0);
+        });
+
+        let bestId = sectionLinks[0].id;
+        let bestRatio = -1;
+        for (const item of sectionLinks) {
+          const ratio = visibilityById.get(item.id) ?? 0;
+          if (ratio > bestRatio) {
+            bestId = item.id;
+            bestRatio = ratio;
+          }
+        }
+
+        setActiveSection((current) => (current === bestId ? current : bestId));
+      },
+      {
+        rootMargin: "-18% 0px -55% 0px",
+        threshold: [0, 0.2, 0.4, 0.6, 0.8, 1]
+      }
+    );
+
+    sectionNodes.forEach((node) => {
+      visibilityById.set(node.id, 0);
+      observer.observe(node);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   const handleDialogOpenChange = React.useCallback((nextOpen: boolean) => {
     setDialogOpen(nextOpen);
     if (!nextOpen) {
@@ -656,10 +707,11 @@ function App() {
                   onChange={(event) => setTheme(event.target.value as ThemeName)}
                   style={{ width: "min(180px, 48vw)" }}
                 >
-                  <option value="core-light">core-light</option>
-                  <option value="core-dark">core-dark</option>
-                  <option value="glass">glass</option>
-                  <option value="neo-brutal">neo-brutal</option>
+                  {availableThemes.map((themeName) => (
+                    <option key={themeName} value={themeName}>
+                      {themeName}
+                    </option>
+                  ))}
                 </Select>
               </div>
             </div>
