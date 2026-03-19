@@ -372,3 +372,5 @@
 - Storybook gate recovery parity: after syncing the single-row assertion and static baseline, `pnpm storybook:test:ci` returned to green (`32` suites / `179` tests) on 2026-03-19.
 - Tabs all-disabled semantics parity: tablist now exposes `aria-disabled=\"true\"` when no enabled tabs exist, with unit coverage to lock disabled focus/shortcut behavior.
 - Storybook tabs edge parity: added `AllTabsDisabled` interaction scenario so no-enabled-tab semantics are validated in visual/interaction baseline.
+- Button contrast parity: disabled-state global opacity attenuation was removed and `KeyboardActivation` story action-button styling was adjusted to keep WCAG contrast in interaction/a11y sweeps.
+- Storybook gate parity refresh: after Button contrast repair, `pnpm storybook:test:ci` returned green on 2026-03-19 (`32` suites / `180` tests).

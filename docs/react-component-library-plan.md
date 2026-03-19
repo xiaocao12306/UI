@@ -488,6 +488,8 @@
   - Storybook Gate 复绿（2026-03-19 latest+2：`storybook:test:ci` 通过，32 suites / 179 tests）
   - Tabs 全禁用语义收口（`tablist` 在无可用 tab 时暴露 `aria-disabled=true`，避免可交互误导）
   - Storybook Tabs 边界验收补齐（新增 `AllTabsDisabled` 场景并纳入交互回归）
+  - Button 对比度修复（移除禁用态透明度衰减并强化 Storybook `KeyboardActivation` 场景可读性）
+  - Storybook Gate 复验（2026-03-19 latest+3：`storybook:test:ci` 通过，32 suites / 180 tests）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
