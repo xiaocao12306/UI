@@ -593,6 +593,9 @@
   - CommandPalette 键冲突告警收口（开发态新增 `commands[].key` 重复值告警，降低 `aria-activedescendant` 与执行遥测漂移风险；补齐 `CommandPalette.test.tsx` 与 Storybook 文档说明）
   - Dropdown 键冲突告警收口（开发态新增 `items[].key` 重复值告警，避免 roving focus 与关闭原因遥测歧义；补齐 `Dropdown.test.tsx` 与 Storybook 文档说明）
   - Combobox 选项值冲突收口（开发态新增 `options[].value` 重复值告警，避免 selected/active 语义歧义；补齐 `Combobox.test.tsx` 与 Storybook 文档说明）
+  - Table 排序命名语义收口（新增 `columns[].sortLabel`，支持非文本列头时的排序按钮与 live region 可读播报；补齐单测 + Storybook `SortLabelForCustomHeader` + API/Best Practices 文档）
+  - Storybook 文档结构门禁收口（新增 `storybook:docs:structure:check` 并接入 `storybook:test:ci`，强制 `Component-API/Best-Practices` 必备章节存在）
+  - Demo 诊断层级收口（Telemetry 胶囊与区块背景降权，优先突出组件主交互与内容层级）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

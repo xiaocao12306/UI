@@ -473,3 +473,6 @@
 - Docs command-governance expansion: `docs:commands:check` now validates `docs/secrets.md` for `release:preflight:*` and enforce dispatch commands, preventing token setup/runbook drift from gate reality.
 - Release dry-run summary naming parity: workflow/script/docs now share `Release Dry Run Summary` heading for deterministic evidence retrieval.
 - Integration recipe parity: `docs/component-recipes.md` now includes production telemetry templates for overlay close reasons, manual-tabs activation, and localized table sort narration + telemetry.
+- Table sort narration parity: added `columns[].sortLabel` so icon/custom header cells can expose readable sort button labels and live-region status text, with unit + Storybook + docs coverage.
+- Storybook docs-structure gate parity: added `storybook:docs:structure:check` and chained it into `storybook:test:ci` to enforce required headings in `Component-API.mdx` and `Best-Practices.mdx`.
+- Demo telemetry hierarchy parity: reduced telemetry pill and container visual dominance so component interaction surfaces remain primary while diagnostic signals stay readable.
