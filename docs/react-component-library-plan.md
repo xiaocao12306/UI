@@ -448,7 +448,7 @@
   - Demo 交互状态收口（SectionNav/HeroStatCard 从事件驱动状态机切换为 CSS `:hover/:focus-visible/[aria-current]`，减少重渲染与状态分叉）
   - Demo 动效可访问性收口（新增 `prefers-reduced-motion` 分支，导航与卡片交互在低动态偏好下关闭位移动效）
   - CI/Release 日志可观测性收口（Storybook coverage 问题计数写入 summary，并上传 gate logs artifact 便于失败复盘）
-  - Table 键盘长按收口（sortable header 在 `Space` repeat 场景忽略重复 keydown，避免排序/遥测抖动）
+  - Table 键盘长按收口（sortable header 在 `Enter/Space` repeat 场景忽略重复 keydown，避免排序/遥测抖动）
   - CommandPalette 引用稳健性收口（`aria-activedescendant` 仅引用现存可执行 option，过滤/命令更新时避免悬空或禁用项引用）
   - Toast 键盘提示精度收口（堆叠通知仅当前可 Escape 关闭的顶层 toast 暴露 `aria-keyshortcuts="Escape"`，避免 AT/QA 误判不可关闭通知）
 - 进行中

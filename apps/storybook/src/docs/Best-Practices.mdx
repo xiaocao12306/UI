@@ -189,7 +189,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Expose `aria-sort` only on the actively sorted header so assistive narration reflects current sort state without repeating neutral columns.
 - Keep non-sortable headers free of `aria-sort` so assistive tech does not announce inert columns as interactive.
 - Validate sortable headers with both pointer and keyboard (`Enter`/`Space`, including legacy `Spacebar`) so non-pointer workflows stay first-class.
-- Treat long-press `Space`/`Spacebar` keyboard repeat (`event.repeat`) on sortable headers as no-op after the first toggle to prevent sort churn and telemetry jitter.
+- Treat long-press keyboard repeat (`event.repeat`) for sortable-header activation keys (`Enter` / `Space` / `Spacebar`) as no-op after the first toggle to prevent sort churn and telemetry jitter.
 - Keep sortable-header focus-visible feedback and `aria-keyshortcuts="Enter Space"` in place so keyboard affordance stays explicit in QA and audits.
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - Use `getSortStatusText` to localize active-sort live narration so keyboard and pointer sorting changes remain equally discoverable to assistive tech users.

@@ -281,7 +281,7 @@
 - CommandPalette shortcut-hint parity: when both `closeOnEscape` and `clearQueryOnEscape` are disabled, combobox `aria-keyshortcuts` now drops `Escape` to avoid advertising unavailable behavior.
 - Tabs shortcut-hint parity: manual mode now advertises `aria-keyshortcuts` only on enabled tabs; disabled tabs omit shortcut metadata to avoid false activation affordances.
 - Table shortcut-hint parity: `aria-keyshortcuts` is now exposed only when sortable headers are actually actionable; loading/empty/single-row disabled states omit the shortcut hint.
-- Table space-repeat parity: sortable headers now ignore repeated `Space` keydown (`event.repeat=true`) so keyboard long-press does not generate duplicate sort toggles/telemetry.
+- Table activation-repeat parity: sortable headers now ignore repeated activation keydown (`event.repeat=true`) for `Enter` / `Space` so keyboard long-press does not generate duplicate sort toggles/telemetry.
 - CommandPalette activedescendant parity: combobox now sanitizes active option references during query/command updates so `aria-activedescendant` never points to missing or disabled options.
 - Demo section-nav parity: `activeSection` now tracks viewport sections via `IntersectionObserver`, so hero cards and nav pills stay aligned during scroll (not only hash changes).
 - Gate observability parity: CI/Release workflows now upload Storybook/Demo/Release gate raw logs as artifacts and include Storybook coverage issue counters in summaries for faster triage.

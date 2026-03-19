@@ -312,7 +312,7 @@ export function Table<T>({
                       }}
                       onKeyDown={(event) => {
                         sortFocusIntentRef.current = true;
-                        if (!isSortSpaceActivationKey(event.key)) {
+                        if (!isSortActivationKey(event.key)) {
                           return;
                         }
 
@@ -458,8 +458,8 @@ function defaultGetSortStatusText({
   return `Sorted by ${columnHeader} ${direction === "asc" ? "ascending" : "descending"}.`;
 }
 
-function isSortSpaceActivationKey(key: string) {
-  return key === " " || key === "Space" || key === "Spacebar";
+function isSortActivationKey(key: string) {
+  return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
 }
 
 function resolveFocusVisibleState(target: HTMLButtonElement | null, fallback: boolean) {

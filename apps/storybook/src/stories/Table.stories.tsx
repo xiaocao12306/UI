@@ -232,6 +232,10 @@ export const SortTelemetry: Story = {
     const issueHeader = issueSortAsc.closest("th");
     await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
 
+    fireEvent.keyDown(issueSortAsc, { key: "Enter", repeat: true });
+    await expect(canvas.getByText("id desc")).toBeInTheDocument();
+    await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
+
     issueSortAsc.focus();
     fireEvent.keyDown(issueSortAsc, { key: "Space", repeat: true });
     await expect(canvas.getByText("id desc")).toBeInTheDocument();
