@@ -661,6 +661,31 @@ test("navigates data tabs with Home/End keys", async ({ page }) => {
   await expect(overviewPanel).not.toHaveAttribute("hidden");
 });
 
+test("keeps data tabs stable for modified navigation keys", async ({ page }) => {
+  await page.goto("/");
+
+  const overviewTab = page.getByRole("tab", { name: "Overview" });
+  const overviewPanel = page.locator(`#${await overviewTab.getAttribute("aria-controls")}`);
+  const settingsTab = page.getByRole("tab", { name: "Settings" });
+
+  await overviewTab.focus();
+  await overviewTab.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "End", ctrlKey: true, bubbles: true }));
+  });
+  await expect(overviewTab).toBeFocused();
+  await expect(overviewPanel).not.toHaveAttribute("hidden");
+  await expect(settingsTab).toHaveAttribute("aria-selected", "false");
+
+  await overviewTab.evaluate((element) => {
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowRight", metaKey: true, bubbles: true })
+    );
+  });
+  await expect(overviewTab).toBeFocused();
+  await expect(overviewPanel).not.toHaveAttribute("hidden");
+  await expect(settingsTab).toHaveAttribute("aria-selected", "false");
+});
+
 test("updates tabs telemetry when active tab changes", async ({ page }) => {
   await page.goto("/");
 
@@ -747,6 +772,30 @@ test("sorts demo table with keyboard activation", async ({ page }) => {
   await componentSortButton.press("Space");
   await expect(componentColumn).toHaveAttribute("aria-sort", "ascending");
   await expect(firstRow).toContainText("Button");
+});
+
+test("keeps demo table sort stable for modified activation keys", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table");
+  const telemetry = page.getByTestId("table-sort-telemetry");
+  const componentColumn = table.getByRole("columnheader", { name: /Component/ });
+  const componentSortButton = table.getByRole("button", { name: /Component/ });
+  const firstRow = table.locator("tbody tr").first();
+
+  await componentSortButton.focus();
+  await componentSortButton.evaluate((element) => {
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Enter", ctrlKey: true, bubbles: true })
+    );
+  });
+  await componentSortButton.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "Space", metaKey: true, bubbles: true }));
+  });
+
+  await expect(componentColumn).toHaveAttribute("aria-sort", "ascending");
+  await expect(firstRow).toContainText("Button");
+  await expect(telemetry).toHaveText("component:asc");
 });
 
 test("ignores repeated Space keydown when sorting demo table", async ({ page }) => {
