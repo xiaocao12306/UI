@@ -515,6 +515,7 @@
   - FormField 关联语义补测（非可克隆子节点默认不输出悬空 `htmlFor`，显式 `htmlFor` 仍可建立 label-control 关联）
   - Dropdown 全禁用 Storybook 验收（新增 `AllItemsDisabledKeyboardNoop`，锁定 Arrow/Home/End/Enter 在禁用列表中保持 no-op）
   - Demo 主题视觉契约收口（`AuroraProvider` 暴露 `data-aurora-theme`，Playwright 断言主题切换/刷新后 CSS 变量真实变更，避免仅文案切换的伪通过）
+  - 文档门禁口径收口（README / testing-and-release / storybook 文档统一补齐 `storybook:docs:parity:check` 与 `release:gate:ci` 的 `coverage:gate` 说明）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

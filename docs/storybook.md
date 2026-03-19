@@ -51,11 +51,14 @@ pnpm storybook:test:ci
 ```bash
 pnpm storybook:coverage:report
 pnpm storybook:docs:check
+pnpm storybook:docs:parity:check
 pnpm storybook:play:check
 pnpm storybook:static:check
 pnpm storybook:a11y:skip-check
 pnpm storybook:test:grep "Table.stories.tsx"
 ```
+
+说明：`pnpm --filter @aurora-ui/storybook-app storybook:test:ci` 只执行 test-runner，不包含根脚本 `storybook:test:ci` 的 coverage/docs/parity/play/static/a11y 前置门禁。
 
 ## Interaction Runner
 
