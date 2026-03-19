@@ -364,3 +364,7 @@
 - CommandPalette status-link parity: combobox now binds `aria-describedby` to live result-status narration to stabilize screen-reader announcement context during filtering.
 - Table loading narration parity: loading state now suppresses sort live narration so only one `role="status"` channel remains during refresh.
 - Table empty-column guard parity: `columns=[]` now keeps empty-state cell `colSpan=1` to preserve valid table semantics in edge configuration.
+- CommandPalette Escape-hint precision parity: combobox now advertises `Escape` shortcut only when Escape close is enabled or current query can be cleared (`clearQueryOnEscape` actionable).
+- Table disabled-sort label parity: when dataset shrinks to empty/single-row, sortable headers keep prior next-direction label while still suppressing `aria-sort`.
+- Storybook/release gate docs parity: README + Storybook + testing docs now expose shortest local gate flows and failure-signature troubleshooting mappings.
+- Demo hero polish parity: first-screen hierarchy, section card surfaces, and mobile navigation readability were further refined without changing interaction contracts.
