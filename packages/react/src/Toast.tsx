@@ -339,6 +339,7 @@ export function Toast({
       aria-modal={hasAction ? "false" : undefined}
       aria-live={ariaLive}
       aria-atomic="true"
+      aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabel ? undefined : titleId}
       aria-describedby={description ? descriptionId : undefined}
