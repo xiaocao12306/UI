@@ -403,3 +403,4 @@
 - Tabs manual-roving parity: tablist blur now resets roving `tabIndex` to the selected tab so keyboard/AT users re-enter consistent with active panel context, with dedicated unit regression coverage.
 - Table scroll-reachability parity: when sortable header controls are unavailable, the overflow container now becomes keyboard focusable (`tabIndex=0`) so horizontal overflow remains reachable for non-pointer users, with regression coverage for both focusable and non-focusable branches.
 - Storybook data keyboard parity: added `Tabs/ManualFocusResetOnBlur` and `Table/KeyboardReachableScrollContainer` interaction stories so manual-tab roving reset and non-sortable table scroll focusability are tracked in visual/interaction baselines.
+- Storybook/docs command-governance parity: added `docs:commands:check` and wired it into `storybook:test:ci` so README + Storybook + release docs command snippets cannot silently drift from gate scripts.

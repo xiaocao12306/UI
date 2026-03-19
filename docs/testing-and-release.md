@@ -52,6 +52,7 @@ pnpm storybook:a11y:skip-check
 pnpm storybook:play:check
 pnpm storybook:docs:check
 pnpm storybook:docs:parity:check
+pnpm docs:commands:check
 pnpm storybook:static:check
 pnpm storybook:test:grep "Table.stories.tsx"
 pnpm storybook:build
@@ -80,6 +81,8 @@ Demo dist gate behavior:
   - Fix: run `pnpm storybook:coverage:report` to inspect issue counts/details; then fix docs/story references and rerun `pnpm storybook:coverage:check`.
 - Signature: `[storybook-docs-import-check] error: ... missing story imports ...` or `... invalid story refs ...`
   - Fix: add missing `*Stories` imports in `apps/storybook/src/docs/*.mdx`, or export the referenced story from `apps/storybook/src/stories/*.stories.tsx`, then rerun `pnpm storybook:docs:check`.
+- Signature: `[docs-command-check] error: missing required command references: ...`
+  - Fix: sync command snippets in `README.md` / `docs/storybook.md` / `docs/testing-and-release.md` (especially `storybook:docs:parity:check` and `release:gate:ci` coverage chain), then rerun `pnpm docs:commands:check`.
 - Signature: `[storybook-play-coverage-check] error: ... story file(s) missing play hooks.`
   - Fix: add at least one exported story with `play` per listed story file, then rerun `pnpm storybook:play:check`.
 - Signature: `[storybook-static-check] error: storybook-static is out of sync with current sources.`

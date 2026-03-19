@@ -17,6 +17,7 @@ pnpm storybook:smoke
 pnpm storybook:build
 pnpm storybook:docs:check
 pnpm storybook:docs:parity:check
+pnpm docs:commands:check
 pnpm storybook:play:check
 pnpm storybook:coverage:report
 pnpm storybook:coverage:check
@@ -52,6 +53,7 @@ pnpm storybook:test:ci
 pnpm storybook:coverage:report
 pnpm storybook:docs:check
 pnpm storybook:docs:parity:check
+pnpm docs:commands:check
 pnpm storybook:play:check
 pnpm storybook:static:check
 pnpm storybook:a11y:skip-check
@@ -66,6 +68,7 @@ pnpm storybook:test:grep "Table.stories.tsx"
 - 入口脚本：
   - `storybook:docs:check`：校验 docs MDX 中 `*Stories` 引用是否都有对应 import，并验证 `of={XStories.Y}` 中 `Y` 在故事文件里真实导出，避免文档页运行时 `ReferenceError` / `Missing story export`
   - `storybook:docs:parity:check`：校验 `Component-API.mdx` 与 `Best-Practices.mdx` 的共享组件导入集合不漂移（Best Practices 导入必须在 Component API 中存在，且共享门禁组件必须双侧都导入）
+  - `docs:commands:check`：校验 `README.md` / `docs/storybook.md` / `docs/testing-and-release.md` 中关键门禁命令片段不漂移（`storybook:docs:parity:check` 与 release gate coverage 链）
   - `storybook:coverage:report`：统计 `apps/storybook/src/stories/*.stories.*` 覆盖率清单，输出 docs import/reference 覆盖率、未被 docs 引用的 story 文件、以及 docs 引用校验摘要（缺失 import / 缺失 story 文件 / 缺失导出 / 未使用 import）；附加 `--strict` 时如存在门禁问题会非 0 退出；在 CI 中会自动写入 `GITHUB_STEP_SUMMARY` 便于 reviewer 快速审阅
   - `storybook:coverage:check`：`storybook:coverage:report -- --strict` 的门禁封装，适用于 CI
   - `storybook:play:check`：校验 `apps/storybook/src/stories/*.stories.*` 每个故事文件至少包含 1 个 `play` 交互场景，防止“仅静态展示、无可回归断言”的文件漏网
@@ -74,7 +77,7 @@ pnpm storybook:test:grep "Table.stories.tsx"
   - `storybook:test`：针对已运行的 Storybook URL 执行交互测试
   - `storybook:test:grep`：针对本地 `storybook-static` 启动临时服务并按 `--testPathPattern` 仅运行指定 story 文件回归（例如 `pnpm storybook:test:grep "Table.stories.tsx"`）
   - `apps/storybook/.storybook/test-runner.ts`：在 `preVisit/postVisit` 注入 `axe-playwright`，为每个 story 执行 WCAG 扫描；`color-contrast` 默认全量执行，仅在白名单存在时对登记 story id 做定向豁免
-- `storybook:test:ci`：先执行 `storybook:coverage:check` + `storybook:docs:check` + `storybook:docs:parity:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`，再在本地静态产物（`storybook-static`）上通过 `scripts/serve-storybook-static.mjs` 启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
+- `storybook:test:ci`：先执行 `storybook:coverage:check` + `storybook:docs:check` + `storybook:docs:parity:check` + `docs:commands:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`，再在本地静态产物（`storybook-static`）上通过 `scripts/serve-storybook-static.mjs` 启动临时服务并运行测试（启动前自动清理 `6106` 端口残留进程）
 - 可审阅性约定：Storybook tests/suites 计数不在文档中手工维护，统一以 CI run 的 `GITHUB_STEP_SUMMARY`（`Storybook Interaction Gate`）为准。
 - 常见失败签名与修复：
   - `[storybook-coverage-report] error: strict mode failed with ... gating issue(s).`
@@ -83,6 +86,8 @@ pnpm storybook:test:grep "Table.stories.tsx"
     - 修复：补齐 `apps/storybook/src/docs/*.mdx` 的 `*Stories` import，或补齐/更正 `apps/storybook/src/stories/*.stories.tsx` 导出，再跑 `pnpm storybook:docs:check`
   - `[storybook-docs-parity-check] error: ...`
     - 修复：补齐 `apps/storybook/src/docs/Component-API.mdx` 或 `apps/storybook/src/docs/Best-Practices.mdx` 的共享组件 story import，保证共享组件双文档一致覆盖，再跑 `pnpm storybook:docs:parity:check`
+  - `[docs-command-check] error: missing required command references: ...`
+    - 修复：同步 `README.md` / `docs/storybook.md` / `docs/testing-and-release.md` 的关键命令片段，再跑 `pnpm docs:commands:check`
   - `[storybook-play-coverage-check] error: ... missing play hooks.`
     - 修复：为列出的 story 文件至少补 1 个带 `play` 的导出故事，再跑 `pnpm storybook:play:check`
   - `[storybook-static-check] error: storybook-static is out of sync with current sources.`

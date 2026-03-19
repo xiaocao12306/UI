@@ -520,6 +520,7 @@
   - Tabs manual 焦点回收收口（tablist 失焦后 roving tabindex 回到当前已选 tab，避免返回组件时焦点落在未激活页签）
   - Table 滚动容器可达性收口（无可用排序控件时自动提供滚动容器键盘焦点入口，确保横向溢出场景可达）
   - Storybook 回归面补齐（`Tabs/ManualFocusResetOnBlur` + `Table/KeyboardReachableScrollContainer` 交互故事，定向 runner 通过）
+  - 文档命令门禁自动化（新增 `docs:commands:check` 并接入 `storybook:test:ci`，防止 README/Storybook/Release 命令口径漂移）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
