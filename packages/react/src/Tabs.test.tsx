@@ -746,7 +746,7 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Spec")).toBeInTheDocument();
   });
 
-  it("shows focus ring only for keyboard-intended tab focus", () => {
+  it("shows focus ring for Tab navigation even after pointer interaction fallback path", () => {
     render(
       <Tabs
         defaultValue="one"
@@ -767,7 +767,7 @@ describe("Tabs", () => {
     expect(oneTab.style.boxShadow).toBe("none");
 
     fireEvent.blur(oneTab);
-    fireEvent.keyDown(oneTab, { key: "Tab" });
+    fireEvent.keyDown(document, { key: "Tab" });
     fireEvent.focus(oneTab);
     expect(oneTab.style.boxShadow).toContain("0 0 0 3px");
 

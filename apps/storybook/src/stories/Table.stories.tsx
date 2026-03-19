@@ -192,6 +192,32 @@ export const KeyboardReachableScrollContainer: Story = {
   }
 };
 
+export const KeyboardFocusRingAfterPointer: Story = {
+  render: () => (
+    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
+      <p style={storyHelperTextStyle}>
+        Sort button hides focus ring on pointer focus, then restores focus-visible ring when users
+        return with keyboard Tab navigation.
+      </p>
+      <button type="button">Before table</button>
+      <Table columns={columns} data={rows} defaultSortKey="id" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = canvas.getByRole("button", { name: "Before table" });
+    const issueSortButton = canvas.getByRole("button", { name: "Issue sort descending" });
+
+    fireEvent.mouseDown(issueSortButton);
+    issueSortButton.focus();
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(issueSortButton).toHaveFocus();
+    await expect(issueSortButton.style.boxShadow).toContain("0 0 0 3px");
+  }
+};
+
 export const LoadingState: Story = {
   render: () => (
     <div style={{ width: "min(100%, 780px)" }}>

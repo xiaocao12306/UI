@@ -88,6 +88,30 @@ export function Tabs({
   const [pressedTabKey, setPressedTabKey] = React.useState<string | null>(null);
   const [focusVisibleTabKey, setFocusVisibleTabKey] = React.useState<string | null>(null);
 
+  React.useEffect(() => {
+    const markKeyboardIntent = (event: KeyboardEvent) => {
+      if (event.metaKey || event.altKey || event.ctrlKey) {
+        return;
+      }
+      focusIntentRef.current = true;
+    };
+    const markPointerIntent = () => {
+      focusIntentRef.current = false;
+    };
+
+    document.addEventListener("keydown", markKeyboardIntent, true);
+    document.addEventListener("pointerdown", markPointerIntent, true);
+    document.addEventListener("mousedown", markPointerIntent, true);
+    document.addEventListener("touchstart", markPointerIntent, true);
+
+    return () => {
+      document.removeEventListener("keydown", markKeyboardIntent, true);
+      document.removeEventListener("pointerdown", markPointerIntent, true);
+      document.removeEventListener("mousedown", markPointerIntent, true);
+      document.removeEventListener("touchstart", markPointerIntent, true);
+    };
+  }, []);
+
   const currentRawValue = value ?? internalValue;
   const currentValue = items.some((item) => item.key === currentRawValue && !item.disabled)
     ? currentRawValue

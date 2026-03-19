@@ -89,6 +89,30 @@ export function Table<T>({
   const [pressedSortKey, setPressedSortKey] = React.useState<string | null>(null);
   const [focusVisibleSortKey, setFocusVisibleSortKey] = React.useState<string | null>(null);
 
+  React.useEffect(() => {
+    const markKeyboardIntent = (event: KeyboardEvent) => {
+      if (event.metaKey || event.altKey || event.ctrlKey) {
+        return;
+      }
+      sortFocusIntentRef.current = true;
+    };
+    const markPointerIntent = () => {
+      sortFocusIntentRef.current = false;
+    };
+
+    document.addEventListener("keydown", markKeyboardIntent, true);
+    document.addEventListener("pointerdown", markPointerIntent, true);
+    document.addEventListener("mousedown", markPointerIntent, true);
+    document.addEventListener("touchstart", markPointerIntent, true);
+
+    return () => {
+      document.removeEventListener("keydown", markKeyboardIntent, true);
+      document.removeEventListener("pointerdown", markPointerIntent, true);
+      document.removeEventListener("mousedown", markPointerIntent, true);
+      document.removeEventListener("touchstart", markPointerIntent, true);
+    };
+  }, []);
+
   const [sortState, setSortState] = React.useState<{
     key: string;
     direction: TableSortDirection;

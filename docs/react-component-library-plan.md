@@ -531,6 +531,7 @@
   - CommandPalette 首帧键盘可用性收口（弹层支持 `data-autofocus` 目标，`open=false -> true` 自动聚焦搜索框并可直接 Enter 执行）
   - Toast timeout 验收补齐（新增 `TimeoutCloseReason` 故事断言自动关闭与 `reason=timeout`，并补齐顶部 toast 外部卸载后的 Escape 栈重分配单测）
   - 文档命令一致性门禁强化（`docs:commands:check` 改为解析 `package.json` 实际 gate 链路并逐文档校验关键命令）
+  - Tabs/Table 焦点兜底收口（全局键鼠意图跟踪 + `:focus-visible` fallback，补齐 keyboard-after-pointer 单测与 Storybook 验收）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

@@ -519,7 +519,7 @@ describe("Table", () => {
     );
   });
 
-  it("shows sort-button focus ring only for keyboard-intended focus", () => {
+  it("shows sort-button focus ring for Tab navigation even after pointer interaction fallback path", () => {
     render(
       <Table
         columns={[
@@ -544,7 +544,7 @@ describe("Table", () => {
     expect(sortButton.style.boxShadow).toBe("none");
 
     fireEvent.blur(sortButton);
-    fireEvent.keyDown(sortButton, { key: "Tab" });
+    fireEvent.keyDown(document, { key: "Tab" });
     fireEvent.focus(sortButton);
     expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
     matchesSpy.mockRestore();

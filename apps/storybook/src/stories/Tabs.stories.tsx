@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Tabs, type TabItem } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const productTabs: TabItem[] = [
   {
@@ -93,6 +93,32 @@ export const Controlled: Story = {
     await userEvent.keyboard("{Home}");
     await expect(specTab).toHaveAttribute("aria-selected", "true");
     await expect(specTab).toHaveFocus();
+  }
+};
+
+export const KeyboardFocusRingAfterPointer: Story = {
+  render: () => (
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
+      <p style={storyHelperTextStyle}>
+        Pointer focus keeps ring hidden, then keyboard Tab navigation restores focus-visible ring
+        for the active tab.
+      </p>
+      <button type="button">Before tabs</button>
+      <Tabs ariaLabel="Focus ring fallback tabs" defaultValue="spec" items={productTabs} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const beforeButton = canvas.getByRole("button", { name: "Before tabs" });
+
+    fireEvent.mouseDown(specTab);
+    specTab.focus();
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(specTab).toHaveFocus();
+    await expect(specTab.style.boxShadow).toContain("0 0 0 3px");
   }
 };
 
