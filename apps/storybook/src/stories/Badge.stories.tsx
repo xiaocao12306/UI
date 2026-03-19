@@ -39,15 +39,15 @@ export const AiInteractionStatus: Story = {
     <div style={{ display: "grid", gap: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <Badge>Queued</Badge>
-        <span style={{ color: "var(--aurora-text-secondary)" }}>Prompt is waiting for the model response.</span>
+        <span style={{ color: "var(--aurora-text-primary)" }}>Prompt is waiting for the model response.</span>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <Badge tone="success">Grounded</Badge>
-        <span style={{ color: "var(--aurora-text-secondary)" }}>Citations and reasoning checks passed.</span>
+        <span style={{ color: "var(--aurora-text-primary)" }}>Citations and reasoning checks passed.</span>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <Badge tone="danger">Needs review</Badge>
-        <span style={{ color: "var(--aurora-text-secondary)" }}>Low-confidence branch detected.</span>
+        <span style={{ color: "var(--aurora-text-primary)" }}>Low-confidence branch detected.</span>
       </div>
     </div>
   ),

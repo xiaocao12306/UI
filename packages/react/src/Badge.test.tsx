@@ -8,13 +8,14 @@ describe("Badge", () => {
     expect(screen.getByText("Stable")).toBeInTheDocument();
   });
 
-  it("applies success tone tokens", () => {
+  it("applies success tone tokens with contrast-safe text", () => {
     render(<Badge tone="success">Healthy</Badge>);
     const badge = screen.getByText("Healthy");
     const style = badge.getAttribute("style") ?? "";
 
     expect(style).toContain("var(--aurora-feedback-success-bg)");
-    expect(style).toContain("var(--aurora-feedback-success-text)");
+    expect(style).toContain("var(--aurora-feedback-success-border)");
+    expect(style).toContain("var(--aurora-text-primary)");
   });
 
   it("allows style overrides", () => {

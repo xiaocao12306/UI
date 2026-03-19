@@ -439,6 +439,7 @@
   - Storybook 入口文档收口（`Getting Started` 改为分域导航 + 阅读路径，补齐 Catalog/API/Best Practices 跳转）
   - Storybook 交互门禁收口（新增 `storybook:play:check`，要求每个 `*.stories.*` 至少 1 个 `play` 回归；补齐 `MessageBubble` 交互断言）
   - Storybook a11y 门禁收口（`@storybook/test-runner` 接入 `axe-playwright`，在 Story 级回归执行 WCAG 扫描，并将 `color-contrast` 收口为 story-id 级别定向豁免）
+  - Storybook 对比度豁免回收（提升 Badge/Tag 默认对比度并移除 `core-badge--tone-matrix` / `core-badge--ai-interaction-status` / `core-tag--ai-context-markers` 白名单）
   - Vitest 覆盖率门禁收口（新增 `coverage:gate` + 硬阈值 lines/statements `>=90%`、branches/functions `>=85%`，并接入 CI/Release Gate）
   - Table 空/单行排序语义收口（`defaultSortKey` 在无有效排序条件时不再暴露 `aria-sort` 与排序播报，避免禁用态误导）
   - Table 排序交互状态收口（sortable header 补齐 hover/active/focus-visible 反馈，并显式暴露 `aria-keyshortcuts="Enter Space"`）

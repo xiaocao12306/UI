@@ -30,7 +30,15 @@ export const MetadataRow: Story = {
       <Tag>cloud</Tag>
       <Tag>frontend</Tag>
       <Tag>design-system</Tag>
-      <Tag style={{ borderColor: "var(--aurora-color-blue-500)", color: "var(--aurora-color-blue-500)" }}>priority</Tag>
+      <Tag
+        style={{
+          borderColor: "var(--aurora-color-blue-500)",
+          background: "color-mix(in srgb, var(--aurora-color-blue-500) 16%, var(--aurora-surface-elevated))",
+          color: "var(--aurora-text-primary)"
+        }}
+      >
+        priority
+      </Tag>
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -50,8 +58,24 @@ export const AiContextMarkers: Story = {
         <Tag>scope: docs</Tag>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <Tag style={{ borderColor: "var(--aurora-color-blue-500)", color: "var(--aurora-color-blue-500)" }}>memory synced</Tag>
-        <Tag style={{ borderColor: "var(--aurora-color-red-500)", color: "var(--aurora-color-red-500)" }}>awaiting approval</Tag>
+        <Tag
+          style={{
+            borderColor: "var(--aurora-color-blue-500)",
+            background: "color-mix(in srgb, var(--aurora-color-blue-500) 16%, var(--aurora-surface-elevated))",
+            color: "var(--aurora-text-primary)"
+          }}
+        >
+          memory synced
+        </Tag>
+        <Tag
+          style={{
+            borderColor: "var(--aurora-color-red-500)",
+            background: "color-mix(in srgb, var(--aurora-color-red-500) 16%, var(--aurora-surface-elevated))",
+            color: "var(--aurora-text-primary)"
+          }}
+        >
+          awaiting approval
+        </Tag>
       </div>
     </div>
   ),
