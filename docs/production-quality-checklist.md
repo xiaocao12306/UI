@@ -479,3 +479,5 @@
 - Demo telemetry hierarchy parity: reduced telemetry pill and container visual dominance so component interaction surfaces remain primary while diagnostic signals stay readable.
 - Storybook showcase consistency parity: `Tabs` and `Toast` stories now share `StoryShowcaseFrame` / `StoryFullscreenFrame` wrappers and telemetry text style tokens, reducing inline layout noise while preserving play assertions.
 - Release-gate parity refresh (2026-03-20 latest+4): reran `pnpm release:gate:ci` after Tabs/Toast Storybook showcase refactor + static sync and confirmed full pass (verify + coverage + demo e2e 73/73 + demo dist sync + storybook interaction 213/213).
+- Storybook overlay showcase parity: `Popover` / `Tooltip` stories now share the same showcase shell + muted/emphasis telemetry text styling, aligning overlay documentation hierarchy with the rest of Storybook.
+- Storybook gate parity refresh (2026-03-20 latest+5): reran `pnpm storybook:test:ci` after Overlay showcase refactor and confirmed full pass (coverage/docs/parity/structure/play/static/a11y gates + storybook interaction 213/213).
