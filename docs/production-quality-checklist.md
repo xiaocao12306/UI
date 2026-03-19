@@ -405,3 +405,4 @@
 - Storybook data keyboard parity: added `Tabs/ManualFocusResetOnBlur` and `Table/KeyboardReachableScrollContainer` interaction stories so manual-tab roving reset and non-sortable table scroll focusability are tracked in visual/interaction baselines.
 - Storybook/docs command-governance parity: added `docs:commands:check` and wired it into `storybook:test:ci` so README + Storybook + release docs command snippets cannot silently drift from gate scripts.
 - Overlay branch parity: added `Drawer` body-scroll-lock regressions (open/close + multi-modal coexistence) and `Dropdown` controlled/defaultOpen regressions to lock controlled-state contract and prevent close-behavior drift.
+- Overlay focus-trap parity: added Dialog/Drawer `Tab` + `Shift+Tab` cycle regressions to ensure focus remains trapped inside modal surfaces and cannot escape to page-level controls while open.

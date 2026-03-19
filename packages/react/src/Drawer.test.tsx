@@ -1,5 +1,6 @@
 import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Dialog } from "./Dialog";
 import { Drawer } from "./Drawer";
@@ -333,6 +334,40 @@ describe("Drawer", () => {
 
     fireEvent.mouseUp(closeButton);
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+  });
+
+  it("keeps Tab/Shift+Tab focus cycling inside drawer", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <div>
+        <button type="button">Outside before</button>
+        <Drawer open onOpenChange={() => {}} title="Focus trap drawer">
+          <button type="button">Primary action</button>
+          <button type="button">Secondary action</button>
+        </Drawer>
+        <button type="button">Outside after</button>
+      </div>
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Close drawer" });
+    const primaryAction = screen.getByRole("button", { name: "Primary action" });
+    const secondaryAction = screen.getByRole("button", { name: "Secondary action" });
+
+    closeButton.focus();
+    expect(closeButton).toHaveFocus();
+
+    await user.tab();
+    expect(primaryAction).toHaveFocus();
+
+    await user.tab();
+    expect(secondaryAction).toHaveFocus();
+
+    await user.tab();
+    expect(closeButton).toHaveFocus();
+
+    await user.tab({ shift: true });
+    expect(secondaryAction).toHaveFocus();
   });
 
   it("locks body scroll while open and restores when closed", () => {

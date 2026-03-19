@@ -122,6 +122,40 @@ describe("Dialog", () => {
     matchesSpy.mockRestore();
   });
 
+  it("keeps Tab/Shift+Tab focus cycling inside dialog", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <div>
+        <button type="button">Outside before</button>
+        <Dialog open onOpenChange={() => {}} title="Focus trap dialog">
+          <button type="button">Primary action</button>
+          <button type="button">Secondary action</button>
+        </Dialog>
+        <button type="button">Outside after</button>
+      </div>
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    const primaryAction = screen.getByRole("button", { name: "Primary action" });
+    const secondaryAction = screen.getByRole("button", { name: "Secondary action" });
+
+    closeButton.focus();
+    expect(closeButton).toHaveFocus();
+
+    await user.tab();
+    expect(primaryAction).toHaveFocus();
+
+    await user.tab();
+    expect(secondaryAction).toHaveFocus();
+
+    await user.tab();
+    expect(closeButton).toHaveFocus();
+
+    await user.tab({ shift: true });
+    expect(secondaryAction).toHaveFocus();
+  });
+
   it("does not dismiss on escape when closeOnEscape is false", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();

@@ -522,6 +522,7 @@
   - Storybook 回归面补齐（`Tabs/ManualFocusResetOnBlur` + `Table/KeyboardReachableScrollContainer` 交互故事，定向 runner 通过）
   - 文档命令门禁自动化（新增 `docs:commands:check` 并接入 `storybook:test:ci`，防止 README/Storybook/Release 命令口径漂移）
   - Overlay 分支补测（`Drawer` 补齐 body scroll lock 回归；`Dropdown` 补齐 controlled + `defaultOpen` 契约回归）
+  - Dialog/Drawer 焦点圈定补测（`Tab`/`Shift+Tab` 循环焦点保持在弹层内部，防止焦点逃逸到外部页面）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
