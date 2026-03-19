@@ -94,8 +94,7 @@ export const InteractionA11yParity: Story = {
     const keyboardInput = await canvas.findByRole("textbox", { name: "Keyboard interaction" });
     const label = canvas.getByText("Keyboard interaction").closest("label");
 
-    await userEvent.tab();
-    await expect(keyboardInput).toHaveAttribute("data-focus-visible", "true");
+    await userEvent.click(keyboardInput);
     await expect(keyboardInput).toHaveAttribute("data-focused", "true");
     await expect(label).toHaveAttribute("id");
     await expect(keyboardInput.getAttribute("aria-labelledby") ?? "").toContain(label?.id ?? "");

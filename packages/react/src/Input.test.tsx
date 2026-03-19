@@ -95,6 +95,24 @@ describe("Input", () => {
     expect(input).not.toHaveAttribute("data-active");
   });
 
+  it("retains focus-visible state on non-primary pointer interaction", () => {
+    render(<Input aria-label="Pointer focus input" />);
+    const input = screen.getByRole("textbox", { name: "Pointer focus input" });
+
+    fireEvent.keyDown(input, { key: "Tab" });
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(input, { button: 1 });
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.pointerDown(input, { button: 2 });
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(input, { button: 0 });
+    expect(input).not.toHaveAttribute("data-focus-visible");
+  });
+
   it("suppresses hover and active states when disabled", () => {
     render(<Input aria-label="Disabled interactions" disabled />);
     const input = screen.getByRole("textbox", { name: "Disabled interactions" });
