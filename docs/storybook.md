@@ -5,6 +5,7 @@
 - 应用目录：`apps/storybook`
 - 框架：`@storybook/react-vite`（Storybook 8）
 - 目标：为 `@aurora-ui/react` 提供组件可视化、主题切换与交互演示
+- 管理端品牌主题：`apps/storybook/.storybook/manager.ts`（`Aurora UI` branding + 字体/色彩基线）
 
 ## 启动与构建
 

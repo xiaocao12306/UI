@@ -506,6 +506,7 @@
   - Storybook IME 验收补齐（`Tabs/ImeCompositionGuard` + `Table/ImeCompositionGuard`，锁定组合输入阶段 Enter/Space 不触发激活/排序）
   - Storybook 定向回归复验（2026-03-19 latest+6：`pnpm storybook:test:grep "Tabs.stories.tsx|Table.stories.tsx"` 通过，2 suites / 31 tests）
   - Dropdown 键盘边界补测（`Home/End` 跳过禁用项 + 全禁用列表 `Arrow/Home/End/Enter` no-op，防止 roving focus 误漂移）
+  - Storybook 管理端品牌化（新增 `.storybook/manager.ts`，统一 `Aurora UI` 品牌标题、字体与中控面板配色）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
