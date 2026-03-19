@@ -382,7 +382,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | sort interaction guard | loading/empty/single-row auto-disabled | Sort buttons disable automatically when sorting would be no-op (`loading`, zero rows, or one row), and no sorted-state narration is emitted in those branches. |
 | sortable header keyboard | `Enter` / `Space` / legacy `Spacebar` | Sort buttons support pointer + keyboard activation with the same direction toggling semantics across browser key-value variants. |
 | sortable header key hints | `aria-keyshortcuts="Enter Space"` | Enabled sort buttons expose explicit keyboard hints and focus-visible ring semantics for deterministic keyboard QA; disabled sort controls omit the hint. |
-| space repeat guard | ignores repeated keydown | Holding `Space` (`event.repeat=true`) on sort headers does not trigger repeated sort toggles, preventing telemetry jitter and accidental direction flips. |
+| activation repeat guard | ignores repeated keydown | Holding sort activation keys (`Enter` / `Space`, `event.repeat=true`) does not trigger repeated sort toggles, preventing telemetry jitter and accidental direction flips. |
 | `aria-sort` exposure | active sorted header only | Unsorted headers (including sortable ones) omit `aria-sort`, reducing screen-reader noise and matching ARIA table guidance. |
 
 <Canvas of={TableStories.SortTelemetry} />
@@ -517,7 +517,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `pauseOnHover` | `boolean` | Suspends timer while hovered or while focus stays inside toast controls. |
 | `position` | `'bottom-right' \| 'bottom-left' \| 'top-right' \| 'top-left'` | Controls viewport anchor for stack placement and Escape-priority grouping. |
 | `closeOnEscape` | `boolean` | Optional keyboard dismiss path; Escape is consumed so stacked toasts dismiss one at a time. |
-| dismiss key hints | `aria-keyshortcuts="Escape"` (when enabled) | Escape-dismissable toasts expose keyboard shortcut metadata directly on toast root for QA/AT discoverability. |
+| dismiss key hints | `aria-keyshortcuts="Escape"` (top escapable toast only) | In stacked layouts, only the current top escapable toast exposes Escape shortcut metadata so QA/AT tooling is not misled by pinned/non-closeable notifications. |
 | `onEscapeKeyDown` | `(event: KeyboardEvent) => void` | Optional toast-level Escape hook; call `event.preventDefault()` to keep toast open in guarded flows. |
 | actionable role mapping | `action` => `dialog/alertdialog` | When `action` is provided, toast exposes interactive surface semantics (`aria-modal="false"`) instead of live-region-only status roles. |
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'timeout') => void` | Emits a structured close reason for analytics and workflow telemetry. |
