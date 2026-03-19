@@ -39,6 +39,7 @@ jobs:
           gate_status=${PIPESTATUS[0]}
 
           verify_line=$(grep -m1 "verify" /tmp/release-gate.log || true)
+          coverage_line=$(grep -m1 "^All files" /tmp/release-gate.log || true)
           demo_run_line=$(grep -m1 "^Running [0-9][0-9]* tests using" /tmp/release-gate.log || true)
           demo_result_line=$(grep -m1 " passed (" /tmp/release-gate.log || true)
           demo_failed_line=$(grep -m1 " failed" /tmp/release-gate.log || true)
@@ -64,6 +65,7 @@ jobs:
             fi
             echo "- command: \`pnpm release:gate:ci\`"
             echo "- ${verify_line:-verify: n/a}"
+            echo "- ${coverage_line:-coverage summary: n/a}"
             echo "- ${demo_run_line:-demo:e2e run line: n/a}"
             echo "- ${demo_result_line:-demo:e2e result line: n/a}"
             if [ "$gate_status" -ne 0 ]; then

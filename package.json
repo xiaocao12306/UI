@@ -32,6 +32,8 @@
     "storybook:test:ci": "pnpm storybook:coverage:check && pnpm storybook:docs:check && pnpm storybook:play:check && pnpm storybook:static:check && pnpm --filter @aurora-ui/storybook-app storybook:test:ci",
     "chromatic": "pnpm --filter @aurora-ui/storybook-app chromatic",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "test:coverage": "pnpm exec vitest run --coverage packages/primitives/src packages/react/src packages/tokens/src",
+    "coverage:gate": "pnpm test:coverage",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
@@ -43,7 +45,7 @@
     "release:preflight:chromatic": "node scripts/release-preflight.mjs --scope=chromatic",
     "release:preflight:publish": "node scripts/release-preflight.mjs --scope=publish",
     "release:dry-run": "node scripts/release-dry-run.mjs",
-    "release:gate:ci": "pnpm verify && pnpm demo:e2e && pnpm demo:dist:check && pnpm storybook:test:ci",
+    "release:gate:ci": "pnpm verify && pnpm coverage:gate && pnpm demo:e2e && pnpm demo:dist:check && pnpm storybook:test:ci",
     "release:gate": "pnpm release:gate:ci && pnpm release:dry-run",
     "release": "changeset publish"
   },

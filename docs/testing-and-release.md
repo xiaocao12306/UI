@@ -8,6 +8,7 @@ Run from repo root:
 pnpm lint
 pnpm typecheck
 pnpm test
+pnpm coverage:gate
 pnpm build
 ```
 
@@ -22,6 +23,7 @@ pnpm demo:e2e
 pnpm demo:dist:check
 pnpm storybook:coverage:report
 pnpm storybook:coverage:check
+pnpm storybook:play:check
 pnpm storybook:docs:check
 pnpm storybook:static:check
 pnpm storybook:build
@@ -113,7 +115,7 @@ Workflow: `.github/workflows/release.yml`
 Behavior:
 
 - always runs Changesets version PR automation on `main`
-- runs `pnpm release:gate:ci` (`verify + demo:e2e + demo:dist:check + storybook:test:ci`) before any version/publish step
+- runs `pnpm release:gate:ci` (`verify + coverage:gate + demo:e2e + demo:dist:check + storybook:test:ci`) before any version/publish step
 - publishes npm packages only when `NPM_TOKEN` is configured
 - uses npm provenance (`id-token: write`) during publish
 - when `NPM_TOKEN` is missing, workflow emits explicit warning annotation and writes skip details into `GITHUB_STEP_SUMMARY` with setup path (`docs/secrets.md`)
@@ -142,6 +144,7 @@ GitHub Actions workflow runs:
 - lint
 - typecheck
 - test
+- coverage gate (`pnpm coverage:gate`, Vitest hard thresholds: lines/statements `>=90%`, branches/functions `>=85%`)
 - build
 - storybook interaction gate (`pnpm storybook:test:ci`, includes coverage/docs/static freshness checks)
 - demo e2e smoke test
@@ -174,9 +177,10 @@ pnpm release:gate:ci
 This runs:
 
 1. `pnpm verify`
-2. `pnpm demo:e2e`
-3. `pnpm demo:dist:check`
-4. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:static:check`）
+2. `pnpm coverage:gate`
+3. `pnpm demo:e2e`
+4. `pnpm demo:dist:check`
+5. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:play:check` + `storybook:static:check`）
 
 Full local pre-release gate (includes tarball evidence):
 
@@ -184,7 +188,7 @@ Full local pre-release gate (includes tarball evidence):
 pnpm release:gate
 ```
 
-This appends: 5. `pnpm release:dry-run`
+This appends: 6. `pnpm release:dry-run`
 
 ## Evidence Retrieval
 
