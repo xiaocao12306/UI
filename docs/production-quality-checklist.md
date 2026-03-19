@@ -144,6 +144,7 @@
 - Pages delivery hardening: GitHub Pages artifact now ships Demo root + Storybook subpath (`/storybook`) in one deploy workflow.
 - Pages observability hardening: deploy workflow now writes Demo + Storybook external URLs into `GITHUB_STEP_SUMMARY`.
 - Release-gate baseline refresh: `pnpm release:gate` rerun passed on 2026-03-18 after latest Tabs/Table hardening, with dry-run tarballs still publishable.
+- Release-gate latest refresh: `pnpm release:gate:ci` rerun passed on 2026-03-19 after fixing Demo Table loading E2E sort-label locator drift (`ascending/descending`) and syncing demo dist artifacts.
 - Release-gate rerun refresh: `pnpm release:gate:ci` passed on 2026-03-19 (verify + demo e2e 69/69 + demo dist sync + storybook gate 177/177).
 - Release-gate hardening: `release:gate` now includes `storybook:test:ci` so publish checks always include Storybook interaction regression.
 - Dropdown unit focus-policy branch: added explicit outside-target focus retention assertion so pointer dismiss cannot regress into trigger focus theft.

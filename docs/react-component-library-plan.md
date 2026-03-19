@@ -456,6 +456,7 @@
   - Tabs 禁用项键盘提示语义收口（manual 模式仅启用 tab 暴露 `aria-keyshortcuts`，禁用项移除提示避免可激活误导）
   - Table 禁用排序键盘提示语义收口（loading/empty/single-row 等禁用态移除 `aria-keyshortcuts`，避免不可操作分支误导）
   - Release Gate 复验（2026-03-19 latest：修复 Popover telemetry E2E 断言目标并同步 demo dist 后，`release:gate:ci` 全链路恢复通过）
+  - Release Gate 复验（2026-03-19 latest+1：修复 Demo Table loading 排序按钮可访问名称断言漂移并同步 demo dist 后，`release:gate:ci` 全链路继续保持通过）
   - Demo 导航语义收口（新增 IntersectionObserver 同步 `activeSection`，滚动浏览时 Hero/分区导航高亮保持一致）
   - Demo 文案可读性收口（Telemetry 胶囊补齐窄屏换行与最大宽度约束，避免 trace 文本挤压）
   - Demo 主题配置收口（Theme Select 改为复用 `availableThemes` 单源渲染，避免新增主题时漏改）
