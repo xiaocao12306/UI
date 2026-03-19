@@ -304,6 +304,7 @@
 - Demo interaction-state parity: section nav and hero stat cards now use CSS state selectors (`:hover`, `:focus-visible`, `[aria-current]`) instead of component-local hover/focus state machines.
 - Demo reduced-motion parity: `prefers-reduced-motion` now disables transform-driven nav/card motion, preserving readability for motion-sensitive users.
 - Demo theme-source parity: theme selector options now render from `availableThemes`, eliminating duplicate hardcoded option drift.
+- Demo hero-control polish: theme switcher now uses a tokenized capsule surface with inline active-theme badge and improved mobile wrapping, strengthening first-screen brand hierarchy without changing behavior.
 - CommandPalette keyboard-discoverability parity: search combobox now exposes `aria-keyshortcuts` metadata (`ArrowDown/ArrowUp/Home/End/PageDown/PageUp/Enter/Escape`) with unit + Storybook + demo E2E coverage.
 - Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.

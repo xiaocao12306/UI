@@ -606,15 +606,15 @@ function App() {
                 </p>
                 <h1 style={heroTitleStyle}>Aurora UI Demo</h1>
               </div>
-              <div className="demo-hero-theme-control" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                <label htmlFor="theme-select" style={{ color: "var(--aurora-text-secondary)" }}>
+              <div className="demo-hero-theme-control">
+                <label htmlFor="theme-select" className="demo-hero-theme-label">
                   Theme
                 </label>
                 <Select
                   id="theme-select"
                   value={theme}
                   onChange={(event) => setTheme(event.target.value as ThemeName)}
-                  style={{ width: "min(180px, 48vw)" }}
+                  style={{ width: "min(180px, 48vw)", minWidth: 138 }}
                 >
                   {availableThemes.map((themeName) => (
                     <option key={themeName} value={themeName}>
@@ -622,6 +622,9 @@ function App() {
                     </option>
                   ))}
                 </Select>
+                <span className="demo-hero-theme-badge" aria-live="polite">
+                  {theme}
+                </span>
               </div>
             </div>
             <div className="demo-hero-overview" style={heroOverviewStyle}>
