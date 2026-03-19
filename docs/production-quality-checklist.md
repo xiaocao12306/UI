@@ -389,3 +389,4 @@
 - Storybook narrative-style parity: Tabs/Table docs stories now reuse consistent helper/telemetry text styling to reduce visual grammar drift in API acceptance panels.
 - Storybook IME baseline parity: added `Tabs/ImeCompositionGuard` + `Table/ImeCompositionGuard` play assertions so composition-phase Enter/Space no-op contracts are locked in interaction baselines.
 - Storybook IME regression refresh: `pnpm storybook:test:grep "Tabs.stories.tsx|Table.stories.tsx"` revalidated green on 2026-03-19 (`31` tests).
+- Dropdown keyboard-boundary parity: added unit regressions for `Home/End` navigation with disabled-item skipping and all-disabled no-op (`Arrow/Home/End/Enter` keep menu open and focus model stable).

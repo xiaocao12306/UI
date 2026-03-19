@@ -89,6 +89,67 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Two" })).toHaveFocus();
   });
 
+  it("supports Home and End navigation while skipping disabled items", () => {
+    render(
+      <Dropdown
+        label="Keyboard Bounds"
+        items={[
+          { key: "draft", label: "Draft", disabled: true },
+          { key: "review", label: "Review" },
+          { key: "blocked", label: "Blocked", disabled: true },
+          { key: "ship", label: "Ship" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Keyboard Bounds" }));
+    const menu = screen.getByRole("menu", { name: "Keyboard Bounds" });
+    expect(screen.getByRole("menuitem", { name: "Review" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "End" });
+    expect(screen.getByRole("menuitem", { name: "Ship" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "Home" });
+    expect(screen.getByRole("menuitem", { name: "Review" })).toHaveFocus();
+  });
+
+  it("keeps keyboard navigation as no-op when all dropdown items are disabled", () => {
+    const onCloseReason = vi.fn();
+
+    render(
+      <Dropdown
+        label="All disabled"
+        onCloseReason={onCloseReason}
+        items={[
+          { key: "archive", label: "Archive", disabled: true },
+          { key: "delete", label: "Delete", disabled: true }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "All disabled" });
+    fireEvent.click(trigger);
+    const menu = screen.getByRole("menu", { name: "All disabled" });
+    const menuItems = screen.getAllByRole("menuitem");
+
+    menuItems.forEach((item) => {
+      expect(item).toHaveAttribute("aria-disabled", "true");
+      expect(item).toHaveAttribute("tabindex", "-1");
+    });
+
+    fireEvent.keyDown(menu, { key: "ArrowDown" });
+    fireEvent.keyDown(menu, { key: "ArrowUp" });
+    fireEvent.keyDown(menu, { key: "Home" });
+    fireEvent.keyDown(menu, { key: "End" });
+    fireEvent.keyDown(menu, { key: "Enter" });
+
+    menuItems.forEach((item) => {
+      expect(item).toHaveAttribute("tabindex", "-1");
+    });
+    expect(screen.getByRole("menu", { name: "All disabled" })).toBeInTheDocument();
+    expect(onCloseReason).not.toHaveBeenCalled();
+  });
+
   it("supports Enter/Space keyboard activation for menu items", () => {
     const onEnterSelect = vi.fn();
     const onSpaceSelect = vi.fn();
