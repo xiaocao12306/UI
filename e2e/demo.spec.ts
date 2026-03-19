@@ -982,21 +982,26 @@ test("reports popover close reason telemetry for trigger, Escape, and outside po
 
   const trigger = page.getByRole("button", { name: "Open Popover" });
   const telemetry = page.getByTestId("popover-close-reason-demo");
+  const traceTelemetry = page.getByTestId("popover-close-trace-demo");
   const outsideTarget = page.getByLabel("Overlay outside focus target");
 
   await expect(telemetry).toHaveText("none");
+  await expect(traceTelemetry).toHaveText("none");
 
   await trigger.click();
   await page.keyboard.press("Escape");
   await expect(telemetry).toHaveText("escape-key");
+  await expect(traceTelemetry).toHaveText("reason:escape-key -> open:false");
 
   await trigger.click();
   await outsideTarget.click();
   await expect(telemetry).toHaveText("outside-pointer");
+  await expect(traceTelemetry).toHaveText("reason:outside-pointer -> open:false");
 
   await trigger.click();
   await trigger.click();
   await expect(telemetry).toHaveText("trigger-click");
+  await expect(traceTelemetry).toHaveText("reason:trigger-click -> open:false");
 });
 
 test("keeps popover open on non-primary outside pointer interaction", async ({ page }) => {
@@ -1025,31 +1030,38 @@ test("reports dropdown close reason telemetry for all dismiss paths", async ({ p
 
   const trigger = page.getByRole("button", { name: "Actions" });
   const telemetry = page.getByTestId("dropdown-close-reason-demo");
+  const traceTelemetry = page.getByTestId("dropdown-close-trace-demo");
   const outsideTarget = page.getByLabel("Overlay outside focus target");
 
   await expect(telemetry).toHaveText("none");
+  await expect(traceTelemetry).toHaveText("none");
 
   await trigger.click();
   await page.getByRole("menuitem", { name: "Duplicate" }).click();
   await expect(telemetry).toHaveText("item-select");
+  await expect(traceTelemetry).toHaveText("select -> reason:item-select -> open:false");
 
   await trigger.click();
   await page.keyboard.press("Escape");
   await expect(telemetry).toHaveText("escape-key");
+  await expect(traceTelemetry).toHaveText("reason:escape-key -> open:false");
 
   await trigger.click();
   await outsideTarget.click();
   await expect(telemetry).toHaveText("outside-pointer");
+  await expect(traceTelemetry).toHaveText("reason:outside-pointer -> open:false");
 
   await trigger.click();
   await trigger.click();
   await expect(telemetry).toHaveText("trigger-click");
+  await expect(traceTelemetry).toHaveText("reason:trigger-click -> open:false");
 
   await trigger.focus();
   await trigger.press("ArrowDown");
   await expect(page.getByRole("menu")).toBeVisible();
   await page.keyboard.press("Tab");
   await expect(telemetry).toHaveText("tab-key");
+  await expect(traceTelemetry).toHaveText("reason:tab-key -> open:false");
 });
 
 test("keeps dropdown open on non-primary outside pointer interaction", async ({ page }) => {

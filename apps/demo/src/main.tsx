@@ -454,7 +454,9 @@ function App() {
   const [paletteQueryTelemetry, setPaletteQueryTelemetry] = React.useState("");
   const [paletteCloseReason, setPaletteCloseReason] = React.useState("none");
   const [popoverCloseReason, setPopoverCloseReason] = React.useState("none");
+  const [popoverCloseTrace, setPopoverCloseTrace] = React.useState("none");
   const [dropdownCloseReason, setDropdownCloseReason] = React.useState("none");
+  const [dropdownCloseTrace, setDropdownCloseTrace] = React.useState("none");
   const [dialogCloseReason, setDialogCloseReason] = React.useState("none");
   const [dialogCloseTrace, setDialogCloseTrace] = React.useState("none");
   const [drawerCloseReason, setDrawerCloseReason] = React.useState("none");
@@ -546,6 +548,40 @@ function App() {
   const handleDrawerCloseReason = React.useCallback((reason: string) => {
     setDrawerCloseReason(reason);
     setDrawerCloseTrace(`reason:${reason}`);
+  }, []);
+
+  const handlePopoverOpenChange = React.useCallback((nextOpen: boolean) => {
+    if (!nextOpen) {
+      setPopoverCloseTrace((current) => {
+        if (!current.endsWith("open:false")) {
+          return `${current} -> open:false`;
+        }
+
+        return current;
+      });
+    }
+  }, []);
+
+  const handlePopoverCloseReason = React.useCallback((reason: string) => {
+    setPopoverCloseReason(reason);
+    setPopoverCloseTrace(`reason:${reason}`);
+  }, []);
+
+  const handleDropdownOpenChange = React.useCallback((nextOpen: boolean) => {
+    if (!nextOpen) {
+      setDropdownCloseTrace((current) => {
+        if (!current.endsWith("open:false")) {
+          return `${current} -> open:false`;
+        }
+
+        return current;
+      });
+    }
+  }, []);
+
+  const handleDropdownCloseReason = React.useCallback((reason: string) => {
+    setDropdownCloseReason(reason);
+    setDropdownCloseTrace((current) => (current === "select" ? `select -> reason:${reason}` : `reason:${reason}`));
   }, []);
 
   return (
@@ -1018,14 +1054,19 @@ function App() {
                   <Tooltip content="Runs a dry-run build">
                     <Button variant="outline">Hover me</Button>
                   </Tooltip>
-                  <Popover triggerLabel="Open Popover" onCloseReason={setPopoverCloseReason}>
+                  <Popover
+                    triggerLabel="Open Popover"
+                    onOpenChange={handlePopoverOpenChange}
+                    onCloseReason={handlePopoverCloseReason}
+                  >
                     <p style={{ margin: 0 }}>This popover is built with Aurora primitives.</p>
                   </Popover>
                   <Dropdown
                     label="Actions"
-                    onCloseReason={setDropdownCloseReason}
+                    onOpenChange={handleDropdownOpenChange}
+                    onCloseReason={handleDropdownCloseReason}
                     items={[
-                      { key: "a", label: "Duplicate" },
+                      { key: "a", label: "Duplicate", onSelect: () => setDropdownCloseTrace("select") },
                       { key: "b", label: "Archive" },
                       { key: "c", label: "Delete" }
                     ]}
@@ -1058,9 +1099,21 @@ function App() {
                     </strong>
                   </p>
                   <p style={mutedBodyStyle}>
+                    Popover close trace:{" "}
+                    <strong data-testid="popover-close-trace-demo" style={telemetryValueStyle}>
+                      {popoverCloseTrace}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
                     Dropdown close reason telemetry:{" "}
                     <strong data-testid="dropdown-close-reason-demo" style={telemetryValueStyle}>
                       {dropdownCloseReason}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Dropdown close trace:{" "}
+                    <strong data-testid="dropdown-close-trace-demo" style={telemetryValueStyle}>
+                      {dropdownCloseTrace}
                     </strong>
                   </p>
                   <p style={mutedBodyStyle}>
