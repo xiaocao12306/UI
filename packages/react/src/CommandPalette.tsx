@@ -289,6 +289,7 @@ export function CommandPalette({
           aria-controls={hasResults ? listId : undefined}
           aria-activedescendant={activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
           aria-describedby={statusId}
+          aria-keyshortcuts="ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
           placeholder={placeholder}
           value={query}
           onChange={(event) => {
