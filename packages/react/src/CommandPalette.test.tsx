@@ -1085,6 +1085,34 @@ describe("CommandPalette", () => {
     expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
   });
 
+  it("keeps native behavior for modifier-key shortcuts and does not trigger command navigation", () => {
+    const onRunLint = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        closeOnSelect={false}
+        onOpenChange={() => {}}
+        commands={[
+          { key: "run-lint", label: "Run lint", onSelect: onRunLint },
+          { key: "publish", label: "Publish release" },
+          { key: "notify", label: "Notify team" }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "PageDown", ctrlKey: true });
+    fireEvent.keyDown(input, { key: "End", metaKey: true });
+    fireEvent.keyDown(input, { key: "Home", altKey: true });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "Enter", ctrlKey: true });
+    expect(onRunLint).not.toHaveBeenCalled();
+  });
+
   it("preserves active command intent when query refinement keeps that command", () => {
     const onSearchDocs = vi.fn();
     const onSendReport = vi.fn();

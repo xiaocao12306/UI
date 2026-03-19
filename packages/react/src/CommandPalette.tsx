@@ -339,6 +339,10 @@ export function CommandPalette({
               return;
             }
 
+            if (event.altKey || event.ctrlKey || event.metaKey) {
+              return;
+            }
+
             if (event.key === "Escape" && clearQueryOnEscape && query.length > 0) {
               event.preventDefault();
               setQuery("");
