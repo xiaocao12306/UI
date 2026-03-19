@@ -105,27 +105,32 @@ test("reports dialog close reason telemetry for close button, Escape, and outsid
 
   const trigger = page.getByRole("button", { name: "Open Dialog" });
   const telemetry = page.getByTestId("dialog-close-reason-demo");
+  const traceTelemetry = page.getByTestId("dialog-close-trace-demo");
   const dialog = page.getByRole("dialog").filter({ hasText: "Dialog Example" });
 
   await expect(telemetry).toHaveText("none");
+  await expect(traceTelemetry).toHaveText("none");
 
   await trigger.click();
   await expect(dialog).toBeVisible();
   await page.getByRole("button", { name: "Close dialog" }).click();
   await expect(dialog).toBeHidden();
   await expect(telemetry).toHaveText("close-button");
+  await expect(traceTelemetry).toHaveText("reason:close-button -> open:false");
 
   await trigger.click();
   await expect(dialog).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
   await expect(telemetry).toHaveText("escape-key");
+  await expect(traceTelemetry).toHaveText("reason:escape-key -> open:false");
 
   await trigger.click();
   await expect(dialog).toBeVisible();
   await page.mouse.click(8, 8);
   await expect(dialog).toBeHidden();
   await expect(telemetry).toHaveText("outside-pointer");
+  await expect(traceTelemetry).toHaveText("reason:outside-pointer -> open:false");
 });
 
 test("keeps dialog open on non-primary outside pointer interaction", async ({ page }) => {
@@ -197,27 +202,32 @@ test("reports drawer close reason telemetry for close button, Escape, and outsid
 
   const trigger = page.getByRole("button", { name: "Open Drawer" });
   const telemetry = page.getByTestId("drawer-close-reason-demo");
+  const traceTelemetry = page.getByTestId("drawer-close-trace-demo");
   const drawerDialog = page.getByRole("dialog", { name: "Drawer Example" });
 
   await expect(telemetry).toHaveText("none");
+  await expect(traceTelemetry).toHaveText("none");
 
   await trigger.click();
   await expect(drawerDialog).toBeVisible();
   await page.getByRole("button", { name: "Close drawer" }).click();
   await expect(drawerDialog).toBeHidden();
   await expect(telemetry).toHaveText("close-button");
+  await expect(traceTelemetry).toHaveText("reason:close-button -> open:false");
 
   await trigger.click();
   await expect(drawerDialog).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(drawerDialog).toBeHidden();
   await expect(telemetry).toHaveText("escape-key");
+  await expect(traceTelemetry).toHaveText("reason:escape-key -> open:false");
 
   await trigger.click();
   await expect(drawerDialog).toBeVisible();
   await page.mouse.click(8, 8);
   await expect(drawerDialog).toBeHidden();
   await expect(telemetry).toHaveText("outside-pointer");
+  await expect(traceTelemetry).toHaveText("reason:outside-pointer -> open:false");
 });
 
 test("keeps drawer open on non-primary outside pointer interaction", async ({ page }) => {

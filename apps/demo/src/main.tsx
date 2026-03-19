@@ -456,7 +456,9 @@ function App() {
   const [popoverCloseReason, setPopoverCloseReason] = React.useState("none");
   const [dropdownCloseReason, setDropdownCloseReason] = React.useState("none");
   const [dialogCloseReason, setDialogCloseReason] = React.useState("none");
+  const [dialogCloseTrace, setDialogCloseTrace] = React.useState("none");
   const [drawerCloseReason, setDrawerCloseReason] = React.useState("none");
+  const [drawerCloseTrace, setDrawerCloseTrace] = React.useState("none");
   const [toastCloseReason, setToastCloseReason] = React.useState("none");
   const [actionToastHandledCount, setActionToastHandledCount] = React.useState(0);
   const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
@@ -508,6 +510,42 @@ function App() {
     return () => {
       window.removeEventListener("hashchange", syncActiveSection);
     };
+  }, []);
+
+  const handleDialogOpenChange = React.useCallback((nextOpen: boolean) => {
+    setDialogOpen(nextOpen);
+    if (!nextOpen) {
+      setDialogCloseTrace((current) => {
+        if (current.startsWith("reason:") && !current.endsWith("open:false")) {
+          return `${current} -> open:false`;
+        }
+
+        return current;
+      });
+    }
+  }, []);
+
+  const handleDialogCloseReason = React.useCallback((reason: string) => {
+    setDialogCloseReason(reason);
+    setDialogCloseTrace(`reason:${reason}`);
+  }, []);
+
+  const handleDrawerOpenChange = React.useCallback((nextOpen: boolean) => {
+    setDrawerOpen(nextOpen);
+    if (!nextOpen) {
+      setDrawerCloseTrace((current) => {
+        if (current.startsWith("reason:") && !current.endsWith("open:false")) {
+          return `${current} -> open:false`;
+        }
+
+        return current;
+      });
+    }
+  }, []);
+
+  const handleDrawerCloseReason = React.useCallback((reason: string) => {
+    setDrawerCloseReason(reason);
+    setDrawerCloseTrace(`reason:${reason}`);
   }, []);
 
   return (
@@ -1032,9 +1070,21 @@ function App() {
                     </strong>
                   </p>
                   <p style={mutedBodyStyle}>
+                    Dialog close trace:{" "}
+                    <strong data-testid="dialog-close-trace-demo" style={telemetryValueStyle}>
+                      {dialogCloseTrace}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
                     Drawer close reason telemetry:{" "}
                     <strong data-testid="drawer-close-reason-demo" style={telemetryValueStyle}>
                       {drawerCloseReason}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Drawer close trace:{" "}
+                    <strong data-testid="drawer-close-trace-demo" style={telemetryValueStyle}>
+                      {drawerCloseTrace}
                     </strong>
                   </p>
                 </div>
@@ -1152,16 +1202,21 @@ function App() {
             </div>
           </Section>
 
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen} onCloseReason={setDialogCloseReason} title="Dialog Example">
+        <Dialog
+          open={dialogOpen}
+          onOpenChange={handleDialogOpenChange}
+          onCloseReason={handleDialogCloseReason}
+          title="Dialog Example"
+        >
           <p style={{ margin: 0 }}>Modal built with FocusScope + DismissableLayer.</p>
         </Dialog>
 
         <Drawer
           open={drawerOpen}
-          onOpenChange={setDrawerOpen}
+          onOpenChange={handleDrawerOpenChange}
           title="Drawer Example"
           description="Contextual panel for filters, details, and quick actions."
-          onCloseReason={setDrawerCloseReason}
+          onCloseReason={handleDrawerCloseReason}
         >
           <p style={{ margin: 0 }}>This drawer can host contextual forms, filters, or details.</p>
         </Drawer>
