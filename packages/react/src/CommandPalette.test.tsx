@@ -1,5 +1,5 @@
 import * as React from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { CommandPalette } from "./CommandPalette";
 import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
@@ -174,6 +174,68 @@ describe("CommandPalette", () => {
 
     fireEvent.keyDown(input, { key: "Escape" });
     expect(onCloseReason).toHaveBeenCalledWith("escape-key");
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it("focuses search input when transitioning from closed to open", async () => {
+    const onOpenChange = vi.fn();
+    const { rerender } = render(
+      <CommandPalette
+        open={false}
+        onOpenChange={onOpenChange}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    expect(screen.queryByRole("combobox", { name: "Search commands" })).toBeNull();
+
+    rerender(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole("combobox", { name: "Search commands" })).toHaveFocus();
+    });
+  });
+
+  it("supports immediate keyboard query and Enter selection after opening from closed state", async () => {
+    const onOpenChange = vi.fn();
+    const onRunE2E = vi.fn();
+    const { rerender } = render(
+      <CommandPalette
+        open={false}
+        onOpenChange={onOpenChange}
+        commands={[
+          { key: "run-e2e", label: "Run E2E Smoke", keywords: ["run"], onSelect: onRunE2E },
+          { key: "open-theme", label: "Open Theme Pack", keywords: ["theme"] }
+        ]}
+      />
+    );
+
+    rerender(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        commands={[
+          { key: "run-e2e", label: "Run E2E Smoke", keywords: ["run"], onSelect: onRunE2E },
+          { key: "open-theme", label: "Open Theme Pack", keywords: ["theme"] }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    await waitFor(() => {
+      expect(input).toHaveFocus();
+    });
+
+    fireEvent.change(input, { target: { value: "run" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(onRunE2E).toHaveBeenCalledTimes(1);
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 

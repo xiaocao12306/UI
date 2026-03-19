@@ -28,8 +28,13 @@ export function FocusScope({
     previouslyFocusedRef.current = document.activeElement as HTMLElement;
 
     if (autoFocus) {
-      const [firstFocusable] = getFocusableElements(container);
-      (firstFocusable ?? container).focus();
+      const focusableElements = getFocusableElements(container);
+      const preferredAutoFocusElement = container.querySelector<HTMLElement>("[data-autofocus]");
+      const nextFocusTarget =
+        preferredAutoFocusElement && focusableElements.includes(preferredAutoFocusElement)
+          ? preferredAutoFocusElement
+          : focusableElements[0];
+      (nextFocusTarget ?? container).focus();
     }
 
     return () => {

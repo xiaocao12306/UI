@@ -46,6 +46,43 @@ function OpenPalette() {
   );
 }
 
+function TriggeredKeyboardFirstPalette() {
+  const [open, setOpen] = React.useState(false);
+  const [selectedAction, setSelectedAction] = React.useState("none");
+
+  return (
+    <div style={{ minHeight: 420, padding: 20, display: "grid", gap: 10, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last keyboard action:{" "}
+        <strong data-testid="keyboard-first-selected" style={{ color: "var(--aurora-text-primary)" }}>
+          {selectedAction}
+        </strong>
+      </p>
+      <button type="button" onClick={() => setOpen(true)}>
+        Open keyboard palette
+      </button>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        commands={[
+          {
+            key: "run-e2e",
+            label: "Run E2E Smoke",
+            keywords: ["run", "test"],
+            onSelect: () => setSelectedAction("Run E2E Smoke")
+          },
+          {
+            key: "open-theme",
+            label: "Open Theme Pack",
+            keywords: ["theme"],
+            onSelect: () => setSelectedAction("Open Theme Pack")
+          }
+        ]}
+      />
+    </div>
+  );
+}
+
 function AiFlowPalette() {
   const [open, setOpen] = React.useState(true);
   const [lastAction, setLastAction] = React.useState("None");
@@ -559,6 +596,29 @@ export const SearchCommands: Story = {
     const disabledOption = canvas.getByRole("option", { name: "Publish Release" });
     await expect(disabledOption).toHaveAttribute("aria-disabled", "true");
     await expect(disabledOption).toHaveAttribute("tabindex", "-1");
+  }
+};
+
+export const OpenFromTriggerKeyboardFirst: Story = {
+  render: () => <TriggeredKeyboardFirstPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await expect(canvas.getByTestId("keyboard-first-selected")).toHaveTextContent("none");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Open keyboard palette" }));
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+    await waitFor(() => {
+      expect(input).toHaveFocus();
+    });
+
+    await userEvent.type(input, "run");
+    await expect(canvas.getByRole("option", { name: "Run E2E Smoke" })).toBeInTheDocument();
+    await userEvent.keyboard("{Enter}");
+
+    await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("keyboard-first-selected")).toHaveTextContent(
+      "Run E2E Smoke"
+    );
   }
 };
 

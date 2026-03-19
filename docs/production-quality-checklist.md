@@ -411,3 +411,4 @@
 - Toast default-timer parity: added regression ensuring passive toasts still auto-dismiss at the default 4000ms when `duration` is omitted, complementing actionable-toast persistent default behavior.
 - Dropdown controlled-contract parity: added Storybook `ControlledOpenContract` interaction scenario to lock controlled `open` behavior where dismiss paths emit close callbacks but visual close waits for parent rerender.
 - Table deferred-schema default-sort parity: when columns rerender from non-sortable to sortable, matching `defaultSortKey` is now re-applied automatically, with unit + Storybook `DeferredColumnsDefaultSortRecovery` coverage.
+- CommandPalette first-frame keyboard parity: FocusScope now honors a `data-autofocus` target so open transitions focus the search combobox instead of the close button, with unit + Storybook trigger-open keyboard regression coverage.

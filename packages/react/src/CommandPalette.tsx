@@ -106,7 +106,13 @@ export function CommandPalette({
 
   React.useEffect(() => {
     if (open) {
-      inputRef.current?.focus();
+      const focusTimeout = globalThis.setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+      wasOpenRef.current = open;
+      return () => {
+        globalThis.clearTimeout(focusTimeout);
+      };
     } else if (wasOpenRef.current) {
       setQuery((currentQuery) => {
         if (currentQuery.length > 0) {
@@ -311,6 +317,7 @@ export function CommandPalette({
       <div style={{ display: "grid", gap: 10 }}>
         <Input
           ref={inputRef}
+          data-autofocus=""
           role="combobox"
           aria-expanded={hasResults}
           aria-haspopup="listbox"
