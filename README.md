@@ -72,6 +72,8 @@ Run demo smoke E2E:
 ```bash
 pnpm exec playwright install chromium
 pnpm demo:e2e
+# run a focused case by title regex:
+pnpm demo:e2e:grep "toggles table loading state and disables sort controls"
 ```
 
 ## Run Storybook

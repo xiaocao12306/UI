@@ -54,6 +54,7 @@ Install browser once in local environment:
 ```bash
 pnpm exec playwright install chromium
 pnpm demo:e2e
+pnpm demo:e2e:grep "toggles table loading state and disables sort controls"
 ```
 
 ## Release Secrets Preflight

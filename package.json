@@ -19,6 +19,7 @@
     "demo:build": "pnpm --filter @aurora-ui/demo build",
     "demo:preview": "pnpm --filter @aurora-ui/demo preview",
     "demo:e2e": "playwright test",
+    "demo:e2e:grep": "playwright test -g",
     "demo:dist:check": "node scripts/check-demo-dist-freshness.mjs",
     "storybook:dev": "pnpm --filter @aurora-ui/storybook-app storybook",
     "storybook:smoke": "pnpm --filter @aurora-ui/storybook-app storybook:smoke",
