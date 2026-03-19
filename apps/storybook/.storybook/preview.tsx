@@ -1,8 +1,6 @@
 import type { Preview } from "@storybook/react";
 import { AuroraProvider, GlobalStyles } from "@aurora-ui/react";
-import type { ThemeName } from "@aurora-ui/tokens";
-
-const themes: ThemeName[] = ["core-light", "core-dark", "glass", "neo-brutal"];
+import { themeNames, type ThemeName } from "@aurora-ui/tokens";
 
 const preview: Preview = {
   globalTypes: {
@@ -12,7 +10,7 @@ const preview: Preview = {
       defaultValue: "core-light",
       toolbar: {
         icon: "paintbrush",
-        items: themes,
+        items: themeNames,
         showName: true
       }
     }

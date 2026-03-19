@@ -157,7 +157,7 @@ pnpm storybook:test:grep "Table.stories.tsx"
 - `Docs/Best Practices`
 - 核心边界示例：`CommandPalette/QueryTelemetry`、`CommandPalette/CloseReasonTelemetry`（含 close trace）、`CommandPalette/DisabledCommandGuard`、`CommandPalette/GuardedDismissEvents`、`CommandPalette/EscapeClearsQueryFirst`、`CommandPalette/EscapePreemptedByGlobalHandler`、`CommandPalette/EmptyStateAriaControlsLifecycle`、`CommandPalette/LocalizedResultsLabel`、`CommandPalette/LocalizedDialogCopy`、`Toast/ActionRequired`、`Toast/CloseReasonTelemetry`（含 close trace）、`Toast/EscapePreemptedByGlobalHandler`、`Toast/EscapeGuardedByToastHandler`、`Dialog/CloseReasonTelemetry`（含 close trace）、`Dialog/EscapeIgnoresImeComposition`、`Dialog/EscapePreemptedByGlobalHandler`、`Drawer/CloseReasonTelemetry`（含 close trace）、`Drawer/EscapeIgnoresImeComposition`、`Drawer/EscapePreemptedByGlobalHandler`、`Popover/CloseReasonTelemetry`（含 close trace）、`Popover/EscapePreemptedByGlobalHandler`、`Dropdown/CloseReasonTelemetry`（含 close trace）、`Dropdown/EscapePreemptedByGlobalHandler`、`Dropdown/TabDismissToNextControl`、`Tabs/KeyboardNavigationGuide`、`Tabs/ManualVerticalActivation`、`Tabs/ImeCompositionGuard`、`Table/SortTelemetry`（含键盘排序）、`Table/SingleRowSortDisabled`、`Table/RowHeaderSemantics`、`Table/ImeCompositionGuard`
 
-说明：预览层通过 toolbar 全局切换 `core-light/core-dark/glass/neo-brutal`，用于验证 token 与主题一致性。
+说明：预览层通过 toolbar 全局切换主题，列表来源统一为 `@aurora-ui/tokens` 的 `themeNames`，避免与 demo 端主题枚举漂移。
 生产级验收矩阵：`docs/production-quality-checklist.md`
 构建噪音控制：`.storybook/main.ts` 已设置 `vite.build.chunkSizeWarningLimit=2500`，避免 Storybook vendor chunk 的误导性超限告警干扰 CI 日志。
 静态产物去噪：`build-storybook` 结束后自动执行 `scripts/normalize-storybook-static-metadata.mjs`，将 `storybook-static/project.json` 中易波动字段（`generatedAt`、`userSince`）规范为稳定值，降低无意义 commit diff。

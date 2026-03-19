@@ -57,3 +57,5 @@ export const themePacks: Record<ThemeName, FlatTokenMap> = {
   glass,
   "neo-brutal": neoBrutal
 };
+
+export const themeNames = Object.keys(themePacks) as ThemeName[];

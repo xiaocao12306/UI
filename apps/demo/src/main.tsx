@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
-import type { ThemeName } from "@aurora-ui/tokens";
+import { themeNames, type ThemeName } from "@aurora-ui/tokens";
 import {
   Alert,
   AuroraProvider,
@@ -46,7 +46,7 @@ const sectionLinks = [
   { id: "overlays-navigation", label: "Overlays & Navigation" },
   { id: "ai-components", label: "AI Components" }
 ];
-const availableThemes: ThemeName[] = ["core-light", "core-dark", "glass", "neo-brutal"];
+const availableThemes: ThemeName[] = [...themeNames];
 const themeStorageKey = "aurora-ui-demo-theme";
 const frameworkOptions = [
   { value: "react", label: "React", keywords: ["library", "jsx"] },
