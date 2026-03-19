@@ -71,6 +71,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep close-button focus intent primary-only in dialog/drawer surfaces so non-primary pointer interactions (for example context/right-click) do not clear keyboard focus-visible feedback.
 - Popover and Dropdown should restore focus to trigger on keyboard dismissal (Escape), but keep pointer target focus on outside-click dismissal.
 - For blocking confirmation/action menus, set `closeOnEscape={false}` + `closeOnOutsidePointer={false}` and provide an explicit close/confirm path.
+- For conditional runtime approval guards, keep `closeOnEscape/closeOnOutsidePointer` enabled and intercept `onEscapeKeyDown/onPointerDownOutside` with `event.preventDefault()` only while guard conditions are active.
 - Dropdown menus should expose an accessible name via trigger-linked `aria-labelledby`.
 - For nested overlays, dismiss policy should resolve top-layer first so one Escape/outside click does not collapse the full stack.
 - For overlays built on `DismissableLayer`, ignore Escape while IME composition is active so CJK text confirmation does not close parent surfaces unexpectedly.

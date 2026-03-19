@@ -475,6 +475,42 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menu", { name: "Policy" })).toBeInTheDocument();
   });
 
+  it("keeps menu open when dismiss hooks call preventDefault", () => {
+    const onEscapeKeyDown = vi.fn((event: KeyboardEvent) => {
+      event.preventDefault();
+    });
+    const onPointerDownOutside = vi.fn((event: PointerEvent) => {
+      event.preventDefault();
+    });
+    const onCloseReason = vi.fn();
+
+    render(
+      <Dropdown
+        label="Guarded"
+        onEscapeKeyDown={onEscapeKeyDown}
+        onPointerDownOutside={onPointerDownOutside}
+        onCloseReason={onCloseReason}
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Guarded" }));
+    expect(screen.getByRole("menu", { name: "Guarded" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(screen.getByRole("menu", { name: "Guarded" })).toBeInTheDocument();
+
+    fireEvent.pointerDown(document.body);
+    expect(onPointerDownOutside).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(screen.getByRole("menu", { name: "Guarded" })).toBeInTheDocument();
+  });
+
   it("skips escape callback and dismiss when Escape is preempted upstream", () => {
     const onEscapeKeyDown = vi.fn();
     const onCloseReason = vi.fn();

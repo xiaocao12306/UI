@@ -87,6 +87,61 @@ export const NonDismissible: Story = {
   }
 };
 
+function DismissGuardDropdown() {
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+  const [outsideCalls, setOutsideCalls] = React.useState(0);
+
+  return (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Escape guard calls:{" "}
+        <strong data-testid="dropdown-guard-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Outside guard calls:{" "}
+        <strong data-testid="dropdown-guard-outside-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {outsideCalls}
+        </strong>
+      </p>
+      <Dropdown
+        label="Guarded menu"
+        onEscapeKeyDown={(event) => {
+          event.preventDefault();
+          setEscapeCalls((count) => count + 1);
+        }}
+        onPointerDownOutside={(event) => {
+          event.preventDefault();
+          setOutsideCalls((count) => count + 1);
+        }}
+        items={items}
+      />
+      <button type="button">Guarded outside target</button>
+    </div>
+  );
+}
+
+export const DismissGuardHooks: Story = {
+  render: () => <DismissGuardDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Guarded menu" });
+    const outsideTarget = canvas.getByRole("button", { name: "Guarded outside target" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Guarded menu" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("menu", { name: "Guarded menu" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-guard-escape-calls")).toHaveTextContent("1");
+
+    await userEvent.click(outsideTarget);
+    await expect(canvas.getByRole("menu", { name: "Guarded menu" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-guard-outside-calls")).toHaveTextContent("1");
+  }
+};
+
 function EscapePreemptedDropdown() {
   const [open, setOpen] = React.useState(false);
   const [escapeCalls, setEscapeCalls] = React.useState(0);

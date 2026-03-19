@@ -305,6 +305,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Escape priority | preempted events skip popover hook/dismiss | If higher-level handlers already `preventDefault()` Escape, popover stays open and does not fire `onEscapeKeyDown`. |
 
 <Canvas of={PopoverStories.NonDismissible} />
+<Canvas of={PopoverStories.DismissGuardHooks} />
 <Canvas of={PopoverStories.OutsideDismissFocusTransfer} />
 <Canvas of={PopoverStories.CloseReasonTelemetry} />
 <Canvas of={PopoverStories.EscapePreemptedByGlobalHandler} />
@@ -337,6 +338,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | nested overlay dismiss | top layer first | Escape/outside dismiss resolves from topmost dismissable layer to avoid collapsing parent overlay stacks in one event. |
 
 <Canvas of={DropdownStories.NonDismissible} />
+<Canvas of={DropdownStories.DismissGuardHooks} />
 <Canvas of={DropdownStories.TypeaheadNavigation} />
 <Canvas of={DropdownStories.TypeaheadIgnoresImeComposition} />
 <Canvas of={DropdownStories.OutsideDismissFocusTransfer} />

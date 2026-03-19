@@ -101,6 +101,62 @@ export const NonDismissible: Story = {
   }
 };
 
+function DismissGuardPopoverDemo() {
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+  const [outsideCalls, setOutsideCalls] = React.useState(0);
+
+  return (
+    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Escape guard calls:{" "}
+        <strong data-testid="popover-guard-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Outside guard calls:{" "}
+        <strong data-testid="popover-guard-outside-calls" style={{ color: "var(--aurora-text-primary)" }}>
+          {outsideCalls}
+        </strong>
+      </p>
+      <Popover
+        triggerLabel="Guarded popover"
+        onEscapeKeyDown={(event) => {
+          event.preventDefault();
+          setEscapeCalls((count) => count + 1);
+        }}
+        onPointerDownOutside={(event) => {
+          event.preventDefault();
+          setOutsideCalls((count) => count + 1);
+        }}
+      >
+        <p style={{ margin: 0 }}>Dismiss hooks can block Escape/outside close paths.</p>
+      </Popover>
+      <button type="button">Guarded outside target</button>
+    </div>
+  );
+}
+
+export const DismissGuardHooks: Story = {
+  render: () => <DismissGuardPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Guarded popover" });
+    const outsideTarget = canvas.getByRole("button", { name: "Guarded outside target" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-guard-escape-calls")).toHaveTextContent("1");
+
+    await userEvent.click(outsideTarget);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-guard-outside-calls")).toHaveTextContent("1");
+  }
+};
+
 export const OutsideDismissFocusTransfer: Story = {
   args: {
     triggerLabel: "Focus Policy",
