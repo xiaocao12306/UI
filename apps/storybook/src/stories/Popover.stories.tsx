@@ -130,6 +130,7 @@ export const OutsideDismissFocusTransfer: Story = {
 
 function CloseReasonTelemetryPopoverDemo() {
   const [lastReason, setLastReason] = React.useState("none");
+  const [lastTrace, setLastTrace] = React.useState("none");
 
   return (
     <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
@@ -139,7 +140,24 @@ function CloseReasonTelemetryPopoverDemo() {
           {lastReason}
         </strong>
       </p>
-      <Popover triggerLabel="Telemetry popover" onCloseReason={(reason) => setLastReason(reason)}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last close trace:{" "}
+        <strong data-testid="popover-close-trace" style={{ color: "var(--aurora-text-primary)" }}>
+          {lastTrace}
+        </strong>
+      </p>
+      <Popover
+        triggerLabel="Telemetry popover"
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) {
+            setLastTrace((current) => `${current} -> open:false`);
+          }
+        }}
+        onCloseReason={(reason) => {
+          setLastReason(reason);
+          setLastTrace(`reason:${reason}`);
+        }}
+      >
         <p style={{ margin: 0 }}>Track trigger / Escape / outside close behavior.</p>
       </Popover>
       <button type="button">Outside target</button>
@@ -159,18 +177,22 @@ export const CloseReasonTelemetry: Story = {
     const outsideTarget = canvas.getByRole("button", { name: "Outside target" });
 
     await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("none");
+    await expect(canvas.getByTestId("popover-close-trace")).toHaveTextContent("none");
 
     await userEvent.click(trigger);
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("escape-key");
+    await expect(canvas.getByTestId("popover-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
 
     await userEvent.click(trigger);
     await userEvent.click(outsideTarget);
     await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("outside-pointer");
+    await expect(canvas.getByTestId("popover-close-trace")).toHaveTextContent("reason:outside-pointer -> open:false");
 
     await userEvent.click(trigger);
     await userEvent.click(trigger);
     await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("trigger-click");
+    await expect(canvas.getByTestId("popover-close-trace")).toHaveTextContent("reason:trigger-click -> open:false");
   }
 };
 

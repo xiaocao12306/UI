@@ -180,6 +180,7 @@ export const SelectionTelemetry: Story = {
 
 function CloseReasonTelemetryDropdown() {
   const [lastReason, setLastReason] = React.useState("none");
+  const [lastTrace, setLastTrace] = React.useState("none");
 
   return (
     <div style={{ display: "grid", gap: 8, justifyItems: "start" }}>
@@ -189,11 +190,31 @@ function CloseReasonTelemetryDropdown() {
           {lastReason}
         </strong>
       </p>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Last close trace:{" "}
+        <strong data-testid="dropdown-close-trace" style={{ color: "var(--aurora-text-primary)" }}>
+          {lastTrace}
+        </strong>
+      </p>
       <Dropdown
         label="Telemetry Menu"
-        onCloseReason={(reason) => setLastReason(reason)}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) {
+            setLastTrace((current) => `${current} -> open:false`);
+          }
+        }}
+        onCloseReason={(reason) => {
+          setLastReason(reason);
+          setLastTrace((current) => (current === "select" ? `select -> reason:${reason}` : `reason:${reason}`));
+        }}
         items={[
-          { key: "duplicate", label: "Duplicate" },
+          {
+            key: "duplicate",
+            label: "Duplicate",
+            onSelect: () => {
+              setLastTrace("select");
+            }
+          },
           { key: "rename", label: "Rename" },
           { key: "archive", label: "Archive" }
         ]}
@@ -211,26 +232,32 @@ export const CloseReasonTelemetry: Story = {
     const outsideTarget = canvas.getByRole("button", { name: "Outside target" });
 
     await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("none");
+    await expect(canvas.getByTestId("dropdown-close-trace")).toHaveTextContent("none");
 
     await userEvent.click(trigger);
     await userEvent.click(canvas.getByRole("menuitem", { name: "Duplicate" }));
     await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("item-select");
+    await expect(canvas.getByTestId("dropdown-close-trace")).toHaveTextContent("select -> reason:item-select -> open:false");
 
     await userEvent.click(trigger);
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("escape-key");
+    await expect(canvas.getByTestId("dropdown-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
 
     await userEvent.click(trigger);
     await userEvent.click(outsideTarget);
     await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("outside-pointer");
+    await expect(canvas.getByTestId("dropdown-close-trace")).toHaveTextContent("reason:outside-pointer -> open:false");
 
     await userEvent.click(trigger);
     await userEvent.click(trigger);
     await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("trigger-click");
+    await expect(canvas.getByTestId("dropdown-close-trace")).toHaveTextContent("reason:trigger-click -> open:false");
 
     await userEvent.click(trigger);
     await userEvent.keyboard("{Tab}");
     await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("tab-key");
+    await expect(canvas.getByTestId("dropdown-close-trace")).toHaveTextContent("reason:tab-key -> open:false");
     await expect(outsideTarget).toHaveFocus();
   }
 };
