@@ -511,6 +511,7 @@
   - Changeset 门禁补齐（新增 `changeset:required` 脚本 + PR 工作流，包变更缺失 `.changeset/*.md` 提前失败）
   - Release 主链路 dry-run 收口（`release.yml` 在发布前执行 `pnpm release:dry-run` 并上传 `release-dry-run-logs`）
   - Popover 键盘聚焦补测（`ArrowDown` 打开 + 无可聚焦内容时 fallback 到容器聚焦，避免键盘上下文丢失）
+  - Tabs RTL 回退补测（无 `dir` 属性时通过 `getComputedStyle().direction` 判定 RTL，锁定 ArrowLeft/ArrowRight 镜像行为）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
