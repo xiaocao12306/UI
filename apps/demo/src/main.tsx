@@ -241,8 +241,7 @@ const sectionNavLinkStyle: React.CSSProperties = {
   gap: 8,
   position: "relative",
   borderRadius: 999,
-  padding: "6px 14px",
-  fontSize: 13
+  lineHeight: 1.2
 };
 const panelTitleStyle: React.CSSProperties = { margin: 0, fontSize: 15, letterSpacing: "-0.01em" };
 const panelDescriptionStyle: React.CSSProperties = { ...mutedBodyStyle, fontSize: 13 };
@@ -251,10 +250,12 @@ const telemetryValueStyle: React.CSSProperties = {
   alignItems: "center",
   minHeight: 22,
   maxWidth: "100%",
-  padding: "1px 9px",
+  padding: "2px 10px",
   borderRadius: 999,
-  border: "1px solid color-mix(in srgb, var(--aurora-border-default) 84%, transparent)",
-  background: "color-mix(in srgb, var(--aurora-surface-elevated) 76%, transparent)",
+  border: "1px solid color-mix(in srgb, var(--aurora-accent-default) 30%, var(--aurora-border-default))",
+  background:
+    "linear-gradient(180deg, color-mix(in srgb, var(--aurora-accent-default) 14%, transparent), color-mix(in srgb, var(--aurora-surface-elevated) 80%, transparent))",
+  boxShadow: "inset 0 1px 0 color-mix(in srgb, var(--aurora-text-primary) 8%, transparent)",
   fontFamily: "var(--aurora-font-family-mono)",
   fontSize: 12,
   letterSpacing: "0.01em",
@@ -1602,6 +1603,7 @@ function App() {
             title="Telemetry toast"
             description="Used to validate close-button / Escape / timeout branches."
             duration={900}
+            pauseOnHover={false}
             closeLabel="Dismiss telemetry toast"
             position="bottom-left"
           />
