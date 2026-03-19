@@ -397,3 +397,4 @@
 - Popover keyboard-focus parity: added unit regressions to lock `ArrowDown` open behavior and “no focusable content” fallback focus on popover container, preventing keyboard context loss in minimal content overlays.
 - Tabs RTL fallback parity: added unit regression for computed-style direction fallback (`getComputedStyle(...).direction = rtl` without `dir` attribute), locking ArrowLeft/ArrowRight mirror behavior in host-app shells.
 - FormField association parity: non-clonable child nodes now avoid emitting dangling `label[for]` when `htmlFor` is omitted, while explicit `htmlFor` continues to work (unit regressions added).
+- Dropdown all-disabled Storybook parity: added `AllItemsDisabledKeyboardNoop` interaction scenario and revalidated `pnpm storybook:test:grep "Dropdown.stories.tsx"` so disabled-only menus keep keyboard paths as no-op in visual baseline.

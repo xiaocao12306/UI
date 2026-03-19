@@ -328,6 +328,40 @@ export const TypeaheadIgnoresImeComposition: Story = {
   }
 };
 
+export const AllItemsDisabledKeyboardNoop: Story = {
+  args: {
+    label: "All Disabled Keyboard",
+    items: [
+      { key: "archive", label: "Archive", disabled: true },
+      { key: "delete", label: "Delete", disabled: true }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "All Disabled Keyboard" });
+
+    await userEvent.click(trigger);
+    const menu = canvas.getByRole("menu", { name: "All Disabled Keyboard" });
+    const menuItems = canvas.getAllByRole("menuitem");
+
+    menuItems.forEach((item) => {
+      expect(item).toHaveAttribute("aria-disabled", "true");
+      expect(item).toHaveAttribute("tabindex", "-1");
+    });
+
+    fireEvent.keyDown(menu, { key: "ArrowDown" });
+    fireEvent.keyDown(menu, { key: "ArrowUp" });
+    fireEvent.keyDown(menu, { key: "Home" });
+    fireEvent.keyDown(menu, { key: "End" });
+    fireEvent.keyDown(menu, { key: "Enter" });
+
+    await expect(canvas.getByRole("menu", { name: "All Disabled Keyboard" })).toBeInTheDocument();
+    menuItems.forEach((item) => {
+      expect(item).toHaveAttribute("tabindex", "-1");
+    });
+  }
+};
+
 export const OutsideDismissFocusTransfer: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
