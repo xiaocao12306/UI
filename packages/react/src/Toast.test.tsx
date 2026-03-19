@@ -490,6 +490,45 @@ describe("Toast", () => {
     });
   });
 
+  it("reassigns visual and escape stacks when toast position changes at runtime", async () => {
+    function PositionSwitchingToasts() {
+      const [movingPosition, setMovingPosition] = React.useState<"bottom-right" | "top-left">(
+        "bottom-right"
+      );
+
+      return (
+        <>
+          <button type="button" onClick={() => setMovingPosition("top-left")}>
+            Move toast
+          </button>
+          <Toast open title="Base" duration={0} position="bottom-right" onOpenChange={() => {}} />
+          <Toast open title="Moving" duration={0} position={movingPosition} onOpenChange={() => {}} />
+        </>
+      );
+    }
+
+    render(<PositionSwitchingToasts />);
+
+    const baseToast = screen.getByRole("status", { name: "Base" });
+    const movingToast = screen.getByRole("status", { name: "Moving" });
+
+    await waitFor(() => {
+      expect(baseToast.getAttribute("style")).toContain("--aurora-toast-stack-offset: -14px");
+      expect(movingToast.getAttribute("style")).toContain("--aurora-toast-stack-offset: 0px");
+      expect(baseToast).not.toHaveAttribute("aria-keyshortcuts");
+      expect(movingToast).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Move toast" }));
+
+    await waitFor(() => {
+      expect(baseToast.getAttribute("style")).toContain("--aurora-toast-stack-offset: 0px");
+      expect(movingToast.getAttribute("style")).toContain("--aurora-toast-stack-offset: 0px");
+      expect(baseToast).not.toHaveAttribute("aria-keyshortcuts");
+      expect(movingToast).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
+  });
+
   it("promotes focused toast to top of stack before Escape dismiss", () => {
     function StackedToasts() {
       const [firstOpen, setFirstOpen] = React.useState(true);
