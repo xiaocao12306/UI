@@ -1,6 +1,7 @@
 import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { Dialog } from "./Dialog";
 import { Drawer } from "./Drawer";
 import { Dropdown } from "./Dropdown";
 import { resetBodyScrollLockForTests } from "./bodyScrollLock";
@@ -332,5 +333,64 @@ describe("Drawer", () => {
 
     fireEvent.mouseUp(closeButton);
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+  });
+
+  it("locks body scroll while open and restores when closed", () => {
+    const { rerender } = render(
+      <Drawer open onOpenChange={() => {}} title="Drawer scroll lock">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    expect(document.body.style.overflow).toBe("hidden");
+
+    rerender(
+      <Drawer open={false} onOpenChange={() => {}} title="Drawer scroll lock">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    expect(document.body.style.overflow).toBe("");
+  });
+
+  it("keeps body scroll locked while another modal surface remains open", () => {
+    const { rerender } = render(
+      <>
+        <Drawer open onOpenChange={() => {}} title="Drawer lock">
+          <p>Drawer content</p>
+        </Drawer>
+        <Dialog open onOpenChange={() => {}} title="Dialog lock">
+          <p>Dialog content</p>
+        </Dialog>
+      </>
+    );
+
+    expect(document.body.style.overflow).toBe("hidden");
+
+    rerender(
+      <>
+        <Drawer open={false} onOpenChange={() => {}} title="Drawer lock">
+          <p>Drawer content</p>
+        </Drawer>
+        <Dialog open onOpenChange={() => {}} title="Dialog lock">
+          <p>Dialog content</p>
+        </Dialog>
+      </>
+    );
+
+    expect(document.body.style.overflow).toBe("hidden");
+
+    rerender(
+      <>
+        <Drawer open={false} onOpenChange={() => {}} title="Drawer lock">
+          <p>Drawer content</p>
+        </Drawer>
+        <Dialog open={false} onOpenChange={() => {}} title="Dialog lock">
+          <p>Dialog content</p>
+        </Dialog>
+      </>
+    );
+
+    expect(document.body.style.overflow).toBe("");
   });
 });

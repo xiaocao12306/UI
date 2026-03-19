@@ -404,3 +404,4 @@
 - Table scroll-reachability parity: when sortable header controls are unavailable, the overflow container now becomes keyboard focusable (`tabIndex=0`) so horizontal overflow remains reachable for non-pointer users, with regression coverage for both focusable and non-focusable branches.
 - Storybook data keyboard parity: added `Tabs/ManualFocusResetOnBlur` and `Table/KeyboardReachableScrollContainer` interaction stories so manual-tab roving reset and non-sortable table scroll focusability are tracked in visual/interaction baselines.
 - Storybook/docs command-governance parity: added `docs:commands:check` and wired it into `storybook:test:ci` so README + Storybook + release docs command snippets cannot silently drift from gate scripts.
+- Overlay branch parity: added `Drawer` body-scroll-lock regressions (open/close + multi-modal coexistence) and `Dropdown` controlled/defaultOpen regressions to lock controlled-state contract and prevent close-behavior drift.

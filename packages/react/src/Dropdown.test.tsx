@@ -89,6 +89,68 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Two" })).toHaveFocus();
   });
 
+  it("supports controlled open mode where dismissal requests depend on parent rerender", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+    const items = [
+      { key: "one", label: "One" },
+      { key: "two", label: "Two" }
+    ];
+
+    const { rerender } = render(
+      <Dropdown
+        label="Controlled"
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        items={items}
+      />
+    );
+
+    expect(screen.getByRole("menu", { name: "Controlled" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Controlled" }));
+    expect(onCloseReason).toHaveBeenCalledWith("trigger-click");
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(screen.getByRole("menu", { name: "Controlled" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onCloseReason).toHaveBeenLastCalledWith("escape-key");
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
+    expect(screen.getByRole("menu", { name: "Controlled" })).toBeInTheDocument();
+
+    rerender(
+      <Dropdown
+        label="Controlled"
+        open={false}
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        items={items}
+      />
+    );
+
+    expect(screen.queryByRole("menu", { name: "Controlled" })).toBeNull();
+  });
+
+  it("supports defaultOpen to mount menu expanded on initial render", () => {
+    render(
+      <Dropdown
+        label="Default expanded"
+        defaultOpen
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Default expanded" })).toHaveAttribute(
+      "aria-expanded",
+      "true"
+    );
+    expect(screen.getByRole("menu", { name: "Default expanded" })).toBeInTheDocument();
+  });
+
   it("supports Home and End navigation while skipping disabled items", () => {
     render(
       <Dropdown
