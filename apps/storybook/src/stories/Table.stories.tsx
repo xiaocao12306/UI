@@ -146,9 +146,9 @@ export const WithRowAction: Story = {
 
 export const EmptyState: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)" }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
       <Table columns={columns} data={[]} emptyContent="No release items yet." />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -162,13 +162,13 @@ export const EmptyState: Story = {
 
 export const SingleRowSortDisabled: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)" }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
       <Table
         columns={columns}
         data={[{ id: "BTN-102", component: "Button", owner: "Design System", status: "ready" }]}
         defaultSortKey="id"
       />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -237,7 +237,7 @@ export const KeyboardFocusRingAfterPointer: Story = {
 
 export const LoadingState: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)" }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
       <Table
         columns={columns}
         data={rows}
@@ -245,7 +245,7 @@ export const LoadingState: Story = {
         loadingContent="Syncing release feed..."
         defaultSortKey="id"
       />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -321,14 +321,14 @@ export const PrimaryPointerOnlySortPress: Story = {
 
 export const AccessibleNameWithoutCaption: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)" }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
       <Table
         ariaLabel="Release checklist table"
         columns={columns}
         data={rows}
         rowKey={(row) => row.id}
       />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -340,9 +340,9 @@ export const AccessibleNameWithoutCaption: Story = {
 
 export const AccessibleNameFallback: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)" }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
       <Table columns={columns} data={rows} rowKey={(row) => row.id} />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -352,7 +352,7 @@ export const AccessibleNameFallback: Story = {
 
 export const AccessibleNameLabelledByHeading: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)" gap={10}>
       <h3 id="release-board-heading" style={{ margin: 0 }}>
         Release board metrics
       </h3>
@@ -363,7 +363,7 @@ export const AccessibleNameLabelledByHeading: Story = {
         data={rows}
         rowKey={(row) => row.id}
       />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -375,7 +375,7 @@ export const AccessibleNameLabelledByHeading: Story = {
 
 export const RowHeaderSemantics: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)" }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
       <Table
         columns={[
           { key: "component", header: "Component", rowHeader: true, sortable: true },
@@ -386,7 +386,7 @@ export const RowHeaderSemantics: Story = {
         rowKey={(row) => row.id}
         defaultSortKey="component"
       />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -505,7 +505,7 @@ export const ImeCompositionGuard: Story = {
 
 export const LocalizedSortLabels: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)" }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
       <Table
         columns={columns}
         data={rows}
@@ -517,7 +517,7 @@ export const LocalizedSortLabels: Story = {
           `当前排序：${columnHeader}（${direction === "asc" ? "升序" : "降序"}）`
         }
       />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -537,9 +537,9 @@ export const InvalidDefaultSortKeyFallback: Story = {
     ];
 
     return (
-      <div style={{ width: "min(100%, 620px)" }}>
+      <StoryShowcaseFrame maxWidth="min(100%, 620px)">
         <Table columns={nonSortableStatusColumns} data={rows} defaultSortKey="status" />
-      </div>
+      </StoryShowcaseFrame>
     );
   },
   play: async ({ canvasElement }) => {
@@ -632,9 +632,9 @@ const statefulColumns: Array<TableColumn<StatefulRow>> = [
 
 export const FallbackRowKeyStability: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 720px)" }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 720px)">
       <Table columns={statefulColumns} data={statefulRows} defaultSortKey="component" />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -648,14 +648,14 @@ export const FallbackRowKeyStability: Story = {
 
 export const SourceIndexRowKeyStability: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 720px)" }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 720px)">
       <Table
         columns={statefulColumns}
         data={statefulRows}
         defaultSortKey="component"
         rowKey={(row, rowIndex) => `${rowIndex}-${row.id}`}
       />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
