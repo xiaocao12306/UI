@@ -118,7 +118,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   const [pressed, setPressed] = React.useState(false);
   const [focusVisible, setFocusVisible] = React.useState(false);
   const focusVisibleIntentRef = React.useRef(true);
+  const missingA11yNameWarnedRef = React.useRef(false);
   const interactionDisabled = disabled || loading;
+  const ariaLabel = props["aria-label"];
+  const ariaLabelledBy = props["aria-labelledby"];
+  const title = props.title;
   const variantStyles = variantStyleMap[variant];
   const stateStyle = interactionDisabled
     ? variantStyles.disabled
@@ -136,6 +140,27 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     setHovered(false);
     setPressed(false);
   }, [interactionDisabled]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    if (missingA11yNameWarnedRef.current) {
+      return;
+    }
+
+    const hasExplicitName =
+      typeof ariaLabel === "string" || typeof ariaLabelledBy === "string" || typeof title === "string";
+    const announcedContent = loading ? (loadingText ?? children) : children;
+
+    if (!hasExplicitName && !hasReadableText(announcedContent)) {
+      missingA11yNameWarnedRef.current = true;
+      console.warn(
+        "[aurora-ui/Button] Icon-only usage requires an accessible name. Provide aria-label or aria-labelledby."
+      );
+    }
+  }, [ariaLabel, ariaLabelledBy, children, loading, loadingText, title]);
 
   return (
     <button
@@ -256,4 +281,27 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
   } catch {
     return fallback;
   }
+}
+
+function hasReadableText(node: React.ReactNode): boolean {
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  if (typeof node === "number") {
+    return true;
+  }
+
+  if (Array.isArray(node)) {
+    return node.some((item) => hasReadableText(item));
+  }
+
+  if (React.isValidElement(node)) {
+    if (node.props["aria-hidden"] === true || node.props["aria-hidden"] === "true") {
+      return false;
+    }
+    return hasReadableText(node.props.children as React.ReactNode);
+  }
+
+  return false;
 }

@@ -549,6 +549,7 @@
   - Switch 主键按压语义收口（switch `pressed` 视觉仅响应主键 `mousedown/up`，新增 `data-pressed` 回归标记并补齐 unit + Storybook `PointerPrimaryOnly`）
   - Input 主键焦点语义收口（非主键 `mousedown/pointerdown` 不再清理 `focus-visible`，补齐 unit + Storybook `InteractionA11yParity` 回归）
   - Input IME 键盘语义收口（组合输入阶段忽略 Enter active 视觉反馈，避免中日韩输入法确认时误触发按压态；补齐 unit + Storybook 交互断言）
+  - Button icon-only 可访问性收口（无可读文本且缺失 `aria-label`/`aria-labelledby` 时开发态告警，补齐 unit + Storybook `IconOnlyAccessibleName` 与 API/Best-Practices 文档）
   - Button 主键焦点语义收口（非主键 `mousedown/pointerdown` 不再清理 `focus-visible`，补齐 unit 回归）
   - Drawer 关闭按钮主键焦点语义收口（非主键 `mousedown` 不再清理 `focus-visible`，补齐 unit 回归）
   - Toast 关闭按钮焦点语义补测（新增非主键 `mousedown` 保留 `focus-visible` 的 unit 回归，锁定关闭按钮主键焦点策略）

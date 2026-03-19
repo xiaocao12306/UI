@@ -128,4 +128,32 @@ describe("Button", () => {
     expect(disabledButton.getAttribute("style")).not.toContain("translateY(1px)");
     expect(disabledButton).toBeDisabled();
   });
+
+  it("warns in development when icon-only button has no accessible name", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    render(
+      <Button>
+        <span aria-hidden="true">+</span>
+      </Button>
+    );
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      "[aurora-ui/Button] Icon-only usage requires an accessible name. Provide aria-label or aria-labelledby."
+    );
+    warnSpy.mockRestore();
+  });
+
+  it("does not warn for icon-only button when aria-label is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    render(
+      <Button aria-label="Add release note">
+        <span aria-hidden="true">+</span>
+      </Button>
+    );
+
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
 });

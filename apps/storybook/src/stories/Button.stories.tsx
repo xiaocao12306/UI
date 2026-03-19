@@ -103,15 +103,7 @@ function KeyboardActivationDemo() {
       </p>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
         <Button onClick={() => setCount((value) => value + 1)}>Run Action</Button>
-        <Button
-          variant="outline"
-          loading={loading}
-          style={{
-            color: "var(--aurora-text-primary)",
-            borderColor: "var(--aurora-border-strong)"
-          }}
-          onClick={() => setCount((value) => value + 10)}
-        >
+        <Button variant="outline" loading={loading} onClick={() => setCount((value) => value + 10)}>
           Background Task
         </Button>
         <Button variant="outline" onClick={() => setLoading((value) => !value)}>
@@ -168,5 +160,29 @@ export const PrimaryPointerOnly: Story = {
 
     await userEvent.click(button);
     await expect(count).toHaveTextContent("1");
+  }
+};
+
+export const IconOnlyAccessibleName: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 560px)" gap={10}>
+      <div style={{ display: "flex", gap: 8 }}>
+        <Button aria-label="Add release note" variant="outline">
+          <span aria-hidden="true">+</span>
+        </Button>
+        <Button aria-label="Open settings" variant="ghost">
+          <span aria-hidden="true">⚙</span>
+        </Button>
+      </div>
+      <small style={storyMutedTextStyle}>
+        Icon-only buttons should always provide an accessible name via <code>aria-label</code> or{" "}
+        <code>aria-labelledby</code>.
+      </small>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: "Add release note" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Open settings" })).toBeInTheDocument();
   }
 };
