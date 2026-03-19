@@ -27,7 +27,7 @@ function ControlledCheckbox() {
   return (
     <div style={{ width: 320, display: "grid", gap: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ color: "var(--aurora-text-secondary)" }}>Current state</span>
+        <span style={{ color: "var(--aurora-text-primary)" }}>Current state</span>
         <Badge tone={checked ? "success" : "danger"}>{checked ? "Enabled" : "Disabled"}</Badge>
       </div>
       <Checkbox

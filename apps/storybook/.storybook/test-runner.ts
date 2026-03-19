@@ -13,14 +13,7 @@ const colorContrastSkipStoryIds = new Set([
   "data-table--with-row-action",
   "feedback-alert--default",
   "feedback-alert--dismissible",
-  "feedback-alert--tone-matrix",
-  "form-checkbox--controlled",
-  "form-datepicker--invalid-with-helper",
-  "form-formfield--with-input-control",
-  "form-input--state-matrix",
-  "form-select--invalid-state",
-  "form-switch--controlled",
-  "form-textarea--invalid-with-helper"
+  "feedback-alert--tone-matrix"
 ]);
 
 const config: TestRunnerConfig = {

@@ -35,7 +35,7 @@ export const AiPromptStyle: Story = {
         <Input id="prompt" placeholder="Ask Aurora AI to scaffold a new dialog flow..." aria-label="AI prompt" />
         <Button>Send</Button>
       </div>
-      <small style={{ color: "var(--aurora-text-secondary)" }}>
+      <small style={{ color: "var(--aurora-text-primary)" }}>
         Tip: switch theme in toolbar to validate input token contrast.
       </small>
     </div>
@@ -84,7 +84,7 @@ function ValidationFlowDemo() {
           onBlur={() => setTouched(true)}
         />
       </FormField>
-      <small style={{ color: "var(--aurora-text-secondary)" }} data-testid="char-count">
+      <small style={{ color: "var(--aurora-text-primary)" }} data-testid="char-count">
         {value.length} chars
       </small>
       <Button disabled={value.trim().length === 0}>Submit Prompt</Button>
@@ -116,7 +116,7 @@ export const InvalidTokenSemantics: Story = {
       <FormField label="Grammar review">
         <Input aria-label="Grammar review input" aria-invalid="grammar" defaultValue="Needs grammar check" />
       </FormField>
-      <small style={{ color: "var(--aurora-text-secondary)" }}>
+      <small style={{ color: "var(--aurora-text-primary)" }}>
         Preserves <code>aria-invalid=&quot;grammar&quot;</code> for assistive-tech integrations that distinguish
         grammar/spelling corrections.
       </small>

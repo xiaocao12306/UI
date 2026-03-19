@@ -30,7 +30,7 @@ function ControlledDatePickerDemo() {
   return (
     <div style={{ width: 360, display: "grid", gap: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ color: "var(--aurora-text-secondary)" }}>Selected date</span>
+        <span style={{ color: "var(--aurora-text-primary)" }}>Selected date</span>
         <Badge tone="default">{value}</Badge>
       </div>
       <DatePicker
@@ -74,10 +74,17 @@ export const InvalidWithHelper: Story = {
         errorMessageId="release-date-error"
         onValueChange={() => {}}
       />
-      <p id="release-date-help" style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+      <p id="release-date-help" style={{ margin: 0, color: "var(--aurora-text-primary)", fontSize: 13 }}>
         Choose a date between February and December.
       </p>
-      <p id="release-date-error" style={{ margin: 0, color: "var(--aurora-color-red-500)", fontSize: 13 }}>
+      <p
+        id="release-date-error"
+        style={{
+          margin: 0,
+          color: "color-mix(in srgb, var(--aurora-color-red-500) 86%, var(--aurora-text-primary))",
+          fontSize: 13
+        }}
+      >
         Release date must be in the approved launch window.
       </p>
     </div>

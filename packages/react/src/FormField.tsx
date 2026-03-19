@@ -84,7 +84,11 @@ export function FormField({ label, htmlFor, description, error, required, disabl
       ) : null}
 
       {error ? (
-        <small id={errorId} role="alert" style={{ color: "var(--aurora-color-red-500)" }}>
+        <small
+          id={errorId}
+          role="alert"
+          style={{ color: "color-mix(in srgb, var(--aurora-color-red-500) 86%, var(--aurora-text-primary))" }}
+        >
           {error}
         </small>
       ) : null}

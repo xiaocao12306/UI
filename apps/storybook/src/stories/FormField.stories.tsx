@@ -30,7 +30,7 @@ export const WithInputControl: Story = {
       <FormField label="Deployment window" description="Use local timezone for all rollouts." error="End date must be after start date.">
         <Input aria-describedby="custom-window-help" defaultValue="2026-03-12" />
       </FormField>
-      <p id="custom-window-help" style={{ margin: "8px 0 0", color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+      <p id="custom-window-help" style={{ margin: "8px 0 0", color: "var(--aurora-text-primary)", fontSize: 13 }}>
         Custom helper: choose an off-peak deployment slot.
       </p>
     </div>

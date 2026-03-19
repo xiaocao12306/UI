@@ -46,10 +46,17 @@ export const InvalidWithHelper: Story = {
         invalid
         aria-describedby="release-summary-help release-summary-error"
       />
-      <p id="release-summary-help" style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+      <p id="release-summary-help" style={{ margin: 0, color: "var(--aurora-text-primary)", fontSize: 13 }}>
         Include impact, rollback plan, and owner contact.
       </p>
-      <p id="release-summary-error" style={{ margin: 0, color: "var(--aurora-color-red-500)", fontSize: 13 }}>
+      <p
+        id="release-summary-error"
+        style={{
+          margin: 0,
+          color: "color-mix(in srgb, var(--aurora-color-red-500) 86%, var(--aurora-text-primary))",
+          fontSize: 13
+        }}
+      >
         Summary cannot be shorter than 30 characters.
       </p>
     </div>
@@ -60,7 +67,7 @@ export const DisabledAndReadOnly: Story = {
   render: () => (
     <div style={{ width: 360, display: "grid", gap: 12 }}>
       <div style={{ display: "grid", gap: 6 }}>
-        <span style={{ color: "var(--aurora-text-secondary)", fontSize: 13 }}>Read-only template</span>
+        <span style={{ color: "var(--aurora-text-primary)", fontSize: 13 }}>Read-only template</span>
         <Textarea
           aria-label="Read-only template"
           readOnly
@@ -68,7 +75,7 @@ export const DisabledAndReadOnly: Story = {
         />
       </div>
       <div style={{ display: "grid", gap: 6 }}>
-        <span style={{ color: "var(--aurora-text-secondary)", fontSize: 13 }}>Disabled while syncing</span>
+        <span style={{ color: "var(--aurora-text-primary)", fontSize: 13 }}>Disabled while syncing</span>
         <Textarea aria-label="Disabled while syncing" disabled defaultValue="Synchronizing from source of truth..." />
       </div>
     </div>

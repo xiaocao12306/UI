@@ -27,7 +27,7 @@ function ControlledSelectDemo() {
   return (
     <div style={{ width: 340, display: "grid", gap: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ color: "var(--aurora-text-secondary)" }}>Selected</span>
+        <span style={{ color: "var(--aurora-text-primary)" }}>Selected</span>
         <Badge>{framework}</Badge>
       </div>
       <Select aria-label="Framework select" value={framework} onChange={(event) => setFramework(event.target.value)}>
@@ -59,7 +59,14 @@ export const InvalidState: Story = {
         <option value="prod">Production</option>
         <option value="stage">Staging</option>
       </Select>
-      <p id="environment-error" style={{ margin: 0, color: "var(--aurora-color-red-500)", fontSize: 13 }}>
+      <p
+        id="environment-error"
+        style={{
+          margin: 0,
+          color: "color-mix(in srgb, var(--aurora-color-red-500) 86%, var(--aurora-text-primary))",
+          fontSize: 13
+        }}
+      >
         Environment is required before deployment.
       </p>
     </div>
