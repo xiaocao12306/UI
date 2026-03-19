@@ -40,11 +40,11 @@ import {
 import "./main.css";
 
 const sectionLinks = [
-  { id: "basic-components", label: "Basic" },
-  { id: "data-navigation", label: "Data" },
-  { id: "feedback-states", label: "States" },
-  { id: "overlays-navigation", label: "Overlays" },
-  { id: "ai-components", label: "AI" }
+  { id: "basic-components", label: "Basic Components" },
+  { id: "data-navigation", label: "Data & Navigation" },
+  { id: "feedback-states", label: "Feedback & States" },
+  { id: "overlays-navigation", label: "Overlays & Navigation" },
+  { id: "ai-components", label: "AI Components" }
 ];
 const availableThemes: ThemeName[] = ["core-light", "core-dark", "glass", "neo-brutal"];
 const themeStorageKey = "aurora-ui-demo-theme";
@@ -689,7 +689,7 @@ function App() {
                 </p>
               </aside>
             </div>
-            <div style={heroStatsGridStyle}>
+            <div className="demo-hero-stats-grid" style={heroStatsGridStyle}>
               <HeroStatCard
                 targetId="basic-components"
                 targetLabel="Basic Components"

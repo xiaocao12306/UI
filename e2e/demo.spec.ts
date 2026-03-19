@@ -591,7 +591,7 @@ test("keeps command palette open when Escape is preempted by a global handler", 
 test("highlights active section in anchor nav", async ({ page }) => {
   await page.goto("/");
 
-  const statesLink = page.getByRole("link", { name: "States", exact: true });
+  const statesLink = page.getByRole("link", { name: "Feedback & States", exact: true });
   await statesLink.click();
   await expect(statesLink).toHaveAttribute("aria-current", "location");
 });
@@ -602,7 +602,10 @@ test("navigates to target sections from hero stat cards", async ({ page }) => {
   const overlaysCardLink = page.getByRole("link", { name: "Jump to Overlays and Navigation section" });
   await overlaysCardLink.click();
   await expect(page).toHaveURL(/#overlays-navigation$/);
-  await expect(page.getByRole("link", { name: "Overlays", exact: true })).toHaveAttribute("aria-current", "location");
+  await expect(page.getByRole("link", { name: "Overlays & Navigation", exact: true })).toHaveAttribute(
+    "aria-current",
+    "location"
+  );
 });
 
 test("navigates data tabs with Home/End keys", async ({ page }) => {

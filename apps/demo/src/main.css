@@ -510,6 +510,14 @@
     min-height: 88px;
   }
 
+  .demo-section-nav-shell {
+    order: 1;
+  }
+
+  .demo-hero-stats-grid {
+    order: 2;
+  }
+
   .demo-section-stack,
   .demo-two-column,
   .demo-tabs-lab-grid {
