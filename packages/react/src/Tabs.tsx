@@ -219,6 +219,9 @@ export function Tabs({
                 focusIntentRef.current = true;
                 if (activationMode === "manual" && isTabActivationKey(event.key)) {
                   event.preventDefault();
+                  if (event.repeat) {
+                    return;
+                  }
                   keyboardActivationTabKeyRef.current = item.key;
                   if (keyboardActivationResetTimerRef.current !== null) {
                     window.clearTimeout(keyboardActivationResetTimerRef.current);

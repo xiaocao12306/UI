@@ -120,6 +120,7 @@
 - Tabs telemetry de-dup hardening: manual mode now ignores follow-up keyboard-generated click (`detail=0`) after key activation, preventing duplicate `onValueChange` emissions.
 - Tabs keyboard-discoverability hardening: manual mode now exposes `aria-keyshortcuts="Enter Space"` on tabs, with unit + Storybook interaction coverage.
 - Demo Tabs keyboard-discoverability parity: Playwright manual-mode flows now assert `aria-keyshortcuts="Enter Space"` on actionable tabs.
+- Tabs activation-repeat parity: manual mode now ignores repeated activation keydown (`Enter` / `Space`, `event.repeat=true`) so long-press does not emit duplicate value-change telemetry.
 - Storybook Tag stability hardening: `Core/Tag/MetadataRow` now has explicit play assertions to reduce interaction-runner navigation retry noise.
 - Storybook Toast stability hardening: `Feedback/Toast/ToneMatrix` now uses `duration={0}` so baseline stories stay deterministic during interaction-runner sweeps.
 - Storybook Pagination stability hardening: keyboard stories now await async role transitions (`findByRole`) and assert focus preconditions to reduce interaction-runner retry noise.

@@ -452,6 +452,7 @@
   - CommandPalette 引用稳健性收口（`aria-activedescendant` 仅引用现存可执行 option，过滤/命令更新时避免悬空或禁用项引用）
   - CommandPalette 键盘长按收口（`Enter` repeat 场景忽略重复触发，避免批量执行模式下重复命令与遥测抖动）
   - CommandPalette 键盘提示精度收口（无可执行命令时移除 `Enter` 键提示，避免 AT/QA 误判可执行路径）
+  - Tabs 键盘长按收口（manual 模式 `Enter/Space` repeat 场景忽略重复触发，避免 tab 切换遥测抖动）
   - Toast 键盘提示精度收口（堆叠通知仅当前可 Escape 关闭的顶层 toast 暴露 `aria-keyshortcuts="Escape"`，避免 AT/QA 误判不可关闭通知）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
