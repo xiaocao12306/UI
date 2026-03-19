@@ -294,6 +294,7 @@
 - Dropdown close-reason telemetry parity: added `onCloseReason` with structured reasons (`trigger-click` / `item-select` / `escape-key` / `outside-pointer` / `tab-key`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
 - Dropdown close lifecycle parity: callback order is now contract-locked by tests/docs (`item-select`: `onSelect -> onCloseReason -> onOpenChange(false)`; other dismiss paths: `onCloseReason -> onOpenChange(false)`).
 - Demo dropdown close-reason parity: added `dropdown-close-reason-demo` indicator and Playwright regression for `item-select` / `escape-key` / `outside-pointer` / `trigger-click` / `tab-key` branches.
+- Demo popover/dropdown close-trace parity: added `popover-close-trace-demo` / `dropdown-close-trace-demo` and Playwright assertions for deterministic callback order (`Popover`: `reason -> open:false`; `Dropdown item-select`: `select -> reason -> open:false`).
 - Popover close-reason telemetry parity: added `onCloseReason` with structured reasons (`trigger-click` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
 - Popover close lifecycle parity: callback order is now contract-locked by tests/docs (`onCloseReason -> onOpenChange(false)`) for trigger/Escape/outside dismiss paths.
 - Dialog close-reason telemetry parity: added `onCloseReason` with structured reasons (`close-button` / `escape-key` / `outside-pointer`) and Storybook `CloseReasonTelemetry` validation for analytics-safe dismiss tracking.
