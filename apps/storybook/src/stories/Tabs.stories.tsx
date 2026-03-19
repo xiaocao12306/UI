@@ -2,6 +2,7 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Tabs, type TabItem } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { StoryShowcaseFrame, storyMutedTextStyle } from "./storyShowcase";
 
 const productTabs: TabItem[] = [
   {
@@ -22,17 +23,38 @@ const productTabs: TabItem[] = [
   }
 ];
 
-const storyHelperTextStyle: React.CSSProperties = {
-  margin: 0,
-  color: "var(--aurora-text-secondary)",
-  fontSize: 13,
-  lineHeight: 1.55
-};
-
 const storyTelemetryLabelStyle: React.CSSProperties = {
   color: "var(--aurora-text-secondary)",
   fontSize: 13
 };
+
+const tabsShowcaseMaxWidth = "min(100%, 620px)";
+
+function TabsShowcase({
+  children,
+  gap = 12,
+  dir
+}: {
+  children: React.ReactNode;
+  gap?: number;
+  dir?: "ltr" | "rtl";
+}) {
+  if (dir) {
+    return (
+      <div dir={dir}>
+        <StoryShowcaseFrame maxWidth={tabsShowcaseMaxWidth} gap={gap}>
+          {children}
+        </StoryShowcaseFrame>
+      </div>
+    );
+  }
+
+  return (
+    <StoryShowcaseFrame maxWidth={tabsShowcaseMaxWidth} gap={gap}>
+      {children}
+    </StoryShowcaseFrame>
+  );
+}
 
 function dispatchImeKeyDown(element: HTMLElement, key: string) {
   const event = new KeyboardEvent("keydown", { key, bubbles: true });
@@ -69,13 +91,13 @@ function ControlledTabsDemo() {
   const [value, setValue] = React.useState("build");
 
   return (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 10 }}>
+    <TabsShowcase gap={10}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span style={storyTelemetryLabelStyle}>Current stage</span>
         <Badge tone="default">{value}</Badge>
       </div>
       <Tabs items={productTabs} value={value} onValueChange={setValue} />
-    </div>
+    </TabsShowcase>
   );
 }
 
@@ -83,7 +105,7 @@ function DisableVisualResetTabsDemo() {
   const [buildDisabled, setBuildDisabled] = React.useState(false);
 
   return (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
+    <TabsShowcase>
       <button type="button" onClick={() => setBuildDisabled(true)}>
         Disable Build tab
       </button>
@@ -109,7 +131,7 @@ function DisableVisualResetTabsDemo() {
           }
         ]}
       />
-    </div>
+    </TabsShowcase>
   );
 }
 
@@ -128,12 +150,12 @@ function RemoveActiveTabFallbackDemo() {
       ];
 
   return (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
+    <TabsShowcase>
       <Button size="sm" variant="outline" onClick={() => setRemoveBuildTab(true)}>
         Remove Build tab
       </Button>
       <Tabs ariaLabel="Removal fallback tabs" defaultValue="build" items={items} />
-    </div>
+    </TabsShowcase>
   );
 }
 
@@ -156,14 +178,14 @@ export const Controlled: Story = {
 
 export const KeyboardFocusRingAfterPointer: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={storyHelperTextStyle}>
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
         Pointer focus keeps ring hidden, then keyboard Tab navigation restores focus-visible ring
         for the active tab.
       </p>
       <button type="button">Before tabs</button>
       <Tabs ariaLabel="Focus ring fallback tabs" defaultValue="spec" items={productTabs} />
-    </div>
+    </TabsShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -221,8 +243,8 @@ export const PrimaryPointerOnlyPressedState: Story = {
     const [changeCount, setChangeCount] = React.useState(0);
 
     return (
-      <div style={{ width: "min(100%, 620px)", display: "grid", gap: 10 }}>
-        <p style={storyHelperTextStyle}>
+      <TabsShowcase gap={10}>
+        <p style={storyMutedTextStyle}>
           Active tab: <strong data-testid="primary-pointer-active">{activeKey}</strong> | Change
           count: <strong data-testid="primary-pointer-count">{changeCount}</strong>
         </p>
@@ -237,7 +259,7 @@ export const PrimaryPointerOnlyPressedState: Story = {
             setChangeCount((current) => current + 1);
           }}
         />
-      </div>
+      </TabsShowcase>
     );
   },
   play: async ({ canvasElement }) => {
@@ -334,8 +356,8 @@ export const AllTabsDisabled: Story = {
 
 export const KeyboardNavigationGuide: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={storyHelperTextStyle}>
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
         Keyboard: horizontal tabs use ArrowLeft/ArrowRight, vertical tabs use ArrowUp/ArrowDown.
         Home jumps to first enabled tab, End jumps to last enabled tab.
       </p>
@@ -349,7 +371,7 @@ export const KeyboardNavigationGuide: Story = {
           { key: "release", label: "Release", content: "Release stage." }
         ]}
       />
-    </div>
+    </TabsShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -377,13 +399,13 @@ export const KeyboardNavigationGuide: Story = {
 
 export const NoLoopNavigation: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={storyHelperTextStyle}>
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
         Set <code>loop=&#123;false&#125;</code> to keep Arrow navigation at tablist boundaries
         instead of wrapping.
       </p>
       <Tabs ariaLabel="No loop tabs" defaultValue="spec" loop={false} items={productTabs} />
-    </div>
+    </TabsShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -406,12 +428,12 @@ function LabelledByHeadingDemo() {
   const headingId = React.useId();
 
   return (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 10 }}>
+    <TabsShowcase gap={10}>
       <h3 id={headingId} style={{ margin: 0 }}>
         Release Stages
       </h3>
       <Tabs ariaLabelledBy={headingId} items={productTabs} defaultValue="spec" />
-    </div>
+    </TabsShowcase>
   );
 }
 
@@ -425,7 +447,7 @@ export const LabelledByHeading: Story = {
 
 export const Vertical: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 620px)" }}>
+    <TabsShowcase>
       <Tabs
         ariaLabel="Vertical workflow tabs"
         orientation="vertical"
@@ -436,7 +458,7 @@ export const Vertical: Story = {
           { key: "release", label: "Release", content: "Release stage." }
         ]}
       />
-    </div>
+    </TabsShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -455,13 +477,13 @@ export const Vertical: Story = {
 
 export const RtlKeyboardNavigation: Story = {
   render: () => (
-    <div dir="rtl" style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={storyHelperTextStyle}>
+    <TabsShowcase dir="rtl">
+      <p style={storyMutedTextStyle}>
         In RTL layouts, horizontal ArrowRight moves to the previous tab and ArrowLeft moves to the
         next tab.
       </p>
       <Tabs ariaLabel="RTL workflow tabs" defaultValue="spec" items={productTabs} />
-    </div>
+    </TabsShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -483,8 +505,8 @@ export const RtlKeyboardNavigation: Story = {
 
 export const ManualActivation: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={storyHelperTextStyle}>
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
         Manual mode keeps panel selection stable while arrows move focus; press Enter or Space to
         activate.
       </p>
@@ -498,7 +520,7 @@ export const ManualActivation: Story = {
           { key: "release", label: "Release", content: "Release stage." }
         ]}
       />
-    </div>
+    </TabsShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -529,8 +551,8 @@ export const ManualActivation: Story = {
 
 export const ManualFocusResetOnBlur: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={storyHelperTextStyle}>
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
         In manual mode, moving focus with arrows does not change selection. After leaving the
         tablist, roving focus returns to the selected tab for the next keyboard entry.
       </p>
@@ -545,7 +567,7 @@ export const ManualFocusResetOnBlur: Story = {
         ]}
       />
       <button type="button">Outside focus target</button>
-    </div>
+    </TabsShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -570,8 +592,8 @@ export const ManualFocusResetOnBlur: Story = {
 
 export const ImeCompositionGuard: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={storyHelperTextStyle}>
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
         In manual mode, Enter and Space are ignored while IME composition is active, so CJK
         confirmation does not activate a tab by accident.
       </p>
@@ -585,7 +607,7 @@ export const ImeCompositionGuard: Story = {
           { key: "release", label: "Release", content: "Release stage." }
         ]}
       />
-    </div>
+    </TabsShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -617,8 +639,8 @@ export const ImeCompositionGuard: Story = {
 
 export const ManualVerticalActivation: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
-      <p style={storyHelperTextStyle}>
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
         Vertical + manual mode keeps selection stable while ArrowUp/ArrowDown move focus;
         Enter/Space activates.
       </p>
@@ -633,7 +655,7 @@ export const ManualVerticalActivation: Story = {
           { key: "ship", label: "Ship", content: "Ship checklist and release notes." }
         ]}
       />
-    </div>
+    </TabsShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -668,7 +690,7 @@ function ChangeTelemetryDemo() {
   const [changes, setChanges] = React.useState(0);
 
   return (
-    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 10 }}>
+    <TabsShowcase gap={10}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span style={storyTelemetryLabelStyle}>Value change events</span>
         <Badge tone="default" data-testid="change-count">
@@ -683,7 +705,7 @@ function ChangeTelemetryDemo() {
           setChanges((count) => count + 1);
         }}
       />
-    </div>
+    </TabsShowcase>
   );
 }
 
