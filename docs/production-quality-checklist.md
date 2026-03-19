@@ -278,6 +278,7 @@
 - Toast actionable-role parity: toasts with `action` now expose `dialog/alertdialog` semantics (`aria-modal="false"`) while passive notifications keep `status/alert`.
 - Table sortable-header state parity: sortable controls now expose hover/pressed/focus-visible feedback and `aria-keyshortcuts="Enter Space"` for keyboard audit clarity.
 - CommandPalette page-jump parity: long lists now support `PageUp/PageDown` jumps across actionable options while preserving disabled-option skip semantics.
+- CommandPalette keyboard-discoverability parity: search combobox now exposes `aria-keyshortcuts` metadata (`ArrowDown/ArrowUp/Home/End/PageDown/PageUp/Enter/Escape`) with unit + Storybook + demo E2E coverage.
 - Storybook AI preemption parity: CommandPalette now includes `EscapePreemptedByGlobalHandler` interaction scenario so preempted Escape keeps palette open and skips hook side effects.
 - Storybook modal preemption parity: Dialog + Drawer now include `EscapePreemptedByGlobalHandler` interaction scenarios so preempted Escape keeps surfaces open and skips hook side effects.
 - Storybook modal close-trace parity: Dialog + Drawer `CloseReasonTelemetry` now exposes close trace and play assertions to lock `onCloseReason -> onOpenChange(false)` callback order in interaction baselines.

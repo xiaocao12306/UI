@@ -566,6 +566,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onOpenChange` | `(open: boolean) => void` | Required controlled dialog state. |
 | combobox relation | conditional `aria-controls` + listbox mount | Search input references listbox only while filtered results exist, avoiding empty-state dangling IDs. |
 | focus model | combobox + `aria-activedescendant` | Options stay outside tab order to keep keyboard flow anchored on the search input. |
+| search key hints | `aria-keyshortcuts="ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"` | Exposes command-navigation shortcut metadata directly on the combobox for QA/AT discoverability. |
 | long-list keyboard jump | `PageUp` / `PageDown` | Page keys jump by 5 actionable commands while skipping disabled options, reducing Arrow-key repetition in dense command sets. |
 | search matching | accent-insensitive + lowercase normalization | Plain query text like `cafe` can match `Café` labels/aliases. |
 | IME safety | composition key guard | Arrow/Enter handling is ignored while `isComposing` (or legacy `keyCode=229`) to prevent accidental command execution during CJK input. |

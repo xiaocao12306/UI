@@ -421,6 +421,7 @@
   - CommandPalette 关闭顺序单测收口（补齐 `escape-key/outside-pointer` 分支，锁定 `onCloseReason -> onOpenChange(false)` 顺序契约）
   - CommandPalette 长列表键盘可见区收口（高亮 option 随 `activeIndex` 自动 `scrollIntoView`，避免“选中不可见”）
   - CommandPalette 长列表翻页键收口（新增 `PageUp/PageDown` 按 5 条可执行项跳转并跳过禁用项，降低高密列表操作成本）
+  - CommandPalette 键盘提示语义收口（search combobox 暴露 `aria-keyshortcuts`，补齐 unit + Storybook + Demo E2E 断言）
   - Demo CommandPalette 翻页键验收（新增键盘提示文案 + Playwright `PageUp/PageDown` 回归，锁定禁用项跳过行为）
   - Toast 关闭回调契约收口（单测锁定 `onCloseReason -> onClose -> onOpenChange(false)` 顺序，并同步 Component API / Best Practices）
   - Toast 关闭顺序单测收口（补齐 `escape-key/timeout` 分支，锁定与 close-button 一致的 `onCloseReason -> onClose -> onOpenChange(false)` 顺序契约）
