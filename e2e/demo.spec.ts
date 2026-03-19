@@ -748,6 +748,9 @@ test("keeps manual tabs panel stable until Enter activation", async ({ page }) =
   const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
   const reviewPanel = page.locator(`#${await reviewTab.getAttribute("aria-controls")}`);
 
+  await expect(draftTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await expect(reviewTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+
   await draftTab.focus();
   await draftTab.press("ArrowRight");
   await expect(reviewTab).toBeFocused();
@@ -769,6 +772,9 @@ test("keeps manual tabs panel stable until Space activation", async ({ page }) =
   const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
   const shipPanel = page.locator(`#${await shipTab.getAttribute("aria-controls")}`);
 
+  await expect(draftTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await expect(shipTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+
   await draftTab.focus();
   await draftTab.press("End");
   await expect(shipTab).toBeFocused();
@@ -789,6 +795,9 @@ test("keeps manual tabs panel stable until legacy Spacebar activation", async ({
   const reviewTab = manualTablist.getByRole("tab", { name: "Review" });
   const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
   const reviewPanel = page.locator(`#${await reviewTab.getAttribute("aria-controls")}`);
+
+  await expect(draftTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await expect(reviewTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 
   await draftTab.focus();
   await draftTab.press("ArrowRight");
@@ -813,6 +822,9 @@ test("keeps manual vertical tabs panel stable until Enter activation", async ({ 
   const shipTab = manualVerticalTablist.getByRole("tab", { name: "Ship" });
   const backlogPanel = page.locator(`#${await backlogTab.getAttribute("aria-controls")}`);
   const shipPanel = page.locator(`#${await shipTab.getAttribute("aria-controls")}`);
+
+  await expect(backlogTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await expect(shipTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 
   await backlogTab.focus();
   await backlogTab.press("ArrowDown");
