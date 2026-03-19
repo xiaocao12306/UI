@@ -282,7 +282,9 @@ function Section({
     <section id={id} aria-labelledby={headingId} className="demo-section" style={sectionStyle}>
       <header className="demo-section-header" style={sectionHeaderStyle}>
         <div style={sectionHeadingRowStyle}>
-          <p style={sectionEyebrowStyle}>{id.replaceAll("-", " ")}</p>
+          <p className="demo-section-eyebrow" style={sectionEyebrowStyle}>
+            {id.replaceAll("-", " ")}
+          </p>
           <span aria-hidden="true" className="demo-section-heading-rule" />
         </div>
         <h2
@@ -364,6 +366,7 @@ function HeroStatCard({
       }}
     >
       <p
+        className="demo-hero-stat-label"
         style={{
           margin: 0,
           fontSize: 11,
@@ -374,8 +377,12 @@ function HeroStatCard({
       >
         {label}
       </p>
-      <strong style={{ fontSize: 18, letterSpacing: "-0.02em" }}>{value}</strong>
-      <p style={{ ...mutedBodyStyle, fontSize: 12 }}>{description}</p>
+      <strong className="demo-hero-stat-value" style={{ fontSize: 18, letterSpacing: "-0.02em" }}>
+        {value}
+      </strong>
+      <p className="demo-hero-stat-description" style={{ ...mutedBodyStyle, fontSize: 12 }}>
+        {description}
+      </p>
     </a>
   );
 }
@@ -631,7 +638,7 @@ function App() {
   return (
     <AuroraProvider theme={theme}>
       <GlobalStyles />
-      <div style={appShellStyle}>
+      <div className="demo-app-shell" style={appShellStyle}>
         <main className="demo-main-layout" style={mainLayoutStyle}>
           <header className="demo-hero" style={heroPanelStyle}>
             <div style={heroHeadlineStyle}>
@@ -648,6 +655,7 @@ function App() {
                   Theme
                 </label>
                 <Select
+                  className="demo-hero-theme-select"
                   id="theme-select"
                   value={theme}
                   onChange={(event) => setTheme(event.target.value as ThemeName)}
@@ -668,13 +676,15 @@ function App() {
               <div style={heroOverviewCopyStyle}>
                 <p className="demo-hero-summary" style={{ ...mutedBodyStyle, maxWidth: 820 }}>
                   Token-first React component library with AI interaction patterns. Current theme:{" "}
-                  <strong>{theme}</strong>
+                  <strong className="demo-theme-value">{theme}</strong>
                 </p>
                 <div className="demo-hero-badge-row" style={heroBadgeRowStyle}>
-                  <Badge tone="success">Production-ready interactions</Badge>
-                  <Badge>Accessibility-first defaults</Badge>
-                  <Tag>Design-token driven</Tag>
-                  <Tag>Overlay + AI ready</Tag>
+                  <Badge className="demo-status-chip" tone="success">
+                    Production-ready interactions
+                  </Badge>
+                  <Badge className="demo-status-chip">Accessibility-first defaults</Badge>
+                  <Tag className="demo-status-chip demo-status-chip-tag">Design-token driven</Tag>
+                  <Tag className="demo-status-chip demo-status-chip-tag">Overlay + AI ready</Tag>
                 </div>
               </div>
               <aside
@@ -719,7 +729,9 @@ function App() {
               />
             </div>
             <div className="demo-section-nav-shell" style={sectionNavShellStyle}>
-              <p style={sectionNavLabelStyle}>Jump to section</p>
+              <p className="demo-section-nav-label" style={sectionNavLabelStyle}>
+                Jump to section
+              </p>
               <nav aria-label="Demo sections" className="demo-section-nav" style={sectionNavStyle}>
                 {sectionLinks.map((item) => (
                   <SectionNavLink
@@ -752,10 +764,14 @@ function App() {
                   <Button>Primary</Button>
                   <Button variant="outline">Outline</Button>
                   <Button variant="ghost">Ghost</Button>
-                  <Tag>Design Token</Tag>
-                  <Badge>Default</Badge>
-                  <Badge tone="success">Stable</Badge>
-                  <Badge tone="danger">Breaking</Badge>
+                  <Tag className="demo-status-chip demo-status-chip-tag">Design Token</Tag>
+                  <Badge className="demo-status-chip">Default</Badge>
+                  <Badge className="demo-status-chip" tone="success">
+                    Stable
+                  </Badge>
+                  <Badge className="demo-status-chip" tone="danger">
+                    Breaking
+                  </Badge>
                 </div>
               </div>
               <div className="demo-two-column">
