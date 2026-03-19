@@ -66,6 +66,23 @@ describe("Button", () => {
     expect(button.getAttribute("style")).not.toContain("translateY(1px)");
   });
 
+  it("only uses primary mouse button for pressed feedback lifecycle", () => {
+    render(<Button>Primary Only</Button>);
+    const button = screen.getByRole("button", { name: "Primary Only" });
+
+    fireEvent.mouseDown(button, { button: 2 });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+
+    fireEvent.mouseDown(button, { button: 0 });
+    expect(button.getAttribute("style")).toContain("translateY(1px)");
+
+    fireEvent.mouseUp(button, { button: 2 });
+    expect(button.getAttribute("style")).toContain("translateY(1px)");
+
+    fireEvent.mouseUp(button, { button: 0 });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+  });
+
   it("clears pressed visual state when loading toggles on", () => {
     const { rerender } = render(<Button>Async Action</Button>);
     const button = screen.getByRole("button", { name: "Async Action" });

@@ -189,7 +189,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         onPointerDown?.(event);
       }}
       onMouseUp={(event) => {
-        setPressed(false);
+        if (event.button === 0) {
+          setPressed(false);
+        }
         onMouseUp?.(event);
       }}
       onFocus={(event) => {
