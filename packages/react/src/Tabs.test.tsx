@@ -562,6 +562,31 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
+  it("ignores modified navigation and activation keys", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        activationMode="manual"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> },
+          { key: "three", label: "Three", content: <div>Panel Three</div> }
+        ]}
+      />
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    fireEvent.keyDown(oneTab, { key: "ArrowRight", ctrlKey: true });
+    expect(oneTab).toHaveAttribute("aria-selected", "true");
+
+    fireEvent.keyDown(oneTab, { key: "End", metaKey: true });
+    expect(oneTab).toHaveAttribute("aria-selected", "true");
+
+    fireEvent.keyDown(oneTab, { key: "Enter", altKey: true });
+    expect(oneTab).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+  });
+
   it("resets manual roving focus target back to selected tab after leaving tablist", async () => {
     const user = userEvent.setup();
     render(

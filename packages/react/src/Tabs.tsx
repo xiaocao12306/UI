@@ -292,6 +292,9 @@ export function Tabs({
               }}
               onKeyDown={(event) => {
                 focusIntentRef.current = true;
+                if (event.altKey || event.ctrlKey || event.metaKey) {
+                  return;
+                }
                 if (activationMode === "manual" && isTabActivationKey(event.key)) {
                   if (isComposingActivationEvent(event)) {
                     return;

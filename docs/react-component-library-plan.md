@@ -555,6 +555,7 @@
   - Switch click guard 契约补测（消费者 `onClick.preventDefault()` 可阻断 pointer toggle，补齐 unit + Storybook `ClickPreventDefaultGuard` 场景）
   - Tabs/Table 主键焦点语义收口（非主键 `mousedown` 不再清理 tab/sort-button `focus-visible`，补齐 unit + Storybook `PrimaryPointerOnly*` 场景）
   - CommandPalette 修饰键导航收口（`Ctrl/Meta/Alt + Home/End/Page/Enter` 保留原生输入行为，补齐 unit + Storybook `PagedKeyboardNavigation` 回归）
+  - Tabs/Table 修饰键语义收口（`Ctrl/Meta/Alt` 组合键不触发 tabs 导航激活与 table 排序，补齐 unit + Storybook `KeyboardNavigationGuide`/`SortTelemetry` 回归）
   - 集成示例文档深化（`component-recipes` 新增 Overlay close telemetry / Tabs manual telemetry / Table i18n sort telemetry 模板）
   - Release Gate 证据刷新（2026-03-19：`release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 202/202）
   - Release Gate 证据刷新（2026-03-19 latest+2：修复 demo dist 同步后 `release:gate:ci` 复验通过，含 verify + coverage + demo e2e 71/71 + demo dist + storybook interaction 206/206）

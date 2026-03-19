@@ -326,6 +326,10 @@ export const KeyboardNavigationGuide: Story = {
     await userEvent.keyboard("{Home}");
     await expect(specTab).toHaveAttribute("aria-selected", "true");
     await expect(specTab).toHaveFocus();
+
+    fireEvent.keyDown(specTab, { key: "End", ctrlKey: true });
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+    await expect(specTab).toHaveFocus();
   }
 };
 

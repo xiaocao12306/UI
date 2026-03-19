@@ -405,6 +405,9 @@ export function Table<T>({
                       }}
                       onKeyDown={(event) => {
                         sortFocusIntentRef.current = true;
+                        if (event.altKey || event.ctrlKey || event.metaKey) {
+                          return;
+                        }
                         if (!isSortActivationKey(event.key)) {
                           return;
                         }

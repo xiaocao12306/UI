@@ -481,6 +481,35 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledTimes(2);
   });
 
+  it("ignores modified sortable-header activation keys", () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        onSortChange={onSortChange}
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    fireEvent.keyDown(sortButton, { key: "Enter", ctrlKey: true });
+    fireEvent.keyDown(sortButton, { key: " ", metaKey: true });
+    fireEvent.keyDown(sortButton, { key: "Spacebar", altKey: true });
+    expect(onSortChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(sortButton, { key: "Enter" });
+    expect(onSortChange).toHaveBeenCalledTimes(1);
+    expect(onSortChange).toHaveBeenCalledWith("name", "desc");
+  });
+
   it("exposes Enter/Space keyboard shortcuts on sortable headers", () => {
     render(
       <Table
