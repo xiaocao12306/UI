@@ -312,6 +312,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `items[].textValue` | `string` | Optional buffered typeahead search text for non-string labels or locale-specific/accent-normalized matching. |
 | `triggerAriaLabel` | `string` | Accessible name override for icon-only trigger button content. |
 | `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Works in both controlled and uncontrolled menu flows. |
+| controlled close contract | close intent first, parent rerender second | In controlled mode, dismiss gestures emit close callbacks first; menu visibility changes only after parent updates `open`. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Allows keeping menu open on Escape/outside pointer for blocking approval flows. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Observe or cancel dismiss gestures before close policy resolves. |
 | `onCloseReason` | `(reason: 'trigger-click' \| 'item-select' \| 'escape-key' \| 'outside-pointer' \| 'tab-key') => void` | Emits structured close telemetry so analytics does not infer dismiss origin from side effects. |
@@ -335,6 +336,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={DropdownStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={DropdownStories.TabDismissToNextControl} />
 <Canvas of={DropdownStories.CloseReasonTelemetry} />
+<Canvas of={DropdownStories.ControlledOpenContract} />
 <Canvas of={DropdownStories.NestedDismissOrder} />
 
 ## Data

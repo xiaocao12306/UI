@@ -83,6 +83,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Use dropdown `onCloseReason` for deterministic telemetry (`trigger-click` / `item-select` / `escape-key` / `outside-pointer` / `tab-key`) instead of inferring close origin from focus/state side effects.
 - Keep popover/dropdown close callbacks ordered and single-purpose: close paths should emit `onCloseReason` before `onOpenChange(false)`, while dropdown `item-select` should run `onSelect` before close callbacks.
 - Keep dropdown `Tab` behavior aligned with document order: close menu and continue focus to next control.
+- For controlled dropdowns, treat Escape/outside/trigger dismiss as close intent only; apply final visual close in parent rerender to avoid state race conditions.
 - Keep dropdown menu-item keyboard activation explicit and cross-browser (`Enter` / `Space` / legacy `Spacebar`) so non-pointer flows can execute actions without click simulation.
 - Treat dropdown menu-item activation repeat (`event.repeat`) as no-op after first keydown to prevent duplicate command execution and telemetry jitter during long-press.
 - Expose dropdown menu-item `aria-keyshortcuts="Enter Space"` only on actionable items; disabled items should omit shortcut hints to avoid false affordance.
@@ -94,6 +95,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={DropdownStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={DropdownStories.TabDismissToNextControl} />
 <Canvas of={DropdownStories.CloseReasonTelemetry} />
+<Canvas of={DropdownStories.ControlledOpenContract} />
 <Canvas of={DropdownStories.TypeaheadNavigation} />
 <Canvas of={DropdownStories.TypeaheadIgnoresImeComposition} />
 <Canvas of={PopoverStories.CloseReasonTelemetry} />
