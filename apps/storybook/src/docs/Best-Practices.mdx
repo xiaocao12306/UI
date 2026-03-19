@@ -158,7 +158,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 
 ## Notification Behavior
 
-- Use `duration={0}` for blocking notifications that require explicit user action.
+- Actionable toasts are persistent by default (`duration` omitted -> `0`); set explicit `duration` only when product requires timed dismissal.
 - If a toast includes `action`, treat it as an interactive surface (`dialog` / `alertdialog`) and keep CTA labels explicit.
 - Keep `closeOnEscape` aligned with task criticality; disable Escape only for must-read states.
 - Use `onEscapeKeyDown` when Escape policy must be toggled dynamically at runtime (e.g. approval checkpoints).

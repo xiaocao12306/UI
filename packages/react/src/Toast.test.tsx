@@ -268,6 +268,66 @@ describe("Toast", () => {
     }
   });
 
+  it("does not auto dismiss actionable toast when duration is not provided", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    try {
+      render(
+        <Toast
+          open
+          title="Action required"
+          action={<button type="button">Review</button>}
+          onOpenChange={onOpenChange}
+          onCloseReason={onCloseReason}
+        />
+      );
+
+      act(() => {
+        vi.advanceTimersByTime(10000);
+      });
+
+      expect(onOpenChange).not.toHaveBeenCalled();
+      expect(onCloseReason).not.toHaveBeenCalled();
+      expect(screen.getByRole("dialog", { name: "Action required" })).toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("auto dismisses actionable toast when explicit duration is provided", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    try {
+      render(
+        <Toast
+          open
+          title="Action required"
+          action={<button type="button">Review</button>}
+          duration={1200}
+          onOpenChange={onOpenChange}
+          onCloseReason={onCloseReason}
+        />
+      );
+
+      act(() => {
+        vi.advanceTimersByTime(1199);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onCloseReason).toHaveBeenCalledWith("timeout");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("pauses auto dismiss while hovered and resumes with remaining duration", () => {
     vi.useFakeTimers();
     const onOpenChange = vi.fn();

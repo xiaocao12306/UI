@@ -399,3 +399,4 @@
 - FormField association parity: non-clonable child nodes now avoid emitting dangling `label[for]` when `htmlFor` is omitted, while explicit `htmlFor` continues to work (unit regressions added).
 - Dropdown all-disabled Storybook parity: added `AllItemsDisabledKeyboardNoop` interaction scenario and revalidated `pnpm storybook:test:grep "Dropdown.stories.tsx"` so disabled-only menus keep keyboard paths as no-op in visual baseline.
 - Demo theme visual-contract parity: `AuroraProvider` now emits `data-aurora-theme`, and Playwright theme-switch + reload regressions assert `--aurora-surface-default` actual CSS variable values so token switching cannot pass via copy-only updates.
+- Toast actionable-duration parity: actionable toasts now default to persistent mode when `duration` is omitted, while explicit `duration` keeps timeout-dismiss behavior; unit tests and Storybook API/Best-Practices docs were updated to lock the contract.

@@ -152,7 +152,7 @@ export function Toast({
   action,
   tone = "info",
   live,
-  duration = 4000,
+  duration,
   pauseOnHover = true,
   closeOnEscape = true,
   onEscapeKeyDown,
@@ -168,7 +168,9 @@ export function Toast({
   const closeRequestedRef = React.useRef(false);
   const timeoutRef = React.useRef<number | null>(null);
   const timerStartedAtRef = React.useRef(0);
-  const remainingDurationRef = React.useRef(duration);
+  const hasAction = React.Children.toArray(action).length > 0;
+  const resolvedDuration = duration ?? (hasAction ? 0 : 4000);
+  const remainingDurationRef = React.useRef(resolvedDuration);
   const [pauseState, setPauseState] = React.useState({ hover: false, focus: false });
   const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
   const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
@@ -294,20 +296,20 @@ export function Toast({
 
   React.useEffect(() => {
     clearCloseTimer();
-    remainingDurationRef.current = duration;
+    remainingDurationRef.current = resolvedDuration;
 
-    if (!open || duration <= 0) {
+    if (!open || resolvedDuration <= 0) {
       return;
     }
 
-    startCloseTimer(duration);
+    startCloseTimer(resolvedDuration);
     return () => {
       clearCloseTimer();
     };
-  }, [clearCloseTimer, duration, open, startCloseTimer]);
+  }, [clearCloseTimer, open, resolvedDuration, startCloseTimer]);
 
   React.useEffect(() => {
-    if (!open || duration <= 0 || !pauseOnHover) {
+    if (!open || resolvedDuration <= 0 || !pauseOnHover) {
       return;
     }
 
@@ -319,7 +321,7 @@ export function Toast({
     if (timeoutRef.current === null) {
       startCloseTimer(remainingDurationRef.current);
     }
-  }, [duration, open, pauseCloseTimer, pauseOnHover, paused, startCloseTimer]);
+  }, [open, pauseCloseTimer, pauseOnHover, paused, resolvedDuration, startCloseTimer]);
 
   React.useEffect(() => {
     if (!open || !closeOnEscape) {
@@ -367,7 +369,6 @@ export function Toast({
     return null;
   }
 
-  const hasAction = React.Children.toArray(action).length > 0;
   const role = hasAction ? (tone === "danger" ? "alertdialog" : "dialog") : tone === "danger" ? "alert" : "status";
   const ariaLive = hasAction ? undefined : (live ?? (tone === "danger" ? "assertive" : "polite"));
 
