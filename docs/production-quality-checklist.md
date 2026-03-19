@@ -484,3 +484,5 @@
 - Storybook form/feedback showcase parity: `Select` + `Alert/Empty/Progress` stories now share `StoryShowcaseFrame` shells, reducing duplicated width wrappers and keeping visual hierarchy consistent.
 - Release-gate parity refresh (2026-03-20 latest+6): reran `pnpm release:gate:ci` after Select/Feedback showcase refactor + static sync and confirmed full pass (verify + coverage + demo e2e 73/73 + demo dist sync + storybook interaction 213/213).
 - Tooltip branch-coverage parity: added unit regressions for trigger close-path `preventDefault` guards, `side/sideOffset` positioning contract, and closeDelay cancellation when pointer re-enters tooltip content.
+- Tabs/Table keyboard-entry parity: added `userEvent.tab()` regressions to validate pointer-first flows still restore fallback focus-visible ring when users re-enter via real Tab navigation.
+- Tooltip callback parity: `onOpenChange` now skips duplicate emits when open state is unchanged (controlled and uncontrolled repeat-open paths), with dedicated regression coverage.

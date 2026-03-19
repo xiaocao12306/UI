@@ -602,6 +602,8 @@
   - Storybook Overlay 展示框架一致性收口（Popover/Tooltip 统一 `StoryShowcaseFrame` 壳层与 telemetry/helper 文案样式，Overlay 组观感与信息层级进一步对齐）
   - Storybook 表单/反馈展示框架一致性收口（Select + Alert/Empty/Progress 统一 `StoryShowcaseFrame` 容器，降低重复宽度壳层与内联布局噪音）
   - Tooltip 分支覆盖收口（补齐 trigger 关闭路径 `preventDefault`、`side/sideOffset` 定位样式、以及 closeDelay 被 tooltip hover 取消的计时分支单测）
+  - Tabs/Table 键盘回归收口（新增 `userEvent.tab()` 真实 Tab 进入路径回归，覆盖 pointer 后 fallback `focus-visible` 恢复场景）
+  - Tooltip 回调去重收口（`onOpenChange` 在目标开闭状态未变化时不再重复触发，补齐 controlled 关闭与重复打开分支回归）
   - Storybook Gate 证据刷新（2026-03-20 latest+5：Overlay 展示收口后 `pnpm storybook:test:ci` 复验通过，含 coverage/docs/parity/structure/play/static/a11y gate + interaction 213/213）
   - Demo 诊断层级收口（Telemetry 胶囊与区块背景降权，优先突出组件主交互与内容层级）
 - 进行中
