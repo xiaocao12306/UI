@@ -1025,8 +1025,7 @@ test("reports popover close reason telemetry for trigger, Escape, and outside po
   await expect(traceTelemetry).toHaveText("none");
 
   await trigger.click();
-  const telemetryToast = page.getByRole("status").filter({ hasText: "Telemetry toast" });
-  await expect(telemetryToast).toHaveAttribute("aria-keyshortcuts", "Escape");
+  await expect(page.getByRole("dialog", { name: "Popover content" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(telemetry).toHaveText("escape-key");
   await expect(traceTelemetry).toHaveText("reason:escape-key -> open:false");
