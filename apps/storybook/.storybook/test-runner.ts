@@ -2,7 +2,6 @@ import type { TestRunnerConfig } from "@storybook/test-runner";
 import { checkA11y, configureAxe, injectAxe } from "axe-playwright";
 
 const colorContrastSkipStoryIds = new Set([
-  "core-button--variant-matrix",
   "data-table--accessible-name-fallback",
   "data-table--accessible-name-labelled-by-heading",
   "data-table--accessible-name-without-caption",

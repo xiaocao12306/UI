@@ -135,6 +135,7 @@
 - Storybook skip-list governance gate: added `storybook:a11y:skip-check` to enforce skip-id dedup/order/existence against `storybook-static/index.json`, preventing stale or drifting a11y exemptions.
 - Storybook form contrast debt reduction: raised default `FormField` error contrast and refined form-story helper/error caption colors, removing form skip-list exemptions (`form-input--state-matrix`, `form-formfield--with-input-control`, `form-select--invalid-state`, `form-textarea--invalid-with-helper`, `form-datepicker--invalid-with-helper`, `form-checkbox--controlled`, `form-switch--controlled`).
 - Storybook alert contrast debt reduction: hardened feedback text token contrast in light/dark themes and removed alert skip-list exemptions (`feedback-alert--default`, `feedback-alert--dismissible`, `feedback-alert--tone-matrix`).
+- Storybook button contrast debt reduction: verified `core-button--variant-matrix` passes WCAG contrast without exemptions and removed it from the test-runner skip list.
 - Vitest coverage gate hardening: added `coverage:gate` with hard thresholds (lines/statements `>=90%`, branches/functions `>=85%`) and wired it into CI + release gate to block coverage regressions.
 - Demo dist-sync gate hardening: `demo:dist:check` now rebuilds demo dist and fails on `git status` diff so stale public-preview artifacts are blocked before release gate completion.
 - Demo visual productization hardening: updated hero panel, badge rail, nav pill styling, and section card surfaces for stronger brand hierarchy and commercial polish.
