@@ -313,6 +313,8 @@
 - Toast dismiss-order parity: component tests now lock `close-button` / `escape-key` / `timeout` branches to `onCloseReason -> onClose -> onOpenChange(false)` callback order.
 - Toast keyboard-discoverability parity: Escape-dismissable toasts now expose `aria-keyshortcuts="Escape"` with unit + Storybook + demo E2E coverage.
 - Toast keyboard-hint precision parity: stacked notifications now expose `aria-keyshortcuts="Escape"` only on the current top escapable toast, preventing hints on pinned/non-closeable entries.
+- Toast Escape repeat parity: repeated Escape keydown (`event.repeat=true`) now no-ops dismiss logic so long-press does not close multiple stacked notices or duplicate close telemetry.
+- Toast dynamic Escape-policy parity: runtime `closeOnEscape` changes now trigger stack hint recomputation, keeping `aria-keyshortcuts` assigned only to the current top escapable toast.
 - Dropdown item-keyboard parity: menu items now support explicit keyboard activation (`Enter` / `Space` / legacy `Spacebar`) with deterministic close behavior, reducing browser-specific click synthesis variance.
 - Dropdown activation-repeat parity: repeated item activation keydown (`event.repeat=true`) now no-ops selection to prevent long-press duplicate action dispatch and telemetry jitter.
 - Dropdown shortcut-hint precision parity: actionable menu items now expose `aria-keyshortcuts="Enter Space"` while disabled entries omit hints to avoid AT/QA false affordance.

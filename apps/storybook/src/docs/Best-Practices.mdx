@@ -165,6 +165,8 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - When Escape is preempted upstream, avoid side effects in toast-level analytics/guards by relying on the built-in hook-skip behavior.
 - Ignore Escape dismissal while IME composition is active so CJK text confirmation inside toast actions does not close the notification unexpectedly.
 - For stacked notifications, rely on Escape handling that dismisses one toast per key press, prioritizing the latest or most recently interacted toast.
+- Treat repeated Escape keydown (`event.repeat`) as no-op for toast dismissal so long-press does not close multiple stacked notices or duplicate telemetry.
+- When `closeOnEscape` toggles at runtime, verify stacked `aria-keyshortcuts` hints move to the current top escapable toast with no stale shortcut exposure.
 - Keep stacked toasts in the same corner so built-in visual offset preserves message legibility for older notifications.
 - Verify timer pause behavior for both pointer hover and keyboard focus when `pauseOnHover` is enabled.
 - Use `onCloseReason` for deterministic telemetry (`close-button` / `escape-key` / `timeout`) instead of inferring dismiss origin from side effects.
@@ -176,6 +178,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={ToastStories.ActionRequiredDanger} />
 <Canvas of={ToastStories.CloseReasonTelemetry} />
 <Canvas of={ToastStories.EscapeStackOrder} />
+<Canvas of={ToastStories.EscapeShortcutSync} />
 <Canvas of={ToastStories.StackedViewportOffset} />
 <Canvas of={ToastStories.FocusedToastEscapesFirst} />
 <Canvas of={ToastStories.EscapePreemptedByGlobalHandler} />

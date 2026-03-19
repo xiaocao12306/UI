@@ -204,6 +204,14 @@ export function Toast({
   }, [open, position]);
 
   React.useEffect(() => {
+    if (!open || !rootRef.current) {
+      return;
+    }
+
+    notifyToastStackChanged();
+  }, [closeOnEscape, open]);
+
+  React.useEffect(() => {
     if (!open) {
       setPauseState({ hover: false, focus: false });
     }
@@ -320,6 +328,10 @@ export function Toast({
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") {
+        return;
+      }
+
+      if (event.repeat) {
         return;
       }
 

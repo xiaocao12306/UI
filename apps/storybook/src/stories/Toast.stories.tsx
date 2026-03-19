@@ -297,6 +297,77 @@ export const EscapeStackOrder: Story = {
   }
 };
 
+function EscapeShortcutSyncDemo() {
+  const [openState, setOpenState] = React.useState({ first: true, second: true });
+  const [topCloseOnEscape, setTopCloseOnEscape] = React.useState(true);
+
+  return (
+    <div style={{ minHeight: 280, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+      <Button variant="outline" onClick={() => setOpenState({ first: true, second: true })}>
+        Reopen Stack
+      </Button>
+      <Button variant="ghost" onClick={() => setTopCloseOnEscape((current) => !current)}>
+        {topCloseOnEscape ? "Pin top toast" : "Unpin top toast"}
+      </Button>
+
+      <Toast
+        open={openState.first}
+        onOpenChange={(open) => {
+          setOpenState((current) => ({ ...current, first: open }));
+        }}
+        title="Base notice"
+        description="Shortcut hint should move here when top toast is pinned."
+        tone="info"
+        duration={0}
+        position="top-left"
+      />
+      <Toast
+        open={openState.second}
+        onOpenChange={(open) => {
+          setOpenState((current) => ({ ...current, second: open }));
+        }}
+        closeOnEscape={topCloseOnEscape}
+        title="Top notice"
+        description="Shortcut hint should follow this toast when Escape is enabled."
+        tone="success"
+        duration={0}
+        position="top-left"
+      />
+    </div>
+  );
+}
+
+export const EscapeShortcutSync: Story = {
+  render: () => <EscapeShortcutSyncDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const doc = canvasElement.ownerDocument;
+    const baseToast = await canvas.findByRole("status", { name: "Base notice" });
+    const topToast = await canvas.findByRole("status", { name: "Top notice" });
+
+    await waitFor(() => {
+      expect(baseToast).not.toHaveAttribute("aria-keyshortcuts");
+      expect(topToast).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
+
+    await userEvent.click(canvas.getByRole("button", { name: "Pin top toast" }));
+    await waitFor(() => {
+      expect(baseToast).toHaveAttribute("aria-keyshortcuts", "Escape");
+      expect(topToast).not.toHaveAttribute("aria-keyshortcuts");
+    });
+
+    await userEvent.click(canvas.getByRole("button", { name: "Unpin top toast" }));
+    await waitFor(() => {
+      expect(baseToast).not.toHaveAttribute("aria-keyshortcuts");
+      expect(topToast).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
+
+    fireEvent.keyDown(doc, { key: "Escape", repeat: true });
+    await expect(canvas.getByRole("status", { name: "Base notice" })).toBeInTheDocument();
+    await expect(canvas.getByRole("status", { name: "Top notice" })).toBeInTheDocument();
+  }
+};
+
 function StackedViewportOffsetDemo() {
   const [openState, setOpenState] = React.useState({ first: true, second: true });
 

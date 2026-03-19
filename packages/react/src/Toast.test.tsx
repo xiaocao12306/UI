@@ -130,6 +130,24 @@ describe("Toast", () => {
     expect(onCloseReason).toHaveBeenCalledWith("escape-key");
   });
 
+  it("ignores repeated Escape keydown to prevent long-press duplicate close", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(<Toast open title="Escapable" duration={0} onOpenChange={onOpenChange} onCloseReason={onCloseReason} />);
+
+    fireEvent.keyDown(document, { key: "Escape", repeat: true });
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(screen.getByRole("status", { name: "Escapable" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onCloseReason).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenCalledWith("escape-key");
+  });
+
   it("calls onEscapeKeyDown before closing", () => {
     const onOpenChange = vi.fn();
     const onEscapeKeyDown = vi.fn();
@@ -575,6 +593,38 @@ describe("Toast", () => {
 
     expect(screen.queryByRole("status", { name: "Escapable" })).toBeNull();
     expect(screen.getByRole("status", { name: "Pinned" })).toBeInTheDocument();
+  });
+
+  it("recomputes Escape shortcut hints when stacked toast closeOnEscape changes at runtime", async () => {
+    function StackedToasts() {
+      const [topCloseOnEscape, setTopCloseOnEscape] = React.useState(false);
+
+      return (
+        <>
+          <button type="button" onClick={() => setTopCloseOnEscape((current) => !current)}>
+            Toggle top escape
+          </button>
+          <Toast open title="Base" duration={0} onOpenChange={() => {}} />
+          <Toast open title="Top" duration={0} closeOnEscape={topCloseOnEscape} onOpenChange={() => {}} />
+        </>
+      );
+    }
+
+    render(<StackedToasts />);
+
+    const baseToast = screen.getByRole("status", { name: "Base" });
+    const topToast = screen.getByRole("status", { name: "Top" });
+    await waitFor(() => {
+      expect(baseToast).toHaveAttribute("aria-keyshortcuts", "Escape");
+      expect(topToast).not.toHaveAttribute("aria-keyshortcuts");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Toggle top escape" }));
+
+    await waitFor(() => {
+      expect(baseToast).not.toHaveAttribute("aria-keyshortcuts");
+      expect(topToast).toHaveAttribute("aria-keyshortcuts", "Escape");
+    });
   });
 
   it("shows close button focus ring only for focus-visible state", () => {

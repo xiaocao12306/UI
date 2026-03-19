@@ -521,6 +521,8 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `position` | `'bottom-right' \| 'bottom-left' \| 'top-right' \| 'top-left'` | Controls viewport anchor for stack placement and Escape-priority grouping. |
 | `closeOnEscape` | `boolean` | Optional keyboard dismiss path; Escape is consumed so stacked toasts dismiss one at a time. |
 | dismiss key hints | `aria-keyshortcuts="Escape"` (top escapable toast only) | In stacked layouts, only the current top escapable toast exposes Escape shortcut metadata so QA/AT tooling is not misled by pinned/non-closeable notifications. |
+| Escape repeat guard | ignores repeated keydown | Escape long-press (`event.repeat=true`) is ignored so one key press closes at most one toast and avoids duplicate close telemetry. |
+| dynamic Escape-hint sync | runtime `closeOnEscape` changes recompute stack hints | When stacked toast `closeOnEscape` policy changes at runtime, shortcut metadata reassigns to the current top escapable toast without stale hints. |
 | `onEscapeKeyDown` | `(event: KeyboardEvent) => void` | Optional toast-level Escape hook; call `event.preventDefault()` to keep toast open in guarded flows. |
 | actionable role mapping | `action` => `dialog/alertdialog` | When `action` is provided, toast exposes interactive surface semantics (`aria-modal="false"`) instead of live-region-only status roles. |
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'timeout') => void` | Emits a structured close reason for analytics and workflow telemetry. |
@@ -536,6 +538,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={ToastStories.ActionRequiredDanger} />
 <Canvas of={ToastStories.CloseReasonTelemetry} />
 <Canvas of={ToastStories.EscapeStackOrder} />
+<Canvas of={ToastStories.EscapeShortcutSync} />
 <Canvas of={ToastStories.StackedViewportOffset} />
 <Canvas of={ToastStories.FocusedToastEscapesFirst} />
 <Canvas of={ToastStories.EscapePreemptedByGlobalHandler} />
