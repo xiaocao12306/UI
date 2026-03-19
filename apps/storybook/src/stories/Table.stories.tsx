@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Table, type TableColumn } from "@aurora-ui/react";
 import * as React from "react";
 import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import {
+  StoryShowcaseFrame,
+  storyEmphasisTextStyle,
+  storyMutedTextStyle
+} from "./storyShowcase";
 
 type ReleaseRow = {
   id: string;
@@ -34,13 +39,6 @@ const columns: Array<TableColumn<ReleaseRow>> = [
   }
 ];
 
-const storyHelperTextStyle: React.CSSProperties = {
-  margin: 0,
-  color: "var(--aurora-text-secondary)",
-  fontSize: 13,
-  lineHeight: 1.55
-};
-
 function dispatchImeKeyDown(element: HTMLElement, key: string) {
   const event = new KeyboardEvent("keydown", { key, bubbles: true });
   Object.defineProperty(event, "isComposing", { value: true });
@@ -52,7 +50,7 @@ function LoadingVisualResetTable() {
   const [loading, setLoading] = React.useState(false);
 
   return (
-    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
       <button type="button" onClick={() => setLoading((current) => !current)}>
         Toggle loading
       </button>
@@ -63,7 +61,7 @@ function LoadingVisualResetTable() {
         loadingContent="Syncing release feed..."
         defaultSortKey="id"
       />
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -71,7 +69,7 @@ const meta = {
   title: "Data/Table",
   tags: ["autodocs"],
   parameters: {
-    layout: "centered",
+    layout: "padded",
     docs: {
       description: {
         component:
@@ -86,7 +84,7 @@ type Story = StoryObj<typeof meta>;
 
 export const ReleaseChecklist: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
       <Table
         caption="Release readiness board"
         columns={columns}
@@ -94,13 +92,13 @@ export const ReleaseChecklist: Story = {
         rowKey={(row) => row.id}
         defaultSortKey="id"
       />
-    </div>
+    </StoryShowcaseFrame>
   )
 };
 
 export const DescendingDefaultSortDirection: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
       <Table
         caption="Release readiness board"
         columns={columns}
@@ -109,7 +107,7 @@ export const DescendingDefaultSortDirection: Story = {
         defaultSortKey="id"
         defaultSortDirection="desc"
       />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -183,7 +181,7 @@ export const SingleRowSortDisabled: Story = {
 
 export const KeyboardReachableScrollContainer: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
       <Table
         columns={[
           { key: "id", header: "Issue" },
@@ -194,7 +192,7 @@ export const KeyboardReachableScrollContainer: Story = {
         data={rows}
       />
       <button type="button">After table</button>
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -213,14 +211,14 @@ export const KeyboardReachableScrollContainer: Story = {
 
 export const KeyboardFocusRingAfterPointer: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
-      <p style={storyHelperTextStyle}>
+    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
+      <p style={storyMutedTextStyle}>
         Sort button hides focus ring on pointer focus, then restores focus-visible ring when users
         return with keyboard Tab navigation.
       </p>
       <button type="button">Before table</button>
       <Table columns={columns} data={rows} defaultSortKey="id" />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -361,9 +359,9 @@ function SortTelemetryDemo() {
   const [sortState, setSortState] = React.useState("id asc");
 
   return (
-    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 8 }}>
-      <p style={storyHelperTextStyle}>
-        Active sort: <strong style={{ color: "var(--aurora-text-primary)" }}>{sortState}</strong>
+    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={8}>
+      <p style={storyMutedTextStyle}>
+        Active sort: <strong style={storyEmphasisTextStyle}>{sortState}</strong>
       </p>
       <Table
         columns={columns}
@@ -371,7 +369,7 @@ function SortTelemetryDemo() {
         defaultSortKey="id"
         onSortChange={(key, direction) => setSortState(`${key} ${direction}`)}
       />
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -416,13 +414,13 @@ function ImeCompositionGuardDemo() {
   const [sortState, setSortState] = React.useState("id asc");
 
   return (
-    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 8 }}>
-      <p style={storyHelperTextStyle}>
+    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={8}>
+      <p style={storyMutedTextStyle}>
         IME composition guards Enter and Space so sortable headers do not toggle while users confirm
         CJK input.
       </p>
-      <p style={storyHelperTextStyle}>
-        Active sort: <strong style={{ color: "var(--aurora-text-primary)" }}>{sortState}</strong>
+      <p style={storyMutedTextStyle}>
+        Active sort: <strong style={storyEmphasisTextStyle}>{sortState}</strong>
       </p>
       <Table
         columns={columns}
@@ -430,7 +428,7 @@ function ImeCompositionGuardDemo() {
         defaultSortKey="id"
         onSortChange={(key, direction) => setSortState(`${key} ${direction}`)}
       />
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -522,13 +520,13 @@ function DeferredColumnsDefaultSortRecoveryDemo() {
   );
 
   return (
-    <div style={{ width: "min(100%, 700px)", display: "grid", gap: 8 }}>
-      <p style={storyHelperTextStyle}>
+    <StoryShowcaseFrame maxWidth="min(100%, 760px)" gap={8}>
+      <p style={storyMutedTextStyle}>
         Async column schema can enable a previously unavailable default sort key after rerender.
       </p>
-      <p style={storyHelperTextStyle}>
+      <p style={storyMutedTextStyle}>
         Status column sortable:{" "}
-        <strong data-testid="table-status-sortable" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="table-status-sortable" style={storyEmphasisTextStyle}>
           {statusSortable ? "yes" : "no"}
         </strong>
       </p>
@@ -536,7 +534,7 @@ function DeferredColumnsDefaultSortRecoveryDemo() {
         Load status sortable schema
       </button>
       <Table columns={deferredColumns} data={rows} rowKey={(row) => row.id} defaultSortKey="status" />
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -633,8 +631,8 @@ const indexSemanticsRows: IndexSemanticsRow[] = [
 
 export const RenderIndexSemantics: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 720px)", display: "grid", gap: 8 }}>
-      <p style={storyHelperTextStyle}>
+    <StoryShowcaseFrame maxWidth="min(100%, 760px)" gap={8}>
+      <p style={storyMutedTextStyle}>
         `render(row, rowIndex, sourceIndex)` exposes both sorted row position and source-data
         position.
       </p>
@@ -652,7 +650,7 @@ export const RenderIndexSemantics: Story = {
         data={indexSemanticsRows}
         defaultSortKey="score"
       />
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

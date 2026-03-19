@@ -1,7 +1,12 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, FormField, Input } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import {
+  StoryShowcaseFrame,
+  storyEmphasisTextStyle,
+  storyMutedTextStyle
+} from "./storyShowcase";
 
 const meta = {
   title: "Form/Input",
@@ -27,7 +32,7 @@ export const Default: Story = {};
 
 export const AiPromptStyle: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 520px)", display: "grid", gap: 8 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 560px)" gap={8}>
       <label htmlFor="prompt" style={{ fontWeight: 600 }}>
         Prompt Draft
       </label>
@@ -35,16 +40,16 @@ export const AiPromptStyle: Story = {
         <Input id="prompt" placeholder="Ask Aurora AI to scaffold a new dialog flow..." aria-label="AI prompt" />
         <Button>Send</Button>
       </div>
-      <small style={{ color: "var(--aurora-text-primary)" }}>
+      <small style={storyEmphasisTextStyle}>
         Tip: switch theme in toolbar to validate input token contrast.
       </small>
-    </div>
+    </StoryShowcaseFrame>
   )
 };
 
 export const StateMatrix: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 560px)", display: "grid", gap: 12 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={12}>
       <FormField label="Default" description="Hover and focus to verify border and ring states.">
         <Input placeholder="Type project name..." />
       </FormField>
@@ -64,8 +69,53 @@ export const StateMatrix: Story = {
       <FormField label="Read-only" description="Read-only fields are focusable but not editable.">
         <Input value="release/0.1.0" readOnly aria-label="Release branch" />
       </FormField>
-    </div>
+    </StoryShowcaseFrame>
   )
+};
+
+export const InteractionA11yParity: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={12}>
+      <FormField label="Keyboard interaction" description="Tab focus should show ring; Enter should show pressed feedback.">
+        <Input defaultValue="release-notes" />
+      </FormField>
+
+      <FormField label="Read-only propagated">
+        <Input aria-label="Read-only propagated input" readOnly defaultValue="stable" />
+      </FormField>
+
+      <FormField label="Disabled interaction guard" disabled>
+        <Input aria-label="Disabled interaction guard input" placeholder="Disabled input" />
+      </FormField>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const keyboardInput = await canvas.findByRole("textbox", { name: "Keyboard interaction" });
+    const label = canvas.getByText("Keyboard interaction").closest("label");
+
+    await userEvent.tab();
+    await expect(keyboardInput).toHaveAttribute("data-focus-visible", "true");
+    await expect(keyboardInput).toHaveAttribute("data-focused", "true");
+    await expect(label).toHaveAttribute("id");
+    await expect(keyboardInput.getAttribute("aria-labelledby") ?? "").toContain(label?.id ?? "");
+
+    fireEvent.keyDown(keyboardInput, { key: "Enter" });
+    fireEvent.keyUp(keyboardInput, { key: "Enter" });
+    await expect(keyboardInput).not.toHaveAttribute("data-active");
+
+    const readOnlyInput = canvas.getByRole("textbox", { name: "Read-only propagated input" });
+    await expect(readOnlyInput).toHaveAttribute("readonly");
+    readOnlyInput.focus();
+    fireEvent.keyDown(readOnlyInput, { key: "Enter" });
+    fireEvent.keyUp(readOnlyInput, { key: "Enter" });
+    await expect(readOnlyInput).not.toHaveAttribute("data-active");
+
+    const disabledInput = canvas.getByRole("textbox", { name: "Disabled interaction guard input" });
+    await expect(disabledInput).toBeDisabled();
+    await userEvent.hover(disabledInput);
+    await expect(disabledInput).not.toHaveAttribute("data-hovered");
+  }
 };
 
 function ValidationFlowDemo() {
@@ -74,7 +124,7 @@ function ValidationFlowDemo() {
   const invalid = touched && value.trim().length === 0;
 
   return (
-    <div style={{ width: "min(100%, 560px)", display: "grid", gap: 10 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={10}>
       <FormField label="Prompt" error={invalid ? "Prompt is required." : undefined}>
         <Input
           aria-label="Prompt input"
@@ -84,11 +134,11 @@ function ValidationFlowDemo() {
           onBlur={() => setTouched(true)}
         />
       </FormField>
-      <small style={{ color: "var(--aurora-text-primary)" }} data-testid="char-count">
+      <small style={storyEmphasisTextStyle} data-testid="char-count">
         {value.length} chars
       </small>
       <Button disabled={value.trim().length === 0}>Submit Prompt</Button>
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -112,15 +162,15 @@ export const ValidationFlow: Story = {
 
 export const InvalidTokenSemantics: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 520px)", display: "grid", gap: 8 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 560px)" gap={8}>
       <FormField label="Grammar review">
         <Input aria-label="Grammar review input" aria-invalid="grammar" defaultValue="Needs grammar check" />
       </FormField>
-      <small style={{ color: "var(--aurora-text-primary)" }}>
+      <small style={storyMutedTextStyle}>
         Preserves <code>aria-invalid=&quot;grammar&quot;</code> for assistive-tech integrations that distinguish
         grammar/spelling corrections.
       </small>
-    </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

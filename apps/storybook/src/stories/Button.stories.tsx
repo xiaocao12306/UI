@@ -1,7 +1,8 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Tag } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { StoryShowcaseFrame, storyMutedTextStyle } from "./storyShowcase";
 
 const meta = {
   title: "Core/Button",
@@ -33,7 +34,7 @@ export const Primary: Story = {
 
 export const VariantMatrix: Story = {
   render: () => (
-    <div style={{ display: "grid", gap: 12 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 760px)" gap={12}>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
         <Button variant="solid">Solid</Button>
         <Button variant="outline">Outline</Button>
@@ -43,13 +44,13 @@ export const VariantMatrix: Story = {
         <Tag>Token: button.solid.bg</Tag>
         <Badge tone="success">Theme-aware</Badge>
       </div>
-    </div>
+    </StoryShowcaseFrame>
   )
 };
 
 export const StateMatrix: Story = {
   render: () => (
-    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 16 }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 800px)" gap={16}>
       <div style={{ display: "grid", gap: 8 }}>
         <strong>Default + Disabled</strong>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -83,11 +84,11 @@ export const StateMatrix: Story = {
         </div>
       </div>
 
-      <small style={{ color: "var(--aurora-text-secondary)" }}>
+      <small style={storyMutedTextStyle}>
         Keyboard focus and pressed states are interactive in canvas: use Tab / Enter / Space to
         validate.
       </small>
-    </div>
+    </StoryShowcaseFrame>
   )
 };
 
@@ -96,8 +97,8 @@ function KeyboardActivationDemo() {
   const [loading, setLoading] = React.useState(true);
 
   return (
-    <div style={{ width: "min(100%, 520px)", display: "grid", gap: 12 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryShowcaseFrame maxWidth="min(100%, 560px)" gap={12}>
+      <p style={storyMutedTextStyle}>
         Activation count: <strong data-testid="activation-count">{count}</strong>
       </p>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -117,7 +118,7 @@ function KeyboardActivationDemo() {
           {loading ? "Enable Background Task" : "Disable Background Task"}
         </Button>
       </div>
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -140,5 +141,32 @@ export const KeyboardActivation: Story = {
     await expect(loadingButton).not.toBeDisabled();
     await userEvent.click(loadingButton);
     await expect(canvas.getByTestId("activation-count")).toHaveTextContent("12");
+  }
+};
+
+export const PrimaryPointerOnly: Story = {
+  render: function RenderPrimaryPointerOnly() {
+    const [count, setCount] = React.useState(0);
+
+    return (
+      <div style={{ display: "grid", gap: 8 }}>
+        <Button onClick={() => setCount((value) => value + 1)}>Primary Pointer Only</Button>
+        <small>
+          Activation count: <span data-testid="primary-pointer-count">{count}</span>
+        </small>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = await canvas.findByRole("button", { name: "Primary Pointer Only" });
+    const count = canvas.getByTestId("primary-pointer-count");
+
+    fireEvent.mouseDown(button, { button: 2 });
+    fireEvent.mouseUp(button, { button: 2 });
+    await expect(count).toHaveTextContent("0");
+
+    await userEvent.click(button);
+    await expect(count).toHaveTextContent("1");
   }
 };
