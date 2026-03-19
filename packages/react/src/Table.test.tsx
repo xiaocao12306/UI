@@ -149,7 +149,41 @@ describe("Table", () => {
     const nameHeader = screen.getByRole("columnheader", { name: /Name/ });
     expect(nameHeader).not.toHaveAttribute("aria-sort");
     expect(screen.queryByRole("status")).toBeNull();
-    expect(screen.getByRole("button", { name: "Name sort ascending" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toBeDisabled();
+  });
+
+  it("keeps disabled sort label aligned with existing sort state when data shrinks to one row", () => {
+    const { rerender } = render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", status: "Stable" },
+          { name: "Button", status: "Stable" }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toBeEnabled();
+
+    rerender(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={[{ name: "Dialog", status: "Stable" }]}
+        defaultSortKey="name"
+      />
+    );
+
+    const nameHeader = screen.getByRole("columnheader", { name: /Name/ });
+    expect(nameHeader).not.toHaveAttribute("aria-sort");
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toBeDisabled();
+    expect(screen.queryByRole("status")).toBeNull();
   });
 
   it("renders loading state with aria-busy and suppresses table rows", () => {
@@ -314,7 +348,10 @@ describe("Table", () => {
 
     const sortedFirstRow = screen.getAllByRole("row")[1];
     expect(sortedFirstRow).toHaveTextContent("Button");
-    expect(screen.getByRole("columnheader", { name: /Name/ })).toHaveAttribute("aria-sort", "ascending");
+    expect(screen.getByRole("columnheader", { name: /Name/ })).toHaveAttribute(
+      "aria-sort",
+      "ascending"
+    );
     expect(screen.getByRole("button", { name: "Name sort descending" })).toBeInTheDocument();
 
     rerender(
@@ -380,7 +417,10 @@ describe("Table", () => {
       />
     );
 
-    expect(screen.getByRole("button", { name: "Name sort descending" })).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space"
+    );
   });
 
   it("omits sortable-header keyboard hints when sorting is disabled", () => {
@@ -395,7 +435,9 @@ describe("Table", () => {
     );
 
     expect(screen.getByRole("button", { name: "Name sort ascending" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Name sort ascending" })).not.toHaveAttribute("aria-keyshortcuts");
+    expect(screen.getByRole("button", { name: "Name sort ascending" })).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
   });
 
   it("shows sort-button focus ring only for keyboard-intended focus", () => {
@@ -638,7 +680,9 @@ describe("Table", () => {
           { name: "Button", score: 95 }
         ]}
         defaultSortKey="name"
-        getSortStatusText={({ columnHeader, direction }) => `当前排序：${columnHeader}（${direction}）`}
+        getSortStatusText={({ columnHeader, direction }) =>
+          `当前排序：${columnHeader}（${direction}）`
+        }
       />
     );
 
@@ -870,7 +914,10 @@ describe("Table", () => {
   });
 
   it("passes both visual row index and source row index to column render callbacks", () => {
-    const indexRenderer = vi.fn((row: { name: string }, rowIndex: number, sourceIndex: number) => `${row.name}-${rowIndex}-${sourceIndex}`);
+    const indexRenderer = vi.fn(
+      (row: { name: string }, rowIndex: number, sourceIndex: number) =>
+        `${row.name}-${rowIndex}-${sourceIndex}`
+    );
 
     render(
       <Table

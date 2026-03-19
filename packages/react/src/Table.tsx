@@ -80,16 +80,19 @@ export function Table<T>({
   getSortStatusText = defaultGetSortStatusText,
   onSortChange
 }: TableProps<T>) {
-  const resolvedAriaLabel = ariaLabelledBy ? undefined : (ariaLabel ?? (caption ? undefined : "Data table"));
+  const resolvedAriaLabel = ariaLabelledBy
+    ? undefined
+    : (ariaLabel ?? (caption ? undefined : "Data table"));
   const sortButtonRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const sortFocusIntentRef = React.useRef(true);
   const [hoveredSortKey, setHoveredSortKey] = React.useState<string | null>(null);
   const [pressedSortKey, setPressedSortKey] = React.useState<string | null>(null);
   const [focusVisibleSortKey, setFocusVisibleSortKey] = React.useState<string | null>(null);
 
-  const [sortState, setSortState] = React.useState<{ key: string; direction: TableSortDirection } | null>(() =>
-    resolveInitialSortState(columns, defaultSortKey, defaultSortDirection)
-  );
+  const [sortState, setSortState] = React.useState<{
+    key: string;
+    direction: TableSortDirection;
+  } | null>(() => resolveInitialSortState(columns, defaultSortKey, defaultSortDirection));
 
   React.useEffect(() => {
     if (!sortState) {
@@ -128,33 +131,32 @@ export function Table<T>({
         return String(value ?? "");
       });
 
-    return sourceEntries
-      .sort((leftEntry, rightEntry) => {
-        const leftValue = accessor(leftEntry.row);
-        const rightValue = accessor(rightEntry.row);
+    return sourceEntries.sort((leftEntry, rightEntry) => {
+      const leftValue = accessor(leftEntry.row);
+      const rightValue = accessor(rightEntry.row);
 
-        if (typeof leftValue === "string" && typeof rightValue === "string") {
-          const compareResult = tableStringCollator.compare(leftValue, rightValue);
-          if (compareResult !== 0) {
-            return sortState.direction === "asc" ? compareResult : -compareResult;
-          }
-
-          return leftEntry.sourceIndex - rightEntry.sourceIndex;
+      if (typeof leftValue === "string" && typeof rightValue === "string") {
+        const compareResult = tableStringCollator.compare(leftValue, rightValue);
+        if (compareResult !== 0) {
+          return sortState.direction === "asc" ? compareResult : -compareResult;
         }
 
-        const normalizedLeft = leftValue instanceof Date ? leftValue.getTime() : leftValue;
-        const normalizedRight = rightValue instanceof Date ? rightValue.getTime() : rightValue;
-
-        if (normalizedLeft < normalizedRight) {
-          return sortState.direction === "asc" ? -1 : 1;
-        }
-        if (normalizedLeft > normalizedRight) {
-          return sortState.direction === "asc" ? 1 : -1;
-        }
-
-        // Preserve deterministic order for equal sort values.
         return leftEntry.sourceIndex - rightEntry.sourceIndex;
-      });
+      }
+
+      const normalizedLeft = leftValue instanceof Date ? leftValue.getTime() : leftValue;
+      const normalizedRight = rightValue instanceof Date ? rightValue.getTime() : rightValue;
+
+      if (normalizedLeft < normalizedRight) {
+        return sortState.direction === "asc" ? -1 : 1;
+      }
+      if (normalizedLeft > normalizedRight) {
+        return sortState.direction === "asc" ? 1 : -1;
+      }
+
+      // Preserve deterministic order for equal sort values.
+      return leftEntry.sourceIndex - rightEntry.sourceIndex;
+    });
   }, [columns, data, sortState]);
 
   const sortStatusText = React.useMemo(() => {
@@ -167,8 +169,15 @@ export function Table<T>({
       return "";
     }
 
-    const columnHeader = typeof activeSortColumn.header === "string" ? activeSortColumn.header : String(activeSortColumn.key);
-    return getSortStatusText({ columnKey: sortState.key, columnHeader, direction: sortState.direction });
+    const columnHeader =
+      typeof activeSortColumn.header === "string"
+        ? activeSortColumn.header
+        : String(activeSortColumn.key);
+    return getSortStatusText({
+      columnKey: sortState.key,
+      columnHeader,
+      direction: sortState.direction
+    });
   }, [columns, getSortStatusText, loading, sortState, sortedEntries.length]);
   const tableColSpan = Math.max(columns.length, 1);
 
@@ -224,13 +233,19 @@ export function Table<T>({
               const key = String(column.key);
               const sortable = Boolean(column.sortable);
               const hasMultiRowData = sortedEntries.length > 1;
-              const currentSortDirection = sortable && sortState?.key === key && hasMultiRowData ? sortState.direction : undefined;
-              const sorted = !loading ? currentSortDirection : undefined;
+              const activeSortDirection =
+                sortable && sortState?.key === key ? sortState.direction : undefined;
+              const sorted = !loading && hasMultiRowData ? activeSortDirection : undefined;
               const ariaSort = sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined;
               const textAlign = column.align ?? "left";
               const headerLabel = typeof column.header === "string" ? column.header : key;
-              const nextDirection: TableSortDirection = currentSortDirection === "asc" ? "desc" : "asc";
-              const sortAriaLabel = getSortAriaLabel({ columnKey: key, columnHeader: headerLabel, nextDirection });
+              const nextDirection: TableSortDirection =
+                activeSortDirection === "asc" ? "desc" : "asc";
+              const sortAriaLabel = getSortAriaLabel({
+                columnKey: key,
+                columnHeader: headerLabel,
+                nextDirection
+              });
               const sortDisabled = loading || !hasMultiRowData;
               const hovered = hoveredSortKey === key;
               const pressed = pressedSortKey === key;
@@ -288,7 +303,9 @@ export function Table<T>({
                         }
 
                         sortFocusIntentRef.current = false;
-                        setFocusVisibleSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                        setFocusVisibleSortKey((currentKey) =>
+                          currentKey === key ? null : currentKey
+                        );
                         setPressedSortKey(key);
                       }}
                       onMouseUp={() => {
@@ -296,12 +313,17 @@ export function Table<T>({
                       }}
                       onFocus={() => {
                         if (sortDisabled) {
-                          setFocusVisibleSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                          setFocusVisibleSortKey((currentKey) =>
+                            currentKey === key ? null : currentKey
+                          );
                           return;
                         }
 
                         setFocusVisibleSortKey((currentKey) =>
-                          resolveFocusVisibleState(sortButtonRefs.current[key], sortFocusIntentRef.current)
+                          resolveFocusVisibleState(
+                            sortButtonRefs.current[key],
+                            sortFocusIntentRef.current
+                          )
                             ? key
                             : currentKey === key
                               ? null
@@ -309,7 +331,9 @@ export function Table<T>({
                         );
                       }}
                       onBlur={() => {
-                        setFocusVisibleSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                        setFocusVisibleSortKey((currentKey) =>
+                          currentKey === key ? null : currentKey
+                        );
                         setPressedSortKey((currentKey) => (currentKey === key ? null : currentKey));
                       }}
                       onKeyDown={(event) => {
@@ -352,7 +376,9 @@ export function Table<T>({
                       }}
                     >
                       {column.header}
-                      <span aria-hidden="true">{sorted === "asc" ? "▲" : sorted === "desc" ? "▼" : "↕"}</span>
+                      <span aria-hidden="true">
+                        {sorted === "asc" ? "▲" : sorted === "desc" ? "▼" : "↕"}
+                      </span>
                     </button>
                   ) : (
                     column.header
@@ -401,7 +427,9 @@ export function Table<T>({
               return (
                 <tr
                   key={rowKey ? rowKey(row, entry.sourceIndex) : fallbackKey}
-                  style={{ background: index % 2 === 0 ? "transparent" : "var(--aurora-surface-elevated)" }}
+                  style={{
+                    background: index % 2 === 0 ? "transparent" : "var(--aurora-surface-elevated)"
+                  }}
                 >
                   {columns.map((column) => {
                     const content = column.render
@@ -417,7 +445,11 @@ export function Table<T>({
 
                     if (column.rowHeader) {
                       return (
-                        <th key={String(column.key)} scope="row" style={{ ...cellStyle, fontWeight: "var(--aurora-font-weight-medium)" }}>
+                        <th
+                          key={String(column.key)}
+                          scope="row"
+                          style={{ ...cellStyle, fontWeight: "var(--aurora-font-weight-medium)" }}
+                        >
                           {content}
                         </th>
                       );
