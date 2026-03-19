@@ -128,6 +128,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 
 - Always expose pending/loading states for AI request actions.
 - Keep command labels explicit and searchable.
+- Keep `commands[].key` unique and stable; development builds now warn on duplicate keys to avoid active-option and telemetry drift.
 - Provide `textValue` aliases for non-string command labels and accent-friendly matching terms.
 - Provide empty-state guidance when no command matches the query.
 - Track user query updates with `onQueryChange` for downstream telemetry.

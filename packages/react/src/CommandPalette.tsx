@@ -71,6 +71,7 @@ export function CommandPalette({
   const activeCommandKeyRef = React.useRef<string | null>(null);
   const closeReasonRef = React.useRef<CommandPaletteCloseReason | null>(null);
   const wasOpenRef = React.useRef(open);
+  const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
   const listId = React.useId();
   const statusId = React.useId();
   const listRef = React.useRef<HTMLDivElement>(null);
@@ -117,6 +118,38 @@ export function CommandPalette({
 
     wasOpenRef.current = open;
   }, [onQueryChange, open]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const duplicateKeys = new Set<string>();
+    const seenKeys = new Set<string>();
+    commands.forEach((item) => {
+      if (seenKeys.has(item.key)) {
+        duplicateKeys.add(item.key);
+      }
+      seenKeys.add(item.key);
+    });
+
+    if (duplicateKeys.size === 0) {
+      warnedDuplicateKeysSignatureRef.current = null;
+      return;
+    }
+
+    const signature = Array.from(duplicateKeys).sort().join("|");
+    if (warnedDuplicateKeysSignatureRef.current === signature) {
+      return;
+    }
+    warnedDuplicateKeysSignatureRef.current = signature;
+
+    console.warn(
+      `[CommandPalette] Duplicate command keys detected: ${Array.from(duplicateKeys)
+        .map((key) => `"${key}"`)
+        .join(", ")}. Keys should be unique to keep aria-activedescendant and selection behavior deterministic.`
+    );
+  }, [commands]);
 
   const normalizedQuery = React.useMemo(() => normalizeSearchText(query.trim()), [query]);
 

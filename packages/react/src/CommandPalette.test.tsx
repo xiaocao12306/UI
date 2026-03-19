@@ -67,6 +67,32 @@ describe("CommandPalette", () => {
     expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
   });
 
+  it("warns when duplicate command keys are provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <CommandPalette
+          open
+          onOpenChange={() => {}}
+          commands={[
+            { key: "deploy", label: "Deploy now" },
+            { key: "deploy", label: "Deploy later" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining('Duplicate command keys detected: "deploy"')
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("matches accented labels with plain query text", () => {
     render(
       <CommandPalette
