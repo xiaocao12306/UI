@@ -390,6 +390,7 @@
   - Storybook Popover 抢占式 Escape 验收（新增 `EscapePreemptedByGlobalHandler` 场景，锁定抢占后保持打开且 hook 计数不变）
   - Storybook Popover/Dropdown 回调顺序验收（`CloseReasonTelemetry` 增加 close trace，锁定 `onCloseReason -> onOpenChange(false)`；Dropdown item-select 额外锁定 `onSelect` 前置）
   - Storybook Dialog/Drawer 回调顺序验收（`CloseReasonTelemetry` 增加 close trace，锁定 `onCloseReason -> onOpenChange(false)`）
+  - Storybook CommandPalette 回调顺序验收（`CloseReasonTelemetry` 增加 close trace，锁定通用关闭路径 `onCloseReason -> onOpenChange(false)`；item-select 路径额外锁定 `onSelect` 前置）
   - Demo Escape 抢占验收扩展（Dialog/Drawer/Popover/CommandPalette/Dropdown/Toast 新增 Playwright 回归，锁定全局抢占后保持打开，解除抢占后恢复正常关闭）
   - CommandPalette 空态语义收口（无匹配结果时移除 combobox `aria-controls` 并卸载 listbox，避免空态悬空引用）
   - CommandPalette 结果命名语义收口（新增 `resultsAriaLabel`，支持 listbox 可访问名称本地化）
@@ -401,6 +402,7 @@
   - CommandPalette 结果播报关联补强（combobox `aria-describedby` 绑定 live status 文本，稳定读屏播报路径）
   - Demo CommandPalette 查询遥测验收（新增可视 telemetry 指示 + Playwright 回归，锁定关闭后重置为 `N/A`）
   - Demo CommandPalette 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 escape/item-select/close-button/outside-pointer）
+  - Demo CommandPalette 关闭顺序验收（新增 `palette-close-trace-demo` + Playwright 回归，锁定通用路径 `reason -> open:false`，item-select 路径 `select -> reason -> open:false`）
   - Storybook CommandPalette 空态引用验收（新增 `EmptyStateAriaControlsLifecycle` 场景，锁定 `aria-controls` 与 listbox 挂载生命周期）
   - Storybook CommandPalette i18n 验收（新增 `LocalizedResultsLabel` 场景，锁定结果 listbox 本地化命名）
   - Storybook CommandPalette i18n 验收扩展（新增 `LocalizedDialogCopy` 场景，锁定 dialog heading + 搜索输入 + listbox 的本地化命名）
@@ -418,8 +420,10 @@
   - CommandPalette 长列表翻页键收口（新增 `PageUp/PageDown` 按 5 条可执行项跳转并跳过禁用项，降低高密列表操作成本）
   - Demo CommandPalette 翻页键验收（新增键盘提示文案 + Playwright `PageUp/PageDown` 回归，锁定禁用项跳过行为）
   - Toast 关闭回调契约收口（单测锁定 `onCloseReason -> onClose -> onOpenChange(false)` 顺序，并同步 Component API / Best Practices）
+  - Storybook Toast 回调顺序验收（`CloseReasonTelemetry` 增加 close trace，锁定 `onCloseReason` 先于 `onOpenChange(false)`，并保持 `onClose` 介于两者之间）
   - Toast 动作语义收口（`action` 存在时切换为 `dialog/alertdialog` 语义，避免可交互通知被当作纯 live-region）
   - Demo Toast 动作语义验收（新增 action toast 场景 + Playwright 回归，锁定 `dialog` 语义与业务按钮闭环）
+  - Demo Toast 关闭顺序验收（新增 `toast-close-trace-demo` + Playwright 回归，锁定 `reason -> open:false` 顺序契约）
   - Toast 同角堆叠可见性收口（同一 viewport 角落的多条通知自动偏移，避免视觉重叠与信息遮挡）
   - Storybook Toast 堆叠可见性验收（新增 `StackedViewportOffset` 场景，断言旧通知偏移与新通知贴边）
   - Demo 首屏门禁文案收口（移除易过期的硬编码验收数字，改为稳定门禁状态表达）
