@@ -15,13 +15,10 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const generatedInputId = React.useId();
   const describedById = React.useId();
   const errorId = React.useId();
-  const childProps =
-    React.isValidElement(children) && typeof children.type !== "symbol"
-      ? (children.props as Record<string, unknown>)
-      : undefined;
-  const childControlId =
-    React.isValidElement(children) && typeof children.type !== "symbol" ? (childProps?.id as string | undefined) : undefined;
-  const controlId = htmlFor ?? childControlId ?? generatedInputId;
+  const canCloneControl = React.isValidElement(children) && typeof children.type !== "symbol";
+  const childProps = canCloneControl ? (children.props as Record<string, unknown>) : undefined;
+  const childControlId = canCloneControl ? (childProps?.id as string | undefined) : undefined;
+  const controlId = htmlFor ?? childControlId ?? (canCloneControl ? generatedInputId : undefined);
   const isInvalid = Boolean(error);
   const childDescribedBy = childProps?.["aria-describedby"] as string | undefined;
   const childErrorMessage = childProps?.["aria-errormessage"] as string | undefined;
@@ -37,7 +34,7 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const mergedErrorMessage = mergeAriaReferenceIds(childErrorMessage, error ? errorId : undefined);
 
   const control =
-    React.isValidElement(children) && typeof children.type !== "symbol"
+    canCloneControl
       ? React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
           id: controlId,
           "aria-describedby": mergedDescribedBy,

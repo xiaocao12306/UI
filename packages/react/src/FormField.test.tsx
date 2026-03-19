@@ -139,4 +139,29 @@ describe("FormField", () => {
     const alert = screen.getByRole("alert");
     expect(mergedErrorMessage.split(" ")).toContain(alert.id);
   });
+
+  it("does not emit dangling htmlFor when child is non-clonable and htmlFor is absent", () => {
+    render(
+      <FormField label="Composite field">
+        <>
+          <Input />
+        </>
+      </FormField>
+    );
+
+    const label = screen.getByText("Composite field").closest("label");
+    expect(label).not.toHaveAttribute("for");
+  });
+
+  it("respects explicit htmlFor even when child is non-clonable", () => {
+    render(
+      <FormField label="External field" htmlFor="external-control">
+        <>
+          <Input id="external-control" />
+        </>
+      </FormField>
+    );
+
+    expect(screen.getByLabelText("External field")).toHaveAttribute("id", "external-control");
+  });
 });
