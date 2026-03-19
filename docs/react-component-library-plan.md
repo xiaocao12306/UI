@@ -339,7 +339,9 @@
   - Toast 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/escape-key/timeout` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Demo Toast 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 escape/close-button/timeout）
   - Dropdown 关闭原因遥测收口（新增 `onCloseReason`，回传 `trigger-click/item-select/escape-key/outside-pointer/tab-key` 并补齐单测 + Storybook `CloseReasonTelemetry`）
+  - Dropdown 回调契约收口（补单测锁定 `item-select` 路径 `onSelect -> onCloseReason -> onOpenChange(false)` 与其他关闭路径 `onCloseReason -> onOpenChange(false)`）
   - Popover 关闭原因遥测收口（新增 `onCloseReason`，回传 `trigger-click/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
+  - Popover 回调契约收口（补单测锁定关闭路径 `onCloseReason -> onOpenChange(false)` 顺序，避免遥测与状态副作用乱序）
   - Dialog 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Drawer 关闭原因遥测收口（新增 `onCloseReason`，回传 `close-button/escape-key/outside-pointer` 并补齐单测 + Storybook `CloseReasonTelemetry`）
   - Demo Dialog 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 close-button / Escape / outside-pointer）
