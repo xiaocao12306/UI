@@ -513,6 +513,29 @@ describe("Toast", () => {
     expect(screen.getByRole("status", { name: "Second" })).toBeInTheDocument();
   });
 
+  it("promotes hovered toast to top of stack before Escape dismiss", () => {
+    function StackedToasts() {
+      const [firstOpen, setFirstOpen] = React.useState(true);
+      const [secondOpen, setSecondOpen] = React.useState(true);
+
+      return (
+        <>
+          <Toast open={firstOpen} title="First" duration={0} onOpenChange={setFirstOpen} />
+          <Toast open={secondOpen} title="Second" duration={0} onOpenChange={setSecondOpen} />
+        </>
+      );
+    }
+
+    render(<StackedToasts />);
+
+    const firstToast = screen.getByRole("status", { name: "First" });
+    fireEvent.mouseEnter(firstToast);
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(screen.queryByRole("status", { name: "First" })).toBeNull();
+    expect(screen.getByRole("status", { name: "Second" })).toBeInTheDocument();
+  });
+
   it("resets paused state after close and reopen", () => {
     vi.useFakeTimers();
     const onOpenChange = vi.fn();
