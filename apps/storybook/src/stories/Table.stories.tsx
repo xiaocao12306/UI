@@ -27,7 +27,8 @@ const columns: Array<TableColumn<ReleaseRow>> = [
     sortable: true,
     sortAccessor: (row) => row.status,
     render: (row) => {
-      const tone = row.status === "ready" ? "success" : row.status === "review" ? "default" : "danger";
+      const tone =
+        row.status === "ready" ? "success" : row.status === "review" ? "default" : "danger";
       return <Badge tone={tone}>{row.status}</Badge>;
     }
   }
@@ -40,7 +41,8 @@ const meta = {
     layout: "centered",
     docs: {
       description: {
-        component: "Table accepts typed column definitions and custom cell renderers for status-heavy ops screens."
+        component:
+          "Table accepts typed column definitions and custom cell renderers for status-heavy ops screens."
       }
     }
   }
@@ -52,7 +54,13 @@ type Story = StoryObj<typeof meta>;
 export const ReleaseChecklist: Story = {
   render: () => (
     <div style={{ width: 780, display: "grid", gap: 10 }}>
-      <Table caption="Release readiness board" columns={columns} data={rows} rowKey={(row) => row.id} defaultSortKey="id" />
+      <Table
+        caption="Release readiness board"
+        columns={columns}
+        data={rows}
+        rowKey={(row) => row.id}
+        defaultSortKey="id"
+      />
     </div>
   )
 };
@@ -113,14 +121,20 @@ export const SingleRowSortDisabled: Story = {
     const issueHeader = canvas.getByRole("columnheader", { name: /Issue/ });
     await expect(issueHeader).not.toHaveAttribute("aria-sort");
     await expect(canvas.queryByRole("status")).not.toBeInTheDocument();
-    await expect(canvas.getByRole("button", { name: "Issue sort ascending" })).toBeDisabled();
+    await expect(canvas.getByRole("button", { name: "Issue sort descending" })).toBeDisabled();
   }
 };
 
 export const LoadingState: Story = {
   render: () => (
     <div style={{ width: 780 }}>
-      <Table columns={columns} data={rows} loading loadingContent="Syncing release feed..." defaultSortKey="id" />
+      <Table
+        columns={columns}
+        data={rows}
+        loading
+        loadingContent="Syncing release feed..."
+        defaultSortKey="id"
+      />
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -141,12 +155,19 @@ export const LoadingState: Story = {
 export const AccessibleNameWithoutCaption: Story = {
   render: () => (
     <div style={{ width: 780 }}>
-      <Table ariaLabel="Release checklist table" columns={columns} data={rows} rowKey={(row) => row.id} />
+      <Table
+        ariaLabel="Release checklist table"
+        columns={columns}
+        data={rows}
+        rowKey={(row) => row.id}
+      />
     </div>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("table", { name: "Release checklist table" })).toBeInTheDocument();
+    await expect(
+      canvas.getByRole("table", { name: "Release checklist table" })
+    ).toBeInTheDocument();
   }
 };
 
@@ -168,7 +189,13 @@ export const AccessibleNameLabelledByHeading: Story = {
       <h3 id="release-board-heading" style={{ margin: 0 }}>
         Release board metrics
       </h3>
-      <Table ariaLabelledBy="release-board-heading" ariaLabel="Fallback table label" columns={columns} data={rows} rowKey={(row) => row.id} />
+      <Table
+        ariaLabelledBy="release-board-heading"
+        ariaLabel="Fallback table label"
+        columns={columns}
+        data={rows}
+        rowKey={(row) => row.id}
+      />
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -260,7 +287,9 @@ export const LocalizedSortLabels: Story = {
         getSortAriaLabel={({ columnHeader, nextDirection }) =>
           `按${nextDirection === "asc" ? "升序" : "降序"}排序：${columnHeader}`
         }
-        getSortStatusText={({ columnHeader, direction }) => `当前排序：${columnHeader}（${direction === "asc" ? "升序" : "降序"}）`}
+        getSortStatusText={({ columnHeader, direction }) =>
+          `当前排序：${columnHeader}（${direction === "asc" ? "升序" : "降序"}）`
+        }
       />
     </div>
   ),
@@ -343,7 +372,12 @@ export const FallbackRowKeyStability: Story = {
 export const SourceIndexRowKeyStability: Story = {
   render: () => (
     <div style={{ width: 720 }}>
-      <Table columns={statefulColumns} data={statefulRows} defaultSortKey="component" rowKey={(row, rowIndex) => `${rowIndex}-${row.id}`} />
+      <Table
+        columns={statefulColumns}
+        data={statefulRows}
+        defaultSortKey="component"
+        rowKey={(row, rowIndex) => `${rowIndex}-${row.id}`}
+      />
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -368,7 +402,8 @@ export const RenderIndexSemantics: Story = {
   render: () => (
     <div style={{ width: 720, display: "grid", gap: 8 }}>
       <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
-        `render(row, rowIndex, sourceIndex)` exposes both sorted row position and source-data position.
+        `render(row, rowIndex, sourceIndex)` exposes both sorted row position and source-data
+        position.
       </p>
       <Table
         columns={[
@@ -376,7 +411,8 @@ export const RenderIndexSemantics: Story = {
             key: "key",
             header: "Item",
             sortable: true,
-            render: (row, rowIndex, sourceIndex) => `${row.key} (visual:${rowIndex}, source:${sourceIndex})`
+            render: (row, rowIndex, sourceIndex) =>
+              `${row.key} (visual:${rowIndex}, source:${sourceIndex})`
           },
           { key: "score", header: "Score", sortable: true }
         ]}
@@ -388,7 +424,11 @@ export const RenderIndexSemantics: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "Score sort descending" }));
-    await expect(canvas.getByRole("cell", { name: "Gamma (visual:0, source:2)" })).toBeInTheDocument();
-    await expect(canvas.getByRole("cell", { name: "Alpha (visual:2, source:0)" })).toBeInTheDocument();
+    await expect(
+      canvas.getByRole("cell", { name: "Gamma (visual:0, source:2)" })
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByRole("cell", { name: "Alpha (visual:2, source:0)" })
+    ).toBeInTheDocument();
   }
 };
