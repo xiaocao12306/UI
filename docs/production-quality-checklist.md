@@ -118,6 +118,7 @@
 - Tabs keyboard parity extension: manual activation now also accepts modern `Space` key value, and Storybook manual-flow interactions explicitly validate the Space activation path.
 - Tabs panel-focus parity: active `tabpanel` now exposes `tabIndex=0` while inactive panels stay `-1`, ensuring keyboard users can reliably enter panel content.
 - Tabs telemetry de-dup hardening: manual mode now ignores follow-up keyboard-generated click (`detail=0`) after key activation, preventing duplicate `onValueChange` emissions.
+- Tabs keyboard-discoverability hardening: manual mode now exposes `aria-keyshortcuts="Enter Space"` on tabs, with unit + Storybook interaction coverage.
 - Storybook Tag stability hardening: `Core/Tag/MetadataRow` now has explicit play assertions to reduce interaction-runner navigation retry noise.
 - Storybook Toast stability hardening: `Feedback/Toast/ToneMatrix` now uses `duration={0}` so baseline stories stay deterministic during interaction-runner sweeps.
 - Storybook Pagination stability hardening: keyboard stories now await async role transitions (`findByRole`) and assert focus preconditions to reduce interaction-runner retry noise.

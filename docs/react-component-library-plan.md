@@ -298,6 +298,7 @@
   - Tabs 键盘兼容收口（manual 模式补齐 legacy `Spacebar` key 兼容 + 单测回归）
   - Tabs 键盘兼容补强（manual 模式补齐现代 `Space` key 值兼容 + Storybook 交互回归）
   - Tabs 回调去重收口（manual 键盘激活后忽略 `detail=0` click，避免 `onValueChange` 重复触发）
+  - Tabs manual 键盘提示语义收口（manual 模式 tab 暴露 `aria-keyshortcuts=\"Enter Space\"`，补齐单测 + Storybook 交互断言）
   - Table 键盘兼容收口（sortable header 补齐 legacy `Spacebar` 激活单测回归）
   - Dropdown 键盘关闭收口（补齐 `Tab` 关闭菜单单测，保持与 demo/E2E 一致）
   - Dropdown Storybook 收口（新增 `TabDismissToNextControl` 场景，补齐 Tab 关闭 + 焦点前进可视回归）
