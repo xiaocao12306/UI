@@ -2,6 +2,15 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Tooltip } from "@aurora-ui/react";
 import { expect, userEvent, waitFor, within } from "@storybook/test";
 import * as React from "react";
+import { StoryShowcaseFrame, storyMutedTextStyle } from "./storyShowcase";
+
+function TooltipShowcase({ children, gap = 12 }: { children: React.ReactNode; gap?: number }) {
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 520px)" gap={gap}>
+      {children}
+    </StoryShowcaseFrame>
+  );
+}
 
 const meta = {
   title: "Overlay/Tooltip",
@@ -83,12 +92,12 @@ export const Disabled: Story = {
 function ControlledTooltipStory({ content, children }: { content: React.ReactNode; children: React.ReactElement }) {
   const [open, setOpen] = React.useState(false);
   return (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+    <TooltipShowcase>
       <Button onClick={() => setOpen((previous) => !previous)}>{open ? "Hide tooltip" : "Show tooltip"}</Button>
       <Tooltip open={open} onOpenChange={setOpen} content={content}>
         {children}
       </Tooltip>
-    </div>
+    </TooltipShowcase>
   );
 }
 
@@ -119,16 +128,16 @@ export const DescribedByLifecycle: Story = {
     children: <Button variant="outline">Lifecycle target</Button>
   },
   render: (args) => (
-    <div style={{ display: "grid", gap: 8, justifyItems: "start" }}>
+    <TooltipShowcase gap={8}>
       <Tooltip content={args.content} closeDelay={0}>
         <button type="button" aria-describedby="helper-id">
           Lifecycle target
         </button>
       </Tooltip>
-      <small id="helper-id" style={{ color: "var(--aurora-text-secondary)" }}>
+      <small id="helper-id" style={storyMutedTextStyle}>
         Existing helper narration
       </small>
-    </div>
+    </TooltipShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
