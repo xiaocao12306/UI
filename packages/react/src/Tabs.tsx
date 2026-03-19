@@ -139,6 +139,19 @@ export function Tabs({
     };
   }, []);
 
+  React.useEffect(() => {
+    const enabledKeys = new Set(items.filter((item) => !item.disabled).map((item) => item.key));
+    setHoveredTabKey((currentKey) =>
+      currentKey && !enabledKeys.has(currentKey) ? null : currentKey
+    );
+    setPressedTabKey((currentKey) =>
+      currentKey && !enabledKeys.has(currentKey) ? null : currentKey
+    );
+    setFocusVisibleTabKey((currentKey) =>
+      currentKey && !enabledKeys.has(currentKey) ? null : currentKey
+    );
+  }, [items]);
+
   const clearKeyboardActivationLatch = React.useCallback(() => {
     keyboardActivationTabKeyRef.current = null;
     if (keyboardActivationResetTimerRef.current !== null) {
@@ -189,9 +202,9 @@ export function Tabs({
         {items.map((item, index) => {
           const selected = item.key === currentValue;
           const disabled = Boolean(item.disabled);
-          const hovered = hoveredTabKey === item.key;
-          const pressed = pressedTabKey === item.key;
-          const focusVisible = focusVisibleTabKey === item.key;
+          const hovered = !disabled && hoveredTabKey === item.key;
+          const pressed = !disabled && pressedTabKey === item.key;
+          const focusVisible = !disabled && focusVisibleTabKey === item.key;
           const interactive = hovered || focusVisible;
 
           return (

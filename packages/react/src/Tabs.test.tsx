@@ -793,6 +793,37 @@ describe("Tabs", () => {
     expect(twoTab.style.transform).toBe("translateY(0)");
   });
 
+  it("resets pressed and focus visual states when interacted tab becomes disabled", () => {
+    const { rerender } = render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    fireEvent.mouseDown(twoTab);
+    expect(twoTab.style.transform).toBe("translateY(1px)");
+
+    rerender(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div>, disabled: true }
+        ]}
+      />
+    );
+
+    const disabledTwoTab = screen.getByRole("tab", { name: "Two" });
+    expect(disabledTwoTab).toBeDisabled();
+    expect(disabledTwoTab.style.transform).toBe("translateY(0)");
+    expect(disabledTwoTab.style.boxShadow).toBe("none");
+  });
+
   it("supports tablist naming through aria-labelledby", () => {
     render(
       <div>

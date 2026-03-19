@@ -573,6 +573,46 @@ describe("Table", () => {
     expect(sortButton.style.transform).toBe("translateY(0)");
   });
 
+  it("resets pressed and focus visual states when sortable controls become disabled", () => {
+    const { rerender } = render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    fireEvent.mouseDown(sortButton);
+    expect(sortButton.style.transform).toBe("translateY(1px)");
+
+    rerender(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        loading
+      />
+    );
+
+    const disabledSortButton = screen.getByRole("button", { name: "Name sort descending" });
+    expect(disabledSortButton).toBeDisabled();
+    expect(disabledSortButton.style.transform).toBe("translateY(0)");
+    expect(disabledSortButton.style.boxShadow).toBe("none");
+  });
+
   it("supports legacy Spacebar key value on sortable headers", () => {
     const onSortChange = vi.fn();
 

@@ -79,6 +79,40 @@ function ControlledTabsDemo() {
   );
 }
 
+function DisableVisualResetTabsDemo() {
+  const [buildDisabled, setBuildDisabled] = React.useState(false);
+
+  return (
+    <div style={{ width: "min(100%, 620px)", display: "grid", gap: 12 }}>
+      <button type="button" onClick={() => setBuildDisabled(true)}>
+        Disable Build tab
+      </button>
+      <Tabs
+        ariaLabel="Disable visual reset tabs"
+        defaultValue="spec"
+        items={[
+          {
+            key: "spec",
+            label: "Spec",
+            content: "Specification stage is active."
+          },
+          {
+            key: "build",
+            label: "Build",
+            content: "Build stage is active.",
+            disabled: buildDisabled
+          },
+          {
+            key: "release",
+            label: "Release",
+            content: "Release stage is active."
+          }
+        ]}
+      />
+    </div>
+  );
+}
+
 export const Controlled: Story = {
   render: () => <ControlledTabsDemo />,
   play: async ({ canvasElement }) => {
@@ -119,6 +153,23 @@ export const KeyboardFocusRingAfterPointer: Story = {
     await userEvent.tab();
     await expect(specTab).toHaveFocus();
     await expect(specTab.style.boxShadow).toContain("0 0 0 3px");
+  }
+};
+
+export const DisabledTabVisualReset: Story = {
+  render: () => <DisableVisualResetTabsDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const disableButton = canvas.getByRole("button", { name: "Disable Build tab" });
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+
+    fireEvent.mouseDown(buildTab);
+
+    await userEvent.click(disableButton);
+    const disabledBuildTab = canvas.getByRole("tab", { name: "Build" });
+    await expect(disabledBuildTab).toBeDisabled();
+    await expect(disabledBuildTab.style.transform).toContain("translateY(0");
+    await expect(disabledBuildTab.style.boxShadow).toBe("none");
   }
 };
 

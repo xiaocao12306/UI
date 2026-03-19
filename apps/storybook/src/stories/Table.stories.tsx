@@ -48,6 +48,25 @@ function dispatchImeKeyDown(element: HTMLElement, key: string) {
   element.dispatchEvent(event);
 }
 
+function LoadingVisualResetTable() {
+  const [loading, setLoading] = React.useState(false);
+
+  return (
+    <div style={{ width: "min(100%, 780px)", display: "grid", gap: 10 }}>
+      <button type="button" onClick={() => setLoading((current) => !current)}>
+        Toggle loading
+      </button>
+      <Table
+        columns={columns}
+        data={rows}
+        loading={loading}
+        loadingContent="Syncing release feed..."
+        defaultSortKey="id"
+      />
+    </div>
+  );
+}
+
 const meta = {
   title: "Data/Table",
   tags: ["autodocs"],
@@ -242,6 +261,23 @@ export const LoadingState: Story = {
     await expect(sortButton).toBeDisabled();
     await expect(sortButton).not.toHaveAttribute("aria-keyshortcuts");
     await expect(issueHeader).not.toHaveAttribute("aria-sort");
+  }
+};
+
+export const LoadingDisablesResetsSortVisualState: Story = {
+  render: () => <LoadingVisualResetTable />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toggleButton = canvas.getByRole("button", { name: "Toggle loading" });
+    const sortButton = canvas.getByRole("button", { name: "Issue sort descending" });
+
+    fireEvent.mouseDown(sortButton);
+
+    await userEvent.click(toggleButton);
+    const disabledSortButton = canvas.getByRole("button", { name: "Issue sort descending" });
+    await expect(disabledSortButton).toBeDisabled();
+    await expect(disabledSortButton.style.transform).toContain("translateY(0");
+    await expect(disabledSortButton.style.boxShadow).toBe("none");
   }
 };
 

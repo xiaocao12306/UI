@@ -220,6 +220,16 @@ export function Table<T>({
     !loading && sortedEntries.length > 1 && columns.some((column) => column.sortable);
   const tableColSpan = Math.max(columns.length, 1);
 
+  React.useEffect(() => {
+    if (hasActionableSortControls) {
+      return;
+    }
+
+    setHoveredSortKey(null);
+    setPressedSortKey(null);
+    setFocusVisibleSortKey(null);
+  }, [hasActionableSortControls]);
+
   return (
     <div
       data-aurora-table-scroll-container=""
@@ -296,9 +306,9 @@ export function Table<T>({
                 nextDirection
               });
               const sortDisabled = loading || !hasMultiRowData;
-              const hovered = hoveredSortKey === key;
-              const pressed = pressedSortKey === key;
-              const focusVisible = focusVisibleSortKey === key;
+              const hovered = !sortDisabled && hoveredSortKey === key;
+              const pressed = !sortDisabled && pressedSortKey === key;
+              const focusVisible = !sortDisabled && focusVisibleSortKey === key;
               const interactive = hovered || focusVisible;
               const activateSort = () => {
                 if (sortDisabled) {
