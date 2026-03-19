@@ -134,13 +134,18 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
       }}
       onKeyDown={(event) => {
         focusVisibleIntentRef.current = true;
-        if (!isInteractionDisabled && !readOnly && isInputActivationKey(event.key)) {
+        if (
+          !isInteractionDisabled &&
+          !readOnly &&
+          isInputActivationKey(event.key) &&
+          !isComposingKeyboardEvent(event)
+        ) {
           setActive(true);
         }
         onKeyDown?.(event);
       }}
       onKeyUp={(event) => {
-        if (isInputActivationKey(event.key)) {
+        if (isInputActivationKey(event.key) && !isComposingKeyboardEvent(event)) {
           setActive(false);
         }
         onKeyUp?.(event);
@@ -152,6 +157,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
 
 function isInputActivationKey(key: string) {
   return key === "Enter";
+}
+
+function isComposingKeyboardEvent(event: React.KeyboardEvent<HTMLInputElement>) {
+  const nativeEvent = event.nativeEvent as KeyboardEvent & { isComposing?: boolean; keyCode?: number };
+  return Boolean(nativeEvent.isComposing) || nativeEvent.keyCode === 229;
 }
 
 function resolveFocusVisibleState(target: HTMLInputElement, fallback: boolean) {

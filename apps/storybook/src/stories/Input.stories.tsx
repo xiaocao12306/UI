@@ -76,7 +76,7 @@ export const StateMatrix: Story = {
 export const InteractionA11yParity: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={12}>
-      <FormField label="Keyboard interaction" description="Tab focus should show ring; Enter should show pressed feedback.">
+      <FormField label="Keyboard interaction" description="Tab focus should show ring; Enter feedback is suppressed during IME composition.">
         <Input defaultValue="release-notes" />
       </FormField>
 
@@ -98,6 +98,9 @@ export const InteractionA11yParity: Story = {
     await expect(keyboardInput).toHaveAttribute("data-focused", "true");
     await expect(label).toHaveAttribute("id");
     await expect(keyboardInput.getAttribute("aria-labelledby") ?? "").toContain(label?.id ?? "");
+
+    fireEvent.keyDown(keyboardInput, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    await expect(keyboardInput).not.toHaveAttribute("data-active");
 
     fireEvent.keyDown(keyboardInput, { key: "Enter" });
     fireEvent.keyUp(keyboardInput, { key: "Enter" });

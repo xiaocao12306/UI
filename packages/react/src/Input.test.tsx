@@ -95,6 +95,23 @@ describe("Input", () => {
     expect(input).not.toHaveAttribute("data-active");
   });
 
+  it("ignores enter active feedback while IME composition is active", () => {
+    render(<Input aria-label="IME field" />);
+    const input = screen.getByRole("textbox", { name: "IME field" });
+
+    fireEvent.keyDown(input, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    expect(input).not.toHaveAttribute("data-active");
+
+    fireEvent.keyDown(input, { key: "Enter", keyCode: 229, which: 229 });
+    expect(input).not.toHaveAttribute("data-active");
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(input).toHaveAttribute("data-active", "true");
+
+    fireEvent.keyUp(input, { key: "Enter" });
+    expect(input).not.toHaveAttribute("data-active");
+  });
+
   it("retains focus-visible state on non-primary pointer interaction", () => {
     render(<Input aria-label="Pointer focus input" />);
     const input = screen.getByRole("textbox", { name: "Pointer focus input" });
