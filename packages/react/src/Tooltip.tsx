@@ -55,12 +55,15 @@ export function Tooltip({
       if (disabled && nextOpen) {
         return;
       }
+      if (isOpen === nextOpen) {
+        return;
+      }
       if (!isControlled) {
         setInternalOpen(nextOpen);
       }
       onOpenChange?.(nextOpen);
     },
-    [disabled, isControlled, onOpenChange]
+    [disabled, isControlled, isOpen, onOpenChange]
   );
 
   const clearTimers = React.useCallback(() => {

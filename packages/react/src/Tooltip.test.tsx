@@ -72,6 +72,23 @@ describe("Tooltip", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("skips duplicate onOpenChange emits when controlled state is unchanged", () => {
+    const onOpenChange = vi.fn();
+
+    render(
+      <Tooltip content="Controlled tooltip" open={false} closeDelay={0} onOpenChange={onOpenChange}>
+        <button type="button">Controlled trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Controlled trigger" });
+    fireEvent.keyDown(trigger, { key: "Escape" });
+    fireEvent.blur(trigger);
+    fireEvent.mouseLeave(trigger);
+
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
   it("merges aria-describedby and supports disabled mode", () => {
     const onOpenChange = vi.fn();
     const { rerender } = render(
@@ -168,6 +185,24 @@ describe("Tooltip", () => {
     expect(onBlur).toHaveBeenCalledTimes(1);
     expect(onMouseLeave).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("tooltip")).toBeInTheDocument();
+  });
+
+  it("does not emit duplicate open events while already visible", () => {
+    const onOpenChange = vi.fn();
+
+    render(
+      <Tooltip content="Tooltip content" delayDuration={0} closeDelay={0} onOpenChange={onOpenChange}>
+        <button type="button">No duplicate open trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "No duplicate open trigger" });
+    fireEvent.focus(trigger);
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+
+    fireEvent.mouseEnter(trigger);
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenNthCalledWith(1, true);
   });
 
   it("applies side and sideOffset positioning styles", () => {
