@@ -2,6 +2,23 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Input, Popover } from "@aurora-ui/react";
 import { expect, userEvent, within } from "@storybook/test";
+import { StoryShowcaseFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
+
+const popoverTelemetryTextStyle: React.CSSProperties = {
+  ...storyMutedTextStyle
+};
+
+const popoverTelemetryValueStyle: React.CSSProperties = {
+  ...storyEmphasisTextStyle
+};
+
+function PopoverShowcase({ children }: { children: React.ReactNode }) {
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 620px)" gap={12}>
+      {children}
+    </StoryShowcaseFrame>
+  );
+}
 
 const meta = {
   title: "Overlay/Popover",
@@ -81,10 +98,10 @@ export const NonDismissible: Story = {
     children: <p style={{ margin: 0 }}>This popover must be closed via trigger toggle.</p>
   },
   render: (args) => (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+    <PopoverShowcase>
       <Popover {...args} />
       <button type="button">Outside target</button>
-    </div>
+    </PopoverShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -106,16 +123,16 @@ function DismissGuardPopoverDemo() {
   const [outsideCalls, setOutsideCalls] = React.useState(0);
 
   return (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <PopoverShowcase>
+      <p style={popoverTelemetryTextStyle}>
         Escape guard calls:{" "}
-        <strong data-testid="popover-guard-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="popover-guard-escape-calls" style={popoverTelemetryValueStyle}>
           {escapeCalls}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={popoverTelemetryTextStyle}>
         Outside guard calls:{" "}
-        <strong data-testid="popover-guard-outside-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="popover-guard-outside-calls" style={popoverTelemetryValueStyle}>
           {outsideCalls}
         </strong>
       </p>
@@ -133,7 +150,7 @@ function DismissGuardPopoverDemo() {
         <p style={{ margin: 0 }}>Dismiss hooks can block Escape/outside close paths.</p>
       </Popover>
       <button type="button">Guarded outside target</button>
-    </div>
+    </PopoverShowcase>
   );
 }
 
@@ -167,12 +184,12 @@ export const OutsideDismissFocusTransfer: Story = {
     children: <p style={{ margin: 0 }}>Dismiss me by clicking outside.</p>
   },
   render: () => (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+    <PopoverShowcase>
       <Popover triggerLabel="Focus Policy">
         <p style={{ margin: 0 }}>Dismiss me by clicking outside.</p>
       </Popover>
       <button type="button">Popover Next Focus Target</button>
-    </div>
+    </PopoverShowcase>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -193,16 +210,16 @@ function CloseReasonTelemetryPopoverDemo() {
   const [lastTrace, setLastTrace] = React.useState("none");
 
   return (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <PopoverShowcase>
+      <p style={popoverTelemetryTextStyle}>
         Last close reason:{" "}
-        <strong data-testid="popover-close-reason" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="popover-close-reason" style={popoverTelemetryValueStyle}>
           {lastReason}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={popoverTelemetryTextStyle}>
         Last close trace:{" "}
-        <strong data-testid="popover-close-trace" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="popover-close-trace" style={popoverTelemetryValueStyle}>
           {lastTrace}
         </strong>
       </p>
@@ -221,7 +238,7 @@ function CloseReasonTelemetryPopoverDemo() {
         <p style={{ margin: 0 }}>Track trigger / Escape / outside close behavior.</p>
       </Popover>
       <button type="button">Outside target</button>
-    </div>
+    </PopoverShowcase>
   );
 }
 
@@ -274,10 +291,10 @@ function EscapePreemptedPopoverDemo() {
   }, []);
 
   return (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <PopoverShowcase>
+      <p style={popoverTelemetryTextStyle}>
         Escape hook calls:{" "}
-        <strong data-testid="popover-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="popover-escape-calls" style={popoverTelemetryValueStyle}>
           {escapeCalls}
         </strong>
       </p>
@@ -289,7 +306,7 @@ function EscapePreemptedPopoverDemo() {
       >
         <p style={{ margin: 0 }}>Escape should remain preempted by global handlers.</p>
       </Popover>
-    </div>
+    </PopoverShowcase>
   );
 }
 
