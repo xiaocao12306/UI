@@ -476,3 +476,5 @@
 - Table sort narration parity: added `columns[].sortLabel` so icon/custom header cells can expose readable sort button labels and live-region status text, with unit + Storybook + docs coverage.
 - Storybook docs-structure gate parity: added `storybook:docs:structure:check` and chained it into `storybook:test:ci` to enforce required headings in `Component-API.mdx` and `Best-Practices.mdx`.
 - Demo telemetry hierarchy parity: reduced telemetry pill and container visual dominance so component interaction surfaces remain primary while diagnostic signals stay readable.
+- Storybook showcase consistency parity: `Tabs` and `Toast` stories now share `StoryShowcaseFrame` / `StoryFullscreenFrame` wrappers and telemetry text style tokens, reducing inline layout noise while preserving play assertions.
+- Release-gate parity refresh (2026-03-20 latest+4): reran `pnpm release:gate:ci` after Tabs/Toast Storybook showcase refactor + static sync and confirmed full pass (verify + coverage + demo e2e 73/73 + demo dist sync + storybook interaction 213/213).
