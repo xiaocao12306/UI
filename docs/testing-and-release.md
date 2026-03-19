@@ -196,3 +196,4 @@ This appends: 5. `pnpm release:dry-run`
 2. `Release Dry Run` workflow：查看包体积表、失败步骤、恢复文件计数。
 3. `Chromatic Visual Tests` workflow：查看 mode/token 状态、build/storybook URL、change/error 计数。
 4. `Release` workflow：查看 `Release Gate (CI)` summary（verify + demo e2e run/result + demo dist + storybook gate）以及 `Publish Mode` summary（`enforce`/token 状态）。
+5. 失败排障：下载 workflow artifacts（`storybook-gate-logs` / `demo-quality-gate-logs` / `release-gate-logs`）查看原始日志与首条失败签名。

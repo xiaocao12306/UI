@@ -44,6 +44,11 @@ jobs:
           demo_failed_line=$(grep -m1 " failed" /tmp/release-gate.log || true)
           demo_dist_line=$(grep -m1 "\\[demo-dist-check\\] ok:" /tmp/release-gate.log || true)
           storybook_coverage_line=$(grep -m1 "docs reference coverage:" /tmp/release-gate.log || true)
+          storybook_missing_imports_line=$(grep -m1 "missing imports:" /tmp/release-gate.log || true)
+          storybook_missing_files_line=$(grep -m1 "missing story files:" /tmp/release-gate.log || true)
+          storybook_missing_exports_line=$(grep -m1 "missing story exports:" /tmp/release-gate.log || true)
+          storybook_unreferenced_line=$(grep -m1 "unreferenced story files:" /tmp/release-gate.log || true)
+          storybook_coverage_error_line=$(grep -m1 "\\[storybook-coverage-report\\] error:" /tmp/release-gate.log || true)
           storybook_docs_line=$(grep -m1 "\\[storybook-docs-import-check\\] ok:" /tmp/release-gate.log || true)
           storybook_static_line=$(grep -m1 "\\[storybook-static-check\\] ok:" /tmp/release-gate.log || true)
           suites_line=$(grep -m1 "^Test Suites:" /tmp/release-gate.log || true)
@@ -66,6 +71,13 @@ jobs:
             fi
             echo "- ${demo_dist_line:-demo dist gate: n/a}"
             echo "- ${storybook_coverage_line:-storybook docs reference coverage: n/a}"
+            echo "- ${storybook_missing_imports_line:-missing imports: n/a}"
+            echo "- ${storybook_missing_files_line:-missing story files: n/a}"
+            echo "- ${storybook_missing_exports_line:-missing story exports: n/a}"
+            echo "- ${storybook_unreferenced_line:-unreferenced story files: n/a}"
+            if [ "$gate_status" -ne 0 ]; then
+              echo "- ${storybook_coverage_error_line:-storybook coverage strict error: n/a}"
+            fi
             echo "- ${storybook_docs_line:-storybook docs gate: n/a}"
             echo "- ${storybook_static_line:-storybook static gate: n/a}"
             echo "- ${suites_line:-Test Suites: n/a}"
@@ -73,6 +85,13 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
           exit "$gate_status"
+      - name: Upload Release Gate Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-gate-logs
+          path: /tmp/release-gate.log
+          if-no-files-found: ignore
 
       - id: npm-token
         name: Check NPM Token

@@ -31,6 +31,11 @@ jobs:
 
           stories_total_line=$(grep -m1 "stories total:" /tmp/storybook-gate.log || true)
           coverage_line=$(grep -m1 "docs reference coverage:" /tmp/storybook-gate.log || true)
+          coverage_missing_imports_line=$(grep -m1 "missing imports:" /tmp/storybook-gate.log || true)
+          coverage_missing_files_line=$(grep -m1 "missing story files:" /tmp/storybook-gate.log || true)
+          coverage_missing_exports_line=$(grep -m1 "missing story exports:" /tmp/storybook-gate.log || true)
+          coverage_unreferenced_line=$(grep -m1 "unreferenced story files:" /tmp/storybook-gate.log || true)
+          coverage_error_line=$(grep -m1 "\\[storybook-coverage-report\\] error:" /tmp/storybook-gate.log || true)
           docs_gate_line=$(grep -m1 "\\[storybook-docs-import-check\\] ok:" /tmp/storybook-gate.log || true)
           static_gate_line=$(grep -m1 "\\[storybook-static-check\\] ok:" /tmp/storybook-gate.log || true)
           suites_line=$(grep -m1 "^Test Suites:" /tmp/storybook-gate.log || true)
@@ -46,6 +51,13 @@ jobs:
             fi
             echo "- ${stories_total_line:-stories total: n/a}"
             echo "- ${coverage_line:-docs reference coverage: n/a}"
+            echo "- ${coverage_missing_imports_line:-missing imports: n/a}"
+            echo "- ${coverage_missing_files_line:-missing story files: n/a}"
+            echo "- ${coverage_missing_exports_line:-missing story exports: n/a}"
+            echo "- ${coverage_unreferenced_line:-unreferenced story files: n/a}"
+            if [ "$gate_status" -ne 0 ]; then
+              echo "- ${coverage_error_line:-storybook coverage strict error: n/a}"
+            fi
             echo "- ${docs_gate_line:-docs import gate: n/a}"
             echo "- ${static_gate_line:-static sync gate: n/a}"
             echo "- ${suites_line:-Test Suites: n/a}"
@@ -53,6 +65,13 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
           exit "$gate_status"
+      - name: Upload Storybook Gate Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-gate-logs
+          path: /tmp/storybook-gate.log
+          if-no-files-found: ignore
 
   demo-e2e:
     runs-on: ubuntu-latest
@@ -103,3 +122,12 @@ jobs:
           if [ "$e2e_status" -ne 0 ] || [ "$dist_status" -ne 0 ]; then
             exit 1
           fi
+      - name: Upload Demo Quality Gate Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-quality-gate-logs
+          path: |
+            /tmp/demo-e2e.log
+            /tmp/demo-dist.log
+          if-no-files-found: ignore
