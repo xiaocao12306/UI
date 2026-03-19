@@ -583,6 +583,7 @@
   - Release Gate 证据刷新（2026-03-20 latest+2：修复 Popover Storybook 类型与静态产物同步后 `pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 73/73 + demo dist + storybook interaction 211/211）
   - Release Dry-Run 证据刷新（2026-03-19 latest+2：`release:dry-run` 通过，`react` package `64.3 kB` / unpacked `394.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
   - Release Dry-Run 证据刷新（2026-03-20 latest：`release:dry-run` 通过，`react` package `66.7 kB` / unpacked `408.0 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
+  - Release Dry-Run 证据刷新（2026-03-20 latest+1：`release:dry-run` 通过，`react` package `67.1 kB` / unpacked `410.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
