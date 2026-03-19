@@ -287,33 +287,39 @@ test("reports command palette close reason telemetry for all dismiss paths", asy
 
   const trigger = page.getByRole("button", { name: "Command Palette" });
   const telemetry = page.getByTestId("palette-close-reason-telemetry");
+  const traceTelemetry = page.getByTestId("palette-close-trace-demo");
   const paletteDialog = page.getByRole("dialog").filter({ hasText: "Command Palette" });
 
   await expect(telemetry).toHaveText("none");
+  await expect(traceTelemetry).toHaveText("none");
 
   await trigger.click();
   await expect(paletteDialog).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(paletteDialog).toBeHidden();
   await expect(telemetry).toHaveText("escape-key");
+  await expect(traceTelemetry).toHaveText("reason:escape-key -> open:false");
 
   await trigger.click();
   await expect(paletteDialog).toBeVisible();
   await paletteDialog.getByRole("option", { name: "Create Project" }).click();
   await expect(paletteDialog).toBeHidden();
   await expect(telemetry).toHaveText("item-select");
+  await expect(traceTelemetry).toHaveText("select -> reason:item-select -> open:false");
 
   await trigger.click();
   await expect(paletteDialog).toBeVisible();
   await paletteDialog.getByRole("button", { name: "Close dialog" }).click();
   await expect(paletteDialog).toBeHidden();
   await expect(telemetry).toHaveText("close-button");
+  await expect(traceTelemetry).toHaveText("reason:close-button -> open:false");
 
   await trigger.click();
   await expect(paletteDialog).toBeVisible();
   await page.mouse.click(8, 8);
   await expect(paletteDialog).toBeHidden();
   await expect(telemetry).toHaveText("outside-pointer");
+  await expect(traceTelemetry).toHaveText("reason:outside-pointer -> open:false");
 });
 
 test("keeps command palette open on non-primary outside pointer interaction", async ({ page }) => {
@@ -321,19 +327,23 @@ test("keeps command palette open on non-primary outside pointer interaction", as
 
   const trigger = page.getByRole("button", { name: "Command Palette" });
   const telemetry = page.getByTestId("palette-close-reason-telemetry");
+  const traceTelemetry = page.getByTestId("palette-close-trace-demo");
   const paletteDialog = page.getByRole("dialog").filter({ hasText: "Command Palette" });
 
   await expect(telemetry).toHaveText("none");
+  await expect(traceTelemetry).toHaveText("none");
   await trigger.click();
   await expect(paletteDialog).toBeVisible();
 
   await page.mouse.click(8, 8, { button: "right" });
   await expect(paletteDialog).toBeVisible();
   await expect(telemetry).toHaveText("none");
+  await expect(traceTelemetry).toHaveText("none");
 
   await page.mouse.click(8, 8);
   await expect(paletteDialog).toBeHidden();
   await expect(telemetry).toHaveText("outside-pointer");
+  await expect(traceTelemetry).toHaveText("reason:outside-pointer -> open:false");
 });
 
 test("keeps command palette open when blocking dismiss mode is enabled", async ({ page }) => {
@@ -1180,20 +1190,25 @@ test("reports toast close reason telemetry for Escape, close button, and timeout
 
   const trigger = page.getByRole("button", { name: "Trigger telemetry toast" });
   const telemetry = page.getByTestId("toast-close-reason-demo");
+  const traceTelemetry = page.getByTestId("toast-close-trace-demo");
 
   await expect(telemetry).toHaveText("none");
+  await expect(traceTelemetry).toHaveText("none");
 
   await trigger.click();
   await page.keyboard.press("Escape");
   await expect(telemetry).toHaveText("escape-key");
+  await expect(traceTelemetry).toHaveText("reason:escape-key -> open:false");
 
   await trigger.click();
   await page.getByRole("button", { name: "Dismiss telemetry toast" }).click();
   await expect(telemetry).toHaveText("close-button");
+  await expect(traceTelemetry).toHaveText("reason:close-button -> open:false");
 
   await trigger.click();
   await expect(page.getByRole("status").filter({ hasText: "Telemetry toast" })).toBeVisible();
   await expect(telemetry).toHaveText("timeout", { timeout: 6000 });
+  await expect(traceTelemetry).toHaveText("reason:timeout -> open:false", { timeout: 6000 });
 });
 
 test("renders actionable toast with dialog semantics and handles action click", async ({ page }) => {
