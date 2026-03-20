@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap");
+
 .demo-app-shell {
   color: var(--aurora-text-primary);
 }
@@ -45,6 +47,13 @@
 }
 
 .demo-main-layout {
+  --demo-font-heading:
+    "Space Grotesk", "Avenir Next", "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+  --demo-font-body:
+    "IBM Plex Sans", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --demo-font-mono:
+    "IBM Plex Mono", "JetBrains Mono", "SFMono-Regular", "Menlo", "Consolas", monospace;
   --demo-space-1: 8px;
   --demo-space-2: 12px;
   --demo-space-3: 14px;
@@ -64,6 +73,7 @@
   position: relative;
   overflow: clip;
   isolation: isolate;
+  font-family: var(--demo-font-body);
 }
 
 .demo-main-layout::before {
@@ -152,10 +162,13 @@
 }
 
 .demo-hero-kicker {
+  font-family: var(--demo-font-mono);
   text-shadow: 0 1px 0 color-mix(in srgb, var(--aurora-surface-default) 45%, transparent);
 }
 
 .demo-hero-title {
+  font-family: var(--demo-font-heading);
+  font-weight: 700;
   max-width: 12.5ch;
   text-wrap: balance;
   text-shadow: 0 2px 14px color-mix(in srgb, var(--aurora-accent-default) 16%, transparent);
@@ -317,6 +330,8 @@
 }
 
 .demo-section-title {
+  font-family: var(--demo-font-heading);
+  font-weight: 600;
   text-wrap: balance;
 }
 
@@ -577,6 +592,11 @@
   text-wrap: pretty;
 }
 
+.demo-panel-header h3,
+.demo-panel-title {
+  font-family: var(--demo-font-heading);
+}
+
 .demo-panel:hover {
   border-color: color-mix(in srgb, var(--aurora-accent-default) 46%, var(--aurora-border-default));
   box-shadow:
@@ -634,6 +654,7 @@
 }
 
 .demo-telemetry-grid {
+  font-family: var(--demo-font-mono);
   display: grid;
   gap: 6px;
   border: 1px solid color-mix(in srgb, var(--aurora-border-default) 68%, transparent);

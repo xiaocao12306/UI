@@ -139,7 +139,7 @@ const mainLayoutStyle: React.CSSProperties = {
   boxShadow: "var(--aurora-shadow-md)",
   display: "grid",
   gap: 30,
-  fontFamily: "var(--aurora-font-family-base)",
+  fontFamily: "var(--demo-font-body)",
   color: "var(--aurora-text-primary)",
   background:
     "radial-gradient(circle at 85% -10%, color-mix(in srgb, var(--aurora-accent-default) 12%, transparent), transparent 36%), radial-gradient(circle at 12% 24%, color-mix(in srgb, var(--aurora-border-default) 24%, transparent), transparent 38%), color-mix(in srgb, var(--aurora-surface-default) 96%, transparent)"
@@ -168,12 +168,14 @@ const heroLabelStyle: React.CSSProperties = {
   fontSize: 12,
   letterSpacing: "0.11em",
   textTransform: "uppercase",
-  color: "var(--aurora-text-secondary)"
+  color: "var(--aurora-text-secondary)",
+  fontFamily: "var(--demo-font-mono)"
 };
 const heroTitleStyle: React.CSSProperties = {
   margin: 0,
   fontSize: "clamp(28px, 4vw, 38px)",
-  letterSpacing: "-0.03em"
+  letterSpacing: "-0.03em",
+  fontFamily: "var(--demo-font-heading)"
 };
 const heroOverviewStyle: React.CSSProperties = {
   display: "grid",
@@ -227,7 +229,7 @@ const sectionNavStyle: React.CSSProperties = {
   backdropFilter: "blur(4px)"
 };
 const keyboardHintStyle: React.CSSProperties = {
-  fontFamily: "var(--aurora-font-family-mono)",
+  fontFamily: "var(--demo-font-mono)",
   border: "1px solid var(--aurora-border-default)",
   borderRadius: 6,
   padding: "2px 6px"
@@ -257,7 +259,12 @@ const sectionNavLinkStyle: React.CSSProperties = {
   borderRadius: 999,
   lineHeight: 1.2
 };
-const panelTitleStyle: React.CSSProperties = { margin: 0, fontSize: 15, letterSpacing: "-0.01em" };
+const panelTitleStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 15,
+  letterSpacing: "-0.01em",
+  fontFamily: "var(--demo-font-heading)"
+};
 const panelDescriptionStyle: React.CSSProperties = { ...mutedBodyStyle, fontSize: 13 };
 const telemetryValueStyle: React.CSSProperties = {
   display: "inline-flex",
@@ -270,7 +277,7 @@ const telemetryValueStyle: React.CSSProperties = {
   background:
     "linear-gradient(180deg, color-mix(in srgb, var(--aurora-surface-elevated) 84%, transparent), color-mix(in srgb, var(--aurora-surface-default) 92%, transparent))",
   boxShadow: "inset 0 1px 0 color-mix(in srgb, var(--aurora-text-primary) 5%, transparent)",
-  fontFamily: "var(--aurora-font-family-mono)",
+  fontFamily: "var(--demo-font-mono)",
   fontSize: 11,
   letterSpacing: "0.01em",
   lineHeight: "16px",
@@ -308,7 +315,12 @@ function Section({
           <h2
             id={headingId}
             className="demo-section-title"
-            style={{ margin: 0, fontSize: "clamp(21px, 2.1vw, 24px)", letterSpacing: "-0.015em" }}
+            style={{
+              margin: 0,
+              fontSize: "clamp(21px, 2.1vw, 24px)",
+              letterSpacing: "-0.015em",
+              fontFamily: "var(--demo-font-heading)"
+            }}
           >
             {title}
           </h2>
