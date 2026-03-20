@@ -25,6 +25,7 @@ describe("Progress", () => {
       expect(indicator).toHaveAttribute("data-aurora-reduced-motion", "animate transform-reset");
       expect(indicator).toHaveStyle({ animation: "aurora-progress-indeterminate 1200ms ease-in-out infinite" });
     }
+    expect(progressbar.querySelector("style")).toBeNull();
   });
 
   it("renders helper value label when requested", () => {

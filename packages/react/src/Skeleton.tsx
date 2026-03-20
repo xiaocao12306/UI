@@ -30,29 +30,24 @@ export function Skeleton({
       : undefined;
 
   return (
-    <>
-      {animated ? (
-        <style>{`@keyframes aurora-skeleton-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }`}</style>
-      ) : null}
-      <div
-        data-aurora-reduced-motion={animated ? "animate" : undefined}
-        role={resolvedAriaLabel ? "status" : undefined}
-        aria-label={resolvedAriaLabel}
-        aria-live={resolvedAriaLabel ? "polite" : undefined}
-        aria-busy={resolvedAriaLabel ? true : undefined}
-        aria-hidden={resolvedAriaLabel ? undefined : true}
-        style={{
-          width: resolvedWidth,
-          height: resolvedHeight,
-          borderRadius: resolvedRadius,
-          background:
-            "linear-gradient(90deg, var(--aurora-skeleton-base) 0%, var(--aurora-skeleton-highlight) 50%, var(--aurora-skeleton-base) 100%)",
-          backgroundSize: "200% 100%",
-          animation: animated ? "aurora-skeleton-shimmer 1.2s ease-in-out infinite" : undefined,
-          ...style
-        }}
-        {...props}
-      />
-    </>
+    <div
+      data-aurora-reduced-motion={animated ? "animate" : undefined}
+      role={resolvedAriaLabel ? "status" : undefined}
+      aria-label={resolvedAriaLabel}
+      aria-live={resolvedAriaLabel ? "polite" : undefined}
+      aria-busy={resolvedAriaLabel ? true : undefined}
+      aria-hidden={resolvedAriaLabel ? undefined : true}
+      style={{
+        width: resolvedWidth,
+        height: resolvedHeight,
+        borderRadius: resolvedRadius,
+        background:
+          "linear-gradient(90deg, var(--aurora-skeleton-base) 0%, var(--aurora-skeleton-highlight) 50%, var(--aurora-skeleton-base) 100%)",
+        backgroundSize: "200% 100%",
+        animation: animated ? "aurora-skeleton-shimmer 1.2s ease-in-out infinite" : undefined,
+        ...style
+      }}
+      {...props}
+    />
   );
 }

@@ -4,13 +4,14 @@ import { Skeleton } from "./Skeleton";
 
 describe("Skeleton", () => {
   it("is decorative by default", () => {
-    render(<Skeleton data-testid="skeleton" />);
+    const { container } = render(<Skeleton data-testid="skeleton" />);
     const skeleton = screen.getByTestId("skeleton");
 
     expect(skeleton).toHaveAttribute("aria-hidden", "true");
     expect(skeleton).not.toHaveAttribute("role");
     expect(skeleton).toHaveAttribute("data-aurora-reduced-motion", "animate");
     expect(skeleton).toHaveStyle({ animation: "aurora-skeleton-shimmer 1.2s ease-in-out infinite" });
+    expect(container.querySelector("style")).toBeNull();
   });
 
   it("supports status narration when ariaLabel is set", () => {
