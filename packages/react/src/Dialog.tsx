@@ -153,6 +153,7 @@ export function Dialog({
                 </div>
                 {showCloseButton ? (
                   <button
+                    data-aurora-reduced-motion="transition"
                     type="button"
                     onClick={() => closeWithReason("close-button")}
                     aria-label={resolvedCloseLabel}

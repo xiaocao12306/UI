@@ -39,6 +39,19 @@ describe("Drawer", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("marks close-button transitions for reduced-motion fallback", () => {
+    render(
+      <Drawer open onOpenChange={() => {}} title="Filters">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    expect(screen.getByRole("button", { name: "Close drawer" })).toHaveAttribute(
+      "data-aurora-reduced-motion",
+      "transition"
+    );
+  });
+
   it("ignores blank closeLabel and falls back to default close button name", () => {
     render(
       <Drawer open onOpenChange={() => {}} title="Fallback close label drawer" closeLabel="   ">

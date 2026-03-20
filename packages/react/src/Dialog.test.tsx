@@ -29,6 +29,19 @@ describe("Dialog", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("marks close-button transitions for reduced-motion fallback", () => {
+    render(
+      <Dialog open onOpenChange={() => {}} title="Settings">
+        <p>Body</p>
+      </Dialog>
+    );
+
+    expect(screen.getByRole("button", { name: "Close dialog" })).toHaveAttribute(
+      "data-aurora-reduced-motion",
+      "transition"
+    );
+  });
+
   it("ignores blank closeLabel and falls back to default close button name", () => {
     render(
       <Dialog open onOpenChange={() => {}} title="Fallback close label" closeLabel="   ">

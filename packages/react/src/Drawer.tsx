@@ -152,6 +152,7 @@ export function Drawer({
                 </div>
                 {showCloseButton ? (
                   <button
+                    data-aurora-reduced-motion="transition"
                     type="button"
                     onClick={() => closeWithReason("close-button")}
                     aria-label={resolvedCloseLabel}
