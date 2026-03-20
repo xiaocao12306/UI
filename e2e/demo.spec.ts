@@ -27,6 +27,18 @@ test("renders demo homepage", async ({ page }) => {
   await expect(page.getByText("Token-first React component library")).toBeVisible();
 });
 
+test("supports keyboard skip link jump to component sections", async ({ page }) => {
+  await page.goto("/");
+
+  await page.keyboard.press("Tab");
+  const skipLink = page.getByRole("link", { name: "Skip to component sections" });
+  await expect(skipLink).toBeVisible();
+
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/#basic-components$/);
+  await expect(page.getByRole("heading", { name: "Basic Components" })).toBeVisible();
+});
+
 test("switches theme from selector", async ({ page }) => {
   await page.goto("/");
 
