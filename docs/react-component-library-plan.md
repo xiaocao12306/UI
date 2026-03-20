@@ -605,6 +605,9 @@
   - Tabs/Table 键盘回归收口（新增 `userEvent.tab()` 真实 Tab 进入路径回归，覆盖 pointer 后 fallback `focus-visible` 恢复场景）
   - Tooltip 回调去重收口（`onOpenChange` 在目标开闭状态未变化时不再重复触发，补齐 controlled 关闭与重复打开分支回归）
   - Storybook Gate 证据刷新（2026-03-20 latest+5：Overlay 展示收口后 `pnpm storybook:test:ci` 复验通过，含 coverage/docs/parity/structure/play/static/a11y gate + interaction 213/213）
+  - Storybook Overlay 文档壳层收口（`Dialog/Drawer/Dropdown` 统一 `StoryShowcaseFrame`/`StoryFullscreenFrame` 与 telemetry 文本样式，降低内联样式噪音并保持 play 断言稳定）
+  - CommandPalette 跨文档引用收口（active option 查找改为 `list.ownerDocument.getElementById`，避免多文档容器引用漂移；补齐 `ownerDocument` 调用路径单测）
+  - Storybook Gate 证据刷新（2026-03-20 latest+7：Overlay 壳层 + CommandPalette ownerDocument 收口后 `pnpm storybook:test:ci` 复验通过，含 coverage/docs/parity/structure/play/static/a11y gate + interaction 213/213）
   - Demo 诊断层级收口（Telemetry 胶囊与区块背景降权，优先突出组件主交互与内容层级）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）

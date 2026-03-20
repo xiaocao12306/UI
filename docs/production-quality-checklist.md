@@ -486,3 +486,6 @@
 - Tooltip branch-coverage parity: added unit regressions for trigger close-path `preventDefault` guards, `side/sideOffset` positioning contract, and closeDelay cancellation when pointer re-enters tooltip content.
 - Tabs/Table keyboard-entry parity: added `userEvent.tab()` regressions to validate pointer-first flows still restore fallback focus-visible ring when users re-enter via real Tab navigation.
 - Tooltip callback parity: `onOpenChange` now skips duplicate emits when open state is unchanged (controlled and uncontrolled repeat-open paths), with dedicated regression coverage.
+- Storybook overlay shell parity: `Dialog` / `Drawer` / `Dropdown` stories now share showcase shell primitives (`StoryShowcaseFrame` / `StoryFullscreenFrame`) and muted/emphasis telemetry text styles to reduce inline-style drift while preserving interaction assertions.
+- CommandPalette owner-document parity: active-option lookup now resolves via `list.ownerDocument.getElementById`, with unit regression coverage locking the owner-document lookup path before `scrollIntoView`.
+- Storybook gate parity refresh (2026-03-20 latest+7): reran `pnpm storybook:test:ci` after overlay shell + CommandPalette owner-document hardening and confirmed full pass (coverage/docs/parity/structure/play/static/a11y gates + storybook interaction 213/213).
