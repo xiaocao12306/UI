@@ -54,7 +54,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `variant` | `'solid' \| 'ghost' \| 'outline'` | Semantic visual variants without hardcoded color usage. |
 | `size` | `'sm' \| 'md' \| 'lg'` | Token-aligned button density. |
 | `loading` / `loadingText` | `boolean` / `ReactNode` | Locks interactions, sets `aria-busy`, and shows deterministic loading copy. |
-| icon-only naming | `aria-label` / `aria-labelledby` | Required when visible children are icon-only; development builds emit warning when missing. |
+| icon-only naming | `aria-label` / `aria-labelledby` | Recommended on the button itself when visible children are icon-only; rich child content with inline `aria-label` is auto-detected, and development builds warn when naming is still missing. |
 | focus intent policy | primary pointer clears focus-visible | Non-primary pointer interactions keep focus ring state; primary pointer resets keyboard-intent ring before press feedback. |
 | native button props | `ButtonHTMLAttributes` | Supports `type`, `disabled`, `onClick`, keyboard handlers. |
 

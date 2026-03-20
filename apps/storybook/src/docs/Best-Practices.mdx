@@ -43,7 +43,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 
 - Ensure keyboard dismissal paths for overlay components.
 - Keep visible labels or accessible names for form controls.
-- For icon-only buttons, always provide `aria-label` or `aria-labelledby`; do not rely on decorative glyph text.
+- For icon-only buttons, provide `aria-label` or `aria-labelledby` on the button itself; inline child `aria-label` is treated as fallback only, and decorative glyph text should remain `aria-hidden`.
 - Prefer `FormField` wrappers for helper/error copy so `aria-describedby` and `aria-errormessage` stay in sync.
 - For guarded approval flows, use control-level `onClick(event.preventDefault())` on switch-like toggles to block pointer state mutation while preserving keyboard/readout semantics.
 - When using standalone DatePicker error messaging, pass `errorMessageId` with `invalid` so both `aria-describedby` and `aria-errormessage` stay aligned.

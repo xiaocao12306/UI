@@ -151,7 +151,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     }
 
     const hasExplicitName =
-      typeof ariaLabel === "string" || typeof ariaLabelledBy === "string" || typeof title === "string";
+      (typeof ariaLabel === "string" && ariaLabel.trim().length > 0) ||
+      (typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0) ||
+      (typeof title === "string" && title.trim().length > 0);
     const announcedContent = loading ? (loadingText ?? children) : children;
 
     if (!hasExplicitName && !hasReadableText(announcedContent)) {
@@ -300,9 +302,13 @@ function hasReadableText(node: React.ReactNode): boolean {
     const elementProps = node.props as {
       children?: React.ReactNode;
       "aria-hidden"?: boolean | "true" | "false";
+      "aria-label"?: string;
     };
     if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
       return false;
+    }
+    if (typeof elementProps["aria-label"] === "string" && elementProps["aria-label"].trim().length > 0) {
+      return true;
     }
     return hasReadableText(elementProps.children);
   }
