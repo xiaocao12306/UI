@@ -480,6 +480,7 @@
   - CommandPalette 键盘提示精度收口（无可执行命令时移除 `Enter` 键提示，避免 AT/QA 误判可执行路径）
   - CommandPalette IME Escape 收口（组合输入阶段忽略 Escape 的 query reset/dismiss 分支，避免 CJK 确认时误清空查询或关闭面板）
   - Tabs 键盘长按收口（manual 模式 `Enter/Space` repeat 场景忽略重复触发，避免 tab 切换遥测抖动）
+  - Demo Tabs `Enter` 长按验收补齐（新增 Playwright 回归，锁定 manual 模式 `event.repeat=true` 不提前激活 panel）
   - Toast 键盘提示精度收口（堆叠通知仅当前可 Escape 关闭的顶层 toast 暴露 `aria-keyshortcuts="Escape"`，避免 AT/QA 误判不可关闭通知）
   - Toast 键盘长按收口（`Escape` repeat 场景忽略重复 keydown，避免一次长按关闭多条通知与遥测抖动）
   - Toast 动态策略提示收口（`closeOnEscape` 运行时切换后重算 stack shortcut，确保仅当前顶层可关闭 toast 暴露 `aria-keyshortcuts`）
