@@ -241,6 +241,61 @@ export const EscapePreemptedByGlobalHandler: Story = {
   }
 };
 
+function EscapeRepeatDropdown() {
+  const [open, setOpen] = React.useState(false);
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+  const [closeReason, setCloseReason] = React.useState("none");
+
+  return (
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
+      <p style={storyMutedTextStyle}>
+        Escape hook calls:{" "}
+        <strong data-testid="dropdown-repeat-escape-calls" style={storyEmphasisTextStyle}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <p style={storyMutedTextStyle}>
+        Last close reason:{" "}
+        <strong data-testid="dropdown-repeat-close-reason" style={storyEmphasisTextStyle}>
+          {closeReason}
+        </strong>
+      </p>
+      <Dropdown
+        label="Repeat Escape Menu"
+        open={open}
+        onOpenChange={setOpen}
+        onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
+        onCloseReason={setCloseReason}
+        items={items}
+      />
+      </div>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const EscapeRepeatGuard: Story = {
+  render: () => <EscapeRepeatDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const ownerDocument = canvasElement.ownerDocument;
+    const trigger = await canvas.findByRole("button", { name: "Repeat Escape Menu" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Repeat Escape Menu" })).toBeInTheDocument();
+
+    fireEvent.keyDown(ownerDocument, { key: "Escape", repeat: true });
+    await expect(canvas.getByRole("menu", { name: "Repeat Escape Menu" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-repeat-escape-calls")).toHaveTextContent("0");
+    await expect(canvas.getByTestId("dropdown-repeat-close-reason")).toHaveTextContent("none");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("menu", { name: "Repeat Escape Menu" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-repeat-escape-calls")).toHaveTextContent("1");
+    await expect(canvas.getByTestId("dropdown-repeat-close-reason")).toHaveTextContent("escape-key");
+  }
+};
+
 function SelectionTelemetryDropdown() {
   const [selected, setSelected] = React.useState("none");
 

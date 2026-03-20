@@ -335,3 +335,57 @@ export const EscapePreemptedByGlobalHandler: Story = {
     await expect(canvas.getByTestId("popover-escape-calls")).toHaveTextContent("0");
   }
 };
+
+function EscapeRepeatPopoverDemo() {
+  const [open, setOpen] = React.useState(false);
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+  const [closeReason, setCloseReason] = React.useState("none");
+
+  return (
+    <PopoverShowcase>
+      <p style={popoverTelemetryTextStyle}>
+        Escape hook calls:{" "}
+        <strong data-testid="popover-repeat-escape-calls" style={popoverTelemetryValueStyle}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <p style={popoverTelemetryTextStyle}>
+        Last close reason:{" "}
+        <strong data-testid="popover-repeat-close-reason" style={popoverTelemetryValueStyle}>
+          {closeReason}
+        </strong>
+      </p>
+      <Popover
+        triggerLabel="Repeat Escape Popover"
+        open={open}
+        onOpenChange={setOpen}
+        onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
+        onCloseReason={setCloseReason}
+      >
+        <p style={{ margin: 0 }}>Repeated Escape keydown should not close this popover.</p>
+      </Popover>
+    </PopoverShowcase>
+  );
+}
+
+export const EscapeRepeatGuard: Story = {
+  render: () => <EscapeRepeatPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const ownerDocument = canvasElement.ownerDocument;
+    const trigger = await canvas.findByRole("button", { name: "Repeat Escape Popover" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    fireEvent.keyDown(ownerDocument, { key: "Escape", repeat: true });
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-repeat-escape-calls")).toHaveTextContent("0");
+    await expect(canvas.getByTestId("popover-repeat-close-reason")).toHaveTextContent("none");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-repeat-escape-calls")).toHaveTextContent("1");
+    await expect(canvas.getByTestId("popover-repeat-close-reason")).toHaveTextContent("escape-key");
+  }
+};
