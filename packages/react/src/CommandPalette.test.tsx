@@ -775,6 +775,48 @@ describe("CommandPalette", () => {
     expect(activeOption).not.toHaveAttribute("aria-disabled", "true");
   });
 
+  it("uses list ownerDocument when resolving active option ids", async () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        closeOnSelect={false}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "run-tests", label: "Run Tests" }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    const listbox = screen.getByRole("listbox", { name: "Command results" });
+    const secondOption = screen.getByRole("option", { name: "Run Tests" });
+    const ownerDocumentGetById = vi.fn(() => secondOption);
+    const primaryGetByIdSpy = vi.spyOn(document, "getElementById");
+    const originalScrollIntoView = secondOption.scrollIntoView;
+    const scrollIntoViewSpy = vi.fn();
+    secondOption.scrollIntoView = scrollIntoViewSpy;
+
+    try {
+      Object.defineProperty(listbox, "ownerDocument", {
+        configurable: true,
+        value: { getElementById: ownerDocumentGetById }
+      });
+
+      primaryGetByIdSpy.mockClear();
+      fireEvent.keyDown(input, { key: "ArrowDown" });
+
+      await waitFor(() => {
+        expect(ownerDocumentGetById).toHaveBeenCalledTimes(1);
+      });
+      expect(primaryGetByIdSpy).not.toHaveBeenCalled();
+      expect(scrollIntoViewSpy).toHaveBeenCalledWith({ block: "nearest" });
+    } finally {
+      secondOption.scrollIntoView = originalScrollIntoView;
+      primaryGetByIdSpy.mockRestore();
+    }
+  });
+
   it("keeps combobox popup semantics aligned with result listbox visibility", () => {
     render(
       <CommandPalette

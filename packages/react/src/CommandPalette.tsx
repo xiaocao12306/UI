@@ -254,8 +254,12 @@ export function CommandPalette({
     }
 
     const list = listRef.current;
-    const activeOption = document.getElementById(`${listId}-option-${safeActiveIndex}`);
-    if (!list || !activeOption || !list.contains(activeOption)) {
+    if (!list) {
+      return;
+    }
+
+    const activeOption = list.ownerDocument.getElementById(`${listId}-option-${safeActiveIndex}`);
+    if (!activeOption || !list.contains(activeOption)) {
       return;
     }
 
