@@ -20,6 +20,20 @@ async function readProviderCssVariable(page: Page, variableName: string) {
     );
 }
 
+async function dispatchModifiedEscape(page: Page) {
+  await page.evaluate(() => {
+    const combinations = [
+      { ctrlKey: true },
+      { altKey: true },
+      { metaKey: true }
+    ];
+
+    combinations.forEach((modifiers) => {
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, ...modifiers }));
+    });
+  });
+}
+
 test("renders demo homepage", async ({ page }) => {
   await page.goto("/");
 
@@ -151,6 +165,20 @@ test("keeps dialog open when Escape is preempted by a global handler", async ({ 
   await expect(dialog).toBeHidden();
 });
 
+test("keeps dialog open when Escape is combined with modifier shortcuts", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Dialog" }).click();
+  const dialog = page.getByRole("dialog").filter({ hasText: "Dialog Example" });
+  await expect(dialog).toBeVisible();
+
+  await dispatchModifiedEscape(page);
+  await expect(dialog).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+});
+
 test("reports dialog close reason telemetry for close button, Escape, and outside pointer", async ({
   page
 }) => {
@@ -243,6 +271,20 @@ test("keeps drawer open when Escape is preempted by a global handler", async ({ 
       delete globalWindow.__demoPreemptEscape;
     }
   });
+
+  await page.keyboard.press("Escape");
+  await expect(drawer).toBeHidden();
+});
+
+test("keeps drawer open when Escape is combined with modifier shortcuts", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Drawer" }).click();
+  const drawer = page.getByRole("dialog", { name: "Drawer Example" });
+  await expect(drawer).toBeVisible();
+
+  await dispatchModifiedEscape(page);
+  await expect(drawer).toBeVisible();
 
   await page.keyboard.press("Escape");
   await expect(drawer).toBeHidden();
@@ -636,6 +678,22 @@ test("keeps command palette open when Escape is preempted by a global handler", 
       delete globalWindow.__demoPreemptEscape;
     }
   });
+
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeHidden();
+});
+
+test("keeps command palette open when Escape is combined with modifier shortcuts", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await expect(palette).toBeVisible();
+
+  await dispatchModifiedEscape(page);
+  await expect(palette).toBeVisible();
 
   await page.keyboard.press("Escape");
   await expect(palette).toBeHidden();
@@ -1194,6 +1252,20 @@ test("keeps popover open when Escape is preempted by a global handler", async ({
   await expect(popover).toBeHidden();
 });
 
+test("keeps popover open when Escape is combined with modifier shortcuts", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Popover" }).click();
+  const popover = page.getByRole("dialog", { name: "Popover content" });
+  await expect(popover).toBeVisible();
+
+  await dispatchModifiedEscape(page);
+  await expect(popover).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(popover).toBeHidden();
+});
+
 test("reports popover close reason telemetry for trigger, Escape, and outside pointer", async ({
   page
 }) => {
@@ -1373,6 +1445,21 @@ test("keeps dropdown open when Escape is preempted by a global handler", async (
       delete globalWindow.__demoPreemptEscape;
     }
   });
+
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+});
+
+test("keeps dropdown open when Escape is combined with modifier shortcuts", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  await trigger.click();
+  const menu = page.getByRole("menu", { name: "Actions" });
+  await expect(menu).toBeVisible();
+
+  await dispatchModifiedEscape(page);
+  await expect(menu).toBeVisible();
 
   await page.keyboard.press("Escape");
   await expect(menu).toBeHidden();
