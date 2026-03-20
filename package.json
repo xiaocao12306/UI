@@ -53,7 +53,7 @@
     "release:preflight:chromatic": "node scripts/release-preflight.mjs --scope=chromatic",
     "release:preflight:publish": "node scripts/release-preflight.mjs --scope=publish",
     "release:dry-run": "node scripts/release-dry-run.mjs",
-    "release:gate:ci": "pnpm verify && pnpm release:exports:check && pnpm coverage:gate && pnpm demo:e2e && pnpm demo:dist:check && pnpm storybook:test:ci",
+    "release:gate:ci": "pnpm verify && pnpm release:exports:check && pnpm coverage:gate && pnpm demo:dist:check && pnpm demo:e2e && pnpm storybook:test:ci",
     "release:gate": "pnpm release:gate:ci && pnpm release:dry-run",
     "release": "changeset publish"
   },
