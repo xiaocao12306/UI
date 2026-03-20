@@ -129,6 +129,27 @@ describe("Combobox", () => {
     expect(screen.getByRole("listbox")).toBeInTheDocument();
   });
 
+  it("keeps options out of tab order for aria-activedescendant pattern", () => {
+    render(<Combobox options={options} onValueChange={() => {}} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+
+    expect(screen.getByRole("option", { name: "React" })).toHaveAttribute("tabindex", "-1");
+    expect(screen.getByRole("option", { name: "Vue" })).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("keeps combobox focus when selecting an option with primary pointer down", () => {
+    render(<Combobox options={options} onValueChange={() => {}} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    const option = screen.getByRole("option", { name: "React" });
+
+    fireEvent.mouseDown(option, { button: 0 });
+    expect(input).toHaveFocus();
+  });
+
   it("shows custom empty message for no matches", () => {
     render(<Combobox options={options} onValueChange={() => {}} emptyMessage="No frameworks available." />);
 

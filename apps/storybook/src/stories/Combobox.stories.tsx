@@ -100,6 +100,23 @@ export const BlankAriaLabelFallback: Story = {
   }
 };
 
+export const ActivedescendantFocusModel: Story = {
+  args: {
+    ariaLabel: "Framework focus model"
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Framework focus model" });
+
+    await userEvent.click(input);
+    const option = canvas.getByRole("option", { name: "React" });
+    await expect(option).toHaveAttribute("tabindex", "-1");
+
+    await userEvent.click(option);
+    await expect(input).toHaveFocus();
+  }
+};
+
 export const DisabledState: Story = {
   args: {
     ariaLabel: "Framework disabled",

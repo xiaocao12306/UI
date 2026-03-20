@@ -49,6 +49,7 @@ export function Combobox({
 }: ComboboxProps) {
   const listId = React.useId();
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const [query, setQuery] = React.useState("");
@@ -168,6 +169,7 @@ export function Combobox({
   return (
     <div ref={rootRef} style={{ display: "grid", gap: 8 }}>
       <Input
+        ref={inputRef}
         id={id}
         role="combobox"
         aria-autocomplete="list"
@@ -275,9 +277,17 @@ export function Combobox({
                   id={`${listId}-option-${index}`}
                   type="button"
                   role="option"
+                  tabIndex={-1}
                   aria-selected={selected}
                   aria-disabled={item.disabled || undefined}
                   disabled={item.disabled}
+                  onMouseDown={(event) => {
+                    if (event.button !== 0 || item.disabled) {
+                      return;
+                    }
+                    event.preventDefault();
+                    inputRef.current?.focus();
+                  }}
                   onMouseEnter={() => {
                     if (!item.disabled) {
                       setActiveIndex(index);
