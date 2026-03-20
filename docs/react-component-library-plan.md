@@ -670,6 +670,7 @@
   - Dialog/Drawer 跨文档挂载回归（新增 iframe 宿主回归，验证 `role=\"dialog\"` 内容落在次文档 body 且不泄漏到主文档，锁定弹层跨文档可用性）
   - Dialog/Drawer 跨文档滚动锁收口（滚动锁定改为等待 panel 节点就绪后按 `ownerDocument` 绑定，避免 Portal 初始阶段误锁主文档；补齐 iframe 宿主滚动锁/释放回归）
   - Popover/Dropdown 跨文档 dismiss 隔离回归（新增 iframe 场景 Escape/outside-pointer 回归，锁定主文档与次文档弹层关闭互不串扰）
+  - Combobox 跨文档 outside-pointer 隔离回归（新增主文档/iframe 并存场景回归，确保外部点击只关闭当前文档下拉，不误关闭他文档实例）
   - Storybook Overlay 跨文档指引收口（`Component-API`/`Best-Practices` 补充 `ownerDocument` 宿主与 dismiss 事件作用域说明，降低 iframe/multi-root 集成歧义）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
