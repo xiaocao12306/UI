@@ -41,6 +41,26 @@ describe("Table", () => {
     expect(screen.getByRole("rowheader", { name: "Dialog" })).toBeInTheDocument();
   });
 
+  it("marks sortable-header transitions for reduced-motion fallback", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Name sort ascending" })).toHaveAttribute(
+      "data-aurora-reduced-motion",
+      "transition"
+    );
+  });
+
   it("warns when rowKey returns duplicate values", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});

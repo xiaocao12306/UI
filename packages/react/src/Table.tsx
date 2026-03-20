@@ -481,6 +481,7 @@ export function Table<T>({
                 >
                   {sortable ? (
                     <button
+                      data-aurora-reduced-motion="transition"
                       type="button"
                       ref={(node) => {
                         sortButtonRefs.current[key] = node;

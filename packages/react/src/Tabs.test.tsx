@@ -20,6 +20,21 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
+  it("marks tab trigger transitions for reduced-motion fallback", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("data-aurora-reduced-motion", "transition");
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute("data-aurora-reduced-motion", "transition");
+  });
+
   it("supports keyboard navigation", () => {
     render(
       <Tabs

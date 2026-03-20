@@ -365,6 +365,7 @@ export function Tabs({
 
           return (
             <button
+              data-aurora-reduced-motion="transition"
               key={item.key}
               ref={(node) => {
                 tabRefs.current[index] = node;
