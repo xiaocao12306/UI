@@ -685,9 +685,12 @@
   - Dialog/Drawer 修饰键 Escape 验收补齐（补充 `Ctrl/Meta/Alt + Escape` 组件级单测与 Storybook `EscapePreemptedByGlobalHandler` 断言，锁定 dismiss hook 与 close reason 不受组合键误触发）
   - Popover/Dropdown 修饰键 Escape 验收补齐（补充 `Ctrl/Meta/Alt + Escape` 组件级单测与 Storybook `EscapePreemptedByGlobalHandler` 断言，锁定 overlay dismiss 不劫持宿主组合快捷键）
   - Toast 修饰键 Escape 验收补齐（新增 Demo E2E `Ctrl/Meta/Alt + Escape` no-op 回归，锁定通知在宿主组合快捷键下不误关闭）
+  - DismissableLayer Shift+Escape 语义锁定（补齐 primitives 回归，确保仅 `Ctrl/Meta/Alt + Escape` 被过滤，`Shift + Escape` 仍可触发正常 dismiss）
+  - Demo Dialog Shift+Escape 验收补齐（新增 Playwright 回归，锁定真实用户路径下 `Shift + Escape` 可关闭弹窗）
   - Demo E2E 修饰键 Escape 验收补齐（新增 Dialog/Drawer/CommandPalette/Popover/Dropdown 五条 `Ctrl/Meta/Alt + Escape` no-op 回归，锁定真实用户路径下 overlay 不误关闭）
   - Demo E2E 证据刷新（2026-03-20 latest+28：`pnpm demo:e2e` 全量复验通过，`81/81`）
   - Demo E2E 证据刷新（2026-03-21 latest+29：补齐 Toast 修饰键 Escape no-op 回归后，`pnpm demo:e2e` 全量复验通过，`82/82`）
+  - Demo E2E 证据刷新（2026-03-21 latest+31：补齐 Dialog `Shift + Escape` 回归后，`pnpm demo:e2e` 全量复验通过，`83/83`）
   - Release Gate 证据刷新（2026-03-20 latest+27：Overlay 修饰键 Escape 横向收口并同步 demo dist 后，`pnpm release:gate:ci` 全链路复验通过，含 verify + coverage + demo e2e `76/76` + demo dist + storybook interaction `221/221`）
   - Release Gate 证据刷新（2026-03-21 latest+30：补齐 Toast 修饰键 Escape Demo 回归后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage + demo e2e `82/82` + demo dist + storybook interaction `221/221`）
 - 进行中
