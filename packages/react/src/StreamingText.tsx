@@ -1,4 +1,5 @@
 import * as React from "react";
+import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
 export type StreamingTextProps = React.ComponentPropsWithoutRef<"span"> & {
   text: string;
@@ -13,6 +14,7 @@ export type StreamingTextProps = React.ComponentPropsWithoutRef<"span"> & {
   onProgress?: (visibleText: string, count: number, total: number) => void;
   live?: "polite" | "assertive" | "off";
   label?: string;
+  respectReducedMotion?: boolean;
 };
 
 export function StreamingText({
@@ -28,10 +30,13 @@ export function StreamingText({
   onProgress,
   live = "polite",
   label = "Streaming text",
+  respectReducedMotion = true,
   style,
   ...props
 }: StreamingTextProps) {
   const rootRef = React.useRef<HTMLSpanElement | null>(null);
+  const prefersReducedMotion = usePrefersReducedMotion(rootRef);
+  const shouldStream = streaming && !(respectReducedMotion && prefersReducedMotion);
   const [visibleText, setVisibleText] = React.useState(streaming ? "" : text);
   const completedRef = React.useRef(false);
   const totalLength = text.length;
@@ -43,7 +48,7 @@ export function StreamingText({
   React.useEffect(() => {
     completedRef.current = false;
 
-    if (!streaming) {
+    if (!shouldStream) {
       setVisibleText(text);
       if (!completedRef.current) {
         completedRef.current = true;
@@ -92,10 +97,10 @@ export function StreamingText({
         ownerWindow.clearInterval(intervalId);
       }
     };
-  }, [onComplete, onProgress, speed, startDelay, streaming, text, totalLength]);
+  }, [onComplete, onProgress, shouldStream, speed, startDelay, text, totalLength]);
 
   const isComplete = visibleText.length >= totalLength;
-  const showCursor = cursor && streaming && (!isComplete || showCursorWhenDone);
+  const showCursor = cursor && shouldStream && (!isComplete || showCursorWhenDone);
 
   return (
     <span
@@ -103,7 +108,7 @@ export function StreamingText({
       role="status"
       aria-label={resolvedLabel}
       aria-live={live}
-      aria-busy={streaming && !isComplete}
+      aria-busy={shouldStream && !isComplete}
       style={{ whiteSpace: preserveLineBreaks ? "pre-wrap" : "normal", ...style }}
       {...props}
     >

@@ -73,4 +73,62 @@ describe("StreamingText", () => {
     clearTimeoutSpy.mockRestore();
     iframe.remove();
   });
+
+  it("respects reduced-motion and renders full text immediately", () => {
+    const restoreMatchMedia = mockMatchMedia(true);
+    const onComplete = vi.fn();
+
+    render(<StreamingText text="Reduced motion response" onComplete={onComplete} />);
+    const status = screen.getByRole("status", { name: "Streaming text" });
+
+    expect(status).toHaveTextContent("Reduced motion response");
+    expect(status).toHaveAttribute("aria-busy", "false");
+    expect(onComplete).toHaveBeenCalledTimes(1);
+
+    restoreMatchMedia();
+  });
+
+  it("keeps streaming when respectReducedMotion is disabled", () => {
+    vi.useFakeTimers();
+    const restoreMatchMedia = mockMatchMedia(true);
+
+    render(<StreamingText text="AB" speed={20} respectReducedMotion={false} />);
+    const status = screen.getByRole("status", { name: "Streaming text" });
+    expect(status).toHaveTextContent("|");
+
+    act(() => {
+      vi.advanceTimersByTime(20);
+    });
+    expect(status).toHaveTextContent("A|");
+
+    restoreMatchMedia();
+    vi.useRealTimers();
+  });
 });
+
+function mockMatchMedia(matches: boolean) {
+  const original = window.matchMedia;
+
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    writable: true,
+    value: vi.fn().mockImplementation(() => ({
+      matches,
+      media: "(prefers-reduced-motion: reduce)",
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn()
+    }))
+  });
+
+  return () => {
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      writable: true,
+      value: original
+    });
+  };
+}

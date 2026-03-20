@@ -526,6 +526,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `running` | `boolean` | Pause/resume the animated dots. |
 | `interval` / `dotCount` | `number` | Controls animation rhythm and max visible dots. |
+| `respectReducedMotion` | `boolean` | Defaults to `true`; when OS reduced-motion is enabled, dots stay static while loading semantics remain intact. |
 | `label` / `live` | `string` / `'polite' \| 'assertive' \| 'off'` | Screen-reader narration and live-region urgency; blank `label` values are ignored and fallback to `Loading`. |
 
 <Canvas of={LoadingDotsStories.Paused} />
@@ -540,6 +541,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `streaming` | `boolean` | Toggle realtime token streaming vs instant completion mode. |
 | `speed` / `startDelay` | `number` | Controls token cadence and delayed start. |
 | `cursorChar` / `showCursorWhenDone` | `string` / `boolean` | Cursor visual customization and completion behavior. |
+| `respectReducedMotion` | `boolean` | Defaults to `true`; reduced-motion users see immediate final text and completion callbacks without token-by-token animation. |
 | `label` | `string` | Accessible narration label for streaming status; blank values are ignored and fallback to `Streaming text`. |
 | `onProgress` / `onComplete` | callbacks | Lifecycle hooks for telemetry and completion flow. |
 

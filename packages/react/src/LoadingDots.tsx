@@ -1,10 +1,12 @@
 import * as React from "react";
+import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
 export type LoadingDotsProps = React.ComponentPropsWithoutRef<"span"> & {
   label?: string;
   interval?: number;
   dotCount?: number;
   running?: boolean;
+  respectReducedMotion?: boolean;
   live?: "polite" | "assertive" | "off";
 };
 
@@ -17,12 +19,15 @@ export function LoadingDots({
   interval = 280,
   dotCount = 3,
   running = true,
+  respectReducedMotion = true,
   live,
   style,
   ...props
 }: LoadingDotsProps) {
   const rootRef = React.useRef<HTMLSpanElement | null>(null);
+  const prefersReducedMotion = usePrefersReducedMotion(rootRef);
   const safeDotCount = clampDotCount(dotCount);
+  const shouldAnimate = running && !(respectReducedMotion && prefersReducedMotion);
   const resolvedLabel =
     typeof label === "string" && label.trim().length > 0
       ? label.trim()
@@ -31,10 +36,10 @@ export function LoadingDots({
 
   React.useEffect(() => {
     setIndex(0);
-  }, [safeDotCount, running]);
+  }, [safeDotCount, shouldAnimate]);
 
   React.useEffect(() => {
-    if (!running) {
+    if (!shouldAnimate) {
       return;
     }
 
@@ -46,9 +51,9 @@ export function LoadingDots({
     return () => {
       ownerWindow.clearInterval(id);
     };
-  }, [interval, running, safeDotCount]);
+  }, [interval, safeDotCount, shouldAnimate]);
 
-  const visibleLength = running ? index + 1 : safeDotCount;
+  const visibleLength = shouldAnimate ? index + 1 : safeDotCount;
   const dotText = ".".repeat(visibleLength).padEnd(safeDotCount, " ");
   const ariaLive = live ?? (running ? "polite" : "off");
 

@@ -66,4 +66,65 @@ describe("LoadingDots", () => {
     clearIntervalSpy.mockRestore();
     iframe.remove();
   });
+
+  it("respects reduced-motion and keeps dots static when running", () => {
+    vi.useFakeTimers();
+    const restoreMatchMedia = mockMatchMedia(true);
+
+    render(<LoadingDots dotCount={4} />);
+    const dots = screen.getByRole("status", { name: "Loading" });
+    expect(dots).toHaveTextContent("....");
+
+    act(() => {
+      vi.advanceTimersByTime(800);
+    });
+    expect(dots).toHaveTextContent("....");
+
+    restoreMatchMedia();
+    vi.useRealTimers();
+  });
+
+  it("allows animation under reduced-motion when respectReducedMotion is disabled", () => {
+    vi.useFakeTimers();
+    const restoreMatchMedia = mockMatchMedia(true);
+
+    render(<LoadingDots interval={120} dotCount={3} respectReducedMotion={false} />);
+    const dots = screen.getByRole("status", { name: "Loading" });
+    expect(dots.textContent).toBe(".  ");
+
+    act(() => {
+      vi.advanceTimersByTime(120);
+    });
+    expect(dots.textContent).toBe(".. ");
+
+    restoreMatchMedia();
+    vi.useRealTimers();
+  });
 });
+
+function mockMatchMedia(matches: boolean) {
+  const original = window.matchMedia;
+
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    writable: true,
+    value: vi.fn().mockImplementation(() => ({
+      matches,
+      media: "(prefers-reduced-motion: reduce)",
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn()
+    }))
+  });
+
+  return () => {
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      writable: true,
+      value: original
+    });
+  };
+}
