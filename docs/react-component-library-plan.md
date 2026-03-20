@@ -718,6 +718,7 @@
   - 发布门禁 fail-fast 顺序收口（`release:gate:ci` 将 `demo:dist:check` 前置到 `demo:e2e` 前，减少静态产物漂移场景的无效长跑；同步 README 与 `docs/testing-and-release.md` 命令顺序）
   - Release Gate 证据刷新（2026-03-21 latest+37：同步 demo/storybook 静态产物后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage + demo e2e `85/85` + demo dist + storybook interaction `221/221`）
   - Release Gate 证据刷新（2026-03-21 latest+42：在 Escape 长按横向补测完成后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage（`40 files / 596 tests`）+ demo e2e `90/90` + demo dist + storybook interaction `221/221`）
+  - Release Gate 证据刷新（2026-03-21 latest+44：补齐 Popover/Dropdown `Escape repeat` 验收后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage（`40 files / 598 tests`）+ demo e2e `92/92` + demo dist + storybook interaction `221/221`）
   - Release Dry-Run 证据刷新（2026-03-21 latest+33：`pnpm release:dry-run` 通过，`@aurora-ui/react` `77.8 kB / 480.2 kB`、`@aurora-ui/primitives` `15.0 kB / 74.3 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
