@@ -161,6 +161,8 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Guard Ctrl/Cmd + Enter submission against active IME composition to avoid accidental sends for CJK input.
 - Show reasoning disclosure with explicit user intent (default collapsed).
 - Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
+- Keep streaming-code narration `live="off"` for high-frequency token output; enable `live="polite"` only when progressive code updates must be announced.
+- Provide explicit `label` for streaming code regions so screen-reader users can distinguish concurrent AI outputs.
 
 <Canvas of={PromptInputStories.WithAiRequestState} />
 <Canvas of={MessageBubbleStories.Conversation} />

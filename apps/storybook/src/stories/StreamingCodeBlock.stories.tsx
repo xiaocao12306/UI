@@ -17,7 +17,9 @@ const meta = {
   args: {
     language: "bash",
     code: "pnpm verify",
-    speed: 12
+    speed: 12,
+    label: "CI command stream",
+    live: "off"
   }
 } satisfies Meta<typeof StreamingCodeBlock>;
 
@@ -29,6 +31,9 @@ export const Default: Story = {
     const root = canvasElement.querySelector("[aria-busy]") as HTMLElement;
     const codeNode = canvasElement.querySelector("code") as HTMLElement;
 
+    await expect(root).toHaveAttribute("role", "region");
+    await expect(root).toHaveAttribute("aria-label", "CI command stream");
+    await expect(root).toHaveAttribute("aria-live", "off");
     await expect(root).toHaveAttribute("aria-busy", "true");
     await waitFor(() => {
       expect(codeNode).toHaveTextContent("pnpm verify");
@@ -42,5 +47,21 @@ export const InstantRender: Story = {
     language: "ts",
     code: "export const releaseReady = true;",
     speed: 0
+  }
+};
+
+export const LiveNarration: Story = {
+  args: {
+    language: "tsx",
+    code: "export function ShipGate() { return true; }",
+    speed: 10,
+    live: "polite",
+    label: "Release streaming code output"
+  },
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.querySelector("[aria-busy]") as HTMLElement;
+
+    await expect(root).toHaveAttribute("aria-label", "Release streaming code output");
+    await expect(root).toHaveAttribute("aria-live", "polite");
   }
 };

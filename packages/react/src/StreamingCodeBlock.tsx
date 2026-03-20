@@ -1,14 +1,26 @@
 import * as React from "react";
 
-export type StreamingCodeBlockProps = {
+export type StreamingCodeBlockProps = React.ComponentPropsWithoutRef<"div"> & {
   code: string;
   language?: string;
   speed?: number;
+  label?: string;
+  live?: "polite" | "assertive" | "off";
 };
 
-export function StreamingCodeBlock({ code, language = "txt", speed = 8 }: StreamingCodeBlockProps) {
+export function StreamingCodeBlock({
+  code,
+  language = "txt",
+  speed = 8,
+  label = "Streaming code block",
+  live = "off",
+  style,
+  ...props
+}: StreamingCodeBlockProps) {
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = React.useState("");
+  const resolvedLabel =
+    typeof label === "string" && label.trim().length > 0 ? label.trim() : "Streaming code block";
 
   React.useEffect(() => {
     if (speed <= 0 || code.length === 0) {
@@ -36,12 +48,17 @@ export function StreamingCodeBlock({ code, language = "txt", speed = 8 }: Stream
   return (
     <div
       ref={rootRef}
+      role="region"
+      aria-label={resolvedLabel}
+      aria-live={live}
       aria-busy={visible.length < code.length}
       style={{
         border: "1px solid var(--aurora-border-default)",
         borderRadius: "var(--aurora-radius-md)",
-        overflow: "hidden"
+        overflow: "hidden",
+        ...style
       }}
+      {...props}
     >
       <header
         style={{

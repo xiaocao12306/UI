@@ -694,3 +694,5 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `code` | `string` | Source content to progressively reveal. |
 | `language` | `string` | Header hint for syntax context. |
 | `speed` | `number` | Milliseconds per character; `0` renders immediately. |
+| `label` | `string` | Accessible region name for assistive tech context; blank values are ignored and fallback to `Streaming code block`. |
+| `live` | `'polite' \| 'assertive' \| 'off'` | Optional live-region politeness for progressive code narration; defaults to `off`. |

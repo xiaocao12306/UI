@@ -14,6 +14,9 @@ describe("StreamingCodeBlock", () => {
     const codeNode = container.querySelector("code") as HTMLElement;
 
     expect(root).toHaveAttribute("aria-busy", "true");
+    expect(root).toHaveAttribute("role", "region");
+    expect(root).toHaveAttribute("aria-label", "Streaming code block");
+    expect(root).toHaveAttribute("aria-live", "off");
     expect(codeNode).toHaveTextContent("");
 
     act(() => {
@@ -54,6 +57,23 @@ describe("StreamingCodeBlock", () => {
       vi.advanceTimersByTime(20);
     });
     expect(readCode()).toBe("xy");
+  });
+
+  it("supports custom region label and live narration settings", () => {
+    const { container } = render(
+      <StreamingCodeBlock code="const ready = true;" speed={0} label="Release code stream" live="polite" />
+    );
+    const root = container.firstElementChild as HTMLElement;
+
+    expect(root).toHaveAttribute("aria-label", "Release code stream");
+    expect(root).toHaveAttribute("aria-live", "polite");
+  });
+
+  it("ignores blank label values and falls back to default narration name", () => {
+    const { container } = render(<StreamingCodeBlock code="const ready = true;" speed={0} label="   " />);
+    const root = container.firstElementChild as HTMLElement;
+
+    expect(root).toHaveAttribute("aria-label", "Streaming code block");
   });
 
   it("uses ownerDocument window interval timers in iframe-hosted renders", () => {
