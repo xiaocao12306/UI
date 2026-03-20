@@ -44,6 +44,7 @@ export function Drawer({
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
   const closeButtonFocusIntentRef = React.useRef(true);
   const panelRef = React.useRef<HTMLElement | null>(null);
+  const [panelElement, setPanelElement] = React.useState<HTMLElement | null>(null);
   const resolvedCloseLabel =
     typeof closeLabel === "string" && closeLabel.trim().length > 0
       ? closeLabel.trim()
@@ -58,13 +59,12 @@ export function Drawer({
   );
 
   React.useEffect(() => {
-    if (!open) {
+    if (!open || !panelElement) {
       return;
     }
 
-    const ownerDocument = panelRef.current?.ownerDocument ?? document;
-    return lockBodyScroll(ownerDocument);
-  }, [open]);
+    return lockBodyScroll(panelElement.ownerDocument);
+  }, [open, panelElement]);
 
   if (!open) {
     return null;
@@ -110,7 +110,10 @@ export function Drawer({
         >
           <FocusScope restoreFocus={restoreFocus}>
             <aside
-              ref={panelRef}
+              ref={(node) => {
+                panelRef.current = node;
+                setPanelElement(node);
+              }}
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}

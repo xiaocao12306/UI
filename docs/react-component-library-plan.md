@@ -665,6 +665,7 @@
   - Demo AI 代码流命名收口（AI 区块 `StreamingCodeBlock` 显式 `label=\"AI response code stream\"`，补齐 Playwright 对 `role=\"region\" + aria-live=\"off\" + aria-busy` 的可访问性回归）
   - Portal 跨文档宿主收口（`Portal` 默认挂载目标由全局 `document.body` 调整为运行时 `ownerDocument.body`，避免 iframe/multi-root 场景弹层错挂主文档；补齐 `Portal.test.tsx` 回归）
   - Dialog/Drawer 跨文档挂载回归（新增 iframe 宿主回归，验证 `role=\"dialog\"` 内容落在次文档 body 且不泄漏到主文档，锁定弹层跨文档可用性）
+  - Dialog/Drawer 跨文档滚动锁收口（滚动锁定改为等待 panel 节点就绪后按 `ownerDocument` 绑定，避免 Portal 初始阶段误锁主文档；补齐 iframe 宿主滚动锁/释放回归）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

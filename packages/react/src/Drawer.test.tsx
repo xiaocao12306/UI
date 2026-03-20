@@ -497,4 +497,33 @@ describe("Drawer", () => {
       iframe.remove();
     }
   });
+
+  it("locks and restores iframe ownerDocument scroll without mutating main document body", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      throw new Error("expected iframe document to exist");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    let unmount: (() => void) | undefined;
+    try {
+      ({ unmount } = render(
+        <Drawer open onOpenChange={() => {}} title="Iframe scroll lock drawer">
+          <p>Drawer body</p>
+        </Drawer>,
+        { container: iframeContainer, baseElement: iframeDocument.body }
+      ));
+
+      expect(iframeDocument.body.style.overflow).toBe("hidden");
+      expect(document.body.style.overflow).toBe("");
+    } finally {
+      unmount?.();
+      expect(iframeDocument.body.style.overflow).toBe("");
+      iframe.remove();
+    }
+  });
 });

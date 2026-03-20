@@ -463,6 +463,35 @@ describe("Dialog", () => {
     }
   });
 
+  it("locks and restores iframe ownerDocument scroll without mutating main document body", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      throw new Error("expected iframe document to exist");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    let unmount: (() => void) | undefined;
+    try {
+      ({ unmount } = render(
+        <Dialog open onOpenChange={() => {}} title="Iframe scroll lock dialog">
+          <p>Dialog body</p>
+        </Dialog>,
+        { container: iframeContainer, baseElement: iframeDocument.body }
+      ));
+
+      expect(iframeDocument.body.style.overflow).toBe("hidden");
+      expect(document.body.style.overflow).toBe("");
+    } finally {
+      unmount?.();
+      expect(iframeDocument.body.style.overflow).toBe("");
+      iframe.remove();
+    }
+  });
+
   it("restores focus to the previously focused element after close by default", async () => {
     const user = userEvent.setup();
 
