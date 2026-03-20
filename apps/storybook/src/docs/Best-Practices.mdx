@@ -55,6 +55,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Treat blank combobox `ariaLabel` as missing so both combobox and listbox names fall back to readable defaults (`Combobox` / `Combobox options`) instead of empty labels.
 - For command-palette `aria-activedescendant` flows, keep `aria-selected` on the active option so screen readers announce current keyboard focus target.
 - For `aria-activedescendant` combobox flows, keep listbox options out of tab order and preserve input focus during pointer selection.
+- For combobox outside-pointer dismissal, ignore non-primary pointer interactions and honor upstream `pointerdown.preventDefault()` guards so context/right-click and guarded workflows do not collapse the popup unexpectedly.
 - Keep combobox `aria-controls` conditional on popup visibility to avoid dangling listbox references.
 - Keep command-palette combobox `aria-controls` conditional on filtered-result listbox visibility so empty states do not expose stale or missing listbox IDs.
 - Localize command-palette result list semantics with `resultsAriaLabel` in non-English products, instead of relying on the default English listbox label.

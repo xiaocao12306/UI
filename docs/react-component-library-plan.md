@@ -673,6 +673,7 @@
   - Dialog/Drawer 跨文档 dismiss 隔离回归（新增主文档与 iframe 并存场景下 Escape/outside-pointer 回归，锁定关闭事件仅作用于当前文档弹层）
   - Popover/Dropdown 跨文档 dismiss 隔离回归（新增 iframe 场景 Escape/outside-pointer 回归，锁定主文档与次文档弹层关闭互不串扰）
   - Combobox 跨文档 outside-pointer 隔离回归（新增主文档/iframe 并存场景回归，确保外部点击只关闭当前文档下拉，不误关闭他文档实例）
+  - Combobox outside-pointer 主键策略收口（外部关闭仅响应主指针并尊重上游 `pointerdown.preventDefault()`，避免右键/受控拦截流程误关；补齐单测与 Storybook API/Best-Practices 文档）
   - Storybook Overlay 跨文档指引收口（`Component-API`/`Best-Practices` 补充 `ownerDocument` 宿主与 dismiss 事件作用域说明，降低 iframe/multi-root 集成歧义）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）

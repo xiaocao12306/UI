@@ -182,6 +182,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | trigger relation | conditional `aria-controls` | Input references listbox ID only while popup is open. |
 | option focus model | `aria-activedescendant` + `tabIndex=-1` options | Keyboard focus stays on combobox input; pointer selection uses primary-pointer `mousedown` guard to avoid focus theft. |
 | dismiss policy | `Escape` / blur outside | Keeps list open when focus moves into option elements; closes on blur outside root. |
+| outside pointer policy | primary pointer only + preemption guard | Outside `pointerdown` close ignores non-primary mouse buttons and skips close when upstream handlers call `preventDefault()`. |
 
 <Canvas of={ComboboxStories.KeyboardDismissPaths} />
 <Canvas of={ComboboxStories.BlankAriaLabelFallback} />
