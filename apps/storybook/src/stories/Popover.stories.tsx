@@ -369,6 +369,10 @@ function EscapeRepeatPopoverDemo() {
 }
 
 export const EscapeRepeatGuard: Story = {
+  args: {
+    triggerLabel: "Repeat Escape Popover",
+    children: <p style={{ margin: 0 }}>Repeated Escape keydown should not close this popover.</p>
+  },
   render: () => <EscapeRepeatPopoverDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
