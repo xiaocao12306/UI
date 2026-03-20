@@ -50,4 +50,22 @@ describe("usePrefersReducedMotion", () => {
     unmount();
     matchMediaMock.restore();
   });
+
+  it("keeps default false when window.matchMedia is unavailable", () => {
+    const original = window.matchMedia;
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      writable: true,
+      value: undefined
+    });
+
+    render(<ReducedMotionProbe />);
+    expect(screen.getByTestId("probe")).toHaveAttribute("data-reduced-motion", "false");
+
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      writable: true,
+      value: original
+    });
+  });
 });
