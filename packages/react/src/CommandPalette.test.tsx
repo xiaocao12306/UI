@@ -1188,6 +1188,30 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("updates active option on mouse enter for enabled items only", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        closeOnSelect={false}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "disabled-command", label: "Disabled Command", disabled: true },
+          { key: "run-tests", label: "Run Tests" }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.mouseEnter(screen.getByRole("option", { name: "Disabled Command" }));
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.mouseEnter(screen.getByRole("option", { name: "Run Tests" }));
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-2"));
+  });
+
   it("supports PageUp/PageDown navigation across long result lists while skipping disabled options", () => {
     render(
       <CommandPalette
