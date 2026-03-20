@@ -1621,10 +1621,14 @@ test("updates ai section prompt and reasoning trace", async ({ page }) => {
   await expect(reasoningToggle).toHaveAttribute("aria-expanded", "true");
   await expect(aiSection.getByText("Generate form schema and OTP fallback path.")).toBeVisible();
 
+  const streamingCodeRegion = aiSection.getByRole("region", { name: "AI response code stream" });
+  await expect(streamingCodeRegion).toHaveAttribute("aria-live", "off");
+
   await expect(aiSection.locator("code")).toContainText("export function OtpFallback()", {
     timeout: 5000
   });
   await expect(
     aiSection.locator('[aria-busy="true"]').filter({ hasText: "OtpFallback" })
   ).toHaveCount(0);
+  await expect(streamingCodeRegion).toHaveAttribute("aria-busy", "false");
 });

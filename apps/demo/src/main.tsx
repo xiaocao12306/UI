@@ -1549,6 +1549,7 @@ function App() {
                   />
                   <StreamingCodeBlock
                     language="tsx"
+                    label="AI response code stream"
                     code={`export function OtpFallback() {
   const [step, setStep] = useState("verify");
   return <div>{step}</div>;
