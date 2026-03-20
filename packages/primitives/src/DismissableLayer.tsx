@@ -49,6 +49,10 @@ function isComposingKeyEvent(event: KeyboardEvent) {
   return event.isComposing || event.keyCode === 229;
 }
 
+function isRepeatedKeyEvent(event: KeyboardEvent) {
+  return event.repeat;
+}
+
 function isModifiedEscapeEvent(event: KeyboardEvent) {
   return event.altKey || event.ctrlKey || event.metaKey;
 }
@@ -97,6 +101,9 @@ export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLaye
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") {
+        return;
+      }
+      if (isRepeatedKeyEvent(event)) {
         return;
       }
       if (isComposingKeyEvent(event)) {

@@ -197,6 +197,25 @@ describe("DismissableLayer", () => {
     expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 
+  it("ignores repeated Escape keydown and only reacts to the first keydown", () => {
+    const onDismiss = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+
+    render(
+      <DismissableLayer onDismiss={onDismiss} onEscapeKeyDown={onEscapeKeyDown}>
+        <div>Layer body</div>
+      </DismissableLayer>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape", repeat: true });
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onDismiss).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onDismiss).toHaveBeenCalledTimes(1);
+  });
+
   it("skips escape callback and dismiss when event is preempted upstream", () => {
     const onDismiss = vi.fn();
     const onEscapeKeyDown = vi.fn();
