@@ -256,6 +256,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`isComposing` / `keyCode=229`) to prevent accidental close while confirming CJK input. |
 | Escape priority | preempted events skip dialog hook/dismiss | If higher-level handlers already `preventDefault()` Escape, dialog stays open and does not fire `onEscapeKeyDown`. |
 | nested dismiss order | top layer first | Nested overlay stacks (for example dropdown inside dialog) dismiss one layer per Escape/outside interaction. |
+| portal host scope | `ownerDocument.body` auto-target | Dialog portal mounts to the invoking document root (including iframe/multi-root hosts) instead of always using top-level `document.body`. |
 
 <Canvas of={DialogStories.NestedDismissOrder} />
 <Canvas of={DialogStories.DismissGuardHooks} />
@@ -283,6 +284,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside drawer | Modal focus scope keeps keyboard focus inside drawer controls while open. |
 | Escape priority | preempted events skip drawer hook/dismiss | If higher-level handlers already `preventDefault()` Escape, drawer stays open and does not fire `onEscapeKeyDown`. |
 | nested dismiss order | top layer first | Nested overlays inside drawer dismiss one layer per Escape/outside interaction. |
+| portal host scope | `ownerDocument.body` auto-target | Drawer portal mounts to the invoking document root (including iframe/multi-root hosts) instead of always using top-level `document.body`. |
 
 <Canvas of={DrawerStories.FocusReturn} />
 <Canvas of={DrawerStories.NoFocusReturn} />
@@ -312,6 +314,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | trigger relation | conditional `aria-controls` | Trigger references content ID only while open to avoid dangling ARIA links. |
 | dismiss focus policy | Escape restores trigger focus; outside pointer keeps target focus | Prevents keyboard dead-ends without stealing pointer intent. |
 | Escape priority | preempted events skip popover hook/dismiss | If higher-level handlers already `preventDefault()` Escape, popover stays open and does not fire `onEscapeKeyDown`. |
+| dismiss event scope | `ownerDocument`-scoped layer listeners | Escape/outside-pointer dismiss responds only to events from the popover document root; cross-document events are ignored. |
 
 <Canvas of={PopoverStories.NonDismissible} />
 <Canvas of={PopoverStories.DismissGuardHooks} />
@@ -346,6 +349,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | overlay IME Escape safety | dismiss-layer composition guard | Escape dismiss is ignored during active IME composition to avoid collapsing parent overlays while confirming CJK input. |
 | pointer dismiss focus | outside pointer keeps target focus | Outside pointer dismissal closes menu without forcing focus back to trigger. |
 | nested overlay dismiss | top layer first | Escape/outside dismiss resolves from topmost dismissable layer to avoid collapsing parent overlay stacks in one event. |
+| dismiss event scope | `ownerDocument`-scoped layer listeners | Escape/outside-pointer dismiss responds only to events from the dropdown document root; cross-document events are ignored. |
 
 <Canvas of={DropdownStories.NonDismissible} />
 <Canvas of={DropdownStories.DismissGuardHooks} />
