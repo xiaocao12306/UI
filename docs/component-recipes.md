@@ -354,7 +354,7 @@ export function TableSortTelemetry() {
 }
 ```
 
-## 11. Keyboard Discoverability Pattern (Tabs + Palette + Toast)
+## 14. Keyboard Discoverability Pattern (Tabs + Palette + Toast)
 ```tsx
 import * as React from "react";
 import { Button, CommandPalette, Tabs, Toast, type TabItem } from "@aurora-ui/react";
@@ -407,7 +407,7 @@ export function KeyboardDiscoverabilityDemo() {
 }
 ```
 
-## 12. Overlay Close Reason Trace Template
+## 15. Overlay Close Reason Trace Template
 ```tsx
 import * as React from "react";
 import { Dialog } from "@aurora-ui/react";
@@ -434,7 +434,7 @@ export function OverlayCloseTelemetry() {
 }
 ```
 
-## 13. Overlay Close-Reason Telemetry Panel
+## 16. Overlay Close-Reason Telemetry Panel
 ```tsx
 import * as React from "react";
 import { Button, CommandPalette, Dialog, Drawer, Popover, Toast } from "@aurora-ui/react";
@@ -489,7 +489,7 @@ export function OverlayTelemetryPanel() {
 }
 ```
 
-## 14. Tabs and Table Telemetry Binding
+## 17. Tabs and Table Telemetry Binding
 ```tsx
 import * as React from "react";
 import { Table, Tabs, type TableSortDirection } from "@aurora-ui/react";
