@@ -567,3 +567,4 @@
 - Demo e2e parity refresh (2026-03-20 latest+28): reran full `pnpm demo:e2e` after overlay modified-Escape path expansion and confirmed `81/81` pass.
 - Demo e2e parity refresh (2026-03-21 latest+29): reran full `pnpm demo:e2e` after adding toast modified-Escape no-op regression and confirmed `82/82` pass.
 - Release-gate parity refresh (2026-03-20 latest+27): after overlay modified-Escape hardening across CommandPalette/Dialog/Drawer/Popover/Dropdown and demo dist sync, reran full `pnpm release:gate:ci` and confirmed all gates green (verify + coverage + demo e2e `76/76` + demo dist sync + storybook interaction `221/221`).
+- Release-gate parity refresh (2026-03-21 latest+30): after adding toast modified-Escape demo regression, reran full `pnpm release:gate:ci` and confirmed all gates green (verify + release:exports:check + coverage + demo e2e `82/82` + demo dist sync + storybook interaction `221/221`).
