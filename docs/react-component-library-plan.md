@@ -732,6 +732,8 @@
   - Storybook CommandPalette 长按验收补齐（新增 `EscapeRepeatGuard` story 与 play 断言，锁定 `Escape repeat` 在 query-clear 与 dismiss 链路均为 no-op）
   - Storybook Gate 证据刷新（2026-03-21 latest+50：CommandPalette `EscapeRepeatGuard` 收口并同步 Storybook 静态产物后，`pnpm storybook:test:ci` 全链路复验通过，含 coverage/docs/parity/structure/play/static/a11y gate + interaction `227/227`）
   - Release Gate 证据刷新（2026-03-21 latest+51：CommandPalette 长按 Storybook 收口后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage（`40 files / 598 tests`）+ demo e2e `92/92` + demo dist + storybook interaction `227/227`）
+  - Demo 品牌视觉收口（强化标题/正文/等宽三层字体体系与信息层级，提升演示站品牌辨识度并保持组件交互语义不变）
+  - Demo 证据刷新（2026-03-21 latest+52：`pnpm demo:e2e:grep "renders demo homepage|switches theme from selector"` 通过 `2/2`，`pnpm demo:dist:check` 通过并确认 dist 同步）
   - Release Dry-Run 证据刷新（2026-03-21 latest+33：`pnpm release:dry-run` 通过，`@aurora-ui/react` `77.8 kB / 480.2 kB`、`@aurora-ui/primitives` `15.0 kB / 74.3 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
