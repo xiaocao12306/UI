@@ -984,6 +984,12 @@ export const EscapeShortcutHintPrecision: Story = {
       "ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
     );
 
+    fireEvent.keyDown(input, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(input, { key: "Escape", altKey: true });
+    fireEvent.keyDown(input, { key: "Escape", metaKey: true });
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("escape-hint-query")).toHaveTextContent("release");
+
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
     await expect(canvas.getByTestId("escape-hint-query")).toHaveTextContent("N/A");

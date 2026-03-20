@@ -785,6 +785,36 @@ describe("CommandPalette", () => {
     expect(onCloseReason).toHaveBeenNthCalledWith(2, "outside-pointer");
   });
 
+  it("ignores modified Escape combinations for query clear and dismiss hooks", () => {
+    const onOpenChange = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        onEscapeKeyDown={onEscapeKeyDown}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.change(input, { target: { value: "release" } });
+    expect(input).toHaveValue("release");
+
+    fireEvent.keyDown(input, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(input, { key: "Escape", altKey: true });
+    fireEvent.keyDown(input, { key: "Escape", metaKey: true });
+
+    expect(input).toHaveValue("release");
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  });
+
   it("allows custom dismiss guards by preventing escape/outside events", () => {
     const onOpenChange = vi.fn();
 

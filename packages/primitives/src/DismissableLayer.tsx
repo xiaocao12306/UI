@@ -49,6 +49,10 @@ function isComposingKeyEvent(event: KeyboardEvent) {
   return event.isComposing || event.keyCode === 229;
 }
 
+function isModifiedEscapeEvent(event: KeyboardEvent) {
+  return event.altKey || event.ctrlKey || event.metaKey;
+}
+
 function isPrimaryPointerDownEvent(event: PointerEvent) {
   const button = typeof event.button === "number" ? event.button : 0;
   if (button > 0) {
@@ -96,6 +100,9 @@ export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLaye
         return;
       }
       if (isComposingKeyEvent(event)) {
+        return;
+      }
+      if (isModifiedEscapeEvent(event)) {
         return;
       }
 

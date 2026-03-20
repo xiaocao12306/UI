@@ -163,6 +163,24 @@ describe("DismissableLayer", () => {
     expect(onDismiss).not.toHaveBeenCalled();
   });
 
+  it("ignores modified Escape key combinations for dismiss and hook callbacks", () => {
+    const onDismiss = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+
+    render(
+      <DismissableLayer onDismiss={onDismiss} onEscapeKeyDown={onEscapeKeyDown}>
+        <div>Layer body</div>
+      </DismissableLayer>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "Escape", altKey: true });
+    fireEvent.keyDown(document, { key: "Escape", metaKey: true });
+
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onDismiss).not.toHaveBeenCalled();
+  });
+
   it("skips escape callback and dismiss when event is preempted upstream", () => {
     const onDismiss = vi.fn();
     const onEscapeKeyDown = vi.fn();
