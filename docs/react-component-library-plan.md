@@ -737,6 +737,7 @@
   - Release Dry-Run 证据刷新（2026-03-21 latest+53：`pnpm release:dry-run` 通过，`@aurora-ui/react` `77.8 kB / 480.4 kB`、`@aurora-ui/primitives` `15.0 kB / 74.5 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`）
   - Release Gate 证据刷新（2026-03-21 latest+54：Demo 品牌化改动后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage（`40 files / 598 tests`）+ demo e2e `92/92` + demo dist + storybook interaction `227/227`）
   - Release Dry-Run 证据刷新（2026-03-21 latest+33：`pnpm release:dry-run` 通过，`@aurora-ui/react` `77.8 kB / 480.2 kB`、`@aurora-ui/primitives` `15.0 kB / 74.3 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`）
+  - Storybook/无障碍动效证据刷新（2026-03-21 latest+55：完成 Button/Progress/Skeleton reduced-motion 收口（`data-aurora-reduced-motion` + `GlobalStyles` 媒体查询）并同步 API/Best Practices 文档与 Storybook 静态产物后，`pnpm --filter @aurora-ui/react exec vitest run src/Button.test.tsx src/Progress.test.tsx src/Skeleton.test.tsx src/GlobalStyles.test.tsx` 通过（`27/27`），`pnpm --filter @aurora-ui/storybook-app storybook:test:ci` 通过（`227/227`））
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
