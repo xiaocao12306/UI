@@ -218,6 +218,30 @@ describe("Toast", () => {
     expect(onCloseReason).toHaveBeenCalledWith("escape-key");
   });
 
+  it("ignores repeated Escape keydown before stacked-toast top dismissal", () => {
+    function StackedToasts() {
+      const [firstOpen, setFirstOpen] = React.useState(true);
+      const [secondOpen, setSecondOpen] = React.useState(true);
+
+      return (
+        <>
+          <Toast open={firstOpen} title="First" duration={0} onOpenChange={setFirstOpen} />
+          <Toast open={secondOpen} title="Second" duration={0} onOpenChange={setSecondOpen} />
+        </>
+      );
+    }
+
+    render(<StackedToasts />);
+
+    fireEvent.keyDown(document, { key: "Escape", repeat: true });
+    expect(screen.getByRole("status", { name: "First" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "Second" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.getByRole("status", { name: "First" })).toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: "Second" })).toBeNull();
+  });
+
   it("calls onEscapeKeyDown before closing", () => {
     const onOpenChange = vi.fn();
     const onEscapeKeyDown = vi.fn();
