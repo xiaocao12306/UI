@@ -691,6 +691,7 @@
   - DismissableLayer Escape 长按收口（忽略 `event.repeat=true` 的重复 Escape keydown，避免长按触发多次 dismiss 与关闭遥测抖动）
   - CommandPalette Escape 长按收口（忽略输入框 `event.repeat=true` 的 Escape keydown，避免长按导致查询清空/关闭链路误触发）
   - CommandPalette 即时关闭模式长按收口（`clearQueryOnEscape=false` 时重复 Escape keydown 仅 no-op，不提前触发关闭；补齐 `CommandPalette.test.tsx` 回归）
+  - Demo CommandPalette 即时关闭模式长按验收补齐（新增 Playwright 回归，锁定 `clearQueryOnEscape=false` 时 `Escape repeat` 不提前关闭）
   - Toast 堆叠长按收口补测（补充 stacked toast 在 `Escape repeat` 下 no-op 回归，锁定首个非重复 Escape 才关闭栈顶通知）
   - Demo Dialog Shift+Escape 验收补齐（新增 Playwright 回归，锁定真实用户路径下 `Shift + Escape` 可关闭弹窗）
   - Demo Dialog Escape 长按验收补齐（新增 Playwright 回归，锁定重复 Escape keydown 不关闭、首次有效 Escape 正常关闭）

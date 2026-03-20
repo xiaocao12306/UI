@@ -570,6 +570,7 @@
 - DismissableLayer Escape-repeat parity: primitives now ignore `event.repeat=true` Escape keydowns so long-press does not trigger duplicate dismiss/hook callbacks.
 - CommandPalette Escape-repeat parity: combobox Escape handler now ignores `event.repeat=true` so long-press does not prematurely clear query or close the panel.
 - CommandPalette immediate-dismiss repeat parity: when `clearQueryOnEscape=false`, repeated Escape keydown now remains no-op until the next non-repeat Escape, preventing long-press accidental closes in immediate-dismiss mode.
+- Demo command-palette immediate-dismiss repeat parity: Playwright now validates `clearQueryOnEscape=false` mode keeps palette open under repeated Escape keydown until the first non-repeat Escape.
 - Demo dialog Shift+Escape parity: Playwright now validates that `Shift + Escape` still dismisses Dialog so escape filtering changes cannot accidentally suppress expected keyboard close behavior.
 - Demo dialog Escape-repeat parity: Playwright now validates repeated Escape keydown is ignored while a subsequent non-repeat Escape still dismisses Dialog as expected.
 - Demo command-palette Escape-repeat parity: Playwright now validates repeated Escape keydown keeps query and panel state unchanged until the next non-repeat Escape.
