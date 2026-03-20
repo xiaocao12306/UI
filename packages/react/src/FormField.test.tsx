@@ -148,6 +148,18 @@ describe("FormField", () => {
     expect(input).not.toHaveAttribute("aria-labelledby");
   });
 
+  it("ignores blank aria-label and falls back to generated label association", () => {
+    render(
+      <FormField label="Release scope">
+        <Input aria-label="   " />
+      </FormField>
+    );
+
+    const input = screen.getByRole("textbox", { name: "Release scope" });
+    expect(input).not.toHaveAttribute("aria-label");
+    expect(input).toHaveAttribute("aria-labelledby");
+  });
+
   it("reflects child disabled semantics on the field wrapper", () => {
     render(
       <FormField label="Inherited disabled state">

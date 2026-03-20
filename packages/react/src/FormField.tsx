@@ -28,6 +28,10 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const childInvalid = childProps?.["aria-invalid"] as React.AriaAttributes["aria-invalid"] | undefined;
   const childLabelledBy = childProps?.["aria-labelledby"] as string | undefined;
   const childAriaLabel = childProps?.["aria-label"] as string | undefined;
+  const resolvedChildAriaLabel =
+    typeof childAriaLabel === "string" && childAriaLabel.trim().length > 0
+      ? childAriaLabel.trim()
+      : undefined;
   const childRequired = resolveRequiredState(
     typeof childProps?.required === "boolean" ? childProps.required : undefined,
     childProps?.["aria-required"] as React.AriaAttributes["aria-required"] | undefined
@@ -37,7 +41,7 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const mergedInvalidAria = isInvalid ? true : childInvalidAria;
   const mergedDescribedBy = mergeAriaReferenceIds(childDescribedBy, description ? describedById : undefined, error ? errorId : undefined);
   const mergedErrorMessage = mergeAriaReferenceIds(childErrorMessage, error ? errorId : undefined);
-  const mergedLabelledBy = childAriaLabel
+  const mergedLabelledBy = resolvedChildAriaLabel
     ? childLabelledBy
     : mergeAriaReferenceIds(childLabelledBy, labelId);
 
@@ -45,6 +49,7 @@ export function FormField({ label, htmlFor, description, error, required, disabl
     canCloneControl
       ? React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
           id: controlId,
+          "aria-label": resolvedChildAriaLabel,
           "aria-labelledby": mergedLabelledBy,
           "aria-describedby": mergedDescribedBy,
           "aria-errormessage": mergedErrorMessage,

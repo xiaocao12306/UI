@@ -104,7 +104,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `label` | `ReactNode` | Primary accessible name for the wrapped control via generated `htmlFor`. |
 | `description` / `error` | `ReactNode` | Auto-merges helper and error IDs into child `aria-describedby` contracts. |
 | `required` / `disabled` | `boolean` | Field-level semantics merged with child state without dropping existing control props. |
-| `children` | `ReactNode` | Works with Aurora controls (Input/Select/etc.) and preserves child `aria-*` attributes. |
+| `children` | `ReactNode` | Works with Aurora controls (Input/Select/etc.) and preserves child `aria-*` attributes (blank child `aria-label` is ignored to avoid overriding visible label naming). |
 
 <Canvas of={FormFieldStories.InheritedControlSemantics} />
 
