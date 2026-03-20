@@ -98,6 +98,33 @@ describe("Drawer", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("ignores modified Escape combinations for dismiss and hook callbacks", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+
+    render(
+      <Drawer
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        onEscapeKeyDown={onEscapeKeyDown}
+        title="Shortcut guard drawer"
+      >
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "Escape", altKey: true });
+    fireEvent.keyDown(document, { key: "Escape", metaKey: true });
+
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Shortcut guard drawer" })).toBeInTheDocument();
+  });
+
   it("ignores non-primary outside pointer interactions", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();

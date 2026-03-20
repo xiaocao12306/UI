@@ -487,9 +487,16 @@ function EscapePreemptedDialog() {
 export const EscapePreemptedByGlobalHandler: Story = {
   render: () => <EscapePreemptedDialog />,
   play: async ({ canvasElement }) => {
-    const body = within(canvasElement.ownerDocument.body);
+    const ownerDocument = canvasElement.ownerDocument;
+    const body = within(ownerDocument.body);
 
     await expect(await body.findByRole("dialog", { name: "Preempted escape dialog" })).toBeInTheDocument();
+    fireEvent.keyDown(ownerDocument, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(ownerDocument, { key: "Escape", altKey: true });
+    fireEvent.keyDown(ownerDocument, { key: "Escape", metaKey: true });
+    await expect(body.getByRole("dialog", { name: "Preempted escape dialog" })).toBeInTheDocument();
+    await expect(body.getByTestId("dialog-escape-calls")).toHaveTextContent("0");
+
     await userEvent.keyboard("{Escape}");
     await expect(body.getByRole("dialog", { name: "Preempted escape dialog" })).toBeInTheDocument();
     await expect(body.getByTestId("dialog-escape-calls")).toHaveTextContent("0");

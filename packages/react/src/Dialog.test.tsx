@@ -214,6 +214,33 @@ describe("Dialog", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("ignores modified Escape combinations for dismiss and hook callbacks", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+
+    render(
+      <Dialog
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        onEscapeKeyDown={onEscapeKeyDown}
+        title="Shortcut guard dialog"
+      >
+        <p>Body</p>
+      </Dialog>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "Escape", altKey: true });
+    fireEvent.keyDown(document, { key: "Escape", metaKey: true });
+
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Shortcut guard dialog" })).toBeInTheDocument();
+  });
+
   it("emits close reasons for Escape and outside-pointer dismiss", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();

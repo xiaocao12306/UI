@@ -255,6 +255,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer down keeps keyboard-intent ring state to avoid accidental ring loss during context/right-click interactions. |
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside dialog | Modal focus scope keeps keyboard focus inside dialog controls while open. |
 | IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`isComposing` / `keyCode=229`) to prevent accidental close while confirming CJK input. |
+| modifier-key guard | ignores `Ctrl/Meta/Alt + Escape` | Preserves host/browser modified-key shortcuts and avoids accidental dialog dismiss/hook side effects from combined key chords. |
 | Escape priority | preempted events skip dialog hook/dismiss | If higher-level handlers already `preventDefault()` Escape, dialog stays open and does not fire `onEscapeKeyDown`. |
 | nested dismiss order | top layer first | Nested overlay stacks (for example dropdown inside dialog) dismiss one layer per Escape/outside interaction. |
 | portal host scope | `ownerDocument.body` auto-target | Dialog portal mounts to the invoking document root (including iframe/multi-root hosts) instead of always using top-level `document.body`. |
@@ -283,6 +284,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `closeLabel` | `string` | Localizable close-button accessible name; blank values are ignored and fallback to `Close drawer`. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer down keeps keyboard-intent ring state to avoid accidental ring loss during context/right-click interactions. |
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside drawer | Modal focus scope keeps keyboard focus inside drawer controls while open. |
+| modifier-key guard | ignores `Ctrl/Meta/Alt + Escape` | Preserves host/browser modified-key shortcuts and avoids accidental drawer dismiss/hook side effects from combined key chords. |
 | Escape priority | preempted events skip drawer hook/dismiss | If higher-level handlers already `preventDefault()` Escape, drawer stays open and does not fire `onEscapeKeyDown`. |
 | nested dismiss order | top layer first | Nested overlays inside drawer dismiss one layer per Escape/outside interaction. |
 | portal host scope | `ownerDocument.body` auto-target | Drawer portal mounts to the invoking document root (including iframe/multi-root hosts) instead of always using top-level `document.body`. |
