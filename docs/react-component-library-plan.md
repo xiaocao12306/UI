@@ -661,6 +661,8 @@
   - Demo 区块标题成品化收口（Section 标题新增生产就绪状态胶囊，统一标题区信息层级与品牌观感，并补齐 Playwright `shows production-readiness pills in section headers` 回归）
   - AI 反馈组件跨文档计时器收口（`LoadingDots/StreamingText/StreamingCodeBlock` 的 interval/timeout 统一绑定 `ownerDocument.defaultView`，避免 iframe/multi-root 计时器窗口漂移；补齐 3 个组件 iframe 计时器回归与 Storybook 定向 runner）
   - Release Gate 证据刷新（2026-03-20 latest+25：完成 Tabs/Pagination RTL + Demo 区块状态胶囊 + AI 反馈计时器跨文档收口并同步静态产物后，`pnpm release:gate:ci` 全链路复验通过，含 verify + coverage + demo e2e `76/76` + demo dist + storybook interaction `220/220`）
+  - 发布门禁漂移恢复（跨文档弹层收口后 `release:gate:ci` 复验发现 demo/storybook 静态产物漂移，已同步 `apps/demo/dist` 与 `apps/storybook/storybook-static` 并恢复门禁）
+  - Release Gate 证据刷新（2026-03-20 latest+26：完成 Portal 宿主 + Dialog/Drawer 跨文档滚动锁收口并同步静态产物后，`pnpm release:gate:ci` 全链路复验通过，含 verify + coverage + demo e2e `76/76` + demo dist + storybook interaction `221/221`）
   - StreamingCodeBlock 可访问性收口（新增 `label/live` API，默认 `aria-live="off"` 降低高频播报噪音并支持可命名 region；补齐 `StreamingCodeBlock.test.tsx` 回归、Storybook `LiveNarration` 场景与 API/Best-Practices 文档）
   - Demo AI 代码流命名收口（AI 区块 `StreamingCodeBlock` 显式 `label=\"AI response code stream\"`，补齐 Playwright 对 `role=\"region\" + aria-live=\"off\" + aria-busy` 的可访问性回归）
   - Portal 跨文档宿主收口（`Portal` 默认挂载目标由全局 `document.body` 调整为运行时 `ownerDocument.body`，避免 iframe/multi-root 场景弹层错挂主文档；补齐 `Portal.test.tsx` 回归）
