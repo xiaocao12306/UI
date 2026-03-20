@@ -746,6 +746,7 @@
   - 动效兼容边界补齐（2026-03-21 latest+61：补充 `usePrefersReducedMotion` 在 `window.matchMedia` 缺失环境的降级回归，`pnpm --filter @aurora-ui/react exec vitest run src/usePrefersReducedMotion.test.tsx` 通过（`4/4`））
   - Toast 动效降级证据刷新（2026-03-21 latest+62：为 Toast 容器与关闭按钮补齐 `data-aurora-reduced-motion=\"transition\"` 标记并新增回归断言，`pnpm --filter @aurora-ui/react exec vitest run src/Toast.test.tsx` 通过（`60/60`））
   - Tabs/Table 动效降级证据刷新（2026-03-21 latest+63：为 Tabs tab trigger 与 Table sortable header 按钮补齐 `data-aurora-reduced-motion=\"transition\"` 标记并新增回归断言，`pnpm --filter @aurora-ui/react exec vitest run src/Tabs.test.tsx src/Table.test.tsx` 通过（`121/121`））
+  - 基础控件动效降级证据刷新（2026-03-21 latest+64：为 Button/Input/Textarea/Select/Switch 过渡面补齐 `data-aurora-reduced-motion=\"transition\"` 标记并新增回归断言，`pnpm --filter @aurora-ui/react exec vitest run src/Button.test.tsx src/Input.test.tsx src/Textarea.test.tsx src/Select.test.tsx src/Switch.test.tsx` 通过（`59/59`））
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
