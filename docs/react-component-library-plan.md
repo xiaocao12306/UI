@@ -294,6 +294,7 @@
   - Storybook Toast 危急动作场景补齐（新增 `ActionRequiredDanger`，锁定 `alertdialog` 语义与交互回归）
   - Table 键盘排序收口（`Enter/Space` 触发 sortable header，单测 + Storybook `SortTelemetry` 回归）
   - Tabs 键盘边界收口（`KeyboardNavigationGuide` 增补 `Home/End` + 禁用项跳过的 Storybook 交互断言）
+  - Tabs 翻页键盘收口（新增 `PageUp/PageDown` 上下页签切换并跳过禁用项，补齐单测 + Storybook `KeyboardNavigationGuide` 回归）
   - Data 文档语义收口（Component API / Best Practices 明确 Table `Enter/Space` 键盘排序语义）
   - Demo Data E2E 收口（Table 列排序补齐 `Enter/Space` 键盘激活回归）
   - Demo Tabs E2E 收口（manual 模式补齐 `Space` 激活回归，覆盖 Enter/Space 双路径）

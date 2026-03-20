@@ -308,6 +308,7 @@
 - CommandPalette page-jump parity: long lists now support `PageUp/PageDown` jumps across actionable options while preserving disabled-option skip semantics.
 - CommandPalette shortcut-hint parity: when both `closeOnEscape` and `clearQueryOnEscape` are disabled, combobox `aria-keyshortcuts` now drops `Escape` to avoid advertising unavailable behavior.
 - Tabs shortcut-hint parity: manual mode now advertises `aria-keyshortcuts` only on enabled tabs; disabled tabs omit shortcut metadata to avoid false activation affordances.
+- Tabs page-navigation parity: `PageUp/PageDown` now navigate to previous/next enabled tabs (with disabled-item skip) and preserve manual-mode “focus moves, selection stays” behavior until explicit activation.
 - Table shortcut-hint parity: `aria-keyshortcuts` is now exposed only when sortable headers are actually actionable; loading/empty/single-row disabled states omit the shortcut hint.
 - Table activation-repeat parity: sortable headers now ignore repeated activation keydown (`event.repeat=true`) for `Enter` / `Space` so keyboard long-press does not generate duplicate sort toggles/telemetry.
 - Table loading-sort semantics parity: loading mode now clears header `aria-sort` so assistive tech does not announce stale sorted state while rows and sort controls are non-interactive.
