@@ -502,3 +502,55 @@ export const EscapePreemptedByGlobalHandler: Story = {
     await expect(body.getByTestId("dialog-escape-calls")).toHaveTextContent("0");
   }
 };
+
+function EscapeRepeatDialogDemo() {
+  const [open, setOpen] = React.useState(true);
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+  const [closeReason, setCloseReason] = React.useState("none");
+
+  return (
+    <StoryShowcaseFrame gap={12}>
+      <p style={storyMutedTextStyle}>
+        Escape hook calls:{" "}
+        <strong data-testid="dialog-repeat-escape-calls" style={storyEmphasisTextStyle}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <p style={storyMutedTextStyle}>
+        Last close reason:{" "}
+        <strong data-testid="dialog-repeat-close-reason" style={storyEmphasisTextStyle}>
+          {closeReason}
+        </strong>
+      </p>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Repeat escape dialog"
+        onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
+        onCloseReason={setCloseReason}
+      >
+        <p style={storyParagraphStyle}>Repeated Escape keydown should not close this dialog.</p>
+      </Dialog>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const EscapeRepeatGuard: Story = {
+  render: () => <EscapeRepeatDialogDemo />,
+  play: async ({ canvasElement }) => {
+    const ownerDocument = canvasElement.ownerDocument;
+    const body = within(ownerDocument.body);
+
+    await expect(await body.findByRole("dialog", { name: "Repeat escape dialog" })).toBeInTheDocument();
+
+    fireEvent.keyDown(ownerDocument, { key: "Escape", repeat: true });
+    await expect(body.getByRole("dialog", { name: "Repeat escape dialog" })).toBeInTheDocument();
+    await expect(body.getByTestId("dialog-repeat-escape-calls")).toHaveTextContent("0");
+    await expect(body.getByTestId("dialog-repeat-close-reason")).toHaveTextContent("none");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(body.queryByRole("dialog", { name: "Repeat escape dialog" })).not.toBeInTheDocument();
+    await expect(body.getByTestId("dialog-repeat-escape-calls")).toHaveTextContent("1");
+    await expect(body.getByTestId("dialog-repeat-close-reason")).toHaveTextContent("escape-key");
+  }
+};

@@ -546,3 +546,55 @@ export const EscapePreemptedByGlobalHandler: Story = {
     await expect(body.getByTestId("drawer-escape-calls")).toHaveTextContent("0");
   }
 };
+
+function EscapeRepeatDrawerDemo() {
+  const [open, setOpen] = React.useState(true);
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+  const [closeReason, setCloseReason] = React.useState("none");
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <p style={storyMutedTextStyle}>
+        Escape hook calls:{" "}
+        <strong data-testid="drawer-repeat-escape-calls" style={storyEmphasisTextStyle}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <p style={storyMutedTextStyle}>
+        Last close reason:{" "}
+        <strong data-testid="drawer-repeat-close-reason" style={storyEmphasisTextStyle}>
+          {closeReason}
+        </strong>
+      </p>
+      <Drawer
+        open={open}
+        onOpenChange={setOpen}
+        title="Repeat escape drawer"
+        onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
+        onCloseReason={setCloseReason}
+      >
+        <p style={storyParagraphStyle}>Repeated Escape keydown should not close this drawer.</p>
+      </Drawer>
+    </StoryFullscreenFrame>
+  );
+}
+
+export const EscapeRepeatGuard: Story = {
+  render: () => <EscapeRepeatDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const ownerDocument = canvasElement.ownerDocument;
+    const body = within(ownerDocument.body);
+
+    await expect(await body.findByRole("dialog", { name: "Repeat escape drawer" })).toBeInTheDocument();
+
+    fireEvent.keyDown(ownerDocument, { key: "Escape", repeat: true });
+    await expect(body.getByRole("dialog", { name: "Repeat escape drawer" })).toBeInTheDocument();
+    await expect(body.getByTestId("drawer-repeat-escape-calls")).toHaveTextContent("0");
+    await expect(body.getByTestId("drawer-repeat-close-reason")).toHaveTextContent("none");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(body.queryByRole("dialog", { name: "Repeat escape drawer" })).not.toBeInTheDocument();
+    await expect(body.getByTestId("drawer-repeat-escape-calls")).toHaveTextContent("1");
+    await expect(body.getByTestId("drawer-repeat-close-reason")).toHaveTextContent("escape-key");
+  }
+};
