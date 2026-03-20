@@ -54,6 +54,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `variant` | `'solid' \| 'ghost' \| 'outline'` | Semantic visual variants without hardcoded color usage. |
 | `size` | `'sm' \| 'md' \| 'lg'` | Token-aligned button density. |
 | `loading` / `loadingText` | `boolean` / `ReactNode` | Locks interactions, sets `aria-busy`, and shows deterministic loading copy. |
+| reduced-motion fallback | loading spinner tagged with `data-aurora-reduced-motion="animate"` | With `GlobalStyles`, spinner animation auto-disables under `prefers-reduced-motion` without changing loading semantics. |
 | icon-only naming | non-empty `aria-label` / `aria-labelledby` | Recommended on the button itself when visible children are icon-only; rich child content with inline `aria-label` is auto-detected, and development builds warn when naming is still missing. |
 | focus intent policy | primary pointer clears focus-visible | Non-primary pointer interactions keep focus ring state; primary pointer resets keyboard-intent ring before press feedback. |
 | native button props | `ButtonHTMLAttributes` | Supports `type`, `disabled`, `onClick`, keyboard handlers. |
@@ -510,6 +511,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `variant` | `'rect' \| 'text' \| 'circle'` | Shape selection for block/text/avatar placeholders. |
 | `animated` | `boolean` | Toggle shimmer animation for reduced-motion or static placeholders. |
+| reduced-motion fallback | shimmer tagged with `data-aurora-reduced-motion="animate"` | With `GlobalStyles`, shimmer auto-disables under `prefers-reduced-motion` while placeholder geometry stays stable. |
 | `ariaLabel` | `string` | Enables narrated loading status semantics when needed; blank values are ignored so skeleton stays decorative by default. |
 | `width` / `height` / `radius` | `number \| string` | Explicit geometry control for layout matching. |
 
@@ -552,6 +554,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `value` / `min` / `max` | `number` | Determinate range with safe clamp and percent narration. |
 | `indeterminate` | `boolean` | Removes `aria-valuenow` and switches to loading animation branch. |
+| reduced-motion fallback | indicator tagged with `data-aurora-reduced-motion` tokens | Indeterminate animation and determinate width transition auto-reduce under `prefers-reduced-motion` when `GlobalStyles` is mounted. |
 | `label` / `valueText` | `string` | Explicit screen-reader label and override value narration text; blank `label` values are ignored and fallback to `Progress`. |
 | `tone` / `size` | `'default' \| 'success' \| 'warning' \| 'danger'` / `'sm' \| 'md'` | Visual emphasis and bar density controls. |
 | `showValueLabel` | `boolean` | Renders helper value text under the progress track. |

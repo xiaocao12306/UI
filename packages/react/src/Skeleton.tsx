@@ -35,6 +35,7 @@ export function Skeleton({
         <style>{`@keyframes aurora-skeleton-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }`}</style>
       ) : null}
       <div
+        data-aurora-reduced-motion={animated ? "animate" : undefined}
         role={resolvedAriaLabel ? "status" : undefined}
         aria-label={resolvedAriaLabel}
         aria-live={resolvedAriaLabel ? "polite" : undefined}

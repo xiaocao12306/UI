@@ -44,6 +44,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Ensure keyboard dismissal paths for overlay components.
 - Keep visible labels or accessible names for form controls.
 - For icon-only buttons, provide non-empty `aria-label` or `aria-labelledby` on the button itself; inline child `aria-label` is treated as fallback only, and decorative glyph text should remain `aria-hidden`.
+- Respect OS reduced-motion preferences: keep `GlobalStyles` mounted so surfaces tagged with `data-aurora-reduced-motion` disable shimmer/spin/indeterminate motion (Button loading spinner, Progress indeterminate bar, Skeleton shimmer) under `prefers-reduced-motion`.
 - Prefer `FormField` wrappers for helper/error copy so `aria-describedby` and `aria-errormessage` stay in sync.
 - For guarded approval flows, use control-level `onClick(event.preventDefault())` on switch-like toggles to block pointer state mutation while preserving keyboard/readout semantics.
 - When using standalone DatePicker error messaging, pass `errorMessageId` with `invalid` so both `aria-describedby` and `aria-errormessage` stay aligned.

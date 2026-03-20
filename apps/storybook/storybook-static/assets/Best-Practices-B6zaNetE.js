@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as a,S as l,D as d,C as n}from"./index-DWM6Ok-w.js";import{VariantMatrix as c,IconOnlyAccessibleName as h}from"./Button.stories-DALeeEQW.js";import{WithInputControl as p}from"./FormField.stories-BTuhsucQ.js";import{Interactive as x,CloseReasonTelemetry as m,FocusTrapKeyboardCycle as u,EscapeIgnoresImeComposition as j,EscapePreemptedByGlobalHandler as f,EscapeRepeatGuard as b,DismissGuardHooks as y}from"./Dialog.stories-BpEf0LNn.js";import{CloseReasonTelemetry as g,FocusTrapKeyboardCycle as v,EscapePreemptedByGlobalHandler as w,EscapeRepeatGuard as k,DismissGuardHooks as E}from"./Drawer.stories-C0kNNyn2.js";import{CloseReasonTelemetry as C,EscapePreemptedByGlobalHandler as D,EscapeRepeatGuard as K,DismissGuardHooks as P}from"./Popover.stories-BmoPHUCX.js";import{OutsideDismissFocusTransfer as F,EscapeDismissFocusReturn as R,EscapePreemptedByGlobalHandler as A,EscapeRepeatGuard as I,TabDismissToNextControl as S,CloseReasonTelemetry as L,ControlledOpenContract as T,TypeaheadNavigation as O,IconItemNaming as H,TypeaheadIgnoresImeComposition as G,DismissGuardHooks as M}from"./Dropdown.stories-Bh4y7QHJ.js";import{DescribedByLifecycle as U}from"./Tooltip.stories-bEfmviDE.js";import{AiInteractionFlow as B,QueryTelemetry as $,CloseReasonTelemetry as q,DisabledCommandGuard as z,TextValueAndAccentSearch as V,IconOnlyCommandNaming as N,PersistentSelection as W,RefinedSearchKeepsActiveCommand as Q,PagedKeyboardNavigation as J,LocalizedResultsLabel as X,LocalizedDialogCopy as _,ImeCompositionGuard as Y,EscapePreemptedByGlobalHandler as Z,GuardedDismissEvents as ee,EscapeClearsQueryFirst as se,EscapeRepeatGuard as ne}from"./CommandPalette.stories-5tFIxgsC.js";import{WithAiRequestState as oe}from"./PromptInput.stories-Dg4GIpmM.js";import{Conversation as ie}from"./MessageBubble.stories-XtWuqyRv.js";import{Default as re}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as te}from"./StreamingCodeBlock.stories-52CajPJL.js";import{ActionRequired as ae,ActionRequiredDanger as le,CloseReasonTelemetry as de,EscapeStackOrder as ce,EscapeShortcutSync as he,StackedViewportOffset as pe,FocusedToastEscapesFirst as xe,CloseButtonPrimaryPointerOnly as me,EscapePreemptedByGlobalHandler as ue,EscapePreemptedSkipsToastHook as je,EscapeGuardedByToastHandler as fe,EscapeIgnoresImeComposition as be,LiveRegionOff as ye}from"./Toast.stories-HtmRTT4G.js";import{KeyboardNavigationGuide as ge,NoLoopNavigation as ve,Vertical as we,RtlKeyboardNavigation as ke,LabelledByHeading as Ee,ManualActivation as Ce,ManualVerticalActivation as De,PrimaryPointerOnlyPressedState as Ke}from"./Tabs.stories-BZUQCxci.js";import{ReleaseChecklist as Pe,SortTelemetry as Fe,LocalizedSortLabels as Re,SortLabelForCustomHeader as Ae,RichTextHeaderAutoSortLabel as Ie,AriaLabelHeaderAutoSortLabel as Se,SingleRowSortDisabled as Le,PrimaryPointerOnlySortPress as Te,WithRowAction as Oe,InvalidDefaultSortKeyFallback as He,RowHeaderSemantics as Ge,AccessibleNameFallback as Me}from"./Table.stories-R7bgsTUW.js";import{KeyboardShortcuts as Ue,RtlKeyboardShortcuts as Be,LabelledByHeading as $e}from"./Pagination.stories-LaCM9y5E.js";import"./index-BWu4c2F4.js";import"./iframe-NvYv0CnD.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-BhfMIoQv.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-ZJmMstsz.js";import"./index-DgAF9SIF.js";import"./storyShowcase-Bw5VyCj0.js";import"./Input-pKdbw4ss.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-CU5SQrEA.js";import"./FormField-ZaHPw_tE.js";import"./Textarea-C2HCxZDO.js";import"./Dialog-DJrTABMX.js";import"./bodyScrollLock-D0vp0S5S.js";import"./DismissableLayer-DAyP3iyR.js";import"./Dropdown-CAW9LzpQ.js";import"./Popover-DfqdphH1.js";function i(o){const s={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...r(),...o.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Best Practices"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as t,T as a,S as l,D as d,C as n}from"./index-C1GfVdWj.js";import{VariantMatrix as c,IconOnlyAccessibleName as h}from"./Button.stories-w1mzxIqi.js";import{WithInputControl as p}from"./FormField.stories-BTuhsucQ.js";import{Interactive as x,CloseReasonTelemetry as m,FocusTrapKeyboardCycle as u,EscapeIgnoresImeComposition as j,EscapePreemptedByGlobalHandler as f,EscapeRepeatGuard as b,DismissGuardHooks as y}from"./Dialog.stories-DOyNvQg9.js";import{CloseReasonTelemetry as g,FocusTrapKeyboardCycle as v,EscapePreemptedByGlobalHandler as w,EscapeRepeatGuard as k,DismissGuardHooks as E}from"./Drawer.stories-vTpne2QT.js";import{CloseReasonTelemetry as C,EscapePreemptedByGlobalHandler as D,EscapeRepeatGuard as K,DismissGuardHooks as P}from"./Popover.stories-BFrF6T1b.js";import{OutsideDismissFocusTransfer as F,EscapeDismissFocusReturn as R,EscapePreemptedByGlobalHandler as S,EscapeRepeatGuard as A,TabDismissToNextControl as I,CloseReasonTelemetry as L,ControlledOpenContract as T,TypeaheadNavigation as O,IconItemNaming as G,TypeaheadIgnoresImeComposition as H,DismissGuardHooks as M}from"./Dropdown.stories-Difx3V9j.js";import{DescribedByLifecycle as B}from"./Tooltip.stories-BAjDL-Os.js";import{AiInteractionFlow as U,QueryTelemetry as $,CloseReasonTelemetry as q,DisabledCommandGuard as z,TextValueAndAccentSearch as V,IconOnlyCommandNaming as N,PersistentSelection as W,RefinedSearchKeepsActiveCommand as Q,PagedKeyboardNavigation as J,LocalizedResultsLabel as X,LocalizedDialogCopy as _,ImeCompositionGuard as Y,EscapePreemptedByGlobalHandler as Z,GuardedDismissEvents as ee,EscapeClearsQueryFirst as se,EscapeRepeatGuard as ne}from"./CommandPalette.stories-D9BBKvn0.js";import{WithAiRequestState as oe}from"./PromptInput.stories-BojY5F8P.js";import{Conversation as ie}from"./MessageBubble.stories-XtWuqyRv.js";import{Default as re}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as te}from"./StreamingCodeBlock.stories-52CajPJL.js";import{ActionRequired as ae,ActionRequiredDanger as le,CloseReasonTelemetry as de,EscapeStackOrder as ce,EscapeShortcutSync as he,StackedViewportOffset as pe,FocusedToastEscapesFirst as xe,CloseButtonPrimaryPointerOnly as me,EscapePreemptedByGlobalHandler as ue,EscapePreemptedSkipsToastHook as je,EscapeGuardedByToastHandler as fe,EscapeIgnoresImeComposition as be,LiveRegionOff as ye}from"./Toast.stories-DQwLZANC.js";import{KeyboardNavigationGuide as ge,NoLoopNavigation as ve,Vertical as we,RtlKeyboardNavigation as ke,LabelledByHeading as Ee,ManualActivation as Ce,ManualVerticalActivation as De,PrimaryPointerOnlyPressedState as Ke}from"./Tabs.stories-55tbmT7i.js";import{ReleaseChecklist as Pe,SortTelemetry as Fe,LocalizedSortLabels as Re,SortLabelForCustomHeader as Se,RichTextHeaderAutoSortLabel as Ae,AriaLabelHeaderAutoSortLabel as Ie,SingleRowSortDisabled as Le,PrimaryPointerOnlySortPress as Te,WithRowAction as Oe,InvalidDefaultSortKeyFallback as Ge,RowHeaderSemantics as He,AccessibleNameFallback as Me}from"./Table.stories-iCTCrhZI.js";import{KeyboardShortcuts as Be,RtlKeyboardShortcuts as Ue,LabelledByHeading as $e}from"./Pagination.stories-LaCM9y5E.js";import"./index-BWu4c2F4.js";import"./iframe-DDzdLK0X.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-D0unLEE8.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-ZJmMstsz.js";import"./index-DgAF9SIF.js";import"./storyShowcase-Bw5VyCj0.js";import"./Input-pKdbw4ss.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-CU5SQrEA.js";import"./FormField-ZaHPw_tE.js";import"./Textarea-C2HCxZDO.js";import"./Dialog-DJrTABMX.js";import"./bodyScrollLock-D0vp0S5S.js";import"./DismissableLayer-DAyP3iyR.js";import"./Dropdown-Do0PdLuv.js";import"./Popover-IdPc6h99.js";function i(o){const s={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...r(),...o.components};return e.jsxs(e.Fragment,{children:[e.jsx(t,{title:"Docs/Best Practices"}),`
 `,e.jsx(a,{}),`
 `,e.jsx(l,{children:"Design + Engineering Checklist"}),`
 `,e.jsx(d,{children:e.jsx(s.p,{children:"Use these rules to keep components consistent with the Aurora plan and avoid regressions in accessibility or theming."})}),`
@@ -21,6 +21,7 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `,e.jsx(s.li,{children:"Ensure keyboard dismissal paths for overlay components."}),`
 `,e.jsx(s.li,{children:"Keep visible labels or accessible names for form controls."}),`
 `,e.jsxs(s.li,{children:["For icon-only buttons, provide non-empty ",e.jsx(s.code,{children:"aria-label"})," or ",e.jsx(s.code,{children:"aria-labelledby"})," on the button itself; inline child ",e.jsx(s.code,{children:"aria-label"})," is treated as fallback only, and decorative glyph text should remain ",e.jsx(s.code,{children:"aria-hidden"}),"."]}),`
+`,e.jsxs(s.li,{children:["Respect OS reduced-motion preferences: keep ",e.jsx(s.code,{children:"GlobalStyles"})," mounted so surfaces tagged with ",e.jsx(s.code,{children:"data-aurora-reduced-motion"})," disable shimmer/spin/indeterminate motion (Button loading spinner, Progress indeterminate bar, Skeleton shimmer) under ",e.jsx(s.code,{children:"prefers-reduced-motion"}),"."]}),`
 `,e.jsxs(s.li,{children:["Prefer ",e.jsx(s.code,{children:"FormField"})," wrappers for helper/error copy so ",e.jsx(s.code,{children:"aria-describedby"})," and ",e.jsx(s.code,{children:"aria-errormessage"})," stay in sync."]}),`
 `,e.jsxs(s.li,{children:["For guarded approval flows, use control-level ",e.jsx(s.code,{children:"onClick(event.preventDefault())"})," on switch-like toggles to block pointer state mutation while preserving keyboard/readout semantics."]}),`
 `,e.jsxs(s.li,{children:["When using standalone DatePicker error messaging, pass ",e.jsx(s.code,{children:"errorMessageId"})," with ",e.jsx(s.code,{children:"invalid"})," so both ",e.jsx(s.code,{children:"aria-describedby"})," and ",e.jsx(s.code,{children:"aria-errormessage"})," stay aligned."]}),`
@@ -40,7 +41,7 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `]}),`
 `,e.jsx(n,{of:p}),`
 `,e.jsx(n,{of:h}),`
-`,e.jsx(n,{of:U}),`
+`,e.jsx(n,{of:B}),`
 `,e.jsx(n,{of:x}),`
 `,e.jsx(s.h2,{id:"overlay-policies",children:"Overlay Policies"}),`
 `,e.jsxs(s.ul,{children:[`
@@ -86,14 +87,14 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `]}),`
 `,e.jsx(n,{of:F}),`
 `,e.jsx(n,{of:R}),`
+`,e.jsx(n,{of:S}),`
 `,e.jsx(n,{of:A}),`
 `,e.jsx(n,{of:I}),`
-`,e.jsx(n,{of:S}),`
 `,e.jsx(n,{of:L}),`
 `,e.jsx(n,{of:T}),`
 `,e.jsx(n,{of:O}),`
-`,e.jsx(n,{of:H}),`
 `,e.jsx(n,{of:G}),`
+`,e.jsx(n,{of:H}),`
 `,e.jsx(n,{of:M}),`
 `,e.jsx(n,{of:C}),`
 `,e.jsx(n,{of:D}),`
@@ -155,7 +156,7 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `,e.jsx(n,{of:ie}),`
 `,e.jsx(n,{of:re}),`
 `,e.jsx(n,{of:te}),`
-`,e.jsx(n,{of:B}),`
+`,e.jsx(n,{of:U}),`
 `,e.jsx(n,{of:$}),`
 `,e.jsx(n,{of:q}),`
 `,e.jsx(n,{of:z}),`
@@ -262,15 +263,15 @@ import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"
 `,e.jsx(n,{of:Pe}),`
 `,e.jsx(n,{of:Fe}),`
 `,e.jsx(n,{of:Re}),`
+`,e.jsx(n,{of:Se}),`
 `,e.jsx(n,{of:Ae}),`
 `,e.jsx(n,{of:Ie}),`
-`,e.jsx(n,{of:Se}),`
 `,e.jsx(n,{of:Le}),`
 `,e.jsx(n,{of:Te}),`
 `,e.jsx(n,{of:Oe}),`
-`,e.jsx(n,{of:He}),`
 `,e.jsx(n,{of:Ge}),`
+`,e.jsx(n,{of:He}),`
 `,e.jsx(n,{of:Me}),`
-`,e.jsx(n,{of:Ue}),`
 `,e.jsx(n,{of:Be}),`
+`,e.jsx(n,{of:Ue}),`
 `,e.jsx(n,{of:$e})]})}function Ps(o={}){const{wrapper:s}={...r(),...o.components};return s?e.jsx(s,{...o,children:e.jsx(i,{...o})}):i(o)}export{Ps as default};

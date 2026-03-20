@@ -17,8 +17,14 @@ describe("Progress", () => {
     render(<Progress indeterminate valueText="Synchronizing" />);
 
     const progressbar = screen.getByRole("progressbar", { name: "Progress" });
+    const indicator = progressbar.querySelector('[data-aurora-reduced-motion]');
     expect(progressbar).not.toHaveAttribute("aria-valuenow");
     expect(progressbar).toHaveAttribute("aria-valuetext", "Synchronizing");
+    expect(indicator).not.toBeNull();
+    if (indicator) {
+      expect(indicator).toHaveAttribute("data-aurora-reduced-motion", "animate transform-reset");
+      expect(indicator).toHaveStyle({ animation: "aurora-progress-indeterminate 1200ms ease-in-out infinite" });
+    }
   });
 
   it("renders helper value label when requested", () => {
@@ -28,6 +34,13 @@ describe("Progress", () => {
 
   it("ignores blank label and falls back to default progressbar name", () => {
     render(<Progress label="   " />);
-    expect(screen.getByRole("progressbar", { name: "Progress" })).toBeInTheDocument();
+    const progressbar = screen.getByRole("progressbar", { name: "Progress" });
+    const indicator = progressbar.querySelector('[data-aurora-reduced-motion]');
+
+    expect(progressbar).toBeInTheDocument();
+    expect(indicator).not.toBeNull();
+    if (indicator) {
+      expect(indicator).toHaveAttribute("data-aurora-reduced-motion", "transition");
+    }
   });
 });

@@ -265,6 +265,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         <>
           <span
             aria-hidden="true"
+            data-aurora-reduced-motion="animate"
             style={{
               width: 14,
               height: 14,

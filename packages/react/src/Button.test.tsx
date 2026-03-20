@@ -22,6 +22,18 @@ describe("Button", () => {
     expect(button).toHaveAttribute("data-loading", "true");
   });
 
+  it("marks loading spinner for reduced-motion fallback", () => {
+    render(<Button loading>Submit</Button>);
+    const spinner = screen.getByRole("button", { name: "Submit" }).querySelector(
+      '[data-aurora-reduced-motion~="animate"]'
+    );
+
+    expect(spinner).not.toBeNull();
+    if (spinner) {
+      expect(spinner).toHaveStyle({ animation: "aurora-spin 0.8s linear infinite" });
+    }
+  });
+
   it("uses button type by default to avoid unintended form submit", () => {
     render(<Button>Action</Button>);
     expect(screen.getByRole("button", { name: "Action" })).toHaveAttribute("type", "button");

@@ -78,6 +78,7 @@ export function Progress({
           <style>{`@keyframes aurora-progress-indeterminate { 0% { transform: translateX(-110%); } 100% { transform: translateX(330%); } }`}</style>
         ) : null}
         <div
+          data-aurora-reduced-motion={indeterminate ? "animate transform-reset" : "transition"}
           style={{
             width: indeterminate ? "35%" : `${ratio}%`,
             height: "100%",
