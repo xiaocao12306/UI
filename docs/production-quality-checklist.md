@@ -564,11 +564,14 @@
 - Popover/Dropdown modified-Escape parity: component-level regressions now lock `Ctrl/Meta/Alt + Escape` as no-op for dismiss hooks and close callbacks, with Storybook `EscapePreemptedByGlobalHandler` interaction assertions to keep overlay API contracts auditable.
 - Toast modified-Escape parity: Playwright now locks `Ctrl/Meta/Alt + Escape` as no-op for prompt toasts so host/app shortcut chords do not dismiss notification flows unexpectedly.
 - DismissableLayer Shift+Escape parity: primitives regression now locks that modifier filtering remains scoped to `Ctrl/Meta/Alt`, while `Shift + Escape` still triggers normal dismiss + hook callbacks.
+- DismissableLayer Escape-repeat parity: primitives now ignore `event.repeat=true` Escape keydowns so long-press does not trigger duplicate dismiss/hook callbacks.
 - Demo dialog Shift+Escape parity: Playwright now validates that `Shift + Escape` still dismisses Dialog so escape filtering changes cannot accidentally suppress expected keyboard close behavior.
+- Demo dialog Escape-repeat parity: Playwright now validates repeated Escape keydown is ignored while a subsequent non-repeat Escape still dismisses Dialog as expected.
 - Demo overlay modified-Escape parity: Playwright now covers `Ctrl/Meta/Alt + Escape` no-op flows for Dialog/Drawer/CommandPalette/Popover/Dropdown so real-user keyboard shortcut paths cannot accidentally dismiss overlays.
 - Demo e2e parity refresh (2026-03-20 latest+28): reran full `pnpm demo:e2e` after overlay modified-Escape path expansion and confirmed `81/81` pass.
 - Demo e2e parity refresh (2026-03-21 latest+29): reran full `pnpm demo:e2e` after adding toast modified-Escape no-op regression and confirmed `82/82` pass.
 - Demo e2e parity refresh (2026-03-21 latest+31): reran full `pnpm demo:e2e` after adding dialog `Shift + Escape` regression and confirmed `83/83` pass.
+- Demo e2e parity refresh (2026-03-21 latest+34): reran full `pnpm demo:e2e` after adding dialog repeated-Escape regression and confirmed `84/84` pass.
 - Release-gate parity refresh (2026-03-20 latest+27): after overlay modified-Escape hardening across CommandPalette/Dialog/Drawer/Popover/Dropdown and demo dist sync, reran full `pnpm release:gate:ci` and confirmed all gates green (verify + coverage + demo e2e `76/76` + demo dist sync + storybook interaction `221/221`).
 - Release-gate parity refresh (2026-03-21 latest+30): after adding toast modified-Escape demo regression, reran full `pnpm release:gate:ci` and confirmed all gates green (verify + release:exports:check + coverage + demo e2e `82/82` + demo dist sync + storybook interaction `221/221`).
 - Release-gate parity refresh (2026-03-21 latest+32): after adding dialog `Shift + Escape` regression, reran full `pnpm release:gate:ci` and confirmed all gates green (verify + release:exports:check + coverage + demo e2e `83/83` + demo dist sync + storybook interaction `221/221`).
