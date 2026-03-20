@@ -749,6 +749,9 @@ function App() {
                   />
                 ))}
               </nav>
+              <p className="demo-section-nav-current" data-testid="active-section-pill" aria-hidden="true">
+                Viewing: {activeSectionLabel}
+              </p>
               <p
                 role="status"
                 aria-live="polite"

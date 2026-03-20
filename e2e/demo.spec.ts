@@ -645,17 +645,21 @@ test("announces current active section after section navigation actions", async 
   await page.goto("/");
 
   const activeSectionStatus = page.getByTestId("active-section-status");
+  const activeSectionPill = page.getByTestId("active-section-pill");
   await expect(activeSectionStatus).toHaveText("Current section: Basic Components");
+  await expect(activeSectionPill).toHaveText("Viewing: Basic Components");
 
   const statesLink = page.getByRole("link", { name: "Feedback & States", exact: true });
   await statesLink.click();
   await expect(activeSectionStatus).toHaveText("Current section: Feedback & States");
+  await expect(activeSectionPill).toHaveText("Viewing: Feedback & States");
 
   const overlaysCardLink = page.getByRole("link", {
     name: "Jump to Overlays and Navigation section"
   });
   await overlaysCardLink.click();
   await expect(activeSectionStatus).toHaveText("Current section: Overlays & Navigation");
+  await expect(activeSectionPill).toHaveText("Viewing: Overlays & Navigation");
 });
 
 test("navigates to target sections from hero stat cards", async ({ page }) => {

@@ -390,6 +390,14 @@
   scroll-padding-inline: 10px;
 }
 
+.demo-section-nav-current {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--aurora-text-secondary);
+  letter-spacing: 0.02em;
+}
+
 .demo-section-nav::-webkit-scrollbar {
   height: 8px;
 }
@@ -722,6 +730,11 @@
     scroll-snap-type: x proximity;
     gap: 6px !important;
     padding: 8px 10px !important;
+  }
+
+  .demo-section-nav-current {
+    margin-top: 6px;
+    font-size: 11px;
   }
 
   .demo-section-nav-pill {
