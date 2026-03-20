@@ -474,6 +474,24 @@ describe("Table", () => {
     expect(screen.getByRole("table", { name: "Component release status" })).toBeInTheDocument();
   });
 
+  it("ignores blank ariaLabel and falls back to default table name", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+        ariaLabel="   "
+      />
+    );
+
+    expect(screen.getByRole("table", { name: "Data table" })).toBeInTheDocument();
+  });
+
   it("supports ariaLabelledBy naming and suppresses aria-label fallback", () => {
     render(
       <div>
@@ -496,6 +514,27 @@ describe("Table", () => {
     const table = screen.getByRole("table", { name: "Release metrics table" });
     expect(table).toHaveAttribute("aria-labelledby", "release-metrics-heading");
     expect(table).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and keeps explicit ariaLabel naming", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+        ariaLabelledBy="   "
+        ariaLabel="Release quality matrix"
+      />
+    );
+
+    const table = screen.getByRole("table", { name: "Release quality matrix" });
+    expect(table).toHaveAttribute("aria-label", "Release quality matrix");
+    expect(table).not.toHaveAttribute("aria-labelledby");
   });
 
   it("prefers caption naming when ariaLabel is not provided", () => {
@@ -1173,6 +1212,25 @@ describe("Table", () => {
     const sortButton = screen.getByRole("button", { name: "按降序排序：Name" });
     fireEvent.click(sortButton);
     expect(screen.getByRole("button", { name: "按升序排序：Name" })).toBeInTheDocument();
+  });
+
+  it("ignores blank custom sort aria labels and falls back to default narration", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score" }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        getSortAriaLabel={() => "   "}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toBeInTheDocument();
   });
 
   it("uses sortLabel for sortable narration when header content is non-text", () => {

@@ -95,9 +95,10 @@ export function Table<T>({
   getSortStatusText = defaultGetSortStatusText,
   onSortChange
 }: TableProps<T>) {
-  const resolvedAriaLabel = ariaLabelledBy
+  const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
+  const resolvedAriaLabel = resolvedAriaLabelledBy
     ? undefined
-    : (ariaLabel ?? (caption ? undefined : "Data table"));
+    : resolveNonEmptyLabel(ariaLabel, caption ? undefined : "Data table");
   const sortButtonRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const keyboardActivationSortKeyRef = React.useRef<string | null>(null);
@@ -357,11 +358,11 @@ export function Table<T>({
       aria-label={
         hasActionableSortControls
           ? undefined
-          : ariaLabelledBy
+          : resolvedAriaLabelledBy
             ? undefined
             : resolvedAriaLabel ?? "Data table scroll container"
       }
-      aria-labelledby={hasActionableSortControls ? undefined : ariaLabelledBy}
+      aria-labelledby={hasActionableSortControls ? undefined : resolvedAriaLabelledBy}
       style={{
         border: "1px solid var(--aurora-border-default)",
         borderRadius: "var(--aurora-radius-md)",
@@ -389,7 +390,7 @@ export function Table<T>({
       ) : null}
       <table
         aria-label={resolvedAriaLabel}
-        aria-labelledby={ariaLabelledBy}
+        aria-labelledby={resolvedAriaLabelledBy}
         aria-busy={loading || undefined}
         style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}
       >
@@ -425,6 +426,14 @@ export function Table<T>({
                 columnHeader: headerLabel,
                 nextDirection
               });
+              const resolvedSortAriaLabel = resolveNonEmptyLabel(
+                sortAriaLabel,
+                defaultGetSortAriaLabel({
+                  columnKey: key,
+                  columnHeader: headerLabel,
+                  nextDirection
+                })
+              );
               const sortDisabled = loading || !hasMultiRowData;
               const hovered = !sortDisabled && hoveredSortKey === key;
               const pressed = !sortDisabled && pressedSortKey === key;
@@ -461,7 +470,7 @@ export function Table<T>({
                       ref={(node) => {
                         sortButtonRefs.current[key] = node;
                       }}
-                      aria-label={sortAriaLabel}
+                      aria-label={resolvedSortAriaLabel}
                       aria-keyshortcuts={sortDisabled ? undefined : "Enter Space"}
                       disabled={sortDisabled}
                       onClick={(event) => {
@@ -777,4 +786,12 @@ function getReadableHeaderText(node: React.ReactNode): string {
 
 function normalizeReadableText(value: string) {
   return value.replace(/\s+/g, " ").trim();
+}
+
+function resolveNonEmptyLabel(label: string | undefined, fallback?: string): string | undefined {
+  if (typeof label === "string" && label.trim().length > 0) {
+    return label.trim();
+  }
+
+  return fallback;
 }
