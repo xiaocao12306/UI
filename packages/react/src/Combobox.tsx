@@ -58,6 +58,7 @@ export function Combobox({
     typeof ariaLabel === "string" && ariaLabel.trim().length > 0
       ? ariaLabel.trim()
       : "Combobox";
+  const resolvedListboxAriaLabel = `${resolvedAriaLabel} options`;
   const currentValue = value ?? internalValue;
 
   const selectedOption = React.useMemo(() => options.find((item) => item.value === currentValue), [currentValue, options]);
@@ -252,7 +253,7 @@ export function Combobox({
         <div
           id={listId}
           role="listbox"
-          aria-label={`${ariaLabel} options`}
+          aria-label={resolvedListboxAriaLabel}
           style={{
             border: "1px solid var(--aurora-border-default)",
             borderRadius: "var(--aurora-radius-md)",

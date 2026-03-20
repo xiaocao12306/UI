@@ -87,6 +87,19 @@ export const KeyboardDismissPaths: Story = {
   }
 };
 
+export const BlankAriaLabelFallback: Story = {
+  args: {
+    ariaLabel: "   "
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Combobox" });
+
+    await userEvent.click(input);
+    await expect(canvas.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+  }
+};
+
 export const DisabledState: Story = {
   args: {
     ariaLabel: "Framework disabled",

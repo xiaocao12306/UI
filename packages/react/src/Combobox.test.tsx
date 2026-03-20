@@ -14,6 +14,22 @@ describe("Combobox", () => {
     expect(screen.getByRole("combobox", { name: "Combobox" })).toBeInTheDocument();
   });
 
+  it("uses fallback listbox name when ariaLabel is blank", () => {
+    render(<Combobox options={options} onValueChange={() => {}} ariaLabel="   " />);
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+
+    fireEvent.focus(input);
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+  });
+
+  it("trims ariaLabel for combobox and listbox naming", () => {
+    render(<Combobox options={options} onValueChange={() => {}} ariaLabel="  Framework picker  " />);
+    const input = screen.getByRole("combobox", { name: "Framework picker" });
+
+    fireEvent.focus(input);
+    expect(screen.getByRole("listbox", { name: "Framework picker options" })).toBeInTheDocument();
+  });
+
   it("filters options by query", () => {
     render(<Combobox options={options} onValueChange={() => {}} />);
 
