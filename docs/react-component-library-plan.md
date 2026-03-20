@@ -702,6 +702,7 @@
   - Storybook Popover/Dropdown Escape 长按验收补齐（新增 `EscapeRepeatGuard` stories 与 `play` 断言，锁定 `event.repeat=true` 不触发关闭，首次有效 Escape 才触发 `escape-key`）
   - Storybook Tabs manual 长按验收补齐（新增 `ManualActivationRepeatGuard` story 与 `play` 断言，锁定 manual 模式下 `Enter/Space repeat` 不误触发激活）
   - Storybook Popover 长按故事类型收口（为 `EscapeRepeatGuard` 补齐必需 `args`，修复 `@aurora-ui/storybook-app` typecheck 阻塞）
+  - Storybook Dialog/Drawer 长按验收补齐（新增 `EscapeRepeatGuard` stories 与 `play` 断言，锁定 `Escape repeat` 不触发关闭，首次有效 Escape 才更新 `escape-key` close reason）
   - Demo E2E 修饰键 Escape 验收补齐（新增 Dialog/Drawer/CommandPalette/Popover/Dropdown 五条 `Ctrl/Meta/Alt + Escape` no-op 回归，锁定真实用户路径下 overlay 不误关闭）
   - Demo E2E 证据刷新（2026-03-20 latest+28：`pnpm demo:e2e` 全量复验通过，`81/81`）
   - Demo E2E 证据刷新（2026-03-21 latest+29：补齐 Toast 修饰键 Escape no-op 回归后，`pnpm demo:e2e` 全量复验通过，`82/82`）
@@ -725,6 +726,7 @@
   - Storybook Gate 证据刷新（2026-03-21 latest+45：补齐 Popover/Dropdown `EscapeRepeatGuard` 交互回归后，`pnpm storybook:test:ci` 全链路复验通过，含 coverage/docs/parity/structure/play/static/a11y gate + interaction `223/223`）
   - Storybook Gate 证据刷新（2026-03-21 latest+46：补齐 Tabs `ManualActivationRepeatGuard` 交互回归后，`pnpm storybook:test:ci` 全链路复验通过，含 coverage/docs/parity/structure/play/static/a11y gate + interaction `224/224`）
   - Release Gate 证据刷新（2026-03-21 latest+47：修复 Popover story 类型阻塞并同步 Storybook 静态产物后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage（`40 files / 598 tests`）+ demo e2e `92/92` + demo dist + storybook interaction `224/224`）
+  - Storybook Gate 证据刷新（2026-03-21 latest+48：补齐 Dialog/Drawer `EscapeRepeatGuard` 交互回归后，`pnpm storybook:test:ci` 全链路复验通过，含 coverage/docs/parity/structure/play/static/a11y gate + interaction `226/226`）
   - Release Dry-Run 证据刷新（2026-03-21 latest+33：`pnpm release:dry-run` 通过，`@aurora-ui/react` `77.8 kB / 480.2 kB`、`@aurora-ui/primitives` `15.0 kB / 74.3 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
