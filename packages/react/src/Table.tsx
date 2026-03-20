@@ -104,6 +104,7 @@ export function Table<T>({
   const keyboardActivationSortKeyRef = React.useRef<string | null>(null);
   const keyboardActivationTimestampRef = React.useRef(0);
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
+  const keyboardActivationTimerWindowRef = React.useRef<Window | null>(null);
   const sortFocusIntentRef = React.useRef(true);
   const warnedDuplicateRowKeysSignatureRef = React.useRef<string | null>(null);
   const warnedMissingSortLabelSignatureRef = React.useRef<string | null>(null);
@@ -140,9 +141,11 @@ export function Table<T>({
     keyboardActivationSortKeyRef.current = null;
     keyboardActivationTimestampRef.current = 0;
     if (keyboardActivationResetTimerRef.current !== null) {
-      window.clearTimeout(keyboardActivationResetTimerRef.current);
+      const timerWindow = keyboardActivationTimerWindowRef.current ?? window;
+      timerWindow.clearTimeout(keyboardActivationResetTimerRef.current);
       keyboardActivationResetTimerRef.current = null;
     }
+    keyboardActivationTimerWindowRef.current = null;
   }, []);
 
   React.useEffect(
@@ -564,10 +567,13 @@ export function Table<T>({
                         }
                         keyboardActivationSortKeyRef.current = key;
                         keyboardActivationTimestampRef.current = Date.now();
+                        const ownerWindow = event.currentTarget.ownerDocument.defaultView ?? window;
                         if (keyboardActivationResetTimerRef.current !== null) {
-                          window.clearTimeout(keyboardActivationResetTimerRef.current);
+                          const timerWindow = keyboardActivationTimerWindowRef.current ?? ownerWindow;
+                          timerWindow.clearTimeout(keyboardActivationResetTimerRef.current);
                         }
-                        keyboardActivationResetTimerRef.current = window.setTimeout(() => {
+                        keyboardActivationTimerWindowRef.current = ownerWindow;
+                        keyboardActivationResetTimerRef.current = ownerWindow.setTimeout(() => {
                           clearKeyboardActivationLatch();
                         }, keyboardSortClickDedupeWindowMs);
                         activateSort();

@@ -1098,6 +1098,52 @@ describe("Tabs", () => {
     }
   });
 
+  it("uses ownerDocument timers for manual keyboard dedupe in cross-document renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+    const setTimeoutSpy = vi.spyOn(secondaryWindow, "setTimeout");
+    const clearTimeoutSpy = vi.spyOn(secondaryWindow, "clearTimeout");
+    const onValueChange = vi.fn();
+
+    try {
+      const { getByRole } = render(
+        <Tabs
+          defaultValue="one"
+          activationMode="manual"
+          onValueChange={onValueChange}
+          items={[
+            { key: "one", label: "One", content: <div>Panel One</div> },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />,
+        { container: secondaryContainer, baseElement: secondaryDocument.body }
+      );
+
+      const twoTab = getByRole("tab", { name: "Two" });
+      fireEvent.keyDown(twoTab, { key: "Enter" });
+      expect(setTimeoutSpy).toHaveBeenCalled();
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+      expect(onValueChange).toHaveBeenLastCalledWith("two");
+
+      fireEvent.click(twoTab, { detail: 0 });
+      expect(clearTimeoutSpy).toHaveBeenCalled();
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+    } finally {
+      setTimeoutSpy.mockRestore();
+      clearTimeoutSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("applies pressed offset only while pointer is active", () => {
     render(
       <Tabs

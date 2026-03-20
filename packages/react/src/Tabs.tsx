@@ -117,6 +117,7 @@ export function Tabs({
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const keyboardActivationTabKeyRef = React.useRef<string | null>(null);
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
+  const keyboardActivationTimerWindowRef = React.useRef<Window | null>(null);
   const warnedInvalidControlledValueRef = React.useRef<string | null>(null);
   const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
   const warnedMissingLabelSignatureRef = React.useRef<string | null>(null);
@@ -285,7 +286,8 @@ export function Tabs({
   React.useEffect(() => {
     return () => {
       if (keyboardActivationResetTimerRef.current !== null) {
-        window.clearTimeout(keyboardActivationResetTimerRef.current);
+        const timerWindow = keyboardActivationTimerWindowRef.current ?? window;
+        timerWindow.clearTimeout(keyboardActivationResetTimerRef.current);
       }
     };
   }, []);
@@ -306,9 +308,11 @@ export function Tabs({
   const clearKeyboardActivationLatch = React.useCallback(() => {
     keyboardActivationTabKeyRef.current = null;
     if (keyboardActivationResetTimerRef.current !== null) {
-      window.clearTimeout(keyboardActivationResetTimerRef.current);
+      const timerWindow = keyboardActivationTimerWindowRef.current ?? window;
+      timerWindow.clearTimeout(keyboardActivationResetTimerRef.current);
       keyboardActivationResetTimerRef.current = null;
     }
+    keyboardActivationTimerWindowRef.current = null;
   }, []);
 
   const select = React.useCallback(
@@ -457,12 +461,16 @@ export function Tabs({
                     return;
                   }
                   keyboardActivationTabKeyRef.current = item.key;
+                  const ownerWindow = event.currentTarget.ownerDocument.defaultView ?? window;
                   if (keyboardActivationResetTimerRef.current !== null) {
-                    window.clearTimeout(keyboardActivationResetTimerRef.current);
+                    const timerWindow = keyboardActivationTimerWindowRef.current ?? ownerWindow;
+                    timerWindow.clearTimeout(keyboardActivationResetTimerRef.current);
                   }
-                  keyboardActivationResetTimerRef.current = window.setTimeout(() => {
+                  keyboardActivationTimerWindowRef.current = ownerWindow;
+                  keyboardActivationResetTimerRef.current = ownerWindow.setTimeout(() => {
                     keyboardActivationTabKeyRef.current = null;
                     keyboardActivationResetTimerRef.current = null;
+                    keyboardActivationTimerWindowRef.current = null;
                   }, 0);
                   select(item.key);
                   return;

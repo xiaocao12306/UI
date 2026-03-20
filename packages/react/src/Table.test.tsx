@@ -936,6 +936,54 @@ describe("Table", () => {
     }
   });
 
+  it("uses ownerDocument timers for keyboard-sort dedupe in cross-document table renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+    const setTimeoutSpy = vi.spyOn(secondaryWindow, "setTimeout");
+    const clearTimeoutSpy = vi.spyOn(secondaryWindow, "clearTimeout");
+    const onSortChange = vi.fn();
+
+    try {
+      const { getByRole } = render(
+        <Table
+          columns={[
+            { key: "name", header: "Name", sortable: true },
+            { key: "score", header: "Score", sortable: true }
+          ]}
+          data={[
+            { name: "Dialog", score: 80 },
+            { name: "Button", score: 95 }
+          ]}
+          onSortChange={onSortChange}
+        />,
+        { container: secondaryContainer, baseElement: secondaryDocument.body }
+      );
+
+      const sortButton = getByRole("button", { name: "Name sort ascending" });
+      fireEvent.keyDown(sortButton, { key: "Enter" });
+      expect(setTimeoutSpy).toHaveBeenCalled();
+      expect(onSortChange).toHaveBeenCalledTimes(1);
+      expect(onSortChange).toHaveBeenLastCalledWith("name", "asc");
+
+      fireEvent.click(sortButton, { detail: 0 });
+      expect(clearTimeoutSpy).toHaveBeenCalled();
+      expect(onSortChange).toHaveBeenCalledTimes(1);
+    } finally {
+      setTimeoutSpy.mockRestore();
+      clearTimeoutSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("applies pressed offset while pointer is active on sortable headers", () => {
     render(
       <Table
