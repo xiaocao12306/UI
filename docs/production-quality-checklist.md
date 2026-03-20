@@ -530,3 +530,4 @@
 - Toast cross-document timer parity: auto-dismiss + early-close timer cleanup now bind to `ownerDocument.defaultView`, with iframe regression coverage for timer `setTimeout/clearTimeout` paths.
 - Tabs/Table cross-document timer parity: manual-tab activation and sortable-header dedupe timers now bind to `ownerDocument.defaultView`, with iframe regression coverage in both suites.
 - CommandPalette cross-document dismiss parity: added regression coverage that Escape/outside-pointer events dispatched from a secondary document do not dismiss the main-document palette, preventing multi-document event-leak closures.
+- Release-gate parity refresh (2026-03-20 latest+21): after cross-document timer hardening + CommandPalette multi-document dismiss regression + static artifact sync, reran `pnpm release:gate:ci` and confirmed full pass (verify + coverage + demo e2e 75/75 + demo dist sync + storybook interaction 220/220).
