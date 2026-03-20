@@ -682,6 +682,7 @@
   - Table 排序表头焦点导航收口（新增 `Home/End/PageUp/PageDown` 键盘焦点跳转，支持在 sortable header 间无排序副作用地快速导航；补齐 `Table.test.tsx`、Storybook `SortTelemetry` 与 API/Best-Practices 文档）
   - Table 修饰键焦点导航防串扰收口（`Ctrl/Meta/Alt + Home/End/PageUp/PageDown` 保持宿主快捷键语义，不触发 sortable header 焦点跳转；补齐 `Table.test.tsx` 与 Storybook `SortTelemetry` 回归）
   - DismissableLayer 修饰键 Escape 收口（`Ctrl/Meta/Alt + Escape` 保持宿主快捷键语义，不触发 overlay dismiss；补齐 primitives 与 CommandPalette 单测 + Storybook `EscapeShortcutHintPrecision` 回归）
+  - Dialog/Drawer 修饰键 Escape 验收补齐（补充 `Ctrl/Meta/Alt + Escape` 组件级单测与 Storybook `EscapePreemptedByGlobalHandler` 断言，锁定 dismiss hook 与 close reason 不受组合键误触发）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
