@@ -57,6 +57,56 @@ describe("Dropdown", () => {
     }
   });
 
+  it("warns when non-text dropdown item labels omit ariaLabel and textValue", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dropdown
+          label="Non-text labels"
+          items={[
+            { key: "icon-only", label: <span aria-hidden="true">⚙</span> },
+            { key: "delete", label: "Delete" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Non-text item labels should provide ariaLabel: "icon-only"')
+      );
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Non-text item labels should provide textValue for typeahead matching: "icon-only"')
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text dropdown item labels when ariaLabel and textValue are provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dropdown
+          label="Named icons"
+          items={[
+            {
+              key: "settings",
+              label: <span aria-hidden="true">⚙</span>,
+              ariaLabel: "Settings",
+              textValue: "Settings"
+            },
+            { key: "delete", label: "Delete" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("closes on escape key and outside pointer", () => {
     const onCloseReason = vi.fn();
 
@@ -365,6 +415,32 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Resume card" })).toHaveFocus();
   });
 
+  it("supports typeahead with rich-text labels without requiring textValue", () => {
+    render(
+      <Dropdown
+        label="Rich text"
+        items={[
+          { key: "duplicate", label: "Duplicate" },
+          {
+            key: "deploy",
+            label: (
+              <span>
+                <span aria-hidden="true">🚀</span> Deploy
+              </span>
+            )
+          },
+          { key: "rename", label: "Rename" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Rich text" }));
+    const menu = screen.getByRole("menu");
+
+    fireEvent.keyDown(menu, { key: "d" });
+    expect(screen.getByRole("menuitem", { name: "Deploy" })).toHaveFocus();
+  });
+
   it("ignores typeahead key presses while IME composition is active", () => {
     render(
       <Dropdown
@@ -464,6 +540,26 @@ describe("Dropdown", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "More deployment actions" }));
     expect(screen.getByRole("menu", { name: "More deployment actions" })).toBeInTheDocument();
+  });
+
+  it("supports icon menuitem naming via ariaLabel", () => {
+    render(
+      <Dropdown
+        label="Icon menuitems"
+        items={[
+          {
+            key: "settings",
+            label: <span aria-hidden="true">⚙</span>,
+            ariaLabel: "Settings",
+            textValue: "Settings"
+          },
+          { key: "archive", label: "Archive" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Icon menuitems" }));
+    expect(screen.getByRole("menuitem", { name: "Settings" })).toBeInTheDocument();
   });
 
   it("supports configurable dismiss policies and event hooks", () => {

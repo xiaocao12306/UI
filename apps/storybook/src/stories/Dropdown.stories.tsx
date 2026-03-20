@@ -65,6 +65,36 @@ export const IconTrigger: Story = {
   }
 };
 
+export const IconItemNaming: Story = {
+  args: {
+    label: "Icon items",
+    items: [
+      {
+        key: "settings",
+        label: <span aria-hidden="true">⚙</span>,
+        ariaLabel: "Settings",
+        textValue: "Settings"
+      },
+      {
+        key: "archive",
+        label: <span aria-hidden="true">🗄</span>,
+        ariaLabel: "Archive",
+        textValue: "Archive"
+      }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole("button", { name: "Icon items" }));
+
+    const menu = canvas.getByRole("menu", { name: "Icon items" });
+    await expect(canvas.getByRole("menuitem", { name: "Settings" })).toBeInTheDocument();
+    await userEvent.keyboard("a");
+    await expect(canvas.getByRole("menuitem", { name: "Archive" })).toHaveFocus();
+    await expect(menu).toBeInTheDocument();
+  }
+};
+
 export const NonDismissible: Story = {
   args: {
     label: "Blocking actions",

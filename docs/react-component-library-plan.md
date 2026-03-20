@@ -600,6 +600,7 @@
   - CommandPalette 键冲突告警收口（开发态新增 `commands[].key` 重复值告警，降低 `aria-activedescendant` 与执行遥测漂移风险；补齐 `CommandPalette.test.tsx` 与 Storybook 文档说明）
   - CommandPalette 搜索元数据防呆收口（开发态对“非文本 `label` 且缺失 `textValue/keywords`”输出告警，避免搜索匹配与读屏播报回退；补齐 `CommandPalette.test.tsx` 与 Storybook 文档说明）
   - Dropdown 键冲突告警收口（开发态新增 `items[].key` 重复值告警，避免 roving focus 与关闭原因遥测歧义；补齐 `Dropdown.test.tsx` 与 Storybook 文档说明）
+  - Dropdown 非文本菜单项命名/搜索防呆收口（新增 `items[].ariaLabel`，并在开发态对“非文本 `label` 且缺失 `ariaLabel/textValue`”输出告警；同时让 typeahead 支持富文本 label 的可读文本提取，补齐 `Dropdown.test.tsx` 与 Storybook 文档说明）
   - Combobox 选项值冲突收口（开发态新增 `options[].value` 重复值告警，避免 selected/active 语义歧义；补齐 `Combobox.test.tsx` 与 Storybook 文档说明）
   - Table 排序命名语义收口（新增 `columns[].sortLabel`，支持非文本列头时的排序按钮与 live region 可读播报；补齐单测 + Storybook `SortLabelForCustomHeader` + API/Best Practices 文档）
   - Table 排序命名防呆收口（开发态对“可排序且非文本列头但缺失 `sortLabel`”输出告警，避免读屏命名回退到技术 key；补齐 `Table.test.tsx` 回归与 Storybook 文档说明）

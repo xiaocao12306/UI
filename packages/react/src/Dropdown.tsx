@@ -5,6 +5,7 @@ import { Button } from "./Button";
 export type DropdownItem = {
   key: string;
   label: React.ReactNode;
+  ariaLabel?: string;
   textValue?: string;
   disabled?: boolean;
   onSelect?: () => void;
@@ -44,10 +45,13 @@ function getNextEnabledIndex(items: DropdownItem[], currentIndex: number, direct
 
 function getDropdownItemText(item: DropdownItem) {
   if (typeof item.textValue === "string") {
-    return item.textValue.trim();
+    const textValue = item.textValue.trim();
+    if (textValue.length > 0) {
+      return textValue;
+    }
   }
 
-  return typeof item.label === "string" ? item.label.trim() : "";
+  return getReadableTextNode(item.label).trim();
 }
 
 function normalizeTypeaheadText(text: string) {
@@ -113,6 +117,8 @@ export function Dropdown({
   const itemRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const typeaheadStateRef = React.useRef<{ query: string; timestamp: number }>({ query: "", timestamp: 0 });
   const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
+  const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
+  const warnedMissingTextValueSignatureRef = React.useRef<string | null>(null);
   const triggerId = React.useId();
   const menuId = React.useId();
 
@@ -166,6 +172,75 @@ export function Dropdown({
       `[Dropdown] Duplicate item keys detected: ${Array.from(duplicateKeys)
         .map((key) => `"${key}"`)
         .join(", ")}. Keys should be unique to keep focus and close telemetry deterministic.`
+    );
+  }, [items]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const missingAriaLabelKeys = items.reduce<string[]>((keys, item) => {
+      const hasReadableLabelText = getReadableTextNode(item.label).trim().length > 0;
+      const hasExplicitAriaLabel =
+        typeof item.ariaLabel === "string" && item.ariaLabel.trim().length > 0;
+      if (hasReadableLabelText || hasExplicitAriaLabel) {
+        return keys;
+      }
+
+      keys.push(item.key);
+      return keys;
+    }, []);
+
+    if (missingAriaLabelKeys.length === 0) {
+      warnedMissingAriaLabelSignatureRef.current = null;
+      return;
+    }
+
+    const signature = missingAriaLabelKeys.sort().join("|");
+    if (warnedMissingAriaLabelSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingAriaLabelSignatureRef.current = signature;
+
+    console.warn(
+      `[Dropdown] Non-text item labels should provide ariaLabel: ${missingAriaLabelKeys
+        .map((key) => `"${key}"`)
+        .join(", ")}.`
+    );
+  }, [items]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const missingTextValueKeys = items.reduce<string[]>((keys, item) => {
+      const hasTextValue = typeof item.textValue === "string" && item.textValue.trim().length > 0;
+      const hasReadableLabelText = getReadableTextNode(item.label).trim().length > 0;
+      if (hasTextValue || hasReadableLabelText) {
+        return keys;
+      }
+
+      keys.push(item.key);
+      return keys;
+    }, []);
+
+    if (missingTextValueKeys.length === 0) {
+      warnedMissingTextValueSignatureRef.current = null;
+      return;
+    }
+
+    const signature = missingTextValueKeys.sort().join("|");
+    if (warnedMissingTextValueSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingTextValueSignatureRef.current = signature;
+
+    console.warn(
+      `[Dropdown] Non-text item labels should provide textValue for typeahead matching: ${missingTextValueKeys
+        .map((key) => `"${key}"`)
+        .join(", ")}.`
     );
   }, [items]);
 
@@ -340,6 +415,7 @@ export function Dropdown({
                     type="button"
                     disabled={item.disabled}
                     tabIndex={isActive ? 0 : -1}
+                    aria-label={item.ariaLabel}
                     aria-disabled={item.disabled || undefined}
                     aria-keyshortcuts={item.disabled ? undefined : "Enter Space"}
                     onMouseEnter={() => {
@@ -404,4 +480,32 @@ function isComposingDropdownKeyEvent(event: React.KeyboardEvent<HTMLElement>) {
   }
 
   return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
+}
+
+function getReadableTextNode(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return node;
+  }
+
+  if (typeof node === "number") {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map((item) => getReadableTextNode(item)).join("");
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  return getReadableTextNode(elementProps.children);
 }

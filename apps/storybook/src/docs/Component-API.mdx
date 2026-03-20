@@ -320,7 +320,8 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `items` | `DropdownItem[]` | Each item supports `disabled` and `onSelect`. Development builds warn when item keys are duplicated. |
-| `items[].textValue` | `string` | Optional buffered typeahead search text for non-string labels or locale-specific/accent-normalized matching. |
+| `items[].ariaLabel` | `string` | Accessible name override for non-text/icon-only menu items; development builds warn when non-text labels omit it. |
+| `items[].textValue` | `string` | Typeahead/search alias for non-text labels or locale-specific/accent-normalized matching; development builds warn when non-text labels omit it. |
 | `triggerAriaLabel` | `string` | Accessible name override for icon-only trigger button content. |
 | `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Works in both controlled and uncontrolled menu flows. |
 | controlled close contract | close intent first, parent rerender second | In controlled mode, dismiss gestures emit close callbacks first; menu visibility changes only after parent updates `open`. |
@@ -342,6 +343,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={DropdownStories.NonDismissible} />
 <Canvas of={DropdownStories.DismissGuardHooks} />
 <Canvas of={DropdownStories.TypeaheadNavigation} />
+<Canvas of={DropdownStories.IconItemNaming} />
 <Canvas of={DropdownStories.TypeaheadIgnoresImeComposition} />
 <Canvas of={DropdownStories.OutsideDismissFocusTransfer} />
 <Canvas of={DropdownStories.EscapeDismissFocusReturn} />
