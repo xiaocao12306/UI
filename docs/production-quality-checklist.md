@@ -544,6 +544,7 @@
 - Demo AI region semantics parity: AI section now labels streaming code output as `AI response code stream`, with Playwright assertions for `role="region"`, `aria-live="off"`, and final `aria-busy="false"` completion semantics.
 - Portal owner-document parity: `Portal` default host now resolves from runtime `ownerDocument.body` instead of global `document.body`, preventing iframe/multi-root overlays from mounting into the wrong document.
 - Portal explicit-container parity: added regression coverage to ensure a provided `container` remains the highest-priority mount target even in cross-document hosts, so owner-document inference never overrides explicit portal routing.
+- Portal container-switch parity: added runtime container-switch regression coverage so portal content cleanly migrates between explicit containers without stale host residue.
 - Dialog/Drawer iframe-host parity: added overlay regression coverage proving dialog/drawer portals mount and remain queryable in iframe `ownerDocument` while main-document queries stay clean, locking cross-document modal usability.
 - Dialog/Drawer cross-document scroll-lock parity: body-scroll lock now waits for mounted panel node and locks its `ownerDocument` only, with iframe regressions confirming lock/unlock never leak onto the main document body.
 - Dialog/Drawer owner-document dismiss parity: added iframe coexistence regressions proving Escape/outside-pointer dismissal is isolated per document root and cannot close overlays in sibling documents.
