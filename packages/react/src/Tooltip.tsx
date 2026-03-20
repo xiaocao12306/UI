@@ -45,10 +45,15 @@ export function Tooltip({
 }: TooltipProps) {
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false);
   const tooltipId = React.useId();
+  const rootRef = React.useRef<HTMLSpanElement | null>(null);
   const openTimerRef = React.useRef<number | null>(null);
   const closeTimerRef = React.useRef<number | null>(null);
+  const openTimerWindowRef = React.useRef<Window | null>(null);
+  const closeTimerWindowRef = React.useRef<Window | null>(null);
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
+
+  const getOwnerWindow = React.useCallback(() => rootRef.current?.ownerDocument.defaultView ?? window, []);
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -68,14 +73,16 @@ export function Tooltip({
 
   const clearTimers = React.useCallback(() => {
     if (openTimerRef.current !== null) {
-      window.clearTimeout(openTimerRef.current);
+      (openTimerWindowRef.current ?? getOwnerWindow()).clearTimeout(openTimerRef.current);
       openTimerRef.current = null;
+      openTimerWindowRef.current = null;
     }
     if (closeTimerRef.current !== null) {
-      window.clearTimeout(closeTimerRef.current);
+      (closeTimerWindowRef.current ?? getOwnerWindow()).clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
+      closeTimerWindowRef.current = null;
     }
-  }, []);
+  }, [getOwnerWindow]);
 
   const closeImmediately = React.useCallback(() => {
     clearTimers();
@@ -87,50 +94,59 @@ export function Tooltip({
       return;
     }
     if (closeTimerRef.current !== null) {
-      window.clearTimeout(closeTimerRef.current);
+      (closeTimerWindowRef.current ?? getOwnerWindow()).clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
+      closeTimerWindowRef.current = null;
     }
     setOpen(true);
-  }, [disabled, setOpen]);
+  }, [disabled, getOwnerWindow, setOpen]);
 
   const scheduleOpen = React.useCallback(() => {
     if (disabled) {
       return;
     }
+    const ownerWindow = getOwnerWindow();
     if (closeTimerRef.current !== null) {
-      window.clearTimeout(closeTimerRef.current);
+      (closeTimerWindowRef.current ?? ownerWindow).clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
+      closeTimerWindowRef.current = null;
     }
     if (delayDuration <= 0) {
       setOpen(true);
       return;
     }
     if (openTimerRef.current !== null) {
-      window.clearTimeout(openTimerRef.current);
+      (openTimerWindowRef.current ?? ownerWindow).clearTimeout(openTimerRef.current);
     }
-    openTimerRef.current = window.setTimeout(() => {
+    openTimerWindowRef.current = ownerWindow;
+    openTimerRef.current = ownerWindow.setTimeout(() => {
       setOpen(true);
       openTimerRef.current = null;
+      openTimerWindowRef.current = null;
     }, delayDuration);
-  }, [delayDuration, disabled, setOpen]);
+  }, [delayDuration, disabled, getOwnerWindow, setOpen]);
 
   const scheduleClose = React.useCallback(() => {
+    const ownerWindow = getOwnerWindow();
     if (openTimerRef.current !== null) {
-      window.clearTimeout(openTimerRef.current);
+      (openTimerWindowRef.current ?? ownerWindow).clearTimeout(openTimerRef.current);
       openTimerRef.current = null;
+      openTimerWindowRef.current = null;
     }
     if (closeDelay <= 0) {
       setOpen(false);
       return;
     }
     if (closeTimerRef.current !== null) {
-      window.clearTimeout(closeTimerRef.current);
+      (closeTimerWindowRef.current ?? ownerWindow).clearTimeout(closeTimerRef.current);
     }
-    closeTimerRef.current = window.setTimeout(() => {
+    closeTimerWindowRef.current = ownerWindow;
+    closeTimerRef.current = ownerWindow.setTimeout(() => {
       setOpen(false);
       closeTimerRef.current = null;
+      closeTimerWindowRef.current = null;
     }, closeDelay);
-  }, [closeDelay, setOpen]);
+  }, [closeDelay, getOwnerWindow, setOpen]);
 
   React.useEffect(() => clearTimers, [clearTimers]);
 
@@ -180,7 +196,7 @@ export function Tooltip({
   });
 
   return (
-    <span style={{ position: "relative", display: "inline-flex", maxWidth: "100%" }}>
+    <span ref={rootRef} style={{ position: "relative", display: "inline-flex", maxWidth: "100%" }}>
       {trigger}
       {visible ? (
         <span

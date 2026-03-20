@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import type * as React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { Tooltip } from "./Tooltip";
@@ -248,5 +248,36 @@ describe("Tooltip", () => {
     expect(screen.queryByRole("tooltip")).toBeNull();
 
     vi.useRealTimers();
+  });
+
+  it("uses ownerDocument window timers in iframe-hosted tooltip", () => {
+    const iframe = document.createElement("iframe");
+    document.body.append(iframe);
+    const iframeDocument = iframe.contentDocument as Document;
+    const iframeWindow = iframeDocument.defaultView as Window;
+    const host = iframeDocument.createElement("div");
+    iframeDocument.body.append(host);
+
+    const iframeSetTimeoutSpy = vi.spyOn(iframeWindow, "setTimeout");
+    const iframeClearTimeoutSpy = vi.spyOn(iframeWindow, "clearTimeout");
+
+    const { unmount } = render(
+      <Tooltip content="Iframe tooltip" delayDuration={120} closeDelay={0}>
+        <button type="button">Iframe trigger</button>
+      </Tooltip>,
+      { container: host }
+    );
+
+    const trigger = within(host).getByRole("button", { name: "Iframe trigger" });
+    fireEvent.mouseEnter(trigger);
+
+    expect(iframeSetTimeoutSpy).toHaveBeenCalled();
+
+    unmount();
+    expect(iframeClearTimeoutSpy).toHaveBeenCalled();
+
+    iframeSetTimeoutSpy.mockRestore();
+    iframeClearTimeoutSpy.mockRestore();
+    iframe.remove();
   });
 });
