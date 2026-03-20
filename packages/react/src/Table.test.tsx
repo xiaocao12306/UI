@@ -680,6 +680,69 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledTimes(2);
   });
 
+  it("supports Home/End keyboard focus navigation across sortable headers", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80, status: "review" },
+          { name: "Button", score: 95, status: "ready" }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    const nameSort = screen.getByRole("button", { name: "Name sort descending" });
+    const statusSort = screen.getByRole("button", { name: "Status sort ascending" });
+    const scoreSort = screen.getByRole("button", { name: "Score sort ascending" });
+
+    await user.tab();
+    expect(nameSort).toHaveFocus();
+
+    fireEvent.keyDown(nameSort, { key: "End" });
+    expect(statusSort).toHaveFocus();
+
+    fireEvent.keyDown(statusSort, { key: "Home" });
+    expect(nameSort).toHaveFocus();
+
+    fireEvent.keyDown(nameSort, { key: "PageDown" });
+    expect(scoreSort).toHaveFocus();
+
+    fireEvent.keyDown(scoreSort, { key: "PageUp" });
+    expect(nameSort).toHaveFocus();
+  });
+
+  it("keeps Home/End/PageUp/PageDown navigation inactive when sortable controls are disabled", () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[{ name: "Dialog", score: 80 }]}
+        onSortChange={onSortChange}
+      />
+    );
+
+    const nameSort = screen.getByRole("button", { name: "Name sort ascending" });
+
+    fireEvent.keyDown(nameSort, { key: "End" });
+    fireEvent.keyDown(nameSort, { key: "Home" });
+    fireEvent.keyDown(nameSort, { key: "PageDown" });
+    fireEvent.keyDown(nameSort, { key: "PageUp" });
+
+    expect(onSortChange).not.toHaveBeenCalled();
+    expect(nameSort).toBeDisabled();
+  });
+
   it("deduplicates synthesized keyboard-origin click after Enter activation", () => {
     const onSortChange = vi.fn();
 

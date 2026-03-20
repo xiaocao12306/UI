@@ -159,6 +159,18 @@ export function Table<T>({
     key: string;
     direction: TableSortDirection;
   } | null>(() => resolveInitialSortState(columns, defaultSortKey, defaultSortDirection));
+  const sortableNavigationKeys = React.useMemo(() => {
+    if (loading || data.length <= 1) {
+      return [];
+    }
+
+    return columns.reduce<string[]>((keys, column) => {
+      if (column.sortable) {
+        keys.push(String(column.key));
+      }
+      return keys;
+    }, []);
+  }, [columns, data.length, loading]);
 
   React.useEffect(() => {
     if (!sortState) {
@@ -553,6 +565,48 @@ export function Table<T>({
                         if (event.altKey || event.ctrlKey || event.metaKey) {
                           return;
                         }
+
+                        if (event.key === "Home") {
+                          const firstKey = sortableNavigationKeys[0];
+                          if (!firstKey) {
+                            return;
+                          }
+                          event.preventDefault();
+                          sortButtonRefs.current[firstKey]?.focus();
+                          return;
+                        }
+
+                        if (event.key === "End") {
+                          const lastKey = sortableNavigationKeys[sortableNavigationKeys.length - 1];
+                          if (!lastKey) {
+                            return;
+                          }
+                          event.preventDefault();
+                          sortButtonRefs.current[lastKey]?.focus();
+                          return;
+                        }
+
+                        if (event.key === "PageDown" || event.key === "PageUp") {
+                          const currentPosition = sortableNavigationKeys.indexOf(key);
+                          if (currentPosition < 0) {
+                            return;
+                          }
+
+                          const delta = event.key === "PageDown" ? 1 : -1;
+                          const nextPosition = Math.max(
+                            0,
+                            Math.min(sortableNavigationKeys.length - 1, currentPosition + delta)
+                          );
+                          if (nextPosition === currentPosition) {
+                            return;
+                          }
+
+                          event.preventDefault();
+                          const nextKey = sortableNavigationKeys[nextPosition];
+                          sortButtonRefs.current[nextKey]?.focus();
+                          return;
+                        }
+
                         if (!isSortActivationKey(event.key)) {
                           return;
                         }
