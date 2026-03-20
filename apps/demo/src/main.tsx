@@ -442,6 +442,8 @@ function App() {
   const feedPageCount = Math.ceil(releaseFeed.length / feedPageSize);
   const visibleFeed = releaseFeed.slice((feedPage - 1) * feedPageSize, feedPage * feedPageSize);
   const tableRows = tableEmpty ? [] : readinessRows;
+  const activeSectionLabel =
+    sectionLinks.find((section) => section.id === activeSection)?.label ?? sectionLinks[0].label;
 
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -747,6 +749,14 @@ function App() {
                   />
                 ))}
               </nav>
+              <p
+                role="status"
+                aria-live="polite"
+                className="demo-visually-hidden"
+                data-testid="active-section-status"
+              >
+                Current section: {activeSectionLabel}
+              </p>
             </div>
           </header>
 
