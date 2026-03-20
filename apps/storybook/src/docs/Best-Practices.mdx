@@ -157,6 +157,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep command-palette `aria-keyshortcuts` aligned with actionable state: when filtered results contain no enabled command, omit `Enter` from shortcut hints.
 - For batched command execution, set `closeOnSelect={false}` so users can run multiple actions without reopening the palette.
 - Treat repeated `Enter` keydown (`event.repeat`) as no-op for command execution so long-press does not trigger duplicate actions or telemetry noise.
+- Treat repeated `Escape` keydown (`event.repeat`) as no-op for both query-clear and dismiss paths so long-press does not clear/close the palette unexpectedly.
 - Use `PageUp` / `PageDown` for long command sets so keyboard users can jump actionable options in larger steps.
 - Keep `Ctrl/Meta/Alt + Home/End/Page/Enter/Escape` on native input behavior; do not hijack modified shortcuts for command navigation or dismiss.
 - Keep `clearQueryOnEscape` enabled so first Escape clears query intent before full palette dismissal; disable only when product expects immediate close.
@@ -194,6 +195,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={CommandPaletteStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={CommandPaletteStories.GuardedDismissEvents} />
 <Canvas of={CommandPaletteStories.EscapeClearsQueryFirst} />
+<Canvas of={CommandPaletteStories.EscapeRepeatGuard} />
 
 ## Notification Behavior
 

@@ -450,6 +450,45 @@ function EscapeClearsQueryFirstPalette() {
   );
 }
 
+function EscapeRepeatGuardPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [query, setQuery] = React.useState("");
+  const [escapeCalls, setEscapeCalls] = React.useState(0);
+
+  return (
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
+        Query telemetry:{" "}
+        <strong data-testid="escape-repeat-query" style={storyEmphasisTextStyle}>
+          {query || "N/A"}
+        </strong>
+      </p>
+      <p style={storyMutedTextStyle}>
+        Palette state:{" "}
+        <strong data-testid="escape-repeat-open-state" style={storyEmphasisTextStyle}>
+          {open ? "open" : "closed"}
+        </strong>
+      </p>
+      <p style={storyMutedTextStyle}>
+        Escape hook calls:{" "}
+        <strong data-testid="escape-repeat-calls" style={storyEmphasisTextStyle}>
+          {escapeCalls}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        onQueryChange={setQuery}
+        onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
+        commands={[
+          { key: "publish-release", label: "Publish Release", keywords: ["release"] },
+          { key: "open-changelog", label: "Open Changelog", keywords: ["notes"] }
+        ]}
+      />
+    </StoryFullscreenFrame>
+  );
+}
+
 function EscapeShortcutHintPrecisionPalette() {
   const [open, setOpen] = React.useState(true);
   const [query, setQuery] = React.useState("");
@@ -963,6 +1002,36 @@ export const EscapeClearsQueryFirst: Story = {
     await userEvent.keyboard("{Escape}");
     await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
     await expect(canvas.getByTestId("open-state")).toHaveTextContent("closed");
+  }
+};
+
+export const EscapeRepeatGuard: Story = {
+  render: () => <EscapeRepeatGuardPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "release");
+    await expect(canvas.getByTestId("escape-repeat-query")).toHaveTextContent("release");
+    await expect(canvas.getByTestId("escape-repeat-open-state")).toHaveTextContent("open");
+
+    fireEvent.keyDown(input, { key: "Escape", repeat: true });
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("escape-repeat-query")).toHaveTextContent("release");
+    await expect(canvas.getByTestId("escape-repeat-open-state")).toHaveTextContent("open");
+    await expect(canvas.getByTestId("escape-repeat-calls")).toHaveTextContent("0");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("escape-repeat-query")).toHaveTextContent("N/A");
+    await expect(canvas.getByTestId("escape-repeat-open-state")).toHaveTextContent("open");
+    await expect(canvas.getByTestId("escape-repeat-calls")).toHaveTextContent("0");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("escape-repeat-open-state")).toHaveTextContent("closed");
+    await expect(canvas.getByTestId("escape-repeat-calls")).toHaveTextContent("1");
   }
 };
 

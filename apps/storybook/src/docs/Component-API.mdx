@@ -648,6 +648,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | activedescendant validity | enabled option only | Active option references are sanitized during command/query updates so combobox never points to missing or disabled options. |
 | search key hints | `aria-keyshortcuts="ArrowDown ArrowUp Home End PageDown PageUp [Enter] [Escape]"` | Combobox exposes command-navigation metadata for QA/AT discoverability; `Enter` hint is omitted when no enabled command is currently actionable, and `Escape` hint is omitted when both `closeOnEscape` and `clearQueryOnEscape` are disabled. |
 | Enter repeat guard | ignores repeated keydown | Command execution ignores repeated `Enter` (`event.repeat=true`) so long-press does not trigger duplicate actions or telemetry noise. |
+| Escape repeat guard | ignores repeated keydown | Repeated `Escape` (`event.repeat=true`) is ignored for both query-clear and dismiss paths so long-press does not trigger accidental close or duplicate telemetry. |
 | long-list keyboard jump | `PageUp` / `PageDown` | Page keys jump by 5 actionable commands while skipping disabled options, reducing Arrow-key repetition in dense command sets. |
 | modifier-key guard | ignores `Ctrl/Meta/Alt + Home/End/Page/Enter/Escape` command handling | Preserves native input editing shortcuts and avoids hijacking app-level modified key flows during search/dismiss. |
 | search matching | accent-insensitive + lowercase normalization | Plain query text like `cafe` can match `Café` labels/aliases. |
@@ -670,6 +671,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={CommandPaletteStories.NonDismissible} />
 <Canvas of={CommandPaletteStories.GuardedDismissEvents} />
 <Canvas of={CommandPaletteStories.EscapeClearsQueryFirst} />
+<Canvas of={CommandPaletteStories.EscapeRepeatGuard} />
 
 ### PromptInput
 
