@@ -603,6 +603,79 @@ export const ManualActivation: Story = {
   }
 };
 
+function ManualActivationRepeatGuardDemo() {
+  const [value, setValue] = React.useState("spec");
+  const [changes, setChanges] = React.useState(0);
+
+  return (
+    <TabsShowcase gap={10}>
+      <p style={storyMutedTextStyle}>
+        Manual activation ignores repeated Enter/Space keydown so long-press does not trigger
+        duplicate value changes.
+      </p>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={storyTelemetryLabelStyle}>Manual activation changes</span>
+        <Badge tone="default" data-testid="manual-repeat-change-count">
+          {changes}
+        </Badge>
+      </div>
+      <Tabs
+        ariaLabel="Manual repeat guard tabs"
+        activationMode="manual"
+        value={value}
+        onValueChange={(nextValue) => {
+          setValue(nextValue);
+          setChanges((count) => count + 1);
+        }}
+        items={[
+          { key: "spec", label: "Spec", content: "Specification stage." },
+          { key: "build", label: "Build", content: "Build stage." },
+          { key: "release", label: "Release", content: "Release stage." }
+        ]}
+      />
+    </TabsShowcase>
+  );
+}
+
+export const ManualActivationRepeatGuard: Story = {
+  render: () => <ManualActivationRepeatGuardDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+    const releaseTab = canvas.getByRole("tab", { name: "Release" });
+    const changeCount = canvas.getByTestId("manual-repeat-change-count");
+
+    await userEvent.click(specTab);
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+    await expect(changeCount).toHaveTextContent("0");
+
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(buildTab).toHaveFocus();
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+
+    fireEvent.keyDown(buildTab, { key: "Enter", repeat: true });
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+    await expect(changeCount).toHaveTextContent("0");
+
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
+    await expect(changeCount).toHaveTextContent("1");
+
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(releaseTab).toHaveFocus();
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
+
+    fireEvent.keyDown(releaseTab, { key: " ", repeat: true });
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
+    await expect(changeCount).toHaveTextContent("1");
+
+    await userEvent.keyboard("{Space}");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Release stage.");
+    await expect(changeCount).toHaveTextContent("2");
+  }
+};
+
 export const ManualFocusResetOnBlur: Story = {
   render: () => (
     <TabsShowcase>
