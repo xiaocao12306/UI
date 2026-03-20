@@ -743,6 +743,7 @@
   - Release Gate 证据刷新（2026-03-21 latest+58：完成 demo dist 同步后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage（`41 files / 604 tests`）+ demo e2e `92/92` + storybook interaction `227/227`）
   - 动效兼容回归证据刷新（2026-03-21 latest+59：新增 `usePrefersReducedMotion` 兼容层回归（`addEventListener` + 旧 `addListener`）并补齐 LoadingDots/StreamingText 在运行时切换系统 reduced-motion 的行为断言后，`pnpm --filter @aurora-ui/react exec vitest run src/usePrefersReducedMotion.test.tsx src/LoadingDots.test.tsx src/StreamingText.test.tsx` 通过（`19/19`））
   - 集成示例文档结构收口（2026-03-21 latest+60：修复 `docs/component-recipes.md` 重复编号（11/12/13/14 冲突）并统一递增到 17，`pnpm docs:commands:check` 复验通过）
+  - 动效兼容边界补齐（2026-03-21 latest+61：补充 `usePrefersReducedMotion` 在 `window.matchMedia` 缺失环境的降级回归，`pnpm --filter @aurora-ui/react exec vitest run src/usePrefersReducedMotion.test.tsx` 通过（`4/4`））
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
