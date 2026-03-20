@@ -640,6 +640,9 @@ function App() {
     <AuroraProvider theme={theme}>
       <GlobalStyles />
       <div className="demo-app-shell" style={appShellStyle}>
+        <a href="#basic-components" className="demo-skip-link">
+          Skip to component sections
+        </a>
         <main className="demo-main-layout" style={mainLayoutStyle}>
           <header className="demo-hero" style={heroPanelStyle}>
             <div style={heroHeadlineStyle}>
