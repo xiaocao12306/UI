@@ -78,6 +78,9 @@ export function CommandPalette({
   const listId = React.useId();
   const statusId = React.useId();
   const listRef = React.useRef<HTMLDivElement>(null);
+  const resolvedSearchAriaLabel = resolveNonEmptyLabel(searchAriaLabel, "Search commands");
+  const resolvedResultsAriaLabel = resolveNonEmptyLabel(resultsAriaLabel, "Command results");
+  const resolvedCloseLabel = resolveNonEmptyLabel(closeLabel, "Close dialog");
 
   const markCloseReason = React.useCallback(
     (reason: CommandPaletteCloseReason) => {
@@ -405,7 +408,7 @@ export function CommandPalette({
       onOpenChange={handleOpenChange}
       title={title}
       description={description}
-      closeLabel={closeLabel}
+      closeLabel={resolvedCloseLabel}
       size="md"
       closeOnEscape={closeOnEscape}
       closeOnOutsidePointer={closeOnOutsidePointer}
@@ -524,7 +527,7 @@ export function CommandPalette({
               selectItem(safeActiveIndex);
             }
           }}
-          aria-label={searchAriaLabel}
+          aria-label={resolvedSearchAriaLabel}
         />
         <p
           id={statusId}
@@ -549,11 +552,12 @@ export function CommandPalette({
             id={listId}
             ref={listRef}
             role="listbox"
-            aria-label={resultsAriaLabel}
+            aria-label={resolvedResultsAriaLabel}
             style={{ maxHeight: 280, overflow: "auto", display: "grid", gap: 4 }}
           >
             {filtered.map((item, index) => {
               const active = index === safeActiveIndex;
+              const optionAriaLabel = resolveNonEmptyLabel(item.ariaLabel);
               return (
                 <div
                   key={item.key}
@@ -561,7 +565,7 @@ export function CommandPalette({
                   role="option"
                   aria-selected={active}
                   aria-disabled={item.disabled || undefined}
-                  aria-label={item.ariaLabel}
+                  aria-label={optionAriaLabel}
                   aria-posinset={index + 1}
                   aria-setsize={filtered.length}
                   tabIndex={-1}
@@ -735,6 +739,14 @@ function getReadableCommandLabelText(node: React.ReactNode): string {
   }
 
   return getReadableCommandLabelText(elementProps.children);
+}
+
+function resolveNonEmptyLabel(label: string | undefined, fallback?: string): string | undefined {
+  if (typeof label === "string" && label.trim().length > 0) {
+    return label.trim();
+  }
+
+  return fallback;
 }
 
 function normalizeReadableCommandText(value: string) {

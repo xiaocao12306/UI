@@ -599,17 +599,17 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `commands` | `CommandItem[]` | `disabled` commands remain visible but non-selectable. Rich labels are searchable via readable text extraction (including inline `aria-label`); non-readable labels should provide `textValue` aliases. Development builds warn when command keys are duplicated, warn when non-text labels omit accessible naming, and warn when non-text labels omit both `textValue` and searchable `keywords`. |
-| `commands[].ariaLabel` | `string` | Accessible name override for icon/non-text command options; rich labels with inline `aria-label` are auto-detected before warning. |
+| `commands[].ariaLabel` | `string` | Accessible name override for icon/non-text command options; rich labels with inline `aria-label` are auto-detected before warning, and blank values are ignored to avoid overriding visible option naming. |
 | `title` / `description` | `ReactNode` | Localizable dialog heading and supporting copy for command context. |
-| `searchAriaLabel` | `string` | Localizable accessible name for the search combobox (default: `Search commands`). |
+| `searchAriaLabel` | `string` | Localizable accessible name for the search combobox; blank values are ignored and fallback to `Search commands`. |
 | `placeholder` | `string` | Custom search input hint text for product-specific command vocabulary. |
-| `closeLabel` | `string` | Localizable close-button accessible name (defaults to Dialog close label). |
+| `closeLabel` | `string` | Localizable close-button accessible name; blank values are ignored and fallback to `Close dialog`. |
 | `closeOnSelect` | `boolean` | Defaults to `true`; set `false` for batch workflows that keep the palette open after each command. |
 | `clearQueryOnEscape` | `boolean` | Defaults to `true`; first Escape clears active query before dismiss is allowed, reducing accidental close during search refinement. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls whether overlay dismisses on Escape or outside pointer interactions for blocking approval flows. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | `(event) => void` | Low-level dismiss hooks; call `event.preventDefault()` for conditional approval guards while keeping default close policy enabled. |
 | `emptyMessage` | `ReactNode` | Custom empty-state guidance for no-match queries. |
-| `resultsAriaLabel` | `string` | Localized accessible name for the command result listbox (default: `Command results`). |
+| `resultsAriaLabel` | `string` | Localized accessible name for the command result listbox; blank values are ignored and fallback to `Command results`. |
 | `onQueryChange` | `(query: string) => void` | Use for analytics and AI telemetry pipelines; palette close now emits `""` so external telemetry/state can reset with internal query lifecycle. |
 | `onCloseReason` | `(reason: 'close-button' \| 'item-select' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry so analytics can distinguish user-dismiss path vs action completion. |
 | close lifecycle order | `item-select: onSelect -> onCloseReason -> onOpenChange(false)`; close-button: `onCloseReason -> onOpenChange(false)` | Keep analytics/actions deterministic and avoid duplicate side effects across callbacks. |

@@ -902,6 +902,19 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("button", { name: "关闭命令面板" })).toBeInTheDocument();
   });
 
+  it("ignores blank closeLabel and falls back to default close-button name", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        closeLabel="   "
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Close dialog" })).toBeInTheDocument();
+  });
+
   it("resets close-reason tracking between dismiss cycles", () => {
     const onCloseReason = vi.fn();
 
@@ -1122,6 +1135,34 @@ describe("CommandPalette", () => {
     );
 
     expect(screen.getByRole("listbox", { name: "命令结果列表" })).toBeInTheDocument();
+  });
+
+  it("ignores blank search and result aria labels and falls back to defaults", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        searchAriaLabel="   "
+        resultsAriaLabel="   "
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    expect(screen.getByRole("combobox", { name: "Search commands" })).toBeInTheDocument();
+    expect(screen.getByRole("listbox", { name: "Command results" })).toBeInTheDocument();
+  });
+
+  it("ignores blank option ariaLabel and keeps visible text as option name", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings", ariaLabel: "   " }]}
+      />
+    );
+
+    const option = screen.getByRole("option", { name: "Open Settings" });
+    expect(option).not.toHaveAttribute("aria-label");
   });
 
   it("supports localized dialog and search input copy", () => {
