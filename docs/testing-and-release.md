@@ -48,6 +48,7 @@ pnpm --filter @aurora-ui/react test
 pnpm --filter @aurora-ui/demo build
 pnpm demo:e2e
 pnpm demo:dist:check
+pnpm release:exports:check
 pnpm changeset:required
 pnpm storybook:coverage:report
 pnpm storybook:coverage:check
@@ -200,7 +201,7 @@ Workflow: `.github/workflows/release.yml`
 Behavior:
 
 - always runs Changesets version PR automation on `main`
-- runs `pnpm release:gate:ci` (`verify + coverage:gate + demo:e2e + demo:dist:check + storybook:test:ci`) before any version/publish step
+- runs `pnpm release:gate:ci` (`verify + release:exports:check + coverage:gate + demo:e2e + demo:dist:check + storybook:test:ci`) before any version/publish step
 - runs `pnpm release:dry-run` in the same workflow before version/publish step and uploads `release-dry-run-logs` artifact
 - publishes npm packages only when `NPM_TOKEN` is configured
 - uses npm provenance (`id-token: write`) during publish
@@ -296,10 +297,11 @@ pnpm release:gate:ci
 This runs:
 
 1. `pnpm verify`
-2. `pnpm coverage:gate`
-3. `pnpm demo:e2e`
-4. `pnpm demo:dist:check`
-5. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:docs:parity:check` + `storybook:docs:structure:check` + `docs:commands:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`）
+2. `pnpm release:exports:check`
+3. `pnpm coverage:gate`
+4. `pnpm demo:e2e`
+5. `pnpm demo:dist:check`
+6. `pnpm storybook:test:ci`（内含 `storybook:coverage:check` + `storybook:docs:check` + `storybook:docs:parity:check` + `storybook:docs:structure:check` + `docs:commands:check` + `storybook:play:check` + `storybook:static:check` + `storybook:a11y:skip-check`）
 
 Full local pre-release gate (includes tarball evidence):
 
@@ -307,7 +309,7 @@ Full local pre-release gate (includes tarball evidence):
 pnpm release:gate
 ```
 
-This appends: 6. `pnpm release:dry-run`
+This appends: 7. `pnpm release:dry-run`
 
 ## Evidence Retrieval
 

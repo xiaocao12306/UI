@@ -157,7 +157,7 @@ pnpm chromatic
   - `pnpm release:preflight` (`CHROMATIC_PROJECT_TOKEN` + `NPM_TOKEN`)
   - `pnpm release:preflight:chromatic` (`CHROMATIC_PROJECT_TOKEN` only; same as `pnpm release:preflight -- --scope=chromatic`)
   - `pnpm release:preflight:publish` (`NPM_TOKEN` only; same as `pnpm release:preflight -- --scope=publish`)
-- local CI-equivalent gate: `pnpm release:gate:ci` (`verify + coverage:gate + demo:e2e + demo:dist:check + storybook:test:ci`)
+- local CI-equivalent gate: `pnpm release:gate:ci` (`verify + release:exports:check + coverage:gate + demo:e2e + demo:dist:check + storybook:test:ci`)
 - local publish dry-run: `pnpm release:dry-run` (runs `changeset version` + auto-discovered package `npm publish --dry-run`)
   - requires clean working tree and auto-reverts dry-run version file edits
   - verifies publishable tarball only, no real publish side-effect
@@ -198,6 +198,7 @@ Token-missing troubleshooting quick signatures:
 
 ```bash
 pnpm verify
+pnpm release:exports:check
 pnpm coverage:gate
 pnpm demo:e2e
 pnpm demo:dist:check
