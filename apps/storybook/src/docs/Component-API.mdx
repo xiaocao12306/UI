@@ -305,7 +305,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onCloseReason` | `(reason: 'trigger-click' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for trigger-toggle vs dismiss-gesture analytics. |
 | close lifecycle order | `onCloseReason -> onOpenChange(false)` | Trigger/Escape/outside-pointer dismiss paths share deterministic close callback order for telemetry reducers. |
 | `align` / `sideOffset` | `'start' \| 'end'` / `number` | Horizontal alignment and vertical spacing from trigger. |
-| `contentLabel` | `string` | Accessible name for popover dialog content region. |
+| `contentLabel` | `string` | Accessible name for popover dialog content region; blank values are ignored and fallback to `Popover content`. |
 | trigger relation | conditional `aria-controls` | Trigger references content ID only while open to avoid dangling ARIA links. |
 | dismiss focus policy | Escape restores trigger focus; outside pointer keeps target focus | Prevents keyboard dead-ends without stealing pointer intent. |
 | Escape priority | preempted events skip popover hook/dismiss | If higher-level handlers already `preventDefault()` Escape, popover stays open and does not fire `onEscapeKeyDown`. |
@@ -503,7 +503,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `running` | `boolean` | Pause/resume the animated dots. |
 | `interval` / `dotCount` | `number` | Controls animation rhythm and max visible dots. |
-| `label` / `live` | `string` / `'polite' \| 'assertive' \| 'off'` | Screen-reader narration and live-region urgency. |
+| `label` / `live` | `string` / `'polite' \| 'assertive' \| 'off'` | Screen-reader narration and live-region urgency; blank `label` values are ignored and fallback to `Loading`. |
 
 <Canvas of={LoadingDotsStories.Paused} />
 
@@ -517,6 +517,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `streaming` | `boolean` | Toggle realtime token streaming vs instant completion mode. |
 | `speed` / `startDelay` | `number` | Controls token cadence and delayed start. |
 | `cursorChar` / `showCursorWhenDone` | `string` / `boolean` | Cursor visual customization and completion behavior. |
+| `label` | `string` | Accessible narration label for streaming status; blank values are ignored and fallback to `Streaming text`. |
 | `onProgress` / `onComplete` | callbacks | Lifecycle hooks for telemetry and completion flow. |
 
 <Canvas of={StreamingTextStories.MultilineCursor} />
@@ -530,7 +531,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `value` / `min` / `max` | `number` | Determinate range with safe clamp and percent narration. |
 | `indeterminate` | `boolean` | Removes `aria-valuenow` and switches to loading animation branch. |
-| `label` / `valueText` | `string` | Explicit screen-reader label and override value narration text. |
+| `label` / `valueText` | `string` | Explicit screen-reader label and override value narration text; blank `label` values are ignored and fallback to `Progress`. |
 | `tone` / `size` | `'default' \| 'success' \| 'warning' \| 'danger'` / `'sm' \| 'md'` | Visual emphasis and bar density controls. |
 | `showValueLabel` | `boolean` | Renders helper value text under the progress track. |
 

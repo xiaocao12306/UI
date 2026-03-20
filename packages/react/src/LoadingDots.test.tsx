@@ -39,4 +39,9 @@ describe("LoadingDots", () => {
     expect(dots).toHaveAttribute("aria-live", "off");
     expect(dots).toHaveTextContent("....");
   });
+
+  it("ignores blank label and falls back to default narration label", () => {
+    render(<LoadingDots label="   " />);
+    expect(screen.getByRole("status", { name: "Loading" })).toBeInTheDocument();
+  });
 });

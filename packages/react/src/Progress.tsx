@@ -48,13 +48,17 @@ export function Progress({
   const safeMax = Number.isFinite(max) && max > safeMin ? max : safeMin + 100;
   const safeValue = clamp(Number.isFinite(value) ? value : safeMin, safeMin, safeMax);
   const ratio = ((safeValue - safeMin) / (safeMax - safeMin)) * 100;
+  const resolvedLabel =
+    typeof label === "string" && label.trim().length > 0
+      ? label.trim()
+      : "Progress";
   const resolvedValueText = valueText ?? (indeterminate ? "Loading" : `${Math.round(ratio)}%`);
 
   return (
     <div style={{ display: "grid", gap: 6 }}>
       <div
         role="progressbar"
-        aria-label={label}
+        aria-label={resolvedLabel}
         aria-valuemin={safeMin}
         aria-valuemax={safeMax}
         aria-valuenow={indeterminate ? undefined : safeValue}

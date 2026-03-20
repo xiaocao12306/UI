@@ -44,4 +44,9 @@ describe("StreamingText", () => {
     expect(status).toHaveTextContent("Hi▋");
     vi.useRealTimers();
   });
+
+  it("ignores blank label and falls back to default streaming narration name", () => {
+    render(<StreamingText text="Result" streaming={false} label="   " />);
+    expect(screen.getByRole("status", { name: "Streaming text" })).toBeInTheDocument();
+  });
 });

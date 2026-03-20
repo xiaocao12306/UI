@@ -25,4 +25,9 @@ describe("Progress", () => {
     render(<Progress value={55} showValueLabel />);
     expect(screen.getByText("55%")).toBeInTheDocument();
   });
+
+  it("ignores blank label and falls back to default progressbar name", () => {
+    render(<Progress label="   " />);
+    expect(screen.getByRole("progressbar", { name: "Progress" })).toBeInTheDocument();
+  });
 });

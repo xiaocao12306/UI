@@ -22,6 +22,10 @@ export function LoadingDots({
   ...props
 }: LoadingDotsProps) {
   const safeDotCount = clampDotCount(dotCount);
+  const resolvedLabel =
+    typeof label === "string" && label.trim().length > 0
+      ? label.trim()
+      : "Loading";
   const [index, setIndex] = React.useState(0);
 
   React.useEffect(() => {
@@ -49,7 +53,7 @@ export function LoadingDots({
   return (
     <span
       role="status"
-      aria-label={label}
+      aria-label={resolvedLabel}
       aria-live={ariaLive}
       aria-busy={running}
       style={{ color: "var(--aurora-text-secondary)", fontFamily: "var(--aurora-font-family-mono)", whiteSpace: "pre", ...style }}

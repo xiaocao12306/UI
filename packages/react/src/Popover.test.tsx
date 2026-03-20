@@ -80,6 +80,17 @@ describe("Popover", () => {
     expect(dialog).toHaveFocus();
   });
 
+  it("ignores blank contentLabel and falls back to default popover dialog name", () => {
+    render(
+      <Popover triggerLabel="Blank content label" contentLabel="   ">
+        <p>Read-only details</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Blank content label" }));
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  });
+
   it("supports icon trigger naming via triggerAriaLabel", () => {
     render(
       <Popover triggerLabel="⋯" triggerAriaLabel="More info">

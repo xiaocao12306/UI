@@ -48,6 +48,10 @@ export function Popover({
     typeof triggerAriaLabel === "string" && triggerAriaLabel.trim().length > 0
       ? triggerAriaLabel.trim()
       : undefined;
+  const resolvedContentLabel =
+    typeof contentLabel === "string" && contentLabel.trim().length > 0
+      ? contentLabel.trim()
+      : "Popover content";
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -116,7 +120,7 @@ export function Popover({
           id={contentId}
           ref={contentRef}
           role="dialog"
-          aria-label={contentLabel}
+          aria-label={resolvedContentLabel}
           tabIndex={-1}
           onEscapeKeyDown={(event) => {
             onEscapeKeyDown?.(event);

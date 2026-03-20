@@ -34,6 +34,10 @@ export function StreamingText({
   const [visibleText, setVisibleText] = React.useState(streaming ? "" : text);
   const completedRef = React.useRef(false);
   const totalLength = text.length;
+  const resolvedLabel =
+    typeof label === "string" && label.trim().length > 0
+      ? label.trim()
+      : "Streaming text";
 
   React.useEffect(() => {
     completedRef.current = false;
@@ -94,7 +98,7 @@ export function StreamingText({
   return (
     <span
       role="status"
-      aria-label={label}
+      aria-label={resolvedLabel}
       aria-live={live}
       aria-busy={streaming && !isComplete}
       style={{ whiteSpace: preserveLineBreaks ? "pre-wrap" : "normal", ...style }}
