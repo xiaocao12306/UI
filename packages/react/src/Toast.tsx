@@ -640,9 +640,14 @@ function hasReadableTextNode(node: React.ReactNode): boolean {
     return false;
   }
 
-  if (node.props?.["aria-hidden"] === true || node.props?.["aria-hidden"] === "true") {
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+  };
+
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
     return false;
   }
 
-  return hasReadableTextNode(node.props?.children);
+  return hasReadableTextNode(elementProps.children);
 }
