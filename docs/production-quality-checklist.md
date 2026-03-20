@@ -496,3 +496,4 @@
 - Demo active-section narration parity: added hidden `role="status"` + `aria-live="polite"` announcer (`data-testid="active-section-status"`) so anchor-nav and hero-card section jumps are voiced for assistive tech users.
 - Demo e2e parity refresh (2026-03-20 latest+10): reran `pnpm demo:e2e` after active-section narration rollout and confirmed full pass (75/75).
 - Tabs direction-priority parity: added regression coverage ensuring nearest explicit `dir="ltr"` overrides computed-style direction fallback, preventing ArrowLeft/ArrowRight semantics drift in mixed-direction hosts.
+- CommandPalette search-metadata diagnostics parity: development builds now warn when non-text command labels omit both `textValue` and searchable `keywords`, preventing command filter fallback drift for icon/custom-label actions.

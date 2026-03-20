@@ -93,6 +93,56 @@ describe("CommandPalette", () => {
     }
   });
 
+  it("warns when non-text labels omit searchable metadata", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <CommandPalette
+          open
+          onOpenChange={() => {}}
+          commands={[
+            { key: "deploy", label: <span>Deploy Project</span> },
+            { key: "settings", label: "Open Settings" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Non-text labels should provide textValue or keywords for searchable metadata: "deploy"'
+        )
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text labels when textValue or keywords are provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <CommandPalette
+          open
+          onOpenChange={() => {}}
+          commands={[
+            { key: "deploy", label: <span>Deploy Project</span>, textValue: "Deploy Project" },
+            { key: "release", label: <span>Release</span>, keywords: ["publish"] }
+          ]}
+        />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("matches accented labels with plain query text", () => {
     render(
       <CommandPalette

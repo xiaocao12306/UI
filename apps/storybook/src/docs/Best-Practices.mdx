@@ -132,6 +132,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep command labels explicit and searchable.
 - Keep `commands[].key` unique and stable; development builds now warn on duplicate keys to avoid active-option and telemetry drift.
 - Provide `textValue` aliases for non-string command labels and accent-friendly matching terms.
+- For non-text command labels, ensure `textValue` or searchable `keywords` are present; development builds warn when both are missing.
 - Provide empty-state guidance when no command matches the query.
 - Track user query updates with `onQueryChange` for downstream telemetry.
 - Treat `onQueryChange("")` on palette close as the telemetry reset signal so external state mirrors the internal query lifecycle.

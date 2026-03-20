@@ -72,6 +72,7 @@ export function CommandPalette({
   const closeReasonRef = React.useRef<CommandPaletteCloseReason | null>(null);
   const wasOpenRef = React.useRef(open);
   const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
+  const warnedMissingSearchMetadataSignatureRef = React.useRef<string | null>(null);
   const listId = React.useId();
   const statusId = React.useId();
   const listRef = React.useRef<HTMLDivElement>(null);
@@ -148,6 +149,49 @@ export function CommandPalette({
       `[CommandPalette] Duplicate command keys detected: ${Array.from(duplicateKeys)
         .map((key) => `"${key}"`)
         .join(", ")}. Keys should be unique to keep aria-activedescendant and selection behavior deterministic.`
+    );
+  }, [commands]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const missingSearchMetadataKeys = commands.reduce<string[]>((keys, item) => {
+      if (typeof item.label === "string") {
+        return keys;
+      }
+
+      if (typeof item.textValue === "string" && item.textValue.trim().length > 0) {
+        return keys;
+      }
+
+      if (
+        Array.isArray(item.keywords) &&
+        item.keywords.some((keyword) => typeof keyword === "string" && keyword.trim().length > 0)
+      ) {
+        return keys;
+      }
+
+      keys.push(item.key);
+      return keys;
+    }, []);
+
+    if (missingSearchMetadataKeys.length === 0) {
+      warnedMissingSearchMetadataSignatureRef.current = null;
+      return;
+    }
+
+    const signature = missingSearchMetadataKeys.sort().join("|");
+    if (warnedMissingSearchMetadataSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingSearchMetadataSignatureRef.current = signature;
+
+    console.warn(
+      `[CommandPalette] Non-text labels should provide textValue or keywords for searchable metadata: ${missingSearchMetadataKeys
+        .map((key) => `"${key}"`)
+        .join(", ")}.`
     );
   }, [commands]);
 
