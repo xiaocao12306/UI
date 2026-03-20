@@ -596,6 +596,31 @@ describe("CommandPalette", () => {
     expect(input).toHaveValue("settings");
   });
 
+  it("ignores repeated Escape keydown when immediate-dismiss mode is enabled", () => {
+    const onOpenChange = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        clearQueryOnEscape={false}
+        onOpenChange={onOpenChange}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.change(input, { target: { value: "settings" } });
+    expect(input).toHaveValue("settings");
+
+    fireEvent.keyDown(input, { key: "Escape", repeat: true });
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(input).toHaveValue("settings");
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(input).toHaveValue("settings");
+  });
+
   it("supports non-dismissible escape and outside pointer policies", () => {
     const onOpenChange = vi.fn();
 
