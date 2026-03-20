@@ -194,7 +194,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - When combining `onCloseReason`, `onClose`, and `onOpenChange`, consume them as ordered lifecycle hooks (`onCloseReason` -> `onClose` -> `onOpenChange(false)`), not parallel duplicate side effects.
 - Keep toast close-button focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible feedback.
 - Keep toast close-button keyboard-intent tracking document-scoped so keyboard re-entry after pointer interactions restores focus-visible fallback consistently.
-- Provide `ariaLabel` when toast title is icon-only or otherwise not plain text.
+- Provide `ariaLabel` when toast title is icon-only or otherwise not plain text; development builds warn when non-text titles omit it.
 - For high-frequency passive updates, set `live="off"` to reduce assistive-tech interruption while keeping visual toast context.
 
 <Canvas of={ToastStories.ActionRequired} />

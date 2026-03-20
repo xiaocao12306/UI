@@ -565,7 +565,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | stacked viewport layout | per-position visual offset | Same-corner toast stacks apply deterministic offset so older notifications remain visible under the latest toast. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer interactions keep keyboard-intent ring state to avoid accidental focus-ring loss during context/right-click paths. |
 | `closeLabel` | `string` | Customize close-button accessible name for i18n. |
-| `ariaLabel` | `string` | Optional live-region accessible name override for icon-only or non-text titles. |
+| `ariaLabel` | `string` | Optional live-region accessible name override for icon-only or non-text titles; development builds warn when non-text titles omit this. |
 
 <Canvas of={ToastStories.ActionRequired} />
 <Canvas of={ToastStories.ActionRequiredDanger} />

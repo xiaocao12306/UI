@@ -194,6 +194,7 @@ export function Toast({
   onOpenChange
 }: ToastProps) {
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const warnedMissingAriaLabelRef = React.useRef(false);
   const closeButtonFocusIntentRef = React.useRef(true);
   const closeRequestedRef = React.useRef(false);
   const timeoutRef = React.useRef<number | null>(null);
@@ -460,6 +461,27 @@ export function Toast({
     };
   }, [closeByEscape, closeOnEscape, onEscapeKeyDown, open]);
 
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const hasExplicitAriaLabel = typeof ariaLabel === "string" && ariaLabel.trim().length > 0;
+    if (hasExplicitAriaLabel || hasReadableTextNode(title)) {
+      warnedMissingAriaLabelRef.current = false;
+      return;
+    }
+
+    if (warnedMissingAriaLabelRef.current) {
+      return;
+    }
+    warnedMissingAriaLabelRef.current = true;
+
+    console.warn(
+      "[Toast] Non-text titles should provide ariaLabel so notification name remains accessible."
+    );
+  }, [ariaLabel, title]);
+
   if (!open) {
     return null;
   }
@@ -599,4 +621,28 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
   } catch {
     return fallback;
   }
+}
+
+function hasReadableTextNode(node: React.ReactNode): boolean {
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  if (typeof node === "number") {
+    return true;
+  }
+
+  if (Array.isArray(node)) {
+    return node.some((child) => hasReadableTextNode(child));
+  }
+
+  if (!React.isValidElement(node)) {
+    return false;
+  }
+
+  if (node.props?.["aria-hidden"] === true || node.props?.["aria-hidden"] === "true") {
+    return false;
+  }
+
+  return hasReadableTextNode(node.props?.children);
 }

@@ -167,6 +167,7 @@
   - CommandPalette 焦点模型补强（`tabIndex=-1` option + pointer 选择保持 combobox 焦点）
   - 横向收口（Toast：auto-dismiss/pauseOnHover/closeOnEscape=false 测试分支、ActionRequired 示例）
   - Toast i18n 可访问性补充（`closeLabel` 自定义关闭按钮文案）
+  - Toast 命名防呆收口（开发态对“非文本 `title` 且缺失 `ariaLabel`”输出告警，避免通知在读屏下退化为无名状态；补齐 `Toast.test.tsx` 与 Storybook 文档说明）
   - 表单 invalid 语义纠偏（`aria-invalid=\"false\"` 正确视为非错误态）
   - 表单 invalid 语义纠偏扩展（Checkbox/RadioGroup/Switch 同步统一 `aria-invalid` 判定）
   - 无障碍工具函数单测补齐（`resolveInvalidState` 多分支断言）

@@ -74,6 +74,34 @@ describe("Toast", () => {
     expect(toast).not.toHaveAttribute("aria-labelledby");
   });
 
+  it("warns when non-text title omits ariaLabel", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(<Toast open title={<span aria-hidden>✅</span>} />);
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Toast] Non-text titles should provide ariaLabel so notification name remains accessible."
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn when non-text title provides ariaLabel", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(<Toast open title={<span aria-hidden>✅</span>} ariaLabel="Sync completed notification" />);
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("supports custom close button label", () => {
     render(<Toast open title="Saved" closeLabel="Dismiss notification" />);
     expect(screen.getByRole("button", { name: "Dismiss notification" })).toBeInTheDocument();
