@@ -663,6 +663,43 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Settings" })).toBeInTheDocument();
   });
 
+  it("ignores blank item ariaLabel and keeps visible label as accessible name", () => {
+    render(
+      <Dropdown
+        label="Deployment actions"
+        items={[
+          { key: "archive", label: "Archive", ariaLabel: "   " },
+          { key: "rollback", label: "Rollback" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Deployment actions" }));
+    const archiveItem = screen.getByRole("menuitem", { name: "Archive" });
+    expect(archiveItem).toBeInTheDocument();
+    expect(archiveItem).not.toHaveAttribute("aria-label");
+  });
+
+  it("trims item ariaLabel before applying icon menuitem name", () => {
+    render(
+      <Dropdown
+        label="Icon menuitems"
+        items={[
+          {
+            key: "settings",
+            label: <span aria-hidden="true">⚙</span>,
+            ariaLabel: "  Settings  ",
+            textValue: "Settings"
+          }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Icon menuitems" }));
+    const settingsItem = screen.getByRole("menuitem", { name: "Settings" });
+    expect(settingsItem).toHaveAttribute("aria-label", "Settings");
+  });
+
   it("supports configurable dismiss policies and event hooks", () => {
     const onEscapeKeyDown = vi.fn();
     const onPointerDownOutside = vi.fn();

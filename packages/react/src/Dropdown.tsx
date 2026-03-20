@@ -124,10 +124,7 @@ export function Dropdown({
 
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
-  const resolvedTriggerAriaLabel =
-    typeof triggerAriaLabel === "string" && triggerAriaLabel.trim().length > 0
-      ? triggerAriaLabel.trim()
-      : undefined;
+  const resolvedTriggerAriaLabel = resolveNonEmptyLabel(triggerAriaLabel);
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -409,6 +406,7 @@ export function Dropdown({
           >
             {items.map((item, index) => {
               const isActive = index === activeIndex;
+              const resolvedItemAriaLabel = resolveNonEmptyLabel(item.ariaLabel);
               return (
                 <li key={item.key} role="none">
                   <button
@@ -419,7 +417,7 @@ export function Dropdown({
                     type="button"
                     disabled={item.disabled}
                     tabIndex={isActive ? 0 : -1}
-                    aria-label={item.ariaLabel}
+                    aria-label={resolvedItemAriaLabel}
                     aria-disabled={item.disabled || undefined}
                     aria-keyshortcuts={item.disabled ? undefined : "Enter Space"}
                     onMouseEnter={() => {
@@ -526,4 +524,12 @@ function getReadableTextNode(node: React.ReactNode): string {
 
 function normalizeReadableDropdownText(value: string) {
   return value.replace(/\s+/g, " ").trim();
+}
+
+function resolveNonEmptyLabel(label: string | undefined) {
+  if (typeof label === "string" && label.trim().length > 0) {
+    return label.trim();
+  }
+
+  return undefined;
 }
