@@ -573,6 +573,7 @@
 - Demo dialog Shift+Escape parity: Playwright now validates that `Shift + Escape` still dismisses Dialog so escape filtering changes cannot accidentally suppress expected keyboard close behavior.
 - Demo dialog Escape-repeat parity: Playwright now validates repeated Escape keydown is ignored while a subsequent non-repeat Escape still dismisses Dialog as expected.
 - Demo command-palette Escape-repeat parity: Playwright now validates repeated Escape keydown keeps query and panel state unchanged until the next non-repeat Escape.
+- Demo stacked-toast Escape-repeat parity: Playwright now validates repeated Escape keydown keeps stacked toasts visible until the first non-repeat Escape dismisses only the top toast.
 - Demo overlay modified-Escape parity: Playwright now covers `Ctrl/Meta/Alt + Escape` no-op flows for Dialog/Drawer/CommandPalette/Popover/Dropdown so real-user keyboard shortcut paths cannot accidentally dismiss overlays.
 - Demo e2e parity refresh (2026-03-20 latest+28): reran full `pnpm demo:e2e` after overlay modified-Escape path expansion and confirmed `81/81` pass.
 - Demo e2e parity refresh (2026-03-21 latest+29): reran full `pnpm demo:e2e` after adding toast modified-Escape no-op regression and confirmed `82/82` pass.
