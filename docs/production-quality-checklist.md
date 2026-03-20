@@ -557,3 +557,4 @@
 - Combobox owner-document isolation parity: added cross-document outside-pointer regression coverage to ensure each combobox instance closes only within its own document root when main-document and iframe instances coexist.
 - Combobox pointer-dismiss parity: outside-pointer close now ignores non-primary pointer buttons and respects upstream `pointerdown.preventDefault()` guards, with unit and Storybook docs contract coverage.
 - Storybook overlay cross-document docs parity: `Component-API` and `Best-Practices` now explicitly document owner-document portal host scope and dismiss-event scope for Dialog/Drawer/Popover/Dropdown integration.
+- Table sortable-header focus-navigation parity: sortable headers now support `Home`/`End` first-last jumps plus `PageUp`/`PageDown` adjacent focus traversal without triggering sort toggles, with unit + Storybook `SortTelemetry` interaction coverage and API/best-practices documentation updates.

@@ -679,6 +679,7 @@
   - Combobox 跨文档 outside-pointer 隔离回归（新增主文档/iframe 并存场景回归，确保外部点击只关闭当前文档下拉，不误关闭他文档实例）
   - Combobox outside-pointer 主键策略收口（外部关闭仅响应主指针并尊重上游 `pointerdown.preventDefault()`，避免右键/受控拦截流程误关；补齐单测与 Storybook API/Best-Practices 文档）
   - Storybook Overlay 跨文档指引收口（`Component-API`/`Best-Practices` 补充 `ownerDocument` 宿主与 dismiss 事件作用域说明，降低 iframe/multi-root 集成歧义）
+  - Table 排序表头焦点导航收口（新增 `Home/End/PageUp/PageDown` 键盘焦点跳转，支持在 sortable header 间无排序副作用地快速导航；补齐 `Table.test.tsx`、Storybook `SortTelemetry` 与 API/Best-Practices 文档）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
