@@ -499,3 +499,4 @@
 - CommandPalette search-metadata diagnostics parity: development builds now warn when non-text command labels omit both `textValue` and searchable `keywords`, preventing command filter fallback drift for icon/custom-label actions.
 - Toast accessible-name diagnostics parity: development builds now warn when non-text toast titles omit `ariaLabel`, preventing unnamed status/alert announcements in assistive technologies.
 - Tabs accessible-name diagnostics parity: added `items[].ariaLabel` for icon/custom tab labels and development warnings when non-text labels omit explicit naming, preventing unnamed tab announcements.
+- Release-gate parity refresh (2026-03-20 latest+11): reran `pnpm release:gate:ci` after CommandPalette/Toast/Tabs/Table naming diagnostics hardening plus demo/storybook static sync and confirmed full pass (verify + coverage + demo e2e 75/75 + demo dist sync + storybook interaction 213/213).
