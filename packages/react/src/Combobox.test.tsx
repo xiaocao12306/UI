@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Combobox } from "./Combobox";
 
@@ -241,6 +241,52 @@ describe("Combobox", () => {
       expect(addListenerSpy).toHaveBeenCalledWith("pointerdown", expect.any(Function));
     } finally {
       addListenerSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
+  it("isolates outside-pointer close handling per owner document", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      throw new Error("iframe contentDocument is unavailable");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    let unmountMain: (() => void) | undefined;
+    let unmountIframe: (() => void) | undefined;
+    try {
+      ({ unmount: unmountMain } = render(
+        <div>
+          <Combobox options={options} onValueChange={() => {}} ariaLabel="Main combobox" />
+          <button type="button">Main outside target</button>
+        </div>
+      ));
+      ({ unmount: unmountIframe } = render(
+        <div>
+          <Combobox options={options} onValueChange={() => {}} ariaLabel="Iframe combobox" />
+          <button type="button">Iframe outside target</button>
+        </div>,
+        { container: iframeContainer, baseElement: iframeDocument.body }
+      ));
+
+      fireEvent.focus(screen.getByRole("combobox", { name: "Main combobox" }));
+      fireEvent.focus(within(iframeDocument.body).getByRole("combobox", { name: "Iframe combobox" }));
+      expect(screen.getByRole("listbox", { name: "Main combobox options" })).toBeInTheDocument();
+      expect(within(iframeDocument.body).getByRole("listbox", { name: "Iframe combobox options" })).toBeInTheDocument();
+
+      fireEvent.pointerDown(screen.getByRole("button", { name: "Main outside target" }));
+      expect(screen.queryByRole("listbox", { name: "Main combobox options" })).toBeNull();
+      expect(within(iframeDocument.body).getByRole("listbox", { name: "Iframe combobox options" })).toBeInTheDocument();
+
+      fireEvent.pointerDown(within(iframeDocument.body).getByRole("button", { name: "Iframe outside target" }));
+      expect(within(iframeDocument.body).queryByRole("listbox", { name: "Iframe combobox options" })).toBeNull();
+    } finally {
+      unmountIframe?.();
+      unmountMain?.();
       iframe.remove();
     }
   });
