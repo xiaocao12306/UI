@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Dropdown } from "./Dropdown";
 import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
@@ -972,6 +972,64 @@ describe("Dropdown", () => {
 
     expect(screen.queryByRole("menu", { name: "Focus policy" })).toBeNull();
     expect(outsideTarget).toHaveFocus();
+  });
+
+  it("isolates Escape and outside-pointer dismiss handling per owner document", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      throw new Error("expected iframe document to exist");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    let unmountMain: (() => void) | undefined;
+    let unmountIframe: (() => void) | undefined;
+    try {
+      ({ unmount: unmountMain } = render(
+        <div>
+          <Dropdown
+            label="Main dropdown"
+            items={[
+              { key: "main-one", label: "Main one" },
+              { key: "main-two", label: "Main two" }
+            ]}
+          />
+          <button type="button">Main outside target</button>
+        </div>
+      ));
+      ({ unmount: unmountIframe } = render(
+        <div>
+          <Dropdown
+            label="Iframe dropdown"
+            items={[
+              { key: "iframe-one", label: "Iframe one" },
+              { key: "iframe-two", label: "Iframe two" }
+            ]}
+          />
+          <button type="button">Iframe outside target</button>
+        </div>,
+        { container: iframeContainer, baseElement: iframeDocument.body }
+      ));
+
+      fireEvent.click(screen.getByRole("button", { name: "Main dropdown" }));
+      fireEvent.click(within(iframeDocument.body).getByRole("button", { name: "Iframe dropdown" }));
+      expect(screen.getByRole("menu", { name: "Main dropdown" })).toBeInTheDocument();
+      expect(within(iframeDocument.body).getByRole("menu", { name: "Iframe dropdown" })).toBeInTheDocument();
+
+      fireEvent.keyDown(document, { key: "Escape" });
+      expect(screen.queryByRole("menu", { name: "Main dropdown" })).toBeNull();
+      expect(within(iframeDocument.body).getByRole("menu", { name: "Iframe dropdown" })).toBeInTheDocument();
+
+      fireEvent.pointerDown(within(iframeDocument.body).getByRole("button", { name: "Iframe outside target" }));
+      expect(within(iframeDocument.body).queryByRole("menu", { name: "Iframe dropdown" })).toBeNull();
+    } finally {
+      unmountIframe?.();
+      unmountMain?.();
+      iframe.remove();
+    }
   });
 
   it("ignores non-primary outside pointer interactions", () => {

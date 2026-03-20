@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Popover } from "./Popover";
 import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
@@ -209,6 +209,56 @@ describe("Popover", () => {
     expect(onCloseReason).not.toHaveBeenCalled();
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
     document.removeEventListener("keydown", preemptEscape, true);
+  });
+
+  it("isolates Escape and outside-pointer dismiss handling per owner document", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      throw new Error("expected iframe document to exist");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    let unmountMain: (() => void) | undefined;
+    let unmountIframe: (() => void) | undefined;
+    try {
+      ({ unmount: unmountMain } = render(
+        <div>
+          <Popover triggerLabel="Main popover">
+            <p>Main popover content</p>
+          </Popover>
+          <button type="button">Main outside target</button>
+        </div>
+      ));
+      ({ unmount: unmountIframe } = render(
+        <div>
+          <Popover triggerLabel="Iframe popover">
+            <p>Iframe popover content</p>
+          </Popover>
+          <button type="button">Iframe outside target</button>
+        </div>,
+        { container: iframeContainer, baseElement: iframeDocument.body }
+      ));
+
+      fireEvent.click(screen.getByRole("button", { name: "Main popover" }));
+      fireEvent.click(within(iframeDocument.body).getByRole("button", { name: "Iframe popover" }));
+      expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+      expect(within(iframeDocument.body).getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+      fireEvent.keyDown(document, { key: "Escape" });
+      expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+      expect(within(iframeDocument.body).getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+      fireEvent.pointerDown(within(iframeDocument.body).getByRole("button", { name: "Iframe outside target" }));
+      expect(within(iframeDocument.body).queryByRole("dialog", { name: "Popover content" })).toBeNull();
+    } finally {
+      unmountIframe?.();
+      unmountMain?.();
+      iframe.remove();
+    }
   });
 
   it("emits trigger-click close reason when trigger toggles open popover", () => {
