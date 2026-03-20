@@ -85,6 +85,52 @@ describe("DismissableLayer", () => {
     }
   });
 
+  it("isolates outside-pointer handling across different ownerDocument stacks", () => {
+    const onMainDismiss = vi.fn();
+    const onIframeDismiss = vi.fn();
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      throw new Error("iframe contentDocument is unavailable");
+    }
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    try {
+      render(
+        <div>
+          <DismissableLayer onDismiss={onMainDismiss}>
+            <div>Main document layer</div>
+          </DismissableLayer>
+          <button type="button">Main outside target</button>
+        </div>
+      );
+      render(
+        <div>
+          <DismissableLayer onDismiss={onIframeDismiss}>
+            <div>Iframe document layer</div>
+          </DismissableLayer>
+          <button type="button">Iframe outside target</button>
+        </div>,
+        { container: iframeContainer, baseElement: iframeDocument.body }
+      );
+
+      fireEvent.pointerDown(screen.getByRole("button", { name: "Main outside target" }));
+      expect(onMainDismiss).toHaveBeenCalledTimes(1);
+      expect(onIframeDismiss).not.toHaveBeenCalled();
+
+      const iframeOutsideTarget = iframeContainer.querySelector("button");
+      if (!iframeOutsideTarget) {
+        throw new Error("expected iframe outside target");
+      }
+      fireEvent.pointerDown(iframeOutsideTarget);
+      expect(onIframeDismiss).toHaveBeenCalledTimes(1);
+    } finally {
+      iframe.remove();
+    }
+  });
+
   it("dismisses only the topmost layer on outside pointer interaction", () => {
     render(<NestedDismissableLayers />);
 
