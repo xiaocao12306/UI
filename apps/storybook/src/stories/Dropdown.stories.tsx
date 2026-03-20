@@ -274,6 +274,9 @@ export const SelectionTelemetry: Story = {
     await userEvent.keyboard("{End}");
     const deleteItem = canvas.getByRole("menuitem", { name: "Delete" });
     await expect(deleteItem).toHaveFocus();
+    fireEvent.keyDown(deleteItem, { key: "Enter", ctrlKey: true });
+    await expect(canvas.getByRole("menu")).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-selected-action")).toHaveTextContent("none");
     fireEvent.keyDown(deleteItem, { key: "Enter", repeat: true });
     await expect(canvas.getByRole("menu")).toBeInTheDocument();
     await expect(canvas.getByTestId("dropdown-selected-action")).toHaveTextContent("none");

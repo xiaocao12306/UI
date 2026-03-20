@@ -220,6 +220,25 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Two" })).toHaveFocus();
   });
 
+  it("ignores modified trigger navigation keys", () => {
+    render(
+      <Dropdown
+        label="Trigger Modifiers"
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "Trigger Modifiers" });
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "ArrowDown", ctrlKey: true });
+    fireEvent.keyDown(trigger, { key: "ArrowUp", metaKey: true });
+
+    expect(screen.queryByRole("menu", { name: "Trigger Modifiers" })).toBeNull();
+  });
+
   it("supports controlled open mode where dismissal requests depend on parent rerender", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();
@@ -411,6 +430,39 @@ describe("Dropdown", () => {
     fireEvent.keyDown(spaceItem, { key: "Spacebar" });
     expect(onSpaceSelect).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole("menu", { name: "Keyboard Select" })).toBeNull();
+  });
+
+  it("ignores modified menu navigation and activation keys", () => {
+    const onSelect = vi.fn();
+
+    render(
+      <Dropdown
+        label="Modifier Guard"
+        items={[
+          { key: "run", label: "Run", onSelect },
+          { key: "archive", label: "Archive" },
+          { key: "delete", label: "Delete" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Modifier Guard" }));
+    const menu = screen.getByRole("menu", { name: "Modifier Guard" });
+    const runItem = screen.getByRole("menuitem", { name: "Run" });
+    expect(runItem).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "End", ctrlKey: true });
+    fireEvent.keyDown(menu, { key: "PageDown", altKey: true });
+    expect(runItem).toHaveFocus();
+
+    fireEvent.keyDown(runItem, { key: "Enter", ctrlKey: true });
+    fireEvent.keyDown(runItem, { key: "Spacebar", metaKey: true });
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(screen.getByRole("menu", { name: "Modifier Guard" })).toBeInTheDocument();
+
+    fireEvent.keyDown(runItem, { key: "Enter" });
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("menu", { name: "Modifier Guard" })).toBeNull();
   });
 
   it("ignores repeated activation keydown for menu items", () => {

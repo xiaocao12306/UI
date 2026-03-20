@@ -127,6 +127,17 @@ function isDropdownItemActivationKey(key: string) {
   return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
 }
 
+function isDropdownNavigationKey(key: string) {
+  return (
+    key === "ArrowDown" ||
+    key === "ArrowUp" ||
+    key === "Home" ||
+    key === "End" ||
+    key === "PageDown" ||
+    key === "PageUp"
+  );
+}
+
 export function Dropdown({
   label,
   triggerAriaLabel,
@@ -311,7 +322,12 @@ export function Dropdown({
           setOpen(true);
         }}
         onKeyDown={(event) => {
-          if (event.key !== "ArrowDown" && event.key !== "ArrowUp") {
+          if (
+            (event.key !== "ArrowDown" && event.key !== "ArrowUp") ||
+            event.altKey ||
+            event.ctrlKey ||
+            event.metaKey
+          ) {
             return;
           }
 
@@ -374,6 +390,13 @@ export function Dropdown({
               zIndex: "var(--aurora-z-overlay)"
             }}
             onKeyDown={(event) => {
+              if (
+                (event.altKey || event.ctrlKey || event.metaKey) &&
+                (isDropdownNavigationKey(event.key) || isDropdownItemActivationKey(event.key))
+              ) {
+                return;
+              }
+
               if (event.key === "ArrowDown") {
                 event.preventDefault();
                 setActiveIndex((current) => getNextEnabledIndex(items, current < 0 ? -1 : current, 1));
@@ -472,6 +495,10 @@ export function Dropdown({
                     }}
                     onKeyDown={(event) => {
                       if (!isDropdownItemActivationKey(event.key)) {
+                        return;
+                      }
+
+                      if (event.altKey || event.ctrlKey || event.metaKey) {
                         return;
                       }
 

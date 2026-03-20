@@ -343,6 +343,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | menu naming | trigger-linked `aria-labelledby` | Menu inherits an accessible name from trigger content for screen-reader context. |
 | trigger relation | conditional `aria-controls` | Trigger points to menu ID only when expanded. |
 | keyboard behavior | Arrow / Home / End / PageUp / PageDown / Enter / Space / Escape / Tab / Typeahead | Roving-focus menu navigation supports non-pointer item selection (Enter/Space incl. legacy `Spacebar`), long-list page jumps, deterministic close policy, buffered multi-character typeahead, repeated-key cycling, and trigger focus restore on Escape. |
+| modifier-key guard | ignores `Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space` | Preserves host app/browser modified-key shortcuts and avoids accidental menu navigation or action execution under combined shortcut chords. |
 | keyboard key hints | `aria-keyshortcuts="Enter Space"` | Enabled menu items expose activation-key metadata for QA/AT discoverability; disabled items omit shortcut hints. |
 | item activation repeat guard | ignores repeated keydown | Item selection ignores repeated activation keydown (`Enter` / `Space`, `event.repeat=true`) so long-press does not dispatch duplicate actions or telemetry. |
 | IME safety | composition key guard | Typeahead matching is paused during active IME composition (`isComposing` / `keyCode=229`) so CJK input confirmation does not move focus unexpectedly. |
