@@ -509,6 +509,7 @@
   - Storybook IME 验收补齐（`Tabs/ImeCompositionGuard` + `Table/ImeCompositionGuard`，锁定组合输入阶段 Enter/Space 不触发激活/排序）
   - Storybook 定向回归复验（2026-03-19 latest+6：`pnpm storybook:test:grep "Tabs.stories.tsx|Table.stories.tsx"` 通过，2 suites / 31 tests）
   - Dropdown 键盘边界补测（`Home/End` 跳过禁用项 + 全禁用列表 `Arrow/Home/End/Enter` no-op，防止 roving focus 误漂移）
+  - Dropdown 长列表分页键盘收口（新增 `PageUp/PageDown` 按 5 条可执行项跳转并跳过禁用项，补齐单测 + Storybook `TypeaheadNavigation` / `AllItemsDisabledKeyboardNoop` 回归）
   - Storybook 管理端品牌化（新增 `.storybook/manager.ts`，统一 `Aurora UI` 品牌标题、字体与中控面板配色）
   - 主题枚举来源收口（`@aurora-ui/tokens` 新增 `themeNames`，Storybook toolbar 与 Demo selector 统一消费，避免主题配置漂移）
   - Changeset 门禁补齐（新增 `changeset:required` 脚本 + PR 工作流，包变更缺失 `.changeset/*.md` 提前失败）
