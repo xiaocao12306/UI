@@ -685,6 +685,7 @@
   - Dialog/Drawer 修饰键 Escape 验收补齐（补充 `Ctrl/Meta/Alt + Escape` 组件级单测与 Storybook `EscapePreemptedByGlobalHandler` 断言，锁定 dismiss hook 与 close reason 不受组合键误触发）
   - Popover/Dropdown 修饰键 Escape 验收补齐（补充 `Ctrl/Meta/Alt + Escape` 组件级单测与 Storybook `EscapePreemptedByGlobalHandler` 断言，锁定 overlay dismiss 不劫持宿主组合快捷键）
   - Demo E2E 修饰键 Escape 验收补齐（新增 Dialog/Drawer/CommandPalette/Popover/Dropdown 五条 `Ctrl/Meta/Alt + Escape` no-op 回归，锁定真实用户路径下 overlay 不误关闭）
+  - Demo E2E 证据刷新（2026-03-20 latest+28：`pnpm demo:e2e` 全量复验通过，`81/81`）
   - Release Gate 证据刷新（2026-03-20 latest+27：Overlay 修饰键 Escape 横向收口并同步 demo dist 后，`pnpm release:gate:ci` 全链路复验通过，含 verify + coverage + demo e2e `76/76` + demo dist + storybook interaction `221/221`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
