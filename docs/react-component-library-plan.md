@@ -740,6 +740,7 @@
   - Storybook/无障碍动效证据刷新（2026-03-21 latest+55：完成 Button/Progress/Skeleton reduced-motion 收口（`data-aurora-reduced-motion` + `GlobalStyles` 媒体查询）并同步 API/Best Practices 文档与 Storybook 静态产物后，`pnpm --filter @aurora-ui/react exec vitest run src/Button.test.tsx src/Progress.test.tsx src/Skeleton.test.tsx src/GlobalStyles.test.tsx` 通过（`27/27`），`pnpm --filter @aurora-ui/storybook-app storybook:test:ci` 通过（`227/227`））
   - Storybook/反馈流式动效证据刷新（2026-03-21 latest+56：完成 LoadingDots/StreamingText 默认 `respectReducedMotion` 收口（系统 reduced-motion 下自动静态化/即时完成，保留 `respectReducedMotion={false}` 强制动效分支）并同步 API/Best Practices 文档与 Storybook 静态产物后，`pnpm --filter @aurora-ui/react exec vitest run src/LoadingDots.test.tsx src/StreamingText.test.tsx` 通过（`14/14`），`pnpm --filter @aurora-ui/storybook-app storybook:test:ci` 通过（`227/227`））
   - Storybook/样式注入收口证据刷新（2026-03-21 latest+57：移除 Progress/Skeleton 实例级 `<style>` 注入并统一复用 `GlobalStyles` keyframes，补齐“无实例 style 注入”回归断言后，`pnpm --filter @aurora-ui/react exec vitest run src/Progress.test.tsx src/Skeleton.test.tsx src/GlobalStyles.test.tsx` 通过（`9/9`），`pnpm --filter @aurora-ui/storybook-app storybook:test:ci` 通过（`227/227`））
+  - Release Gate 证据刷新（2026-03-21 latest+58：完成 demo dist 同步后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage（`41 files / 604 tests`）+ demo e2e `92/92` + storybook interaction `227/227`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
