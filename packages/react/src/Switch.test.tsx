@@ -14,6 +14,14 @@ describe("Switch", () => {
     expect(onCheckedChange).toHaveBeenCalledWith(false);
   });
 
+  it("marks track and thumb transitions for reduced-motion fallback", () => {
+    render(<Switch label="Reduced motion switch" checked={false} onCheckedChange={() => {}} />);
+
+    const control = screen.getByRole("switch", { name: "Reduced motion switch" });
+    const reducedMotionNodes = control.querySelectorAll('[data-aurora-reduced-motion="transition"]');
+    expect(reducedMotionNodes).toHaveLength(2);
+  });
+
   it("supports uncontrolled behavior with defaultChecked", () => {
     render(<Switch label="Auto-refresh" defaultChecked={false} />);
     const control = screen.getByRole("switch", { name: "Auto-refresh" });

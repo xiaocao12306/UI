@@ -34,6 +34,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
       aria-invalid={resolvedInvalidAria}
       data-invalid={isInvalid ? "true" : undefined}
       data-focused={focused ? "true" : undefined}
+      data-aurora-reduced-motion="transition"
       style={{
         ...fieldBaseStyle,
         transition:

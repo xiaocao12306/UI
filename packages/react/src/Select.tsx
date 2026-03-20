@@ -22,6 +22,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
       aria-invalid={resolvedInvalidAria}
       data-invalid={isInvalid ? "true" : undefined}
       data-focused={focused ? "true" : undefined}
+      data-aurora-reduced-motion="transition"
       style={{
         ...fieldBaseStyle,
         transition:

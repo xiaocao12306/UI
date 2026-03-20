@@ -174,6 +174,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
 
   return (
     <button
+      data-aurora-reduced-motion="transition"
       ref={ref}
       type={type ?? "button"}
       disabled={interactionDisabled}

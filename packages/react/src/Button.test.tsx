@@ -22,6 +22,11 @@ describe("Button", () => {
     expect(button).toHaveAttribute("data-loading", "true");
   });
 
+  it("marks button transitions for reduced-motion fallback", () => {
+    render(<Button>Publish</Button>);
+    expect(screen.getByRole("button", { name: "Publish" })).toHaveAttribute("data-aurora-reduced-motion", "transition");
+  });
+
   it("marks loading spinner for reduced-motion fallback", () => {
     render(<Button loading>Submit</Button>);
     const spinner = screen.getByRole("button", { name: "Submit" }).querySelector(

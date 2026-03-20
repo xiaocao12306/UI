@@ -59,6 +59,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
       data-hovered={hovered ? "true" : undefined}
       data-active={active ? "true" : undefined}
       data-disabled={isInteractionDisabled ? "true" : undefined}
+      data-aurora-reduced-motion="transition"
       style={{
         ...fieldBaseStyle,
         transition:

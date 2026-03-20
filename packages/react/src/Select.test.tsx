@@ -11,7 +11,9 @@ describe("Select", () => {
       </Select>
     );
 
-    expect(screen.getByRole("combobox", { name: "Framework" })).toHaveValue("react");
+    const select = screen.getByRole("combobox", { name: "Framework" });
+    expect(select).toHaveValue("react");
+    expect(select).toHaveAttribute("data-aurora-reduced-motion", "transition");
   });
 
   it("applies invalid accessibility attributes", () => {

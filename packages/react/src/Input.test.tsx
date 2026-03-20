@@ -8,6 +8,7 @@ describe("Input", () => {
     const input = screen.getByPlaceholderText("Search");
     expect(input).toBeInTheDocument();
     expect(input).toHaveAttribute("data-aurora-input", "true");
+    expect(input).toHaveAttribute("data-aurora-reduced-motion", "transition");
   });
 
   it("applies invalid accessibility attributes", () => {

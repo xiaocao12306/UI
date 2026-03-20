@@ -5,7 +5,9 @@ import { Textarea } from "./Textarea";
 describe("Textarea", () => {
   it("renders with placeholder text", () => {
     render(<Textarea placeholder="Write summary" />);
-    expect(screen.getByPlaceholderText("Write summary")).toBeInTheDocument();
+    const textarea = screen.getByPlaceholderText("Write summary");
+    expect(textarea).toBeInTheDocument();
+    expect(textarea).toHaveAttribute("data-aurora-reduced-motion", "transition");
   });
 
   it("applies invalid accessibility attributes", () => {

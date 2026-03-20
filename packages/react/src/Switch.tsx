@@ -169,6 +169,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       }}
     >
       <span
+        data-aurora-reduced-motion="transition"
         aria-hidden="true"
         style={{
           width: 44,
@@ -186,6 +187,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         }}
       >
         <span
+          data-aurora-reduced-motion="transition"
           style={{
             width: 18,
             height: 18,
