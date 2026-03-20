@@ -98,6 +98,28 @@ describe("Drawer", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("ignores repeated Escape keydown before first non-repeat dismiss", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <Drawer open onOpenChange={onOpenChange} onCloseReason={onCloseReason} title="Drawer repeat guard">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape", repeat: true });
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Drawer repeat guard" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onCloseReason).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenCalledWith("escape-key");
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it("ignores modified Escape combinations for dismiss and hook callbacks", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();

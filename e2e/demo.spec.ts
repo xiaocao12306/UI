@@ -267,6 +267,24 @@ test("opens and dismisses drawer with keyboard", async ({ page }) => {
   await expect(drawer).toBeHidden();
 });
 
+test("keeps drawer open on repeated Escape keydown until initial keydown event", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Drawer" }).click();
+  const drawer = page.getByRole("dialog", { name: "Drawer Example" });
+  await expect(drawer).toBeVisible();
+
+  await page.evaluate(() => {
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", repeat: true, bubbles: true }));
+  });
+  await expect(drawer).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(drawer).toBeHidden();
+});
+
 test("keeps drawer open when Escape is preempted by a global handler", async ({ page }) => {
   await page.goto("/");
 

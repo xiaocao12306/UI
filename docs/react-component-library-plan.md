@@ -695,6 +695,7 @@
   - Toast 堆叠长按收口补测（补充 stacked toast 在 `Escape repeat` 下 no-op 回归，锁定首个非重复 Escape 才关闭栈顶通知）
   - Demo Dialog Shift+Escape 验收补齐（新增 Playwright 回归，锁定真实用户路径下 `Shift + Escape` 可关闭弹窗）
   - Demo Dialog Escape 长按验收补齐（新增 Playwright 回归，锁定重复 Escape keydown 不关闭、首次有效 Escape 正常关闭）
+  - Demo Drawer Escape 长按验收补齐（新增 Playwright 回归，锁定重复 Escape keydown 不关闭、首次有效 Escape 正常关闭）
   - Demo CommandPalette Escape 长按验收补齐（新增 Playwright 回归，锁定重复 Escape keydown 不清空查询且不关闭，后续首次有效 Escape 才进入“清空后关闭”序列）
   - Demo Toast 堆叠长按验收补齐（新增 Playwright 回归，锁定 `Escape repeat` 不提前关闭栈顶通知）
   - Demo E2E 修饰键 Escape 验收补齐（新增 Dialog/Drawer/CommandPalette/Popover/Dropdown 五条 `Ctrl/Meta/Alt + Escape` no-op 回归，锁定真实用户路径下 overlay 不误关闭）

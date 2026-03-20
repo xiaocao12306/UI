@@ -573,6 +573,7 @@
 - Demo command-palette immediate-dismiss repeat parity: Playwright now validates `clearQueryOnEscape=false` mode keeps palette open under repeated Escape keydown until the first non-repeat Escape.
 - Demo dialog Shift+Escape parity: Playwright now validates that `Shift + Escape` still dismisses Dialog so escape filtering changes cannot accidentally suppress expected keyboard close behavior.
 - Demo dialog Escape-repeat parity: Playwright now validates repeated Escape keydown is ignored while a subsequent non-repeat Escape still dismisses Dialog as expected.
+- Demo drawer Escape-repeat parity: Playwright now validates repeated Escape keydown keeps Drawer open until the next non-repeat Escape performs dismiss.
 - Demo command-palette Escape-repeat parity: Playwright now validates repeated Escape keydown keeps query and panel state unchanged until the next non-repeat Escape.
 - Demo stacked-toast Escape-repeat parity: Playwright now validates repeated Escape keydown keeps stacked toasts visible until the first non-repeat Escape dismisses only the top toast.
 - Demo overlay modified-Escape parity: Playwright now covers `Ctrl/Meta/Alt + Escape` no-op flows for Dialog/Drawer/CommandPalette/Popover/Dropdown so real-user keyboard shortcut paths cannot accidentally dismiss overlays.
