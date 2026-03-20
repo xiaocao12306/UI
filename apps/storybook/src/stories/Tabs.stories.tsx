@@ -437,11 +437,52 @@ function LabelledByHeadingDemo() {
   );
 }
 
+function IconOnlyLabelTabsDemo() {
+  return (
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
+        Icon tabs should expose explicit naming through <code>items[].ariaLabel</code> so keyboard
+        and screen-reader navigation stay clear.
+      </p>
+      <Tabs
+        ariaLabel="Icon label tabs"
+        defaultValue="overview"
+        items={[
+          {
+            key: "overview",
+            label: <span aria-hidden="true">🧭</span>,
+            ariaLabel: "Navigation overview",
+            content: "Overview panel keeps icon-only tab naming explicit."
+          },
+          {
+            key: "release",
+            label: "Release",
+            content: "Release panel remains text-labeled."
+          }
+        ]}
+      />
+    </TabsShowcase>
+  );
+}
+
 export const LabelledByHeading: Story = {
   render: () => <LabelledByHeadingDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("tablist", { name: "Release Stages" })).toBeInTheDocument();
+  }
+};
+
+export const IconOnlyLabelNaming: Story = {
+  render: () => <IconOnlyLabelTabsDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const iconTab = canvas.getByRole("tab", { name: "Navigation overview" });
+    await expect(iconTab).toHaveAttribute("aria-selected", "true");
+    await expect(iconTab).toHaveAttribute("aria-controls");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+      "Overview panel keeps icon-only tab naming explicit."
+    );
   }
 };
 
