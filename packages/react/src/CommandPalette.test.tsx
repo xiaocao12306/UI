@@ -94,6 +94,34 @@ describe("CommandPalette", () => {
     expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
   });
 
+  it("filters segmented rich-text labels with whitespace queries", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          {
+            key: "deploy",
+            label: (
+              <span>
+                <span>Deploy</span>
+                <span>Project</span>
+              </span>
+            )
+          },
+          { key: "settings", label: "Open Settings" }
+        ]}
+      />
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "deploy project" }
+    });
+
+    expect(screen.getByRole("option", { name: "Deploy Project" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
+  });
+
   it("warns when duplicate command keys are provided", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});

@@ -636,19 +636,21 @@ export function CommandPalette({
 
 function getCommandText(item: CommandItem) {
   if (typeof item.textValue === "string") {
-    const textValue = item.textValue.trim();
+    const textValue = normalizeReadableCommandText(item.textValue);
     if (textValue.length > 0) {
       return textValue;
     }
   }
 
-  return getReadableCommandLabelText(item.label).trim();
+  return normalizeReadableCommandText(getReadableCommandLabelText(item.label));
 }
 
 function normalizeSearchText(text: string) {
   return text
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
     .toLowerCase();
 }
 
@@ -707,7 +709,12 @@ function getReadableCommandLabelText(node: React.ReactNode): string {
   }
 
   if (Array.isArray(node)) {
-    return node.map((item) => getReadableCommandLabelText(item)).join("");
+    return normalizeReadableCommandText(
+      node
+        .map((item) => getReadableCommandLabelText(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
   }
 
   if (!React.isValidElement(node)) {
@@ -723,4 +730,8 @@ function getReadableCommandLabelText(node: React.ReactNode): string {
   }
 
   return getReadableCommandLabelText(elementProps.children);
+}
+
+function normalizeReadableCommandText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }

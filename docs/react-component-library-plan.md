@@ -604,6 +604,7 @@
   - CommandPalette 键冲突告警收口（开发态新增 `commands[].key` 重复值告警，降低 `aria-activedescendant` 与执行遥测漂移风险；补齐 `CommandPalette.test.tsx` 与 Storybook 文档说明）
   - CommandPalette 搜索元数据防呆收口（开发态对“非文本 `label` 且缺失 `textValue/keywords`”输出告警，避免搜索匹配与读屏播报回退；补齐 `CommandPalette.test.tsx` 与 Storybook 文档说明）
   - CommandPalette 非文本命令命名收口（新增 `commands[].ariaLabel` 并在开发态对“非文本 `label` 且缺失 `ariaLabel`”输出告警；同时补齐富文本 label 可读文本提取，让包裹文本可直接参与搜索匹配；补齐 `CommandPalette.test.tsx` 与 Storybook 文档说明）
+  - CommandPalette 富文本分段检索收口（富文本 `label` 可读文本提取新增空白归一化，支持无文本空格分段标签被带空格查询命中；补齐 `CommandPalette.test.tsx` 回归）
   - Dropdown 键冲突告警收口（开发态新增 `items[].key` 重复值告警，避免 roving focus 与关闭原因遥测歧义；补齐 `Dropdown.test.tsx` 与 Storybook 文档说明）
   - Dropdown 非文本菜单项命名/搜索防呆收口（新增 `items[].ariaLabel`，并在开发态对“非文本 `label` 且缺失 `ariaLabel/textValue`”输出告警；同时让 typeahead 支持富文本 label 的可读文本提取，补齐 `Dropdown.test.tsx` 与 Storybook 文档说明）
   - Combobox 选项值冲突收口（开发态新增 `options[].value` 重复值告警，避免 selected/active 语义歧义；补齐 `Combobox.test.tsx` 与 Storybook 文档说明）
