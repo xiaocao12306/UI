@@ -648,6 +648,8 @@
   - Demo 区块状态播报收口（新增当前区块 `aria-live` 状态播报 `active-section-status`，覆盖锚点导航与 Hero 卡片跳转路径，保障读屏用户可感知区块切换）
   - Demo E2E 证据刷新（2026-03-20 latest+10：新增 active-section 状态播报回归后 `pnpm demo:e2e` 复验通过，75 passed）
   - Tabs 方向优先级收口（存在最近 `dir=\"ltr\"` 时优先使用显式方向而非 `getComputedStyle` 回退，补齐 unit 回归锁定 ArrowLeft/ArrowRight 语义）
+  - Toast 计时器跨文档收口（自动关闭/提前关闭计时器改为绑定 `ownerDocument.defaultView`，避免 iframe 场景下计时器窗口漂移；补齐 `Toast.test.tsx` iframe 计时器 set/clear 回归）
+  - Tabs/Table 键盘去重计时器跨文档收口（manual 激活与 sortable header 的 dedupe timer 改为绑定 `ownerDocument.defaultView`，补齐 `Tabs.test.tsx` / `Table.test.tsx` iframe 回归）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

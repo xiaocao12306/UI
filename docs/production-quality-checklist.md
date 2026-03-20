@@ -527,3 +527,5 @@
 - Combobox activedescendant-focus parity: listbox options now stay out of tab order (`tabIndex=-1`) and primary-pointer `mousedown` keeps focus on the combobox input, with unit regressions and Storybook `ActivedescendantFocusModel` coverage.
 - Combobox multi-document parity: outside-pointer dismiss listener now binds to `ownerDocument` so iframe/multi-root renders do not lose close behavior; covered by `Combobox.test.tsx` owner-document regression.
 - DismissableLayer multi-document parity: Escape/outside-pointer stack and listeners are now isolated per `ownerDocument`, preventing cross-document overlays from stealing top-layer dismissal priority; covered by primitives + overlay regression suites.
+- Toast cross-document timer parity: auto-dismiss + early-close timer cleanup now bind to `ownerDocument.defaultView`, with iframe regression coverage for timer `setTimeout/clearTimeout` paths.
+- Tabs/Table cross-document timer parity: manual-tab activation and sortable-header dedupe timers now bind to `ownerDocument.defaultView`, with iframe regression coverage in both suites.
