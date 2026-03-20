@@ -1,5 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { installMatchMediaMock } from "./test-utils/matchMedia";
 import { LoadingDots } from "./LoadingDots";
 
 describe("LoadingDots", () => {
@@ -69,7 +70,7 @@ describe("LoadingDots", () => {
 
   it("respects reduced-motion and keeps dots static when running", () => {
     vi.useFakeTimers();
-    const restoreMatchMedia = mockMatchMedia(true);
+    const matchMediaMock = installMatchMediaMock({ initialMatches: true });
 
     render(<LoadingDots dotCount={4} />);
     const dots = screen.getByRole("status", { name: "Loading" });
@@ -80,13 +81,13 @@ describe("LoadingDots", () => {
     });
     expect(dots).toHaveTextContent("....");
 
-    restoreMatchMedia();
+    matchMediaMock.restore();
     vi.useRealTimers();
   });
 
   it("allows animation under reduced-motion when respectReducedMotion is disabled", () => {
     vi.useFakeTimers();
-    const restoreMatchMedia = mockMatchMedia(true);
+    const matchMediaMock = installMatchMediaMock({ initialMatches: true });
 
     render(<LoadingDots interval={120} dotCount={3} respectReducedMotion={false} />);
     const dots = screen.getByRole("status", { name: "Loading" });
@@ -97,34 +98,34 @@ describe("LoadingDots", () => {
     });
     expect(dots.textContent).toBe(".. ");
 
-    restoreMatchMedia();
+    matchMediaMock.restore();
+    vi.useRealTimers();
+  });
+
+  it("switches to static dots when reduced-motion preference changes at runtime", () => {
+    vi.useFakeTimers();
+    const matchMediaMock = installMatchMediaMock({ initialMatches: false });
+
+    render(<LoadingDots interval={120} dotCount={4} />);
+    const dots = screen.getByRole("status", { name: "Loading" });
+    expect(dots.textContent).toBe(".   ");
+
+    act(() => {
+      vi.advanceTimersByTime(120);
+    });
+    expect(dots.textContent).toBe("..  ");
+
+    act(() => {
+      matchMediaMock.setMatches(true);
+    });
+    expect(dots.textContent).toBe("....");
+
+    act(() => {
+      vi.advanceTimersByTime(240);
+    });
+    expect(dots.textContent).toBe("....");
+
+    matchMediaMock.restore();
     vi.useRealTimers();
   });
 });
-
-function mockMatchMedia(matches: boolean) {
-  const original = window.matchMedia;
-
-  Object.defineProperty(window, "matchMedia", {
-    configurable: true,
-    writable: true,
-    value: vi.fn().mockImplementation(() => ({
-      matches,
-      media: "(prefers-reduced-motion: reduce)",
-      onchange: null,
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn()
-    }))
-  });
-
-  return () => {
-    Object.defineProperty(window, "matchMedia", {
-      configurable: true,
-      writable: true,
-      value: original
-    });
-  };
-}

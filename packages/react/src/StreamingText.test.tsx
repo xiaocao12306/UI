@@ -1,5 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { installMatchMediaMock } from "./test-utils/matchMedia";
 import { StreamingText } from "./StreamingText";
 
 describe("StreamingText", () => {
@@ -75,7 +76,7 @@ describe("StreamingText", () => {
   });
 
   it("respects reduced-motion and renders full text immediately", () => {
-    const restoreMatchMedia = mockMatchMedia(true);
+    const matchMediaMock = installMatchMediaMock({ initialMatches: true });
     const onComplete = vi.fn();
 
     render(<StreamingText text="Reduced motion response" onComplete={onComplete} />);
@@ -85,12 +86,12 @@ describe("StreamingText", () => {
     expect(status).toHaveAttribute("aria-busy", "false");
     expect(onComplete).toHaveBeenCalledTimes(1);
 
-    restoreMatchMedia();
+    matchMediaMock.restore();
   });
 
   it("keeps streaming when respectReducedMotion is disabled", () => {
     vi.useFakeTimers();
-    const restoreMatchMedia = mockMatchMedia(true);
+    const matchMediaMock = installMatchMediaMock({ initialMatches: true });
 
     render(<StreamingText text="AB" speed={20} respectReducedMotion={false} />);
     const status = screen.getByRole("status", { name: "Streaming text" });
@@ -101,34 +102,31 @@ describe("StreamingText", () => {
     });
     expect(status).toHaveTextContent("A|");
 
-    restoreMatchMedia();
+    matchMediaMock.restore();
+    vi.useRealTimers();
+  });
+
+  it("finishes immediately when reduced-motion preference toggles during streaming", () => {
+    vi.useFakeTimers();
+    const matchMediaMock = installMatchMediaMock({ initialMatches: false });
+
+    render(<StreamingText text="ABCD" speed={20} />);
+    const status = screen.getByRole("status", { name: "Streaming text" });
+    expect(status).toHaveAttribute("aria-busy", "true");
+    expect(status).toHaveTextContent("|");
+
+    act(() => {
+      vi.advanceTimersByTime(20);
+    });
+    expect(status).toHaveTextContent("A|");
+
+    act(() => {
+      matchMediaMock.setMatches(true);
+    });
+    expect(status).toHaveAttribute("aria-busy", "false");
+    expect(status).toHaveTextContent("ABCD");
+
+    matchMediaMock.restore();
     vi.useRealTimers();
   });
 });
-
-function mockMatchMedia(matches: boolean) {
-  const original = window.matchMedia;
-
-  Object.defineProperty(window, "matchMedia", {
-    configurable: true,
-    writable: true,
-    value: vi.fn().mockImplementation(() => ({
-      matches,
-      media: "(prefers-reduced-motion: reduce)",
-      onchange: null,
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn()
-    }))
-  });
-
-  return () => {
-    Object.defineProperty(window, "matchMedia", {
-      configurable: true,
-      writable: true,
-      value: original
-    });
-  };
-}
