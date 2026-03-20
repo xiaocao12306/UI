@@ -49,4 +49,28 @@ describe("StreamingText", () => {
     render(<StreamingText text="Result" streaming={false} label="   " />);
     expect(screen.getByRole("status", { name: "Streaming text" })).toBeInTheDocument();
   });
+
+  it("uses ownerDocument window timeout timers in iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.append(iframe);
+    const iframeDocument = iframe.contentDocument as Document;
+    const iframeWindow = iframeDocument.defaultView as Window;
+    const host = iframeDocument.createElement("div");
+    iframeDocument.body.append(host);
+
+    const setTimeoutSpy = vi.spyOn(iframeWindow, "setTimeout");
+    const clearTimeoutSpy = vi.spyOn(iframeWindow, "clearTimeout");
+
+    const { unmount } = render(<StreamingText text="Owner document timer" speed={20} startDelay={120} />, {
+      container: host
+    });
+    expect(setTimeoutSpy).toHaveBeenCalled();
+
+    unmount();
+    expect(clearTimeoutSpy).toHaveBeenCalled();
+
+    setTimeoutSpy.mockRestore();
+    clearTimeoutSpy.mockRestore();
+    iframe.remove();
+  });
 });

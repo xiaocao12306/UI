@@ -44,4 +44,26 @@ describe("LoadingDots", () => {
     render(<LoadingDots label="   " />);
     expect(screen.getByRole("status", { name: "Loading" })).toBeInTheDocument();
   });
+
+  it("uses ownerDocument window interval timers in iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.append(iframe);
+    const iframeDocument = iframe.contentDocument as Document;
+    const iframeWindow = iframeDocument.defaultView as Window;
+    const host = iframeDocument.createElement("div");
+    iframeDocument.body.append(host);
+
+    const setIntervalSpy = vi.spyOn(iframeWindow, "setInterval");
+    const clearIntervalSpy = vi.spyOn(iframeWindow, "clearInterval");
+
+    const { unmount } = render(<LoadingDots interval={120} />, { container: host });
+    expect(setIntervalSpy).toHaveBeenCalled();
+
+    unmount();
+    expect(clearIntervalSpy).toHaveBeenCalled();
+
+    setIntervalSpy.mockRestore();
+    clearIntervalSpy.mockRestore();
+    iframe.remove();
+  });
 });

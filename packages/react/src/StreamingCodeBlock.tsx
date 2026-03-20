@@ -7,6 +7,7 @@ export type StreamingCodeBlockProps = {
 };
 
 export function StreamingCodeBlock({ code, language = "txt", speed = 8 }: StreamingCodeBlockProps) {
+  const rootRef = React.useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = React.useState("");
 
   React.useEffect(() => {
@@ -17,22 +18,24 @@ export function StreamingCodeBlock({ code, language = "txt", speed = 8 }: Stream
 
     let pointer = 0;
     setVisible("");
+    const ownerWindow = rootRef.current?.ownerDocument.defaultView ?? window;
 
-    const id = window.setInterval(() => {
+    const id = ownerWindow.setInterval(() => {
       pointer += 1;
       setVisible(code.slice(0, pointer));
       if (pointer >= code.length) {
-        window.clearInterval(id);
+        ownerWindow.clearInterval(id);
       }
     }, speed);
 
     return () => {
-      window.clearInterval(id);
+      ownerWindow.clearInterval(id);
     };
   }, [code, speed]);
 
   return (
     <div
+      ref={rootRef}
       aria-busy={visible.length < code.length}
       style={{
         border: "1px solid var(--aurora-border-default)",

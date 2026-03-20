@@ -21,6 +21,7 @@ export function LoadingDots({
   style,
   ...props
 }: LoadingDotsProps) {
+  const rootRef = React.useRef<HTMLSpanElement | null>(null);
   const safeDotCount = clampDotCount(dotCount);
   const resolvedLabel =
     typeof label === "string" && label.trim().length > 0
@@ -37,12 +38,13 @@ export function LoadingDots({
       return;
     }
 
-    const id = window.setInterval(() => {
+    const ownerWindow = rootRef.current?.ownerDocument.defaultView ?? window;
+    const id = ownerWindow.setInterval(() => {
       setIndex((prev) => (prev + 1) % safeDotCount);
     }, Math.max(80, interval));
 
     return () => {
-      window.clearInterval(id);
+      ownerWindow.clearInterval(id);
     };
   }, [interval, running, safeDotCount]);
 
@@ -52,6 +54,7 @@ export function LoadingDots({
 
   return (
     <span
+      ref={rootRef}
       role="status"
       aria-label={resolvedLabel}
       aria-live={ariaLive}

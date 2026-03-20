@@ -31,6 +31,7 @@ export function StreamingText({
   style,
   ...props
 }: StreamingTextProps) {
+  const rootRef = React.useRef<HTMLSpanElement | null>(null);
   const [visibleText, setVisibleText] = React.useState(streaming ? "" : text);
   const completedRef = React.useRef(false);
   const totalLength = text.length;
@@ -54,16 +55,17 @@ export function StreamingText({
     let pointer = 0;
     let intervalId: number | null = null;
     setVisibleText("");
+    const ownerWindow = rootRef.current?.ownerDocument.defaultView ?? window;
 
     const start = () => {
-      intervalId = window.setInterval(() => {
+      intervalId = ownerWindow.setInterval(() => {
         pointer += 1;
         const nextText = text.slice(0, pointer);
         setVisibleText(nextText);
         onProgress?.(nextText, pointer, totalLength);
         if (pointer >= totalLength) {
           if (intervalId !== null) {
-            window.clearInterval(intervalId);
+            ownerWindow.clearInterval(intervalId);
             intervalId = null;
           }
           if (!completedRef.current) {
@@ -82,12 +84,12 @@ export function StreamingText({
       return;
     }
 
-    const timeoutId = window.setTimeout(start, Math.max(0, startDelay));
+    const timeoutId = ownerWindow.setTimeout(start, Math.max(0, startDelay));
 
     return () => {
-      window.clearTimeout(timeoutId);
+      ownerWindow.clearTimeout(timeoutId);
       if (intervalId !== null) {
-        window.clearInterval(intervalId);
+        ownerWindow.clearInterval(intervalId);
       }
     };
   }, [onComplete, onProgress, speed, startDelay, streaming, text, totalLength]);
@@ -97,6 +99,7 @@ export function StreamingText({
 
   return (
     <span
+      ref={rootRef}
       role="status"
       aria-label={resolvedLabel}
       aria-live={live}

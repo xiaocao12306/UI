@@ -55,4 +55,28 @@ describe("StreamingCodeBlock", () => {
     });
     expect(readCode()).toBe("xy");
   });
+
+  it("uses ownerDocument window interval timers in iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.append(iframe);
+    const iframeDocument = iframe.contentDocument as Document;
+    const iframeWindow = iframeDocument.defaultView as Window;
+    const host = iframeDocument.createElement("div");
+    iframeDocument.body.append(host);
+
+    const setIntervalSpy = vi.spyOn(iframeWindow, "setInterval");
+    const clearIntervalSpy = vi.spyOn(iframeWindow, "clearInterval");
+
+    const { unmount } = render(<StreamingCodeBlock code="const x = 1;" speed={12} />, {
+      container: host
+    });
+    expect(setIntervalSpy).toHaveBeenCalled();
+
+    unmount();
+    expect(clearIntervalSpy).toHaveBeenCalled();
+
+    setIntervalSpy.mockRestore();
+    clearIntervalSpy.mockRestore();
+    iframe.remove();
+  });
 });
