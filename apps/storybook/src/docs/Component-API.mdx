@@ -365,9 +365,9 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `items` | `TabItem[]` | Include `disabled` for unavailable states. Non-text `label` values can provide `items[].ariaLabel` for explicit tab naming. |
-| `items[].ariaLabel` | `string` | Accessible name override for icon/custom tab labels; rich labels that expose readable text or inline `aria-label` are auto-detected, and development builds warn when non-text labels still omit both. |
+| `items[].ariaLabel` | `string` | Accessible name override for icon/custom tab labels; rich labels that expose readable text or inline `aria-label` are auto-detected, and development builds warn when non-text labels still omit both. Blank values are ignored to avoid overriding visible tab naming. |
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled modes are both supported. |
-| `ariaLabel` / `ariaLabelledBy` | `string` / `string` | Name the tablist with a direct label or an external heading reference for screen-reader context. |
+| `ariaLabel` / `ariaLabelledBy` | `string` / `string` | Name the tablist with a direct label or an external heading reference for screen-reader context; blank values are ignored (`ariaLabel` falls back to `Tabs`, `ariaLabelledBy` is dropped). |
 | `orientation` | `'horizontal' \| 'vertical'` | Keyboard map follows orientation (`Left/Right` or `Up/Down`) with shared `Home/End` behavior. |
 | RTL keyboard parity | horizontal ArrowLeft/ArrowRight auto-flip | In `dir="rtl"` containers, horizontal arrow intent is mirrored so navigation follows visual reading direction. |
 | `activationMode` | `'automatic' \| 'manual'` | Automatic mode switches panels on arrow navigation; manual mode requires `Enter`/`Space` (including legacy `Spacebar`) to activate focused tab. |

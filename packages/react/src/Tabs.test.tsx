@@ -452,6 +452,20 @@ describe("Tabs", () => {
     }
   });
 
+  it("ignores blank item ariaLabel and keeps visible tab text as accessible name", () => {
+    render(
+      <Tabs
+        items={[
+          { key: "one", label: "Overview", ariaLabel: "   ", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const overviewTab = screen.getByRole("tab", { name: "Overview" });
+    expect(overviewTab).not.toHaveAttribute("aria-label");
+  });
+
   it("does not warn when rich tab labels expose aria-label on inner node", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -1205,5 +1219,36 @@ describe("Tabs", () => {
     const tablist = screen.getByRole("tablist", { name: "Release stages" });
     expect(tablist).toHaveAttribute("aria-labelledby", "release-stages");
     expect(tablist).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabel and falls back to default tablist name", () => {
+    render(
+      <Tabs
+        ariaLabel="   "
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("tablist", { name: "Tabs" })).toBeInTheDocument();
+  });
+
+  it("ignores blank ariaLabelledBy and keeps explicit ariaLabel naming", () => {
+    render(
+      <Tabs
+        ariaLabel="Release phases"
+        ariaLabelledBy="   "
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const tablist = screen.getByRole("tablist", { name: "Release phases" });
+    expect(tablist).toHaveAttribute("aria-label", "Release phases");
+    expect(tablist).not.toHaveAttribute("aria-labelledby");
   });
 });

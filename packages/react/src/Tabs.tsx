@@ -129,6 +129,8 @@ export function Tabs({
   const [hoveredTabKey, setHoveredTabKey] = React.useState<string | null>(null);
   const [pressedTabKey, setPressedTabKey] = React.useState<string | null>(null);
   const [focusVisibleTabKey, setFocusVisibleTabKey] = React.useState<string | null>(null);
+  const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel, "Tabs");
+  const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {
@@ -329,8 +331,8 @@ export function Tabs({
       <div
         ref={tabListRef}
         role="tablist"
-        aria-label={ariaLabelledBy ? undefined : ariaLabel}
-        aria-labelledby={ariaLabelledBy}
+        aria-label={resolvedAriaLabelledBy ? undefined : resolvedAriaLabel}
+        aria-labelledby={resolvedAriaLabelledBy}
         aria-orientation={orientation}
         aria-disabled={firstEnabledKey ? undefined : true}
         onBlurCapture={(event) => {
@@ -355,6 +357,7 @@ export function Tabs({
           const pressed = !disabled && pressedTabKey === item.key;
           const focusVisible = !disabled && focusVisibleTabKey === item.key;
           const interactive = hovered || focusVisible;
+          const itemAriaLabel = resolveNonEmptyLabel(item.ariaLabel);
 
           return (
             <button
@@ -365,7 +368,7 @@ export function Tabs({
               id={`${baseId}-tab-${index}`}
               type="button"
               role="tab"
-              aria-label={item.ariaLabel}
+              aria-label={itemAriaLabel}
               aria-selected={selected}
               aria-controls={`${baseId}-panel-${index}`}
               aria-disabled={disabled || undefined}
@@ -673,4 +676,12 @@ function hasReadableTextNode(node: React.ReactNode): boolean {
   }
 
   return hasReadableTextNode(elementProps.children);
+}
+
+function resolveNonEmptyLabel(label: string | undefined, fallback?: string): string | undefined {
+  if (typeof label === "string" && label.trim().length > 0) {
+    return label.trim();
+  }
+
+  return fallback;
 }
