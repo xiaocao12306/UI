@@ -27,6 +27,14 @@ test("renders demo homepage", async ({ page }) => {
   await expect(page.getByText("Token-first React component library")).toBeVisible();
 });
 
+test("shows production-readiness pills in section headers", async ({ page }) => {
+  await page.goto("/");
+
+  await expect(page.getByTestId("basic-components-status-pill")).toBeVisible();
+  await expect(page.getByTestId("basic-components-status-pill")).toContainText("Core Stable");
+  await expect(page.getByTestId("overlays-navigation-status-pill")).toContainText("Overlay Hardened");
+});
+
 test("supports keyboard skip link jump to component sections", async ({ page }) => {
   await page.goto("/");
 

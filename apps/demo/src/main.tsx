@@ -46,6 +46,13 @@ const sectionLinks = [
   { id: "overlays-navigation", label: "Overlays & Navigation" },
   { id: "ai-components", label: "AI Components" }
 ];
+const sectionReadinessById = {
+  "basic-components": { label: "Core Stable", note: "A11y + regression green" },
+  "data-navigation": { label: "Data Verified", note: "Keyboard + E2E locked" },
+  "feedback-states": { label: "Feedback Ready", note: "Live-region semantics hardened" },
+  "overlays-navigation": { label: "Overlay Hardened", note: "Dismiss policy + focus return" },
+  "ai-components": { label: "AI Kit Beta", note: "Streaming workflow validated" }
+} as const;
 const availableThemes: ThemeName[] = [...themeNames];
 const themeStorageKey = "aurora-ui-demo-theme";
 const frameworkOptions = [
@@ -85,6 +92,13 @@ const sectionHeadingRowStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   gap: 10
+};
+const sectionTitleRowStyle: React.CSSProperties = {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: 10,
+  justifyContent: "space-between"
 };
 const sectionEyebrowStyle: React.CSSProperties = {
   margin: 0,
@@ -270,11 +284,13 @@ function Section({
   id,
   title,
   description,
+  status,
   children
 }: {
   id: string;
   title: string;
   description?: string;
+  status?: { label: string; note: string };
   children: React.ReactNode;
 }) {
   const headingId = `${id}-title`;
@@ -288,13 +304,21 @@ function Section({
           </p>
           <span aria-hidden="true" className="demo-section-heading-rule" />
         </div>
-        <h2
-          id={headingId}
-          className="demo-section-title"
-          style={{ margin: 0, fontSize: "clamp(21px, 2.1vw, 24px)", letterSpacing: "-0.015em" }}
-        >
-          {title}
-        </h2>
+        <div className="demo-section-title-row" style={sectionTitleRowStyle}>
+          <h2
+            id={headingId}
+            className="demo-section-title"
+            style={{ margin: 0, fontSize: "clamp(21px, 2.1vw, 24px)", letterSpacing: "-0.015em" }}
+          >
+            {title}
+          </h2>
+          {status ? (
+            <span className="demo-section-status-pill" data-testid={`${id}-status-pill`}>
+              <span className="demo-section-status-label">{status.label}</span>
+              <span className="demo-section-status-note">{status.note}</span>
+            </span>
+          ) : null}
+        </div>
         {description ? (
           <p className="demo-section-description" style={mutedBodyStyle}>
             {description}
@@ -767,6 +791,7 @@ function App() {
             id="basic-components"
             title="Basic Components"
             description="Core controls and form primitives with theme-driven tokens."
+            status={sectionReadinessById["basic-components"]}
           >
             <div className="demo-section-stack">
               <div className="demo-panel">
@@ -883,6 +908,7 @@ function App() {
             id="data-navigation"
             title="Data & Navigation"
             description="Common data surfaces and navigation containers."
+            status={sectionReadinessById["data-navigation"]}
           >
             <div className="demo-section-stack">
               <div className="demo-panel">
@@ -1175,6 +1201,7 @@ function App() {
             id="feedback-states"
             title="Feedback & States"
             description="System status, loading skeletons, and streaming indicators."
+            status={sectionReadinessById["feedback-states"]}
           >
             <div className="demo-section-stack">
               <div className="demo-panel">
@@ -1280,6 +1307,7 @@ function App() {
             id="overlays-navigation"
             title="Overlays & Navigation"
             description="Layered surfaces with keyboard and pointer dismissal behavior."
+            status={sectionReadinessById["overlays-navigation"]}
           >
             <div className="demo-section-stack">
               <div className="demo-panel">
@@ -1476,6 +1504,7 @@ function App() {
             id="ai-components"
             title="AI Components"
             description="Prompt, reasoning, and streaming response building blocks."
+            status={sectionReadinessById["ai-components"]}
           >
             <div className="demo-section-stack">
               <div className="demo-two-column">
