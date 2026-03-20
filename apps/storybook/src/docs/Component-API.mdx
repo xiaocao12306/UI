@@ -147,6 +147,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onCheckedChange` | `(checked: boolean) => void` | Triggered from pointer and keyboard (`Space`) interactions. |
 | click guard | `onClick(event.preventDefault())` | Pointer toggle respects consumer click guards; blocked clicks do not emit `onCheckedChange`. |
 | `description` | `ReactNode` | Auto-wires helper copy to `aria-describedby`. |
+| `aria-label` / `aria-labelledby` | `string` | Optional explicit naming; blank string values are ignored so visible label naming is not accidentally overridden. |
 | `invalid` | `boolean` | Applies invalid semantics and error-token visual states. |
 
 <Canvas of={SwitchStories.InvalidAndDisabled} />

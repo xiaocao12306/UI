@@ -30,6 +30,8 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     onMouseUp,
     onKeyDown,
     "aria-invalid": ariaInvalid,
+    "aria-label": rawAriaLabel,
+    "aria-labelledby": rawAriaLabelledBy,
     ...props
   },
   forwardedRef
@@ -46,9 +48,17 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
 
   const isControlled = checked !== undefined;
   const currentChecked = isControlled ? checked : internalChecked;
+  const ariaLabel =
+    typeof rawAriaLabel === "string" && rawAriaLabel.trim().length > 0
+      ? rawAriaLabel.trim()
+      : undefined;
+  const ariaLabelledBy =
+    typeof rawAriaLabelledBy === "string" && rawAriaLabelledBy.trim().length > 0
+      ? rawAriaLabelledBy.trim()
+      : undefined;
   const describedBy = [props["aria-describedby"], description ? descriptionId : undefined].filter(Boolean).join(" ") || undefined;
   const labelledBy =
-    props["aria-label"] || props["aria-labelledby"] || !label ? props["aria-labelledby"] : labelId;
+    ariaLabel || ariaLabelledBy || !label ? ariaLabelledBy : labelId;
 
   const focusRingColor = isInvalid
     ? "color-mix(in srgb, var(--aurora-color-red-500) 24%, transparent)"
@@ -88,6 +98,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       aria-checked={currentChecked}
       aria-invalid={resolvedInvalidAria}
       aria-disabled={disabled || undefined}
+      aria-label={ariaLabel}
       aria-describedby={describedBy}
       aria-labelledby={labelledBy}
       disabled={disabled}

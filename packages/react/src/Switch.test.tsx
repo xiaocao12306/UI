@@ -112,4 +112,19 @@ describe("Switch", () => {
     render(<Switch label="Valid switch" aria-invalid="false" />);
     expect(screen.getByRole("switch", { name: "Valid switch" })).not.toHaveAttribute("aria-invalid");
   });
+
+  it("ignores blank aria-label and keeps visible label as accessible name", () => {
+    render(<Switch label="Release gate" aria-label="   " />);
+
+    const control = screen.getByRole("switch", { name: "Release gate" });
+    expect(control).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank aria-labelledby and keeps visible label as accessible name", () => {
+    render(<Switch label="Release gate" aria-labelledby="   " />);
+
+    const control = screen.getByRole("switch", { name: "Release gate" });
+    expect(control).toHaveAttribute("aria-labelledby");
+    expect((control.getAttribute("aria-labelledby") ?? "").trim().length).toBeGreaterThan(0);
+  });
 });
