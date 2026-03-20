@@ -242,7 +242,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `size` | `'sm' \| 'md' \| 'lg'` | Overlay width presets. |
 | `restoreFocus` | `boolean` | Whether to restore focus to the previously focused element when dialog closes. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls dismiss policy for blocking vs non-blocking dialogs. |
-| `showCloseButton` / `closeLabel` | `boolean` / `string` | Close affordance visibility and accessible label text. |
+| `showCloseButton` / `closeLabel` | `boolean` / `string` | Close affordance visibility and accessible label text; blank `closeLabel` values are ignored and fallback to `Close dialog`. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Inspect or cancel dismiss intent before `onOpenChange(false)`. |
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for dialog-dismiss analytics and workflow tracing. |
 | close lifecycle order | `onCloseReason -> onOpenChange(false)` | Close-button/Escape/outside-pointer paths use deterministic callback order for telemetry and reducer side effects. |
@@ -273,6 +273,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for close-button vs dismiss-gesture analytics. |
 | close lifecycle order | `onCloseReason -> onOpenChange(false)` | Close-button/Escape/outside-pointer paths keep callback order deterministic for telemetry reducers. |
 | `showCloseButton` | `boolean` | Allows explicit in-panel action-only dismissal. |
+| `closeLabel` | `string` | Localizable close-button accessible name; blank values are ignored and fallback to `Close drawer`. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer down keeps keyboard-intent ring state to avoid accidental ring loss during context/right-click interactions. |
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside drawer | Modal focus scope keeps keyboard focus inside drawer controls while open. |
 | Escape priority | preempted events skip drawer hook/dismiss | If higher-level handlers already `preventDefault()` Escape, drawer stays open and does not fire `onEscapeKeyDown`. |
@@ -543,6 +544,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `tone` | `'info' \| 'success' \| 'warning' \| 'danger'` | Controls visual emphasis and live-region urgency. |
 | `description` | `ReactNode` | Main alert body copy under title. |
 | `onClose` | `() => void` | Enables dismiss button branch for actionable notices. |
+| `closeLabel` | `string` | Localizable dismiss-button accessible name; blank values are ignored and fallback to `Dismiss alert`. |
 | `live` | `'polite' \| 'assertive' \| 'off'` | Overrides default aria-live behavior. |
 
 ### Toast
@@ -570,7 +572,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | stacked Escape order | top-priority toast first | In multi-toast layouts, Escape dismisses the top toast (latest opened or most recently focused/hovered). |
 | stacked viewport layout | per-position visual offset | Same-corner toast stacks apply deterministic offset so older notifications remain visible under the latest toast. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer interactions keep keyboard-intent ring state to avoid accidental focus-ring loss during context/right-click paths. |
-| `closeLabel` | `string` | Customize close-button accessible name for i18n. |
+| `closeLabel` | `string` | Customize close-button accessible name for i18n; blank values are ignored and fallback to `Close toast`. |
 | `ariaLabel` | `string` | Optional live-region accessible name override for icon-only or non-text titles; rich titles with readable text or inline `aria-label` are auto-detected, and development builds warn when non-text titles omit both. |
 
 <Canvas of={ToastStories.ActionRequired} />

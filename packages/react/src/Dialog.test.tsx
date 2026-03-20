@@ -29,6 +29,16 @@ describe("Dialog", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("ignores blank closeLabel and falls back to default close button name", () => {
+    render(
+      <Dialog open onOpenChange={() => {}} title="Fallback close label" closeLabel="   ">
+        <p>Body</p>
+      </Dialog>
+    );
+
+    expect(screen.getByRole("button", { name: "Close dialog" })).toBeInTheDocument();
+  });
+
   it("emits close callbacks in deterministic order for close-button and Escape dismiss", () => {
     const events: string[] = [];
     render(

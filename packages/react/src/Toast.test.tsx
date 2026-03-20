@@ -121,6 +121,11 @@ describe("Toast", () => {
     expect(screen.getByRole("button", { name: "Dismiss notification" })).toBeInTheDocument();
   });
 
+  it("ignores blank closeLabel and falls back to default close button name", () => {
+    render(<Toast open title="Saved" closeLabel="   " />);
+    expect(screen.getByRole("button", { name: "Close toast" })).toBeInTheDocument();
+  });
+
   it("uses alert role for danger tone", () => {
     render(<Toast open tone="danger" title="Failed" />);
     expect(screen.getByRole("alert")).toHaveAttribute("aria-live", "assertive");

@@ -31,4 +31,9 @@ describe("Alert", () => {
     fireEvent.click(screen.getByRole("button", { name: "Close notice" }));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it("ignores blank closeLabel and falls back to default dismiss button name", () => {
+    render(<Alert title="Notice" onClose={() => {}} closeLabel="   " />);
+    expect(screen.getByRole("button", { name: "Dismiss alert" })).toBeInTheDocument();
+  });
 });

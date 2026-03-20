@@ -39,6 +39,16 @@ describe("Drawer", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("ignores blank closeLabel and falls back to default close button name", () => {
+    render(
+      <Drawer open onOpenChange={() => {}} title="Fallback close label drawer" closeLabel="   ">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    expect(screen.getByRole("button", { name: "Close drawer" })).toBeInTheDocument();
+  });
+
   it("emits close callbacks in deterministic order for close-button and outside-pointer dismiss", () => {
     const events: string[] = [];
     render(

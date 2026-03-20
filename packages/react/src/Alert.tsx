@@ -46,6 +46,10 @@ export function Alert({
 }: AlertProps) {
   const role = tone === "danger" ? "alert" : "status";
   const ariaLive = live ?? (role === "alert" ? "assertive" : "polite");
+  const resolvedCloseLabel =
+    typeof closeLabel === "string" && closeLabel.trim().length > 0
+      ? closeLabel.trim()
+      : "Dismiss alert";
 
   return (
     <div
@@ -71,7 +75,7 @@ export function Alert({
         {onClose ? (
           <button
             type="button"
-            aria-label={closeLabel}
+            aria-label={resolvedCloseLabel}
             onClick={() => onClose()}
             style={{
               borderRadius: "var(--aurora-radius-sm)",

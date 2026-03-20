@@ -43,6 +43,10 @@ export function Drawer({
   const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
   const closeButtonFocusIntentRef = React.useRef(true);
+  const resolvedCloseLabel =
+    typeof closeLabel === "string" && closeLabel.trim().length > 0
+      ? closeLabel.trim()
+      : "Close drawer";
 
   const closeWithReason = React.useCallback(
     (reason: DrawerCloseReason) => {
@@ -144,7 +148,7 @@ export function Drawer({
                   <button
                     type="button"
                     onClick={() => closeWithReason("close-button")}
-                    aria-label={closeLabel}
+                    aria-label={resolvedCloseLabel}
                     onMouseEnter={() => {
                       setCloseButtonHovered(true);
                     }}

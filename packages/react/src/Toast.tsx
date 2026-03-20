@@ -211,6 +211,10 @@ export function Toast({
   const paused = documentHidden || (pauseOnHover && (pauseState.hover || pauseState.focus));
   const titleId = React.useId();
   const descriptionId = React.useId();
+  const resolvedCloseLabel =
+    typeof closeLabel === "string" && closeLabel.trim().length > 0
+      ? closeLabel.trim()
+      : "Close toast";
 
   const updateEscapeKeyShortcutsVisibility = React.useCallback(() => {
     const element = rootRef.current;
@@ -547,7 +551,7 @@ export function Toast({
         <button
           type="button"
           onClick={closeByButton}
-          aria-label={closeLabel}
+          aria-label={resolvedCloseLabel}
           onMouseEnter={() => {
             setCloseButtonHovered(true);
           }}

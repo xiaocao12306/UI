@@ -49,6 +49,10 @@ export function Dialog({
   const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
   const closeButtonFocusIntentRef = React.useRef(true);
+  const resolvedCloseLabel =
+    typeof closeLabel === "string" && closeLabel.trim().length > 0
+      ? closeLabel.trim()
+      : "Close dialog";
 
   const closeWithReason = React.useCallback(
     (reason: DialogCloseReason) => {
@@ -145,7 +149,7 @@ export function Dialog({
                   <button
                     type="button"
                     onClick={() => closeWithReason("close-button")}
-                    aria-label={closeLabel}
+                    aria-label={resolvedCloseLabel}
                     onMouseEnter={() => {
                       setCloseButtonHovered(true);
                     }}
