@@ -134,6 +134,35 @@ describe("Dropdown", () => {
     }
   });
 
+  it("warns and ignores blank ariaLabel on non-text dropdown items", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dropdown
+          label="Blank icon label"
+          items={[
+            {
+              key: "settings",
+              label: <span aria-hidden="true">⚙</span>,
+              ariaLabel: "   ",
+              textValue: "Settings"
+            }
+          ]}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button", { name: "Blank icon label" }));
+      const settingsItem = screen.getByRole("menuitem");
+      expect(settingsItem).not.toHaveAttribute("aria-label");
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Non-text item labels should provide ariaLabel: "settings"')
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("closes on escape key and outside pointer", () => {
     const onCloseReason = vi.fn();
 
