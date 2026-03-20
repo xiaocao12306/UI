@@ -211,6 +211,10 @@ export function Toast({
   const paused = documentHidden || (pauseOnHover && (pauseState.hover || pauseState.focus));
   const titleId = React.useId();
   const descriptionId = React.useId();
+  const resolvedAriaLabel =
+    typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+      ? ariaLabel.trim()
+      : undefined;
   const resolvedCloseLabel =
     typeof closeLabel === "string" && closeLabel.trim().length > 0
       ? closeLabel.trim()
@@ -470,7 +474,7 @@ export function Toast({
       return;
     }
 
-    const hasExplicitAriaLabel = typeof ariaLabel === "string" && ariaLabel.trim().length > 0;
+    const hasExplicitAriaLabel = Boolean(resolvedAriaLabel);
     if (hasExplicitAriaLabel || hasReadableTextNode(title)) {
       warnedMissingAriaLabelRef.current = false;
       return;
@@ -484,7 +488,7 @@ export function Toast({
     console.warn(
       "[Toast] Non-text titles should provide ariaLabel so notification name remains accessible."
     );
-  }, [ariaLabel, title]);
+  }, [resolvedAriaLabel, title]);
 
   if (!open) {
     return null;
@@ -502,8 +506,8 @@ export function Toast({
       aria-live={ariaLive}
       aria-atomic="true"
       aria-keyshortcuts={showEscapeKeyShortcuts ? "Escape" : undefined}
-      aria-label={ariaLabel}
-      aria-labelledby={ariaLabel ? undefined : titleId}
+      aria-label={resolvedAriaLabel}
+      aria-labelledby={resolvedAriaLabel ? undefined : titleId}
       aria-describedby={description ? descriptionId : undefined}
       onMouseEnter={() => {
         promoteToTop();
