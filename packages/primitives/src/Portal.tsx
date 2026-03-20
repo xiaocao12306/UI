@@ -7,16 +7,27 @@ export type PortalProps = {
 };
 
 export function Portal({ children, container }: PortalProps) {
-  const [mounted, setMounted] = React.useState(false);
+  const anchorRef = React.useRef<HTMLSpanElement>(null);
+  const [target, setTarget] = React.useState<Element | DocumentFragment | null>(container ?? null);
 
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  React.useLayoutEffect(() => {
+    if (container) {
+      setTarget(container);
+      return;
+    }
 
-  if (!mounted) {
-    return null;
+    const ownerDocument = anchorRef.current?.ownerDocument;
+    setTarget(ownerDocument?.body ?? null);
+  }, [container]);
+
+  if (!target) {
+    return <span ref={anchorRef} aria-hidden="true" style={{ display: "none" }} />;
   }
 
-  const target = container ?? document.body;
-  return createPortal(children, target);
+  return (
+    <>
+      <span ref={anchorRef} aria-hidden="true" style={{ display: "none" }} />
+      {createPortal(children, target)}
+    </>
+  );
 }

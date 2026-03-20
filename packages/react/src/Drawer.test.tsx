@@ -1,5 +1,5 @@
 import * as React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Dialog } from "./Dialog";
@@ -468,5 +468,33 @@ describe("Drawer", () => {
     );
 
     expect(document.body.style.overflow).toBe("");
+  });
+
+  it("renders the drawer portal in ownerDocument body when mounted in iframe container", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      throw new Error("expected iframe document to exist");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    let unmount: (() => void) | undefined;
+    try {
+      ({ unmount } = render(
+        <Drawer open onOpenChange={() => {}} title="Iframe drawer">
+          <p>Drawer body</p>
+        </Drawer>,
+        { container: iframeContainer, baseElement: iframeDocument.body }
+      ));
+
+      expect(within(iframeDocument.body).getByRole("dialog", { name: "Iframe drawer" })).toBeInTheDocument();
+      expect(screen.queryByRole("dialog", { name: "Iframe drawer" })).toBeNull();
+    } finally {
+      unmount?.();
+      iframe.remove();
+    }
   });
 });
