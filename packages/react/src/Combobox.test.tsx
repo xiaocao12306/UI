@@ -215,6 +215,36 @@ describe("Combobox", () => {
     expect(screen.queryByRole("listbox")).toBeNull();
   });
 
+  it("binds outside pointer listener to ownerDocument when opened", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const ownerDocument = iframe.contentDocument;
+    if (!ownerDocument) {
+      throw new Error("iframe contentDocument is unavailable");
+    }
+    const container = ownerDocument.createElement("div");
+    ownerDocument.body.appendChild(container);
+    const addListenerSpy = vi.spyOn(ownerDocument, "addEventListener");
+
+    try {
+      render(<Combobox options={options} onValueChange={() => {}} />, {
+        container,
+        baseElement: ownerDocument.body
+      });
+
+      const input = container.querySelector<HTMLInputElement>('input[role="combobox"]');
+      if (!input) {
+        throw new Error("expected combobox input in iframe document");
+      }
+      fireEvent.focus(input);
+
+      expect(addListenerSpy).toHaveBeenCalledWith("pointerdown", expect.any(Function));
+    } finally {
+      addListenerSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("only exposes aria-controls while popup is open", () => {
     render(<Combobox options={options} onValueChange={() => {}} />);
 

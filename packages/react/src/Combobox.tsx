@@ -114,15 +114,16 @@ export function Combobox({
       return;
     }
 
+    const ownerDocument = rootRef.current?.ownerDocument ?? document;
     const onPointerDown = (event: PointerEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) {
         setOpen(false);
       }
     };
 
-    document.addEventListener("pointerdown", onPointerDown);
+    ownerDocument.addEventListener("pointerdown", onPointerDown);
     return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
+      ownerDocument.removeEventListener("pointerdown", onPointerDown);
     };
   }, [open]);
 
