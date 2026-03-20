@@ -596,6 +596,8 @@
   - Tabs/Toast 命名语义收口（非文本富节点支持内联 `aria-label` 可读性回退，减少无障碍命名误告警；补齐 `Tabs.test.tsx` / `Toast.test.tsx` 与 Storybook API/Best Practices 文档）
   - CommandPalette/Dropdown 检索命名收口（富节点文本提取支持内联 `aria-label`，覆盖筛选/typeahead 与开发态命名告警分支；补齐 `CommandPalette.test.tsx` / `Dropdown.test.tsx` 与 Storybook 文档）
   - Release Gate 证据刷新（2026-03-20 latest+17：内联 `aria-label` 可读性收口并同步 demo + Storybook 静态产物后 `pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 75/75 + demo dist + storybook interaction 218/218）
+  - Button 命名告警收口（图标按钮空白 `aria-label` 不再被当作有效命名，且支持富节点内联 `aria-label` 回退；补齐 `Button.test.tsx` 与 Storybook API/Best Practices 文档）
+  - Release Gate 证据刷新（2026-03-20 latest+18：Button 图标命名收口并同步 Storybook 静态产物后 `pnpm release:gate:ci` 复验通过，含 verify + coverage + demo e2e 75/75 + demo dist + storybook interaction 218/218）
   - Release Dry-Run 证据刷新（2026-03-19 latest+2：`release:dry-run` 通过，`react` package `64.3 kB` / unpacked `394.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
   - Release Dry-Run 证据刷新（2026-03-20 latest：`release:dry-run` 通过，`react` package `66.7 kB` / unpacked `408.0 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
   - Release Dry-Run 证据刷新（2026-03-20 latest+1：`release:dry-run` 通过，`react` package `67.1 kB` / unpacked `410.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
