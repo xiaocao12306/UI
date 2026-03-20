@@ -585,6 +585,7 @@
 - Demo e2e parity refresh (2026-03-21 latest+38): reran full `pnpm demo:e2e` after adding table repeated-Enter sort regression and confirmed `86/86` pass.
 - Demo e2e parity refresh (2026-03-21 latest+39): reran full `pnpm demo:e2e` after adding manual-tabs repeated-Enter activation regression and confirmed `87/87` pass.
 - Demo e2e parity refresh (2026-03-21 latest+40): reran full `pnpm demo:e2e` after adding command-palette immediate-dismiss repeat + stacked-toast repeated-Escape regressions and confirmed `89/89` pass.
+- Demo e2e parity refresh (2026-03-21 latest+41): reran full `pnpm demo:e2e` after adding drawer repeated-Escape regression and confirmed `90/90` pass.
 - Release-gate parity refresh (2026-03-20 latest+27): after overlay modified-Escape hardening across CommandPalette/Dialog/Drawer/Popover/Dropdown and demo dist sync, reran full `pnpm release:gate:ci` and confirmed all gates green (verify + coverage + demo e2e `76/76` + demo dist sync + storybook interaction `221/221`).
 - Release-gate parity refresh (2026-03-21 latest+30): after adding toast modified-Escape demo regression, reran full `pnpm release:gate:ci` and confirmed all gates green (verify + release:exports:check + coverage + demo e2e `82/82` + demo dist sync + storybook interaction `221/221`).
 - Release-gate parity refresh (2026-03-21 latest+32): after adding dialog `Shift + Escape` regression, reran full `pnpm release:gate:ci` and confirmed all gates green (verify + release:exports:check + coverage + demo e2e `83/83` + demo dist sync + storybook interaction `221/221`).
