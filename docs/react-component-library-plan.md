@@ -605,6 +605,7 @@
   - Dropdown 菜单项命名防呆收口（`items[].ariaLabel` 空白值统一忽略并 trim 非空值，避免覆盖可见菜单项命名；补齐 `Dropdown.test.tsx` 回归）
   - 发布门禁漂移修复（`release:gate:ci` 复验中发现 demo/storybook 静态产物漂移，已同步 `apps/demo/dist` 与 `apps/storybook/storybook-static` 并恢复门禁）
   - Release Gate 证据刷新（2026-03-20 latest+20：完成 Dropdown 空白命名收口并同步 demo/Storybook 静态产物后 `pnpm release:gate:ci` 全链路复验通过，含 verify + coverage + demo e2e 75/75 + demo dist + storybook interaction 218/218）
+  - Combobox 命名一致性收口（listbox 命名改为复用清洗后的 `ariaLabel`，空白值回退 `Combobox options` 且非空值 trim 后生效；补齐 `Combobox.test.tsx` 与 Storybook `BlankAriaLabelFallback` 场景）
   - Release Dry-Run 证据刷新（2026-03-19 latest+2：`release:dry-run` 通过，`react` package `64.3 kB` / unpacked `394.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
   - Release Dry-Run 证据刷新（2026-03-20 latest：`release:dry-run` 通过，`react` package `66.7 kB` / unpacked `408.0 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
   - Release Dry-Run 证据刷新（2026-03-20 latest+1：`release:dry-run` 通过，`react` package `67.1 kB` / unpacked `410.8 kB`，`primitives` package `14.5 kB` / unpacked `71.7 kB`，`tokens` package `3.2 kB` / unpacked `17.3 kB`）
