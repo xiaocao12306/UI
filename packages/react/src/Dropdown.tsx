@@ -94,6 +94,35 @@ function getTypeaheadIndex(items: DropdownItem[], currentIndex: number, query: s
   return -1;
 }
 
+function getPagedEnabledIndex(
+  items: DropdownItem[],
+  currentIndex: number,
+  direction: 1 | -1,
+  pageSize = 5
+) {
+  const enabledIndices = items.reduce<number[]>((indices, item, index) => {
+    if (!item.disabled) {
+      indices.push(index);
+    }
+    return indices;
+  }, []);
+
+  if (enabledIndices.length === 0) {
+    return -1;
+  }
+
+  const currentEnabledPosition = enabledIndices.indexOf(currentIndex);
+  if (currentEnabledPosition < 0) {
+    return direction === 1 ? enabledIndices[0] : enabledIndices[enabledIndices.length - 1];
+  }
+
+  const nextEnabledPosition = Math.min(
+    enabledIndices.length - 1,
+    Math.max(0, currentEnabledPosition + direction * pageSize)
+  );
+  return enabledIndices[nextEnabledPosition] ?? -1;
+}
+
 function isDropdownItemActivationKey(key: string) {
   return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
 }
@@ -366,6 +395,22 @@ export function Dropdown({
               if (event.key === "End") {
                 event.preventDefault();
                 setActiveIndex(getNextEnabledIndex(items, 0, -1));
+                return;
+              }
+
+              if (event.key === "PageDown") {
+                event.preventDefault();
+                setActiveIndex((current) =>
+                  getPagedEnabledIndex(items, current < 0 ? -1 : current, 1)
+                );
+                return;
+              }
+
+              if (event.key === "PageUp") {
+                event.preventDefault();
+                setActiveIndex((current) =>
+                  getPagedEnabledIndex(items, current < 0 ? -1 : current, -1)
+                );
                 return;
               }
 

@@ -306,6 +306,41 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Review" })).toHaveFocus();
   });
 
+  it("supports PageUp and PageDown navigation for long menus while skipping disabled items", () => {
+    render(
+      <Dropdown
+        label="Paged Keyboard Bounds"
+        items={[
+          { key: "alpha", label: "Alpha" },
+          { key: "bravo", label: "Bravo" },
+          { key: "charlie", label: "Charlie", disabled: true },
+          { key: "delta", label: "Delta" },
+          { key: "echo", label: "Echo" },
+          { key: "foxtrot", label: "Foxtrot" },
+          { key: "golf", label: "Golf" },
+          { key: "hotel", label: "Hotel" },
+          { key: "india", label: "India" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Paged Keyboard Bounds" }));
+    const menu = screen.getByRole("menu", { name: "Paged Keyboard Bounds" });
+    expect(screen.getByRole("menuitem", { name: "Alpha" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "PageDown" });
+    expect(screen.getByRole("menuitem", { name: "Golf" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "PageDown" });
+    expect(screen.getByRole("menuitem", { name: "India" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "PageUp" });
+    expect(screen.getByRole("menuitem", { name: "Delta" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "PageUp" });
+    expect(screen.getByRole("menuitem", { name: "Alpha" })).toHaveFocus();
+  });
+
   it("keeps keyboard navigation as no-op when all dropdown items are disabled", () => {
     const onCloseReason = vi.fn();
 
@@ -334,6 +369,8 @@ describe("Dropdown", () => {
     fireEvent.keyDown(menu, { key: "ArrowUp" });
     fireEvent.keyDown(menu, { key: "Home" });
     fireEvent.keyDown(menu, { key: "End" });
+    fireEvent.keyDown(menu, { key: "PageDown" });
+    fireEvent.keyDown(menu, { key: "PageUp" });
     fireEvent.keyDown(menu, { key: "Enter" });
 
     menuItems.forEach((item) => {

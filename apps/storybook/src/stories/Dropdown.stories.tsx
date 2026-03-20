@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Dropdown provides keyboard navigation (Arrow/Home/End), disabled item semantics, and outside/Escape dismissal."
+          "Dropdown provides keyboard navigation (Arrow/Home/End/PageUp/PageDown), disabled item semantics, and outside/Escape dismissal."
       }
     }
   },
@@ -489,6 +489,10 @@ export const TypeaheadNavigation: Story = {
 
     await userEvent.click(trigger);
     const menu = canvas.getByRole("menu");
+    await userEvent.keyboard("{PageDown}");
+    await expect(canvas.getByRole("menuitem", { name: "Rename" })).toHaveFocus();
+    await userEvent.keyboard("{PageUp}");
+    await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
     await userEvent.keyboard("a");
     await expect(canvas.getByRole("menuitem", { name: "Add note" })).toHaveFocus();
     await userEvent.keyboard("a");
@@ -549,6 +553,8 @@ export const AllItemsDisabledKeyboardNoop: Story = {
     fireEvent.keyDown(menu, { key: "ArrowUp" });
     fireEvent.keyDown(menu, { key: "Home" });
     fireEvent.keyDown(menu, { key: "End" });
+    fireEvent.keyDown(menu, { key: "PageDown" });
+    fireEvent.keyDown(menu, { key: "PageUp" });
     fireEvent.keyDown(menu, { key: "Enter" });
 
     await expect(canvas.getByRole("menu", { name: "All Disabled Keyboard" })).toBeInTheDocument();
