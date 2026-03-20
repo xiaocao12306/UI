@@ -567,6 +567,28 @@ test("clears palette query on first Escape before dismiss when enabled", async (
   await expect(palette).toBeHidden();
 });
 
+test("ignores repeated Escape keydown before query-clear and dismiss sequence", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  const searchInput = palette.getByRole("combobox", { name: "Search commands" });
+
+  await searchInput.fill("drawer");
+  await searchInput.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", repeat: true, bubbles: true }));
+  });
+  await expect(searchInput).toHaveValue("drawer");
+  await expect(palette).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(searchInput).toHaveValue("");
+  await expect(palette).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeHidden();
+});
+
 test("ignores command palette navigation and selection keys during IME composition", async ({
   page
 }) => {

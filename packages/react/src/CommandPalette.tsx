@@ -458,10 +458,15 @@ export function CommandPalette({
               return;
             }
 
-            if (event.key === "Escape" && clearQueryOnEscape && query.length > 0) {
-              event.preventDefault();
-              setQuery("");
-              onQueryChange?.("");
+            if (event.key === "Escape") {
+              if (event.repeat) {
+                return;
+              }
+              if (clearQueryOnEscape && query.length > 0) {
+                event.preventDefault();
+                setQuery("");
+                onQueryChange?.("");
+              }
               return;
             }
 

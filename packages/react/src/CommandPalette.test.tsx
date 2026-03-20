@@ -445,6 +445,38 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("ignores repeated Escape keydown for query-clear and dismiss paths", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.change(input, { target: { value: "settings" } });
+    expect(input).toHaveValue("settings");
+
+    fireEvent.keyDown(input, { key: "Escape", repeat: true });
+    expect(input).toHaveValue("settings");
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(input).toHaveValue("");
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(onCloseReason).toHaveBeenCalledWith("escape-key");
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it("focuses search input when transitioning from closed to open", async () => {
     const onOpenChange = vi.fn();
     const { rerender } = render(
