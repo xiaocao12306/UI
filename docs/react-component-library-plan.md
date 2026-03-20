@@ -598,6 +598,7 @@
   - Dropdown 键冲突告警收口（开发态新增 `items[].key` 重复值告警，避免 roving focus 与关闭原因遥测歧义；补齐 `Dropdown.test.tsx` 与 Storybook 文档说明）
   - Combobox 选项值冲突收口（开发态新增 `options[].value` 重复值告警，避免 selected/active 语义歧义；补齐 `Combobox.test.tsx` 与 Storybook 文档说明）
   - Table 排序命名语义收口（新增 `columns[].sortLabel`，支持非文本列头时的排序按钮与 live region 可读播报；补齐单测 + Storybook `SortLabelForCustomHeader` + API/Best Practices 文档）
+  - Table 排序命名防呆收口（开发态对“可排序且非文本列头但缺失 `sortLabel`”输出告警，避免读屏命名回退到技术 key；补齐 `Table.test.tsx` 回归与 Storybook 文档说明）
   - Storybook 文档结构门禁收口（新增 `storybook:docs:structure:check` 并接入 `storybook:test:ci`，强制 `Component-API/Best-Practices` 必备章节存在）
   - Storybook 展示框架一致性收口（Tabs/Toast 统一 `StoryShowcaseFrame`/`StoryFullscreenFrame` 壳层并抽离 telemetry 文案样式，降低故事内联样式噪音并保持 runner 断言稳定）
   - Storybook Overlay 展示框架一致性收口（Popover/Tooltip 统一 `StoryShowcaseFrame` 壳层与 telemetry/helper 文案样式，Overlay 组观感与信息层级进一步对齐）

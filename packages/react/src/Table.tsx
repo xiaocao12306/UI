@@ -71,7 +71,14 @@ function resolveColumnSortLabel<T>(column: TableColumn<T>, fallbackKey: string) 
     return column.sortLabel.trim();
   }
 
-  return typeof column.header === "string" ? column.header : fallbackKey;
+  if (typeof column.header === "string" || typeof column.header === "number") {
+    const normalizedHeader = String(column.header).trim();
+    if (normalizedHeader.length > 0) {
+      return normalizedHeader;
+    }
+  }
+
+  return fallbackKey;
 }
 
 export function Table<T>({
@@ -100,6 +107,7 @@ export function Table<T>({
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const sortFocusIntentRef = React.useRef(true);
   const warnedDuplicateRowKeysSignatureRef = React.useRef<string | null>(null);
+  const warnedMissingSortLabelSignatureRef = React.useRef<string | null>(null);
   const [hoveredSortKey, setHoveredSortKey] = React.useState<string | null>(null);
   const [pressedSortKey, setPressedSortKey] = React.useState<string | null>(null);
   const [focusVisibleSortKey, setFocusVisibleSortKey] = React.useState<string | null>(null);
@@ -217,6 +225,46 @@ export function Table<T>({
         .join(", ")}. Ensure rowKey returns a unique, stable value for each source row.`
     );
   }, [rowKey, sourceRowKeys]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const missingSortLabelKeys = columns.reduce<string[]>((keys, column) => {
+      if (!column.sortable) {
+        return keys;
+      }
+
+      if (typeof column.sortLabel === "string" && column.sortLabel.trim().length > 0) {
+        return keys;
+      }
+
+      if (typeof column.header === "string" || typeof column.header === "number") {
+        return keys;
+      }
+
+      keys.push(String(column.key));
+      return keys;
+    }, []);
+
+    if (missingSortLabelKeys.length === 0) {
+      warnedMissingSortLabelSignatureRef.current = null;
+      return;
+    }
+
+    const signature = missingSortLabelKeys.sort().join("|");
+    if (warnedMissingSortLabelSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingSortLabelSignatureRef.current = signature;
+
+    console.warn(
+      `[Table] Sortable columns with non-text headers should provide sortLabel: ${missingSortLabelKeys
+        .map((key) => `"${key}"`)
+        .join(", ")}. This keeps sort button labels and live-region narration accessible.`
+    );
+  }, [columns]);
 
   const sortedEntries = React.useMemo(() => {
     const sourceEntries = data.map((row, sourceIndex) => ({ row, sourceIndex }));

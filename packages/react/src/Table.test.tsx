@@ -70,6 +70,69 @@ describe("Table", () => {
     }
   });
 
+  it("warns when sortable non-text headers omit sortLabel", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            {
+              key: "status",
+              header: <span aria-hidden="true">⚙</span>,
+              sortable: true
+            },
+            { key: "name", header: "Name" }
+          ]}
+          data={[
+            { name: "Button", status: "Stable" },
+            { name: "Dialog", status: "Stable" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Sortable columns with non-text headers should provide sortLabel: "status"'
+        )
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for sortable non-text headers when sortLabel is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            {
+              key: "status",
+              header: <span aria-hidden="true">⚙</span>,
+              sortLabel: "Status",
+              sortable: true
+            },
+            { key: "name", header: "Name" }
+          ]}
+          data={[
+            { name: "Button", status: "Stable" },
+            { name: "Dialog", status: "Stable" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("falls back to a default accessible table name when caption and ariaLabel are absent", () => {
     render(
       <Table
