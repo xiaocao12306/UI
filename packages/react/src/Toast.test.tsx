@@ -657,6 +657,61 @@ describe("Toast", () => {
     expect(onSecondaryOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("uses owner document window timers when mounted in an iframe document", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+
+    const iframeWindow = iframe.contentWindow;
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeWindow || !iframeDocument) {
+      throw new Error("Expected iframe document to be available in test environment.");
+    }
+
+    const setTimeoutSpy = vi.spyOn(iframeWindow, "setTimeout");
+
+    try {
+      const container = iframeDocument.createElement("div");
+      iframeDocument.body.appendChild(container);
+      render(<Toast open title="Iframe timer" duration={1200} onOpenChange={() => {}} />, {
+        container,
+        baseElement: iframeDocument.body
+      });
+
+      expect(setTimeoutSpy).toHaveBeenCalled();
+    } finally {
+      setTimeoutSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
+  it("clears iframe window timers when toast closes early", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+
+    const iframeWindow = iframe.contentWindow;
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeWindow || !iframeDocument) {
+      throw new Error("Expected iframe document to be available in test environment.");
+    }
+
+    const clearTimeoutSpy = vi.spyOn(iframeWindow, "clearTimeout");
+
+    try {
+      const container = iframeDocument.createElement("div");
+      iframeDocument.body.appendChild(container);
+      const view = render(<Toast open title="Iframe timer clear" duration={1200} onOpenChange={() => {}} />, {
+        container,
+        baseElement: iframeDocument.body
+      });
+
+      fireEvent.click(view.getByRole("button", { name: "Close toast" }));
+      expect(clearTimeoutSpy).toHaveBeenCalled();
+    } finally {
+      clearTimeoutSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("exposes Escape shortcut only for the current top escapable toast", async () => {
     function StackedToasts() {
       const [firstOpen, setFirstOpen] = React.useState(true);

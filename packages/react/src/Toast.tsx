@@ -198,6 +198,7 @@ export function Toast({
   const closeButtonFocusIntentRef = React.useRef(true);
   const closeRequestedRef = React.useRef(false);
   const timeoutRef = React.useRef<number | null>(null);
+  const timerWindowRef = React.useRef<Window | null>(null);
   const timerStartedAtRef = React.useRef(0);
   const hasAction = React.Children.toArray(action).length > 0;
   const resolvedDuration = duration ?? (hasAction ? 0 : 4000);
@@ -324,9 +325,11 @@ export function Toast({
 
   const clearCloseTimer = React.useCallback(() => {
     if (timeoutRef.current !== null) {
-      window.clearTimeout(timeoutRef.current);
+      const timerWindow = timerWindowRef.current ?? window;
+      timerWindow.clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
+    timerWindowRef.current = null;
     timerStartedAtRef.current = 0;
   }, []);
 
@@ -377,8 +380,11 @@ export function Toast({
       clearCloseTimer();
       remainingDurationRef.current = timeoutMs;
       timerStartedAtRef.current = Date.now();
-      timeoutRef.current = window.setTimeout(() => {
+      const ownerWindow = rootRef.current?.ownerDocument.defaultView ?? window;
+      timerWindowRef.current = ownerWindow;
+      timeoutRef.current = ownerWindow.setTimeout(() => {
         timeoutRef.current = null;
+        timerWindowRef.current = null;
         timerStartedAtRef.current = 0;
         remainingDurationRef.current = 0;
         closeByTimeout();
