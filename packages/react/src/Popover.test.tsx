@@ -181,6 +181,32 @@ describe("Popover", () => {
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   });
 
+  it("ignores modified Escape combinations for dismiss and hook callbacks", () => {
+    const onEscapeKeyDown = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <Popover
+        triggerLabel="Shortcut Guard"
+        onEscapeKeyDown={onEscapeKeyDown}
+        onCloseReason={onCloseReason}
+      >
+        <p>Guarded content</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Shortcut Guard" }));
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "Escape", altKey: true });
+    fireEvent.keyDown(document, { key: "Escape", metaKey: true });
+
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  });
+
   it("skips escape callback and dismiss when Escape is preempted upstream", () => {
     const onEscapeKeyDown = vi.fn();
     const onCloseReason = vi.fn();

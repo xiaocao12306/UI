@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Input, Popover } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 import { StoryShowcaseFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
 
 const popoverTelemetryTextStyle: React.CSSProperties = {
@@ -318,10 +318,18 @@ export const EscapePreemptedByGlobalHandler: Story = {
   render: () => <EscapePreemptedPopoverDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const ownerDocument = canvasElement.ownerDocument;
     const trigger = await canvas.findByRole("button", { name: "Preempted popover" });
 
     await userEvent.click(trigger);
     await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    fireEvent.keyDown(ownerDocument, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(ownerDocument, { key: "Escape", altKey: true });
+    fireEvent.keyDown(ownerDocument, { key: "Escape", metaKey: true });
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-escape-calls")).toHaveTextContent("0");
+
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
     await expect(canvas.getByTestId("popover-escape-calls")).toHaveTextContent("0");

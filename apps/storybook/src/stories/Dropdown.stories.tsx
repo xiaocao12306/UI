@@ -223,10 +223,17 @@ export const EscapePreemptedByGlobalHandler: Story = {
   render: () => <EscapePreemptedDropdown />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const ownerDocument = canvasElement.ownerDocument;
     const trigger = await canvas.findByRole("button", { name: "Preempted Escape Menu" });
 
     await userEvent.click(trigger);
     await expect(canvas.getByRole("menu", { name: "Preempted Escape Menu" })).toBeInTheDocument();
+
+    fireEvent.keyDown(ownerDocument, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(ownerDocument, { key: "Escape", altKey: true });
+    fireEvent.keyDown(ownerDocument, { key: "Escape", metaKey: true });
+    await expect(canvas.getByRole("menu", { name: "Preempted Escape Menu" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-escape-calls")).toHaveTextContent("0");
 
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByRole("menu", { name: "Preempted Escape Menu" })).toBeInTheDocument();
