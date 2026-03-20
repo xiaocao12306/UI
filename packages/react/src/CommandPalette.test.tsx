@@ -586,6 +586,53 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
+  it("isolates escape and outside-pointer dismiss handling per owner document", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    try {
+      render(
+        <CommandPalette
+          open
+          onOpenChange={onOpenChange}
+          onCloseReason={onCloseReason}
+          commands={[{ key: "open-settings", label: "Open Settings" }]}
+        />
+      );
+
+      expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.KeyboardEvent("keydown", {
+          key: "Escape",
+          bubbles: true
+        })
+      );
+      fireEvent.pointerDown(secondaryDocument.body);
+      expect(onOpenChange).not.toHaveBeenCalled();
+      expect(onCloseReason).not.toHaveBeenCalled();
+
+      fireEvent.keyDown(document, { key: "Escape" });
+      expect(onOpenChange).toHaveBeenNthCalledWith(1, false);
+      expect(onCloseReason).toHaveBeenNthCalledWith(1, "escape-key");
+
+      fireEvent.pointerDown(document.body);
+      expect(onOpenChange).toHaveBeenNthCalledWith(2, false);
+      expect(onCloseReason).toHaveBeenNthCalledWith(2, "outside-pointer");
+    } finally {
+      iframe.remove();
+    }
+  });
+
   it("removes Escape keyboard hint when Escape behaviors are fully disabled", () => {
     render(
       <CommandPalette
