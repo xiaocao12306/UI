@@ -490,3 +490,4 @@
 - Storybook overlay shell parity: `Dialog` / `Drawer` / `Dropdown` stories now share showcase shell primitives (`StoryShowcaseFrame` / `StoryFullscreenFrame`) and muted/emphasis telemetry text styles to reduce inline-style drift while preserving interaction assertions.
 - CommandPalette owner-document parity: active-option lookup now resolves via `list.ownerDocument.getElementById`, with unit regression coverage locking the owner-document lookup path before `scrollIntoView`.
 - Storybook gate parity refresh (2026-03-20 latest+7): reran `pnpm storybook:test:ci` after overlay shell + CommandPalette owner-document hardening and confirmed full pass (coverage/docs/parity/structure/play/static/a11y gates + storybook interaction 213/213).
+- Demo keyboard skip-link parity: added `Skip to component sections` anchor for immediate keyboard jump into component sections, with Playwright regression coverage for hash navigation and section visibility.

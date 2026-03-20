@@ -610,6 +610,7 @@
   - CommandPalette 跨文档引用收口（active option 查找改为 `list.ownerDocument.getElementById`，避免多文档容器引用漂移；补齐 `ownerDocument` 调用路径单测）
   - Storybook Gate 证据刷新（2026-03-20 latest+7：Overlay 壳层 + CommandPalette ownerDocument 收口后 `pnpm storybook:test:ci` 复验通过，含 coverage/docs/parity/structure/play/static/a11y gate + interaction 213/213）
   - Demo 诊断层级收口（Telemetry 胶囊与区块背景降权，优先突出组件主交互与内容层级）
+  - Demo 键盘跳转可达性收口（新增 `Skip to component sections` 跳转入口并补齐 Playwright 回归，保障键盘用户可快速进入组件区块）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
