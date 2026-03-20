@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as w}from"./index-CHKtz2QT.js";import{M as C,T as E,S as D,D as T,C as o,a as s}from"./index-bCxQ8P47.js";import{Primary as r,IconOnlyAccessibleName as P}from"./Button.stories-DALeeEQW.js";import{Default as d}from"./Tag.stories-C0q8Y_rv.js";import{Default as a}from"./Badge.stories-pDjpxk1g.js";import{Default as c,InvalidTokenSemantics as S}from"./Input.stories-FIK6wpZR.js";import{WithInputControl as t,InheritedControlSemantics as I}from"./FormField.stories-BTuhsucQ.js";import{Controlled as A,Indeterminate as N,InvalidAndDisabled as R}from"./Checkbox.stories-cCeNwowA.js";import{Controlled as O,DisabledOption as L,InvalidState as $}from"./RadioGroup.stories-DmN1I-fB.js";import{Controlled as H,KeyboardToggle as M,InvalidAndDisabled as K,ClickPreventDefaultGuard as B}from"./Switch.stories-BuVlx9Yh.js";import{Controlled as z,DisabledState as F,InvalidState as G}from"./Select.stories-C4IEADoE.js";import{Controlled as W,WithCustomEmptyMessage as V,KeyboardDismissPaths as q,BlankAriaLabelFallback as Q}from"./Combobox.stories-ctJJvy4G.js";import{Controlled as U,StateMatrix as l,InvalidWithHelper as J}from"./DatePicker.stories-q5erwe6a.js";import{Default as h,InvalidWithHelper as Y}from"./Textarea.stories-DOG_RsaT.js";import{Interactive as x,NestedDismissOrder as X,DismissGuardHooks as _,CloseReasonTelemetry as Z,FocusTrapKeyboardCycle as ee,EscapeIgnoresImeComposition as ne,EscapePreemptedByGlobalHandler as oe}from"./Dialog.stories-C4stgkQg.js";import{Interactive as se,NonDismissible as ie,FocusReturn as re,NoFocusReturn as de,NestedDismissOrder as ae,DismissGuardHooks as ce,CloseReasonTelemetry as te,FocusTrapKeyboardCycle as le,EscapeIgnoresImeComposition as he,EscapePreemptedByGlobalHandler as xe}from"./Drawer.stories-BO-BzIeb.js";import{Default as p,Controlled as pe,DescribedByLifecycle as je}from"./Tooltip.stories-DsRk7nAh.js";import{WithInteractiveContent as me,Default as ue,NonDismissible as be,DismissGuardHooks as fe,OutsideDismissFocusTransfer as ge,CloseReasonTelemetry as ye,EscapePreemptedByGlobalHandler as ve}from"./Popover.stories-DZSUAC8Z.js";import{Default as j,NonDismissible as ke,DismissGuardHooks as we,TypeaheadNavigation as Ce,IconItemNaming as Ee,TypeaheadIgnoresImeComposition as De,OutsideDismissFocusTransfer as Te,EscapeDismissFocusReturn as Pe,EscapePreemptedByGlobalHandler as Se,TabDismissToNextControl as Ie,CloseReasonTelemetry as Ae,ControlledOpenContract as Ne,NestedDismissOrder as Re}from"./Dropdown.stories-4fx-CZjX.js";import{SearchCommands as m,QueryTelemetry as Oe,CloseReasonTelemetry as Le,EmptyStateAriaControlsLifecycle as $e,LocalizedResultsLabel as He,LocalizedDialogCopy as Me,DisabledCommandGuard as Ke,TextValueAndAccentSearch as Be,IconOnlyCommandNaming as ze,PersistentSelection as Fe,RefinedSearchKeepsActiveCommand as Ge,PagedKeyboardNavigation as We,ImeCompositionGuard as Ve,EscapePreemptedByGlobalHandler as qe,NonDismissible as Qe,GuardedDismissEvents as Ue,EscapeClearsQueryFirst as Je}from"./CommandPalette.stories-BN-cSUgK.js";import{Default as Ye,WithAction as Xe,ToneMatrix as _e}from"./Empty.stories-BHVKsBqK.js";import{Default as Ze,NarratedStatus as en,ProfileCard as nn}from"./Skeleton.stories-3iH2sR-k.js";import{Default as on,SlowPulse as sn,Paused as rn}from"./LoadingDots.stories-CQ01XPmU.js";import{Default as dn,InstantDone as an,MultilineCursor as cn}from"./StreamingText.stories-YqIsweXv.js";import{Default as u,Indeterminate as tn}from"./Progress.stories-Bm-q5hoO.js";import{Default as ln,Dismissible as hn}from"./Alert.stories-DeF5_Y_-.js";import{Default as b,ActionRequired as xn,ActionRequiredDanger as pn,CloseReasonTelemetry as jn,EscapeStackOrder as mn,EscapeShortcutSync as un,StackedViewportOffset as bn,FocusedToastEscapesFirst as fn,CloseButtonPrimaryPointerOnly as gn,EscapePreemptedByGlobalHandler as yn,EscapePreemptedSkipsToastHook as vn,EscapeGuardedByToastHandler as kn,EscapeIgnoresImeComposition as wn,LiveRegionOff as Cn}from"./Toast.stories-BBQvxPue.js";import{Default as f,KeyboardNavigationGuide as En,NoLoopNavigation as Dn,Vertical as Tn,RtlKeyboardNavigation as Pn,LabelledByHeading as Sn,ManualActivation as In,ManualFocusResetOnBlur as An,ManualVerticalActivation as Nn,PrimaryPointerOnlyPressedState as Rn,ChangeTelemetry as On,ControlsReferenceMountedPanels as Ln}from"./Tabs.stories-Z0SKIEZD.js";import{ReleaseChecklist as $n,SortTelemetry as Hn,LocalizedSortLabels as Mn,SortLabelForCustomHeader as Kn,RichTextHeaderAutoSortLabel as Bn,AriaLabelHeaderAutoSortLabel as zn,LoadingState as Fn,EmptyState as Gn,SingleRowSortDisabled as Wn,PrimaryPointerOnlySortPress as Vn,KeyboardReachableScrollContainer as qn,WithRowAction as Qn,InvalidDefaultSortKeyFallback as Un,SourceIndexRowKeyStability as Jn,RenderIndexSemantics as Yn,AccessibleNameWithoutCaption as Xn,AccessibleNameFallback as _n,AccessibleNameLabelledByHeading as Zn,RowHeaderSemantics as eo}from"./Table.stories-DNsDB1Gs.js";import{Controlled as no,KeyboardShortcuts as g,RtlKeyboardShortcuts as oo,BoundaryAriaLabels as so,LabelledByHeading as io}from"./Pagination.stories-CA1d6J2E.js";import{WithAiRequestState as ro,Default as ao}from"./PromptInput.stories-Dg4GIpmM.js";import{Conversation as co,Default as to}from"./MessageBubble.stories-XtWuqyRv.js";import{Default as y}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as v}from"./StreamingCodeBlock.stories-Jd4VPz8N.js";import"./index-BWu4c2F4.js";import"./iframe-CAlpX8Aq.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-BhfMIoQv.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-ZJmMstsz.js";import"./index-DgAF9SIF.js";import"./storyShowcase-Bw5VyCj0.js";import"./Input-pKdbw4ss.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-CU5SQrEA.js";import"./FormField-ZaHPw_tE.js";import"./Textarea-C2HCxZDO.js";import"./Dialog-hbozTbkO.js";import"./bodyScrollLock-CnEUF6y7.js";import"./DismissableLayer-BWoUnDZk.js";import"./Dropdown-LkuGS8z0.js";import"./Popover-DVgs6ZcT.js";function k(i){const n={code:"code",h2:"h2",h3:"h3",p:"p",...w(),...i.components};return e.jsxs(e.Fragment,{children:[e.jsx(C,{title:"Docs/Component API"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as w}from"./index-CHKtz2QT.js";import{M as C,T as E,S as D,D as T,C as o,a as s}from"./index-De5-_oOr.js";import{Primary as r,IconOnlyAccessibleName as P}from"./Button.stories-DALeeEQW.js";import{Default as d}from"./Tag.stories-C0q8Y_rv.js";import{Default as a}from"./Badge.stories-pDjpxk1g.js";import{Default as c,InvalidTokenSemantics as S}from"./Input.stories-FIK6wpZR.js";import{WithInputControl as t,InheritedControlSemantics as I}from"./FormField.stories-BTuhsucQ.js";import{Controlled as A,Indeterminate as N,InvalidAndDisabled as R}from"./Checkbox.stories-cCeNwowA.js";import{Controlled as O,DisabledOption as L,InvalidState as $}from"./RadioGroup.stories-DmN1I-fB.js";import{Controlled as H,KeyboardToggle as M,InvalidAndDisabled as K,ClickPreventDefaultGuard as B}from"./Switch.stories-BuVlx9Yh.js";import{Controlled as F,DisabledState as z,InvalidState as G}from"./Select.stories-C4IEADoE.js";import{Controlled as W,WithCustomEmptyMessage as V,KeyboardDismissPaths as q,BlankAriaLabelFallback as Q,ActivedescendantFocusModel as U}from"./Combobox.stories-CFRb-Zsj.js";import{Controlled as J,StateMatrix as l,InvalidWithHelper as Y}from"./DatePicker.stories-q5erwe6a.js";import{Default as h,InvalidWithHelper as X}from"./Textarea.stories-DOG_RsaT.js";import{Interactive as x,NestedDismissOrder as _,DismissGuardHooks as Z,CloseReasonTelemetry as ee,FocusTrapKeyboardCycle as ne,EscapeIgnoresImeComposition as oe,EscapePreemptedByGlobalHandler as se}from"./Dialog.stories-C4stgkQg.js";import{Interactive as ie,NonDismissible as re,FocusReturn as de,NoFocusReturn as ae,NestedDismissOrder as ce,DismissGuardHooks as te,CloseReasonTelemetry as le,FocusTrapKeyboardCycle as he,EscapeIgnoresImeComposition as xe,EscapePreemptedByGlobalHandler as pe}from"./Drawer.stories-BO-BzIeb.js";import{Default as p,Controlled as je,DescribedByLifecycle as me}from"./Tooltip.stories-DsRk7nAh.js";import{WithInteractiveContent as ue,Default as be,NonDismissible as fe,DismissGuardHooks as ge,OutsideDismissFocusTransfer as ye,CloseReasonTelemetry as ve,EscapePreemptedByGlobalHandler as ke}from"./Popover.stories-DZSUAC8Z.js";import{Default as j,NonDismissible as we,DismissGuardHooks as Ce,TypeaheadNavigation as Ee,IconItemNaming as De,TypeaheadIgnoresImeComposition as Te,OutsideDismissFocusTransfer as Pe,EscapeDismissFocusReturn as Se,EscapePreemptedByGlobalHandler as Ie,TabDismissToNextControl as Ae,CloseReasonTelemetry as Ne,ControlledOpenContract as Re,NestedDismissOrder as Oe}from"./Dropdown.stories-4fx-CZjX.js";import{SearchCommands as m,QueryTelemetry as Le,CloseReasonTelemetry as $e,EmptyStateAriaControlsLifecycle as He,LocalizedResultsLabel as Me,LocalizedDialogCopy as Ke,DisabledCommandGuard as Be,TextValueAndAccentSearch as Fe,IconOnlyCommandNaming as ze,PersistentSelection as Ge,RefinedSearchKeepsActiveCommand as We,PagedKeyboardNavigation as Ve,ImeCompositionGuard as qe,EscapePreemptedByGlobalHandler as Qe,NonDismissible as Ue,GuardedDismissEvents as Je,EscapeClearsQueryFirst as Ye}from"./CommandPalette.stories-BN-cSUgK.js";import{Default as Xe,WithAction as _e,ToneMatrix as Ze}from"./Empty.stories-BHVKsBqK.js";import{Default as en,NarratedStatus as nn,ProfileCard as on}from"./Skeleton.stories-3iH2sR-k.js";import{Default as sn,SlowPulse as rn,Paused as dn}from"./LoadingDots.stories-CQ01XPmU.js";import{Default as an,InstantDone as cn,MultilineCursor as tn}from"./StreamingText.stories-YqIsweXv.js";import{Default as u,Indeterminate as ln}from"./Progress.stories-Bm-q5hoO.js";import{Default as hn,Dismissible as xn}from"./Alert.stories-DeF5_Y_-.js";import{Default as b,ActionRequired as pn,ActionRequiredDanger as jn,CloseReasonTelemetry as mn,EscapeStackOrder as un,EscapeShortcutSync as bn,StackedViewportOffset as fn,FocusedToastEscapesFirst as gn,CloseButtonPrimaryPointerOnly as yn,EscapePreemptedByGlobalHandler as vn,EscapePreemptedSkipsToastHook as kn,EscapeGuardedByToastHandler as wn,EscapeIgnoresImeComposition as Cn,LiveRegionOff as En}from"./Toast.stories-BBQvxPue.js";import{Default as f,KeyboardNavigationGuide as Dn,NoLoopNavigation as Tn,Vertical as Pn,RtlKeyboardNavigation as Sn,LabelledByHeading as In,ManualActivation as An,ManualFocusResetOnBlur as Nn,ManualVerticalActivation as Rn,PrimaryPointerOnlyPressedState as On,ChangeTelemetry as Ln,ControlsReferenceMountedPanels as $n}from"./Tabs.stories-Z0SKIEZD.js";import{ReleaseChecklist as Hn,SortTelemetry as Mn,LocalizedSortLabels as Kn,SortLabelForCustomHeader as Bn,RichTextHeaderAutoSortLabel as Fn,AriaLabelHeaderAutoSortLabel as zn,LoadingState as Gn,EmptyState as Wn,SingleRowSortDisabled as Vn,PrimaryPointerOnlySortPress as qn,KeyboardReachableScrollContainer as Qn,WithRowAction as Un,InvalidDefaultSortKeyFallback as Jn,SourceIndexRowKeyStability as Yn,RenderIndexSemantics as Xn,AccessibleNameWithoutCaption as _n,AccessibleNameFallback as Zn,AccessibleNameLabelledByHeading as eo,RowHeaderSemantics as no}from"./Table.stories-DNsDB1Gs.js";import{Controlled as oo,KeyboardShortcuts as g,RtlKeyboardShortcuts as so,BoundaryAriaLabels as io,LabelledByHeading as ro}from"./Pagination.stories-CA1d6J2E.js";import{WithAiRequestState as ao,Default as co}from"./PromptInput.stories-Dg4GIpmM.js";import{Conversation as to,Default as lo}from"./MessageBubble.stories-XtWuqyRv.js";import{Default as y}from"./ReasoningPanel.stories-ll9aUG-c.js";import{Default as v}from"./StreamingCodeBlock.stories-Jd4VPz8N.js";import"./index-BWu4c2F4.js";import"./iframe-qyqeCy1t.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-BhfMIoQv.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-ZJmMstsz.js";import"./index-DgAF9SIF.js";import"./storyShowcase-Bw5VyCj0.js";import"./Input-pKdbw4ss.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-CU5SQrEA.js";import"./FormField-ZaHPw_tE.js";import"./Textarea-C2HCxZDO.js";import"./Dialog-hbozTbkO.js";import"./bodyScrollLock-CnEUF6y7.js";import"./DismissableLayer-BWoUnDZk.js";import"./Dropdown-LkuGS8z0.js";import"./Popover-DVgs6ZcT.js";function k(i){const n={code:"code",h2:"h2",h3:"h3",p:"p",...w(),...i.components};return e.jsxs(e.Fragment,{children:[e.jsx(C,{title:"Docs/Component API"}),`
 `,e.jsx(E,{}),`
 `,e.jsx(D,{children:"Primary API Reference"}),`
 `,e.jsx(T,{children:e.jsx(n.p,{children:`This page links the most-used Aurora UI components to executable stories and prop controls.
@@ -86,8 +86,8 @@ When controls are available, Storybook reflects the runtime API contract directl
 `,e.jsx(o,{of:K}),`
 `,e.jsx(o,{of:B}),`
 `,e.jsx(n.h3,{id:"select",children:"Select"}),`
-`,e.jsx(o,{of:z}),`
-`,e.jsx(s,{of:F}),`
+`,e.jsx(o,{of:F}),`
+`,e.jsx(s,{of:z}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"value"})," / ",e.jsx(n.code,{children:"defaultValue"})," | ",e.jsx(n.code,{children:"string"}),` | Supports controlled and uncontrolled native select flows. |
@@ -102,11 +102,12 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"options"})," | ",e.jsx(n.code,{children:"ComboboxOption[]"}),` | Supports disabled entries and keyword filtering. Development builds warn when option values are duplicated. |
 | `,e.jsx(n.code,{children:"value"})," / ",e.jsx(n.code,{children:"defaultValue"})," | ",e.jsx(n.code,{children:"string"}),` | Controlled and uncontrolled modes are both available. |
 | `,e.jsx(n.code,{children:"onValueChange"})," | ",e.jsx(n.code,{children:"(value: string) => void"}),` | Fires when user confirms option by click or Enter. |
-| `,e.jsx(n.code,{children:"ariaLabel"})," | ",e.jsx(n.code,{children:"string"})," | Optional combobox accessible name override; blank values are ignored and fallback to ",e.jsx(n.code,{children:"Combobox"}),", and listbox naming follows ",e.jsx(n.code,{children:"\\"}),"$",ariaLabel," options`",e.jsx(n.code,{children:"after the same sanitization. | |"}),"emptyMessage",e.jsx(n.code,{children:"|"}),"ReactNode",e.jsx(n.code,{children:"| Custom no-result content for search miss scenarios. | | trigger relation | conditional"}),"aria-controls",e.jsx(n.code,{children:"| Input references listbox ID only while popup is open. | | dismiss policy |"}),"Escape` / blur outside | Keeps list open when focus moves into option elements; closes on blur outside root. |"]}),`
+| `,e.jsx(n.code,{children:"ariaLabel"})," | ",e.jsx(n.code,{children:"string"})," | Optional combobox accessible name override; blank values are ignored and fallback to ",e.jsx(n.code,{children:"Combobox"}),", and listbox naming follows ",e.jsx(n.code,{children:"\\"}),"$",ariaLabel," options`",e.jsx(n.code,{children:"after the same sanitization. | |"}),"emptyMessage",e.jsx(n.code,{children:"|"}),"ReactNode",e.jsx(n.code,{children:"| Custom no-result content for search miss scenarios. | | trigger relation | conditional"}),"aria-controls",e.jsx(n.code,{children:"| Input references listbox ID only while popup is open. | | option focus model |"}),"aria-activedescendant",e.jsx(n.code,{children:"+"}),"tabIndex=-1",e.jsx(n.code,{children:"options | Keyboard focus stays on combobox input; pointer selection uses primary-pointer"}),"mousedown",e.jsx(n.code,{children:"guard to avoid focus theft. | | dismiss policy |"}),"Escape` / blur outside | Keeps list open when focus moves into option elements; closes on blur outside root. |"]}),`
 `,e.jsx(o,{of:q}),`
 `,e.jsx(o,{of:Q}),`
-`,e.jsx(n.h3,{id:"datepicker",children:"DatePicker"}),`
 `,e.jsx(o,{of:U}),`
+`,e.jsx(n.h3,{id:"datepicker",children:"DatePicker"}),`
+`,e.jsx(o,{of:J}),`
 `,e.jsx(s,{of:l}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
@@ -116,7 +117,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"min"})," / ",e.jsx(n.code,{children:"max"})," | ",e.jsx(n.code,{children:"string"}),` | Native date range constraints. |
 | `,e.jsx(n.code,{children:"invalid"})," | ",e.jsx(n.code,{children:"boolean"})," | Adds ",e.jsx(n.code,{children:"aria-invalid"}),` to communicate validation state. |
 | `,e.jsx(n.code,{children:"errorMessageId"})," | ",e.jsx(n.code,{children:"string"})," | Appends error helper ID into ",e.jsx(n.code,{children:"aria-describedby"})," and ",e.jsx(n.code,{children:"aria-errormessage"})," when ",e.jsx(n.code,{children:"invalid"})," is true (deduped if ID already exists). |"]}),`
-`,e.jsx(o,{of:J}),`
+`,e.jsx(o,{of:Y}),`
 `,e.jsx(o,{of:l}),`
 `,e.jsx(n.h3,{id:"textarea",children:"Textarea"}),`
 `,e.jsx(o,{of:h}),`
@@ -126,7 +127,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"invalid"})," | ",e.jsx(n.code,{children:"boolean"})," | Adds ",e.jsx(n.code,{children:"aria-invalid"}),` and invalid token styles. |
 | `,e.jsx(n.code,{children:"readOnly"})," / ",e.jsx(n.code,{children:"disabled"})," | ",e.jsx(n.code,{children:"boolean"}),` | Preserves semantic behavior and visual state boundaries. |
 | `,e.jsx(n.code,{children:"aria-describedby"})," | ",e.jsx(n.code,{children:"string"})," | Supports helper/error hint linkage for form narration. |"]}),`
-`,e.jsx(o,{of:Y}),`
+`,e.jsx(o,{of:X}),`
 `,e.jsx(n.h2,{id:"overlay",children:"Overlay"}),`
 `,e.jsx(n.h3,{id:"tooltip",children:"Tooltip"}),`
 `,e.jsx(o,{of:p}),`
@@ -138,8 +139,8 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"delayDuration"})," / ",e.jsx(n.code,{children:"closeDelay"})," | ",e.jsx(n.code,{children:"number"}),` | Fine-grained pointer open/close timing control. |
 | `,e.jsx(n.code,{children:"disabled"})," | ",e.jsx(n.code,{children:"boolean"}),` | Prevents open behavior and closes active tooltip state. |
 | `,e.jsx(n.code,{children:"side"})," / ",e.jsx(n.code,{children:"sideOffset"})," | ",e.jsx(n.code,{children:"'top' \\| 'right' \\| 'bottom' \\| 'left'"})," / ",e.jsx(n.code,{children:"number"})," | Controls overlay placement around trigger. |"]}),`
-`,e.jsx(o,{of:pe}),`
 `,e.jsx(o,{of:je}),`
+`,e.jsx(o,{of:me}),`
 `,e.jsx(n.h3,{id:"dialog",children:"Dialog"}),`
 `,e.jsx(o,{of:x}),`
 `,e.jsx(s,{of:x}),`
@@ -159,15 +160,15 @@ When controls are available, Storybook reflects the runtime API contract directl
 | IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`,e.jsx(n.code,{children:"isComposing"})," / ",e.jsx(n.code,{children:"keyCode=229"}),`) to prevent accidental close while confirming CJK input. |
 | Escape priority | preempted events skip dialog hook/dismiss | If higher-level handlers already `,e.jsx(n.code,{children:"preventDefault()"})," Escape, dialog stays open and does not fire ",e.jsx(n.code,{children:"onEscapeKeyDown"}),`. |
 | nested dismiss order | top layer first | Nested overlay stacks (for example dropdown inside dialog) dismiss one layer per Escape/outside interaction. |`]}),`
-`,e.jsx(o,{of:X}),`
 `,e.jsx(o,{of:_}),`
 `,e.jsx(o,{of:Z}),`
 `,e.jsx(o,{of:ee}),`
 `,e.jsx(o,{of:ne}),`
 `,e.jsx(o,{of:oe}),`
-`,e.jsx(n.h3,{id:"drawer",children:"Drawer"}),`
 `,e.jsx(o,{of:se}),`
-`,e.jsx(s,{of:ie}),`
+`,e.jsx(n.h3,{id:"drawer",children:"Drawer"}),`
+`,e.jsx(o,{of:ie}),`
+`,e.jsx(s,{of:re}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"side"})," | ",e.jsx(n.code,{children:"'left' \\| 'right'"}),` | Controls panel placement and border direction. |
@@ -182,7 +183,6 @@ When controls are available, Storybook reflects the runtime API contract directl
 | focus trap cycle | `,e.jsx(n.code,{children:"Tab"})," / ",e.jsx(n.code,{children:"Shift+Tab"}),` loop inside drawer | Modal focus scope keeps keyboard focus inside drawer controls while open. |
 | Escape priority | preempted events skip drawer hook/dismiss | If higher-level handlers already `,e.jsx(n.code,{children:"preventDefault()"})," Escape, drawer stays open and does not fire ",e.jsx(n.code,{children:"onEscapeKeyDown"}),`. |
 | nested dismiss order | top layer first | Nested overlays inside drawer dismiss one layer per Escape/outside interaction. |`]}),`
-`,e.jsx(o,{of:re}),`
 `,e.jsx(o,{of:de}),`
 `,e.jsx(o,{of:ae}),`
 `,e.jsx(o,{of:ce}),`
@@ -190,9 +190,10 @@ When controls are available, Storybook reflects the runtime API contract directl
 `,e.jsx(o,{of:le}),`
 `,e.jsx(o,{of:he}),`
 `,e.jsx(o,{of:xe}),`
+`,e.jsx(o,{of:pe}),`
 `,e.jsx(n.h3,{id:"popover",children:"Popover"}),`
-`,e.jsx(o,{of:me}),`
-`,e.jsx(s,{of:ue}),`
+`,e.jsx(o,{of:ue}),`
+`,e.jsx(s,{of:be}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"triggerLabel"})," | ",e.jsx(n.code,{children:"ReactNode"}),` | Trigger button content. |
@@ -207,11 +208,11 @@ When controls are available, Storybook reflects the runtime API contract directl
 | trigger relation | conditional `,e.jsx(n.code,{children:"aria-controls"}),` | Trigger references content ID only while open to avoid dangling ARIA links. |
 | dismiss focus policy | Escape restores trigger focus; outside pointer keeps target focus | Prevents keyboard dead-ends without stealing pointer intent. |
 | Escape priority | preempted events skip popover hook/dismiss | If higher-level handlers already `,e.jsx(n.code,{children:"preventDefault()"})," Escape, popover stays open and does not fire ",e.jsx(n.code,{children:"onEscapeKeyDown"}),". |"]}),`
-`,e.jsx(o,{of:be}),`
 `,e.jsx(o,{of:fe}),`
 `,e.jsx(o,{of:ge}),`
 `,e.jsx(o,{of:ye}),`
 `,e.jsx(o,{of:ve}),`
+`,e.jsx(o,{of:ke}),`
 `,e.jsx(n.h3,{id:"dropdown",children:"Dropdown"}),`
 `,e.jsx(o,{of:j}),`
 `,e.jsx(s,{of:j}),`
@@ -237,7 +238,6 @@ When controls are available, Storybook reflects the runtime API contract directl
 | overlay IME Escape safety | dismiss-layer composition guard | Escape dismiss is ignored during active IME composition to avoid collapsing parent overlays while confirming CJK input. |
 | pointer dismiss focus | outside pointer keeps target focus | Outside pointer dismissal closes menu without forcing focus back to trigger. |
 | nested overlay dismiss | top layer first | Escape/outside dismiss resolves from topmost dismissable layer to avoid collapsing parent overlay stacks in one event. |`]}),`
-`,e.jsx(o,{of:ke}),`
 `,e.jsx(o,{of:we}),`
 `,e.jsx(o,{of:Ce}),`
 `,e.jsx(o,{of:Ee}),`
@@ -249,6 +249,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 `,e.jsx(o,{of:Ae}),`
 `,e.jsx(o,{of:Ne}),`
 `,e.jsx(o,{of:Re}),`
+`,e.jsx(o,{of:Oe}),`
 `,e.jsx(n.h2,{id:"data",children:"Data"}),`
 `,e.jsx(n.h3,{id:"tabs",children:"Tabs"}),`
 `,e.jsx(o,{of:f}),`
@@ -270,7 +271,6 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"onValueChange"})," | ",e.jsx(n.code,{children:"(value: string) => void"}),` | Fires only for enabled tabs and only when active key changes. |
 | controlled-value diagnostics | dev warning on missing/disabled `,e.jsx(n.code,{children:"value"})," | Controlled mode falls back to first enabled tab when incoming ",e.jsx(n.code,{children:"value"}),` is missing/disabled, and emits a development warning to surface upstream state drift early. |
 | tab relation | mounted `,e.jsx(n.code,{children:"tabpanel"})," set + ",e.jsx(n.code,{children:"hidden"})," toggle | Keeps every ",e.jsx(n.code,{children:"aria-controls"})," target valid while showing only active content panel. |"]}),`
-`,e.jsx(o,{of:En}),`
 `,e.jsx(o,{of:Dn}),`
 `,e.jsx(o,{of:Tn}),`
 `,e.jsx(o,{of:Pn}),`
@@ -281,8 +281,9 @@ When controls are available, Storybook reflects the runtime API contract directl
 `,e.jsx(o,{of:Rn}),`
 `,e.jsx(o,{of:On}),`
 `,e.jsx(o,{of:Ln}),`
-`,e.jsx(n.h3,{id:"table",children:"Table"}),`
 `,e.jsx(o,{of:$n}),`
+`,e.jsx(n.h3,{id:"table",children:"Table"}),`
+`,e.jsx(o,{of:Hn}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"columns"})," | ",e.jsx(n.code,{children:"TableColumn<T>[]"})," | ",e.jsx(n.code,{children:"sortable"})," + optional ",e.jsx(n.code,{children:"sortAccessor"}),` for stable sorting behavior. |
@@ -308,12 +309,11 @@ When controls are available, Storybook reflects the runtime API contract directl
 | keyboard-click dedupe | ignores synthesized keyboard-origin click (`,e.jsx(n.code,{children:"detail=0"}),`) after handled activation keydown | Prevents duplicate sort toggles/telemetry when environments emit both keydown and follow-up click for the same keyboard action. |
 | `,e.jsx(n.code,{children:"aria-sort"})," exposure | active sorted header only | Unsorted headers (including sortable ones) omit ",e.jsx(n.code,{children:"aria-sort"}),`, reducing screen-reader noise and matching ARIA table guidance. |
 | loading sort semantics | clears `,e.jsx(n.code,{children:"aria-sort"})," during ",e.jsx(n.code,{children:"loading"})," | Loading mode suppresses stale sort semantics and leaves ",e.jsx(n.code,{children:"aria-sort"})," unset until data rows are interactive again. |"]}),`
-`,e.jsx(o,{of:Hn}),`
 `,e.jsx(o,{of:Mn}),`
 `,e.jsx(o,{of:Kn}),`
 `,e.jsx(o,{of:Bn}),`
-`,e.jsx(o,{of:zn}),`
 `,e.jsx(o,{of:Fn}),`
+`,e.jsx(o,{of:zn}),`
 `,e.jsx(o,{of:Gn}),`
 `,e.jsx(o,{of:Wn}),`
 `,e.jsx(o,{of:Vn}),`
@@ -326,8 +326,9 @@ When controls are available, Storybook reflects the runtime API contract directl
 `,e.jsx(o,{of:_n}),`
 `,e.jsx(o,{of:Zn}),`
 `,e.jsx(o,{of:eo}),`
-`,e.jsx(n.h3,{id:"pagination",children:"Pagination"}),`
 `,e.jsx(o,{of:no}),`
+`,e.jsx(n.h3,{id:"pagination",children:"Pagination"}),`
+`,e.jsx(o,{of:oo}),`
 `,e.jsx(s,{of:g}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
@@ -340,42 +341,42 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"getItemAriaLabel"})," | ",e.jsx(n.code,{children:"(type, page) => string"})," | Customize pagination control narration for i18n; boundary ",e.jsx(n.code,{children:"previous/next"}),` pages are clamped to valid range, and blank return values fallback to default narration. |
 | RTL keyboard parity | ArrowLeft/ArrowRight auto-flip | In `,e.jsx(n.code,{children:'dir="rtl"'})," containers, horizontal arrow shortcuts mirror navigation intent to match visual flow. |"]}),`
 `,e.jsx(o,{of:g}),`
-`,e.jsx(o,{of:oo}),`
 `,e.jsx(o,{of:so}),`
 `,e.jsx(o,{of:io}),`
+`,e.jsx(o,{of:ro}),`
 `,e.jsx(n.h2,{id:"feedback",children:"Feedback"}),`
 `,e.jsx(n.h3,{id:"empty",children:"Empty"}),`
-`,e.jsx(o,{of:Ye}),`
-`,e.jsx(s,{of:Xe}),`
+`,e.jsx(o,{of:Xe}),`
+`,e.jsx(s,{of:_e}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"title"})," / ",e.jsx(n.code,{children:"description"})," | ",e.jsx(n.code,{children:"ReactNode"}),` | Empty-state headline and helper explanation text. |
 | `,e.jsx(n.code,{children:"icon"})," / ",e.jsx(n.code,{children:"action"})," | ",e.jsx(n.code,{children:"ReactNode"}),` | Optional visual cue and primary call-to-action slot. |
 | `,e.jsx(n.code,{children:"tone"})," | ",e.jsx(n.code,{children:"'default' \\| 'info' \\| 'warning' \\| 'danger'"}),` | Semantic emphasis for empty-state severity context. |
 | `,e.jsx(n.code,{children:"align"})," / ",e.jsx(n.code,{children:"titleAs"})," | ",e.jsx(n.code,{children:"'center' \\| 'left'"})," / heading element | Control content layout and heading semantics. |"]}),`
-`,e.jsx(o,{of:_e}),`
-`,e.jsx(n.h3,{id:"skeleton",children:"Skeleton"}),`
 `,e.jsx(o,{of:Ze}),`
-`,e.jsx(s,{of:en}),`
+`,e.jsx(n.h3,{id:"skeleton",children:"Skeleton"}),`
+`,e.jsx(o,{of:en}),`
+`,e.jsx(s,{of:nn}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"variant"})," | ",e.jsx(n.code,{children:"'rect' \\| 'text' \\| 'circle'"}),` | Shape selection for block/text/avatar placeholders. |
 | `,e.jsx(n.code,{children:"animated"})," | ",e.jsx(n.code,{children:"boolean"}),` | Toggle shimmer animation for reduced-motion or static placeholders. |
 | `,e.jsx(n.code,{children:"ariaLabel"})," | ",e.jsx(n.code,{children:"string"}),` | Enables narrated loading status semantics when needed; blank values are ignored so skeleton stays decorative by default. |
 | `,e.jsx(n.code,{children:"width"})," / ",e.jsx(n.code,{children:"height"})," / ",e.jsx(n.code,{children:"radius"})," | ",e.jsx(n.code,{children:"number \\| string"})," | Explicit geometry control for layout matching. |"]}),`
-`,e.jsx(o,{of:nn}),`
-`,e.jsx(n.h3,{id:"loadingdots",children:"LoadingDots"}),`
 `,e.jsx(o,{of:on}),`
-`,e.jsx(s,{of:sn}),`
+`,e.jsx(n.h3,{id:"loadingdots",children:"LoadingDots"}),`
+`,e.jsx(o,{of:sn}),`
+`,e.jsx(s,{of:rn}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"running"})," | ",e.jsx(n.code,{children:"boolean"}),` | Pause/resume the animated dots. |
 | `,e.jsx(n.code,{children:"interval"})," / ",e.jsx(n.code,{children:"dotCount"})," | ",e.jsx(n.code,{children:"number"}),` | Controls animation rhythm and max visible dots. |
 | `,e.jsx(n.code,{children:"label"})," / ",e.jsx(n.code,{children:"live"})," | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"'polite' \\| 'assertive' \\| 'off'"})," | Screen-reader narration and live-region urgency; blank ",e.jsx(n.code,{children:"label"})," values are ignored and fallback to ",e.jsx(n.code,{children:"Loading"}),". |"]}),`
-`,e.jsx(o,{of:rn}),`
-`,e.jsx(n.h3,{id:"streamingtext",children:"StreamingText"}),`
 `,e.jsx(o,{of:dn}),`
-`,e.jsx(s,{of:an}),`
+`,e.jsx(n.h3,{id:"streamingtext",children:"StreamingText"}),`
+`,e.jsx(o,{of:an}),`
+`,e.jsx(s,{of:cn}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"streaming"})," | ",e.jsx(n.code,{children:"boolean"}),` | Toggle realtime token streaming vs instant completion mode. |
@@ -383,7 +384,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"cursorChar"})," / ",e.jsx(n.code,{children:"showCursorWhenDone"})," | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"boolean"}),` | Cursor visual customization and completion behavior. |
 | `,e.jsx(n.code,{children:"label"})," | ",e.jsx(n.code,{children:"string"})," | Accessible narration label for streaming status; blank values are ignored and fallback to ",e.jsx(n.code,{children:"Streaming text"}),`. |
 | `,e.jsx(n.code,{children:"onProgress"})," / ",e.jsx(n.code,{children:"onComplete"})," | callbacks | Lifecycle hooks for telemetry and completion flow. |"]}),`
-`,e.jsx(o,{of:cn}),`
+`,e.jsx(o,{of:tn}),`
 `,e.jsx(n.h3,{id:"progress",children:"Progress"}),`
 `,e.jsx(o,{of:u}),`
 `,e.jsx(s,{of:u}),`
@@ -394,10 +395,10 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `,e.jsx(n.code,{children:"label"})," / ",e.jsx(n.code,{children:"valueText"})," | ",e.jsx(n.code,{children:"string"})," | Explicit screen-reader label and override value narration text; blank ",e.jsx(n.code,{children:"label"})," values are ignored and fallback to ",e.jsx(n.code,{children:"Progress"}),`. |
 | `,e.jsx(n.code,{children:"tone"})," / ",e.jsx(n.code,{children:"size"})," | ",e.jsx(n.code,{children:"'default' \\| 'success' \\| 'warning' \\| 'danger'"})," / ",e.jsx(n.code,{children:"'sm' \\| 'md'"}),` | Visual emphasis and bar density controls. |
 | `,e.jsx(n.code,{children:"showValueLabel"})," | ",e.jsx(n.code,{children:"boolean"})," | Renders helper value text under the progress track. |"]}),`
-`,e.jsx(o,{of:tn}),`
-`,e.jsx(n.h3,{id:"alert",children:"Alert"}),`
 `,e.jsx(o,{of:ln}),`
-`,e.jsx(s,{of:hn}),`
+`,e.jsx(n.h3,{id:"alert",children:"Alert"}),`
+`,e.jsx(o,{of:hn}),`
+`,e.jsx(s,{of:xn}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"tone"})," | ",e.jsx(n.code,{children:"'info' \\| 'success' \\| 'warning' \\| 'danger'"}),` | Controls visual emphasis and live-region urgency. |
@@ -430,7 +431,6 @@ When controls are available, Storybook reflects the runtime API contract directl
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer interactions keep keyboard-intent ring state to avoid accidental focus-ring loss during context/right-click paths. |
 | `,e.jsx(n.code,{children:"closeLabel"})," | ",e.jsx(n.code,{children:"string"})," | Customize close-button accessible name for i18n; blank values are ignored and fallback to ",e.jsx(n.code,{children:"Close toast"}),`. |
 | `,e.jsx(n.code,{children:"ariaLabel"})," | ",e.jsx(n.code,{children:"string"})," | Optional live-region accessible name override for icon-only or non-text titles; rich titles with readable text or inline ",e.jsx(n.code,{children:"aria-label"})," are auto-detected, and development builds warn when non-text titles omit both. Blank values are ignored and fallback to title-derived naming. |"]}),`
-`,e.jsx(o,{of:xn}),`
 `,e.jsx(o,{of:pn}),`
 `,e.jsx(o,{of:jn}),`
 `,e.jsx(o,{of:mn}),`
@@ -443,6 +443,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 `,e.jsx(o,{of:kn}),`
 `,e.jsx(o,{of:wn}),`
 `,e.jsx(o,{of:Cn}),`
+`,e.jsx(o,{of:En}),`
 `,e.jsx(n.h2,{id:"ai",children:"AI"}),`
 `,e.jsx(n.h3,{id:"commandpalette",children:"CommandPalette"}),`
 `,e.jsx(o,{of:m}),`
@@ -476,15 +477,14 @@ When controls are available, Storybook reflects the runtime API contract directl
 | search matching | accent-insensitive + lowercase normalization | Plain query text like `,e.jsx(n.code,{children:"cafe"})," can match ",e.jsx(n.code,{children:"Café"}),` labels/aliases. |
 | IME safety | composition key guard | Arrow/Enter command handling and query-clearing Escape behavior are ignored while `,e.jsx(n.code,{children:"isComposing"})," (or legacy ",e.jsx(n.code,{children:"keyCode=229"}),`) so CJK composition confirmation does not execute commands or clear active query. |
 | Escape priority | preempted events skip palette hook/dismiss | If higher-level handlers already `,e.jsx(n.code,{children:"preventDefault()"})," Escape, palette keeps dialog open and does not fire ",e.jsx(n.code,{children:"onEscapeKeyDown"}),". |"]}),`
-`,e.jsx(o,{of:Oe}),`
 `,e.jsx(o,{of:Le}),`
 `,e.jsx(o,{of:$e}),`
 `,e.jsx(o,{of:He}),`
 `,e.jsx(o,{of:Me}),`
 `,e.jsx(o,{of:Ke}),`
 `,e.jsx(o,{of:Be}),`
-`,e.jsx(o,{of:ze}),`
 `,e.jsx(o,{of:Fe}),`
+`,e.jsx(o,{of:ze}),`
 `,e.jsx(o,{of:Ge}),`
 `,e.jsx(o,{of:We}),`
 `,e.jsx(o,{of:Ve}),`
@@ -492,17 +492,18 @@ When controls are available, Storybook reflects the runtime API contract directl
 `,e.jsx(o,{of:Qe}),`
 `,e.jsx(o,{of:Ue}),`
 `,e.jsx(o,{of:Je}),`
+`,e.jsx(o,{of:Ye}),`
 `,e.jsx(n.h3,{id:"promptinput",children:"PromptInput"}),`
-`,e.jsx(o,{of:ro}),`
-`,e.jsx(s,{of:ao}),`
+`,e.jsx(o,{of:ao}),`
+`,e.jsx(s,{of:co}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"onSubmit"})," | ",e.jsx(n.code,{children:"(prompt: string) => void"}),` | Triggered by send button or Ctrl/Cmd + Enter shortcut (ignored during IME composition). |
 | `,e.jsx(n.code,{children:"submitting"})," | ",e.jsx(n.code,{children:"boolean"}),` | Locks input + button and updates live hint during AI request execution. |
 | `,e.jsx(n.code,{children:"placeholder"})," | ",e.jsx(n.code,{children:"string"})," | Optional prompt guidance text. |"]}),`
 `,e.jsx(n.h3,{id:"messagebubble",children:"MessageBubble"}),`
-`,e.jsx(o,{of:co}),`
-`,e.jsx(s,{of:to}),`
+`,e.jsx(o,{of:to}),`
+`,e.jsx(s,{of:lo}),`
 `,e.jsxs(n.p,{children:[`| Prop | Type | Notes |
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"speaker"})," | ",e.jsx(n.code,{children:"'user' \\| 'assistant' \\| 'system'"})," | Applies alignment and semantic labeling (",e.jsx(n.code,{children:"aria-label"}),`). |
@@ -522,4 +523,4 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `,e.jsx(n.code,{children:"code"})," | ",e.jsx(n.code,{children:"string"}),` | Source content to progressively reveal. |
 | `,e.jsx(n.code,{children:"language"})," | ",e.jsx(n.code,{children:"string"}),` | Header hint for syntax context. |
-| `,e.jsx(n.code,{children:"speed"})," | ",e.jsx(n.code,{children:"number"})," | Milliseconds per character; ",e.jsx(n.code,{children:"0"})," renders immediately. |"]})]})}function hs(i={}){const{wrapper:n}={...w(),...i.components};return n?e.jsx(n,{...i,children:e.jsx(k,{...i})}):k(i)}export{hs as default};
+| `,e.jsx(n.code,{children:"speed"})," | ",e.jsx(n.code,{children:"number"})," | Milliseconds per character; ",e.jsx(n.code,{children:"0"})," renders immediately. |"]})]})}function xs(i={}){const{wrapper:n}={...w(),...i.components};return n?e.jsx(n,{...i,children:e.jsx(k,{...i})}):k(i)}export{xs as default};
