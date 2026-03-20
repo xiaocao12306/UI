@@ -560,6 +560,25 @@ describe("Toast", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("ignores modified Escape keydown for close and hook callbacks", () => {
+    const onOpenChange = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+
+    render(<Toast open title="Shortcut Guard" onOpenChange={onOpenChange} onEscapeKeyDown={onEscapeKeyDown} />);
+    expect(screen.getByRole("status", { name: "Shortcut Guard" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Escape"
+    );
+
+    fireEvent.keyDown(document, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "Escape", altKey: true });
+    fireEvent.keyDown(document, { key: "Escape", metaKey: true });
+
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("status", { name: "Shortcut Guard" })).toBeInTheDocument();
+  });
+
   it("does not close when Escape event is already default prevented", () => {
     const onOpenChange = vi.fn();
 

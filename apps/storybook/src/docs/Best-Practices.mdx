@@ -200,6 +200,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Ignore Escape dismissal while IME composition is active so CJK text confirmation inside toast actions does not close the notification unexpectedly.
 - For stacked notifications, rely on Escape handling that dismisses one toast per key press, prioritizing the latest or most recently interacted toast.
 - Treat repeated Escape keydown (`event.repeat`) as no-op for toast dismissal so long-press does not close multiple stacked notices or duplicate telemetry.
+- Keep toast Escape dismissal scoped to unmodified keys; `Ctrl/Meta/Alt + Escape` should stay on host/app shortcut behavior.
 - When `closeOnEscape` toggles at runtime, verify stacked `aria-keyshortcuts` hints move to the current top escapable toast with no stale shortcut exposure.
 - Keep stacked toasts in the same corner so built-in visual offset preserves message legibility for older notifications.
 - Verify timer pause behavior for both pointer hover and keyboard focus when `pauseOnHover` is enabled.

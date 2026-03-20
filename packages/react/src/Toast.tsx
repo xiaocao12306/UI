@@ -442,6 +442,10 @@ export function Toast({
         return;
       }
 
+      if (event.altKey || event.ctrlKey || event.metaKey) {
+        return;
+      }
+
       if (event.repeat) {
         return;
       }

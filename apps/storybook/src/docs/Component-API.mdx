@@ -575,6 +575,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `closeOnEscape` | `boolean` | Optional keyboard dismiss path; Escape is consumed so stacked toasts dismiss one at a time. |
 | dismiss key hints | `aria-keyshortcuts="Escape"` (top escapable toast only) | In stacked layouts, only the current top escapable toast exposes Escape shortcut metadata so QA/AT tooling is not misled by pinned/non-closeable notifications. |
 | Escape repeat guard | ignores repeated keydown | Escape long-press (`event.repeat=true`) is ignored so one key press closes at most one toast and avoids duplicate close telemetry. |
+| modifier-key guard | ignores `Ctrl/Meta/Alt + Escape` | Preserves host app/browser modified-key shortcuts and prevents accidental toast dismissal or hook side effects under combined key chords. |
 | dynamic Escape-hint sync | runtime `closeOnEscape` changes recompute stack hints | When stacked toast `closeOnEscape` policy changes at runtime, shortcut metadata reassigns to the current top escapable toast without stale hints. |
 | `onEscapeKeyDown` | `(event: KeyboardEvent) => void` | Optional toast-level Escape hook; call `event.preventDefault()` to keep toast open in guarded flows. |
 | actionable role mapping | `action` => `dialog/alertdialog` | When `action` is provided, toast exposes interactive surface semantics (`aria-modal="false"`) instead of live-region-only status roles. |
