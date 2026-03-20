@@ -167,6 +167,40 @@ describe("Table", () => {
     }
   });
 
+  it("uses aria-label from sortable rich headers as sort-label fallback", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            {
+              key: "status",
+              header: (
+                <span aria-label="Release status">
+                  <span aria-hidden="true">🚦</span>
+                </span>
+              ),
+              sortable: true
+            },
+            { key: "name", header: "Name" }
+          ]}
+          data={[
+            { name: "Button", status: "Stable" },
+            { name: "Dialog", status: "Stable" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+      expect(screen.getByRole("button", { name: "Release status sort ascending" })).toBeInTheDocument();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("falls back to a default accessible table name when caption and ariaLabel are absent", () => {
     render(
       <Table

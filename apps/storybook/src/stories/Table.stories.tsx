@@ -598,6 +598,43 @@ export const RichTextHeaderAutoSortLabel: Story = {
   }
 };
 
+export const AriaLabelHeaderAutoSortLabel: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
+      <Table
+        columns={[
+          {
+            key: "status",
+            header: (
+              <span aria-label="Release status">
+                <span aria-hidden="true">🚦</span>
+              </span>
+            ),
+            sortable: true
+          },
+          { key: "component", header: "Component", sortable: true }
+        ]}
+        data={[
+          { status: "Review", component: "Dialog" },
+          { status: "Ready", component: "Button" }
+        ]}
+        defaultSortKey="status"
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Release status ascending.");
+    const descendingButton = canvas.getByRole("button", {
+      name: "Release status sort descending"
+    });
+    await userEvent.click(descendingButton);
+    await expect(
+      canvas.getByRole("button", { name: "Release status sort ascending" })
+    ).toBeInTheDocument();
+  }
+};
+
 export const InvalidDefaultSortKeyFallback: Story = {
   render: () => {
     const nonSortableStatusColumns: Array<TableColumn<ReleaseRow>> = [

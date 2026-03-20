@@ -71,7 +71,7 @@ function resolveColumnSortLabel<T>(column: TableColumn<T>, fallbackKey: string) 
     return column.sortLabel.trim();
   }
 
-  const normalizedHeader = getReadableHeaderText(column.header).trim();
+  const normalizedHeader = normalizeReadableText(getReadableHeaderText(column.header));
   if (normalizedHeader.length > 0) {
     return normalizedHeader;
   }
@@ -238,7 +238,7 @@ export function Table<T>({
         return keys;
       }
 
-      if (getReadableHeaderText(column.header).trim().length > 0) {
+      if (normalizeReadableText(getReadableHeaderText(column.header)).length > 0) {
         return keys;
       }
 
@@ -744,7 +744,12 @@ function getReadableHeaderText(node: React.ReactNode): string {
   }
 
   if (Array.isArray(node)) {
-    return node.map((item) => getReadableHeaderText(item)).join("");
+    return normalizeReadableText(
+      node
+        .map((item) => getReadableHeaderText(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
   }
 
   if (!React.isValidElement(node)) {
@@ -754,10 +759,22 @@ function getReadableHeaderText(node: React.ReactNode): string {
   const elementProps = node.props as {
     children?: React.ReactNode;
     "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
   };
   if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
     return "";
   }
 
+  if (typeof elementProps["aria-label"] === "string") {
+    const normalizedAriaLabel = normalizeReadableText(elementProps["aria-label"]);
+    if (normalizedAriaLabel.length > 0) {
+      return normalizedAriaLabel;
+    }
+  }
+
   return getReadableHeaderText(elementProps.children);
+}
+
+function normalizeReadableText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }

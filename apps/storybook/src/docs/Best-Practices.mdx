@@ -233,7 +233,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep sortable-header focus-visible feedback and `aria-keyshortcuts="Enter Space"` in place so keyboard affordance stays explicit in QA and audits.
 - Keep tab and sortable-header focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible rings.
 - For iframe/multi-document hosts, keep tab/sort focus-intent tracking bound to each component `ownerDocument` so keyboard focus-visible semantics remain stable outside the top-level document.
-- When sortable headers have no readable text (for example icon-only markup), provide `columns[].sortLabel` so aria labels and live narration stay human-readable; rich headers with visible text are auto-extracted.
+- When sortable headers have no readable text (for example icon-only markup), provide `columns[].sortLabel` so aria labels and live narration stay human-readable; rich headers with visible text or inline `aria-label` are auto-extracted.
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - Use `getSortStatusText` to localize active-sort live narration so keyboard and pointer sorting changes remain equally discoverable to assistive tech users.
 - During async refreshes, set `loading` so table emits `aria-busy` and temporarily suppresses stale row actions/sorting.
@@ -271,6 +271,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={TableStories.LocalizedSortLabels} />
 <Canvas of={TableStories.SortLabelForCustomHeader} />
 <Canvas of={TableStories.RichTextHeaderAutoSortLabel} />
+<Canvas of={TableStories.AriaLabelHeaderAutoSortLabel} />
 <Canvas of={TableStories.SingleRowSortDisabled} />
 <Canvas of={TableStories.PrimaryPointerOnlySortPress} />
 <Canvas of={TableStories.WithRowAction} />
