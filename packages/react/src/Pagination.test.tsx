@@ -1,5 +1,5 @@
 import * as React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Pagination } from "./Pagination";
 
@@ -190,6 +190,41 @@ describe("Pagination", () => {
 
     expect(onPageChange).toHaveBeenNthCalledWith(1, 3);
     expect(onPageChange).toHaveBeenNthCalledWith(2, 5);
+  });
+
+  it("uses ownerDocument computed style direction in iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.append(iframe);
+    const iframeDocument = iframe.contentDocument as Document;
+    const iframeWindow = iframeDocument.defaultView as Window;
+    const host = iframeDocument.createElement("div");
+    iframeDocument.body.append(host);
+
+    const originalGetComputedStyle = iframeWindow.getComputedStyle;
+    const getComputedStyleSpy = vi.spyOn(iframeWindow, "getComputedStyle").mockImplementation((element, pseudoElt) => {
+      const style = originalGetComputedStyle.call(iframeWindow, element, pseudoElt);
+      return new Proxy(style, {
+        get(target, property, receiver) {
+          if (property === "direction") {
+            return "rtl";
+          }
+          return Reflect.get(target, property, receiver);
+        }
+      }) as CSSStyleDeclaration;
+    });
+
+    const onPageChange = vi.fn();
+    render(<Pagination page={4} pageCount={10} onPageChange={onPageChange} />, { container: host });
+
+    const activeButton = within(host).getByRole("button", { name: "Current page, 4" });
+    fireEvent.keyDown(activeButton, { key: "ArrowRight" });
+    fireEvent.keyDown(activeButton, { key: "ArrowLeft" });
+
+    expect(onPageChange).toHaveBeenNthCalledWith(1, 3);
+    expect(onPageChange).toHaveBeenNthCalledWith(2, 5);
+
+    getComputedStyleSpy.mockRestore();
+    iframe.remove();
   });
 
   it("supports custom aria label generators", () => {

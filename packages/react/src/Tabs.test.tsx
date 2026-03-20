@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Tabs } from "./Tabs";
@@ -160,6 +160,52 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel One")).toBeInTheDocument();
 
     getComputedStyleSpy.mockRestore();
+  });
+
+  it("uses ownerDocument computed style direction in iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.append(iframe);
+    const iframeDocument = iframe.contentDocument as Document;
+    const iframeWindow = iframeDocument.defaultView as Window;
+    const host = iframeDocument.createElement("div");
+    iframeDocument.body.append(host);
+
+    const originalGetComputedStyle = iframeWindow.getComputedStyle;
+    const getComputedStyleSpy = vi.spyOn(iframeWindow, "getComputedStyle").mockImplementation((element, pseudoElt) => {
+      const style = originalGetComputedStyle.call(iframeWindow, element, pseudoElt);
+      return new Proxy(style, {
+        get(target, property, receiver) {
+          if (property === "direction") {
+            return "rtl";
+          }
+          return Reflect.get(target, property, receiver);
+        }
+      }) as CSSStyleDeclaration;
+    });
+
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> },
+          { key: "three", label: "Three", content: <div>Panel Three</div> }
+        ]}
+      />,
+      { container: host }
+    );
+
+    const oneTab = within(host).getByRole("tab", { name: "One" });
+    fireEvent.keyDown(oneTab, { key: "ArrowRight" });
+    expect(within(host).getByRole("tab", { name: "Three" })).toHaveFocus();
+    expect(within(host).getByText("Panel Three")).toBeInTheDocument();
+
+    fireEvent.keyDown(within(host).getByRole("tab", { name: "Three" }), { key: "ArrowLeft" });
+    expect(within(host).getByRole("tab", { name: "One" })).toHaveFocus();
+    expect(within(host).getByText("Panel One")).toBeInTheDocument();
+
+    getComputedStyleSpy.mockRestore();
+    iframe.remove();
   });
 
   it("supports vertical keyboard navigation with ArrowUp and ArrowDown", () => {

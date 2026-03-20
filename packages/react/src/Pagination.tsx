@@ -294,11 +294,12 @@ function isElementDirectionRtl(element: HTMLElement | null) {
     return false;
   }
 
-  if (typeof window === "undefined") {
+  const ownerWindow = element.ownerDocument.defaultView ?? (typeof window !== "undefined" ? window : null);
+  if (!ownerWindow) {
     return false;
   }
 
-  return window.getComputedStyle(element).direction === "rtl";
+  return ownerWindow.getComputedStyle(element).direction === "rtl";
 }
 
 function defaultGetItemAriaLabel(
