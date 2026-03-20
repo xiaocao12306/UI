@@ -181,6 +181,22 @@ describe("DismissableLayer", () => {
     expect(onDismiss).not.toHaveBeenCalled();
   });
 
+  it("still dismisses when Escape is combined with Shift", () => {
+    const onDismiss = vi.fn();
+    const onEscapeKeyDown = vi.fn();
+
+    render(
+      <DismissableLayer onDismiss={onDismiss} onEscapeKeyDown={onEscapeKeyDown}>
+        <div>Layer body</div>
+      </DismissableLayer>
+    );
+
+    fireEvent.keyDown(document, { key: "Escape", shiftKey: true });
+
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onDismiss).toHaveBeenCalledTimes(1);
+  });
+
   it("skips escape callback and dismiss when event is preempted upstream", () => {
     const onDismiss = vi.fn();
     const onEscapeKeyDown = vi.fn();

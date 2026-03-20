@@ -129,6 +129,17 @@ test("opens and dismisses dialog with keyboard", async ({ page }) => {
   await expect(dialog).toBeHidden();
 });
 
+test("dismisses dialog when Escape is combined with Shift", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Dialog" }).click();
+  const dialog = page.getByRole("dialog").filter({ hasText: "Dialog Example" });
+  await expect(dialog).toBeVisible();
+
+  await page.keyboard.press("Shift+Escape");
+  await expect(dialog).toBeHidden();
+});
+
 test("keeps dialog open when Escape is preempted by a global handler", async ({ page }) => {
   await page.goto("/");
 
