@@ -69,4 +69,9 @@ describe("RadioGroup", () => {
     render(<RadioGroup name="Valid group" aria-invalid="false" options={baseOptions} />);
     expect(screen.getByRole("radiogroup", { name: "Valid group" })).not.toHaveAttribute("aria-invalid");
   });
+
+  it("ignores blank ariaLabel and falls back to group name", () => {
+    render(<RadioGroup name="Fallback group name" ariaLabel="   " options={baseOptions} />);
+    expect(screen.getByRole("radiogroup", { name: "Fallback group name" })).toBeInTheDocument();
+  });
 });

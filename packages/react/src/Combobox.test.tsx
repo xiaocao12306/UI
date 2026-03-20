@@ -9,6 +9,11 @@ const options = [
 ];
 
 describe("Combobox", () => {
+  it("ignores blank ariaLabel and falls back to default combobox name", () => {
+    render(<Combobox options={options} onValueChange={() => {}} ariaLabel="   " />);
+    expect(screen.getByRole("combobox", { name: "Combobox" })).toBeInTheDocument();
+  });
+
   it("filters options by query", () => {
     render(<Combobox options={options} onValueChange={() => {}} />);
 

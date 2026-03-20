@@ -130,6 +130,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled single-choice flows. |
+| `ariaLabel` | `string` | Optional radiogroup accessible name override; blank values are ignored and fallback to `name`. |
 | `options[].disabled` | `boolean` | Disable specific choices without removing context. |
 | `invalid` | `boolean` | Applies `aria-invalid` to the `radiogroup` container for screen-reader narration. |
 | `direction` | `'vertical' \| 'horizontal'` | Layout direction for stacked vs inline groups. |
@@ -176,6 +177,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `options` | `ComboboxOption[]` | Supports disabled entries and keyword filtering. Development builds warn when option values are duplicated. |
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled modes are both available. |
 | `onValueChange` | `(value: string) => void` | Fires when user confirms option by click or Enter. |
+| `ariaLabel` | `string` | Optional combobox accessible name override; blank values are ignored and fallback to `Combobox`. |
 | `emptyMessage` | `ReactNode` | Custom no-result content for search miss scenarios. |
 | trigger relation | conditional `aria-controls` | Input references listbox ID only while popup is open. |
 | dismiss policy | `Escape` / blur outside | Keeps list open when focus moves into option elements; closes on blur outside root. |
@@ -487,7 +489,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `variant` | `'rect' \| 'text' \| 'circle'` | Shape selection for block/text/avatar placeholders. |
 | `animated` | `boolean` | Toggle shimmer animation for reduced-motion or static placeholders. |
-| `ariaLabel` | `string` | Enables narrated loading status semantics when needed. |
+| `ariaLabel` | `string` | Enables narrated loading status semantics when needed; blank values are ignored so skeleton stays decorative by default. |
 | `width` / `height` / `radius` | `number \| string` | Explicit geometry control for layout matching. |
 
 <Canvas of={SkeletonStories.ProfileCard} />

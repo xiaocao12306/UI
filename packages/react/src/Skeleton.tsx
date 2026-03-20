@@ -24,6 +24,10 @@ export function Skeleton({
     (variant === "circle" ? "9999px" : variant === "text" ? "var(--aurora-radius-pill)" : "var(--aurora-radius-sm)");
   const resolvedWidth = variant === "circle" ? width ?? height : width;
   const resolvedHeight = variant === "text" ? height ?? 14 : height;
+  const resolvedAriaLabel =
+    typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+      ? ariaLabel.trim()
+      : undefined;
 
   return (
     <>
@@ -31,11 +35,11 @@ export function Skeleton({
         <style>{`@keyframes aurora-skeleton-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }`}</style>
       ) : null}
       <div
-        role={ariaLabel ? "status" : undefined}
-        aria-label={ariaLabel}
-        aria-live={ariaLabel ? "polite" : undefined}
-        aria-busy={ariaLabel ? true : undefined}
-        aria-hidden={ariaLabel ? undefined : true}
+        role={resolvedAriaLabel ? "status" : undefined}
+        aria-label={resolvedAriaLabel}
+        aria-live={resolvedAriaLabel ? "polite" : undefined}
+        aria-busy={resolvedAriaLabel ? true : undefined}
+        aria-hidden={resolvedAriaLabel ? undefined : true}
         style={{
           width: resolvedWidth,
           height: resolvedHeight,

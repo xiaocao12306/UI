@@ -19,6 +19,15 @@ describe("Skeleton", () => {
     expect(skeleton).toHaveAttribute("aria-busy", "true");
   });
 
+  it("ignores blank ariaLabel and keeps decorative semantics", () => {
+    render(<Skeleton data-testid="skeleton-blank-label" ariaLabel="   " />);
+    const skeleton = screen.getByTestId("skeleton-blank-label");
+
+    expect(skeleton).toHaveAttribute("aria-hidden", "true");
+    expect(skeleton).not.toHaveAttribute("role");
+    expect(skeleton).not.toHaveAttribute("aria-label");
+  });
+
   it("supports circle variant and non-animated branch", () => {
     render(<Skeleton data-testid="avatar" variant="circle" width={40} height={40} animated={false} />);
     const skeleton = screen.getByTestId("avatar");

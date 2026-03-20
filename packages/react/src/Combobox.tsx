@@ -54,6 +54,10 @@ export function Combobox({
   const [query, setQuery] = React.useState("");
   const [internalValue, setInternalValue] = React.useState(defaultValue);
   const warnedDuplicateValuesSignatureRef = React.useRef<string | null>(null);
+  const resolvedAriaLabel =
+    typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+      ? ariaLabel.trim()
+      : "Combobox";
   const currentValue = value ?? internalValue;
 
   const selectedOption = React.useMemo(() => options.find((item) => item.value === currentValue), [currentValue, options]);
@@ -170,7 +174,7 @@ export function Combobox({
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
         aria-activedescendant={open && activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
-        aria-label={ariaLabel}
+        aria-label={resolvedAriaLabel}
         autoComplete="off"
         value={query}
         disabled={disabled}

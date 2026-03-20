@@ -37,6 +37,10 @@ export function RadioGroup({
   const currentValue = value ?? internalValue;
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
+  const resolvedAriaLabel =
+    typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+      ? ariaLabel.trim()
+      : undefined;
 
   const handleChange = (nextValue: string, optionDisabled: boolean | undefined) => {
     if (disabled || optionDisabled) {
@@ -56,7 +60,7 @@ export function RadioGroup({
         alignItems: direction === "horizontal" ? "center" : undefined
       }}
       role="radiogroup"
-      aria-label={ariaLabel ?? name}
+      aria-label={resolvedAriaLabel ?? name}
       aria-invalid={resolvedInvalidAria}
     >
       {options.map((option) => (
