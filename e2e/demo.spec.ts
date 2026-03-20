@@ -1578,6 +1578,23 @@ test("keeps toast open when Escape is preempted by a global handler", async ({ p
   await expect(toast).toBeHidden();
 });
 
+test("keeps toast open when Escape is combined with modifier shortcuts", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await palette.getByRole("option", { name: "Create Project" }).click();
+
+  const toast = page.getByRole("status").filter({ hasText: "Prompt submitted" });
+  await expect(toast).toBeVisible();
+
+  await dispatchModifiedEscape(page);
+  await expect(toast).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(toast).toBeHidden();
+});
+
 test("keeps toast open when Escape is dispatched during IME composition", async ({ page }) => {
   await page.goto("/");
 
