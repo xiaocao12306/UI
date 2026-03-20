@@ -663,6 +663,8 @@
   - Release Gate 证据刷新（2026-03-20 latest+25：完成 Tabs/Pagination RTL + Demo 区块状态胶囊 + AI 反馈计时器跨文档收口并同步静态产物后，`pnpm release:gate:ci` 全链路复验通过，含 verify + coverage + demo e2e `76/76` + demo dist + storybook interaction `220/220`）
   - StreamingCodeBlock 可访问性收口（新增 `label/live` API，默认 `aria-live="off"` 降低高频播报噪音并支持可命名 region；补齐 `StreamingCodeBlock.test.tsx` 回归、Storybook `LiveNarration` 场景与 API/Best-Practices 文档）
   - Demo AI 代码流命名收口（AI 区块 `StreamingCodeBlock` 显式 `label=\"AI response code stream\"`，补齐 Playwright 对 `role=\"region\" + aria-live=\"off\" + aria-busy` 的可访问性回归）
+  - Portal 跨文档宿主收口（`Portal` 默认挂载目标由全局 `document.body` 调整为运行时 `ownerDocument.body`，避免 iframe/multi-root 场景弹层错挂主文档；补齐 `Portal.test.tsx` 回归）
+  - Dialog/Drawer 跨文档挂载回归（新增 iframe 宿主回归，验证 `role=\"dialog\"` 内容落在次文档 body 且不泄漏到主文档，锁定弹层跨文档可用性）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
