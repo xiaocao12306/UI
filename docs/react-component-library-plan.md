@@ -697,6 +697,7 @@
   - Release Gate 证据刷新（2026-03-20 latest+27：Overlay 修饰键 Escape 横向收口并同步 demo dist 后，`pnpm release:gate:ci` 全链路复验通过，含 verify + coverage + demo e2e `76/76` + demo dist + storybook interaction `221/221`）
   - Release Gate 证据刷新（2026-03-21 latest+30：补齐 Toast 修饰键 Escape Demo 回归后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage + demo e2e `82/82` + demo dist + storybook interaction `221/221`）
   - Release Gate 证据刷新（2026-03-21 latest+32：补齐 Dialog `Shift + Escape` 回归后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage + demo e2e `83/83` + demo dist + storybook interaction `221/221`）
+  - Release Gate 证据刷新（2026-03-21 latest+35：补齐 Escape repeat 收口并同步 demo/storybook 静态产物后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage + demo e2e `84/84` + demo dist + storybook interaction `221/221`）
   - Release Dry-Run 证据刷新（2026-03-21 latest+33：`pnpm release:dry-run` 通过，`@aurora-ui/react` `77.8 kB / 480.2 kB`、`@aurora-ui/primitives` `15.0 kB / 74.3 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
