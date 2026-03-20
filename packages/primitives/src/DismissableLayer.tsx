@@ -6,25 +6,43 @@ export type DismissableLayerProps = React.ComponentPropsWithoutRef<"div"> & {
   onDismiss?: () => void;
 };
 
-const dismissableLayerStack: HTMLElement[] = [];
+type DismissableLayerDocumentState = {
+  stack: HTMLElement[];
+};
+
+const dismissableLayerStateByDocument = new WeakMap<Document, DismissableLayerDocumentState>();
+
+function getDismissableLayerDocumentState(ownerDocument: Document): DismissableLayerDocumentState {
+  const existingState = dismissableLayerStateByDocument.get(ownerDocument);
+  if (existingState) {
+    return existingState;
+  }
+
+  const nextState: DismissableLayerDocumentState = { stack: [] };
+  dismissableLayerStateByDocument.set(ownerDocument, nextState);
+  return nextState;
+}
 
 function pushLayer(element: HTMLElement) {
-  const existingIndex = dismissableLayerStack.lastIndexOf(element);
+  const stack = getDismissableLayerDocumentState(element.ownerDocument).stack;
+  const existingIndex = stack.lastIndexOf(element);
   if (existingIndex >= 0) {
-    dismissableLayerStack.splice(existingIndex, 1);
+    stack.splice(existingIndex, 1);
   }
-  dismissableLayerStack.push(element);
+  stack.push(element);
 }
 
 function removeLayer(element: HTMLElement) {
-  const existingIndex = dismissableLayerStack.lastIndexOf(element);
+  const stack = getDismissableLayerDocumentState(element.ownerDocument).stack;
+  const existingIndex = stack.lastIndexOf(element);
   if (existingIndex >= 0) {
-    dismissableLayerStack.splice(existingIndex, 1);
+    stack.splice(existingIndex, 1);
   }
 }
 
 function isTopLayer(element: HTMLElement) {
-  return dismissableLayerStack[dismissableLayerStack.length - 1] === element;
+  const stack = getDismissableLayerDocumentState(element.ownerDocument).stack;
+  return stack[stack.length - 1] === element;
 }
 
 function isComposingKeyEvent(event: KeyboardEvent) {
@@ -68,6 +86,11 @@ export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLaye
   }, []);
 
   React.useEffect(() => {
+    const ownerDocument = localRef.current?.ownerDocument;
+    if (!ownerDocument) {
+      return;
+    }
+
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") {
         return;
@@ -113,12 +136,12 @@ export const DismissableLayer = React.forwardRef<HTMLDivElement, DismissableLaye
       }
     };
 
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("pointerdown", onPointerDown);
+    ownerDocument.addEventListener("keydown", onKeyDown);
+    ownerDocument.addEventListener("pointerdown", onPointerDown);
 
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("pointerdown", onPointerDown);
+      ownerDocument.removeEventListener("keydown", onKeyDown);
+      ownerDocument.removeEventListener("pointerdown", onPointerDown);
     };
   }, [onDismiss, onEscapeKeyDown, onPointerDownOutside]);
 
