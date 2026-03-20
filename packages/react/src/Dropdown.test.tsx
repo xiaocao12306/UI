@@ -625,6 +625,24 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menu", { name: "More deployment actions" })).toBeInTheDocument();
   });
 
+  it("ignores blank triggerAriaLabel and keeps visible trigger text as accessible name", () => {
+    render(
+      <Dropdown
+        label="Deployment actions"
+        triggerAriaLabel="   "
+        items={[
+          { key: "ship", label: "Ship" },
+          { key: "rollback", label: "Rollback" }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "Deployment actions" });
+    expect(trigger).not.toHaveAttribute("aria-label");
+    fireEvent.click(trigger);
+    expect(screen.getByRole("menu", { name: "Deployment actions" })).toBeInTheDocument();
+  });
+
   it("supports icon menuitem naming via ariaLabel", () => {
     render(
       <Dropdown

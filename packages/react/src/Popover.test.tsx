@@ -91,6 +91,19 @@ describe("Popover", () => {
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   });
 
+  it("ignores blank triggerAriaLabel and keeps visible trigger text as accessible name", () => {
+    render(
+      <Popover triggerLabel="Info" triggerAriaLabel="   ">
+        <p>Popover content</p>
+      </Popover>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Info" });
+    expect(trigger).not.toHaveAttribute("aria-label");
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  });
+
   it("supports configurable dismiss policies and event hooks", () => {
     const onEscapeKeyDown = vi.fn();
     const onPointerDownOutside = vi.fn();

@@ -124,6 +124,10 @@ export function Dropdown({
 
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
+  const resolvedTriggerAriaLabel =
+    typeof triggerAriaLabel === "string" && triggerAriaLabel.trim().length > 0
+      ? triggerAriaLabel.trim()
+      : undefined;
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -269,7 +273,7 @@ export function Dropdown({
         id={triggerId}
         ref={triggerRef}
         variant="outline"
-        aria-label={triggerAriaLabel}
+        aria-label={resolvedTriggerAriaLabel}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}

@@ -44,6 +44,10 @@ export function Popover({
   const contentRef = React.useRef<HTMLDivElement>(null);
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
+  const resolvedTriggerAriaLabel =
+    typeof triggerAriaLabel === "string" && triggerAriaLabel.trim().length > 0
+      ? triggerAriaLabel.trim()
+      : undefined;
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -86,7 +90,7 @@ export function Popover({
       <Button
         ref={triggerRef}
         variant="outline"
-        aria-label={triggerAriaLabel}
+        aria-label={resolvedTriggerAriaLabel}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         aria-controls={isOpen ? contentId : undefined}

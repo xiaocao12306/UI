@@ -96,7 +96,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep dropdown menu-item keyboard activation explicit and cross-browser (`Enter` / `Space` / legacy `Spacebar`) so non-pointer flows can execute actions without click simulation.
 - Treat dropdown menu-item activation repeat (`event.repeat`) as no-op after first keydown to prevent duplicate command execution and telemetry jitter during long-press.
 - Expose dropdown menu-item `aria-keyshortcuts="Enter Space"` only on actionable items; disabled items should omit shortcut hints to avoid false affordance.
-- For icon-only popover/dropdown triggers, always provide `triggerAriaLabel` to preserve an explicit control name.
+- For icon-only popover/dropdown triggers, provide non-empty `triggerAriaLabel` to preserve an explicit control name.
 - Keep field/button focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible rings before actual activation intent.
 - Command palette and combobox-style overlays should keep text input as the primary focus anchor for navigation.
 

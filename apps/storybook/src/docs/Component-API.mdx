@@ -295,7 +295,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `triggerLabel` | `ReactNode` | Trigger button content. |
-| `triggerAriaLabel` | `string` | Accessible name override for icon-only trigger content. |
+| `triggerAriaLabel` | `string` | Accessible name override for icon-only trigger content; blank values are ignored to avoid overriding visible trigger naming. |
 | `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Supports both managed and unmanaged overlay state. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Configures whether keyboard/pointer dismiss gestures are allowed for non-blocking vs blocking workflows. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks | Observe or cancel dismiss intents before close policy resolves. |
@@ -323,7 +323,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `items` | `DropdownItem[]` | Each item supports `disabled` and `onSelect`. Development builds warn when item keys are duplicated. |
 | `items[].ariaLabel` | `string` | Accessible name override for non-text/icon-only menu items; rich labels with inline `aria-label` are auto-detected, and development builds warn when non-text labels omit both. |
 | `items[].textValue` | `string` | Typeahead/search alias for non-text labels or locale-specific/accent-normalized matching; rich labels with readable text or inline `aria-label` are auto-detected before warning. |
-| `triggerAriaLabel` | `string` | Accessible name override for icon-only trigger button content. |
+| `triggerAriaLabel` | `string` | Accessible name override for icon-only trigger button content; blank values are ignored to avoid overriding visible trigger naming. |
 | `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Works in both controlled and uncontrolled menu flows. |
 | controlled close contract | close intent first, parent rerender second | In controlled mode, dismiss gestures emit close callbacks first; menu visibility changes only after parent updates `open`. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Allows keeping menu open on Escape/outside pointer for blocking approval flows. |
