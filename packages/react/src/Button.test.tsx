@@ -172,6 +172,20 @@ describe("Button", () => {
     warnSpy.mockRestore();
   });
 
+  it("ignores blank aria-label and keeps text-content accessible name", () => {
+    render(<Button aria-label="   ">Publish</Button>);
+
+    const button = screen.getByRole("button", { name: "Publish" });
+    expect(button).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank aria-labelledby and keeps text-content accessible name", () => {
+    render(<Button aria-labelledby="   ">Publish</Button>);
+
+    const button = screen.getByRole("button", { name: "Publish" });
+    expect(button).not.toHaveAttribute("aria-labelledby");
+  });
+
   it("does not warn for icon-only button when rich child exposes inline aria-label", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 

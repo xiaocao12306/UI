@@ -110,6 +110,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     onKeyDown,
     onKeyUp,
     children,
+    "aria-label": rawAriaLabel,
+    "aria-labelledby": rawAriaLabelledBy,
     ...props
   },
   ref
@@ -120,8 +122,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   const focusVisibleIntentRef = React.useRef(true);
   const missingA11yNameWarnedRef = React.useRef(false);
   const interactionDisabled = disabled || loading;
-  const ariaLabel = props["aria-label"];
-  const ariaLabelledBy = props["aria-labelledby"];
+  const ariaLabel =
+    typeof rawAriaLabel === "string" && rawAriaLabel.trim().length > 0
+      ? rawAriaLabel.trim()
+      : undefined;
+  const ariaLabelledBy =
+    typeof rawAriaLabelledBy === "string" && rawAriaLabelledBy.trim().length > 0
+      ? rawAriaLabelledBy.trim()
+      : undefined;
   const title = props.title;
   const variantStyles = variantStyleMap[variant];
   const stateStyle = interactionDisabled
@@ -170,6 +178,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       type={type ?? "button"}
       disabled={interactionDisabled}
       aria-busy={loading || undefined}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
       data-loading={loading ? "true" : undefined}
       style={{
         position: "relative",
