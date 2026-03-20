@@ -72,4 +72,36 @@ describe("Portal", () => {
       iframe.remove();
     }
   });
+
+  it("moves portal content when explicit container changes at runtime", () => {
+    const firstContainer = document.createElement("div");
+    firstContainer.setAttribute("data-testid", "portal-container-a");
+    const secondContainer = document.createElement("div");
+    secondContainer.setAttribute("data-testid", "portal-container-b");
+    document.body.appendChild(firstContainer);
+    document.body.appendChild(secondContainer);
+
+    try {
+      const { rerender } = render(
+        <Portal container={firstContainer}>
+          <div>Runtime container switch content</div>
+        </Portal>
+      );
+
+      expect(within(firstContainer).getByText("Runtime container switch content")).toBeInTheDocument();
+      expect(within(secondContainer).queryByText("Runtime container switch content")).toBeNull();
+
+      rerender(
+        <Portal container={secondContainer}>
+          <div>Runtime container switch content</div>
+        </Portal>
+      );
+
+      expect(within(firstContainer).queryByText("Runtime container switch content")).toBeNull();
+      expect(within(secondContainer).getByText("Runtime container switch content")).toBeInTheDocument();
+    } finally {
+      firstContainer.remove();
+      secondContainer.remove();
+    }
+  });
 });
