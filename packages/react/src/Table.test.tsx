@@ -812,7 +812,8 @@ describe("Table", () => {
     }
   });
 
-  it("ignores modified sortable-header activation keys", () => {
+  it("ignores modified sortable-header focus and activation keys", async () => {
+    const user = userEvent.setup();
     const onSortChange = vi.fn();
 
     render(
@@ -831,6 +832,18 @@ describe("Table", () => {
     );
 
     const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    const scoreSort = screen.getByRole("button", { name: "Score sort ascending" });
+
+    await user.tab();
+    expect(sortButton).toHaveFocus();
+
+    await user.keyboard("{Control>}{End}{/Control}");
+    await user.keyboard("{Alt>}{Home}{/Alt}");
+    await user.keyboard("{Meta>}{PageDown}{/Meta}");
+    await user.keyboard("{Control>}{PageUp}{/Control}");
+    expect(sortButton).toHaveFocus();
+    expect(scoreSort).not.toHaveFocus();
+
     fireEvent.keyDown(sortButton, { key: "Enter", ctrlKey: true });
     fireEvent.keyDown(sortButton, { key: " ", metaKey: true });
     fireEvent.keyDown(sortButton, { key: "Spacebar", altKey: true });

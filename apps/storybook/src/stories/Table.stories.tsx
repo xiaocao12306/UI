@@ -463,6 +463,13 @@ export const SortTelemetry: Story = {
     await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Issue ascending.");
 
     const issueSortDesc = canvas.getByRole("button", { name: "Issue sort descending" });
+    issueSortDesc.focus();
+    fireEvent.keyDown(issueSortDesc, { key: "End", ctrlKey: true });
+    fireEvent.keyDown(issueSortDesc, { key: "Home", altKey: true });
+    fireEvent.keyDown(issueSortDesc, { key: "PageDown", metaKey: true });
+    fireEvent.keyDown(issueSortDesc, { key: "PageUp", ctrlKey: true });
+    await expect(issueSortDesc).toHaveFocus();
+
     fireEvent.keyDown(issueSortDesc, { key: "Enter", ctrlKey: true });
     fireEvent.keyDown(issueSortDesc, { key: "Space", metaKey: true });
     await expect(canvas.getByText("id asc")).toBeInTheDocument();
