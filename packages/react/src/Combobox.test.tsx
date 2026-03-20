@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Combobox } from "./Combobox";
+import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 const options = [
   { value: "react", label: "React", keywords: ["frontend"] },
@@ -116,6 +117,37 @@ describe("Combobox", () => {
     expect(screen.getByRole("listbox")).toBeInTheDocument();
     fireEvent.blur(input, { relatedTarget: null });
     expect(screen.queryByRole("listbox")).toBeNull();
+  });
+
+  it("keeps popup open on non-primary outside pointer interactions", () => {
+    render(<Combobox options={options} onValueChange={() => {}} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+
+    dispatchNonPrimaryPointerDown(document.body);
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+  });
+
+  it("skips outside-pointer close when pointerdown is preempted upstream", () => {
+    const preemptPointerDown = (event: PointerEvent) => {
+      event.preventDefault();
+    };
+
+    document.addEventListener("pointerdown", preemptPointerDown, true);
+    try {
+      render(<Combobox options={options} onValueChange={() => {}} />);
+
+      const input = screen.getByRole("combobox", { name: "Combobox" });
+      fireEvent.focus(input);
+      expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+
+      fireEvent.pointerDown(document.body);
+      expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+    } finally {
+      document.removeEventListener("pointerdown", preemptPointerDown, true);
+    }
   });
 
   it("keeps popup open when focus moves to option element", () => {

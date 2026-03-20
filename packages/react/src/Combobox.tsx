@@ -36,6 +36,24 @@ function findNextEnabledIndex(options: ComboboxOption[], startIndex: number, dir
   return -1;
 }
 
+function isPrimaryPointerDownEvent(event: PointerEvent) {
+  const button = typeof event.button === "number" ? event.button : 0;
+  if (button > 0) {
+    return false;
+  }
+
+  if (event.pointerType === "mouse" || event.pointerType === "") {
+    if (typeof event.buttons === "number" && event.buttons !== 0 && (event.buttons & 1) === 0) {
+      return false;
+    }
+    if (event.ctrlKey) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export function Combobox({
   options,
   value,
@@ -116,6 +134,12 @@ export function Combobox({
 
     const ownerDocument = rootRef.current?.ownerDocument ?? document;
     const onPointerDown = (event: PointerEvent) => {
+      if (!isPrimaryPointerDownEvent(event)) {
+        return;
+      }
+      if (event.defaultPrevented) {
+        return;
+      }
       if (!rootRef.current?.contains(event.target as Node)) {
         setOpen(false);
       }
