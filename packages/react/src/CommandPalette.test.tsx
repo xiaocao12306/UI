@@ -122,6 +122,33 @@ describe("CommandPalette", () => {
     expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
   });
 
+  it("filters non-text rich labels via inline aria-label without requiring textValue", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          {
+            key: "deploy",
+            label: (
+              <span aria-label="Deploy Project">
+                <span aria-hidden="true">🚀</span>
+              </span>
+            )
+          },
+          { key: "settings", label: "Open Settings" }
+        ]}
+      />
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "deploy project" }
+    });
+
+    expect(screen.getByRole("option", { name: "Deploy Project" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
+  });
+
   it("warns when duplicate command keys are provided", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -246,6 +273,36 @@ describe("CommandPalette", () => {
               label: <span aria-hidden="true">🚀</span>,
               ariaLabel: "Deploy Project",
               textValue: "Deploy Project"
+            },
+            { key: "settings", label: "Open Settings" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text labels when inline aria-label is present", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <CommandPalette
+          open
+          onOpenChange={() => {}}
+          commands={[
+            {
+              key: "deploy",
+              label: (
+                <span aria-label="Deploy Project">
+                  <span aria-hidden="true">🚀</span>
+                </span>
+              )
             },
             { key: "settings", label: "Open Settings" }
           ]}

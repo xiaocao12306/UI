@@ -320,8 +320,8 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `items` | `DropdownItem[]` | Each item supports `disabled` and `onSelect`. Development builds warn when item keys are duplicated. |
-| `items[].ariaLabel` | `string` | Accessible name override for non-text/icon-only menu items; development builds warn when non-text labels omit it. |
-| `items[].textValue` | `string` | Typeahead/search alias for non-text labels or locale-specific/accent-normalized matching; development builds warn when non-text labels omit it. |
+| `items[].ariaLabel` | `string` | Accessible name override for non-text/icon-only menu items; rich labels with inline `aria-label` are auto-detected, and development builds warn when non-text labels omit both. |
+| `items[].textValue` | `string` | Typeahead/search alias for non-text labels or locale-specific/accent-normalized matching; rich labels with readable text or inline `aria-label` are auto-detected before warning. |
 | `triggerAriaLabel` | `string` | Accessible name override for icon-only trigger button content. |
 | `open` / `defaultOpen` / `onOpenChange` | controlled/uncontrolled | Works in both controlled and uncontrolled menu flows. |
 | controlled close contract | close intent first, parent rerender second | In controlled mode, dismiss gestures emit close callbacks first; menu visibility changes only after parent updates `open`. |
@@ -595,8 +595,8 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 | Prop | Type | Notes |
 | --- | --- | --- |
-| `commands` | `CommandItem[]` | `disabled` commands remain visible but non-selectable. Rich labels are searchable via readable text extraction; non-readable labels should provide `textValue` aliases. Development builds warn when command keys are duplicated, warn when non-text labels omit `ariaLabel`, and warn when non-text labels omit both `textValue` and searchable `keywords`. |
-| `commands[].ariaLabel` | `string` | Accessible name override for icon/non-text command options; development builds warn when non-text labels omit it. |
+| `commands` | `CommandItem[]` | `disabled` commands remain visible but non-selectable. Rich labels are searchable via readable text extraction (including inline `aria-label`); non-readable labels should provide `textValue` aliases. Development builds warn when command keys are duplicated, warn when non-text labels omit accessible naming, and warn when non-text labels omit both `textValue` and searchable `keywords`. |
+| `commands[].ariaLabel` | `string` | Accessible name override for icon/non-text command options; rich labels with inline `aria-label` are auto-detected before warning. |
 | `title` / `description` | `ReactNode` | Localizable dialog heading and supporting copy for command context. |
 | `searchAriaLabel` | `string` | Localizable accessible name for the search combobox (default: `Search commands`). |
 | `placeholder` | `string` | Custom search input hint text for product-specific command vocabulary. |

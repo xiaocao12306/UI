@@ -107,6 +107,33 @@ describe("Dropdown", () => {
     }
   });
 
+  it("does not warn for non-text dropdown labels when inline aria-label is present", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dropdown
+          label="Inline aria label"
+          items={[
+            {
+              key: "settings",
+              label: (
+                <span aria-label="Settings">
+                  <span aria-hidden="true">⚙</span>
+                </span>
+              )
+            },
+            { key: "delete", label: "Delete" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("closes on escape key and outside pointer", () => {
     const onCloseReason = vi.fn();
 
@@ -439,6 +466,32 @@ describe("Dropdown", () => {
 
     fireEvent.keyDown(menu, { key: "d" });
     expect(screen.getByRole("menuitem", { name: "Deploy" })).toHaveFocus();
+  });
+
+  it("supports typeahead for non-text labels via inline aria-label without textValue", () => {
+    render(
+      <Dropdown
+        label="Inline aria-label typeahead"
+        items={[
+          { key: "duplicate", label: "Duplicate" },
+          {
+            key: "settings",
+            label: (
+              <span aria-label="Settings">
+                <span aria-hidden="true">⚙</span>
+              </span>
+            )
+          },
+          { key: "rename", label: "Rename" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Inline aria-label typeahead" }));
+    const menu = screen.getByRole("menu");
+
+    fireEvent.keyDown(menu, { key: "s" });
+    expect(screen.getByRole("menuitem", { name: "Settings" })).toHaveFocus();
   });
 
   it("matches segmented rich-text labels when buffered query includes whitespace", () => {

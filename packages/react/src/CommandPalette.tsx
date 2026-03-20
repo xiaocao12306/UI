@@ -724,9 +724,14 @@ function getReadableCommandLabelText(node: React.ReactNode): string {
   const elementProps = node.props as {
     children?: React.ReactNode;
     "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
   };
   if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
     return "";
+  }
+
+  if (typeof elementProps["aria-label"] === "string" && elementProps["aria-label"].trim().length > 0) {
+    return normalizeReadableCommandText(elementProps["aria-label"]);
   }
 
   return getReadableCommandLabelText(elementProps.children);

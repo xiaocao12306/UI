@@ -91,8 +91,8 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep popover/dropdown close callbacks ordered and single-purpose: close paths should emit `onCloseReason` before `onOpenChange(false)`, while dropdown `item-select` should run `onSelect` before close callbacks.
 - Keep dropdown `Tab` behavior aligned with document order: close menu and continue focus to next control.
 - For controlled dropdowns, treat Escape/outside/trigger dismiss as close intent only; apply final visual close in parent rerender to avoid state race conditions.
-- For icon-only/non-text dropdown items, provide `items[].ariaLabel` so each menuitem keeps an explicit accessible name; development builds warn when omitted.
-- For icon-only/non-text dropdown items, provide `items[].textValue` so buffered typeahead can still discover those actions; development builds warn when omitted.
+- For icon-only/non-text dropdown items, provide `items[].ariaLabel` unless the rich label already exposes inline `aria-label`; development builds warn when both are missing.
+- For icon-only/non-text dropdown items, provide `items[].textValue` unless the rich label already exposes readable text or inline `aria-label`; buffered typeahead relies on one of these metadata paths.
 - Keep dropdown menu-item keyboard activation explicit and cross-browser (`Enter` / `Space` / legacy `Spacebar`) so non-pointer flows can execute actions without click simulation.
 - Treat dropdown menu-item activation repeat (`event.repeat`) as no-op after first keydown to prevent duplicate command execution and telemetry jitter during long-press.
 - Expose dropdown menu-item `aria-keyshortcuts="Enter Space"` only on actionable items; disabled items should omit shortcut hints to avoid false affordance.
@@ -135,7 +135,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep command labels explicit and searchable.
 - Keep `commands[].key` unique and stable; development builds now warn on duplicate keys to avoid active-option and telemetry drift.
 - Provide `textValue` aliases for non-string command labels and accent-friendly matching terms.
-- For icon/non-text command labels, provide `commands[].ariaLabel` so each option keeps an explicit accessible name; development builds warn when omitted.
+- For icon/non-text command labels, provide `commands[].ariaLabel` unless the rich label already exposes inline `aria-label`; development builds warn when both are missing.
 - For non-text command labels, ensure `textValue` or searchable `keywords` are present; development builds warn when both are missing.
 - Provide empty-state guidance when no command matches the query.
 - Track user query updates with `onQueryChange` for downstream telemetry.
