@@ -498,6 +498,46 @@ describe("Drawer", () => {
     }
   });
 
+  it("isolates Escape and outside-pointer dismiss handling per owner document", () => {
+    const onMainOpenChange = vi.fn();
+    const onIframeOpenChange = vi.fn();
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      throw new Error("expected iframe document to exist");
+    }
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    let unmountMain: (() => void) | undefined;
+    let unmountIframe: (() => void) | undefined;
+    try {
+      ({ unmount: unmountMain } = render(
+        <Drawer open onOpenChange={onMainOpenChange} title="Main document drawer">
+          <p>Main body</p>
+        </Drawer>
+      ));
+      ({ unmount: unmountIframe } = render(
+        <Drawer open onOpenChange={onIframeOpenChange} title="Iframe document drawer">
+          <p>Iframe body</p>
+        </Drawer>,
+        { container: iframeContainer, baseElement: iframeDocument.body }
+      ));
+
+      fireEvent.keyDown(document, { key: "Escape" });
+      expect(onMainOpenChange).toHaveBeenCalledWith(false);
+      expect(onIframeOpenChange).not.toHaveBeenCalled();
+
+      fireEvent.pointerDown(iframeDocument.body);
+      expect(onIframeOpenChange).toHaveBeenCalledWith(false);
+    } finally {
+      unmountIframe?.();
+      unmountMain?.();
+      iframe.remove();
+    }
+  });
+
   it("locks and restores iframe ownerDocument scroll without mutating main document body", () => {
     const iframe = document.createElement("iframe");
     document.body.appendChild(iframe);
