@@ -2,6 +2,7 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Drawer, Dropdown } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { StoryFullscreenFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
 
 const meta = {
   title: "Overlay/Drawer",
@@ -29,11 +30,23 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const storyContentStackStyle: React.CSSProperties = { display: "grid", gap: 10 };
+const storyTelemetryStackStyle: React.CSSProperties = { display: "grid", gap: 10, justifyItems: "start" };
+const storyParagraphStyle: React.CSSProperties = { margin: 0 };
+const storyOutsideProbeStyle: React.CSSProperties = {
+  position: "absolute",
+  left: 0,
+  top: 0,
+  width: 1,
+  height: 1,
+  opacity: 0
+};
+
 function InteractiveDrawerDemo() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div style={{ minHeight: 420, padding: 16 }}>
+    <StoryFullscreenFrame align="start">
       <Button variant="outline" onClick={() => setOpen(true)}>
         Open Drawer
       </Button>
@@ -44,12 +57,12 @@ function InteractiveDrawerDemo() {
         title="Release filters"
         description="Filter environment, owner, and severity."
       >
-        <div style={{ display: "grid", gap: 10 }}>
-          <p style={{ margin: 0 }}>Use this panel to narrow incident review scope.</p>
+        <div style={storyContentStackStyle}>
+          <p style={storyParagraphStyle}>Use this panel to narrow incident review scope.</p>
           <Button onClick={() => setOpen(false)}>Apply and close</Button>
         </div>
       </Drawer>
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -70,7 +83,7 @@ function NonDismissibleDrawerDemo() {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <div style={{ minHeight: 420, padding: 16 }}>
+    <StoryFullscreenFrame align="start">
       <Button variant="outline" onClick={() => setOpen(true)}>
         Reopen Drawer
       </Button>
@@ -84,12 +97,12 @@ function NonDismissibleDrawerDemo() {
         closeOnOutsidePointer={false}
         showCloseButton={false}
       >
-        <div style={{ display: "grid", gap: 10 }}>
-          <p style={{ margin: 0 }}>Outside click and Escape are disabled in this flow.</p>
+        <div style={storyContentStackStyle}>
+          <p style={storyParagraphStyle}>Outside click and Escape are disabled in this flow.</p>
           <Button onClick={() => setOpen(false)}>I understand</Button>
         </div>
       </Drawer>
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -113,29 +126,23 @@ function DismissGuardDrawerDemo() {
   const [outsideCalls, setOutsideCalls] = React.useState(0);
 
   return (
-    <div style={{ minHeight: 420, padding: 16, display: "grid", gap: 10, justifyItems: "start" }}>
+    <StoryFullscreenFrame align="start">
+      <div style={storyTelemetryStackStyle}>
       <button
         type="button"
         data-testid="drawer-guard-outside-target"
         aria-label="Drawer guard outside target"
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: 1,
-          height: 1,
-          opacity: 0
-        }}
+        style={storyOutsideProbeStyle}
       />
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Escape guard calls:{" "}
-        <strong data-testid="drawer-guard-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="drawer-guard-escape-calls" style={storyEmphasisTextStyle}>
           {escapeCalls}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Outside guard calls:{" "}
-        <strong data-testid="drawer-guard-outside-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="drawer-guard-outside-calls" style={storyEmphasisTextStyle}>
           {outsideCalls}
         </strong>
       </p>
@@ -152,9 +159,10 @@ function DismissGuardDrawerDemo() {
           setOutsideCalls((count) => count + 1);
         }}
       >
-        <p style={{ margin: 0 }}>Dismiss hooks can block Escape and outside pointer close paths.</p>
+        <p style={storyParagraphStyle}>Dismiss hooks can block Escape and outside pointer close paths.</p>
       </Drawer>
-    </div>
+      </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -179,7 +187,7 @@ function CloseButtonPrimaryPointerOnlyDrawerDemo() {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <div style={{ minHeight: 420, padding: 16, display: "grid", gap: 10, justifyItems: "start" }}>
+    <StoryFullscreenFrame align="start">
       <Button variant="outline" onClick={() => setOpen(true)}>
         Reopen Drawer
       </Button>
@@ -189,9 +197,9 @@ function CloseButtonPrimaryPointerOnlyDrawerDemo() {
         title="Primary pointer close affordance"
         description="Close button should only show pressed state for primary pointer interactions."
       >
-        <p style={{ margin: 0 }}>Validate close-button pressed feedback with primary pointer only.</p>
+        <p style={storyParagraphStyle}>Validate close-button pressed feedback with primary pointer only.</p>
       </Drawer>
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -216,29 +224,23 @@ function CloseReasonTelemetryDrawerDemo() {
   const [lastTrace, setLastTrace] = React.useState("none");
 
   return (
-    <div style={{ minHeight: 420, padding: 16, display: "grid", gap: 10, justifyItems: "start" }}>
+    <StoryFullscreenFrame align="start">
+      <div style={storyTelemetryStackStyle}>
       <button
         type="button"
         data-testid="drawer-outside-target"
         aria-label="Drawer outside target"
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: 1,
-          height: 1,
-          opacity: 0
-        }}
+        style={storyOutsideProbeStyle}
       />
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Last close reason:{" "}
-        <strong data-testid="drawer-close-reason" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="drawer-close-reason" style={storyEmphasisTextStyle}>
           {lastReason}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Last close trace:{" "}
-        <strong data-testid="drawer-close-trace" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="drawer-close-trace" style={storyEmphasisTextStyle}>
           {lastTrace}
         </strong>
       </p>
@@ -259,9 +261,10 @@ function CloseReasonTelemetryDrawerDemo() {
           setLastTrace(`reason:${reason}`);
         }}
       >
-        <p style={{ margin: 0 }}>Track close-button, Escape, and outside-pointer dismiss reasons.</p>
+        <p style={storyParagraphStyle}>Track close-button, Escape, and outside-pointer dismiss reasons.</p>
       </Drawer>
-    </div>
+      </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -299,7 +302,7 @@ function FocusReturnDrawerDemo() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div style={{ minHeight: 420, padding: 16 }}>
+    <StoryFullscreenFrame align="start">
       <Button variant="outline" onClick={() => setOpen(true)}>
         Open Focus Return Drawer
       </Button>
@@ -310,9 +313,9 @@ function FocusReturnDrawerDemo() {
         title="Focus return drawer"
         description="Closing should restore focus to trigger by default."
       >
-        <p style={{ margin: 0 }}>Use close button and verify trigger focus restoration.</p>
+        <p style={storyParagraphStyle}>Use close button and verify trigger focus restoration.</p>
       </Drawer>
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -335,17 +338,17 @@ function FocusTrapKeyboardCycleDrawerDemo() {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <div style={{ minHeight: 420, padding: 16, display: "grid", gap: 10, justifyItems: "start" }}>
+    <StoryFullscreenFrame align="start">
       <button type="button">Outside before drawer</button>
       <Drawer open={open} onOpenChange={setOpen} title="Focus trap drawer">
-        <div style={{ display: "grid", gap: 10 }}>
-          <p style={{ margin: 0 }}>Tab and Shift+Tab should cycle within the drawer.</p>
+        <div style={storyContentStackStyle}>
+          <p style={storyParagraphStyle}>Tab and Shift+Tab should cycle within the drawer.</p>
           <Button>Primary drawer action</Button>
           <Button variant="outline">Secondary drawer action</Button>
         </div>
       </Drawer>
       <button type="button">Outside after drawer</button>
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -380,7 +383,7 @@ function FocusReturnDisabledDrawerDemo() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div style={{ minHeight: 420, padding: 16, display: "grid", gap: 8, justifyItems: "start" }}>
+    <StoryFullscreenFrame align="start" gap={8}>
       <Button variant="outline" onClick={() => setOpen(true)}>
         Open No Focus Return Drawer
       </Button>
@@ -393,9 +396,9 @@ function FocusReturnDisabledDrawerDemo() {
         description="Closing should not force focus back to the trigger."
         restoreFocus={false}
       >
-        <p style={{ margin: 0 }}>Use this mode when close flow intentionally hands off focus.</p>
+        <p style={storyParagraphStyle}>Use this mode when close flow intentionally hands off focus.</p>
       </Drawer>
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -418,13 +421,13 @@ function NestedOverlayDrawerDemo() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div style={{ minHeight: 420, padding: 16 }}>
+    <StoryFullscreenFrame align="start">
       <Button variant="outline" onClick={() => setOpen(true)}>
         Open Nested Overlay Drawer
       </Button>
       <Drawer open={open} onOpenChange={setOpen} title="Nested overlay drawer">
-        <div style={{ display: "grid", gap: 10 }}>
-          <p style={{ margin: 0 }}>Escape should close dropdown first, then drawer.</p>
+        <div style={storyContentStackStyle}>
+          <p style={storyParagraphStyle}>Escape should close dropdown first, then drawer.</p>
           <Dropdown
             label="Drawer actions"
             items={[
@@ -434,7 +437,7 @@ function NestedOverlayDrawerDemo() {
           />
         </div>
       </Drawer>
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 
@@ -464,7 +467,7 @@ function EscapeImeGuardDrawerDemo() {
 
   return (
     <Drawer open={open} onOpenChange={setOpen} title="IME composition drawer">
-      <p style={{ margin: 0 }}>Escape should be ignored while IME composition is active.</p>
+      <p style={storyParagraphStyle}>Escape should be ignored while IME composition is active.</p>
     </Drawer>
   );
 }
@@ -506,10 +509,10 @@ function EscapePreemptedDrawerDemo() {
   }, []);
 
   return (
-    <div style={{ minHeight: 420, padding: 16, display: "grid", gap: 10, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryFullscreenFrame align="start">
+      <p style={storyMutedTextStyle}>
         Escape hook calls:{" "}
-        <strong data-testid="drawer-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="drawer-escape-calls" style={storyEmphasisTextStyle}>
           {escapeCalls}
         </strong>
       </p>
@@ -519,9 +522,9 @@ function EscapePreemptedDrawerDemo() {
         title="Preempted escape drawer"
         onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
       >
-        <p style={{ margin: 0 }}>Escape should remain preempted by global handlers.</p>
+        <p style={storyParagraphStyle}>Escape should remain preempted by global handlers.</p>
       </Drawer>
-    </div>
+    </StoryFullscreenFrame>
   );
 }
 

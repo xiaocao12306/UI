@@ -2,6 +2,7 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Dropdown, Popover, type DropdownItem } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { StoryShowcaseFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
 
 const items: DropdownItem[] = [
   { key: "duplicate", label: "Duplicate" },
@@ -31,6 +32,10 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+const storyStackStyle: React.CSSProperties = { display: "grid", gap: 12, justifyItems: "start" };
+const storyTelemetryStackStyle: React.CSSProperties = { display: "grid", gap: 8, justifyItems: "start" };
+const storyParagraphStyle: React.CSSProperties = { margin: 0 };
 
 export const Default: Story = {};
 
@@ -68,10 +73,12 @@ export const NonDismissible: Story = {
     items
   },
   render: (args) => (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
       <Dropdown {...args} />
       <button type="button">Outside target</button>
-    </div>
+      </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -92,16 +99,17 @@ function DismissGuardDropdown() {
   const [outsideCalls, setOutsideCalls] = React.useState(0);
 
   return (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
+      <p style={storyMutedTextStyle}>
         Escape guard calls:{" "}
-        <strong data-testid="dropdown-guard-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dropdown-guard-escape-calls" style={storyEmphasisTextStyle}>
           {escapeCalls}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Outside guard calls:{" "}
-        <strong data-testid="dropdown-guard-outside-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dropdown-guard-outside-calls" style={storyEmphasisTextStyle}>
           {outsideCalls}
         </strong>
       </p>
@@ -118,7 +126,8 @@ function DismissGuardDropdown() {
         items={items}
       />
       <button type="button">Guarded outside target</button>
-    </div>
+      </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -160,10 +169,11 @@ function EscapePreemptedDropdown() {
   }, []);
 
   return (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
+      <p style={storyMutedTextStyle}>
         Escape hook calls:{" "}
-        <strong data-testid="dropdown-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dropdown-escape-calls" style={storyEmphasisTextStyle}>
           {escapeCalls}
         </strong>
       </p>
@@ -174,7 +184,8 @@ function EscapePreemptedDropdown() {
         onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
         items={items}
       />
-    </div>
+      </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -204,15 +215,15 @@ function SelectionTelemetryDropdown() {
   ];
 
   return (
-    <div style={{ display: "grid", gap: 8 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryShowcaseFrame gap={8}>
+      <p style={storyMutedTextStyle}>
         Selected action:{" "}
-        <strong data-testid="dropdown-selected-action" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dropdown-selected-action" style={storyEmphasisTextStyle}>
           {selected}
         </strong>
       </p>
       <Dropdown label="Release Actions" items={telemetryItems} />
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -251,16 +262,17 @@ function CloseReasonTelemetryDropdown() {
   const [lastTrace, setLastTrace] = React.useState("none");
 
   return (
-    <div style={{ display: "grid", gap: 8, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryShowcaseFrame gap={8}>
+      <div style={storyTelemetryStackStyle}>
+      <p style={storyMutedTextStyle}>
         Last close reason:{" "}
-        <strong data-testid="dropdown-close-reason" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dropdown-close-reason" style={storyEmphasisTextStyle}>
           {lastReason}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Last close trace:{" "}
-        <strong data-testid="dropdown-close-trace" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dropdown-close-trace" style={storyEmphasisTextStyle}>
           {lastTrace}
         </strong>
       </p>
@@ -288,7 +300,8 @@ function CloseReasonTelemetryDropdown() {
         ]}
       />
       <button type="button">Outside target</button>
-    </div>
+      </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -337,22 +350,23 @@ function ControlledContractDropdown() {
   const [lastReason, setLastReason] = React.useState("none");
 
   return (
-    <div style={{ display: "grid", gap: 8, justifyItems: "start" }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryShowcaseFrame gap={8}>
+      <div style={storyTelemetryStackStyle}>
+      <p style={storyMutedTextStyle}>
         Close requests:{" "}
-        <strong data-testid="dropdown-controlled-close-requests" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dropdown-controlled-close-requests" style={storyEmphasisTextStyle}>
           {closeRequests}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Pending parent close:{" "}
-        <strong data-testid="dropdown-controlled-pending-close" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dropdown-controlled-pending-close" style={storyEmphasisTextStyle}>
           {pendingClose ? "yes" : "no"}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Last close reason:{" "}
-        <strong data-testid="dropdown-controlled-last-reason" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dropdown-controlled-last-reason" style={storyEmphasisTextStyle}>
           {lastReason}
         </strong>
       </p>
@@ -389,7 +403,8 @@ function ControlledContractDropdown() {
       >
         Apply close request
       </button>
-    </div>
+      </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -515,10 +530,12 @@ export const AllItemsDisabledKeyboardNoop: Story = {
 
 export const OutsideDismissFocusTransfer: Story = {
   render: () => (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
-      <Dropdown label="Focus Policy" items={items} />
-      <button type="button">Next Focus Target</button>
-    </div>
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
+        <Dropdown label="Focus Policy" items={items} />
+        <button type="button">Next Focus Target</button>
+      </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -536,9 +553,11 @@ export const OutsideDismissFocusTransfer: Story = {
 
 export const EscapeDismissFocusReturn: Story = {
   render: () => (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
-      <Dropdown label="Escape Focus Policy" items={items} />
-    </div>
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
+        <Dropdown label="Escape Focus Policy" items={items} />
+      </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -554,10 +573,12 @@ export const EscapeDismissFocusReturn: Story = {
 
 export const TabDismissToNextControl: Story = {
   render: () => (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
-      <Dropdown label="Tab Flow Menu" items={items} />
-      <button type="button">After Menu Control</button>
-    </div>
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
+        <Dropdown label="Tab Flow Menu" items={items} />
+        <button type="button">After Menu Control</button>
+      </div>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -573,18 +594,20 @@ export const TabDismissToNextControl: Story = {
 
 export const NestedDismissOrder: Story = {
   render: () => (
-    <Popover triggerLabel="Open container">
-      <div style={{ display: "grid", gap: 8 }}>
-        <p style={{ margin: 0 }}>Popover shell</p>
-        <Dropdown
-          label="Inner actions"
-          items={[
-            { key: "duplicate", label: "Duplicate" },
-            { key: "archive", label: "Archive" }
-          ]}
-        />
-      </div>
-    </Popover>
+    <StoryShowcaseFrame gap={8}>
+      <Popover triggerLabel="Open container">
+        <div style={storyTelemetryStackStyle}>
+          <p style={storyParagraphStyle}>Popover shell</p>
+          <Dropdown
+            label="Inner actions"
+            items={[
+              { key: "duplicate", label: "Duplicate" },
+              { key: "archive", label: "Archive" }
+            ]}
+          />
+        </div>
+      </Popover>
+    </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
