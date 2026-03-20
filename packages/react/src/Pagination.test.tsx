@@ -27,6 +27,11 @@ describe("Pagination", () => {
     expect(screen.getByRole("navigation", { name: "Pagination" })).toBeInTheDocument();
   });
 
+  it("ignores blank ariaLabel and falls back to default navigation label", () => {
+    render(<Pagination page={3} pageCount={8} onPageChange={() => {}} ariaLabel="   " />);
+    expect(screen.getByRole("navigation", { name: "Pagination" })).toBeInTheDocument();
+  });
+
   it("supports ariaLabelledBy naming and suppresses fallback aria-label", () => {
     render(
       <div>
@@ -38,6 +43,22 @@ describe("Pagination", () => {
     const navigation = screen.getByRole("navigation", { name: "Release pages" });
     expect(navigation).toHaveAttribute("aria-labelledby", "release-pages-heading");
     expect(navigation).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and keeps explicit ariaLabel naming", () => {
+    render(
+      <Pagination
+        page={3}
+        pageCount={8}
+        onPageChange={() => {}}
+        ariaLabelledBy="   "
+        ariaLabel="Release page navigation"
+      />
+    );
+
+    const navigation = screen.getByRole("navigation", { name: "Release page navigation" });
+    expect(navigation).toHaveAttribute("aria-label", "Release page navigation");
+    expect(navigation).not.toHaveAttribute("aria-labelledby");
   });
 
   it("moves to previous and next page", () => {
@@ -185,6 +206,21 @@ describe("Pagination", () => {
     expect(screen.getByRole("button", { name: "current:2" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "page:3" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "next:3" })).toBeInTheDocument();
+  });
+
+  it("ignores blank custom aria labels and falls back to default pagination narration", () => {
+    render(
+      <Pagination
+        page={2}
+        pageCount={6}
+        onPageChange={() => {}}
+        getItemAriaLabel={() => "   "}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Go to first page" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Current page, 2" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Go to next page" })).toBeInTheDocument();
   });
 
   it("clamps custom previous/next aria label pages at boundaries", () => {

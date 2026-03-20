@@ -82,6 +82,8 @@ export function Pagination({
 }: PaginationProps) {
   const navRef = React.useRef<HTMLElement>(null);
   const pendingFocusPageRef = React.useRef<number | null>(null);
+  const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel, "Pagination");
+  const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedPageCount = Math.max(pageCount, 1);
   const currentPage = clamp(page, 1, resolvedPageCount);
   const tokens = pageCount <= 1 ? [] : getPaginationTokens(currentPage, pageCount, siblingCount, boundaryCount);
@@ -89,6 +91,17 @@ export function Pagination({
   const nextPage = clamp(currentPage + 1, 1, resolvedPageCount);
   const canGoPrevious = !disabled && pageCount > 1 && currentPage > 1;
   const canGoNext = !disabled && pageCount > 1 && currentPage < pageCount;
+  const resolveItemAriaLabel = React.useCallback(
+    (
+      type: "page" | "current" | "first" | "last" | "next" | "previous",
+      pageNumber: number
+    ) =>
+      resolveNonEmptyLabel(
+        getItemAriaLabel(type, pageNumber),
+        defaultGetItemAriaLabel(type, pageNumber)
+      ),
+    [getItemAriaLabel]
+  );
 
   const goToPage = (nextPage: number) => {
     if (disabled || pageCount <= 1) {
@@ -148,7 +161,11 @@ export function Pagination({
   }
 
   return (
-    <nav ref={navRef} aria-label={ariaLabelledBy ? undefined : ariaLabel} aria-labelledby={ariaLabelledBy}>
+    <nav
+      ref={navRef}
+      aria-label={resolvedAriaLabelledBy ? undefined : resolvedAriaLabel}
+      aria-labelledby={resolvedAriaLabelledBy}
+    >
       <ul
         style={{
           listStyle: "none",
@@ -167,7 +184,7 @@ export function Pagination({
               disabled={!canGoPrevious}
               onClick={() => goToPage(1)}
               onKeyDown={handleKeyDown}
-              aria-label={getItemAriaLabel("first", 1)}
+              aria-label={resolveItemAriaLabel("first", 1)}
               style={buttonStyle(false, !canGoPrevious)}
             >
               «
@@ -180,7 +197,7 @@ export function Pagination({
             disabled={!canGoPrevious}
             onClick={() => goToPage(previousPage)}
             onKeyDown={handleKeyDown}
-            aria-label={getItemAriaLabel("previous", previousPage)}
+            aria-label={resolveItemAriaLabel("previous", previousPage)}
             style={buttonStyle(false, !canGoPrevious)}
           >
             ‹
@@ -205,7 +222,11 @@ export function Pagination({
                 onKeyDown={handleKeyDown}
                 data-aurora-pagination-page={token}
                 aria-current={selected ? "page" : undefined}
-                aria-label={selected ? getItemAriaLabel("current", token) : getItemAriaLabel("page", token)}
+                aria-label={
+                  selected
+                    ? resolveItemAriaLabel("current", token)
+                    : resolveItemAriaLabel("page", token)
+                }
                 style={buttonStyle(selected, disabled)}
               >
                 {token}
@@ -219,7 +240,7 @@ export function Pagination({
             disabled={!canGoNext}
             onClick={() => goToPage(nextPage)}
             onKeyDown={handleKeyDown}
-            aria-label={getItemAriaLabel("next", nextPage)}
+            aria-label={resolveItemAriaLabel("next", nextPage)}
             style={buttonStyle(false, !canGoNext)}
           >
             ›
@@ -232,7 +253,7 @@ export function Pagination({
               disabled={!canGoNext}
               onClick={() => goToPage(pageCount)}
               onKeyDown={handleKeyDown}
-              aria-label={getItemAriaLabel("last", pageCount)}
+              aria-label={resolveItemAriaLabel("last", pageCount)}
               style={buttonStyle(false, !canGoNext)}
             >
               »
@@ -314,4 +335,12 @@ function buttonStyle(selected: boolean, disabled: boolean): React.CSSProperties 
     cursor: disabled ? "not-allowed" : "pointer",
     font: "inherit"
   };
+}
+
+function resolveNonEmptyLabel(label: string | undefined, fallback?: string): string | undefined {
+  if (typeof label === "string" && label.trim().length > 0) {
+    return label.trim();
+  }
+
+  return fallback;
 }

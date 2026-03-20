@@ -453,8 +453,8 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onPageChange` | `(page: number) => void` | Called for navigation intent. |
 | `showFirstLast` | `boolean` | Toggle first/last jump buttons. |
 | `siblingCount` / `boundaryCount` | `number` | Controls visible number tokens before ellipsis. |
-| `ariaLabel` / `ariaLabelledBy` | `string` / `string` | Name pagination nav with direct copy or an external heading reference; `ariaLabelledBy` takes precedence when both are provided. |
-| `getItemAriaLabel` | `(type, page) => string` | Customize pagination control narration for i18n; boundary `previous/next` pages are clamped to valid range. |
+| `ariaLabel` / `ariaLabelledBy` | `string` / `string` | Name pagination nav with direct copy or an external heading reference; `ariaLabelledBy` takes precedence when both are provided, and blank naming values are ignored (`ariaLabel` falls back to `Pagination`). |
+| `getItemAriaLabel` | `(type, page) => string` | Customize pagination control narration for i18n; boundary `previous/next` pages are clamped to valid range, and blank return values fallback to default narration. |
 | RTL keyboard parity | ArrowLeft/ArrowRight auto-flip | In `dir="rtl"` containers, horizontal arrow shortcuts mirror navigation intent to match visual flow. |
 
 <Canvas of={PaginationStories.KeyboardShortcuts} />
