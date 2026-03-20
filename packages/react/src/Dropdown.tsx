@@ -45,13 +45,13 @@ function getNextEnabledIndex(items: DropdownItem[], currentIndex: number, direct
 
 function getDropdownItemText(item: DropdownItem) {
   if (typeof item.textValue === "string") {
-    const textValue = item.textValue.trim();
+    const textValue = normalizeReadableDropdownText(item.textValue);
     if (textValue.length > 0) {
       return textValue;
     }
   }
 
-  return getReadableTextNode(item.label).trim();
+  return normalizeReadableDropdownText(getReadableTextNode(item.label));
 }
 
 function normalizeTypeaheadText(text: string) {
@@ -492,7 +492,12 @@ function getReadableTextNode(node: React.ReactNode): string {
   }
 
   if (Array.isArray(node)) {
-    return node.map((item) => getReadableTextNode(item)).join("");
+    return normalizeReadableDropdownText(
+      node
+        .map((item) => getReadableTextNode(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
   }
 
   if (!React.isValidElement(node)) {
@@ -508,4 +513,8 @@ function getReadableTextNode(node: React.ReactNode): string {
   }
 
   return getReadableTextNode(elementProps.children);
+}
+
+function normalizeReadableDropdownText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }

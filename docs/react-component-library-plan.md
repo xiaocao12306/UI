@@ -607,6 +607,7 @@
   - CommandPalette 富文本分段检索收口（富文本 `label` 可读文本提取新增空白归一化，支持无文本空格分段标签被带空格查询命中；补齐 `CommandPalette.test.tsx` 回归）
   - Dropdown 键冲突告警收口（开发态新增 `items[].key` 重复值告警，避免 roving focus 与关闭原因遥测歧义；补齐 `Dropdown.test.tsx` 与 Storybook 文档说明）
   - Dropdown 非文本菜单项命名/搜索防呆收口（新增 `items[].ariaLabel`，并在开发态对“非文本 `label` 且缺失 `ariaLabel/textValue`”输出告警；同时让 typeahead 支持富文本 label 的可读文本提取，补齐 `Dropdown.test.tsx` 与 Storybook 文档说明）
+  - Dropdown 富文本分段 Typeahead 收口（富文本 `label` 可读文本提取新增空白归一化，支持无文本空格分段标签在带空格的缓冲查询下稳定命中；补齐 `Dropdown.test.tsx` 回归）
   - Combobox 选项值冲突收口（开发态新增 `options[].value` 重复值告警，避免 selected/active 语义歧义；补齐 `Combobox.test.tsx` 与 Storybook 文档说明）
   - Table 排序命名语义收口（新增 `columns[].sortLabel`，支持非文本列头时的排序按钮与 live region 可读播报；补齐单测 + Storybook `SortLabelForCustomHeader` + API/Best Practices 文档）
   - Table 排序命名防呆收口（开发态对“可排序且非文本列头但缺失 `sortLabel`”输出告警，避免读屏命名回退到技术 key；补齐 `Table.test.tsx` 回归与 Storybook 文档说明）

@@ -441,6 +441,36 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Deploy" })).toHaveFocus();
   });
 
+  it("matches segmented rich-text labels when buffered query includes whitespace", () => {
+    render(
+      <Dropdown
+        label="Segmented rich text"
+        items={[
+          { key: "duplicate", label: "Duplicate" },
+          {
+            key: "deploy-project",
+            label: (
+              <span>
+                <span>Deploy</span>
+                <span>Project</span>
+              </span>
+            )
+          },
+          { key: "preview", label: "Preview" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Segmented rich text" }));
+    const menu = screen.getByRole("menu");
+
+    for (const key of ["d", "e", "p", "l", "o", "y", " ", "p"]) {
+      fireEvent.keyDown(menu, { key });
+    }
+
+    expect(screen.getByRole("menuitem", { name: "Deploy Project" })).toHaveFocus();
+  });
+
   it("ignores typeahead key presses while IME composition is active", () => {
     render(
       <Dropdown
