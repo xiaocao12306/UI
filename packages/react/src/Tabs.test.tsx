@@ -452,6 +452,32 @@ describe("Tabs", () => {
     }
   });
 
+  it("does not warn when rich tab labels expose aria-label on inner node", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Tabs
+          items={[
+            {
+              key: "icon-only",
+              label: <span aria-label="Settings icon">⚙</span>,
+              content: <div>Panel One</div>
+            },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+      expect(screen.getByRole("tab", { name: "Settings icon" })).toBeInTheDocument();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("falls back to first enabled tab when active tab becomes disabled after rerender", () => {
     const baseItems = [
       { key: "one", label: "One", content: <div>Panel One</div> },

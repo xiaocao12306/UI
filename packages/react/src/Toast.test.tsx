@@ -102,6 +102,20 @@ describe("Toast", () => {
     }
   });
 
+  it("does not warn when rich non-text title exposes aria-label on inner node", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(<Toast open title={<span aria-label="Sync completed notification">✅</span>} />);
+      expect(warnSpy).not.toHaveBeenCalled();
+      expect(screen.getByRole("status", { name: "Sync completed notification" })).toBeInTheDocument();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("supports custom close button label", () => {
     render(<Toast open title="Saved" closeLabel="Dismiss notification" />);
     expect(screen.getByRole("button", { name: "Dismiss notification" })).toBeInTheDocument();
