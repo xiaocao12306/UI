@@ -67,6 +67,33 @@ describe("CommandPalette", () => {
     expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
   });
 
+  it("filters rich-text labels without requiring textValue", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          {
+            key: "deploy",
+            label: (
+              <span>
+                <span aria-hidden="true">🚀</span> Deploy Project
+              </span>
+            )
+          },
+          { key: "settings", label: "Open Settings" }
+        ]}
+      />
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "deploy" }
+    });
+
+    expect(screen.getByRole("option", { name: "Deploy Project" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
+  });
+
   it("warns when duplicate command keys are provided", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -103,7 +130,7 @@ describe("CommandPalette", () => {
           open
           onOpenChange={() => {}}
           commands={[
-            { key: "deploy", label: <span>Deploy Project</span> },
+            { key: "deploy", label: <span aria-hidden="true">🚀</span> },
             { key: "settings", label: "Open Settings" }
           ]}
         />
@@ -120,7 +147,7 @@ describe("CommandPalette", () => {
     }
   });
 
-  it("does not warn for non-text labels when textValue or keywords are provided", () => {
+  it("does not warn for non-text labels about searchable metadata when textValue or keywords are provided", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -130,8 +157,69 @@ describe("CommandPalette", () => {
           open
           onOpenChange={() => {}}
           commands={[
-            { key: "deploy", label: <span>Deploy Project</span>, textValue: "Deploy Project" },
-            { key: "release", label: <span>Release</span>, keywords: ["publish"] }
+            {
+              key: "deploy",
+              label: <span aria-hidden="true">🚀</span>,
+              textValue: "Deploy Project"
+            },
+            { key: "release", label: <span aria-hidden="true">📦</span>, keywords: ["publish"] }
+          ]}
+        />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining(
+          "Non-text labels should provide textValue or keywords for searchable metadata"
+        )
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("warns when non-text labels omit ariaLabel", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <CommandPalette
+          open
+          onOpenChange={() => {}}
+          commands={[
+            { key: "deploy", label: <span aria-hidden="true">🚀</span>, textValue: "Deploy Project" },
+            { key: "settings", label: "Open Settings" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Non-text labels should provide ariaLabel: "deploy"')
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text labels when ariaLabel is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <CommandPalette
+          open
+          onOpenChange={() => {}}
+          commands={[
+            {
+              key: "deploy",
+              label: <span aria-hidden="true">🚀</span>,
+              ariaLabel: "Deploy Project",
+              textValue: "Deploy Project"
+            },
+            { key: "settings", label: "Open Settings" }
           ]}
         />
       );
@@ -141,6 +229,25 @@ describe("CommandPalette", () => {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
     }
+  });
+
+  it("supports icon command naming via ariaLabel", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          {
+            key: "deploy",
+            label: <span aria-hidden="true">🚀</span>,
+            ariaLabel: "Deploy Project",
+            textValue: "Deploy Project"
+          }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("option", { name: "Deploy Project" })).toBeInTheDocument();
   });
 
   it("matches accented labels with plain query text", () => {

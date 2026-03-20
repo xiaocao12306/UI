@@ -282,6 +282,34 @@ function TextValueAndAccentSearchPalette() {
   );
 }
 
+function IconOnlyCommandNamingPalette() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <CommandPalette
+      open={open}
+      onOpenChange={setOpen}
+      commands={[
+        {
+          key: "deploy",
+          label: <span aria-hidden="true">🚀</span>,
+          ariaLabel: "Deploy Release",
+          textValue: "Deploy Release",
+          keywords: ["deploy", "release"]
+        },
+        {
+          key: "rollback",
+          label: <span aria-hidden="true">↩</span>,
+          ariaLabel: "Rollback Release",
+          textValue: "Rollback Release",
+          keywords: ["rollback", "release"]
+        }
+      ]}
+      placeholder="Try searching rollback..."
+    />
+  );
+}
+
 function PersistentSelectionPalette() {
   const [open, setOpen] = React.useState(true);
   const [selectedCount, setSelectedCount] = React.useState(0);
@@ -833,6 +861,19 @@ export const TextValueAndAccentSearch: Story = {
     await userEvent.type(input, "cafe");
     await expect(canvas.getByRole("option", { name: "Café Settings" })).toBeInTheDocument();
     await expect(canvas.queryByRole("option", { name: "Open Reports" })).not.toBeInTheDocument();
+  }
+};
+
+export const IconOnlyCommandNaming: Story = {
+  render: () => <IconOnlyCommandNamingPalette />,
+  play: async ({ canvasElement }) => {
+    const root = within(canvasElement.ownerDocument.body);
+    const input = await root.findByRole("combobox");
+    await expect(root.getByRole("option", { name: "Deploy Release" })).toBeInTheDocument();
+
+    await userEvent.type(input, "rollback");
+    await expect(root.getByRole("option", { name: "Rollback Release" })).toBeInTheDocument();
+    await expect(root.queryByRole("option", { name: "Deploy Release" })).not.toBeInTheDocument();
   }
 };
 

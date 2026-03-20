@@ -5,6 +5,7 @@ import { Input } from "./Input";
 export type CommandItem = {
   key: string;
   label: React.ReactNode;
+  ariaLabel?: string;
   textValue?: string;
   keywords?: string[];
   disabled?: boolean;
@@ -72,6 +73,7 @@ export function CommandPalette({
   const closeReasonRef = React.useRef<CommandPaletteCloseReason | null>(null);
   const wasOpenRef = React.useRef(open);
   const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
+  const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const warnedMissingSearchMetadataSignatureRef = React.useRef<string | null>(null);
   const listId = React.useId();
   const statusId = React.useId();
@@ -157,10 +159,43 @@ export function CommandPalette({
       return;
     }
 
-    const missingSearchMetadataKeys = commands.reduce<string[]>((keys, item) => {
-      if (typeof item.label === "string") {
+    const missingAriaLabelKeys = commands.reduce<string[]>((keys, item) => {
+      const hasReadableLabelText = getReadableCommandLabelText(item.label).trim().length > 0;
+      const hasExplicitAriaLabel =
+        typeof item.ariaLabel === "string" && item.ariaLabel.trim().length > 0;
+      if (hasReadableLabelText || hasExplicitAriaLabel) {
         return keys;
       }
+
+      keys.push(item.key);
+      return keys;
+    }, []);
+
+    if (missingAriaLabelKeys.length === 0) {
+      warnedMissingAriaLabelSignatureRef.current = null;
+      return;
+    }
+
+    const signature = missingAriaLabelKeys.sort().join("|");
+    if (warnedMissingAriaLabelSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingAriaLabelSignatureRef.current = signature;
+
+    console.warn(
+      `[CommandPalette] Non-text labels should provide ariaLabel: ${missingAriaLabelKeys
+        .map((key) => `"${key}"`)
+        .join(", ")}.`
+    );
+  }, [commands]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const missingSearchMetadataKeys = commands.reduce<string[]>((keys, item) => {
+      const hasReadableLabelText = getReadableCommandLabelText(item.label).trim().length > 0;
 
       if (typeof item.textValue === "string" && item.textValue.trim().length > 0) {
         return keys;
@@ -170,6 +205,10 @@ export function CommandPalette({
         Array.isArray(item.keywords) &&
         item.keywords.some((keyword) => typeof keyword === "string" && keyword.trim().length > 0)
       ) {
+        return keys;
+      }
+
+      if (hasReadableLabelText) {
         return keys;
       }
 
@@ -522,6 +561,7 @@ export function CommandPalette({
                   role="option"
                   aria-selected={active}
                   aria-disabled={item.disabled || undefined}
+                  aria-label={item.ariaLabel}
                   aria-posinset={index + 1}
                   aria-setsize={filtered.length}
                   tabIndex={-1}
@@ -596,10 +636,13 @@ export function CommandPalette({
 
 function getCommandText(item: CommandItem) {
   if (typeof item.textValue === "string") {
-    return item.textValue.trim();
+    const textValue = item.textValue.trim();
+    if (textValue.length > 0) {
+      return textValue;
+    }
   }
 
-  return typeof item.label === "string" ? item.label.trim() : "";
+  return getReadableCommandLabelText(item.label).trim();
 }
 
 function normalizeSearchText(text: string) {
@@ -652,4 +695,32 @@ function defaultGetResultsStatusText({
   }
 
   return `${visibleCount} command${visibleCount === 1 ? "" : "s"} found for "${normalized}".`;
+}
+
+function getReadableCommandLabelText(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return node;
+  }
+
+  if (typeof node === "number") {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map((item) => getReadableCommandLabelText(item)).join("");
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  return getReadableCommandLabelText(elementProps.children);
 }

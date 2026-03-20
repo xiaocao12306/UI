@@ -135,6 +135,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep command labels explicit and searchable.
 - Keep `commands[].key` unique and stable; development builds now warn on duplicate keys to avoid active-option and telemetry drift.
 - Provide `textValue` aliases for non-string command labels and accent-friendly matching terms.
+- For icon/non-text command labels, provide `commands[].ariaLabel` so each option keeps an explicit accessible name; development builds warn when omitted.
 - For non-text command labels, ensure `textValue` or searchable `keywords` are present; development builds warn when both are missing.
 - Provide empty-state guidance when no command matches the query.
 - Track user query updates with `onQueryChange` for downstream telemetry.
@@ -168,6 +169,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={CommandPaletteStories.CloseReasonTelemetry} />
 <Canvas of={CommandPaletteStories.DisabledCommandGuard} />
 <Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />
+<Canvas of={CommandPaletteStories.IconOnlyCommandNaming} />
 <Canvas of={CommandPaletteStories.PersistentSelection} />
 <Canvas of={CommandPaletteStories.RefinedSearchKeepsActiveCommand} />
 <Canvas of={CommandPaletteStories.PagedKeyboardNavigation} />
