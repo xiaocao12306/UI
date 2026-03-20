@@ -693,6 +693,7 @@
   - Demo E2E 证据刷新（2026-03-21 latest+31：补齐 Dialog `Shift + Escape` 回归后，`pnpm demo:e2e` 全量复验通过，`83/83`）
   - Release Gate 证据刷新（2026-03-20 latest+27：Overlay 修饰键 Escape 横向收口并同步 demo dist 后，`pnpm release:gate:ci` 全链路复验通过，含 verify + coverage + demo e2e `76/76` + demo dist + storybook interaction `221/221`）
   - Release Gate 证据刷新（2026-03-21 latest+30：补齐 Toast 修饰键 Escape Demo 回归后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage + demo e2e `82/82` + demo dist + storybook interaction `221/221`）
+  - Release Gate 证据刷新（2026-03-21 latest+32：补齐 Dialog `Shift + Escape` 回归后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage + demo e2e `83/83` + demo dist + storybook interaction `221/221`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
