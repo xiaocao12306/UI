@@ -1,17 +1,37 @@
-let lockCount = 0;
-let previousOverflow: string | null = null;
+type BodyScrollLockState = {
+  lockCount: number;
+  previousOverflow: string | null;
+};
 
-export function lockBodyScroll() {
-  if (typeof document === "undefined") {
+const lockStateByDocument = new Map<Document, BodyScrollLockState>();
+
+function getLockState(ownerDocument: Document) {
+  const existingState = lockStateByDocument.get(ownerDocument);
+  if (existingState) {
+    return existingState;
+  }
+
+  const nextState: BodyScrollLockState = {
+    lockCount: 0,
+    previousOverflow: null
+  };
+  lockStateByDocument.set(ownerDocument, nextState);
+  return nextState;
+}
+
+export function lockBodyScroll(ownerDocument?: Document) {
+  if (typeof document === "undefined" && !ownerDocument) {
     return () => {};
   }
+  const targetDocument = ownerDocument ?? document;
+  const state = getLockState(targetDocument);
 
-  if (lockCount === 0) {
-    previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+  if (state.lockCount === 0) {
+    state.previousOverflow = targetDocument.body.style.overflow;
+    targetDocument.body.style.overflow = "hidden";
   }
 
-  lockCount += 1;
+  state.lockCount += 1;
   let released = false;
 
   return () => {
@@ -20,17 +40,24 @@ export function lockBodyScroll() {
     }
 
     released = true;
-    lockCount = Math.max(0, lockCount - 1);
-    if (lockCount > 0) {
+    const currentState = lockStateByDocument.get(targetDocument);
+    if (!currentState) {
       return;
     }
 
-    document.body.style.overflow = previousOverflow ?? "";
-    previousOverflow = null;
+    currentState.lockCount = Math.max(0, currentState.lockCount - 1);
+    if (currentState.lockCount > 0) {
+      return;
+    }
+
+    targetDocument.body.style.overflow = currentState.previousOverflow ?? "";
+    lockStateByDocument.delete(targetDocument);
   };
 }
 
 export function resetBodyScrollLockForTests() {
-  lockCount = 0;
-  previousOverflow = null;
+  lockStateByDocument.forEach((state, ownerDocument) => {
+    ownerDocument.body.style.overflow = state.previousOverflow ?? "";
+  });
+  lockStateByDocument.clear();
 }

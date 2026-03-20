@@ -39,4 +39,39 @@ describe("bodyScrollLock", () => {
 
     expect(document.body.style.overflow).toBe("");
   });
+
+  it("isolates lock state across different owner documents", () => {
+    const externalDocument = document.implementation.createHTMLDocument("external");
+    externalDocument.body.style.overflow = "clip";
+
+    const releaseMain = lockBodyScroll(document);
+    const releaseExternal = lockBodyScroll(externalDocument);
+
+    expect(document.body.style.overflow).toBe("hidden");
+    expect(externalDocument.body.style.overflow).toBe("hidden");
+
+    releaseMain();
+    expect(document.body.style.overflow).toBe("");
+    expect(externalDocument.body.style.overflow).toBe("hidden");
+
+    releaseExternal();
+    expect(externalDocument.body.style.overflow).toBe("clip");
+  });
+
+  it("restores all tracked documents when reset is called", () => {
+    const externalDocument = document.implementation.createHTMLDocument("external");
+    externalDocument.body.style.overflow = "auto";
+    document.body.style.overflow = "clip";
+
+    lockBodyScroll(document);
+    lockBodyScroll(externalDocument);
+
+    expect(document.body.style.overflow).toBe("hidden");
+    expect(externalDocument.body.style.overflow).toBe("hidden");
+
+    resetBodyScrollLockForTests();
+
+    expect(document.body.style.overflow).toBe("clip");
+    expect(externalDocument.body.style.overflow).toBe("auto");
+  });
 });

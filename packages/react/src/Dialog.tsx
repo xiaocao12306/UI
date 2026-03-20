@@ -49,6 +49,7 @@ export function Dialog({
   const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
   const closeButtonFocusIntentRef = React.useRef(true);
+  const panelRef = React.useRef<HTMLElement | null>(null);
   const resolvedCloseLabel =
     typeof closeLabel === "string" && closeLabel.trim().length > 0
       ? closeLabel.trim()
@@ -67,7 +68,8 @@ export function Dialog({
       return;
     }
 
-    return lockBodyScroll();
+    const ownerDocument = panelRef.current?.ownerDocument ?? document;
+    return lockBodyScroll(ownerDocument);
   }, [open]);
 
   if (!open) {
@@ -116,6 +118,7 @@ export function Dialog({
         >
           <FocusScope restoreFocus={restoreFocus}>
             <section
+              ref={panelRef}
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
