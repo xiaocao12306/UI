@@ -491,3 +491,4 @@
 - CommandPalette owner-document parity: active-option lookup now resolves via `list.ownerDocument.getElementById`, with unit regression coverage locking the owner-document lookup path before `scrollIntoView`.
 - Storybook gate parity refresh (2026-03-20 latest+7): reran `pnpm storybook:test:ci` after overlay shell + CommandPalette owner-document hardening and confirmed full pass (coverage/docs/parity/structure/play/static/a11y gates + storybook interaction 213/213).
 - Demo keyboard skip-link parity: added `Skip to component sections` anchor for immediate keyboard jump into component sections, with Playwright regression coverage for hash navigation and section visibility.
+- Demo e2e parity refresh (2026-03-20 latest+9): reran `pnpm demo:e2e` after skip-link rollout and confirmed full pass (74/74).
