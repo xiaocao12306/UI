@@ -40,4 +40,36 @@ describe("Portal", () => {
       iframe.remove();
     }
   });
+
+  it("prefers explicit container over ownerDocument body", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      throw new Error("expected iframe document to exist");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+    const explicitContainer = document.createElement("div");
+    explicitContainer.setAttribute("data-testid", "explicit-portal-container");
+    document.body.appendChild(explicitContainer);
+
+    let unmount: (() => void) | undefined;
+    try {
+      ({ unmount } = render(
+        <Portal container={explicitContainer}>
+          <div>Explicit container portal content</div>
+        </Portal>,
+        { container: iframeContainer, baseElement: iframeDocument.body }
+      ));
+
+      expect(within(explicitContainer).getByText("Explicit container portal content")).toBeInTheDocument();
+      expect(within(iframeDocument.body).queryByText("Explicit container portal content")).toBeNull();
+    } finally {
+      unmount?.();
+      explicitContainer.remove();
+      iframe.remove();
+    }
+  });
 });
