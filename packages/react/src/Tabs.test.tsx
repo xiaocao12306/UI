@@ -123,6 +123,45 @@ describe("Tabs", () => {
     getComputedStyleSpy.mockRestore();
   });
 
+  it("prefers nearest explicit ltr direction over computed style fallback", () => {
+    const originalGetComputedStyle = window.getComputedStyle;
+    const getComputedStyleSpy = vi.spyOn(window, "getComputedStyle").mockImplementation((element, pseudoElt) => {
+      const style = originalGetComputedStyle.call(window, element, pseudoElt);
+      return new Proxy(style, {
+        get(target, property, receiver) {
+          if (property === "direction") {
+            return "rtl";
+          }
+          return Reflect.get(target, property, receiver);
+        }
+      }) as CSSStyleDeclaration;
+    });
+
+    render(
+      <div dir="ltr">
+        <Tabs
+          defaultValue="one"
+          items={[
+            { key: "one", label: "One", content: <div>Panel One</div> },
+            { key: "two", label: "Two", content: <div>Panel Two</div> },
+            { key: "three", label: "Three", content: <div>Panel Three</div> }
+          ]}
+        />
+      </div>
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    fireEvent.keyDown(oneTab, { key: "ArrowRight" });
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveFocus();
+    expect(screen.getByText("Panel Two")).toBeInTheDocument();
+
+    fireEvent.keyDown(screen.getByRole("tab", { name: "Two" }), { key: "ArrowLeft" });
+    expect(screen.getByRole("tab", { name: "One" })).toHaveFocus();
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+
+    getComputedStyleSpy.mockRestore();
+  });
+
   it("supports vertical keyboard navigation with ArrowUp and ArrowDown", () => {
     render(
       <Tabs
