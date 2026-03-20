@@ -526,3 +526,4 @@
 - Combobox label-consistency parity: popup listbox naming now reuses sanitized `ariaLabel` (blank => `Combobox options`, non-empty => trimmed suffix), with unit regressions and Storybook `BlankAriaLabelFallback` interaction coverage.
 - Combobox activedescendant-focus parity: listbox options now stay out of tab order (`tabIndex=-1`) and primary-pointer `mousedown` keeps focus on the combobox input, with unit regressions and Storybook `ActivedescendantFocusModel` coverage.
 - Combobox multi-document parity: outside-pointer dismiss listener now binds to `ownerDocument` so iframe/multi-root renders do not lose close behavior; covered by `Combobox.test.tsx` owner-document regression.
+- DismissableLayer multi-document parity: Escape/outside-pointer stack and listeners are now isolated per `ownerDocument`, preventing cross-document overlays from stealing top-layer dismissal priority; covered by primitives + overlay regression suites.
