@@ -71,11 +71,9 @@ function resolveColumnSortLabel<T>(column: TableColumn<T>, fallbackKey: string) 
     return column.sortLabel.trim();
   }
 
-  if (typeof column.header === "string" || typeof column.header === "number") {
-    const normalizedHeader = String(column.header).trim();
-    if (normalizedHeader.length > 0) {
-      return normalizedHeader;
-    }
+  const normalizedHeader = getReadableHeaderText(column.header).trim();
+  if (normalizedHeader.length > 0) {
+    return normalizedHeader;
   }
 
   return fallbackKey;
@@ -240,7 +238,7 @@ export function Table<T>({
         return keys;
       }
 
-      if (typeof column.header === "string" || typeof column.header === "number") {
+      if (getReadableHeaderText(column.header).trim().length > 0) {
         return keys;
       }
 
@@ -734,4 +732,32 @@ function resolveFocusVisibleState(target: HTMLButtonElement | null, fallback: bo
   } catch {
     return fallback;
   }
+}
+
+function getReadableHeaderText(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return node;
+  }
+
+  if (typeof node === "number") {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map((item) => getReadableHeaderText(item)).join("");
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  return getReadableHeaderText(elementProps.children);
 }
