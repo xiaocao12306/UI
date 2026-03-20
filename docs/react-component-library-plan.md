@@ -650,6 +650,7 @@
   - Tabs 方向优先级收口（存在最近 `dir=\"ltr\"` 时优先使用显式方向而非 `getComputedStyle` 回退，补齐 unit 回归锁定 ArrowLeft/ArrowRight 语义）
   - Toast 计时器跨文档收口（自动关闭/提前关闭计时器改为绑定 `ownerDocument.defaultView`，避免 iframe 场景下计时器窗口漂移；补齐 `Toast.test.tsx` iframe 计时器 set/clear 回归）
   - Tabs/Table 键盘去重计时器跨文档收口（manual 激活与 sortable header 的 dedupe timer 改为绑定 `ownerDocument.defaultView`，补齐 `Tabs.test.tsx` / `Table.test.tsx` iframe 回归）
+  - CommandPalette 跨文档 dismiss 事件隔离回归（补齐“次文档 Escape / outside-pointer 不应误关闭主文档面板”回归，锁定多文档宿主下关闭语义）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

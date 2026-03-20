@@ -529,3 +529,4 @@
 - DismissableLayer multi-document parity: Escape/outside-pointer stack and listeners are now isolated per `ownerDocument`, preventing cross-document overlays from stealing top-layer dismissal priority; covered by primitives + overlay regression suites.
 - Toast cross-document timer parity: auto-dismiss + early-close timer cleanup now bind to `ownerDocument.defaultView`, with iframe regression coverage for timer `setTimeout/clearTimeout` paths.
 - Tabs/Table cross-document timer parity: manual-tab activation and sortable-header dedupe timers now bind to `ownerDocument.defaultView`, with iframe regression coverage in both suites.
+- CommandPalette cross-document dismiss parity: added regression coverage that Escape/outside-pointer events dispatched from a secondary document do not dismiss the main-document palette, preventing multi-document event-leak closures.
