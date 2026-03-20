@@ -657,6 +657,8 @@
   - Storybook Gate 漂移恢复（2026-03-20 latest+23：文档更新导致静态 hash 变更后，同步 `apps/storybook/storybook-static` 并复验 `pnpm storybook:test:ci`，interaction `220/220` 全绿）
   - Tooltip 计时器跨文档收口（`delay/close` 计时器改为绑定 `ownerDocument.defaultView` 并按来源 window 清理，避免 iframe 场景计时器窗口漂移；补齐 `Tooltip.test.tsx` iframe `setTimeout/clearTimeout` 回归）
   - Release Gate 证据刷新（2026-03-20 latest+24：Tooltip 跨文档计时器收口并同步 demo/Storybook 静态产物后，`pnpm release:gate:ci` 全链路复验通过，含 verify + coverage + demo e2e `75/75` + demo dist + storybook interaction `220/220`）
+  - Tabs/Pagination RTL 跨文档收口（方向回退 `getComputedStyle` 改为读取元素 `ownerDocument.defaultView`，避免 iframe/multi-root 场景误用主文档方向；补齐 `Tabs.test.tsx` / `Pagination.test.tsx` iframe 回归）
+  - Demo 区块标题成品化收口（Section 标题新增生产就绪状态胶囊，统一标题区信息层级与品牌观感，并补齐 Playwright `shows production-readiness pills in section headers` 回归）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
