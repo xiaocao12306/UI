@@ -698,6 +698,7 @@
   - Demo Drawer Escape 长按验收补齐（新增 Playwright 回归，锁定重复 Escape keydown 不关闭、首次有效 Escape 正常关闭）
   - Demo CommandPalette Escape 长按验收补齐（新增 Playwright 回归，锁定重复 Escape keydown 不清空查询且不关闭，后续首次有效 Escape 才进入“清空后关闭”序列）
   - Demo Toast 堆叠长按验收补齐（新增 Playwright 回归，锁定 `Escape repeat` 不提前关闭栈顶通知）
+  - Popover/Dropdown Escape 长按收口补测（补齐组件单测与 Demo 回归，锁定 `Escape repeat` 仅 no-op，后续首次有效 Escape 才触发关闭与 close reason）
   - Demo E2E 修饰键 Escape 验收补齐（新增 Dialog/Drawer/CommandPalette/Popover/Dropdown 五条 `Ctrl/Meta/Alt + Escape` no-op 回归，锁定真实用户路径下 overlay 不误关闭）
   - Demo E2E 证据刷新（2026-03-20 latest+28：`pnpm demo:e2e` 全量复验通过，`81/81`）
   - Demo E2E 证据刷新（2026-03-21 latest+29：补齐 Toast 修饰键 Escape no-op 回归后，`pnpm demo:e2e` 全量复验通过，`82/82`）
@@ -708,6 +709,7 @@
   - Demo E2E 证据刷新（2026-03-21 latest+39：补齐 Tabs manual `Enter repeat` 回归后，`pnpm demo:e2e` 全量复验通过，`87/87`）
   - Demo E2E 证据刷新（2026-03-21 latest+40：补齐 CommandPalette 即时关闭 + Toast 堆叠 `Escape repeat` 回归后，`pnpm demo:e2e` 全量复验通过，`89/89`）
   - Demo E2E 证据刷新（2026-03-21 latest+41：补齐 Drawer `Escape repeat` 回归后，`pnpm demo:e2e` 全量复验通过，`90/90`）
+  - Demo E2E 证据刷新（2026-03-21 latest+43：补齐 Popover/Dropdown `Escape repeat` 回归后，`pnpm demo:e2e` 全量复验通过，`92/92`）
   - Release Gate 证据刷新（2026-03-20 latest+27：Overlay 修饰键 Escape 横向收口并同步 demo dist 后，`pnpm release:gate:ci` 全链路复验通过，含 verify + coverage + demo e2e `76/76` + demo dist + storybook interaction `221/221`）
   - Release Gate 证据刷新（2026-03-21 latest+30：补齐 Toast 修饰键 Escape Demo 回归后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage + demo e2e `82/82` + demo dist + storybook interaction `221/221`）
   - Release Gate 证据刷新（2026-03-21 latest+32：补齐 Dialog `Shift + Escape` 回归后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage + demo e2e `83/83` + demo dist + storybook interaction `221/221`）

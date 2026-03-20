@@ -916,6 +916,36 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menu", { name: "Shortcut Guard" })).toBeInTheDocument();
   });
 
+  it("ignores repeated Escape keydown for dismiss and hook callbacks", () => {
+    const onEscapeKeyDown = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <Dropdown
+        label="Repeat Guard"
+        onEscapeKeyDown={onEscapeKeyDown}
+        onCloseReason={onCloseReason}
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Repeat Guard" }));
+    expect(screen.getByRole("menu", { name: "Repeat Guard" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape", repeat: true });
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(screen.getByRole("menu", { name: "Repeat Guard" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenCalledWith("escape-key");
+    expect(screen.queryByRole("menu", { name: "Repeat Guard" })).toBeNull();
+  });
+
   it("skips escape callback and dismiss when Escape is preempted upstream", () => {
     const onEscapeKeyDown = vi.fn();
     const onCloseReason = vi.fn();

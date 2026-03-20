@@ -1391,6 +1391,24 @@ test("keeps popover open when Escape is preempted by a global handler", async ({
   await expect(popover).toBeHidden();
 });
 
+test("keeps popover open on repeated Escape keydown until initial keydown event", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Popover" }).click();
+  const popover = page.getByRole("dialog", { name: "Popover content" });
+  await expect(popover).toBeVisible();
+
+  await page.evaluate(() => {
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", repeat: true, bubbles: true }));
+  });
+  await expect(popover).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(popover).toBeHidden();
+});
+
 test("keeps popover open when Escape is combined with modifier shortcuts", async ({ page }) => {
   await page.goto("/");
 
@@ -1584,6 +1602,25 @@ test("keeps dropdown open when Escape is preempted by a global handler", async (
       delete globalWindow.__demoPreemptEscape;
     }
   });
+
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+});
+
+test("keeps dropdown open on repeated Escape keydown until initial keydown event", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  await trigger.click();
+  const menu = page.getByRole("menu", { name: "Actions" });
+  await expect(menu).toBeVisible();
+
+  await page.evaluate(() => {
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", repeat: true, bubbles: true }));
+  });
+  await expect(menu).toBeVisible();
 
   await page.keyboard.press("Escape");
   await expect(menu).toBeHidden();

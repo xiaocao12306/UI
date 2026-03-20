@@ -207,6 +207,34 @@ describe("Popover", () => {
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   });
 
+  it("ignores repeated Escape keydown for dismiss and hook callbacks", () => {
+    const onEscapeKeyDown = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <Popover
+        triggerLabel="Repeat Guard"
+        onEscapeKeyDown={onEscapeKeyDown}
+        onCloseReason={onCloseReason}
+      >
+        <p>Repeat guarded content</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Repeat Guard" }));
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape", repeat: true });
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenCalledWith("escape-key");
+    expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+  });
+
   it("skips escape callback and dismiss when Escape is preempted upstream", () => {
     const onEscapeKeyDown = vi.fn();
     const onCloseReason = vi.fn();
