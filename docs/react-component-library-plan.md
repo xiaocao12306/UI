@@ -744,6 +744,7 @@
   - 动效兼容回归证据刷新（2026-03-21 latest+59：新增 `usePrefersReducedMotion` 兼容层回归（`addEventListener` + 旧 `addListener`）并补齐 LoadingDots/StreamingText 在运行时切换系统 reduced-motion 的行为断言后，`pnpm --filter @aurora-ui/react exec vitest run src/usePrefersReducedMotion.test.tsx src/LoadingDots.test.tsx src/StreamingText.test.tsx` 通过（`19/19`））
   - 集成示例文档结构收口（2026-03-21 latest+60：修复 `docs/component-recipes.md` 重复编号（11/12/13/14 冲突）并统一递增到 17，`pnpm docs:commands:check` 复验通过）
   - 动效兼容边界补齐（2026-03-21 latest+61：补充 `usePrefersReducedMotion` 在 `window.matchMedia` 缺失环境的降级回归，`pnpm --filter @aurora-ui/react exec vitest run src/usePrefersReducedMotion.test.tsx` 通过（`4/4`））
+  - Toast 动效降级证据刷新（2026-03-21 latest+62：为 Toast 容器与关闭按钮补齐 `data-aurora-reduced-motion=\"transition\"` 标记并新增回归断言，`pnpm --filter @aurora-ui/react exec vitest run src/Toast.test.tsx` 通过（`60/60`））
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
