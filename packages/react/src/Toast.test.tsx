@@ -21,6 +21,16 @@ describe("Toast", () => {
     expect(onCloseReason).toHaveBeenCalledWith("close-button");
   });
 
+  it("marks toast transitions for reduced-motion fallback", () => {
+    render(<Toast open title="Saved" />);
+
+    const toast = screen.getByRole("status", { name: "Saved" });
+    const closeButton = screen.getByRole("button", { name: "Close toast" });
+
+    expect(toast).toHaveAttribute("data-aurora-reduced-motion", "transition");
+    expect(closeButton).toHaveAttribute("data-aurora-reduced-motion", "transition");
+  });
+
   it("emits close callbacks in deterministic order for close-button dismiss", () => {
     const events: string[] = [];
     render(

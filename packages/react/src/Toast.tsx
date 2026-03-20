@@ -509,6 +509,7 @@ export function Toast({
 
   return (
     <div
+      data-aurora-reduced-motion="transition"
       ref={rootRef}
       role={role}
       data-close-on-escape={closeOnEscape ? "true" : "false"}
@@ -563,6 +564,7 @@ export function Toast({
           {title}
         </strong>
         <button
+          data-aurora-reduced-motion="transition"
           type="button"
           onClick={closeByButton}
           aria-label={resolvedCloseLabel}
