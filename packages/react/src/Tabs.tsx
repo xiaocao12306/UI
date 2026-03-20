@@ -503,6 +503,20 @@ export function Tabs({
                   return;
                 }
 
+                if (event.key === "PageDown") {
+                  event.preventDefault();
+                  const nextIndex = getNextEnabledIndex(items, index, 1, loop);
+                  moveToIndex(nextIndex);
+                  return;
+                }
+
+                if (event.key === "PageUp") {
+                  event.preventDefault();
+                  const previousIndex = getNextEnabledIndex(items, index, -1, loop);
+                  moveToIndex(previousIndex);
+                  return;
+                }
+
                 const moveDirection = getTabMoveDirection({
                   orientation,
                   key: event.key,

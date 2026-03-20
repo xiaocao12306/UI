@@ -802,6 +802,30 @@ describe("Tabs", () => {
     expect(screen.getByRole("tab", { name: "Build" })).toHaveFocus();
   });
 
+  it("supports PageUp and PageDown keyboard navigation while skipping disabled tabs", () => {
+    render(
+      <Tabs
+        defaultValue="build"
+        items={[
+          { key: "spec", label: "Spec", content: <div>Panel Spec</div>, disabled: true },
+          { key: "build", label: "Build", content: <div>Panel Build</div> },
+          { key: "review", label: "Review", content: <div>Panel Review</div>, disabled: true },
+          { key: "release", label: "Release", content: <div>Panel Release</div> }
+        ]}
+      />
+    );
+
+    const buildTab = screen.getByRole("tab", { name: "Build" });
+    fireEvent.keyDown(buildTab, { key: "PageDown" });
+    expect(screen.getByText("Panel Release")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Release" })).toHaveFocus();
+
+    const releaseTab = screen.getByRole("tab", { name: "Release" });
+    fireEvent.keyDown(releaseTab, { key: "PageUp" });
+    expect(screen.getByText("Panel Build")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Build" })).toHaveFocus();
+  });
+
   it("supports manual activation mode with Enter", () => {
     render(
       <Tabs
@@ -843,6 +867,9 @@ describe("Tabs", () => {
     expect(oneTab).toHaveAttribute("aria-selected", "true");
 
     fireEvent.keyDown(oneTab, { key: "End", metaKey: true });
+    expect(oneTab).toHaveAttribute("aria-selected", "true");
+
+    fireEvent.keyDown(oneTab, { key: "PageDown", ctrlKey: true });
     expect(oneTab).toHaveAttribute("aria-selected", "true");
 
     fireEvent.keyDown(oneTab, { key: "Enter", altKey: true });
@@ -1032,6 +1059,32 @@ describe("Tabs", () => {
 
     fireEvent.keyDown(screen.getByRole("tab", { name: "Spec" }), { key: " " });
     expect(screen.getByText("Panel Spec")).toBeInTheDocument();
+  });
+
+  it("keeps manual mode panel stable on PageUp/PageDown until explicit activation", () => {
+    render(
+      <Tabs
+        defaultValue="build"
+        activationMode="manual"
+        items={[
+          { key: "spec", label: "Spec", content: <div>Panel Spec</div> },
+          { key: "build", label: "Build", content: <div>Panel Build</div> },
+          { key: "release", label: "Release", content: <div>Panel Release</div> }
+        ]}
+      />
+    );
+
+    const buildTab = screen.getByRole("tab", { name: "Build" });
+    fireEvent.keyDown(buildTab, { key: "PageDown" });
+    expect(screen.getByRole("tab", { name: "Release" })).toHaveFocus();
+    expect(screen.getByText("Panel Build")).toBeInTheDocument();
+
+    fireEvent.keyDown(screen.getByRole("tab", { name: "Release" }), { key: "PageUp" });
+    expect(screen.getByRole("tab", { name: "Build" })).toHaveFocus();
+    expect(screen.getByText("Panel Build")).toBeInTheDocument();
+
+    fireEvent.keyDown(screen.getByRole("tab", { name: "Build" }), { key: "Enter" });
+    expect(screen.getByText("Panel Build")).toBeInTheDocument();
   });
 
   it("shows focus ring for Tab navigation even after pointer interaction fallback path", () => {

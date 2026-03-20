@@ -72,7 +72,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Tabs support horizontal/vertical keyboard navigation (Arrow/Home/End) and theme-aware state styling for data-heavy dashboards."
+          "Tabs support horizontal/vertical keyboard navigation (Arrow/Home/End/PageUp/PageDown) and theme-aware state styling for data-heavy dashboards."
       }
     }
   },
@@ -359,7 +359,8 @@ export const KeyboardNavigationGuide: Story = {
     <TabsShowcase>
       <p style={storyMutedTextStyle}>
         Keyboard: horizontal tabs use ArrowLeft/ArrowRight, vertical tabs use ArrowUp/ArrowDown.
-        Home jumps to first enabled tab, End jumps to last enabled tab.
+        Home jumps to first enabled tab, End jumps to last enabled tab, and PageUp/PageDown move to
+        the previous/next enabled tab.
       </p>
       <Tabs
         ariaLabel="Keyboard guide tabs"
@@ -387,11 +388,23 @@ export const KeyboardNavigationGuide: Story = {
     await expect(releaseTab).toHaveAttribute("aria-selected", "true");
     await expect(releaseTab).toHaveFocus();
 
+    await userEvent.keyboard("{PageUp}");
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+    await expect(specTab).toHaveFocus();
+
+    await userEvent.keyboard("{PageDown}");
+    await expect(releaseTab).toHaveAttribute("aria-selected", "true");
+    await expect(releaseTab).toHaveFocus();
+
     await userEvent.keyboard("{Home}");
     await expect(specTab).toHaveAttribute("aria-selected", "true");
     await expect(specTab).toHaveFocus();
 
     fireEvent.keyDown(specTab, { key: "End", ctrlKey: true });
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+    await expect(specTab).toHaveFocus();
+
+    fireEvent.keyDown(specTab, { key: "PageDown", ctrlKey: true });
     await expect(specTab).toHaveAttribute("aria-selected", "true");
     await expect(specTab).toHaveFocus();
   }
