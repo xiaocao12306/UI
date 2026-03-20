@@ -666,6 +666,7 @@
   - StreamingCodeBlock 可访问性收口（新增 `label/live` API，默认 `aria-live="off"` 降低高频播报噪音并支持可命名 region；补齐 `StreamingCodeBlock.test.tsx` 回归、Storybook `LiveNarration` 场景与 API/Best-Practices 文档）
   - Demo AI 代码流命名收口（AI 区块 `StreamingCodeBlock` 显式 `label=\"AI response code stream\"`，补齐 Playwright 对 `role=\"region\" + aria-live=\"off\" + aria-busy` 的可访问性回归）
   - Portal 跨文档宿主收口（`Portal` 默认挂载目标由全局 `document.body` 调整为运行时 `ownerDocument.body`，避免 iframe/multi-root 场景弹层错挂主文档；补齐 `Portal.test.tsx` 回归）
+  - Portal 容器优先级收口（显式 `container` 继续高优先于 `ownerDocument.body` 自动推断，补齐跨文档场景回归防止宿主推断覆盖用户指定容器）
   - Dialog/Drawer 跨文档挂载回归（新增 iframe 宿主回归，验证 `role=\"dialog\"` 内容落在次文档 body 且不泄漏到主文档，锁定弹层跨文档可用性）
   - Dialog/Drawer 跨文档滚动锁收口（滚动锁定改为等待 panel 节点就绪后按 `ownerDocument` 绑定，避免 Portal 初始阶段误锁主文档；补齐 iframe 宿主滚动锁/释放回归）
   - Popover/Dropdown 跨文档 dismiss 隔离回归（新增 iframe 场景 Escape/outside-pointer 回归，锁定主文档与次文档弹层关闭互不串扰）
