@@ -612,6 +612,8 @@
   - Demo 诊断层级收口（Telemetry 胶囊与区块背景降权，优先突出组件主交互与内容层级）
   - Demo 键盘跳转可达性收口（新增 `Skip to component sections` 跳转入口并补齐 Playwright 回归，保障键盘用户可快速进入组件区块）
   - Demo E2E 证据刷新（2026-03-20 latest+9：新增 skip-link 回归后 `pnpm demo:e2e` 复验通过，74 passed）
+  - Demo 区块状态播报收口（新增当前区块 `aria-live` 状态播报 `active-section-status`，覆盖锚点导航与 Hero 卡片跳转路径，保障读屏用户可感知区块切换）
+  - Demo E2E 证据刷新（2026-03-20 latest+10：新增 active-section 状态播报回归后 `pnpm demo:e2e` 复验通过，75 passed）
   - Tabs 方向优先级收口（存在最近 `dir=\"ltr\"` 时优先使用显式方向而非 `getComputedStyle` 回退，补齐 unit 回归锁定 ArrowLeft/ArrowRight 语义）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
