@@ -3,6 +3,7 @@ import * as React from "react";
 export type TabItem = {
   key: string;
   label: React.ReactNode;
+  ariaLabel?: string;
   content: React.ReactNode;
   disabled?: boolean;
 };
@@ -118,6 +119,7 @@ export function Tabs({
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const warnedInvalidControlledValueRef = React.useRef<string | null>(null);
   const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
+  const warnedMissingLabelSignatureRef = React.useRef<string | null>(null);
   const focusIntentRef = React.useRef(true);
   const [recentKeyIndexMap, setRecentKeyIndexMap] = React.useState<Record<string, number>>(() =>
     buildKeyIndexMap(items)
@@ -157,6 +159,40 @@ export function Tabs({
       `[Tabs] Duplicate item keys detected: ${Array.from(duplicateKeys)
         .map((key) => `"${key}"`)
         .join(", ")}. Keys should be unique to keep aria bindings and focus behavior deterministic.`
+    );
+  }, [items]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const missingLabelKeys = items.reduce<string[]>((keys, item) => {
+      const hasExplicitAriaLabel =
+        typeof item.ariaLabel === "string" && item.ariaLabel.trim().length > 0;
+      if (hasExplicitAriaLabel || hasReadableTextNode(item.label)) {
+        return keys;
+      }
+
+      keys.push(item.key);
+      return keys;
+    }, []);
+
+    if (missingLabelKeys.length === 0) {
+      warnedMissingLabelSignatureRef.current = null;
+      return;
+    }
+
+    const signature = missingLabelKeys.sort().join("|");
+    if (warnedMissingLabelSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingLabelSignatureRef.current = signature;
+
+    console.warn(
+      `[Tabs] Non-text labels should provide ariaLabel: ${missingLabelKeys
+        .map((key) => `"${key}"`)
+        .join(", ")}.`
     );
   }, [items]);
 
@@ -329,6 +365,7 @@ export function Tabs({
               id={`${baseId}-tab-${index}`}
               type="button"
               role="tab"
+              aria-label={item.ariaLabel}
               aria-selected={selected}
               aria-controls={`${baseId}-panel-${index}`}
               aria-disabled={disabled || undefined}
@@ -602,4 +639,28 @@ function resolveFocusVisibleState(target: HTMLButtonElement | null, fallback: bo
   } catch {
     return fallback;
   }
+}
+
+function hasReadableTextNode(node: React.ReactNode): boolean {
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  if (typeof node === "number") {
+    return true;
+  }
+
+  if (Array.isArray(node)) {
+    return node.some((child) => hasReadableTextNode(child));
+  }
+
+  if (!React.isValidElement(node)) {
+    return false;
+  }
+
+  if (node.props?.["aria-hidden"] === true || node.props?.["aria-hidden"] === "true") {
+    return false;
+  }
+
+  return hasReadableTextNode(node.props?.children);
 }

@@ -402,6 +402,56 @@ describe("Tabs", () => {
     }
   });
 
+  it("warns when non-text tab labels omit ariaLabel", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Tabs
+          items={[
+            { key: "icon-only", label: <span aria-hidden="true">⚙</span>, content: <div>Panel One</div> },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Non-text labels should provide ariaLabel: "icon-only"')
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn when non-text tab labels provide ariaLabel and exposes accessible name", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Tabs
+          items={[
+            {
+              key: "icon-only",
+              label: <span aria-hidden="true">⚙</span>,
+              ariaLabel: "Settings",
+              content: <div>Panel One</div>
+            },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+      expect(screen.getByRole("tab", { name: "Settings" })).toBeInTheDocument();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("falls back to first enabled tab when active tab becomes disabled after rerender", () => {
     const baseItems = [
       { key: "one", label: "One", content: <div>Panel One</div> },

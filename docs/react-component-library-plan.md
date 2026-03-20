@@ -280,6 +280,7 @@
   - CommandPalette listbox 语义补强（`aria-posinset/aria-setsize`）并补回归测试
   - Table 空数据交互收口（无行时排序按钮禁用）并补单测 + Storybook 交互断言
   - Tabs 命名语义收口（`ariaLabelledBy` 支持外部标题命名 tablist，减少泛化标签）
+  - Tabs 标签命名防呆收口（新增 `items[].ariaLabel` 支持图标型 tab 显式命名，并在开发态对“非文本 label 且缺 ariaLabel”输出告警；补齐 `Tabs.test.tsx` 与 Storybook 文档说明）
   - Tabs 引用稳健性收口（tab/panel id 改为稳定索引映射，避免特殊字符 key 破坏 `aria-controls` 关联）
   - Tabs 方向键边界补测（横向忽略 `ArrowUp/ArrowDown`、纵向忽略 `ArrowLeft/ArrowRight`，锁定无效键不触发切换）
   - Popover/Dropdown 关闭策略收口（`closeOnEscape`/`closeOnOutsidePointer` + dismiss 事件钩子，覆盖阻塞式流程）

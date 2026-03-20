@@ -243,6 +243,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Ensure tabs support orientation-aware arrows (`Left/Right` or `Up/Down`) plus `Home/End`, and skip disabled entries.
 - In RTL layouts, verify horizontal `ArrowLeft`/`ArrowRight` intent is mirrored so tab navigation matches visual reading flow.
 - Prefer `ariaLabelledBy` with a visible heading when tabs already have on-screen context labels; fall back to `ariaLabel` for standalone tab groups.
+- For icon/custom tab labels, provide `items[].ariaLabel` so each tab keeps an explicit accessible name; development builds warn when non-text labels omit it.
 - Use `activationMode="manual"` when arrow-key navigation should not immediately trigger expensive panel renders.
 - Use `loop={false}` when boundary tabs should trap Arrow navigation (for linear workflows where wrap-around can feel like a jump).
 - Keep modified shortcuts (`Ctrl/Meta/Alt + Arrow/Home/End/Enter/Space`) on host/browser behavior; tabs should only react to unmodified navigation/activation keys.

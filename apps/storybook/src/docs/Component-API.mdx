@@ -360,7 +360,8 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 | Prop | Type | Notes |
 | --- | --- | --- |
-| `items` | `TabItem[]` | Include `disabled` for unavailable states. |
+| `items` | `TabItem[]` | Include `disabled` for unavailable states. Non-text `label` values can provide `items[].ariaLabel` for explicit tab naming. |
+| `items[].ariaLabel` | `string` | Accessible name override for icon/custom tab labels; development builds warn when non-text labels omit it. |
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled modes are both supported. |
 | `ariaLabel` / `ariaLabelledBy` | `string` / `string` | Name the tablist with a direct label or an external heading reference for screen-reader context. |
 | `orientation` | `'horizontal' \| 'vertical'` | Keyboard map follows orientation (`Left/Right` or `Up/Down`) with shared `Home/End` behavior. |
