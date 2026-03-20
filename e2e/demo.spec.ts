@@ -971,6 +971,26 @@ test("ignores repeated Space keydown when sorting demo table", async ({ page }) 
   await expect(telemetry).toHaveText("component:desc");
 });
 
+test("ignores repeated Enter keydown when sorting demo table", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table");
+  const telemetry = page.getByTestId("table-sort-telemetry");
+  const componentColumn = table.getByRole("columnheader", { name: /Component/ });
+  const componentSortButton = table.getByRole("button", { name: /Component/ });
+  const firstRow = table.locator("tbody tr").first();
+
+  await componentSortButton.focus();
+  await componentSortButton.evaluate((element) => {
+    const event = new KeyboardEvent("keydown", { key: "Enter", repeat: true, bubbles: true });
+    element.dispatchEvent(event);
+  });
+
+  await expect(componentColumn).toHaveAttribute("aria-sort", "ascending");
+  await expect(firstRow).toContainText("Button");
+  await expect(telemetry).toHaveText("component:asc");
+});
+
 test("sorts demo table with legacy Spacebar key event", async ({ page }) => {
   await page.goto("/");
 

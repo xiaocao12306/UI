@@ -472,6 +472,7 @@
   - Chromatic summary 字段收口（skip/fail 分支补齐统一 status/build/storybook/change/error 字段，避免与上传分支证据口径漂移）
   - Demo Hero 主题控制器成品化（主题切换区升级为 capsule 容器 + 当前主题徽标 + 移动端换行适配，提升首屏品牌层次）
   - Table 键盘长按收口（sortable header 在 `Enter/Space` repeat 场景忽略重复 keydown，避免排序/遥测抖动）
+  - Demo Table `Enter` 长按验收补齐（新增 Playwright 回归，锁定 `KeyboardEvent.repeat=true` 不触发重复排序）
   - Table loading 排序语义收口（`loading` 场景清理 header `aria-sort`，避免播报陈旧排序状态误导）
   - Table loading 排序提示收口（保留排序按钮 `aria-label` 的 next-direction 文案，避免 loading 切换时从 `descending` 误漂到 `ascending`）
   - CommandPalette 引用稳健性收口（`aria-activedescendant` 仅引用现存可执行 option，过滤/命令更新时避免悬空或禁用项引用）
