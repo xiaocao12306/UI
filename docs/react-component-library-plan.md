@@ -687,13 +687,16 @@
   - Toast 修饰键 Escape 验收补齐（新增 Demo E2E `Ctrl/Meta/Alt + Escape` no-op 回归，锁定通知在宿主组合快捷键下不误关闭）
   - DismissableLayer Shift+Escape 语义锁定（补齐 primitives 回归，确保仅 `Ctrl/Meta/Alt + Escape` 被过滤，`Shift + Escape` 仍可触发正常 dismiss）
   - DismissableLayer Escape 长按收口（忽略 `event.repeat=true` 的重复 Escape keydown，避免长按触发多次 dismiss 与关闭遥测抖动）
+  - CommandPalette Escape 长按收口（忽略输入框 `event.repeat=true` 的 Escape keydown，避免长按导致查询清空/关闭链路误触发）
   - Demo Dialog Shift+Escape 验收补齐（新增 Playwright 回归，锁定真实用户路径下 `Shift + Escape` 可关闭弹窗）
   - Demo Dialog Escape 长按验收补齐（新增 Playwright 回归，锁定重复 Escape keydown 不关闭、首次有效 Escape 正常关闭）
+  - Demo CommandPalette Escape 长按验收补齐（新增 Playwright 回归，锁定重复 Escape keydown 不清空查询且不关闭，后续首次有效 Escape 才进入“清空后关闭”序列）
   - Demo E2E 修饰键 Escape 验收补齐（新增 Dialog/Drawer/CommandPalette/Popover/Dropdown 五条 `Ctrl/Meta/Alt + Escape` no-op 回归，锁定真实用户路径下 overlay 不误关闭）
   - Demo E2E 证据刷新（2026-03-20 latest+28：`pnpm demo:e2e` 全量复验通过，`81/81`）
   - Demo E2E 证据刷新（2026-03-21 latest+29：补齐 Toast 修饰键 Escape no-op 回归后，`pnpm demo:e2e` 全量复验通过，`82/82`）
   - Demo E2E 证据刷新（2026-03-21 latest+31：补齐 Dialog `Shift + Escape` 回归后，`pnpm demo:e2e` 全量复验通过，`83/83`）
   - Demo E2E 证据刷新（2026-03-21 latest+34：补齐 Dialog 重复 Escape keydown 回归后，`pnpm demo:e2e` 全量复验通过，`84/84`）
+  - Demo E2E 证据刷新（2026-03-21 latest+36：补齐 CommandPalette 重复 Escape keydown 回归后，`pnpm demo:e2e` 全量复验通过，`85/85`）
   - Release Gate 证据刷新（2026-03-20 latest+27：Overlay 修饰键 Escape 横向收口并同步 demo dist 后，`pnpm release:gate:ci` 全链路复验通过，含 verify + coverage + demo e2e `76/76` + demo dist + storybook interaction `221/221`）
   - Release Gate 证据刷新（2026-03-21 latest+30：补齐 Toast 修饰键 Escape Demo 回归后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage + demo e2e `82/82` + demo dist + storybook interaction `221/221`）
   - Release Gate 证据刷新（2026-03-21 latest+32：补齐 Dialog `Shift + Escape` 回归后，`pnpm release:gate:ci` 全链路复验通过，含 verify + release:exports:check + coverage + demo e2e `83/83` + demo dist + storybook interaction `221/221`）
