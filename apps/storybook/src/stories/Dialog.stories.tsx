@@ -2,6 +2,7 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Dialog, Dropdown, Input, Textarea } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { StoryShowcaseFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
 
 const meta = {
   title: "Overlay/Dialog",
@@ -26,20 +27,34 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const storyStackStyle: React.CSSProperties = { display: "grid", gap: 12 };
+const storyContentStackStyle: React.CSSProperties = { display: "grid", gap: 10 };
+const storyActionRowStyle: React.CSSProperties = { display: "flex", gap: 8, justifyContent: "end" };
+const storyTelemetryStackStyle: React.CSSProperties = { display: "grid", gap: 12, justifyItems: "start" };
+const storyParagraphStyle: React.CSSProperties = { margin: 0 };
+const storyOutsideProbeStyle: React.CSSProperties = {
+  position: "absolute",
+  left: 0,
+  top: 0,
+  width: 1,
+  height: 1,
+  opacity: 0
+};
+
 function InteractiveDialog() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div style={{ display: "grid", gap: 12 }}>
+    <StoryShowcaseFrame gap={12}>
       <Button onClick={() => setOpen(true)}>Open Draft Dialog</Button>
       <Dialog open={open} onOpenChange={setOpen} title="Create AI Draft">
-        <div style={{ display: "grid", gap: 10 }}>
+        <div style={storyContentStackStyle}>
           <Input placeholder="Title" aria-label="Title" />
           <Textarea placeholder="Describe expected output..." aria-label="Description" />
           <Button>Save Draft</Button>
         </div>
       </Dialog>
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -48,7 +63,7 @@ function InitiallyOpenDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen} title="Review Prompt Plan">
-      <p style={{ margin: 0 }}>Escape and outside pointer interactions should dismiss this dialog.</p>
+      <p style={storyParagraphStyle}>Escape and outside pointer interactions should dismiss this dialog.</p>
     </Dialog>
   );
 }
@@ -71,12 +86,12 @@ function FocusReturnDialog() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div style={{ display: "grid", gap: 12 }}>
+    <StoryShowcaseFrame gap={12}>
       <Button onClick={() => setOpen(true)}>Open Focus Return Dialog</Button>
       <Dialog open={open} onOpenChange={setOpen} title="Focus Return">
-        <p style={{ margin: 0 }}>Close this dialog and focus should return to the trigger button.</p>
+        <p style={storyParagraphStyle}>Close this dialog and focus should return to the trigger button.</p>
       </Dialog>
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -99,17 +114,17 @@ function FocusTrapKeyboardCycleDialog() {
   const [open, setOpen] = React.useState(true);
 
   return (
-    <div style={{ display: "grid", gap: 12 }}>
+    <StoryShowcaseFrame gap={12}>
       <button type="button">Outside before dialog</button>
       <Dialog open={open} onOpenChange={setOpen} title="Focus trap dialog">
-        <div style={{ display: "grid", gap: 10 }}>
-          <p style={{ margin: 0 }}>Tab and Shift+Tab should cycle within the dialog.</p>
+        <div style={storyContentStackStyle}>
+          <p style={storyParagraphStyle}>Tab and Shift+Tab should cycle within the dialog.</p>
           <Button>Primary dialog action</Button>
           <Button variant="outline">Secondary dialog action</Button>
         </div>
       </Dialog>
       <button type="button">Outside after dialog</button>
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -145,7 +160,7 @@ function FocusIntentPrimaryPointerDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen} title="Focus intent pointer policy">
-      <p style={{ margin: 0 }}>
+      <p style={storyParagraphStyle}>
         Non-primary mouse down should not clear close-button focus-visible feedback.
       </p>
     </Dialog>
@@ -192,9 +207,9 @@ function NonDismissableDialog() {
       closeOnOutsidePointer={false}
       size="lg"
     >
-      <div style={{ display: "grid", gap: 12 }}>
-        <p style={{ margin: 0 }}>Review the migration plan before confirming release.</p>
-        <div style={{ display: "flex", gap: 8, justifyContent: "end" }}>
+      <div style={storyStackStyle}>
+        <p style={storyParagraphStyle}>Review the migration plan before confirming release.</p>
+        <div style={storyActionRowStyle}>
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
@@ -225,29 +240,23 @@ function DismissGuardDialog() {
   const [outsideCalls, setOutsideCalls] = React.useState(0);
 
   return (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyTelemetryStackStyle}>
       <button
         type="button"
         data-testid="dialog-guard-outside-target"
         aria-label="Dialog guard outside target"
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: 1,
-          height: 1,
-          opacity: 0
-        }}
+        style={storyOutsideProbeStyle}
       />
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Escape guard calls:{" "}
-        <strong data-testid="dialog-guard-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dialog-guard-escape-calls" style={storyEmphasisTextStyle}>
           {escapeCalls}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Outside guard calls:{" "}
-        <strong data-testid="dialog-guard-outside-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dialog-guard-outside-calls" style={storyEmphasisTextStyle}>
           {outsideCalls}
         </strong>
       </p>
@@ -264,9 +273,10 @@ function DismissGuardDialog() {
           setOutsideCalls((count) => count + 1);
         }}
       >
-        <p style={{ margin: 0 }}>Dismiss hooks can block Escape and outside pointer close paths.</p>
+        <p style={storyParagraphStyle}>Dismiss hooks can block Escape and outside pointer close paths.</p>
       </Dialog>
-    </div>
+      </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -293,29 +303,23 @@ function CloseReasonTelemetryDialog() {
   const [lastTrace, setLastTrace] = React.useState("none");
 
   return (
-    <div style={{ display: "grid", gap: 12, justifyItems: "start" }}>
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyTelemetryStackStyle}>
       <button
         type="button"
         data-testid="dialog-outside-target"
         aria-label="Dialog outside target"
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: 1,
-          height: 1,
-          opacity: 0
-        }}
+        style={storyOutsideProbeStyle}
       />
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Last close reason:{" "}
-        <strong data-testid="dialog-close-reason" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dialog-close-reason" style={storyEmphasisTextStyle}>
           {lastReason}
         </strong>
       </p>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+      <p style={storyMutedTextStyle}>
         Last close trace:{" "}
-        <strong data-testid="dialog-close-trace" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dialog-close-trace" style={storyEmphasisTextStyle}>
           {lastTrace}
         </strong>
       </p>
@@ -334,9 +338,10 @@ function CloseReasonTelemetryDialog() {
           setLastTrace(`reason:${reason}`);
         }}
       >
-        <p style={{ margin: 0 }}>Track close-button, Escape, and outside-pointer dismiss reasons.</p>
+        <p style={storyParagraphStyle}>Track close-button, Escape, and outside-pointer dismiss reasons.</p>
       </Dialog>
-    </div>
+      </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -374,11 +379,11 @@ function NestedOverlayDialog() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div style={{ display: "grid", gap: 12 }}>
+    <StoryShowcaseFrame gap={12}>
       <Button onClick={() => setOpen(true)}>Open Nested Overlay Dialog</Button>
       <Dialog open={open} onOpenChange={setOpen} title="Nested Overlay Dialog">
-        <div style={{ display: "grid", gap: 10 }}>
-          <p style={{ margin: 0 }}>Escape should close dropdown first, then dialog.</p>
+        <div style={storyContentStackStyle}>
+          <p style={storyParagraphStyle}>Escape should close dropdown first, then dialog.</p>
           <Dropdown
             label="Dialog actions"
             items={[
@@ -388,7 +393,7 @@ function NestedOverlayDialog() {
           />
         </div>
       </Dialog>
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
@@ -418,7 +423,7 @@ function EscapeImeGuardDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen} title="IME composition dialog">
-      <p style={{ margin: 0 }}>Escape should be ignored while IME composition is active.</p>
+      <p style={storyParagraphStyle}>Escape should be ignored while IME composition is active.</p>
     </Dialog>
   );
 }
@@ -460,10 +465,10 @@ function EscapePreemptedDialog() {
   }, []);
 
   return (
-    <div style={{ display: "grid", gap: 12 }}>
-      <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+    <StoryShowcaseFrame gap={12}>
+      <p style={storyMutedTextStyle}>
         Escape hook calls:{" "}
-        <strong data-testid="dialog-escape-calls" style={{ color: "var(--aurora-text-primary)" }}>
+        <strong data-testid="dialog-escape-calls" style={storyEmphasisTextStyle}>
           {escapeCalls}
         </strong>
       </p>
@@ -473,9 +478,9 @@ function EscapePreemptedDialog() {
         title="Preempted escape dialog"
         onEscapeKeyDown={() => setEscapeCalls((count) => count + 1)}
       >
-        <p style={{ margin: 0 }}>Escape should remain preempted by global handlers.</p>
+        <p style={storyParagraphStyle}>Escape should remain preempted by global handlers.</p>
       </Dialog>
-    </div>
+    </StoryShowcaseFrame>
   );
 }
 
