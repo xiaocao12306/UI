@@ -652,6 +652,7 @@
   - Tabs/Table 键盘去重计时器跨文档收口（manual 激活与 sortable header 的 dedupe timer 改为绑定 `ownerDocument.defaultView`，补齐 `Tabs.test.tsx` / `Table.test.tsx` iframe 回归）
   - CommandPalette 跨文档 dismiss 事件隔离回归（补齐“次文档 Escape / outside-pointer 不应误关闭主文档面板”回归，锁定多文档宿主下关闭语义）
   - Release Gate 证据刷新（2026-03-20 latest+21：跨文档计时器与静态产物同步后，`pnpm release:gate:ci` 复验全绿，`demo:e2e 75/75` + `storybook interaction 220/220`）
+  - Release dry-run 证据刷新（2026-03-20 latest+22：`pnpm release:dry-run` 通过，`@aurora-ui/react` `75.7 kB / 465.1 kB`、`@aurora-ui/primitives` `14.7 kB / 72.9 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
