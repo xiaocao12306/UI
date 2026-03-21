@@ -130,6 +130,7 @@ export function Popover({
           ref={contentRef}
           role="dialog"
           aria-label={resolvedContentLabel}
+          aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
           tabIndex={-1}
           onEscapeKeyDown={(event) => {
             onEscapeKeyDown?.(event);

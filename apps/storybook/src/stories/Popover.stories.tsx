@@ -51,7 +51,9 @@ export const Default: Story = {
     await expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown");
 
     await userEvent.click(trigger);
-    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    const dialog = canvas.getByRole("dialog", { name: "Popover content" });
+    await expect(dialog).toBeInTheDocument();
+    await expect(dialog).toHaveAttribute("aria-keyshortcuts", "Escape");
     await expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
 
     await userEvent.keyboard("{Escape}");
@@ -158,7 +160,9 @@ export const NonDismissible: Story = {
     const trigger = await canvas.findByRole("button", { name: "Review policy" });
 
     await userEvent.click(trigger);
-    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    const dialog = canvas.getByRole("dialog", { name: "Popover content" });
+    await expect(dialog).toBeInTheDocument();
+    await expect(dialog).not.toHaveAttribute("aria-keyshortcuts");
 
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();

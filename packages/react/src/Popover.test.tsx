@@ -73,6 +73,29 @@ describe("Popover", () => {
     expect(screen.getByRole("button", { name: "Primary action" })).toHaveFocus();
   });
 
+  it("exposes Escape shortcut hints on popover content only when closeOnEscape is enabled", () => {
+    const { rerender } = render(
+      <Popover triggerLabel="Escape hint popover">
+        <p>Hint content</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Escape hint popover" }));
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Escape"
+    );
+
+    rerender(
+      <Popover triggerLabel="Escape hint popover" open closeOnEscape={false}>
+        <p>Hint content</p>
+      </Popover>
+    );
+    expect(screen.getByRole("dialog", { name: "Popover content" })).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
+  });
+
   it("ignores modified ArrowDown combinations for trigger keyboard open", () => {
     render(
       <Popover triggerLabel="Arrow guard popover">
