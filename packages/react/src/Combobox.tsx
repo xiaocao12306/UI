@@ -173,16 +173,43 @@ export function Combobox({
   }, [open]);
 
   const filtered = React.useMemo(() => {
-    const normalized = query.trim().toLowerCase();
+    const normalized = normalizeSearchText(query);
     if (!normalized) {
       return options;
     }
 
     return options.filter((option) => {
-      const haystack = [option.label, ...(option.keywords ?? [])].join(" ").toLowerCase();
+      const haystack = normalizeSearchText([option.label, ...(option.keywords ?? [])].join(" "));
       return haystack.includes(normalized);
     });
   }, [options, query]);
+  const enabledCount = React.useMemo(
+    () => filtered.reduce((count, option) => (option.disabled ? count : count + 1), 0),
+    [filtered]
+  );
+  const canNavigateOptions = enabledCount > 1;
+  const canSelectOption = open && enabledCount > 0;
+  const searchKeyShortcuts = React.useMemo(() => {
+    if (disabled) {
+      return undefined;
+    }
+    if (!open) {
+      return "Enter";
+    }
+
+    const shortcuts: string[] = [];
+    if (canNavigateOptions) {
+      shortcuts.push("ArrowDown", "ArrowUp", "Home", "End");
+    }
+    if (canSelectOption) {
+      shortcuts.push("Enter");
+    }
+    if (open) {
+      shortcuts.push("Escape");
+    }
+
+    return shortcuts.length > 0 ? shortcuts.join(" ") : undefined;
+  }, [canNavigateOptions, canSelectOption, disabled, open]);
   const filteredRenderKeys = React.useMemo(() => {
     const counts = new Map<string, number>();
     return filtered.map((item) => {
@@ -219,6 +246,7 @@ export function Combobox({
     onValueChange?.(option.value);
     setOpen(false);
   };
+  const hasResults = open && filtered.length > 0;
 
   return (
     <div ref={rootRef} style={{ display: "grid", gap: 8 }}>
@@ -228,9 +256,10 @@ export function Combobox({
         role="combobox"
         aria-autocomplete="list"
         aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-controls={open ? listId : undefined}
-        aria-activedescendant={open && activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
+        aria-expanded={hasResults}
+        aria-controls={hasResults ? listId : undefined}
+        aria-activedescendant={hasResults && activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
+        aria-keyshortcuts={searchKeyShortcuts}
         aria-label={resolvedAriaLabel}
         autoComplete="off"
         value={query}
@@ -313,7 +342,7 @@ export function Combobox({
           }
         }}
       />
-      {open ? (
+      {hasResults ? (
         <div
           id={listId}
           role="listbox"
@@ -329,59 +358,66 @@ export function Combobox({
             gap: 4
           }}
         >
-          {filtered.length > 0 ? (
-            filtered.map((item, index) => {
-              const active = index === activeIndex;
-              const selected = item.value === currentValue;
-              return (
-                <button
-                  key={filteredRenderKeys[index] ?? `${item.value}__index-${index}`}
-                  id={`${listId}-option-${index}`}
-                  type="button"
-                  role="option"
-                  tabIndex={-1}
-                  aria-selected={selected}
-                  aria-disabled={item.disabled || undefined}
-                  disabled={item.disabled}
-                  onMouseDown={(event) => {
-                    if (event.button !== 0 || item.disabled) {
-                      return;
-                    }
-                    event.preventDefault();
-                    inputRef.current?.focus();
-                  }}
-                  onMouseEnter={() => {
-                    if (!item.disabled) {
-                      setActiveIndex(index);
-                    }
-                  }}
-                  onClick={() => selectOption(item)}
-                  style={{
-                    border: "1px solid var(--aurora-border-default)",
-                    borderRadius: "var(--aurora-radius-sm)",
-                    background: active
-                      ? "color-mix(in srgb, var(--aurora-accent-default) 12%, var(--aurora-surface-default))"
-                      : "var(--aurora-surface-default)",
-                    color: item.disabled
-                      ? "color-mix(in srgb, var(--aurora-text-secondary) 60%, transparent)"
-                      : "var(--aurora-text-primary)",
-                    textAlign: "left",
-                    padding: "0 10px",
-                    height: 34,
-                    cursor: item.disabled ? "not-allowed" : "pointer"
-                  }}
-                >
-                  {item.label}
-                </button>
-              );
-            })
-          ) : (
-            <p role="status" aria-live="polite" style={{ margin: 0, padding: "8px 10px", color: "var(--aurora-text-secondary)" }}>
-              {emptyMessage}
-            </p>
-          )}
+          {filtered.map((item, index) => {
+            const active = index === activeIndex;
+            const selected = item.value === currentValue;
+            return (
+              <button
+                key={filteredRenderKeys[index] ?? `${item.value}__index-${index}`}
+                id={`${listId}-option-${index}`}
+                type="button"
+                role="option"
+                tabIndex={-1}
+                aria-selected={selected}
+                aria-disabled={item.disabled || undefined}
+                disabled={item.disabled}
+                onMouseDown={(event) => {
+                  if (event.button !== 0 || item.disabled) {
+                    return;
+                  }
+                  event.preventDefault();
+                  inputRef.current?.focus();
+                }}
+                onMouseEnter={() => {
+                  if (!item.disabled) {
+                    setActiveIndex(index);
+                  }
+                }}
+                onClick={() => selectOption(item)}
+                style={{
+                  border: "1px solid var(--aurora-border-default)",
+                  borderRadius: "var(--aurora-radius-sm)",
+                  background: active
+                    ? "color-mix(in srgb, var(--aurora-accent-default) 12%, var(--aurora-surface-default))"
+                    : "var(--aurora-surface-default)",
+                  color: item.disabled
+                    ? "color-mix(in srgb, var(--aurora-text-secondary) 60%, transparent)"
+                    : "var(--aurora-text-primary)",
+                  textAlign: "left",
+                  padding: "0 10px",
+                  height: 34,
+                  cursor: item.disabled ? "not-allowed" : "pointer"
+                }}
+              >
+                {item.label}
+              </button>
+            );
+          })}
         </div>
+      ) : open ? (
+        <p role="status" aria-live="polite" style={{ margin: 0, padding: "8px 10px", color: "var(--aurora-text-secondary)" }}>
+          {emptyMessage}
+        </p>
       ) : null}
     </div>
   );
+}
+
+function normalizeSearchText(text: string) {
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
 }

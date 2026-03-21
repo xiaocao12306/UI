@@ -48,6 +48,28 @@ describe("Combobox", () => {
     expect(screen.queryByRole("option", { name: "React" })).toBeNull();
   });
 
+  it("matches accented labels and keywords with plain query text", () => {
+    render(
+      <Combobox
+        options={[
+          { value: "cafe", label: "Café Launch", keywords: ["déploiement rapide"] },
+          { value: "release", label: "Release Notes" }
+        ]}
+        onValueChange={() => {}}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "cafe launch" } });
+
+    expect(screen.getByRole("option", { name: "Café Launch" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Release Notes" })).toBeNull();
+
+    fireEvent.change(input, { target: { value: "deploiement rapide" } });
+    expect(screen.getByRole("option", { name: "Café Launch" })).toBeInTheDocument();
+  });
+
   it("warns when duplicate combobox option values are provided", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -139,6 +161,35 @@ describe("Combobox", () => {
 
     fireEvent.keyDown(input, { key: "Home" });
     expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+  });
+
+  it("exposes state-aware keyboard shortcut hints", () => {
+    render(<Combobox options={options} onValueChange={() => {}} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
+
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp Home End Enter Escape");
+
+    fireEvent.change(input, { target: { value: "sv" } });
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Enter Escape");
+
+    fireEvent.change(input, { target: { value: "no-match" } });
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Escape");
+    expect(input).toHaveAttribute("aria-expanded", "false");
+    expect(input).not.toHaveAttribute("aria-controls");
+    expect(input).not.toHaveAttribute("aria-activedescendant");
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
+  });
+
+  it("omits default keyboard shortcut hints for disabled combobox", () => {
+    render(<Combobox options={options} onValueChange={() => {}} disabled />);
+    expect(screen.getByRole("combobox", { name: "Combobox" })).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
   });
 
   it("ignores modified navigation, selection, and dismiss key combinations", () => {
@@ -367,6 +418,10 @@ describe("Combobox", () => {
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: "angular" } });
 
+    expect(screen.queryByRole("listbox", { name: "Combobox options" })).toBeNull();
+    expect(input).toHaveAttribute("aria-expanded", "false");
+    expect(input).not.toHaveAttribute("aria-controls");
+    expect(input).not.toHaveAttribute("aria-activedescendant");
     expect(screen.getByRole("status")).toHaveTextContent("No frameworks available.");
   });
 

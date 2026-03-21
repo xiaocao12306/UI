@@ -222,6 +222,38 @@ export const ActivedescendantFocusModel: Story = {
   }
 };
 
+export const SearchNormalizationAndShortcutHints: Story = {
+  args: {
+    ariaLabel: "Release search"
+  },
+  render: (args) => (
+    <Combobox
+      {...args}
+      options={[
+        { value: "cafe-launch", label: "Café Launch", keywords: ["déploiement", "release"] },
+        { value: "release-notes", label: "Release Notes", keywords: ["notes"] }
+      ]}
+      onValueChange={() => {}}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Release search" });
+
+    await userEvent.click(input);
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp Home End Enter Escape");
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "cafe launch");
+    await expect(canvas.getByRole("option", { name: "Café Launch" })).toBeInTheDocument();
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "Enter Escape");
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "no-match");
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "Escape");
+  }
+};
+
 export const DisabledState: Story = {
   args: {
     ariaLabel: "Framework disabled",
