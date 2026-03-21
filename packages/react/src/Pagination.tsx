@@ -273,14 +273,14 @@ export function Pagination({
         setFocusVisibleButtonId((current) => (current === buttonId ? null : current));
       },
       onMouseDown: (event: React.MouseEvent<HTMLButtonElement>) => {
-        if (event.button !== 0) {
+        if (event.button !== 0 || event.ctrlKey) {
           return;
         }
         focusVisibleIntentRef.current = false;
         setFocusVisibleButtonId((current) => (current === buttonId ? null : current));
       },
       onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => {
-        if (event.button !== 0) {
+        if (event.button !== 0 || event.ctrlKey) {
           return;
         }
         focusVisibleIntentRef.current = false;

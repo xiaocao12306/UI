@@ -294,6 +294,9 @@ describe("Pagination", () => {
     fireEvent.mouseDown(currentButton, { button: 1 });
     expect(currentButton).toHaveAttribute("data-focus-visible", "true");
 
+    fireEvent.mouseDown(currentButton, { button: 0, ctrlKey: true });
+    expect(currentButton).toHaveAttribute("data-focus-visible", "true");
+
     fireEvent.mouseDown(currentButton, { button: 0 });
     expect(currentButton).not.toHaveAttribute("data-focus-visible");
   });
