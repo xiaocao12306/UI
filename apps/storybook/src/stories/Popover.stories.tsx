@@ -275,6 +275,94 @@ export const NestedDismissOrder: Story = {
   }
 };
 
+function NestedOutsideDismissOrderPopoverDemo() {
+  const [trace, setTrace] = React.useState("none");
+
+  const appendTrace = (entry: string) => {
+    setTrace((current) => (current === "none" ? entry : `${current} -> ${entry}`));
+  };
+
+  return (
+    <PopoverShowcase>
+      <p style={popoverTelemetryTextStyle}>
+        Outside pointer should dismiss nested popovers one layer at a time.
+      </p>
+      <Popover
+        triggerLabel="Outer outside-order popover"
+        contentLabel="Outer outside-order popover content"
+        onCloseReason={(reason) => appendTrace(`outer:reason:${reason}`)}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) {
+            appendTrace("outer:open:false");
+          }
+        }}
+      >
+        <div style={{ display: "grid", gap: 8 }}>
+          <p style={{ margin: 0 }}>Outer layer content.</p>
+          <Popover
+            triggerLabel="Inner outside-order popover"
+            contentLabel="Inner outside-order popover content"
+            onCloseReason={(reason) => appendTrace(`inner:reason:${reason}`)}
+            onOpenChange={(nextOpen) => {
+              if (!nextOpen) {
+                appendTrace("inner:open:false");
+              }
+            }}
+          >
+            <p style={{ margin: 0 }}>Inner layer content.</p>
+          </Popover>
+        </div>
+      </Popover>
+      <button type="button">Popover nested outside target</button>
+      <p style={popoverTelemetryTextStyle}>
+        Nested close trace:{" "}
+        <strong data-testid="popover-nested-outside-trace" style={popoverTelemetryValueStyle}>
+          {trace}
+        </strong>
+      </p>
+    </PopoverShowcase>
+  );
+}
+
+export const NestedOutsideDismissOrder: Story = {
+  render: () => <NestedOutsideDismissOrderPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const outerTrigger = await canvas.findByRole("button", { name: "Outer outside-order popover" });
+
+    await userEvent.click(outerTrigger);
+    await expect(
+      canvas.getByRole("dialog", { name: "Outer outside-order popover content" })
+    ).toBeInTheDocument();
+
+    const innerTrigger = canvas.getByRole("button", { name: "Inner outside-order popover" });
+    await userEvent.click(innerTrigger);
+    await expect(
+      canvas.getByRole("dialog", { name: "Inner outside-order popover content" })
+    ).toBeInTheDocument();
+
+    const outsideTarget = canvas.getByRole("button", { name: "Popover nested outside target" });
+    await userEvent.click(outsideTarget);
+    await expect(
+      canvas.queryByRole("dialog", { name: "Inner outside-order popover content" })
+    ).not.toBeInTheDocument();
+    await expect(
+      canvas.getByRole("dialog", { name: "Outer outside-order popover content" })
+    ).toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-nested-outside-trace")).toHaveTextContent(
+      "inner:reason:outside-pointer -> inner:open:false"
+    );
+
+    await userEvent.click(outsideTarget);
+    await expect(
+      canvas.queryByRole("dialog", { name: "Outer outside-order popover content" })
+    ).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-nested-outside-trace")).toHaveTextContent(
+      "inner:reason:outside-pointer -> inner:open:false -> outer:reason:outside-pointer -> outer:open:false"
+    );
+  }
+};
+
 export const OutsideDismissFocusTransfer: Story = {
   args: {
     triggerLabel: "Focus Policy",
