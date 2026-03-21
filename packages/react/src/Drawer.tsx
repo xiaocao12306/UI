@@ -156,6 +156,7 @@ export function Drawer({
                     type="button"
                     onClick={() => closeWithReason("close-button")}
                     aria-label={resolvedCloseLabel}
+                    aria-keyshortcuts="Enter Space"
                     onMouseEnter={() => {
                       setCloseButtonHovered(true);
                     }}

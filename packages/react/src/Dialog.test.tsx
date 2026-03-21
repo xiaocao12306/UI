@@ -42,6 +42,19 @@ describe("Dialog", () => {
     );
   });
 
+  it("exposes close-button keyboard shortcut hints for Enter/Space activation", () => {
+    render(
+      <Dialog open onOpenChange={() => {}} title="Shortcut hints dialog">
+        <p>Body</p>
+      </Dialog>
+    );
+
+    expect(screen.getByRole("button", { name: "Close dialog" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space"
+    );
+  });
+
   it("ignores blank closeLabel and falls back to default close button name", () => {
     render(
       <Dialog open onOpenChange={() => {}} title="Fallback close label" closeLabel="   ">

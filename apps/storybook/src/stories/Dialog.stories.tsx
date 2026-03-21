@@ -214,6 +214,7 @@ export const CloseButtonKeyboardPressedState: Story = {
   play: async ({ canvasElement }) => {
     const body = within(canvasElement.ownerDocument.body);
     const closeButton = await body.findByRole("button", { name: "Close dialog" });
+    await expect(closeButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 
     closeButton.focus();
     fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });

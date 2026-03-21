@@ -52,6 +52,19 @@ describe("Drawer", () => {
     );
   });
 
+  it("exposes close-button keyboard shortcut hints for Enter/Space activation", () => {
+    render(
+      <Drawer open onOpenChange={() => {}} title="Shortcut hints drawer">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    expect(screen.getByRole("button", { name: "Close drawer" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space"
+    );
+  });
+
   it("ignores blank closeLabel and falls back to default close button name", () => {
     render(
       <Drawer open onOpenChange={() => {}} title="Fallback close label drawer" closeLabel="   ">
