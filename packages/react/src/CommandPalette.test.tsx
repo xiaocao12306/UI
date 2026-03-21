@@ -244,7 +244,11 @@ describe("CommandPalette", () => {
           open
           onOpenChange={() => {}}
           commands={[
-            { key: "deploy", label: <span aria-hidden="true">🚀</span>, textValue: "Deploy Project" },
+            {
+              key: "deploy",
+              label: <span aria-hidden="true">🚀</span>,
+              textValue: "Deploy Project"
+            },
             { key: "settings", label: "Open Settings" }
           ]}
         />
@@ -1383,10 +1387,7 @@ describe("CommandPalette", () => {
 
     const input = screen.getByRole("combobox", { name: "Search commands" });
     expect(input).not.toHaveAttribute("aria-activedescendant");
-    expect(input).toHaveAttribute(
-      "aria-keyshortcuts",
-      "Escape"
-    );
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Escape");
 
     fireEvent.keyDown(input, { key: "ArrowDown" });
     fireEvent.keyDown(input, { key: "ArrowUp" });
@@ -1527,8 +1528,10 @@ describe("CommandPalette", () => {
     expect(options).toHaveLength(2);
     expect(options[0]).toHaveAttribute("aria-posinset", "1");
     expect(options[0]).toHaveAttribute("aria-setsize", "2");
+    expect(options[0]).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     expect(options[1]).toHaveAttribute("aria-posinset", "2");
     expect(options[1]).toHaveAttribute("aria-setsize", "2");
+    expect(options[1]).toHaveAttribute("aria-keyshortcuts", "Enter Space");
   });
 
   it("supports localized listbox accessible naming", () => {
@@ -2093,10 +2096,7 @@ describe("CommandPalette", () => {
       target: { value: "release" }
     });
     expect(screen.getByRole("status")).toHaveTextContent('No enabled commands match "release".');
-    expect(input).toHaveAttribute(
-      "aria-keyshortcuts",
-      "Escape"
-    );
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Escape");
   });
 
   it("does not prevent native input key behavior when filtered results have no enabled commands", () => {
@@ -2163,6 +2163,7 @@ describe("CommandPalette", () => {
     expect(disabledOptions).toHaveLength(2);
     disabledOptions.forEach((option) => {
       expect(option).toHaveAttribute("aria-disabled", "true");
+      expect(option).not.toHaveAttribute("aria-keyshortcuts");
     });
 
     fireEvent.keyDown(input, { key: "ArrowDown" });

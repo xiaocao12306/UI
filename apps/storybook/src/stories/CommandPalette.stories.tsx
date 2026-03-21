@@ -2,11 +2,7 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, CommandPalette, Popover, type CommandItem } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
-import {
-  StoryFullscreenFrame,
-  storyEmphasisTextStyle,
-  storyMutedTextStyle
-} from "./storyShowcase";
+import { StoryFullscreenFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
 
 const commands: CommandItem[] = [
   { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
@@ -117,8 +113,7 @@ function AiFlowPalette() {
   return (
     <StoryFullscreenFrame>
       <p style={storyMutedTextStyle}>
-        Last AI action:{" "}
-        <strong style={storyEmphasisTextStyle}>{lastAction}</strong>
+        Last AI action: <strong style={storyEmphasisTextStyle}>{lastAction}</strong>
       </p>
       <CommandPalette open={open} onOpenChange={setOpen} commands={actionCommands} />
     </StoryFullscreenFrame>
@@ -800,9 +795,7 @@ export const OpenFromTriggerKeyboardFirst: Story = {
     await userEvent.keyboard("{Enter}");
 
     await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
-    await expect(canvas.getByTestId("keyboard-first-selected")).toHaveTextContent(
-      "Run E2E Smoke"
-    );
+    await expect(canvas.getByTestId("keyboard-first-selected")).toHaveTextContent("Run E2E Smoke");
   }
 };
 
@@ -1049,6 +1042,7 @@ export const DisabledCommandGuard: Story = {
 
     const disabledOption = canvas.getByRole("option", { name: "Publish Release" });
     await expect(disabledOption).toHaveAttribute("aria-disabled", "true");
+    await expect(disabledOption).not.toHaveAttribute("aria-keyshortcuts");
     await userEvent.click(disabledOption);
 
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
@@ -1135,6 +1129,7 @@ export const OptionActivationKeyGuard: Story = {
     const canvas = within(canvasElement.ownerDocument.body);
     const option = await canvas.findByRole("option", { name: "Run Lint" });
     option.focus();
+    await expect(option).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 
     await expect(canvas.getByTestId("option-activation-count")).toHaveTextContent("0");
     await userEvent.keyboard("{Control>}{Enter}{/Control}");
@@ -1398,20 +1393,30 @@ export const NestedDismissOrder: Story = {
     const outerTrigger = await canvas.findByRole("button", { name: "Open container popover" });
 
     await userEvent.click(outerTrigger);
-    await expect(canvas.getByRole("dialog", { name: "Command container popover" })).toBeInTheDocument();
+    await expect(
+      canvas.getByRole("dialog", { name: "Command container popover" })
+    ).toBeInTheDocument();
 
     await userEvent.click(canvas.getByRole("button", { name: "Open nested palette" }));
-    await expect(canvas.getByRole("dialog", { name: "Nested command palette" })).toBeInTheDocument();
+    await expect(
+      canvas.getByRole("dialog", { name: "Nested command palette" })
+    ).toBeInTheDocument();
 
     await userEvent.keyboard("{Escape}");
     await waitFor(() => {
-      expect(canvas.queryByRole("dialog", { name: "Nested command palette" })).not.toBeInTheDocument();
+      expect(
+        canvas.queryByRole("dialog", { name: "Nested command palette" })
+      ).not.toBeInTheDocument();
     });
-    await expect(canvas.getByRole("dialog", { name: "Command container popover" })).toBeInTheDocument();
+    await expect(
+      canvas.getByRole("dialog", { name: "Command container popover" })
+    ).toBeInTheDocument();
 
     await userEvent.keyboard("{Escape}");
     await waitFor(() => {
-      expect(canvas.queryByRole("dialog", { name: "Command container popover" })).not.toBeInTheDocument();
+      expect(
+        canvas.queryByRole("dialog", { name: "Command container popover" })
+      ).not.toBeInTheDocument();
     });
     await expect(outerTrigger).toHaveFocus();
   }

@@ -228,6 +228,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat repeated `Enter` keydown (`event.repeat`) as no-op for command execution so long-press does not trigger duplicate actions or telemetry noise.
 - Treat repeated `Escape` keydown (`event.repeat`) as no-op for both query-clear and dismiss paths so long-press does not clear/close the palette unexpectedly.
 - Keep option-level activation (`Enter`/`Space`) scoped to unmodified, non-repeat keydown so focused listbox options cannot execute on `Ctrl/Meta/Alt` shortcuts or long-press repeats.
+- Expose command-palette option `aria-keyshortcuts="Enter Space"` only on actionable options; disabled options should omit shortcut hints to avoid false affordance metadata.
 - Use `PageUp` / `PageDown` for long command sets so keyboard users can jump actionable options in larger steps.
 - Keep `Ctrl/Meta/Alt + ArrowDown/ArrowUp/Home/End/Page/Enter/Escape` on native input behavior; do not hijack modified shortcuts for command navigation or dismiss.
 - Keep `Shift + Escape` available so command input can follow the standard first-escape-clear / second-escape-dismiss sequence.

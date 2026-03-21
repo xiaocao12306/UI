@@ -161,7 +161,9 @@ export function CommandPalette({
     console.warn(
       `[CommandPalette] Duplicate command keys detected: ${Array.from(duplicateKeys)
         .map((key) => `"${key}"`)
-        .join(", ")}. Keys should be unique to keep aria-activedescendant and selection behavior deterministic.`
+        .join(
+          ", "
+        )}. Keys should be unique to keep aria-activedescendant and selection behavior deterministic.`
     );
   }, [commands]);
 
@@ -275,21 +277,26 @@ export function CommandPalette({
     return shortcuts.length > 0 ? shortcuts.join(" ") : undefined;
   }, [canNavigateCommandList, clearQueryOnEscape, closeOnEscape, query.length]);
 
-  const resultsStatusText = React.useMemo(
-    () => {
-      if (loading) {
-        return resolvedLoadingStatusText;
-      }
+  const resultsStatusText = React.useMemo(() => {
+    if (loading) {
+      return resolvedLoadingStatusText;
+    }
 
-      return getResultsStatusText({
-        query,
-        visibleCount: filtered.length,
-        enabledCount,
-        totalCount: commands.length
-      });
-    },
-    [commands.length, enabledCount, filtered.length, getResultsStatusText, loading, query, resolvedLoadingStatusText]
-  );
+    return getResultsStatusText({
+      query,
+      visibleCount: filtered.length,
+      enabledCount,
+      totalCount: commands.length
+    });
+  }, [
+    commands.length,
+    enabledCount,
+    filtered.length,
+    getResultsStatusText,
+    loading,
+    query,
+    resolvedLoadingStatusText
+  ]);
 
   const enabledIndices = React.useMemo(
     () =>
@@ -593,6 +600,7 @@ export function CommandPalette({
                   aria-selected={active}
                   aria-disabled={item.disabled || undefined}
                   aria-label={optionAriaLabel}
+                  aria-keyshortcuts={item.disabled ? undefined : "Enter Space"}
                   aria-posinset={index + 1}
                   aria-setsize={filtered.length}
                   tabIndex={-1}
@@ -773,7 +781,10 @@ function getReadableCommandLabelText(node: React.ReactNode): string {
     return "";
   }
 
-  if (typeof elementProps["aria-label"] === "string" && elementProps["aria-label"].trim().length > 0) {
+  if (
+    typeof elementProps["aria-label"] === "string" &&
+    elementProps["aria-label"].trim().length > 0
+  ) {
     return normalizeReadableCommandText(elementProps["aria-label"]);
   }
 
