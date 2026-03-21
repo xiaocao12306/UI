@@ -268,6 +268,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Localize prompt input naming and helper copy with `ariaLabel`, `shortcutHint`, and `submittingHint`; expose `aria-keyshortcuts="Control+Enter Meta+Enter"` only while not submitting so shortcut metadata does not advertise unavailable submit actions.
 - Keep prompt helper text bound through `aria-describedby` so assistive tech announces shortcut/pending guidance from the same live hint node.
 - Keep prompt textarea keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
+- Keep prompt textarea focus intent primary-only: non-primary pointer interactions and `Ctrl + primary click` context-click paths should not clear keyboard-origin focus-visible state.
 - Localize message-bubble narration with `speakerLabel` or explicit `ariaLabel`; blank values should be omitted so speaker-based fallback naming remains valid.
 - Localize message semantics with `roleDescription` when product vocabulary differs from plain `message`; blank values should fallback to default role description.
 - Localize reasoning disclosure semantics with `expandLabel`/`collapseLabel` and `listAriaLabel` so assistive-tech narration matches product language.

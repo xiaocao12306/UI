@@ -133,7 +133,7 @@ describe("PromptInput", () => {
     expect(textbox).toHaveAttribute("aria-label", "Prompt input");
   });
 
-  it("tracks keyboard focus-visible intent and clears it only on primary pointer interaction", () => {
+  it("tracks keyboard focus-visible intent and clears it only on plain primary pointer interaction", () => {
     render(<PromptInput ariaLabel="Focus-visible prompt" />);
 
     const textbox = screen.getByRole("textbox", { name: "Focus-visible prompt" });
@@ -142,6 +142,9 @@ describe("PromptInput", () => {
     expect(textbox).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(textbox, { button: 1 });
+    expect(textbox).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(textbox, { button: 0, ctrlKey: true });
     expect(textbox).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(textbox, { button: 0 });
@@ -164,6 +167,16 @@ describe("PromptInput", () => {
 
     fireEvent.mouseDown(beforeButton, { button: 0 });
     fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(textbox);
+    expect(textbox).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(textbox);
+    fireEvent.mouseDown(document.body, { button: 2 });
+    fireEvent.focus(textbox);
+    expect(textbox).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(textbox);
+    fireEvent.mouseDown(document.body, { button: 0, ctrlKey: true });
     fireEvent.focus(textbox);
     expect(textbox).toHaveAttribute("data-focus-visible", "true");
 
@@ -199,6 +212,13 @@ describe("PromptInput", () => {
     try {
       iframeDocument.dispatchEvent(
         new iframeWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(textbox);
+      expect(textbox).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(textbox);
+      iframeDocument.dispatchEvent(
+        new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0, ctrlKey: true })
       );
       fireEvent.focus(textbox);
       expect(textbox).toHaveAttribute("data-focus-visible", "true");
