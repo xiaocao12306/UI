@@ -144,7 +144,7 @@ describe("DatePicker", () => {
     expect(input).not.toHaveAttribute("aria-label");
   });
 
-  it("tracks keyboard focus-visible intent and clears it on primary pointer interaction", () => {
+  it("tracks keyboard focus-visible intent and clears it on plain primary pointer interaction", () => {
     render(<DatePicker aria-label="Focus-visible date" onValueChange={() => {}} />);
     const input = screen.getByLabelText("Focus-visible date");
 
@@ -153,6 +153,9 @@ describe("DatePicker", () => {
     expect(input).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(input, { button: 1 });
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(input, { button: 0, ctrlKey: true });
     expect(input).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(input, { button: 0 });
@@ -175,6 +178,16 @@ describe("DatePicker", () => {
 
     fireEvent.mouseDown(beforeButton, { button: 0 });
     fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(input);
+    fireEvent.mouseDown(document.body, { button: 2 });
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(input);
+    fireEvent.mouseDown(document.body, { button: 0, ctrlKey: true });
     fireEvent.focus(input);
     expect(input).toHaveAttribute("data-focus-visible", "true");
 
@@ -214,6 +227,13 @@ describe("DatePicker", () => {
     try {
       secondaryDocument.dispatchEvent(
         new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(input);
+      expect(input).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(input);
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0, ctrlKey: true })
       );
       fireEvent.focus(input);
       expect(input).toHaveAttribute("data-focus-visible", "true");

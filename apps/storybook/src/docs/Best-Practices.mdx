@@ -73,6 +73,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep input shortcut hints precise: expose default `aria-keyshortcuts="Enter"` only for actionable text-like inputs (`text/search/email/url/tel/password`), and remove default hints for non-text types plus read-only/disabled states.
 - Keep local pointer focus/active intent primary-only across button/input/textarea/select: non-primary pointer interactions and `Ctrl + primary click` context-click paths should not clear keyboard-origin focus-visible or trigger pressed/active visuals.
 - Keep date-picker shortcut hints explicit: native `type="date"` should not expose default Enter shortcut metadata; only pass `aria-keyshortcuts` when product workflows require a custom documented shortcut.
+- Keep date-picker focus intent parity with text fields: non-primary pointer interactions and `Ctrl + primary click` context-click paths should not clear keyboard-origin focus-visible state.
 - Keep input keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep textarea keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep select keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
