@@ -2,6 +2,7 @@ import * as React from "react";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { CommandPalette } from "./CommandPalette";
+import { Popover } from "./Popover";
 import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 describe("CommandPalette", () => {
@@ -716,6 +717,52 @@ describe("CommandPalette", () => {
     } finally {
       iframe.remove();
     }
+  });
+
+  it("dismisses nested command palette layer before parent popover layer", async () => {
+    function NestedPaletteInPopover() {
+      const [paletteOpen, setPaletteOpen] = React.useState(false);
+
+      return (
+        <Popover triggerLabel="Outer popover" contentLabel="Outer popover content">
+          <button type="button" onClick={() => setPaletteOpen(true)}>
+            Open nested palette
+          </button>
+          <CommandPalette
+            open={paletteOpen}
+            onOpenChange={setPaletteOpen}
+            title="Nested command palette"
+            commands={[
+              { key: "create-spec", label: "Create Spec" },
+              { key: "run-e2e", label: "Run E2E Smoke" }
+            ]}
+          />
+        </Popover>
+      );
+    }
+
+    render(<NestedPaletteInPopover />);
+
+    const outerTrigger = screen.getByRole("button", { name: "Outer popover" });
+    fireEvent.click(outerTrigger);
+    expect(screen.getByRole("dialog", { name: "Outer popover content" })).toBeInTheDocument();
+
+    const openNestedPaletteButton = screen.getByRole("button", { name: "Open nested palette" });
+    fireEvent.click(openNestedPaletteButton);
+    expect(screen.getByRole("dialog", { name: "Nested command palette" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Nested command palette" })).toBeNull();
+    });
+    expect(screen.getByRole("dialog", { name: "Outer popover content" })).toBeInTheDocument();
+    expect(openNestedPaletteButton).toHaveFocus();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Outer popover content" })).toBeNull();
+    });
+    expect(outerTrigger).toHaveFocus();
   });
 
   it("removes Escape keyboard hint when Escape behaviors are fully disabled", () => {
