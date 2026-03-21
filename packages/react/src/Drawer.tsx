@@ -72,7 +72,10 @@ export function Drawer({
     }
 
     const ownerDocument = panelElement.ownerDocument;
-    const markKeyboardIntent = () => {
+    const markKeyboardIntent = (event: KeyboardEvent) => {
+      if (event.metaKey || event.altKey || event.ctrlKey) {
+        return;
+      }
       closeButtonFocusIntentRef.current = true;
     };
     const markPointerIntent = () => {

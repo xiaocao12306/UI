@@ -519,6 +519,41 @@ describe("Drawer", () => {
     matchesSpy.mockRestore();
   });
 
+  it("ignores modified ownerDocument keydown for close-button focus-visible fallback intent", () => {
+    render(
+      <div>
+        <button type="button">Before drawer close</button>
+        <Drawer open onOpenChange={() => {}} title="Modified-key intent drawer" closeLabel="Modified intent close">
+          <p>Drawer content</p>
+        </Drawer>
+      </div>
+    );
+
+    const beforeButton = screen.getByRole("button", { name: "Before drawer close" });
+    const closeButton = screen.getByRole("button", { name: "Modified intent close" });
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.blur(closeButton);
+    fireEvent.keyDown(document, { key: "Tab", ctrlKey: true });
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+    fireEvent.blur(closeButton);
+    fireEvent.keyDown(document, { key: "Tab", metaKey: true });
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+    fireEvent.blur(closeButton);
+    fireEvent.keyDown(document, { key: "Tab", altKey: true });
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+    matchesSpy.mockRestore();
+  });
+
   it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
     const iframe = document.createElement("iframe");
     document.body.appendChild(iframe);
