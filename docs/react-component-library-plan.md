@@ -769,6 +769,8 @@
   - Release Gate 漂移恢复与证据刷新（2026-03-21 latest+84：Input 收口后首次 `pnpm release:gate:ci` 在 `demo:dist:check` 检测到 `apps/demo/dist` 漂移，已同步 Demo 静态产物并再次全链路复验通过，含 verify + release:exports:check + coverage（`43 files / 630 tests`）+ demo e2e `98/98` + storybook interaction `228/228`）
   - Button 修饰键按压反馈收口（2026-03-21 latest+85：Button 按压视觉反馈改为忽略 `Ctrl/Meta/Alt` 修饰键激活组合，保留未修饰/`Shift` 的 `Enter` 与 `Space`（含 `Spacebar`）语义；同步单测/Storybook/文档验收，`pnpm --filter @aurora-ui/react exec vitest run src/Button.test.tsx` 通过（`20/20`），`pnpm --filter @aurora-ui/storybook-app typecheck && pnpm storybook:docs:check && pnpm storybook:docs:parity:check && pnpm storybook:docs:structure:check && pnpm storybook:play:check` 通过，`pnpm storybook:test:grep \"Button.stories.tsx\"` 通过（`6/6`））
   - Release Gate 证据刷新（2026-03-21 latest+86：Button 收口后首次门禁在 `demo:dist:check` 提示 Demo 产物漂移，已同步 `apps/demo/dist` 并重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`43 files / 631 tests`）+ demo e2e `98/98` + storybook interaction `228/228`）
+  - Dialog 关闭按钮按下态收口（2026-03-21 latest+87：Dialog close-button 补齐 `active/pressed` 视觉反馈与位移回弹，统一 Drawer/Toast 状态语言；同步单测、Storybook `FocusIntentPrimaryPointerOnly` 与 Component API/Best Practices 文档，`pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx` 通过（`28/28`），`pnpm storybook:test:grep \"Dialog.stories.tsx\"` 通过（`12/12`））
+  - Release Gate 证据刷新（2026-03-21 latest+88：修复 Dialog Storybook 断言稳定性并同步 `apps/storybook/storybook-static` 后重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`43 files / 632 tests`）+ demo e2e `98/98` + storybook interaction `228/228`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
