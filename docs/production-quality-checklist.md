@@ -355,6 +355,7 @@
 - Toast stacked-repeat parity: stacked toast regressions now lock `Escape repeat` as a strict no-op and reserve top-toast dismissal for the first non-repeat Escape keydown.
 - Toast modifier-key parity: `Ctrl/Meta/Alt + Escape` now bypasses toast dismiss/hook paths so host shortcut chords are preserved without accidental close side effects.
 - Toast dynamic Escape-policy parity: runtime `closeOnEscape` changes now trigger stack hint recomputation, keeping `aria-keyshortcuts` assigned only to the current top escapable toast.
+- Toast interaction-priority parity: focused/hovered toasts are now explicitly covered in Storybook + demo E2E (`FocusedToastEscapesFirst` + stacked-hover Playwright) so Escape always dismisses the notification users are currently interacting with.
 - Dropdown item-keyboard parity: menu items now support explicit keyboard activation (`Enter` / `Space` / legacy `Spacebar`) with deterministic close behavior, reducing browser-specific click synthesis variance.
 - Dropdown activation-repeat parity: repeated item activation keydown (`event.repeat=true`) now no-ops selection to prevent long-press duplicate action dispatch and telemetry jitter.
 - Dropdown shortcut-hint precision parity: actionable menu items now expose `aria-keyshortcuts="Enter Space"` while disabled entries omit hints to avoid AT/QA false affordance.

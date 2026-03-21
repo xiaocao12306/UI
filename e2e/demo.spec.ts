@@ -2020,6 +2020,27 @@ test("prioritizes focused toast when dismissing stacked notifications with Escap
   await expect(secondToast).toBeVisible();
 });
 
+test("prioritizes hovered toast when dismissing stacked notifications with Escape", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Trigger stacked toasts" }).click();
+
+  const firstToast = page.getByRole("status", { name: "Sync started" });
+  const secondToast = page.getByRole("status", { name: "Sync completed" });
+  await expect(firstToast).toBeVisible();
+  await expect(secondToast).toBeVisible();
+
+  await firstToast.evaluate((node) => {
+    node.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+  });
+  await page.keyboard.press("Escape");
+
+  await expect(firstToast).toBeHidden();
+  await expect(secondToast).toBeVisible();
+});
+
 test("keeps blocking toast open on Escape until explicit dismiss", async ({ page }) => {
   await page.goto("/");
 

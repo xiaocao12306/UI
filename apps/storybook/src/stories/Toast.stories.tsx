@@ -598,7 +598,28 @@ export const FocusedToastEscapesFirst: Story = {
       </p>
       <EscapeStackOrderDemo />
     </ToastShowcase>
-  )
+  ),
+  play: async ({ canvasElement }) => {
+    const doc = canvasElement.ownerDocument;
+    const canvas = within(doc.body);
+
+    const first = await canvas.findByRole("status", { name: "First notice" });
+    const second = await canvas.findByRole("status", { name: "Second notice" });
+
+    await within(first).findByRole("button", { name: "Close toast" }).then((button) => button.focus());
+    fireEvent.keyDown(doc, { key: "Escape" });
+    await expect(canvas.queryByRole("status", { name: "First notice" })).not.toBeInTheDocument();
+    await expect(canvas.getByRole("status", { name: "Second notice" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Reopen stack" }));
+    const reopenedFirst = await canvas.findByRole("status", { name: "First notice" });
+    await canvas.findByRole("status", { name: "Second notice" });
+
+    fireEvent.mouseEnter(reopenedFirst);
+    fireEvent.keyDown(doc, { key: "Escape" });
+    await expect(canvas.queryByRole("status", { name: "First notice" })).not.toBeInTheDocument();
+    await expect(canvas.getByRole("status", { name: "Second notice" })).toBeInTheDocument();
+  }
 };
 
 function EscapePreemptedDemo() {
