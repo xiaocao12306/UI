@@ -58,6 +58,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat blank checkbox `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Keep checkbox shortcut hints precise: expose `aria-keyshortcuts="Space"` only while actionable, and remove shortcut metadata when checkbox is disabled.
 - Keep select shortcut hints precise: expose `aria-keyshortcuts="ArrowDown ArrowUp"` only while actionable, and remove shortcut metadata when select is disabled.
+- Keep native select `<option value>` entries unique and stable; development builds warn on duplicate values so selected-option semantics stay deterministic.
 - Treat blank select `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank textarea `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank switch `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.

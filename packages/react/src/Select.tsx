@@ -21,11 +21,13 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
     "aria-label": rawAriaLabel,
     "aria-labelledby": rawAriaLabelledBy,
     "aria-keyshortcuts": rawAriaKeyShortcuts,
+    children,
     ...restProps
   },
   ref
 ) {
   const selectRef = React.useRef<HTMLSelectElement | null>(null);
+  const warnedDuplicateOptionValuesSignatureRef = React.useRef<string | null>(null);
   const [focused, setFocused] = React.useState(false);
   const [focusVisible, setFocusVisible] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
@@ -38,6 +40,39 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
   const ariaKeyShortcuts = isInteractionDisabled
     ? undefined
     : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "ArrowDown ArrowUp";
+  const optionValues = React.useMemo(() => collectSelectOptionValues(children), [children]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const duplicateValues = new Set<string>();
+    const seenValues = new Set<string>();
+    optionValues.forEach((value) => {
+      if (seenValues.has(value)) {
+        duplicateValues.add(value);
+      }
+      seenValues.add(value);
+    });
+
+    if (duplicateValues.size === 0) {
+      warnedDuplicateOptionValuesSignatureRef.current = null;
+      return;
+    }
+
+    const signature = Array.from(duplicateValues).sort().join("|");
+    if (warnedDuplicateOptionValuesSignatureRef.current === signature) {
+      return;
+    }
+    warnedDuplicateOptionValuesSignatureRef.current = signature;
+
+    console.warn(
+      `[Select] Duplicate option values detected: ${Array.from(duplicateValues)
+        .map((item) => `"${item}"`)
+        .join(", ")}. Values should be unique to keep native selected-option semantics deterministic.`
+    );
+  }, [optionValues]);
 
   React.useEffect(() => {
     if (!isInteractionDisabled) {
@@ -165,7 +200,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
         setHovered(false);
         onMouseLeave?.(event);
       }}
-    />
+    >
+      {children}
+    </select>
   );
 });
 
@@ -184,4 +221,41 @@ function resolveFocusVisibleState(target: HTMLSelectElement, fallback: boolean) 
   } catch {
     return fallback;
   }
+}
+
+function collectSelectOptionValues(children: React.ReactNode) {
+  const values: string[] = [];
+  const collect = (nodes: React.ReactNode) => {
+    React.Children.forEach(nodes, (node) => {
+      if (!React.isValidElement(node)) {
+        return;
+      }
+
+      const type = typeof node.type === "string" ? node.type : null;
+      if (type === "option") {
+        const optionValue = resolveOptionValue((node.props as { value?: unknown }).value);
+        if (optionValue !== undefined) {
+          values.push(optionValue);
+        }
+        return;
+      }
+
+      if (type === "optgroup") {
+        collect((node.props as { children?: React.ReactNode }).children);
+        return;
+      }
+
+      collect((node.props as { children?: React.ReactNode }).children);
+    });
+  };
+
+  collect(children);
+  return values;
+}
+
+function resolveOptionValue(value: unknown) {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+  return String(value);
 }

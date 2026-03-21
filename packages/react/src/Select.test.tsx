@@ -16,6 +16,29 @@ describe("Select", () => {
     expect(select).toHaveAttribute("data-aurora-reduced-motion", "transition");
   });
 
+  it("warns when duplicate select option values are provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Select aria-label="Duplicate value select">
+          <option value="react">React stable</option>
+          <option value="react">React legacy</option>
+        </Select>
+      );
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining('Duplicate option values detected: "react"')
+      );
+      expect(warnSpy).toHaveBeenLastCalledWith(expect.stringContaining("selected-option semantics"));
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("exposes default shortcut hints only when actionable", () => {
     render(
       <div>
