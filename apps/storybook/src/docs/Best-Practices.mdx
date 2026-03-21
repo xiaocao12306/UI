@@ -181,6 +181,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For icon/non-text command labels, provide `commands[].ariaLabel` unless the rich label already exposes inline `aria-label`; development builds warn when both are missing.
 - For non-text command labels, ensure `textValue` or searchable `keywords` are present; development builds warn when both are missing.
 - Provide empty-state guidance when no command matches the query.
+- Use `loading` + `loadingContent` during async command fetch so stale options are hidden and command execution/navigation is paused until results are ready.
 - Track user query updates with `onQueryChange` for downstream telemetry.
 - Treat `onQueryChange("")` on palette close as the telemetry reset signal so external state mirrors the internal query lifecycle.
 - Keep live-region narration aligned with actionable commands (enabled matches), not just visible results.
@@ -218,6 +219,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={StreamingCodeBlockStories.Default} />
 <Canvas of={CommandPaletteStories.AiInteractionFlow} />
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
+<Canvas of={CommandPaletteStories.LoadingState} />
 <Canvas of={CommandPaletteStories.CloseReasonTelemetry} />
 <Canvas of={CommandPaletteStories.DisabledCommandGuard} />
 <Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />

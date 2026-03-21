@@ -558,6 +558,57 @@ test("keeps command palette open after command select in persistent mode", async
   await expect(palette).toBeHidden();
 });
 
+test("holds command palette in loading mode and resumes command execution after sync", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  const loadingSwitch = page.getByRole("switch", { name: "Simulate command loading state" });
+  await loadingSwitch.click();
+  await expect(loadingSwitch).toHaveAttribute("aria-checked", "true");
+
+  const closeReasonTelemetry = page.getByTestId("palette-close-reason-telemetry");
+  await expect(closeReasonTelemetry).toHaveText("none");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  const searchInput = palette.getByRole("combobox", { name: "Search commands" });
+
+  await expect(palette).toBeVisible();
+  await expect(searchInput).toHaveAttribute("aria-busy", "true");
+  await expect(searchInput).toHaveAttribute("aria-expanded", "false");
+  await expect(searchInput).toHaveAttribute("aria-keyshortcuts", "Escape");
+  await expect(palette.getByTestId("command-palette-loading-content")).toHaveText(
+    "Syncing command index..."
+  );
+  await expect(palette.getByRole("option", { name: "Open Drawer" })).toBeHidden();
+
+  await searchInput.press("ArrowDown");
+  await searchInput.press("Enter");
+  await expect(palette).toBeVisible();
+  await expect(closeReasonTelemetry).toHaveText("none");
+
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeHidden();
+
+  await loadingSwitch.click();
+  await expect(loadingSwitch).toHaveAttribute("aria-checked", "false");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  await expect(palette).toBeVisible();
+  await expect(searchInput).not.toHaveAttribute("aria-busy");
+  await expect(searchInput).toHaveAttribute(
+    "aria-keyshortcuts",
+    "ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
+  );
+
+  await searchInput.fill("drawer");
+  await searchInput.press("ArrowDown");
+  await searchInput.press("Enter");
+  await expect(palette).toBeHidden();
+  await expect(page.getByRole("dialog", { name: "Drawer Example" })).toBeVisible();
+});
+
 test("clears palette query on first Escape before dismiss when enabled", async ({ page }) => {
   await page.goto("/");
 

@@ -28,6 +28,8 @@ export type CommandPaletteProps = {
   onPointerDownOutside?: (event: PointerEvent) => void;
   closeLabel?: string;
   placeholder?: string;
+  loading?: boolean;
+  loadingContent?: React.ReactNode;
   emptyMessage?: React.ReactNode;
   onQueryChange?: (query: string) => void;
   onCloseReason?: (reason: CommandPaletteCloseReason) => void;
@@ -61,6 +63,8 @@ export function CommandPalette({
   onPointerDownOutside,
   closeLabel,
   placeholder = "Search commands...",
+  loading = false,
+  loadingContent = "Loading commands...",
   emptyMessage = "No commands found.",
   onQueryChange,
   onCloseReason,
@@ -81,6 +85,10 @@ export function CommandPalette({
   const resolvedSearchAriaLabel = resolveNonEmptyLabel(searchAriaLabel, "Search commands");
   const resolvedResultsAriaLabel = resolveNonEmptyLabel(resultsAriaLabel, "Command results");
   const resolvedCloseLabel = resolveNonEmptyLabel(closeLabel, "Close dialog");
+  const resolvedLoadingStatusText = React.useMemo(
+    () => resolveLoadingStatusText(loadingContent),
+    [loadingContent]
+  );
 
   const markCloseReason = React.useCallback(
     (reason: CommandPaletteCloseReason) => {
@@ -254,27 +262,33 @@ export function CommandPalette({
     () => filtered.reduce((count, command) => (command.disabled ? count : count + 1), 0),
     [filtered]
   );
-  const hasResults = filtered.length > 0;
+  const canNavigateCommandList = !loading && enabledCount > 0;
+  const hasResults = !loading && filtered.length > 0;
   const searchKeyShortcuts = React.useMemo(() => {
     const shortcuts: string[] = [];
-    if (enabledCount > 0) {
+    if (canNavigateCommandList) {
       shortcuts.push("ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp", "Enter");
     }
     if (closeOnEscape || (clearQueryOnEscape && query.length > 0)) {
       shortcuts.push("Escape");
     }
     return shortcuts.length > 0 ? shortcuts.join(" ") : undefined;
-  }, [clearQueryOnEscape, closeOnEscape, enabledCount, query.length]);
+  }, [canNavigateCommandList, clearQueryOnEscape, closeOnEscape, query.length]);
 
   const resultsStatusText = React.useMemo(
-    () =>
-      getResultsStatusText({
+    () => {
+      if (loading) {
+        return resolvedLoadingStatusText;
+      }
+
+      return getResultsStatusText({
         query,
         visibleCount: filtered.length,
         enabledCount,
         totalCount: commands.length
-      }),
-    [commands.length, enabledCount, filtered.length, getResultsStatusText, query]
+      });
+    },
+    [commands.length, enabledCount, filtered.length, getResultsStatusText, loading, query, resolvedLoadingStatusText]
   );
 
   const enabledIndices = React.useMemo(
@@ -434,12 +448,13 @@ export function CommandPalette({
           ref={inputRef}
           data-autofocus=""
           role="combobox"
+          aria-busy={loading || undefined}
           aria-expanded={hasResults}
           aria-haspopup="listbox"
           aria-autocomplete="list"
           aria-controls={hasResults ? listId : undefined}
           aria-activedescendant={
-            safeActiveIndex >= 0 ? `${listId}-option-${safeActiveIndex}` : undefined
+            !loading && safeActiveIndex >= 0 ? `${listId}-option-${safeActiveIndex}` : undefined
           }
           aria-describedby={statusId}
           aria-keyshortcuts={searchKeyShortcuts}
@@ -471,7 +486,7 @@ export function CommandPalette({
             }
 
             if (event.key === "ArrowDown") {
-              if (enabledCount === 0) {
+              if (!canNavigateCommandList) {
                 return;
               }
               event.preventDefault();
@@ -480,7 +495,7 @@ export function CommandPalette({
             }
 
             if (event.key === "ArrowUp") {
-              if (enabledCount === 0) {
+              if (!canNavigateCommandList) {
                 return;
               }
               event.preventDefault();
@@ -489,7 +504,7 @@ export function CommandPalette({
             }
 
             if (event.key === "Home") {
-              if (enabledCount === 0) {
+              if (!canNavigateCommandList) {
                 return;
               }
               event.preventDefault();
@@ -498,7 +513,7 @@ export function CommandPalette({
             }
 
             if (event.key === "End") {
-              if (enabledCount === 0) {
+              if (!canNavigateCommandList) {
                 return;
               }
               event.preventDefault();
@@ -507,7 +522,7 @@ export function CommandPalette({
             }
 
             if (event.key === "PageDown") {
-              if (enabledCount === 0) {
+              if (!canNavigateCommandList) {
                 return;
               }
               event.preventDefault();
@@ -516,7 +531,7 @@ export function CommandPalette({
             }
 
             if (event.key === "PageUp") {
-              if (enabledCount === 0) {
+              if (!canNavigateCommandList) {
                 return;
               }
               event.preventDefault();
@@ -524,7 +539,7 @@ export function CommandPalette({
               return;
             }
 
-            if (event.key === "Enter" && safeActiveIndex >= 0) {
+            if (event.key === "Enter" && !loading && safeActiveIndex >= 0) {
               event.preventDefault();
               if (event.repeat) {
                 return;
@@ -552,7 +567,14 @@ export function CommandPalette({
         >
           {resultsStatusText}
         </p>
-        {hasResults ? (
+        {loading ? (
+          <p
+            data-testid="command-palette-loading-content"
+            style={{ margin: 0, color: "var(--aurora-text-secondary)" }}
+          >
+            {loadingContent}
+          </p>
+        ) : hasResults ? (
           <div
             id={listId}
             ref={listRef}
@@ -713,6 +735,11 @@ function defaultGetResultsStatusText({
   }
 
   return `${visibleCount} command${visibleCount === 1 ? "" : "s"} found for "${normalized}".`;
+}
+
+function resolveLoadingStatusText(loadingContent: React.ReactNode) {
+  const normalized = normalizeReadableCommandText(getReadableCommandLabelText(loadingContent));
+  return normalized.length > 0 ? normalized : "Loading commands...";
 }
 
 function getReadableCommandLabelText(node: React.ReactNode): string {

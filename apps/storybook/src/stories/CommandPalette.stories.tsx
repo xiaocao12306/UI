@@ -145,6 +145,50 @@ function QueryTelemetryPalette() {
   );
 }
 
+function LoadingStatePalette() {
+  const [open, setOpen] = React.useState(true);
+  const [loading, setLoading] = React.useState(true);
+  const [selectedCount, setSelectedCount] = React.useState(0);
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <p style={storyMutedTextStyle}>
+        Executed commands while ready:{" "}
+        <strong data-testid="loading-selection-count" style={storyEmphasisTextStyle}>
+          {selectedCount}
+        </strong>
+      </p>
+      <Button size="sm" variant="outline" onClick={() => setLoading((current) => !current)}>
+        {loading ? "Finish loading commands" : "Re-enable loading commands"}
+      </Button>
+      <Button size="sm" variant="ghost" onClick={() => setOpen(true)}>
+        Reopen loading palette
+      </Button>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        loading={loading}
+        loadingContent="Syncing AI workflow commands..."
+        closeOnSelect={false}
+        commands={[
+          {
+            key: "open-theme",
+            label: "Open Theme Pack",
+            keywords: ["theme"],
+            onSelect: () => setSelectedCount((count) => count + 1)
+          },
+          {
+            key: "run-e2e",
+            label: "Run E2E Smoke",
+            keywords: ["test"],
+            onSelect: () => setSelectedCount((count) => count + 1)
+          }
+        ]}
+      />
+    </StoryFullscreenFrame>
+  );
+}
+
 function CloseReasonTelemetryPalette() {
   const [open, setOpen] = React.useState(true);
   const [lastReason, setLastReason] = React.useState("none");
@@ -769,6 +813,45 @@ export const QueryTelemetry: Story = {
     await userEvent.keyboard("{ArrowDown}{Enter}");
     await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
     await expect(canvas.getByTestId("query-telemetry")).toHaveTextContent("N/A");
+  }
+};
+
+export const LoadingState: Story = {
+  render: () => <LoadingStatePalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    let input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await expect(canvas.getByTestId("loading-selection-count")).toHaveTextContent("0");
+    await expect(input).toHaveAttribute("aria-busy", "true");
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "Escape");
+    await expect(canvas.getByTestId("command-palette-loading-content")).toHaveTextContent(
+      "Syncing AI workflow commands..."
+    );
+    await expect(
+      canvas.queryByRole("listbox", { name: "Command results" })
+    ).not.toBeInTheDocument();
+
+    await userEvent.keyboard("{ArrowDown}{Enter}");
+    await expect(canvas.getByTestId("loading-selection-count")).toHaveTextContent("0");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Finish loading commands" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Reopen loading palette" }));
+    input = await canvas.findByRole("combobox", { name: "Search commands" });
+    await expect(input).not.toHaveAttribute("aria-busy");
+    await expect(input).toHaveAttribute("aria-expanded", "true");
+    await expect(input).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
+    );
+    await expect(canvas.getByRole("listbox", { name: "Command results" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{ArrowDown}{Enter}");
+    await expect(canvas.getByTestId("loading-selection-count")).toHaveTextContent("1");
   }
 };
 

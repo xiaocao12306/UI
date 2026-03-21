@@ -680,6 +680,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `title` / `description` | `ReactNode` | Localizable dialog heading and supporting copy for command context. |
 | `searchAriaLabel` | `string` | Localizable accessible name for the search combobox; blank values are ignored and fallback to `Search commands`. |
 | `placeholder` | `string` | Custom search input hint text for product-specific command vocabulary. |
+| `loading` / `loadingContent` | `boolean` / `ReactNode` | Loading mode surfaces pending copy, sets combobox `aria-busy`, and suppresses listbox mount plus command-navigation/selection interactions until command data is ready. |
 | `closeLabel` | `string` | Localizable close-button accessible name; blank values are ignored and fallback to `Close dialog`. |
 | dismiss key hints | `aria-keyshortcuts="Escape"` when `closeOnEscape` is enabled | Inherited from dialog dismiss policy so QA/AT tooling can discover Escape dismiss affordance only when that behavior is actionable. |
 | close-button key hints | `aria-keyshortcuts="Enter Space"` | Inherited from dialog close affordance so QA/AT tooling can discover deterministic keyboard dismiss activation keys. |
@@ -699,7 +700,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | combobox relation | conditional `aria-controls` + listbox mount | Search input references listbox only while filtered results exist, avoiding empty-state dangling IDs. |
 | focus model | combobox + `aria-activedescendant` | Options stay outside tab order to keep keyboard flow anchored on the search input. |
 | activedescendant validity | enabled option only | Active option references are sanitized during command/query updates so combobox never points to missing or disabled options, and `aria-activedescendant` is cleared when filtered results are empty. |
-| search key hints | `aria-keyshortcuts="ArrowDown ArrowUp Home End PageDown PageUp [Enter] [Escape]"` | Combobox exposes command-navigation metadata for QA/AT discoverability; `Enter` hint is omitted when no enabled command is currently actionable, and `Escape` hint is omitted when both `closeOnEscape` and `clearQueryOnEscape` are disabled. |
+| search key hints | `aria-keyshortcuts="ArrowDown ArrowUp Home End PageDown PageUp [Enter] [Escape]"` | Combobox exposes command-navigation metadata for QA/AT discoverability; in loading mode only `Escape` remains when applicable, `Enter` hint is omitted when no enabled command is currently actionable, and `Escape` hint is omitted when both `closeOnEscape` and `clearQueryOnEscape` are disabled. |
 | Enter repeat guard | ignores repeated keydown | Command execution ignores repeated `Enter` (`event.repeat=true`) so long-press does not trigger duplicate actions or telemetry noise. |
 | Escape repeat guard | ignores repeated keydown | Repeated `Escape` (`event.repeat=true`) is ignored for both query-clear and dismiss paths so long-press does not trigger accidental close or duplicate telemetry. |
 | option activation guard | ignores `Ctrl/Meta/Alt + Enter/Space` and repeated option activation keydown | Listbox option activation stays scoped to unmodified, non-repeat keys so host shortcuts and long-press do not trigger duplicate command execution. |
@@ -710,6 +711,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Escape priority | preempted events skip palette hook/dismiss | If higher-level handlers already `preventDefault()` Escape, palette keeps dialog open and does not fire `onEscapeKeyDown`. |
 
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
+<Canvas of={CommandPaletteStories.LoadingState} />
 <Canvas of={CommandPaletteStories.CloseReasonTelemetry} />
 <Canvas of={CommandPaletteStories.NestedDismissOrder} />
 <Canvas of={CommandPaletteStories.EmptyStateAriaControlsLifecycle} />

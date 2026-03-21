@@ -1242,6 +1242,58 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("status")).toHaveTextContent('No commands match "no-match".');
   });
 
+  it("renders loading state and suppresses command-list interactions until commands are ready", () => {
+    const onSelect = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        loading
+        loadingContent="Syncing command index..."
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings", onSelect },
+          { key: "open-changelog", label: "Open Changelog", onSelect }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    expect(input).toHaveAttribute("aria-busy", "true");
+    expect(input).toHaveAttribute("aria-expanded", "false");
+    expect(input).not.toHaveAttribute("aria-controls");
+    expect(input).not.toHaveAttribute("aria-activedescendant");
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Escape");
+
+    expect(screen.getAllByText("Syncing command index...")).toHaveLength(2);
+    expect(screen.queryByRole("listbox", { name: "Command results" })).toBeNull();
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "ArrowUp" });
+    fireEvent.keyDown(input, { key: "PageDown" });
+    fireEvent.keyDown(input, { key: "PageUp" });
+    fireEvent.keyDown(input, { key: "Home" });
+    fireEvent.keyDown(input, { key: "End" });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(input).not.toHaveAttribute("aria-activedescendant");
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+
+  it("falls back loading narration when loadingContent has no readable text", () => {
+    render(
+      <CommandPalette
+        open
+        loading
+        loadingContent={<span aria-hidden="true">*</span>}
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("Loading commands...");
+  });
+
   it("ignores arrow and page navigation when all filtered commands are disabled", () => {
     const onOpenChange = vi.fn();
 

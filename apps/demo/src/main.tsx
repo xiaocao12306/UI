@@ -466,6 +466,7 @@ function App() {
   const [paletteOpen, setPaletteOpen] = React.useState(false);
   const [paletteBlocking, setPaletteBlocking] = React.useState(false);
   const [paletteDismissGuard, setPaletteDismissGuard] = React.useState(false);
+  const [paletteLoading, setPaletteLoading] = React.useState(false);
   const [palettePersistent, setPalettePersistent] = React.useState(false);
   const [paletteEscapeClearsQuery, setPaletteEscapeClearsQuery] = React.useState(true);
   const [paletteQueryTelemetry, setPaletteQueryTelemetry] = React.useState("");
@@ -1585,6 +1586,12 @@ function App() {
                     description="Use onEscapeKeyDown/onPointerDownOutside with preventDefault() while enabled."
                   />
                   <Switch
+                    checked={paletteLoading}
+                    onCheckedChange={setPaletteLoading}
+                    label="Simulate command loading state"
+                    description="Show pending command sync copy and pause list navigation/selection."
+                  />
+                  <Switch
                     checked={palettePersistent}
                     onCheckedChange={setPalettePersistent}
                     label="Keep palette open after command select"
@@ -1714,6 +1721,8 @@ function App() {
             clearQueryOnEscape={paletteEscapeClearsQuery}
             closeOnEscape={!paletteBlocking}
             closeOnOutsidePointer={!paletteBlocking}
+            loading={paletteLoading}
+            loadingContent="Syncing command index..."
             onQueryChange={setPaletteQueryTelemetry}
             onCloseReason={handlePaletteCloseReason}
             onEscapeKeyDown={(event) => {
