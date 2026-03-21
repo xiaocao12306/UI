@@ -666,6 +666,43 @@ test("ignores command palette navigation and selection keys during IME compositi
   await expect(page.getByRole("dialog", { name: "Dialog Example" })).toBeVisible();
 });
 
+test("keeps command option activation stable for modified and repeated keydown", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  const searchInput = palette.getByRole("combobox", { name: "Search commands" });
+  await expect(palette).toBeVisible();
+  await searchInput.fill("drawer");
+
+  const drawerOption = palette.getByRole("option", { name: "Open Drawer" });
+  const drawerDialog = page.getByRole("dialog", { name: "Drawer Example" });
+  await expect(drawerDialog).toBeHidden();
+
+  await drawerOption.evaluate((element) => {
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Enter", ctrlKey: true, bubbles: true, cancelable: true })
+    );
+  });
+  await drawerOption.evaluate((element) => {
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Enter", repeat: true, bubbles: true, cancelable: true })
+    );
+  });
+
+  await expect(palette).toBeVisible();
+  await expect(drawerDialog).toBeHidden();
+
+  await drawerOption.evaluate((element) => {
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true })
+    );
+  });
+
+  await expect(palette).toBeHidden();
+  await expect(drawerDialog).toBeVisible();
+});
+
 test("does not close command palette when disabled command is clicked", async ({ page }) => {
   await page.goto("/");
 
