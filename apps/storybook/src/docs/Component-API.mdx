@@ -741,7 +741,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 | Prop | Type | Notes |
 | --- | --- | --- |
-| `onSubmit` | `(prompt: string) => void` | Triggered by send button or Ctrl/Cmd + Enter shortcut (ignored during IME composition). |
+| `onSubmit` | `(prompt: string) => void` | Triggered by send button or Ctrl/Cmd + Enter shortcut; ignored during IME composition and legacy fallback paths that only expose `keyCode=229`. |
 | `submitting` | `boolean` | Locks input + button and updates live hint during AI request execution. |
 | `placeholder` | `string` | Optional prompt guidance text. |
 

@@ -48,7 +48,7 @@ export function PromptInput({ onSubmit, submitting, placeholder = "Type your pro
           composingRef.current = false;
         }}
         onKeyDown={(event) => {
-          if (composingRef.current || event.nativeEvent.isComposing) {
+          if (composingRef.current || isComposingPromptKeyEvent(event)) {
             return;
           }
 
@@ -67,4 +67,9 @@ export function PromptInput({ onSubmit, submitting, placeholder = "Type your pro
       </div>
     </div>
   );
+}
+
+function isComposingPromptKeyEvent(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+  const nativeEvent = event.nativeEvent as KeyboardEvent & { isComposing?: boolean; keyCode?: number };
+  return Boolean(nativeEvent.isComposing) || nativeEvent.keyCode === 229;
 }

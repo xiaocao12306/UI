@@ -65,4 +65,25 @@ describe("PromptInput", () => {
     fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
     expect(onSubmit).toHaveBeenCalledWith("中文输入草稿");
   });
+
+  it("does not submit on Ctrl+Enter when only legacy IME keyCode is present", () => {
+    const onSubmit = vi.fn();
+
+    render(<PromptInput onSubmit={onSubmit} />);
+    const textbox = screen.getByRole("textbox", { name: "Prompt input" });
+
+    fireEvent.change(textbox, { target: { value: "Legacy fallback draft" } });
+    const legacyImeSubmitEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(legacyImeSubmitEvent, "keyCode", { value: 229 });
+    textbox.dispatchEvent(legacyImeSubmitEvent);
+    expect(onSubmit).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
+    expect(onSubmit).toHaveBeenCalledWith("Legacy fallback draft");
+  });
 });

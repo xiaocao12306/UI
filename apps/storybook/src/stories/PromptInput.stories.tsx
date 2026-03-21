@@ -41,6 +41,17 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+function dispatchLegacyImeCtrlEnter(element: HTMLElement) {
+  const event = new KeyboardEvent("keydown", {
+    key: "Enter",
+    ctrlKey: true,
+    bubbles: true,
+    cancelable: true
+  });
+  Object.defineProperty(event, "keyCode", { value: 229 });
+  element.dispatchEvent(event);
+}
+
 export const Default: Story = {};
 
 function InteractivePromptInput() {
@@ -85,6 +96,8 @@ export const WithAiRequestState: Story = {
     fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
     await expect(canvas.getByText(/Submission count:/)).toHaveTextContent("Submission count: 0");
     fireEvent.compositionEnd(textbox);
+    dispatchLegacyImeCtrlEnter(textbox);
+    await expect(canvas.getByText(/Submission count:/)).toHaveTextContent("Submission count: 0");
 
     await userEvent.keyboard("{Control>}{Enter}{/Control}");
     await expect(canvas.getByText("Draft release retrospective")).toBeInTheDocument();

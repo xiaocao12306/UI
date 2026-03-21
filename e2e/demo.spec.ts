@@ -2448,8 +2448,22 @@ test("updates ai section prompt and reasoning trace", async ({ page }) => {
 
   const aiSection = page.locator("#ai-components");
   const promptInput = aiSection.getByRole("textbox", { name: "Prompt input" });
+  const userMessages = aiSection.getByRole("article", { name: "User message" });
+  const initialMessageCount = await userMessages.count();
 
   await promptInput.fill("Generate release rollout checklist");
+  await promptInput.evaluate((element) => {
+    const event = new KeyboardEvent("keydown", {
+      key: "Enter",
+      ctrlKey: true,
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(event, "keyCode", { value: 229 });
+    element.dispatchEvent(event);
+  });
+  await expect(userMessages).toHaveCount(initialMessageCount);
+
   await promptInput.press("Control+Enter");
 
   await expect(aiSection.getByRole("article", { name: "User message" })).toContainText(
