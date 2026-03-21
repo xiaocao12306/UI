@@ -866,6 +866,7 @@
   - Dropdown 跨文档 Tab 退焦迁移验收补齐（2026-03-22 latest+183：补齐 dropdown 在 iframe ownerDocument 场景下 `Tab`/`Shift+Tab` 退焦关闭后的焦点迁移回归，锁定跨文档菜单关闭后焦点会稳定落到相邻控件；同步 `Dropdown.test.tsx`、Storybook `ShiftTabDismissToPreviousControl` 与 Component API/Best Practices 文档，并复验 `pnpm --filter @aurora-ui/react exec vitest run src/Dropdown.test.tsx`、`pnpm storybook:test:grep \"Dropdown.stories.tsx\"` 与 docs parity 相关检查通过）
   - Popover 边界 Tab 退焦迁移验收补齐（2026-03-22 latest+184：补齐 popover 在内容边界 `Tab`/`Shift+Tab` 关闭并迁移焦点的回归，锁定“内容内 Tab 继续流动、边界 Tab 才关闭并按文档顺序迁移”的键盘一致性；同步 `Popover.tsx`、`Popover.test.tsx`、Storybook `TabDismissToNextControl` / `ShiftTabDismissToPreviousControl` / `CloseReasonTelemetry` 与 Component API/Best Practices 文档，并复验 `pnpm --filter @aurora-ui/react exec vitest run src/Popover.test.tsx`、`pnpm storybook:test:grep \"Popover.stories.tsx\"` 与 docs parity 相关检查通过）
   - Demo Popover Tab 退焦验收补齐（2026-03-22 latest+185：新增 demo E2E 覆盖 popover `Tab` 关闭 telemetry 与 `Shift+Tab` 反向焦点迁移，锁定真实页面中 popover 与 launcher 邻接焦点流的一致性；同步 `e2e/demo.spec.ts` 并复验 `pnpm demo:e2e:grep \"popover close reason telemetry|shift-tabs out of popover boundary\"` 通过）
+  - Demo Release Feed 成品化收口（2026-03-22 latest+186：升级 Release Activity Feed 为品牌化卡片流（版本标签 + 状态标记 + 层级化文案），提升数据导航区产品观感与信息可扫读性；同步 `apps/demo/src/main.tsx`、`apps/demo/src/main.css` 与 `apps/demo/dist`，并复验 `pnpm demo:build` 与 `pnpm demo:e2e:grep \"renders demo homepage|shows production-readiness pills\"` 通过）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

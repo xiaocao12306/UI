@@ -75,6 +75,17 @@ const readinessRows = [
   { component: "Dialog", status: "Stable", coverage: 88 },
   { component: "StreamingCodeBlock", status: "Beta", coverage: 73 }
 ];
+
+function parseReleaseEntry(entry: string) {
+  const [versionSegment, ...detailSegments] = entry.split(":");
+  const version = versionSegment?.trim() || "release";
+  const detail = detailSegments.join(":").trim();
+
+  return {
+    version,
+    detail: detail.length > 0 ? detail : entry
+  };
+}
 const mutedBodyStyle: React.CSSProperties = {
   margin: 0,
   color: "var(--aurora-text-secondary)",
@@ -1262,12 +1273,21 @@ function App() {
                       dashboard lane.
                     </p>
                   </div>
-                  <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 6 }}>
-                    {visibleFeed.map((entry) => (
-                      <li key={entry} style={{ color: "var(--aurora-text-secondary)" }}>
-                        {entry}
-                      </li>
-                    ))}
+                  <ul className="demo-release-feed" aria-label="Latest release activity">
+                    {visibleFeed.map((entry) => {
+                      const parsedEntry = parseReleaseEntry(entry);
+                      return (
+                        <li key={entry} className="demo-release-feed-item">
+                          <div className="demo-release-feed-header">
+                            <Tag className="demo-status-chip demo-status-chip-tag">{parsedEntry.version}</Tag>
+                            <span className="demo-release-feed-marker" aria-hidden="true">
+                              deployment-ready
+                            </span>
+                          </div>
+                          <p className="demo-release-feed-body">{parsedEntry.detail}</p>
+                        </li>
+                      );
+                    })}
                   </ul>
                   <Pagination
                     ariaLabel="Release feed pagination"
