@@ -122,6 +122,16 @@ describe("Checkbox", () => {
     expect(checkbox).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.blur(checkbox);
+    fireEvent.mouseDown(document.body, { button: 2 });
+    fireEvent.focus(checkbox);
+    expect(checkbox).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(checkbox);
+    fireEvent.mouseDown(document.body, { button: 0, ctrlKey: true });
+    fireEvent.focus(checkbox);
+    expect(checkbox).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(checkbox);
     fireEvent.mouseDown(document.body, { button: 0 });
     fireEvent.focus(checkbox);
     expect(checkbox).not.toHaveAttribute("data-focus-visible");

@@ -218,6 +218,16 @@ describe("RadioGroup", () => {
     expect(medium).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.blur(medium);
+    fireEvent.mouseDown(document.body, { button: 2 });
+    fireEvent.focus(medium);
+    expect(medium).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(medium);
+    fireEvent.mouseDown(document.body, { button: 0, ctrlKey: true });
+    fireEvent.focus(medium);
+    expect(medium).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(medium);
     fireEvent.mouseDown(document.body, { button: 0 });
     fireEvent.focus(medium);
     expect(medium).not.toHaveAttribute("data-focus-visible");

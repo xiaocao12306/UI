@@ -114,6 +114,9 @@ export function RadioGroup({
       if ("button" in event && typeof event.button === "number" && event.button !== 0) {
         return;
       }
+      if ("ctrlKey" in event && event.ctrlKey) {
+        return;
+      }
       focusVisibleIntentRef.current = false;
     };
 

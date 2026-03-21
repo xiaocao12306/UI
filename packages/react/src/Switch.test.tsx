@@ -160,6 +160,16 @@ describe("Switch", () => {
     expect(control).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.blur(control);
+    fireEvent.mouseDown(document.body, { button: 2 });
+    fireEvent.focus(control);
+    expect(control).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(control);
+    fireEvent.mouseDown(document.body, { button: 0, ctrlKey: true });
+    fireEvent.focus(control);
+    expect(control).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(control);
     fireEvent.mouseDown(document.body, { button: 0 });
     fireEvent.focus(control);
     expect(control).not.toHaveAttribute("data-focus-visible");

@@ -82,6 +82,16 @@ describe("Alert", () => {
     expect(closeButton).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.blur(closeButton);
+    fireEvent.mouseDown(document.body, { button: 2 });
+    fireEvent.focus(closeButton);
+    expect(closeButton).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(closeButton);
+    fireEvent.mouseDown(document.body, { button: 0, ctrlKey: true });
+    fireEvent.focus(closeButton);
+    expect(closeButton).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(closeButton);
     fireEvent.mouseDown(document.body, { button: 0 });
     fireEvent.focus(closeButton);
     expect(closeButton).not.toHaveAttribute("data-focus-visible");

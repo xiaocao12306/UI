@@ -78,6 +78,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep switch keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep checkbox keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep radio-group keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
+- Keep switch/checkbox/radio owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - Keep date-picker keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep combobox keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - For guarded approval flows, use control-level `onClick(event.preventDefault())` on switch-like toggles to block pointer state mutation while preserving keyboard/readout semantics.
@@ -326,6 +327,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep toast close-button keyboard-intent tracking document-scoped (including iframe hosts) so keyboard re-entry after pointer interactions restores focus-visible fallback consistently.
 - Keep toast close-button owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - Keep alert close-button keyboard-intent tracking document-scoped so keyboard re-entry after pointer interactions restores focus-visible fallback consistently.
+- Keep alert close-button owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - Keep alert close-button keyboard pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); keep `aria-keyshortcuts="Enter Space"` visible for AT/QA discoverability, and ensure `Ctrl/Meta/Alt` chords plus IME composition key paths (`isComposing` / `keyCode=229`) do not trigger pressed visuals.
 - For toast titles without readable text, provide `ariaLabel`; rich title nodes that expose inline `aria-label` are auto-detected, and development builds warn only when both are missing.
 - For high-frequency passive updates, set `live="off"` to reduce assistive-tech interruption while keeping visual toast context.
@@ -388,6 +390,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep modified shortcuts (`Ctrl/Meta/Alt + Home/End/ArrowLeft/ArrowRight`) on host/browser behavior; pagination should only react to unmodified navigation keys.
 - Keep pagination shortcut hints state-aware (`aria-keyshortcuts="[Home] [End] ArrowLeft ArrowRight"`): omit unavailable boundary keys (`Home` on first page, `End` on last page), and omit hints entirely on disabled controls.
 - Keep pagination keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
+- Keep pagination owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - Surface status semantics with tokens instead of custom ad-hoc colors.
 - Keep row actions predictable and keyboard reachable.
 - Ensure tabs support orientation-aware arrows (`Left/Right` or `Up/Down`) plus `Home/End`, and skip disabled entries.
