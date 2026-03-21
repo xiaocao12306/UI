@@ -372,7 +372,7 @@ export function Combobox({
                 aria-disabled={item.disabled || undefined}
                 disabled={item.disabled}
                 onMouseDown={(event) => {
-                  if (event.button !== 0 || item.disabled) {
+                  if (event.button !== 0 || event.ctrlKey || item.disabled) {
                     return;
                   }
                   event.preventDefault();

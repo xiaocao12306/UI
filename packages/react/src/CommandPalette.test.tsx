@@ -1007,6 +1007,15 @@ describe("CommandPalette", () => {
     });
     option.dispatchEvent(primaryMouseDown);
     expect(primaryMouseDown.defaultPrevented).toBe(true);
+
+    const ctrlPrimaryMouseDown = new MouseEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+      ctrlKey: true
+    });
+    option.dispatchEvent(ctrlPrimaryMouseDown);
+    expect(ctrlPrimaryMouseDown.defaultPrevented).toBe(false);
   });
 
   it("prevents primary touch pointerdown default on options to keep combobox focus", () => {

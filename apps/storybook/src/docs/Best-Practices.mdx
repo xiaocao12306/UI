@@ -91,6 +91,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat blank combobox `ariaLabel` as missing so both combobox and listbox names fall back to readable defaults (`Combobox` / `Combobox options`) instead of empty labels.
 - For command-palette `aria-activedescendant` flows, keep `aria-selected` on the active option so screen readers announce current keyboard focus target.
 - For `aria-activedescendant` combobox flows, keep listbox options out of tab order and preserve input focus during pointer selection.
+- For combobox option `mousedown` focus-guards, treat `Ctrl + primary click` as context-click intent and avoid calling `preventDefault()` so context menus and host shortcut flows remain intact.
 - For combobox outside-pointer dismissal, ignore non-primary pointer interactions and honor upstream `pointerdown.preventDefault()` guards so context/right-click and guarded workflows do not collapse the popup unexpectedly.
 - Keep combobox `aria-controls` conditional on listbox visibility (not just focus/open shell) to avoid dangling listbox references in empty-result states.
 - Keep combobox keyboard handling scoped to unmodified keys; `Ctrl/Meta/Alt + Arrow/Home/End/Enter/Escape` should stay on host/browser shortcut behavior.
@@ -243,6 +244,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat repeated `Enter` keydown (`event.repeat`) as no-op for command execution so long-press does not trigger duplicate actions or telemetry noise.
 - Treat repeated `Escape` keydown (`event.repeat`) as no-op for both query-clear and dismiss paths so long-press does not clear/close the palette unexpectedly.
 - Keep option-level activation (`Enter`/`Space`) scoped to unmodified, non-repeat keydown so focused listbox options cannot execute on `Ctrl/Meta/Alt` shortcuts or long-press repeats.
+- Keep command-palette option `mousedown` focus guards primary-only but exclude `Ctrl + primary click` context-click paths so pointer guard logic does not swallow host context interactions.
 - Expose command-palette option `aria-keyshortcuts="Enter Space"` only on actionable options; disabled options should omit shortcut hints to avoid false affordance metadata.
 - Use `PageUp` / `PageDown` for long command sets so keyboard users can jump actionable options in larger steps.
 - Keep `Ctrl/Meta/Alt + ArrowDown/ArrowUp/Home/End/Page/Enter/Escape` on native input behavior; do not hijack modified shortcuts for command navigation or dismiss.

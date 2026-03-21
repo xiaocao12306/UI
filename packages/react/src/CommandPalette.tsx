@@ -628,7 +628,7 @@ export function CommandPalette({
                     event.preventDefault();
                   }}
                   onMouseDown={(event) => {
-                    if (event.button !== 0) {
+                    if (event.button !== 0 || event.ctrlKey) {
                       return;
                     }
                     // Keep combobox input focus while selecting listbox options.

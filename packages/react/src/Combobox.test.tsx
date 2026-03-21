@@ -329,6 +329,24 @@ describe("Combobox", () => {
     expect(input).toHaveFocus();
   });
 
+  it("does not prevent default on ctrl-primary option mousedown", () => {
+    render(<Combobox options={options} onValueChange={() => {}} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    const option = screen.getByRole("option", { name: "React" });
+
+    const ctrlPrimaryMouseDown = new MouseEvent("mousedown", {
+      bubbles: true,
+      cancelable: true,
+      button: 0,
+      ctrlKey: true
+    });
+    option.dispatchEvent(ctrlPrimaryMouseDown);
+
+    expect(ctrlPrimaryMouseDown.defaultPrevented).toBe(false);
+  });
+
   it("tracks keyboard focus-visible intent and clears it only on primary pointer interaction", () => {
     render(<Combobox options={options} onValueChange={() => {}} ariaLabel="Focus-visible combobox" />);
 
