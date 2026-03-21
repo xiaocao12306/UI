@@ -432,6 +432,69 @@ describe("Dropdown", () => {
     expect(screen.queryByRole("menu", { name: "Keyboard Select" })).toBeNull();
   });
 
+  it("deduplicates synthesized keyboard-origin click after menu-item Enter activation", () => {
+    const onSelect = vi.fn();
+    const onCloseReason = vi.fn();
+    const onOpenChange = vi.fn();
+
+    render(
+      <Dropdown
+        open
+        label="Keyboard Click Dedupe"
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        items={[
+          { key: "run", label: "Run", onSelect },
+          { key: "archive", label: "Archive" }
+        ]}
+      />
+    );
+
+    const runItem = screen.getByRole("menuitem", { name: "Run" });
+    fireEvent.keyDown(runItem, { key: "Enter" });
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenLastCalledWith("item-select");
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
+
+    fireEvent.click(runItem, { detail: 0 });
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(onCloseReason).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+  });
+
+  it("expires menu-item keyboard click dedupe latch after window timeout", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-03-21T00:00:00.000Z"));
+
+    try {
+      const onSelect = vi.fn();
+
+      render(
+        <Dropdown
+          open
+          label="Keyboard Dedupe Timeout"
+          onOpenChange={() => {}}
+          items={[
+            { key: "run", label: "Run", onSelect },
+            { key: "archive", label: "Archive" }
+          ]}
+        />
+      );
+
+      const runItem = screen.getByRole("menuitem", { name: "Run" });
+      fireEvent.keyDown(runItem, { key: "Enter" });
+      expect(onSelect).toHaveBeenCalledTimes(1);
+
+      vi.advanceTimersByTime(401);
+      fireEvent.click(runItem, { detail: 0 });
+      expect(onSelect).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("ignores modified menu navigation and activation keys", () => {
     const onSelect = vi.fn();
 

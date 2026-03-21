@@ -26,6 +26,7 @@ export type DropdownProps = {
   onPointerDownOutside?: (event: PointerEvent) => void;
   onCloseReason?: (reason: DropdownCloseReason) => void;
 };
+const dropdownItemKeyboardClickDedupeWindowMs = 400;
 
 function getNextEnabledIndex(items: DropdownItem[], currentIndex: number, direction: 1 | -1) {
   if (items.length === 0) {
@@ -156,6 +157,10 @@ export function Dropdown({
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const itemRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const typeaheadStateRef = React.useRef<{ query: string; timestamp: number }>({ query: "", timestamp: 0 });
+  const keyboardActivationItemKeyRef = React.useRef<string | null>(null);
+  const keyboardActivationTimestampRef = React.useRef(0);
+  const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
+  const keyboardActivationTimerWindowRef = React.useRef<Window | null>(null);
   const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
   const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const warnedMissingTextValueSignatureRef = React.useRef<string | null>(null);
@@ -182,6 +187,24 @@ export function Dropdown({
       setOpen(false);
     },
     [onCloseReason, setOpen]
+  );
+
+  const clearKeyboardActivationLatch = React.useCallback(() => {
+    keyboardActivationItemKeyRef.current = null;
+    keyboardActivationTimestampRef.current = 0;
+    if (keyboardActivationResetTimerRef.current !== null) {
+      const timerWindow = keyboardActivationTimerWindowRef.current ?? window;
+      timerWindow.clearTimeout(keyboardActivationResetTimerRef.current);
+      keyboardActivationResetTimerRef.current = null;
+    }
+    keyboardActivationTimerWindowRef.current = null;
+  }, []);
+
+  React.useEffect(
+    () => () => {
+      clearKeyboardActivationLatch();
+    },
+    [clearKeyboardActivationLatch]
   );
 
   React.useEffect(() => {
@@ -289,12 +312,13 @@ export function Dropdown({
     if (!isOpen) {
       setActiveIndex(-1);
       typeaheadStateRef.current = { query: "", timestamp: 0 };
+      clearKeyboardActivationLatch();
       return;
     }
 
     const firstEnabledIndex = items.findIndex((item) => !item.disabled);
     setActiveIndex(firstEnabledIndex);
-  }, [isOpen, items]);
+  }, [clearKeyboardActivationLatch, isOpen, items]);
 
   React.useEffect(() => {
     if (!isOpen || activeIndex < 0) {
@@ -507,11 +531,34 @@ export function Dropdown({
                         return;
                       }
 
+                      keyboardActivationItemKeyRef.current = item.key;
+                      keyboardActivationTimestampRef.current = Date.now();
+                      const ownerWindow = event.currentTarget.ownerDocument.defaultView ?? window;
+                      if (keyboardActivationResetTimerRef.current !== null) {
+                        const timerWindow = keyboardActivationTimerWindowRef.current ?? ownerWindow;
+                        timerWindow.clearTimeout(keyboardActivationResetTimerRef.current);
+                      }
+                      keyboardActivationTimerWindowRef.current = ownerWindow;
+                      keyboardActivationResetTimerRef.current = ownerWindow.setTimeout(() => {
+                        clearKeyboardActivationLatch();
+                      }, dropdownItemKeyboardClickDedupeWindowMs);
+
                       item.onSelect?.();
                       closeWithReason("item-select");
                       triggerRef.current?.focus();
                     }}
-                    onClick={() => {
+                    onClick={(event) => {
+                      const keyboardActivationAgeMs = Date.now() - keyboardActivationTimestampRef.current;
+                      const clickFromKeyboardActivation =
+                        event.detail === 0 &&
+                        keyboardActivationItemKeyRef.current === item.key &&
+                        keyboardActivationTimestampRef.current > 0 &&
+                        keyboardActivationAgeMs <= dropdownItemKeyboardClickDedupeWindowMs;
+                      clearKeyboardActivationLatch();
+                      if (clickFromKeyboardActivation) {
+                        return;
+                      }
+
                       if (item.disabled) {
                         return;
                       }

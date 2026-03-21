@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Dropdown, Popover, type DropdownItem } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import { StoryShowcaseFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
 
 const items: DropdownItem[] = [
@@ -349,6 +349,68 @@ export const SelectionTelemetry: Story = {
     trigger.focus();
     await userEvent.keyboard("{ArrowDown}");
     await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+  }
+};
+
+function KeyboardActivationDedupeDropdown() {
+  const [selectionCount, setSelectionCount] = React.useState(0);
+  const [closeCount, setCloseCount] = React.useState(0);
+
+  return (
+    <StoryShowcaseFrame gap={8}>
+      <p style={storyMutedTextStyle}>
+        Selection calls:{" "}
+        <strong data-testid="dropdown-keyboard-dedupe-selection-count" style={storyEmphasisTextStyle}>
+          {selectionCount}
+        </strong>
+      </p>
+      <p style={storyMutedTextStyle}>
+        Item-close reasons:{" "}
+        <strong data-testid="dropdown-keyboard-dedupe-close-count" style={storyEmphasisTextStyle}>
+          {closeCount}
+        </strong>
+      </p>
+      <Dropdown
+        open
+        label="Keyboard Dedupe Menu"
+        onOpenChange={() => {}}
+        onCloseReason={(reason) => {
+          if (reason === "item-select") {
+            setCloseCount((count) => count + 1);
+          }
+        }}
+        items={[
+          {
+            key: "run",
+            label: "Run",
+            onSelect: () => {
+              setSelectionCount((count) => count + 1);
+            }
+          },
+          { key: "archive", label: "Archive" }
+        ]}
+      />
+    </StoryShowcaseFrame>
+  );
+}
+
+export const KeyboardActivationDedupe: Story = {
+  render: () => <KeyboardActivationDedupeDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const runItem = await canvas.findByRole("menuitem", { name: "Run" });
+
+    fireEvent.keyDown(runItem, { key: "Enter" });
+    await waitFor(() => {
+      expect(canvas.getByTestId("dropdown-keyboard-dedupe-selection-count")).toHaveTextContent("1");
+      expect(canvas.getByTestId("dropdown-keyboard-dedupe-close-count")).toHaveTextContent("1");
+    });
+
+    fireEvent.click(runItem, { detail: 0 });
+    await waitFor(() => {
+      expect(canvas.getByTestId("dropdown-keyboard-dedupe-selection-count")).toHaveTextContent("1");
+      expect(canvas.getByTestId("dropdown-keyboard-dedupe-close-count")).toHaveTextContent("1");
+    });
   }
 };
 
