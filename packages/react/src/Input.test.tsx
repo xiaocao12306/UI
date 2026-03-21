@@ -113,6 +113,25 @@ describe("Input", () => {
     expect(input).not.toHaveAttribute("data-active");
   });
 
+  it("ignores modified Enter activation while keeping Shift+Enter active feedback", () => {
+    render(<Input aria-label="Modified enter field" />);
+    const input = screen.getByRole("textbox", { name: "Modified enter field" });
+
+    fireEvent.keyDown(input, { key: "Enter", ctrlKey: true });
+    expect(input).not.toHaveAttribute("data-active");
+
+    fireEvent.keyDown(input, { key: "Enter", metaKey: true });
+    expect(input).not.toHaveAttribute("data-active");
+
+    fireEvent.keyDown(input, { key: "Enter", altKey: true });
+    expect(input).not.toHaveAttribute("data-active");
+
+    fireEvent.keyDown(input, { key: "Enter", shiftKey: true });
+    expect(input).toHaveAttribute("data-active", "true");
+    fireEvent.keyUp(input, { key: "Enter", shiftKey: true });
+    expect(input).not.toHaveAttribute("data-active");
+  });
+
   it("retains focus-visible state on non-primary pointer interaction", () => {
     render(<Input aria-label="Pointer focus input" />);
     const input = screen.getByRole("textbox", { name: "Pointer focus input" });

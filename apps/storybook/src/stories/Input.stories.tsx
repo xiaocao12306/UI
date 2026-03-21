@@ -102,6 +102,17 @@ export const InteractionA11yParity: Story = {
     fireEvent.keyDown(keyboardInput, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
     await expect(keyboardInput).not.toHaveAttribute("data-active");
 
+    fireEvent.keyDown(keyboardInput, { key: "Enter", ctrlKey: true });
+    await expect(keyboardInput).not.toHaveAttribute("data-active");
+    fireEvent.keyDown(keyboardInput, { key: "Enter", metaKey: true });
+    await expect(keyboardInput).not.toHaveAttribute("data-active");
+    fireEvent.keyDown(keyboardInput, { key: "Enter", altKey: true });
+    await expect(keyboardInput).not.toHaveAttribute("data-active");
+
+    fireEvent.keyDown(keyboardInput, { key: "Enter", shiftKey: true });
+    fireEvent.keyUp(keyboardInput, { key: "Enter", shiftKey: true });
+    await expect(keyboardInput).not.toHaveAttribute("data-active");
+
     fireEvent.keyDown(keyboardInput, { key: "Enter" });
     fireEvent.keyUp(keyboardInput, { key: "Enter" });
     await expect(keyboardInput).not.toHaveAttribute("data-active");

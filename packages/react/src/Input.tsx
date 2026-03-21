@@ -139,6 +139,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
           !isInteractionDisabled &&
           !readOnly &&
           isInputActivationKey(event.key) &&
+          !isModifiedActivationChord(event) &&
           !isComposingKeyboardEvent(event)
         ) {
           setActive(true);
@@ -158,6 +159,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
 
 function isInputActivationKey(key: string) {
   return key === "Enter";
+}
+
+function isModifiedActivationChord(event: React.KeyboardEvent<HTMLInputElement>) {
+  return event.ctrlKey || event.metaKey || event.altKey;
 }
 
 function isComposingKeyboardEvent(event: React.KeyboardEvent<HTMLInputElement>) {

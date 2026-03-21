@@ -90,6 +90,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `invalid` | `boolean` | Applies `aria-invalid` and error-token border/ring styles; incoming `aria-invalid="grammar|spelling"` is preserved. |
 | `readOnly` / `disabled` | `boolean` | Preserves semantic behavior and visual state boundaries. |
 | `aria-describedby` | `string` | Recommended for helper/error narration in forms. |
+| Enter active feedback policy | unmodified `Enter`/`Shift+Enter` only | Ignores `Ctrl/Meta/Alt + Enter` so host shortcut chords do not trigger input active-press visuals. |
 | focus intent policy | primary pointer clears focus-visible | Non-primary `mousedown/pointerdown` keeps keyboard-intent focus ring state, while primary pointer keeps prior active/pressed behavior. |
 | native input props | `InputHTMLAttributes` | Includes `value`, `defaultValue`, `onChange`, `type`, and autocomplete controls. |
 
