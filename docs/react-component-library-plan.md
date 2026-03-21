@@ -773,6 +773,8 @@
   - Release Gate 证据刷新（2026-03-21 latest+88：修复 Dialog Storybook 断言稳定性并同步 `apps/storybook/storybook-static` 后重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`43 files / 632 tests`）+ demo e2e `98/98` + storybook interaction `228/228`）
   - Table 键盘按压态收口（2026-03-21 latest+89：sortable header 新增键盘 `Enter/Space` 长按按压态反馈与抬起回弹，补齐 `Table.test.tsx` 键盘按压断言并同步 Component API/Best Practices 文档，`pnpm --filter @aurora-ui/react exec vitest run src/Table.test.tsx` 通过（`67/67`），`pnpm storybook:test:grep \"Table.stories.tsx\"` 通过（`25/25`））
   - Release Gate 证据刷新（2026-03-21 latest+90：完成 Table 按压态收口并同步 Storybook/Demo 静态产物后重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`43 files / 633 tests`）+ demo e2e `98/98` + storybook interaction `228/228`）
+  - Toast 关闭按钮键盘按压态收口（2026-03-21 latest+91：close-button 新增键盘 `Enter/Space`（含 `Spacebar`）按压态反馈并过滤 `Ctrl/Meta/Alt` 修饰键，补齐 `Toast.test.tsx` 回归、Storybook `CloseButtonKeyboardPressedState` 与 Component API/Best Practices 文档，`pnpm --filter @aurora-ui/react exec vitest run src/Toast.test.tsx` 通过（`62/62`），`pnpm storybook:test:grep \"Toast.stories.tsx\"` 通过（`18/18`））
+  - Release Gate 证据刷新（2026-03-21 latest+92：完成 Toast 键盘按压态收口并同步 Storybook/Demo 静态产物后重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`43 files / 634 tests`）+ demo e2e `98/98` + storybook interaction `229/229`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
