@@ -808,3 +808,77 @@ export const NestedDismissOrder: Story = {
     await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
   }
 };
+
+function NestedOutsideDismissOrderDemo() {
+  const [trace, setTrace] = React.useState("none");
+
+  const appendTrace = (entry: string) => {
+    setTrace((current) => (current === "none" ? entry : `${current} -> ${entry}`));
+  };
+
+  return (
+    <StoryShowcaseFrame gap={8}>
+      <div style={storyTelemetryStackStyle}>
+        <Popover
+          triggerLabel="Open outside-order container"
+          contentLabel="Outside-order popover content"
+          onCloseReason={(reason) => appendTrace(`popover:reason:${reason}`)}
+          onOpenChange={(nextOpen) => {
+            if (!nextOpen) {
+              appendTrace("popover:open:false");
+            }
+          }}
+        >
+          <div style={storyTelemetryStackStyle}>
+            <p style={storyParagraphStyle}>Outside pointer should dismiss inner layer first.</p>
+            <Dropdown
+              label="Inner outside-order menu"
+              onCloseReason={(reason) => appendTrace(`dropdown:reason:${reason}`)}
+              onOpenChange={(nextOpen) => {
+                if (!nextOpen) {
+                  appendTrace("dropdown:open:false");
+                }
+              }}
+              items={[
+                { key: "duplicate", label: "Duplicate" },
+                { key: "archive", label: "Archive" }
+              ]}
+            />
+          </div>
+        </Popover>
+        <button type="button">Outside order target</button>
+        <p style={storyMutedTextStyle}>
+          Nested close trace:{" "}
+          <strong data-testid="dropdown-nested-outside-trace" style={storyEmphasisTextStyle}>
+            {trace}
+          </strong>
+        </p>
+      </div>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const NestedOutsideDismissOrder: Story = {
+  render: () => <NestedOutsideDismissOrderDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole("button", { name: "Open outside-order container" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Inner outside-order menu" }));
+
+    await expect(canvas.getByRole("menu", { name: "Inner outside-order menu" })).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog", { name: "Outside-order popover content" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Outside order target" }));
+    await expect(canvas.queryByRole("menu", { name: "Inner outside-order menu" })).not.toBeInTheDocument();
+    await expect(canvas.getByRole("dialog", { name: "Outside-order popover content" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-nested-outside-trace")).toHaveTextContent(
+      "dropdown:reason:outside-pointer -> dropdown:open:false"
+    );
+
+    await userEvent.click(canvas.getByRole("button", { name: "Outside order target" }));
+    await expect(canvas.queryByRole("dialog", { name: "Outside-order popover content" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-nested-outside-trace")).toHaveTextContent(
+      "dropdown:reason:outside-pointer -> dropdown:open:false -> popover:reason:outside-pointer -> popover:open:false"
+    );
+  }
+};
