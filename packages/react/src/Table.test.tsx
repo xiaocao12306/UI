@@ -90,6 +90,31 @@ describe("Table", () => {
     }
   });
 
+  it("warns when columns contain duplicate keys", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            { key: "name", header: "Name", sortable: true },
+            { key: "name", header: "Name copy", sortable: true }
+          ]}
+          data={[
+            { name: "Button" },
+            { name: "Dialog" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Duplicate column keys detected: "name"'));
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("warns when sortable non-text headers omit sortLabel", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});

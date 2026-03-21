@@ -106,6 +106,7 @@ export function Table<T>({
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const keyboardActivationTimerWindowRef = React.useRef<Window | null>(null);
   const sortFocusIntentRef = React.useRef(true);
+  const warnedDuplicateColumnKeysSignatureRef = React.useRef<string | null>(null);
   const warnedDuplicateRowKeysSignatureRef = React.useRef<string | null>(null);
   const warnedMissingSortLabelSignatureRef = React.useRef<string | null>(null);
   const [hoveredSortKey, setHoveredSortKey] = React.useState<string | null>(null);
@@ -239,6 +240,39 @@ export function Table<T>({
         .join(", ")}. Ensure rowKey returns a unique, stable value for each source row.`
     );
   }, [rowKey, sourceRowKeys]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const duplicateColumnKeys = new Set<string>();
+    const seenColumnKeys = new Set<string>();
+    columns.forEach((column) => {
+      const key = String(column.key);
+      if (seenColumnKeys.has(key)) {
+        duplicateColumnKeys.add(key);
+      }
+      seenColumnKeys.add(key);
+    });
+
+    if (duplicateColumnKeys.size === 0) {
+      warnedDuplicateColumnKeysSignatureRef.current = null;
+      return;
+    }
+
+    const signature = Array.from(duplicateColumnKeys).sort().join("|");
+    if (warnedDuplicateColumnKeysSignatureRef.current === signature) {
+      return;
+    }
+    warnedDuplicateColumnKeysSignatureRef.current = signature;
+
+    console.warn(
+      `[Table] Duplicate column keys detected: ${Array.from(duplicateColumnKeys)
+        .map((key) => `"${key}"`)
+        .join(", ")}. Ensure columns[].key values are unique to keep header associations and sorting behavior deterministic.`
+    );
+  }, [columns]);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {

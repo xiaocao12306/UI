@@ -751,6 +751,7 @@
   - Release Gate 证据刷新（2026-03-21 latest+66：完成 `apps/storybook/storybook-static` 同步后重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`42 files / 617 tests`）+ demo e2e `92/92` + storybook interaction `454/454`）
   - Primitives 语义回归补齐（2026-03-21 latest+67：新增 `Box/Text/VisuallyHidden` 基础渲染、`asChild` 透传与样式合并回归测试，`pnpm --filter @aurora-ui/primitives exec vitest run src/LayoutPrimitives.test.tsx` 通过（`8/8`））
   - Demo 锚点导航修饰点击稳态收口（2026-03-21 latest+68：SectionNav/HeroStatCard 对 `Ctrl/Meta/Alt/Shift` 点击统一 `preventDefault` 以阻断 hash 污染，新增两条 Playwright 回归并复验 `pnpm demo:e2e` 全量通过（`94/94`））
+  - Table 列键稳定性收口（2026-03-21 latest+69：新增 `columns[].key` 重复告警与单测，避免表头关联/排序引用发散；`pnpm --filter @aurora-ui/react exec vitest run src/Table.test.tsx` 通过（`66/66`），并复验 `pnpm storybook:docs:check && pnpm storybook:docs:parity:check && pnpm storybook:docs:structure:check`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

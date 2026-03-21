@@ -239,6 +239,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 ## Data Presentation Patterns
 
 - Use typed columns and stable row keys in data tables; fallback source-index keys exist for safety but explicit `rowKey` is preferred.
+- Keep `columns[].key` values unique; development builds now warn on duplicate column keys to avoid unstable header references and sort-button wiring.
 - Keep `rowKey` outputs unique per source row; development builds now warn on duplicate keys to catch unstable identity wiring early.
 - If `rowKey` uses `rowIndex`, treat it as source-data index; avoid deriving keys from sorted visual position.
 - For custom cell renderers, use `render(row, rowIndex, sourceIndex)` and pick the index intentionally (`rowIndex` for ranking UI, `sourceIndex` for source-linked IDs/telemetry).
