@@ -1436,6 +1436,11 @@ describe("Table", () => {
     const sortButton = screen.getByRole("button", { name: "Name sort descending" });
     fireEvent.keyDown(sortButton, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
     fireEvent.keyDown(sortButton, { key: " ", isComposing: true, keyCode: 229, which: 229 });
+    for (const key of ["Enter", " "]) {
+      const legacyImeEvent = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+      Object.defineProperty(legacyImeEvent, "keyCode", { value: 229 });
+      sortButton.dispatchEvent(legacyImeEvent);
+    }
     expect(onSortChange).not.toHaveBeenCalled();
 
     fireEvent.keyDown(sortButton, { key: "Enter" });

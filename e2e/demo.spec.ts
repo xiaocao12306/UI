@@ -1266,6 +1266,34 @@ test("ignores repeated Enter keydown when sorting demo table", async ({ page }) 
   await expect(telemetry).toHaveText("component:asc");
 });
 
+test("ignores table sort activation when only legacy IME keyCode is present", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
+  const telemetry = page.getByTestId("table-sort-telemetry");
+  const componentColumn = table.getByRole("columnheader", { name: /Component/ });
+  const componentSortButton = table.getByRole("button", { name: /Component/ });
+
+  await expect(componentColumn).toHaveAttribute("aria-sort", "ascending");
+  await expect(telemetry).toHaveText("component:asc");
+
+  await componentSortButton.focus();
+  await componentSortButton.evaluate((element) => {
+    for (const key of ["Enter", " "]) {
+      const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+      Object.defineProperty(event, "keyCode", { value: 229 });
+      element.dispatchEvent(event);
+    }
+  });
+
+  await expect(componentColumn).toHaveAttribute("aria-sort", "ascending");
+  await expect(telemetry).toHaveText("component:asc");
+
+  await componentSortButton.press("Enter");
+  await expect(componentColumn).toHaveAttribute("aria-sort", "descending");
+  await expect(telemetry).toHaveText("component:desc");
+});
+
 test("sorts demo table with legacy Spacebar key event", async ({ page }) => {
   await page.goto("/");
 
