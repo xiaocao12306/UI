@@ -133,6 +133,18 @@ export const KeyboardActivation: Story = {
     fireEvent.keyUp(runAction, { key: " ", altKey: true });
     await expect(canvas.getByTestId("activation-count")).toHaveTextContent("0");
 
+    fireEvent.keyDown(runAction, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    await waitFor(() => {
+      expect(runAction.style.transform).not.toContain("translateY(1px)");
+    });
+    await expect(canvas.getByTestId("activation-count")).toHaveTextContent("0");
+
+    fireEvent.keyDown(runAction, { key: "Enter", keyCode: 229, which: 229 });
+    await waitFor(() => {
+      expect(runAction.style.transform).not.toContain("translateY(1px)");
+    });
+    await expect(canvas.getByTestId("activation-count")).toHaveTextContent("0");
+
     fireEvent.keyDown(runAction, { key: "Space" });
     await waitFor(() => {
       expect(runAction.style.transform).toContain("translateY(1px)");

@@ -175,6 +175,12 @@ describe("Button", () => {
 
     fireEvent.keyUp(button, { key: "Spacebar" });
     expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+
+    fireEvent.keyDown(button, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+
+    fireEvent.keyDown(button, { key: "Enter", keyCode: 229, which: 229 });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
   });
 
   it("ignores modified activation chords for pressed feedback while keeping Shift activation", () => {

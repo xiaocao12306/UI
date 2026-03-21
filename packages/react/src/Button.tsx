@@ -295,6 +295,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         focusVisibleIntentRef.current = true;
         if (
           !interactionDisabled &&
+          !isComposingButtonActivationEvent(event) &&
           isButtonActivationKey(event.key) &&
           !isModifiedActivationChord(event)
         ) {
@@ -339,6 +340,15 @@ function isButtonActivationKey(key: string) {
 
 function isModifiedActivationChord(event: React.KeyboardEvent<HTMLButtonElement>) {
   return event.ctrlKey || event.metaKey || event.altKey;
+}
+
+function isComposingButtonActivationEvent(event: React.KeyboardEvent<HTMLButtonElement>) {
+  const nativeEvent = event.nativeEvent;
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }
 
 function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {
