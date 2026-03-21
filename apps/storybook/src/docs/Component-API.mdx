@@ -497,6 +497,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `getItemAriaLabel` | `(type, page) => string` | Customize pagination control narration for i18n; boundary `previous/next` pages are clamped to valid range, and blank return values fallback to default narration. |
 | RTL keyboard parity | ArrowLeft/ArrowRight auto-flip | In `dir="rtl"` containers, horizontal arrow shortcuts mirror navigation intent to match visual flow. |
 | modifier-key guard | ignores `Ctrl/Meta/Alt + Home/End/ArrowLeft/ArrowRight` | Preserves host app/browser modified-key shortcuts and avoids accidental page jumps under combined shortcut chords; `Shift`-modified shortcuts remain valid pagination navigation. |
+| keyboard shortcut hints | `aria-keyshortcuts="Home End ArrowLeft ArrowRight"` on enabled controls | Announces pagination keyboard navigation affordances to assistive tech and QA audits; disabled controls omit shortcut hints. |
 
 <Canvas of={PaginationStories.KeyboardShortcuts} />
 <Canvas of={PaginationStories.ModifierKeyGuard} />

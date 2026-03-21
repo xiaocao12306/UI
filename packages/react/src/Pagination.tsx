@@ -1,6 +1,7 @@
 import * as React from "react";
 
 type PaginationToken = number | "ellipsis-left" | "ellipsis-right";
+const paginationKeyboardShortcuts = "Home End ArrowLeft ArrowRight";
 
 export type PaginationProps = {
   page: number;
@@ -191,6 +192,7 @@ export function Pagination({
               onClick={() => goToPage(1)}
               onKeyDown={handleKeyDown}
               aria-label={resolveItemAriaLabel("first", 1)}
+              aria-keyshortcuts={!canGoPrevious ? undefined : paginationKeyboardShortcuts}
               style={buttonStyle(false, !canGoPrevious)}
             >
               «
@@ -204,6 +206,7 @@ export function Pagination({
             onClick={() => goToPage(previousPage)}
             onKeyDown={handleKeyDown}
             aria-label={resolveItemAriaLabel("previous", previousPage)}
+            aria-keyshortcuts={!canGoPrevious ? undefined : paginationKeyboardShortcuts}
             style={buttonStyle(false, !canGoPrevious)}
           >
             ‹
@@ -233,6 +236,7 @@ export function Pagination({
                     ? resolveItemAriaLabel("current", token)
                     : resolveItemAriaLabel("page", token)
                 }
+                aria-keyshortcuts={disabled ? undefined : paginationKeyboardShortcuts}
                 style={buttonStyle(selected, disabled)}
               >
                 {token}
@@ -247,6 +251,7 @@ export function Pagination({
             onClick={() => goToPage(nextPage)}
             onKeyDown={handleKeyDown}
             aria-label={resolveItemAriaLabel("next", nextPage)}
+            aria-keyshortcuts={!canGoNext ? undefined : paginationKeyboardShortcuts}
             style={buttonStyle(false, !canGoNext)}
           >
             ›
@@ -260,6 +265,7 @@ export function Pagination({
               onClick={() => goToPage(pageCount)}
               onKeyDown={handleKeyDown}
               aria-label={resolveItemAriaLabel("last", pageCount)}
+              aria-keyshortcuts={!canGoNext ? undefined : paginationKeyboardShortcuts}
               style={buttonStyle(false, !canGoNext)}
             >
               »

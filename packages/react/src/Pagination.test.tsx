@@ -130,6 +130,26 @@ describe("Pagination", () => {
     expect(onPageChange).toHaveBeenNthCalledWith(4, 5);
   });
 
+  it("exposes keyboard shortcut hints on enabled controls and omits them on disabled controls", () => {
+    const { rerender } = render(<Pagination page={4} pageCount={10} onPageChange={() => {}} />);
+
+    expect(screen.getByRole("button", { name: "Go to first page" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home End ArrowLeft ArrowRight"
+    );
+    expect(screen.getByRole("button", { name: "Current page, 4" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home End ArrowLeft ArrowRight"
+    );
+    expect(screen.getByRole("button", { name: "Go to next page" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home End ArrowLeft ArrowRight"
+    );
+
+    rerender(<Pagination page={4} pageCount={10} onPageChange={() => {}} disabled />);
+    expect(screen.getByRole("button", { name: "Current page, 4" })).not.toHaveAttribute("aria-keyshortcuts");
+  });
+
   it("ignores Ctrl/Meta/Alt-modified Home/End/arrow shortcuts", () => {
     const onPageChange = vi.fn();
     render(<Pagination page={4} pageCount={10} onPageChange={onPageChange} />);

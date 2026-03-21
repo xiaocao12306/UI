@@ -71,6 +71,7 @@ export const KeyboardShortcuts: Story = {
 
     current.focus();
     await expect(current).toHaveFocus();
+    await expect(current).toHaveAttribute("aria-keyshortcuts", "Home End ArrowLeft ArrowRight");
     await userEvent.keyboard("{End}");
     const currentLast = await canvas.findByRole("button", { name: "Current page, 12" });
     await expect(currentLast).toBeInTheDocument();
