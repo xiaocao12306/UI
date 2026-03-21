@@ -50,6 +50,65 @@ describe("RadioGroup", () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it("warns when duplicate radio option values are provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <RadioGroup
+          name="Duplicate values group"
+          options={[
+            { label: "React stable", value: "react" },
+            { label: "React legacy", value: "react" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining('Duplicate option values detected: "react"')
+      );
+      expect(warnSpy).toHaveBeenLastCalledWith(expect.stringContaining("auto-suffixed by option index"));
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("avoids duplicate-key errors and keeps focus styling isolated with duplicate values", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <RadioGroup
+          name="Duplicate values group"
+          options={[
+            { label: "React stable", value: "react" },
+            { label: "React legacy", value: "react" },
+            { label: "Vue", value: "vue" }
+          ]}
+        />
+      );
+
+      const stable = screen.getByRole("radio", { name: "React stable" });
+      const legacy = screen.getByRole("radio", { name: "React legacy" });
+      fireEvent.focus(stable);
+      expect(stable).toHaveAttribute("data-focused", "true");
+      expect(legacy).not.toHaveAttribute("data-focused");
+
+      const duplicateKeyErrors = errorSpy.mock.calls.filter(([message]) =>
+        typeof message === "string" && message.includes("same key")
+      );
+      expect(duplicateKeyErrors).toHaveLength(0);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("exposes shortcut hints only for actionable options", () => {
     render(
       <RadioGroup

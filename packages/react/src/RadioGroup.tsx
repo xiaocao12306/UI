@@ -36,10 +36,11 @@ export function RadioGroup({
   direction = "vertical"
 }: RadioGroupProps) {
   const [internalValue, setInternalValue] = React.useState(defaultValue);
-  const [focusedValue, setFocusedValue] = React.useState<string | null>(null);
-  const [focusVisibleValue, setFocusVisibleValue] = React.useState<string | null>(null);
+  const [focusedIndex, setFocusedIndex] = React.useState<number | null>(null);
+  const [focusVisibleIndex, setFocusVisibleIndex] = React.useState<number | null>(null);
   const groupRef = React.useRef<HTMLDivElement | null>(null);
   const focusVisibleIntentRef = React.useRef(false);
+  const warnedDuplicateValuesSignatureRef = React.useRef<string | null>(null);
   const currentValue = value ?? internalValue;
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
@@ -56,9 +57,50 @@ export function RadioGroup({
       return;
     }
 
-    setFocusedValue(null);
-    setFocusVisibleValue(null);
+    setFocusedIndex(null);
+    setFocusVisibleIndex(null);
   }, [disabled]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const duplicateValues = new Set<string>();
+    const seenValues = new Set<string>();
+    options.forEach((option) => {
+      if (seenValues.has(option.value)) {
+        duplicateValues.add(option.value);
+      }
+      seenValues.add(option.value);
+    });
+
+    if (duplicateValues.size === 0) {
+      warnedDuplicateValuesSignatureRef.current = null;
+      return;
+    }
+
+    const signature = Array.from(duplicateValues).sort().join("|");
+    if (warnedDuplicateValuesSignatureRef.current === signature) {
+      return;
+    }
+    warnedDuplicateValuesSignatureRef.current = signature;
+
+    console.warn(
+      `[RadioGroup] Duplicate option values detected: ${Array.from(duplicateValues)
+        .map((item) => `"${item}"`)
+        .join(", ")}. Values should be unique to keep checked and focus semantics deterministic; duplicate render keys are auto-suffixed by option index for stability.`
+    );
+  }, [options]);
+
+  const optionRenderKeys = React.useMemo(() => {
+    const counts = new Map<string, number>();
+    return options.map((option) => {
+      const count = counts.get(option.value) ?? 0;
+      counts.set(option.value, count + 1);
+      return count === 0 ? option.value : `${option.value}__duplicate-${count}`;
+    });
+  }, [options]);
 
   React.useEffect(() => {
     const ownerDocument = groupRef.current?.ownerDocument ?? document;
@@ -111,14 +153,14 @@ export function RadioGroup({
       aria-labelledby={resolvedAriaLabelledBy}
       aria-invalid={resolvedInvalidAria}
     >
-      {options.map((option) => {
+      {options.map((option, index) => {
         const optionDisabled = Boolean(disabled || option.disabled);
-        const isFocused = focusedValue === option.value;
-        const isFocusVisible = focusVisibleValue === option.value;
+        const isFocused = focusedIndex === index;
+        const isFocusVisible = focusVisibleIndex === index;
 
         return (
           <label
-            key={option.value}
+            key={optionRenderKeys[index] ?? `${option.value}__index-${index}`}
             style={{
               display: "inline-flex",
               alignItems: "flex-start",
@@ -140,30 +182,30 @@ export function RadioGroup({
               data-focus-visible={isFocusVisible ? "true" : undefined}
               onChange={() => handleChange(option.value, option.disabled)}
               onFocus={(event) => {
-                setFocusedValue(option.value);
-                setFocusVisibleValue(
+                setFocusedIndex(index);
+                setFocusVisibleIndex(
                   resolveFocusVisibleState(event.currentTarget, focusVisibleIntentRef.current)
-                    ? option.value
+                    ? index
                     : null
                 );
               }}
               onBlur={() => {
-                setFocusedValue((current) => (current === option.value ? null : current));
-                setFocusVisibleValue((current) => (current === option.value ? null : current));
+                setFocusedIndex((current) => (current === index ? null : current));
+                setFocusVisibleIndex((current) => (current === index ? null : current));
               }}
               onMouseDown={(event) => {
                 if (event.button !== 0) {
                   return;
                 }
                 focusVisibleIntentRef.current = false;
-                setFocusVisibleValue((current) => (current === option.value ? null : current));
+                setFocusVisibleIndex((current) => (current === index ? null : current));
               }}
               onPointerDown={(event) => {
                 if (event.button !== 0) {
                   return;
                 }
                 focusVisibleIntentRef.current = false;
-                setFocusVisibleValue((current) => (current === option.value ? null : current));
+                setFocusVisibleIndex((current) => (current === index ? null : current));
               }}
               onKeyDown={() => {
                 focusVisibleIntentRef.current = true;
