@@ -177,8 +177,19 @@ export function Drawer({
                         setCloseButtonPressed(false);
                       }
                     }}
-                    onKeyDown={() => {
+                    onKeyDown={(event) => {
                       closeButtonFocusIntentRef.current = true;
+                      if (
+                        isDrawerCloseButtonActivationKey(event.key) &&
+                        !isModifiedDrawerCloseButtonActivationChord(event)
+                      ) {
+                        setCloseButtonPressed(true);
+                      }
+                    }}
+                    onKeyUp={(event) => {
+                      if (isDrawerCloseButtonActivationKey(event.key)) {
+                        setCloseButtonPressed(false);
+                      }
                     }}
                     onFocus={(event) => {
                       setCloseButtonFocusVisible(resolveFocusVisibleState(event.currentTarget, closeButtonFocusIntentRef.current));
@@ -229,4 +240,12 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
   } catch {
     return fallback;
   }
+}
+
+function isDrawerCloseButtonActivationKey(key: string) {
+  return key === "Enter" || key === " " || key === "Spacebar";
+}
+
+function isModifiedDrawerCloseButtonActivationChord(event: Pick<KeyboardEvent, "altKey" | "ctrlKey" | "metaKey">) {
+  return event.altKey || event.ctrlKey || event.metaKey;
 }

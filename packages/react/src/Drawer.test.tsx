@@ -439,6 +439,31 @@ describe("Drawer", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 
+  it("applies close-button pressed transform for unmodified keyboard activation keys and ignores modified chords", () => {
+    render(
+      <Drawer open onOpenChange={() => {}} title="Keyboard press drawer">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Close drawer" });
+
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.keyUp(closeButton, { key: "Enter" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+    fireEvent.keyUp(closeButton, { key: "Enter", ctrlKey: true });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.keyDown(closeButton, { key: "Spacebar" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.keyUp(closeButton, { key: "Spacebar" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+  });
+
   it("keeps Tab/Shift+Tab focus cycling inside drawer", async () => {
     const user = userEvent.setup();
 

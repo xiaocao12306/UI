@@ -194,6 +194,54 @@ export const FocusIntentPrimaryPointerOnly: Story = {
   }
 };
 
+function CloseButtonKeyboardPressedDialog() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+      title="Keyboard pressed close affordance"
+      description="Close button should expose pressed feedback on unmodified Enter/Space only."
+    >
+      <p style={storyParagraphStyle}>Validate keyboard activation parity with pointer pressed-state feedback.</p>
+    </Dialog>
+  );
+}
+
+export const CloseButtonKeyboardPressedState: Story = {
+  render: () => <CloseButtonKeyboardPressedDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const closeButton = await body.findByRole("button", { name: "Close dialog" });
+
+    closeButton.focus();
+    fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+    fireEvent.keyUp(closeButton, { key: "Enter", ctrlKey: true });
+
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(1px)");
+    });
+    fireEvent.keyUp(closeButton, { key: "Enter" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+
+    fireEvent.keyDown(closeButton, { key: "Spacebar" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(1px)");
+    });
+    fireEvent.keyUp(closeButton, { key: "Spacebar" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+  }
+};
+
 export const OpenByDefault: Story = {
   render: () => <InitiallyOpenDialog />
 };

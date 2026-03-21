@@ -179,8 +179,19 @@ export function Dialog({
                         setCloseButtonPressed(false);
                       }
                     }}
-                    onKeyDown={() => {
+                    onKeyDown={(event) => {
                       closeButtonFocusIntentRef.current = true;
+                      if (
+                        isDialogCloseButtonActivationKey(event.key) &&
+                        !isModifiedDialogCloseButtonActivationChord(event)
+                      ) {
+                        setCloseButtonPressed(true);
+                      }
+                    }}
+                    onKeyUp={(event) => {
+                      if (isDialogCloseButtonActivationKey(event.key)) {
+                        setCloseButtonPressed(false);
+                      }
                     }}
                     onFocus={(event) => {
                       setCloseButtonFocusVisible(resolveFocusVisibleState(event.currentTarget, closeButtonFocusIntentRef.current));
@@ -233,4 +244,12 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
   } catch {
     return fallback;
   }
+}
+
+function isDialogCloseButtonActivationKey(key: string) {
+  return key === "Enter" || key === " " || key === "Spacebar";
+}
+
+function isModifiedDialogCloseButtonActivationChord(event: Pick<KeyboardEvent, "altKey" | "ctrlKey" | "metaKey">) {
+  return event.altKey || event.ctrlKey || event.metaKey;
 }

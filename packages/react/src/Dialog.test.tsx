@@ -171,6 +171,31 @@ describe("Dialog", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 
+  it("applies close-button pressed transform for unmodified keyboard activation keys and ignores modified chords", () => {
+    render(
+      <Dialog open onOpenChange={() => {}} title="Keyboard press dialog">
+        <p>Body</p>
+      </Dialog>
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.keyUp(closeButton, { key: "Enter" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+    fireEvent.keyUp(closeButton, { key: "Enter", ctrlKey: true });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.keyDown(closeButton, { key: "Spacebar" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.keyUp(closeButton, { key: "Spacebar" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+  });
+
   it("keeps close-button focus-visible state on non-primary mouse down", () => {
     render(
       <Dialog open onOpenChange={() => {}} title="Focus intent dialog">

@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Drawer, Dropdown } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import { StoryFullscreenFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
 
 const meta = {
@@ -215,6 +215,56 @@ export const CloseButtonPrimaryPointerOnly: Story = {
     fireEvent.mouseDown(closeButton);
     fireEvent.mouseUp(closeButton);
     await expect(closeButton.style.transform).toContain("translateY(0");
+  }
+};
+
+function CloseButtonKeyboardPressedDrawerDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <Drawer
+        open={open}
+        onOpenChange={setOpen}
+        title="Keyboard pressed close affordance"
+        description="Close button should expose pressed feedback on unmodified Enter/Space only."
+      >
+        <p style={storyParagraphStyle}>Validate keyboard activation parity with pointer pressed-state feedback.</p>
+      </Drawer>
+    </StoryFullscreenFrame>
+  );
+}
+
+export const CloseButtonKeyboardPressedState: Story = {
+  render: () => <CloseButtonKeyboardPressedDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const closeButton = await body.findByRole("button", { name: "Close drawer" });
+
+    closeButton.focus();
+    fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+    fireEvent.keyUp(closeButton, { key: "Enter", ctrlKey: true });
+
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(1px)");
+    });
+    fireEvent.keyUp(closeButton, { key: "Enter" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+
+    fireEvent.keyDown(closeButton, { key: "Spacebar" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(1px)");
+    });
+    fireEvent.keyUp(closeButton, { key: "Spacebar" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
   }
 };
 

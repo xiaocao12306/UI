@@ -75,6 +75,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep `restoreFocus` enabled for dialogs unless product flow intentionally redirects focus after close.
 - Keep `restoreFocus` enabled for drawers unless closing should intentionally hand focus to a different target.
 - Keep close-button focus intent primary-only in dialog/drawer surfaces so non-primary pointer interactions (for example context/right-click) do not clear keyboard focus-visible feedback.
+- Keep dialog/drawer close-button keyboard pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`/`Spacebar`); `Ctrl/Meta/Alt` chords should not trigger pressed visuals.
 - Popover and Dropdown should restore focus to trigger on keyboard dismissal (Escape), but keep pointer target focus on outside-click dismissal.
 - For blocking confirmation/action menus, set `closeOnEscape={false}` + `closeOnOutsidePointer={false}` and provide an explicit close/confirm path.
 - For conditional runtime approval guards, keep `closeOnEscape/closeOnOutsidePointer` enabled and intercept `onEscapeKeyDown/onPointerDownOutside` with `event.preventDefault()` only while guard conditions are active.
@@ -129,12 +130,14 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={PopoverStories.DismissGuardHooks} />
 <Canvas of={DialogStories.CloseReasonTelemetry} />
 <Canvas of={DialogStories.FocusTrapKeyboardCycle} />
+<Canvas of={DialogStories.CloseButtonKeyboardPressedState} />
 <Canvas of={DialogStories.EscapeIgnoresImeComposition} />
 <Canvas of={DialogStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={DialogStories.EscapeRepeatGuard} />
 <Canvas of={DialogStories.DismissGuardHooks} />
 <Canvas of={DrawerStories.CloseReasonTelemetry} />
 <Canvas of={DrawerStories.FocusTrapKeyboardCycle} />
+<Canvas of={DrawerStories.CloseButtonKeyboardPressedState} />
 <Canvas of={DrawerStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={DrawerStories.EscapeRepeatGuard} />
 <Canvas of={DrawerStories.DismissGuardHooks} />
