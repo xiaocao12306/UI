@@ -209,6 +209,41 @@ export const BoundaryAriaLabels: Story = {
   }
 };
 
+function BoundaryShortcutHintsDemo() {
+  const [page, setPage] = React.useState(1);
+
+  return (
+    <div style={{ width: 640, display: "grid", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ color: "var(--aurora-text-secondary)" }}>Boundary page</span>
+        <Badge tone="default" data-testid="boundary-page-value">
+          {page}
+        </Badge>
+      </div>
+      <Pagination page={page} pageCount={12} onPageChange={setPage} />
+    </div>
+  );
+}
+
+export const BoundaryShortcutHints: Story = {
+  render: () => <BoundaryShortcutHintsDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const currentFirst = await canvas.findByRole("button", { name: "Current page, 1" });
+    await expect(currentFirst).toHaveAttribute("aria-keyshortcuts", "End ArrowLeft ArrowRight");
+    currentFirst.focus();
+    await expect(currentFirst).toHaveFocus();
+
+    await userEvent.keyboard("{Home}");
+    await expect(canvas.getByTestId("boundary-page-value")).toHaveTextContent("1");
+
+    await userEvent.keyboard("{End}");
+    const currentLast = await canvas.findByRole("button", { name: "Current page, 12" });
+    await expect(currentLast).toHaveAttribute("aria-keyshortcuts", "Home ArrowLeft ArrowRight");
+    await expect(canvas.getByTestId("boundary-page-value")).toHaveTextContent("12");
+  }
+};
+
 export const LabelledByHeading: Story = {
   render: (args) => (
     <div style={{ width: 640, display: "grid", gap: 12 }}>

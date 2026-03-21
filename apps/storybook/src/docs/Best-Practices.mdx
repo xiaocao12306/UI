@@ -372,7 +372,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Prefer `ariaLabelledBy` for pagination when a visible heading already exists; use `ariaLabel` for standalone pagers without nearby title copy.
 - In RTL layouts, verify Pagination ArrowLeft/ArrowRight keyboard shortcuts are mirrored so page movement follows visual direction.
 - Keep modified shortcuts (`Ctrl/Meta/Alt + Home/End/ArrowLeft/ArrowRight`) on host/browser behavior; pagination should only react to unmodified navigation keys.
-- Keep pagination shortcut hints (`aria-keyshortcuts="Home End ArrowLeft ArrowRight"`) on enabled controls so keyboard affordances are discoverable in AT/QA, and omit them on disabled controls.
+- Keep pagination shortcut hints state-aware (`aria-keyshortcuts="[Home] [End] ArrowLeft ArrowRight"`): omit unavailable boundary keys (`Home` on first page, `End` on last page), and omit hints entirely on disabled controls.
 - Keep pagination keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Surface status semantics with tokens instead of custom ad-hoc colors.
 - Keep row actions predictable and keyboard reachable.
@@ -427,5 +427,6 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={PaginationStories.KeyboardShortcuts} />
 <Canvas of={PaginationStories.ModifierKeyGuard} />
 <Canvas of={PaginationStories.RtlKeyboardShortcuts} />
+<Canvas of={PaginationStories.BoundaryShortcutHints} />
 <Canvas of={PaginationStories.LabelledByHeading} />
 <Canvas of={PaginationStories.FocusIntentReentry} />

@@ -150,6 +150,29 @@ describe("Pagination", () => {
     expect(screen.getByRole("button", { name: "Current page, 4" })).not.toHaveAttribute("aria-keyshortcuts");
   });
 
+  it("omits boundary-unavailable Home/End shortcut hints on first and last page", () => {
+    const { rerender } = render(<Pagination page={1} pageCount={10} onPageChange={() => {}} />);
+
+    expect(screen.getByRole("button", { name: "Current page, 1" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "End ArrowLeft ArrowRight"
+    );
+    expect(screen.getByRole("button", { name: "Go to next page" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "End ArrowLeft ArrowRight"
+    );
+
+    rerender(<Pagination page={10} pageCount={10} onPageChange={() => {}} />);
+    expect(screen.getByRole("button", { name: "Current page, 10" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home ArrowLeft ArrowRight"
+    );
+    expect(screen.getByRole("button", { name: "Go to previous page" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home ArrowLeft ArrowRight"
+    );
+  });
+
   it("ignores Ctrl/Meta/Alt-modified Home/End/arrow shortcuts", () => {
     const onPageChange = vi.fn();
     render(<Pagination page={4} pageCount={10} onPageChange={onPageChange} />);
@@ -163,6 +186,35 @@ describe("Pagination", () => {
 
     fireEvent.keyDown(activeButton, { key: "End", shiftKey: true });
     expect(onPageChange).toHaveBeenCalledWith(10);
+  });
+
+  it("keeps boundary Home/End keys passive when already at first/last page", () => {
+    const onPageChange = vi.fn();
+    const { rerender } = render(<Pagination page={1} pageCount={10} onPageChange={onPageChange} />);
+
+    const firstButton = screen.getByRole("button", { name: "Current page, 1" });
+    const homeEvent = new KeyboardEvent("keydown", { key: "Home", bubbles: true, cancelable: true });
+    firstButton.dispatchEvent(homeEvent);
+    expect(homeEvent.defaultPrevented).toBe(false);
+    expect(onPageChange).not.toHaveBeenCalled();
+
+    const endEvent = new KeyboardEvent("keydown", { key: "End", bubbles: true, cancelable: true });
+    firstButton.dispatchEvent(endEvent);
+    expect(endEvent.defaultPrevented).toBe(true);
+    expect(onPageChange).toHaveBeenCalledWith(10);
+
+    onPageChange.mockClear();
+    rerender(<Pagination page={10} pageCount={10} onPageChange={onPageChange} />);
+    const lastButton = screen.getByRole("button", { name: "Current page, 10" });
+    const endBoundaryEvent = new KeyboardEvent("keydown", { key: "End", bubbles: true, cancelable: true });
+    lastButton.dispatchEvent(endBoundaryEvent);
+    expect(endBoundaryEvent.defaultPrevented).toBe(false);
+    expect(onPageChange).not.toHaveBeenCalled();
+
+    const homeBoundaryEvent = new KeyboardEvent("keydown", { key: "Home", bubbles: true, cancelable: true });
+    lastButton.dispatchEvent(homeBoundaryEvent);
+    expect(homeBoundaryEvent.defaultPrevented).toBe(true);
+    expect(onPageChange).toHaveBeenCalledWith(1);
   });
 
   it("keeps focus on the newly active page button after keyboard page changes", async () => {

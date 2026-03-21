@@ -1,7 +1,6 @@
 import * as React from "react";
 
 type PaginationToken = number | "ellipsis-left" | "ellipsis-right";
-const paginationKeyboardShortcuts = "Home End ArrowLeft ArrowRight";
 
 export type PaginationProps = {
   page: number;
@@ -95,6 +94,24 @@ export function Pagination({
   const nextPage = clamp(currentPage + 1, 1, resolvedPageCount);
   const canGoPrevious = !disabled && pageCount > 1 && currentPage > 1;
   const canGoNext = !disabled && pageCount > 1 && currentPage < pageCount;
+  const paginationKeyboardShortcuts = React.useMemo(() => {
+    if (disabled || pageCount <= 1) {
+      return undefined;
+    }
+
+    const shortcuts: string[] = [];
+    if (canGoPrevious) {
+      shortcuts.push("Home");
+    }
+    if (canGoNext) {
+      shortcuts.push("End");
+    }
+    if (canGoPrevious || canGoNext) {
+      shortcuts.push("ArrowLeft", "ArrowRight");
+    }
+
+    return shortcuts.length > 0 ? shortcuts.join(" ") : undefined;
+  }, [canGoNext, canGoPrevious, disabled, pageCount]);
   const resolveItemAriaLabel = React.useCallback(
     (
       type: "page" | "current" | "first" | "last" | "next" | "previous",
@@ -187,9 +204,18 @@ export function Pagination({
       return;
     }
     if (event.key === "Home") {
+      if (currentPage === 1) {
+        return;
+      }
       event.preventDefault();
       goToPageWithFocus(1);
-    } else if (event.key === "End") {
+      return;
+    }
+
+    if (event.key === "End") {
+      if (currentPage === resolvedPageCount) {
+        return;
+      }
       event.preventDefault();
       goToPageWithFocus(resolvedPageCount);
       return;
@@ -200,8 +226,13 @@ export function Pagination({
       return;
     }
 
+    const nextPage = clamp(currentPage + arrowDelta, 1, resolvedPageCount);
+    if (nextPage === currentPage) {
+      return;
+    }
+
     event.preventDefault();
-    goToPageWithFocus(currentPage + arrowDelta);
+    goToPageWithFocus(nextPage);
   };
 
   const createButtonFocusIntentProps = React.useCallback(
