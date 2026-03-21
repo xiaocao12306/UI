@@ -47,6 +47,16 @@ function isComboboxManagedKeyboardKey(key: string) {
   );
 }
 
+function isComposingComboboxKeyEvent(event: React.KeyboardEvent<HTMLInputElement>) {
+  const nativeEvent = event.nativeEvent as KeyboardEvent & { isComposing?: boolean; keyCode?: number };
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  // Legacy fallback for IME workflows on browsers emitting keyCode=229.
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
+}
+
 function isPrimaryPointerDownEvent(event: PointerEvent) {
   const button = typeof event.button === "number" ? event.button : 0;
   if (button > 0) {
@@ -238,6 +248,10 @@ export function Combobox({
         }}
         onKeyDown={(event) => {
           if (disabled) {
+            return;
+          }
+
+          if (isComboboxManagedKeyboardKey(event.key) && isComposingComboboxKeyEvent(event)) {
             return;
           }
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Combobox, type ComboboxOption } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const frameworkOptions: ComboboxOption[] = [
   { value: "react", label: "React", keywords: ["library", "jsx"] },
@@ -9,6 +9,12 @@ const frameworkOptions: ComboboxOption[] = [
   { value: "svelte", label: "Svelte", keywords: ["compiler"] },
   { value: "solid", label: "Solid", keywords: ["signals"], disabled: true }
 ];
+
+function dispatchLegacyImeKeyDown(element: HTMLElement, key: string) {
+  const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+  Object.defineProperty(event, "keyCode", { value: 229 });
+  element.dispatchEvent(event);
+}
 
 const meta = {
   title: "Form/Combobox",
@@ -129,6 +135,60 @@ export const ModifierKeyGuard: Story = {
     await userEvent.keyboard("{Escape}");
     await expect(canvas.queryByRole("listbox", { name: "Framework modifier guard options" })).not.toBeInTheDocument();
     await expect(canvas.getByTestId("combobox-modifier-selected-value")).toHaveTextContent("react");
+  }
+};
+
+function ImeGuardComboboxDemo() {
+  const [value, setValue] = React.useState("react");
+
+  return (
+    <div style={{ width: 400, display: "grid", gap: 10 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ color: "var(--aurora-text-secondary)" }}>Selected framework</span>
+        <Badge tone="default" data-testid="combobox-ime-selected-value">
+          {value}
+        </Badge>
+      </div>
+      <Combobox options={frameworkOptions} value={value} onValueChange={setValue} ariaLabel="Framework IME guard" />
+    </div>
+  );
+}
+
+export const ImeCompositionGuard: Story = {
+  render: () => <ImeGuardComboboxDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Framework IME guard" });
+
+    await userEvent.click(input);
+    await expect(canvas.getByRole("listbox", { name: "Framework IME guard options" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("combobox-ime-selected-value")).toHaveTextContent("react");
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "ArrowDown", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(input, { key: "End", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(input, { key: "Home", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(input, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(input, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    await expect(canvas.getByRole("listbox", { name: "Framework IME guard options" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("combobox-ime-selected-value")).toHaveTextContent("react");
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    dispatchLegacyImeKeyDown(input, "ArrowDown");
+    dispatchLegacyImeKeyDown(input, "End");
+    dispatchLegacyImeKeyDown(input, "Home");
+    dispatchLegacyImeKeyDown(input, "Enter");
+    dispatchLegacyImeKeyDown(input, "Escape");
+    await expect(canvas.getByRole("listbox", { name: "Framework IME guard options" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("combobox-ime-selected-value")).toHaveTextContent("react");
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "vu");
+    const vueOption = canvas.getByRole("option", { name: "Vue" });
+    await expect(vueOption).toBeInTheDocument();
+    await userEvent.click(vueOption);
+    await expect(canvas.getByTestId("combobox-ime-selected-value")).toHaveTextContent("vue");
   }
 };
 

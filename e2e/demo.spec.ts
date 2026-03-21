@@ -1778,6 +1778,43 @@ test("selects framework from combobox", async ({ page }) => {
   await expect(page.getByText("Current selection: svelte")).toBeVisible();
 });
 
+test("ignores combobox managed keys when only legacy IME keyCode is present", async ({ page }) => {
+  await page.goto("/");
+
+  const combobox = page.getByRole("combobox", { name: "Framework Combobox" });
+  await combobox.click();
+  await expect(page.getByRole("listbox", { name: "Framework Combobox options" })).toBeVisible();
+  await expect(page.getByText("Current selection: react")).toBeVisible();
+  await expect(combobox).toHaveAttribute("aria-activedescendant", /option-0$/);
+
+  await page.evaluate(() => {
+    const input = document.querySelector<HTMLInputElement>("#framework-combobox");
+    if (!input) {
+      throw new Error("Framework combobox input not found");
+    }
+
+    for (const key of ["ArrowDown", "End", "Home", "Enter", "Escape"]) {
+      const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+      Object.defineProperty(event, "keyCode", { value: 229 });
+      input.dispatchEvent(event);
+    }
+  });
+
+  await expect(page.getByRole("listbox", { name: "Framework Combobox options" })).toBeVisible();
+  await expect(page.getByText("Current selection: react")).toBeVisible();
+  await expect(combobox).toHaveAttribute("aria-activedescendant", /option-0$/);
+
+  await combobox.fill("vu");
+  await expect(
+    page
+      .getByRole("listbox", { name: "Framework Combobox options" })
+      .getByRole("option", { name: "Vue" })
+  ).toBeVisible();
+  await combobox.press("ArrowDown");
+  await combobox.press("Enter");
+  await expect(page.getByText("Current selection: vue")).toBeVisible();
+});
+
 test("updates release date with date picker", async ({ page }) => {
   await page.goto("/");
 

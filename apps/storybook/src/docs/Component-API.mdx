@@ -190,11 +190,13 @@ When controls are available, Storybook reflects the runtime API contract directl
 | trigger relation | conditional `aria-controls` | Input references listbox ID only while popup is open. |
 | option focus model | `aria-activedescendant` + `tabIndex=-1` options | Keyboard focus stays on combobox input; pointer selection uses primary-pointer `mousedown` guard to avoid focus theft. |
 | modifier-key guard | ignores `Ctrl/Meta/Alt + Arrow/Home/End/Enter/Escape` combobox handling | Preserves host/browser modified-key shortcuts and avoids accidental combobox navigation, selection, or dismiss from combined key chords. |
+| IME safety | composition key guard | Arrow/Home/End/Enter/Escape handling is ignored while `isComposing` and legacy fallback paths that only expose `keyCode=229`, so CJK confirmation does not trigger navigation, selection, or dismiss unexpectedly. |
 | dismiss policy | `Escape` / blur outside | Keeps list open when focus moves into option elements; closes on blur outside root. |
 | outside pointer policy | primary pointer only + preemption guard | Outside `pointerdown` close ignores non-primary mouse buttons and skips close when upstream handlers call `preventDefault()`. |
 
 <Canvas of={ComboboxStories.KeyboardDismissPaths} />
 <Canvas of={ComboboxStories.ModifierKeyGuard} />
+<Canvas of={ComboboxStories.ImeCompositionGuard} />
 <Canvas of={ComboboxStories.BlankAriaLabelFallback} />
 <Canvas of={ComboboxStories.ActivedescendantFocusModel} />
 

@@ -65,6 +65,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For combobox outside-pointer dismissal, ignore non-primary pointer interactions and honor upstream `pointerdown.preventDefault()` guards so context/right-click and guarded workflows do not collapse the popup unexpectedly.
 - Keep combobox `aria-controls` conditional on popup visibility to avoid dangling listbox references.
 - Keep combobox keyboard handling scoped to unmodified keys; `Ctrl/Meta/Alt + Arrow/Home/End/Enter/Escape` should stay on host/browser shortcut behavior.
+- Ignore combobox managed keys (`Arrow/Home/End/Enter/Escape`) during IME composition, including legacy browsers that only expose `keyCode=229`, so CJK confirmation does not trigger accidental navigation, selection, or dismiss.
 - Keep command-palette combobox `aria-controls` conditional on filtered-result listbox visibility so empty states do not expose stale or missing listbox IDs.
 - Localize command-palette result list semantics with `resultsAriaLabel` in non-English products, instead of relying on the default English listbox label.
 - Localize command-palette heading/search/close semantics with `title` / `description` / `searchAriaLabel` / `closeLabel` so dialog narration matches product language.

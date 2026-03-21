@@ -9,6 +9,12 @@ const options = [
   { value: "svelte", label: "Svelte", keywords: ["compiler"] }
 ];
 
+function dispatchLegacyImeKeyDown(element: HTMLElement, key: string) {
+  const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+  Object.defineProperty(event, "keyCode", { value: 229 });
+  element.dispatchEvent(event);
+}
+
 describe("Combobox", () => {
   it("ignores blank ariaLabel and falls back to default combobox name", () => {
     render(<Combobox options={options} onValueChange={() => {}} ariaLabel="   " />);
@@ -123,6 +129,38 @@ describe("Combobox", () => {
 
     fireEvent.keyDown(input, { key: "Escape", metaKey: true });
     expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onValueChange).toHaveBeenCalledWith("vue");
+  });
+
+  it("ignores managed key handling during IME composition including legacy keyCode fallback", () => {
+    const onValueChange = vi.fn();
+    render(<Combobox options={options} onValueChange={onValueChange} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "ArrowDown", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(input, { key: "End", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(input, { key: "Home", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(input, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(input, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    dispatchLegacyImeKeyDown(input, "ArrowDown");
+    dispatchLegacyImeKeyDown(input, "End");
+    dispatchLegacyImeKeyDown(input, "Home");
+    dispatchLegacyImeKeyDown(input, "Enter");
+    dispatchLegacyImeKeyDown(input, "Escape");
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
 
     fireEvent.keyDown(input, { key: "ArrowDown" });
     fireEvent.keyDown(input, { key: "Enter" });
