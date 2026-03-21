@@ -162,7 +162,7 @@ function CloseButtonKeyboardPressedStateDemo() {
         onOpenChange={() => {}}
         duration={0}
         title="Keyboard pressed close affordance"
-        description="Close button should expose pressed-state feedback for unmodified Enter/Space only."
+        description="Close button should expose pressed-state feedback for unmodified Enter/Space only, and ignore IME composition keys."
         tone="info"
       />
     </ToastShowcase>
@@ -206,6 +206,16 @@ export const CloseButtonKeyboardPressedState: Story = {
       expect(closeButton.style.transform).toContain("translateY(1px)");
     });
     fireEvent.keyUp(closeButton, { key: "Space" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+
+    fireEvent.keyDown(closeButton, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+
+    fireEvent.keyDown(closeButton, { key: "Enter", keyCode: 229, which: 229 });
     await waitFor(() => {
       expect(closeButton.style.transform).toContain("translateY(0");
     });

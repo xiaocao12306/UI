@@ -597,6 +597,9 @@ export function Toast({
           }}
           onKeyDown={(event) => {
             closeButtonFocusIntentRef.current = true;
+            if (isComposingToastCloseButtonActivationEvent(event)) {
+              return;
+            }
             if (
               isToastCloseButtonActivationKey(event.key) &&
               !isModifiedToastCloseButtonActivationChord(event)
@@ -666,6 +669,15 @@ function isToastCloseButtonActivationKey(key: string) {
 
 function isModifiedToastCloseButtonActivationChord(event: React.KeyboardEvent<HTMLButtonElement>) {
   return event.ctrlKey || event.metaKey || event.altKey;
+}
+
+function isComposingToastCloseButtonActivationEvent(event: React.KeyboardEvent<HTMLButtonElement>) {
+  const nativeEvent = event.nativeEvent;
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }
 
 function hasReadableTextNode(node: React.ReactNode): boolean {
