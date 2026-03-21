@@ -290,7 +290,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
 });
 
 function isButtonActivationKey(key: string) {
-  return key === "Enter" || key === " " || key === "Spacebar";
+  return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
 }
 
 function isModifiedActivationChord(event: React.KeyboardEvent<HTMLButtonElement>) {

@@ -1142,6 +1142,11 @@ describe("Toast", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
     fireEvent.keyUp(closeButton, { key: "Spacebar" });
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.keyDown(closeButton, { key: "Space" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.keyUp(closeButton, { key: "Space" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 
   it("applies close-button hover visuals and keyboard-intended focus fallback when focus-visible is unavailable", () => {

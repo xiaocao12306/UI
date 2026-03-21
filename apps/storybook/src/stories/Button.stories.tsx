@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Tag } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import { StoryShowcaseFrame, storyMutedTextStyle } from "./storyShowcase";
 
 const meta = {
@@ -132,6 +132,15 @@ export const KeyboardActivation: Story = {
     fireEvent.keyDown(runAction, { key: " ", altKey: true });
     fireEvent.keyUp(runAction, { key: " ", altKey: true });
     await expect(canvas.getByTestId("activation-count")).toHaveTextContent("0");
+
+    fireEvent.keyDown(runAction, { key: "Space" });
+    await waitFor(() => {
+      expect(runAction.style.transform).toContain("translateY(1px)");
+    });
+    fireEvent.keyUp(runAction, { key: "Space" });
+    await waitFor(() => {
+      expect(runAction.style.transform).not.toContain("translateY(1px)");
+    });
 
     await userEvent.keyboard("{Shift>}{Enter}{/Shift}");
     await userEvent.keyboard(" ");

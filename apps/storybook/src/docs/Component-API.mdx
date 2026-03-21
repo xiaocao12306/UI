@@ -56,7 +56,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `loading` / `loadingText` | `boolean` / `ReactNode` | Locks interactions, sets `aria-busy`, and shows deterministic loading copy. |
 | reduced-motion fallback | loading spinner tagged with `data-aurora-reduced-motion="animate"` | With `GlobalStyles`, spinner animation auto-disables under `prefers-reduced-motion` without changing loading semantics. |
 | icon-only naming | non-empty `aria-label` / `aria-labelledby` | Recommended on the button itself when visible children are icon-only; rich child content with inline `aria-label` is auto-detected, and development builds warn when naming is still missing. |
-| keyboard press feedback policy | unmodified `Enter`/`Space` (+ legacy `Spacebar`) and `Shift` variants | Ignores `Ctrl/Meta/Alt` modified activation chords so host shortcut combinations do not trigger pressed visuals. |
+| keyboard press feedback policy | unmodified `Enter`/`Space` (+ `Space` / legacy `Spacebar` key values) and `Shift` variants | Ignores `Ctrl/Meta/Alt` modified activation chords so host shortcut combinations do not trigger pressed visuals. |
 | focus intent policy | primary pointer clears focus-visible | Non-primary pointer interactions keep focus ring state; primary pointer resets keyboard-intent ring before press feedback. |
 | native button props | `ButtonHTMLAttributes` | Supports `type`, `disabled`, `onClick`, keyboard handlers. |
 
@@ -258,7 +258,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for dialog-dismiss analytics and workflow tracing. |
 | close lifecycle order | `onCloseReason -> onOpenChange(false)` | Close-button/Escape/outside-pointer paths use deterministic callback order for telemetry and reducer side effects. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer down keeps keyboard-intent ring state to avoid accidental ring loss during context/right-click interactions. |
-| close-button pressed feedback | primary pointer + unmodified `Enter`/`Space` (+ legacy `Spacebar`) | Close button exposes pressed offset/background on primary pointer down and keyboard activation key hold; `Ctrl/Meta/Alt` chords are ignored so host shortcuts do not flash pressed visuals. |
+| close-button pressed feedback | primary pointer + unmodified `Enter`/`Space` (+ `Space` / legacy `Spacebar` key values) | Close button exposes pressed offset/background on primary pointer down and keyboard activation key hold; `Ctrl/Meta/Alt` chords are ignored so host shortcuts do not flash pressed visuals. |
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside dialog | Modal focus scope keeps keyboard focus inside dialog controls while open. |
 | IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`isComposing` / `keyCode=229`) to prevent accidental close while confirming CJK input. |
 | modifier-key guard | ignores `Ctrl/Meta/Alt + Escape` | Preserves host/browser modified-key shortcuts and avoids accidental dialog dismiss/hook side effects from combined key chords. |
@@ -292,7 +292,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `showCloseButton` | `boolean` | Allows explicit in-panel action-only dismissal. |
 | `closeLabel` | `string` | Localizable close-button accessible name; blank values are ignored and fallback to `Close drawer`. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer down keeps keyboard-intent ring state to avoid accidental ring loss during context/right-click interactions. |
-| close-button pressed feedback | primary pointer + unmodified `Enter`/`Space` (+ legacy `Spacebar`) | Close button exposes pressed offset/background on primary pointer down and keyboard activation key hold; `Ctrl/Meta/Alt` chords are ignored so host shortcuts do not flash pressed visuals. |
+| close-button pressed feedback | primary pointer + unmodified `Enter`/`Space` (+ `Space` / legacy `Spacebar` key values) | Close button exposes pressed offset/background on primary pointer down and keyboard activation key hold; `Ctrl/Meta/Alt` chords are ignored so host shortcuts do not flash pressed visuals. |
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside drawer | Modal focus scope keeps keyboard focus inside drawer controls while open. |
 | modifier-key guard | ignores `Ctrl/Meta/Alt + Escape` | Preserves host/browser modified-key shortcuts and avoids accidental drawer dismiss/hook side effects from combined key chords. |
 | Escape repeat guard | ignores repeated keydown | Long-press Escape (`event.repeat=true`) is ignored so one key press closes at most one drawer and avoids duplicate dismiss telemetry. |
@@ -623,7 +623,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Escape scope isolation | `ownerDocument` stack isolation | Escape-priority stacks and shortcut hints are isolated per document root, so key events in another document do not close this toast stack. |
 | stacked viewport layout | per-position visual offset | Same-corner toast stacks apply deterministic offset so older notifications remain visible under the latest toast. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer interactions keep keyboard-intent ring state to avoid accidental focus-ring loss during context/right-click paths. |
-| close-button keyboard pressed feedback | unmodified `Enter`/`Space` (+ legacy `Spacebar`) | Close button exposes pressed-state offset for unmodified keyboard activation keys; `Ctrl/Meta/Alt` chords are ignored so host shortcuts do not trigger pressed visuals. |
+| close-button keyboard pressed feedback | unmodified `Enter`/`Space` (+ `Space` / legacy `Spacebar` key values) | Close button exposes pressed-state offset for unmodified keyboard activation keys; `Ctrl/Meta/Alt` chords are ignored so host shortcuts do not trigger pressed visuals. |
 | `closeLabel` | `string` | Customize close-button accessible name for i18n; blank values are ignored and fallback to `Close toast`. |
 | `ariaLabel` | `string` | Optional live-region accessible name override for icon-only or non-text titles; rich titles with readable text or inline `aria-label` are auto-detected, and development builds warn when non-text titles omit both. Blank values are ignored and fallback to title-derived naming. |
 

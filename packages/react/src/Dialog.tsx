@@ -247,7 +247,7 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
 }
 
 function isDialogCloseButtonActivationKey(key: string) {
-  return key === "Enter" || key === " " || key === "Spacebar";
+  return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
 }
 
 function isModifiedDialogCloseButtonActivationChord(event: Pick<KeyboardEvent, "altKey" | "ctrlKey" | "metaKey">) {

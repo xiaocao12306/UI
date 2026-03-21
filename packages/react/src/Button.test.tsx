@@ -92,9 +92,14 @@ describe("Button", () => {
     matchesSpy.mockRestore();
   });
 
-  it("supports legacy Spacebar key value for pressed-state feedback", () => {
-    render(<Button>Legacy Spacebar</Button>);
-    const button = screen.getByRole("button", { name: "Legacy Spacebar" });
+  it("supports Space and legacy Spacebar key values for pressed-state feedback", () => {
+    render(<Button>Space key aliases</Button>);
+    const button = screen.getByRole("button", { name: "Space key aliases" });
+
+    fireEvent.keyDown(button, { key: "Space" });
+    expect(button.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.keyUp(button, { key: "Space" });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
 
     fireEvent.keyDown(button, { key: "Spacebar" });
     expect(button.getAttribute("style")).toContain("translateY(1px)");

@@ -239,6 +239,15 @@ export const CloseButtonKeyboardPressedState: Story = {
     await waitFor(() => {
       expect(closeButton.style.transform).toContain("translateY(0");
     });
+
+    fireEvent.keyDown(closeButton, { key: "Space" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(1px)");
+    });
+    fireEvent.keyUp(closeButton, { key: "Space" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
   }
 };
 

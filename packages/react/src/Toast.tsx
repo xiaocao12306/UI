@@ -655,7 +655,7 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
 }
 
 function isToastCloseButtonActivationKey(key: string) {
-  return key === "Enter" || key === " " || key === "Spacebar";
+  return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
 }
 
 function isModifiedToastCloseButtonActivationChord(event: React.KeyboardEvent<HTMLButtonElement>) {

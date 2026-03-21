@@ -243,7 +243,7 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
 }
 
 function isDrawerCloseButtonActivationKey(key: string) {
-  return key === "Enter" || key === " " || key === "Spacebar";
+  return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
 }
 
 function isModifiedDrawerCloseButtonActivationChord(event: Pick<KeyboardEvent, "altKey" | "ctrlKey" | "metaKey">) {
