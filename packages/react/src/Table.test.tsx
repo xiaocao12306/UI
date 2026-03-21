@@ -1133,6 +1133,34 @@ describe("Table", () => {
     expect(sortButton.style.transform).toBe("translateY(0)");
   });
 
+  it("applies pressed offset while keyboard activation key is held on sortable headers", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    await user.tab();
+    expect(sortButton).toHaveFocus();
+
+    await user.keyboard("[Enter>]");
+    expect(sortButton.style.transform).toBe("translateY(1px)");
+
+    await user.keyboard("[/Enter]");
+    expect(sortButton.style.transform).toBe("translateY(0)");
+  });
+
   it("ignores non-primary pointer buttons for sortable-header pressed state", () => {
     render(
       <Table

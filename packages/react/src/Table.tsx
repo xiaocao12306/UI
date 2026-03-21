@@ -654,6 +654,7 @@ export function Table<T>({
                         if (event.repeat) {
                           return;
                         }
+                        setPressedSortKey(key);
                         keyboardActivationSortKeyRef.current = key;
                         keyboardActivationTimestampRef.current = Date.now();
                         const ownerWindow = event.currentTarget.ownerDocument.defaultView ?? window;
@@ -666,6 +667,17 @@ export function Table<T>({
                           clearKeyboardActivationLatch();
                         }, keyboardSortClickDedupeWindowMs);
                         activateSort();
+                      }}
+                      onKeyUp={(event) => {
+                        if (event.altKey || event.ctrlKey || event.metaKey) {
+                          return;
+                        }
+
+                        if (!isSortActivationKey(event.key)) {
+                          return;
+                        }
+
+                        setPressedSortKey((currentKey) => (currentKey === key ? null : currentKey));
                       }}
                       style={{
                         border: interactive
