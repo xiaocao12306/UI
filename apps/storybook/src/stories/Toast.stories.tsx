@@ -212,6 +212,38 @@ export const CloseButtonKeyboardPressedState: Story = {
   }
 };
 
+function FocusIntentReentryDemo() {
+  return (
+    <ToastShowcase align="start">
+      <button type="button">Before toast close</button>
+      <Toast
+        open
+        onOpenChange={() => {}}
+        duration={0}
+        title="Focus intent re-entry toast"
+        description="Click the preceding control first, then Tab to verify close-button focus ring recovery."
+        tone="info"
+      />
+    </ToastShowcase>
+  );
+}
+
+export const FocusIntentReentry: Story = {
+  render: () => <FocusIntentReentryDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const beforeButton = await canvas.findByRole("button", { name: "Before toast close" });
+    const closeButton = await canvas.findByRole("button", { name: "Close toast" });
+
+    await userEvent.click(beforeButton);
+    await expect(beforeButton).toHaveFocus();
+
+    await userEvent.tab();
+    await expect(closeButton).toHaveFocus();
+    await expect(closeButton.style.boxShadow).toContain("0 0 0 3px");
+  }
+};
+
 function ActionRequiredToastDemo() {
   const [open, setOpen] = React.useState(true);
 

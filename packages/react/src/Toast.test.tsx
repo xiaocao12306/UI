@@ -1283,4 +1283,46 @@ describe("Toast", () => {
     expect(closeButton.style.boxShadow).toContain("0 0 0 3px");
     matchesSpy.mockRestore();
   });
+
+  it("restores close-button focus fallback for iframe-hosted toasts after ownerDocument keyboard intent", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeWindow = iframe.contentWindow;
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeWindow || !iframeDocument) {
+      throw new Error("Expected iframe document to be available in test environment.");
+    }
+
+    const container = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(container);
+    const { getByRole, unmount } = render(<Toast open title="Iframe keyboard re-entry" duration={0} />, {
+      container,
+      baseElement: iframeDocument.body
+    });
+
+    const closeButton = getByRole("button", { name: "Close toast" });
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is unsupported");
+    });
+
+    try {
+      iframeDocument.dispatchEvent(new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0 }));
+      fireEvent.focus(closeButton);
+      expect(closeButton.style.boxShadow).toBe("none");
+
+      fireEvent.blur(closeButton);
+      iframeDocument.dispatchEvent(new iframeWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true }));
+      fireEvent.focus(closeButton);
+      expect(closeButton.style.boxShadow).toContain("0 0 0 3px");
+
+      fireEvent.blur(closeButton);
+      iframeDocument.dispatchEvent(new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0 }));
+      fireEvent.focus(closeButton);
+      expect(closeButton.style.boxShadow).toBe("none");
+    } finally {
+      unmount();
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
 });
