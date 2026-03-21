@@ -568,6 +568,7 @@ export function Toast({
           type="button"
           onClick={closeByButton}
           aria-label={resolvedCloseLabel}
+          aria-keyshortcuts="Enter Space"
           onMouseEnter={() => {
             setCloseButtonHovered(true);
           }}

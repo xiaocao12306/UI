@@ -1149,6 +1149,14 @@ describe("Toast", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 
+  it("exposes close-button keyboard shortcut hints for Enter/Space activation", () => {
+    render(<Toast open title="Shortcut hints" duration={0} />);
+    expect(screen.getByRole("button", { name: "Close toast" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space"
+    );
+  });
+
   it("applies close-button hover visuals and keyboard-intended focus fallback when focus-visible is unavailable", () => {
     render(<Toast open title="Hover + fallback" duration={0} />);
 

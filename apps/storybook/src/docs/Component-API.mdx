@@ -628,7 +628,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Escape scope isolation | `ownerDocument` stack isolation | Escape-priority stacks and shortcut hints are isolated per document root, so key events in another document do not close this toast stack. |
 | stacked viewport layout | per-position visual offset | Same-corner toast stacks apply deterministic offset so older notifications remain visible under the latest toast. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer interactions keep keyboard-intent ring state to avoid accidental focus-ring loss during context/right-click paths. |
-| close-button keyboard pressed feedback | unmodified `Enter`/`Space` (+ `Space` / legacy `Spacebar` key values) | Close button exposes pressed-state offset for unmodified keyboard activation keys; `Ctrl/Meta/Alt` chords are ignored so host shortcuts do not trigger pressed visuals. |
+| close-button keyboard pressed feedback | unmodified `Enter`/`Space` (+ `Space` / legacy `Spacebar` key values) + `aria-keyshortcuts="Enter Space"` | Close button exposes pressed-state offset for unmodified keyboard activation keys and explicit shortcut hints; `Ctrl/Meta/Alt` chords are ignored so host shortcuts do not trigger pressed visuals. |
 | `closeLabel` | `string` | Customize close-button accessible name for i18n; blank values are ignored and fallback to `Close toast`. |
 | `ariaLabel` | `string` | Optional live-region accessible name override for icon-only or non-text titles; rich titles with readable text or inline `aria-label` are auto-detected, and development builds warn when non-text titles omit both. Blank values are ignored and fallback to title-derived naming. |
 
