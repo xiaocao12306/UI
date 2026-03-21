@@ -138,12 +138,13 @@ When controls are available, Storybook reflects the runtime API contract directl
 | Prop | Type | Notes |
 | --- | --- | --- |
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled single-choice flows. |
-| `ariaLabel` | `string` | Optional radiogroup accessible name override; blank values are ignored and fallback to `name`. |
+| `ariaLabel` / `ariaLabelledBy` | `string` / `string` | Optional radiogroup naming override; blank values are ignored, and `ariaLabelledBy` takes precedence when both are provided (`ariaLabel` otherwise falls back to `name`). |
 | `options[].disabled` | `boolean` | Disable specific choices without removing context. |
 | `invalid` | `boolean` | Applies `aria-invalid` to the `radiogroup` container for screen-reader narration. |
 | `direction` | `'vertical' \| 'horizontal'` | Layout direction for stacked vs inline groups. |
 
 <Canvas of={RadioGroupStories.InvalidState} />
+<Canvas of={RadioGroupStories.LabelledByPrecedence} />
 
 ### Switch
 

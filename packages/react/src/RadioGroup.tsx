@@ -15,6 +15,7 @@ export type RadioGroupProps = {
   options: RadioOption[];
   onChange?: (nextValue: string) => void;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
   invalid?: boolean;
   "aria-invalid"?: React.AriaAttributes["aria-invalid"];
   disabled?: boolean;
@@ -28,6 +29,7 @@ export function RadioGroup({
   options,
   onChange,
   ariaLabel,
+  ariaLabelledBy,
   invalid,
   "aria-invalid": ariaInvalid,
   disabled = false,
@@ -37,10 +39,10 @@ export function RadioGroup({
   const currentValue = value ?? internalValue;
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
-  const resolvedAriaLabel =
-    typeof ariaLabel === "string" && ariaLabel.trim().length > 0
-      ? ariaLabel.trim()
-      : undefined;
+  const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
+  const resolvedAriaLabel = resolvedAriaLabelledBy
+    ? undefined
+    : resolveNonEmptyLabel(ariaLabel);
 
   const handleChange = (nextValue: string, optionDisabled: boolean | undefined) => {
     if (disabled || optionDisabled) {
@@ -60,7 +62,8 @@ export function RadioGroup({
         alignItems: direction === "horizontal" ? "center" : undefined
       }}
       role="radiogroup"
-      aria-label={resolvedAriaLabel ?? name}
+      aria-label={resolvedAriaLabelledBy ? undefined : resolvedAriaLabel ?? name}
+      aria-labelledby={resolvedAriaLabelledBy}
       aria-invalid={resolvedInvalidAria}
     >
       {options.map((option) => (
@@ -99,4 +102,13 @@ export function RadioGroup({
       ))}
     </div>
   );
+}
+
+function resolveNonEmptyLabel(label: string | undefined) {
+  if (typeof label !== "string") {
+    return undefined;
+  }
+
+  const normalized = label.trim();
+  return normalized.length > 0 ? normalized : undefined;
 }

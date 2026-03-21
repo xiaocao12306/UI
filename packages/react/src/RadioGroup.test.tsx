@@ -74,4 +74,30 @@ describe("RadioGroup", () => {
     render(<RadioGroup name="Fallback group name" ariaLabel="   " options={baseOptions} />);
     expect(screen.getByRole("radiogroup", { name: "Fallback group name" })).toBeInTheDocument();
   });
+
+  it("supports ariaLabelledBy naming and suppresses ariaLabel fallback", () => {
+    render(
+      <div>
+        <p id="radiogroup-heading">External group heading</p>
+        <RadioGroup
+          name="Fallback group name"
+          ariaLabel="Fallback group label"
+          ariaLabelledBy="radiogroup-heading"
+          options={baseOptions}
+        />
+      </div>
+    );
+
+    const group = screen.getByRole("radiogroup", { name: "External group heading" });
+    expect(group).toHaveAttribute("aria-labelledby", "radiogroup-heading");
+    expect(group).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and keeps fallback name semantics", () => {
+    render(<RadioGroup name="Fallback group name" ariaLabelledBy="   " options={baseOptions} />);
+
+    const group = screen.getByRole("radiogroup", { name: "Fallback group name" });
+    expect(group).not.toHaveAttribute("aria-labelledby");
+    expect(group).toHaveAttribute("aria-label", "Fallback group name");
+  });
 });

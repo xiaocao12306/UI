@@ -77,3 +77,26 @@ export const DisabledOption: Story = {
     ]
   }
 };
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ width: 340, display: "grid", gap: 12 }}>
+      <p id="radiogroup-story-heading" style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Release preference heading
+      </p>
+      <RadioGroup
+        name="Release preference fallback"
+        ariaLabel="Release preference fallback label"
+        ariaLabelledBy="radiogroup-story-heading"
+        defaultValue="m"
+        options={options}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const group = canvas.getByRole("radiogroup", { name: "Release preference heading" });
+    await expect(group).toHaveAttribute("aria-labelledby", "radiogroup-story-heading");
+    await expect(group).not.toHaveAttribute("aria-label");
+  }
+};
