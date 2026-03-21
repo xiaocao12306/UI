@@ -565,6 +565,53 @@ describe("CommandPalette", () => {
     matchesSpy.mockRestore();
   });
 
+  it("restores close-button focus fallback for iframe-hosted palettes after ownerDocument keyboard intent", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    const iframeWindow = iframe.contentWindow;
+    if (!iframeDocument || !iframeWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+    const { getByRole, unmount } = render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />,
+      {
+        container: iframeContainer,
+        baseElement: iframeDocument.body
+      }
+    );
+
+    const input = getByRole("combobox", { name: "Search commands" });
+    const closeButton = getByRole("button", { name: "Close dialog" });
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is unsupported");
+    });
+
+    try {
+      fireEvent.mouseDown(input, { button: 0 });
+      fireEvent.focus(closeButton);
+      expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+      fireEvent.blur(closeButton);
+      iframeDocument.dispatchEvent(
+        new iframeWindow.KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true })
+      );
+      fireEvent.focus(closeButton);
+      expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+    } finally {
+      unmount();
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("supports immediate keyboard query and Enter selection after opening from closed state", async () => {
     const onOpenChange = vi.fn();
     const onRunE2E = vi.fn();
