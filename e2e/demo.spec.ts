@@ -1409,6 +1409,35 @@ test("keeps manual tabs panel stable until Shift+Enter activation", async ({ pag
   await expect(reviewPanel).not.toHaveAttribute("hidden");
 });
 
+test("ignores manual tabs activation when only legacy IME keyCode is present", async ({ page }) => {
+  await page.goto("/");
+
+  const manualTablist = page.getByRole("tablist", { name: "Manual release workflow tabs" });
+  const draftTab = manualTablist.getByRole("tab", { name: "Draft" });
+  const reviewTab = manualTablist.getByRole("tab", { name: "Review" });
+  const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
+  const reviewPanel = page.locator(`#${await reviewTab.getAttribute("aria-controls")}`);
+
+  await draftTab.focus();
+  await draftTab.press("ArrowRight");
+  await expect(reviewTab).toBeFocused();
+  await expect(reviewPanel).toHaveAttribute("hidden");
+
+  await reviewTab.evaluate((element) => {
+    for (const key of ["Enter", " "]) {
+      const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+      Object.defineProperty(event, "keyCode", { value: 229 });
+      element.dispatchEvent(event);
+    }
+  });
+
+  await expect(draftPanel).not.toHaveAttribute("hidden");
+  await expect(reviewPanel).toHaveAttribute("hidden");
+
+  await reviewTab.press("Enter");
+  await expect(reviewPanel).not.toHaveAttribute("hidden");
+});
+
 test("ignores repeated Enter keydown before manual tabs activation", async ({ page }) => {
   await page.goto("/");
 

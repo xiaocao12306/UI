@@ -430,6 +430,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | manual activation repeat guard | ignores repeated keydown | Manual-mode activation ignores repeated `Enter`/`Space` (`event.repeat=true`) so long-press does not emit duplicate tab-change events. |
 | manual activation pressed feedback | activation keydown sets pressed, keyup clears | In manual mode, tab triggers expose pressed offset while `Enter`/`Space`/`Spacebar` is held so keyboard activation has the same active affordance as pointer interactions. |
 | modifier-key guard | ignores `Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space` | Preserves host app/browser modified-key shortcuts and avoids unexpected tab navigation/activation hijack across horizontal (`ArrowLeft/ArrowRight`) and vertical (`ArrowUp/ArrowDown`) maps; `Shift + Enter/Space` remains valid for manual activation flows. |
+| IME activation guard | ignores `Enter/Space` while composition is active (`isComposing` or legacy `keyCode=229`) | Prevents accidental manual-tab activation while users confirm CJK input, including legacy browser paths that only emit `keyCode=229`. |
 | focus intent policy | primary pointer clears focus-visible | Non-primary pointer interactions keep keyboard-intent ring state; primary pointer down clears focus-visible and drives pressed offset lifecycle. |
 | `loop` | `boolean` | Defaults to `true`; set `false` to stop Arrow navigation at first/last enabled tab instead of wrapping. |
 | `onValueChange` | `(value: string) => void` | Fires only for enabled tabs and only when active key changes. |
@@ -445,6 +446,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={TabsStories.ManualActivationPressedFeedback} />
 <Canvas of={TabsStories.ManualFocusResetOnBlur} />
 <Canvas of={TabsStories.ManualVerticalActivation} />
+<Canvas of={TabsStories.ImeCompositionGuard} />
 <Canvas of={TabsStories.PrimaryPointerOnlyPressedState} />
 <Canvas of={TabsStories.ChangeTelemetry} />
 <Canvas of={TabsStories.ControlsReferenceMountedPanels} />

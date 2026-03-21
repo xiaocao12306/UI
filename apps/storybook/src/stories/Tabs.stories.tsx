@@ -67,6 +67,12 @@ function dispatchImeKeyDown(element: HTMLElement, key: string) {
   element.dispatchEvent(event);
 }
 
+function dispatchLegacyImeKeyDown(element: HTMLElement, key: string) {
+  const event = new KeyboardEvent("keydown", { key, bubbles: true });
+  Object.defineProperty(event, "keyCode", { value: 229 });
+  element.dispatchEvent(event);
+}
+
 const meta = {
   title: "Data/Tabs",
   component: Tabs,
@@ -826,6 +832,14 @@ export const ImeCompositionGuard: Story = {
     await expect(buildTab).toHaveAttribute("aria-selected", "false");
 
     dispatchImeKeyDown(buildTab, "Space");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+    await expect(buildTab).toHaveAttribute("aria-selected", "false");
+
+    dispatchLegacyImeKeyDown(buildTab, "Enter");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+    await expect(buildTab).toHaveAttribute("aria-selected", "false");
+
+    dispatchLegacyImeKeyDown(buildTab, "Space");
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
     await expect(buildTab).toHaveAttribute("aria-selected", "false");
 

@@ -733,6 +733,11 @@ describe("Tabs", () => {
     const twoTab = screen.getByRole("tab", { name: "Two" });
     fireEvent.keyDown(twoTab, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
     fireEvent.keyDown(twoTab, { key: " ", isComposing: true, keyCode: 229, which: 229 });
+    for (const key of ["Enter", " "]) {
+      const legacyImeEvent = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+      Object.defineProperty(legacyImeEvent, "keyCode", { value: 229 });
+      twoTab.dispatchEvent(legacyImeEvent);
+    }
     expect(onValueChange).not.toHaveBeenCalled();
 
     fireEvent.keyDown(twoTab, { key: "Enter" });
