@@ -205,11 +205,11 @@ export function Dialog({
                       setCloseButtonPressed(false);
                     }}
                     onMouseDown={(event) => {
-                      if (event.button === 0) {
+                      if (event.button === 0 && !event.ctrlKey) {
                         closeButtonFocusIntentRef.current = false;
                         setCloseButtonFocusVisible(false);
                       }
-                      if (event.button === 0) {
+                      if (event.button === 0 && !event.ctrlKey) {
                         setCloseButtonPressed(true);
                       }
                     }}

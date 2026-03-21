@@ -181,7 +181,7 @@ describe("Dialog", () => {
     matchesSpy.mockRestore();
   });
 
-  it("shows pressed feedback on close button only for primary pointer interactions", () => {
+  it("shows pressed feedback on close button only for plain primary pointer interactions", () => {
     render(
       <Dialog open onOpenChange={() => {}} title="Pressed close button dialog">
         <p>Body</p>
@@ -192,6 +192,9 @@ describe("Dialog", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
 
     fireEvent.mouseDown(closeButton, { button: 1 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.mouseDown(closeButton, { button: 0, ctrlKey: true });
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
 
     fireEvent.mouseDown(closeButton, { button: 0 });
@@ -243,7 +246,7 @@ describe("Dialog", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 
-  it("keeps close-button focus-visible state on non-primary mouse down", () => {
+  it("keeps close-button focus-visible state on non-primary or ctrl-primary mouse down", () => {
     render(
       <Dialog open onOpenChange={() => {}} title="Focus intent dialog">
         <p>Body</p>
@@ -264,6 +267,9 @@ describe("Dialog", () => {
     expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
 
     fireEvent.mouseDown(closeButton, { button: 1 });
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.mouseDown(closeButton, { button: 0, ctrlKey: true });
     expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
 
     fireEvent.mouseDown(closeButton, { button: 0 });

@@ -461,7 +461,7 @@ describe("Drawer", () => {
     matchesSpy.mockRestore();
   });
 
-  it("preserves close-button focus ring on non-primary pointer down", () => {
+  it("preserves close-button focus ring on non-primary or ctrl-primary pointer down", () => {
     render(
       <Drawer open onOpenChange={() => {}} title="Secondary pointer drawer">
         <p>Drawer content</p>
@@ -483,6 +483,10 @@ describe("Drawer", () => {
 
     fireEvent.mouseDown(closeButton, { button: 2 });
     expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.mouseDown(closeButton, { button: 0, ctrlKey: true });
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
     matchesSpy.mockRestore();
   });
 
@@ -619,7 +623,7 @@ describe("Drawer", () => {
     }
   });
 
-  it("applies pressed transform only for primary-button close-button pointer paths", () => {
+  it("applies pressed transform only for plain primary-button close-button pointer paths", () => {
     render(
       <Drawer open onOpenChange={() => {}} title="Pressable drawer">
         <p>Drawer content</p>
@@ -628,6 +632,9 @@ describe("Drawer", () => {
 
     const closeButton = screen.getByRole("button", { name: "Close drawer" });
     fireEvent.mouseDown(closeButton, { button: 2 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.mouseDown(closeButton, { button: 0, ctrlKey: true });
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
 
     fireEvent.mouseDown(closeButton, { button: 0 });
