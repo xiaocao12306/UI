@@ -27,9 +27,11 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("article", { name: "Assistant message" })).toHaveTextContent(
+    const assistantMessage = canvas.getByRole("article", { name: "Assistant message" });
+    await expect(assistantMessage).toHaveTextContent(
       "Here is the generated summary."
     );
+    await expect(assistantMessage).toHaveAttribute("aria-roledescription", "message");
   }
 };
 
@@ -54,7 +56,7 @@ export const LocalizedNaming: Story = {
       <MessageBubble speaker="user" speakerLabel="产品经理">
         请输出 v0.2 发布摘要。
       </MessageBubble>
-      <MessageBubble speaker="assistant" ariaLabel="发布助手回复">
+      <MessageBubble speaker="assistant" ariaLabel="发布助手回复" roleDescription="聊天消息">
         已生成按模块拆分的发布摘要。
       </MessageBubble>
     </StoryFullscreenFrame>
@@ -63,6 +65,8 @@ export const LocalizedNaming: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("article", { name: "系统 message" })).toBeInTheDocument();
     await expect(canvas.getByRole("article", { name: "产品经理 message" })).toBeInTheDocument();
-    await expect(canvas.getByRole("article", { name: "发布助手回复" })).toBeInTheDocument();
+    const assistantMessage = canvas.getByRole("article", { name: "发布助手回复" });
+    await expect(assistantMessage).toBeInTheDocument();
+    await expect(assistantMessage).toHaveAttribute("aria-roledescription", "聊天消息");
   }
 };

@@ -224,6 +224,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Localize prompt input naming and helper copy with `ariaLabel`, `shortcutHint`, and `submittingHint`; keep `aria-keyshortcuts="Control+Enter Meta+Enter"` exposed for shortcut discoverability.
 - Keep prompt helper text bound through `aria-describedby` so assistive tech announces shortcut/pending guidance from the same live hint node.
 - Localize message-bubble narration with `speakerLabel` or explicit `ariaLabel`; blank values should be omitted so speaker-based fallback naming remains valid.
+- Localize message semantics with `roleDescription` when product vocabulary differs from plain `message`; blank values should fallback to default role description.
 - Localize reasoning disclosure semantics with `expandLabel`/`collapseLabel` and `listAriaLabel` so assistive-tech narration matches product language.
 - Keep reasoning disclosure shortcuts discoverable with `aria-keyshortcuts="Enter Space"` so QA/AT audits can verify keyboard toggle support.
 - Show reasoning disclosure with explicit user intent (default collapsed).

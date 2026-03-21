@@ -15,6 +15,7 @@ describe("MessageBubble", () => {
     expect(screen.getByRole("article", { name: "User message" })).toHaveTextContent("Ship this today.");
     expect(screen.getByRole("article", { name: "Assistant message" })).toHaveTextContent("Draft created. Please review.");
     expect(screen.getByRole("article", { name: "System message" })).toHaveTextContent("Autosaved 2 minutes ago.");
+    expect(screen.getByRole("article", { name: "User message" })).toHaveAttribute("aria-roledescription", "message");
   });
 
   it("exposes speaker marker for diagnostics hooks", () => {
@@ -43,5 +44,28 @@ describe("MessageBubble", () => {
       </MessageBubble>
     );
     expect(screen.getByRole("article", { name: "User message" })).toHaveTextContent("Fallback label.");
+  });
+
+  it("supports localized role description and falls back when blank", () => {
+    const { rerender } = render(
+      <MessageBubble speaker="assistant" roleDescription="聊天消息">
+        已完成草稿生成。
+      </MessageBubble>
+    );
+
+    expect(screen.getByRole("article", { name: "Assistant message" })).toHaveAttribute(
+      "aria-roledescription",
+      "聊天消息"
+    );
+
+    rerender(
+      <MessageBubble speaker="assistant" roleDescription="   ">
+        Fallback role description.
+      </MessageBubble>
+    );
+    expect(screen.getByRole("article", { name: "Assistant message" })).toHaveAttribute(
+      "aria-roledescription",
+      "message"
+    );
   });
 });

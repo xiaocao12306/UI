@@ -7,6 +7,7 @@ export type MessageBubbleProps = {
   children: React.ReactNode;
   ariaLabel?: string;
   speakerLabel?: string;
+  roleDescription?: string;
 };
 
 const speakerStyles: Record<MessageSpeaker, React.CSSProperties> = {
@@ -36,13 +37,15 @@ const speakerLabels: Record<MessageSpeaker, string> = {
   system: "System"
 };
 
-export function MessageBubble({ speaker, children, ariaLabel, speakerLabel }: MessageBubbleProps) {
+export function MessageBubble({ speaker, children, ariaLabel, speakerLabel, roleDescription }: MessageBubbleProps) {
   const resolvedSpeakerLabel = resolveNonEmptyLabel(speakerLabel) ?? speakerLabels[speaker];
   const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel) ?? `${resolvedSpeakerLabel} message`;
+  const resolvedRoleDescription = resolveNonEmptyLabel(roleDescription) ?? "message";
 
   return (
     <article
       aria-label={resolvedAriaLabel}
+      aria-roledescription={resolvedRoleDescription}
       data-speaker={speaker}
       style={{
         maxWidth: "min(680px, 90%)",
