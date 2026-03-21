@@ -1,5 +1,7 @@
 import * as React from "react";
 
+const sortableHeaderKeyboardShortcuts = "Enter Space Home End PageDown PageUp";
+
 export type TableAlign = "left" | "center" | "right";
 export type TableSortDirection = "asc" | "desc";
 
@@ -521,7 +523,7 @@ export function Table<T>({
                         sortButtonRefs.current[key] = node;
                       }}
                       aria-label={resolvedSortAriaLabel}
-                      aria-keyshortcuts={sortDisabled ? undefined : "Enter Space"}
+                      aria-keyshortcuts={sortDisabled ? undefined : sortableHeaderKeyboardShortcuts}
                       disabled={sortDisabled}
                       onClick={(event) => {
                         const keyboardActivationAgeMs = Date.now() - keyboardActivationTimestampRef.current;

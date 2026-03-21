@@ -904,7 +904,7 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenLastCalledWith("name", "asc");
   });
 
-  it("exposes Enter/Space keyboard shortcuts on sortable headers", () => {
+  it("exposes activation and focus-navigation keyboard shortcuts on sortable headers", () => {
     render(
       <Table
         columns={[
@@ -921,7 +921,7 @@ describe("Table", () => {
 
     expect(screen.getByRole("button", { name: "Name sort descending" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "Enter Space"
+      "Enter Space Home End PageDown PageUp"
     );
   });
 

@@ -424,7 +424,10 @@ export const SortTelemetry: Story = {
     await expect(scrollContainer).not.toHaveAttribute("tabindex");
 
     const issueSort = canvas.getByRole("button", { name: "Issue sort descending" });
-    await expect(issueSort).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    await expect(issueSort).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space Home End PageDown PageUp"
+    );
 
     issueSort.focus();
     await userEvent.keyboard("{End}");
