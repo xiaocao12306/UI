@@ -496,6 +496,7 @@ function App() {
   const [tableSortTelemetry, setTableSortTelemetry] = React.useState("component:asc");
   const [tableLoading, setTableLoading] = React.useState(false);
   const [tableEmpty, setTableEmpty] = React.useState(false);
+  const [tableRtl, setTableRtl] = React.useState(false);
   const feedPageSize = 3;
   const feedPageCount = Math.ceil(releaseFeed.length / feedPageSize);
   const visibleFeed = releaseFeed.slice((feedPage - 1) * feedPageSize, feedPage * feedPageSize);
@@ -1201,33 +1202,42 @@ function App() {
                     <h3 style={panelTitleStyle}>Readiness Table</h3>
                     <p style={panelDescriptionStyle}>
                       Sortable readiness data paired with state toggles for loading and empty
-                      branches.
+                      branches. RTL mode mirrors ArrowLeft/ArrowRight sortable-header traversal to
+                      visual column order.
                     </p>
                   </div>
-                  <Table
-                    caption="Component readiness metrics"
-                    defaultSortKey="component"
-                    onSortChange={(key, direction) => setTableSortTelemetry(`${key}:${direction}`)}
-                    loading={tableLoading}
-                    loadingContent="Syncing component readiness metrics..."
-                    emptyContent="No component readiness metrics yet."
-                    columns={[
-                      { key: "component", header: "Component", sortable: true, rowHeader: true },
-                      { key: "status", header: "Status", sortable: true },
-                      {
-                        key: "coverage",
-                        header: "Coverage",
-                        sortable: true,
-                        render: (row) => `${row.coverage}%`
-                      }
-                    ]}
-                    data={tableRows}
-                  />
+                  <div dir={tableRtl ? "rtl" : "ltr"} data-testid="table-direction-container">
+                    <Table
+                      caption="Component readiness metrics"
+                      defaultSortKey="component"
+                      onSortChange={(key, direction) => setTableSortTelemetry(`${key}:${direction}`)}
+                      loading={tableLoading}
+                      loadingContent="Syncing component readiness metrics..."
+                      emptyContent="No component readiness metrics yet."
+                      columns={[
+                        { key: "component", header: "Component", sortable: true, rowHeader: true },
+                        { key: "status", header: "Status", sortable: true },
+                        {
+                          key: "coverage",
+                          header: "Coverage",
+                          sortable: true,
+                          render: (row) => `${row.coverage}%`
+                        }
+                      ]}
+                      data={tableRows}
+                    />
+                  </div>
                   <div className="demo-telemetry-grid">
                     <p style={mutedBodyStyle}>
                       Table sort telemetry:{" "}
                       <strong data-testid="table-sort-telemetry" style={telemetryValueStyle}>
                         {tableSortTelemetry}
+                      </strong>
+                    </p>
+                    <p style={mutedBodyStyle}>
+                      Table direction:{" "}
+                      <strong data-testid="table-direction-telemetry" style={telemetryValueStyle}>
+                        {tableRtl ? "rtl" : "ltr"}
                       </strong>
                     </p>
                   </div>
@@ -1237,6 +1247,9 @@ function App() {
                     </Button>
                     <Button variant="outline" onClick={() => setTableEmpty((value) => !value)}>
                       Toggle table empty state
+                    </Button>
+                    <Button variant="outline" onClick={() => setTableRtl((value) => !value)}>
+                      Toggle table RTL mode
                     </Button>
                   </div>
                 </div>

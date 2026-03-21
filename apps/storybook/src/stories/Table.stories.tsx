@@ -503,6 +503,34 @@ export const SortTelemetry: Story = {
   }
 };
 
+export const RtlArrowNavigation: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={8}>
+      <p style={storyMutedTextStyle}>
+        In RTL layout, ArrowLeft/ArrowRight sortable-header traversal follows visual column order.
+      </p>
+      <div dir="rtl">
+        <Table columns={columns} data={rows} defaultSortKey="id" />
+      </div>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const issueSort = canvas.getByRole("button", { name: "Issue sort descending" });
+    const componentSort = canvas.getByRole("button", { name: "Component sort ascending" });
+
+    issueSort.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(issueSort).toHaveFocus();
+
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(componentSort).toHaveFocus();
+
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(issueSort).toHaveFocus();
+  }
+};
+
 function ImeCompositionGuardDemo() {
   const [sortState, setSortState] = React.useState("id asc");
 

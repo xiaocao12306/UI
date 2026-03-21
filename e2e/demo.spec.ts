@@ -1072,6 +1072,30 @@ test("navigates demo table sortable headers with ArrowLeft/ArrowRight", async ({
   await expect(telemetry).toHaveText("component:asc");
 });
 
+test("mirrors demo table ArrowLeft/ArrowRight navigation in rtl mode", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
+  const directionToggle = page.getByRole("button", { name: "Toggle table RTL mode" });
+  const directionTelemetry = page.getByTestId("table-direction-telemetry");
+  const componentSortDesc = table.getByRole("button", { name: "Component sort descending" });
+  const statusSort = table.getByRole("button", { name: "Status sort ascending" });
+
+  await expect(directionTelemetry).toHaveText("ltr");
+  await directionToggle.click();
+  await expect(directionTelemetry).toHaveText("rtl");
+
+  await componentSortDesc.focus();
+  await componentSortDesc.press("ArrowRight");
+  await expect(componentSortDesc).toBeFocused();
+
+  await componentSortDesc.press("ArrowLeft");
+  await expect(statusSort).toBeFocused();
+
+  await statusSort.press("ArrowRight");
+  await expect(componentSortDesc).toBeFocused();
+});
+
 test("sorts demo table with keyboard activation", async ({ page }) => {
   await page.goto("/");
 
