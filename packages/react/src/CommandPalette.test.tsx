@@ -643,6 +643,34 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
+  it("inherits Escape dismiss shortcut hints from dialog only when closeOnEscape is enabled", () => {
+    const { rerender } = render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Escape"
+    );
+
+    rerender(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        closeOnEscape={false}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
+  });
+
   it("isolates escape and outside-pointer dismiss handling per owner document", () => {
     const iframe = document.createElement("iframe");
     document.body.appendChild(iframe);

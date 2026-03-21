@@ -775,7 +775,9 @@ export const CloseReasonTelemetry: Story = {
     );
 
     await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
-    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    const dialog = canvas.getByRole("dialog", { name: "Command Palette" });
+    await expect(dialog).toBeInTheDocument();
+    await expect(dialog).toHaveAttribute("aria-keyshortcuts", "Escape");
     const closeButton = canvas.getByRole("button", { name: "Close dialog" });
     await expect(closeButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     await userEvent.click(closeButton);
@@ -998,6 +1000,7 @@ export const NonDismissible: Story = {
     await userEvent.click(await canvas.findByRole("button", { name: "Open blocking palette" }));
     const dialog = canvas.getByRole("dialog", { name: "Command Palette" });
     await expect(dialog).toBeInTheDocument();
+    await expect(dialog).not.toHaveAttribute("aria-keyshortcuts");
     await expect(canvas.getByRole("combobox", { name: "Search commands" })).toHaveAttribute(
       "aria-keyshortcuts",
       "ArrowDown ArrowUp Home End PageDown PageUp Enter"
