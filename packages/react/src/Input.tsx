@@ -24,6 +24,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
     "aria-invalid": ariaInvalid,
     "aria-label": ariaLabel,
     "aria-labelledby": ariaLabelledBy,
+    "aria-keyshortcuts": rawAriaKeyShortcuts,
     ...props
   },
   ref
@@ -39,6 +40,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
   const isInteractionDisabled = Boolean(disabled);
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel = resolvedAriaLabelledBy ? undefined : resolveNonEmptyLabel(ariaLabel);
+  const ariaKeyShortcuts =
+    isInteractionDisabled || readOnly
+      ? undefined
+      : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "Enter";
 
   React.useEffect(() => {
     if (!isInteractionDisabled) {
@@ -103,6 +108,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
       aria-invalid={resolvedInvalidAria}
       aria-label={resolvedAriaLabel}
       aria-labelledby={resolvedAriaLabelledBy}
+      aria-keyshortcuts={ariaKeyShortcuts}
       data-invalid={isInvalid ? "true" : undefined}
       data-focused={focused ? "true" : undefined}
       data-focus-visible={focusVisible ? "true" : undefined}

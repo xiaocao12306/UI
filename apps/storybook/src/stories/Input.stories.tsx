@@ -131,6 +131,46 @@ export const InteractionA11yParity: Story = {
   }
 };
 
+export const ShortcutHintPrecision: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={12}>
+      <FormField
+        label="Actionable shortcut input"
+        description="Actionable inputs should expose Enter shortcut hints."
+      >
+        <Input />
+      </FormField>
+
+      <FormField
+        label="Read-only shortcut input"
+        description="Read-only inputs should not advertise keyboard shortcuts."
+      >
+        <Input readOnly defaultValue="release/0.1.0" />
+      </FormField>
+
+      <FormField
+        label="Disabled shortcut input"
+        description="Disabled inputs should not advertise keyboard shortcuts."
+        disabled
+      >
+        <Input />
+      </FormField>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvas.getByRole("textbox", { name: /^Actionable shortcut input/ })
+    ).toHaveAttribute("aria-keyshortcuts", "Enter");
+    await expect(
+      canvas.getByRole("textbox", { name: /^Read-only shortcut input/ })
+    ).not.toHaveAttribute("aria-keyshortcuts");
+    await expect(
+      canvas.getByRole("textbox", { name: /^Disabled shortcut input/ })
+    ).not.toHaveAttribute("aria-keyshortcuts");
+  }
+};
+
 function FocusIntentReentryDemo() {
   return (
     <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={10}>

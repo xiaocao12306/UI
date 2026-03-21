@@ -94,6 +94,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `readOnly` / `disabled`               | `boolean`                                    | Preserves semantic behavior and visual state boundaries.                                                                                                                                        |
 | `aria-label` / `aria-labelledby`      | `string`                                     | Blank values are ignored; when both are provided, `aria-labelledby` takes precedence so visible context labels remain canonical.                                                                |
 | `aria-describedby`                    | `string`                                     | Recommended for helper/error narration in forms.                                                                                                                                                |
+| keyboard shortcut hints               | default `aria-keyshortcuts="Enter"`          | Actionable inputs expose Enter shortcut metadata for QA/AT discoverability; read-only or disabled inputs omit hints so metadata does not advertise unavailable activation paths.               |
 | Enter active feedback policy          | unmodified `Enter`/`Shift+Enter` only        | Ignores `Ctrl/Meta/Alt + Enter` so host shortcut chords do not trigger input active-press visuals.                                                                                              |
 | focus intent policy                   | primary pointer clears focus-visible         | Non-primary `mousedown/pointerdown` keeps keyboard-intent focus ring state, while primary pointer keeps prior active/pressed behavior.                                                          |
 | document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores input focus-visible state consistently, including iframe hosts. |
@@ -101,6 +102,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 
 <Canvas of={InputStories.InvalidTokenSemantics} />
 <Canvas of={InputStories.BlankAriaLabelFallback} />
+<Canvas of={InputStories.ShortcutHintPrecision} />
 <Canvas of={InputStories.FocusIntentReentry} />
 
 ### FormField

@@ -64,6 +64,45 @@ describe("Input", () => {
     expect(input).not.toHaveAttribute("data-active");
   });
 
+  it("exposes default Enter shortcut hints only when actionable", () => {
+    render(
+      <div>
+        <Input aria-label="Actionable input" />
+        <Input aria-label="Read-only input" readOnly />
+        <Input aria-label="Disabled input" disabled />
+      </div>
+    );
+
+    expect(screen.getByRole("textbox", { name: "Actionable input" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter"
+    );
+    expect(screen.getByRole("textbox", { name: "Read-only input" })).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
+    expect(screen.getByRole("textbox", { name: "Disabled input" })).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
+  });
+
+  it("accepts explicit shortcut hints and ignores blank overrides", () => {
+    render(
+      <div>
+        <Input aria-label="Custom shortcut input" aria-keyshortcuts="Enter Shift+Enter" />
+        <Input aria-label="Blank shortcut input" aria-keyshortcuts="   " />
+      </div>
+    );
+
+    expect(screen.getByRole("textbox", { name: "Custom shortcut input" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Shift+Enter"
+    );
+    expect(screen.getByRole("textbox", { name: "Blank shortcut input" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter"
+    );
+  });
+
   it("tracks hover and active interaction states", () => {
     render(<Input aria-label="Stateful field" />);
     const input = screen.getByRole("textbox", { name: "Stateful field" });
