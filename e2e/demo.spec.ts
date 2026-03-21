@@ -2167,6 +2167,25 @@ test("dismisses stacked toasts from top-most to oldest on Escape", async ({ page
   await expect(firstToast).toBeHidden();
 });
 
+test("keeps stacked toasts open when Escape is combined with modifier shortcuts", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Trigger stacked toasts" }).click();
+
+  const firstToast = page.getByRole("status", { name: "Sync started" });
+  const secondToast = page.getByRole("status", { name: "Sync completed" });
+  await expect(firstToast).toBeVisible();
+  await expect(secondToast).toBeVisible();
+
+  await dispatchModifiedEscape(page);
+  await expect(firstToast).toBeVisible();
+  await expect(secondToast).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(secondToast).toBeHidden();
+  await expect(firstToast).toBeVisible();
+});
+
 test("ignores repeated Escape keydown before stacked toast dismissal", async ({ page }) => {
   await page.goto("/");
 

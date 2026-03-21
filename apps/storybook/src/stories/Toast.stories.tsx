@@ -456,6 +456,7 @@ export const EscapeStackOrder: Story = {
   render: () => <EscapeStackOrderDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
+    const doc = canvasElement.ownerDocument;
 
     const first = await canvas.findByRole("status", { name: "First notice" });
     const second = await canvas.findByRole("status", { name: "Second notice" });
@@ -464,8 +465,11 @@ export const EscapeStackOrder: Story = {
       expect(second).toHaveAttribute("aria-keyshortcuts", "Escape");
     });
 
-    await userEvent.click(within(second).getByRole("button", { name: "Close toast" }));
+    fireEvent.keyDown(doc, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(doc, { key: "Escape", metaKey: true });
+    await expect(second).toBeInTheDocument();
 
+    await userEvent.click(within(second).getByRole("button", { name: "Close toast" }));
     await expect(canvas.queryByRole("status", { name: "Second notice" })).not.toBeInTheDocument();
     await waitFor(() => {
       expect(canvas.getByRole("status", { name: "First notice" })).toHaveAttribute("aria-keyshortcuts", "Escape");
@@ -607,16 +611,24 @@ export const FocusedToastEscapesFirst: Story = {
     const second = await canvas.findByRole("status", { name: "Second notice" });
 
     await within(first).findByRole("button", { name: "Close toast" }).then((button) => button.focus());
-    fireEvent.keyDown(doc, { key: "Escape" });
+    await waitFor(() => {
+      expect(first).toHaveAttribute("aria-keyshortcuts", "Escape");
+      expect(second).not.toHaveAttribute("aria-keyshortcuts");
+    });
+    await userEvent.keyboard("{Escape}");
     await expect(canvas.queryByRole("status", { name: "First notice" })).not.toBeInTheDocument();
     await expect(canvas.getByRole("status", { name: "Second notice" })).toBeInTheDocument();
 
-    await userEvent.click(canvas.getByRole("button", { name: "Reopen stack" }));
+    await userEvent.click(canvas.getByRole("button", { name: /reopen stack/i }));
     const reopenedFirst = await canvas.findByRole("status", { name: "First notice" });
     await canvas.findByRole("status", { name: "Second notice" });
 
     fireEvent.mouseEnter(reopenedFirst);
-    fireEvent.keyDown(doc, { key: "Escape" });
+    await waitFor(() => {
+      expect(reopenedFirst).toHaveAttribute("aria-keyshortcuts", "Escape");
+      expect(canvas.getByRole("status", { name: "Second notice" })).not.toHaveAttribute("aria-keyshortcuts");
+    });
+    await userEvent.keyboard("{Escape}");
     await expect(canvas.queryByRole("status", { name: "First notice" })).not.toBeInTheDocument();
     await expect(canvas.getByRole("status", { name: "Second notice" })).toBeInTheDocument();
   }

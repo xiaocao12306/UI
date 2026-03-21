@@ -731,6 +731,35 @@ describe("Toast", () => {
     expect(screen.queryByRole("status", { name: "First" })).toBeNull();
   });
 
+  it("ignores modified Escape keydown before stacked-toast top dismissal", () => {
+    function StackedToasts() {
+      const [firstOpen, setFirstOpen] = React.useState(true);
+      const [secondOpen, setSecondOpen] = React.useState(true);
+
+      return (
+        <>
+          <Toast open={firstOpen} title="First" onOpenChange={setFirstOpen} />
+          <Toast open={secondOpen} title="Second" onOpenChange={setSecondOpen} />
+        </>
+      );
+    }
+
+    render(<StackedToasts />);
+
+    expect(screen.getByRole("status", { name: "First" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "Second" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "Escape", metaKey: true });
+    fireEvent.keyDown(document, { key: "Escape", altKey: true });
+    expect(screen.getByRole("status", { name: "First" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "Second" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.getByRole("status", { name: "First" })).toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: "Second" })).toBeNull();
+  });
+
   it("isolates Escape dismissal stacks per owner document", () => {
     const onMainOpenChange = vi.fn();
     const onSecondaryOpenChange = vi.fn();
