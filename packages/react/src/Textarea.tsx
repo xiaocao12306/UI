@@ -17,7 +17,9 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
     onMouseEnter,
     onMouseLeave,
     "aria-invalid": ariaInvalid,
-    ...props
+    "aria-label": rawAriaLabel,
+    "aria-labelledby": rawAriaLabelledBy,
+    ...restProps
   },
   ref
 ) {
@@ -25,12 +27,17 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
   const [hovered, setHovered] = React.useState(false);
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
+  const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
+  const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
 
   return (
     <textarea
       ref={ref}
+      {...restProps}
       disabled={disabled}
       readOnly={readOnly}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
       aria-invalid={resolvedInvalidAria}
       data-invalid={isInvalid ? "true" : undefined}
       data-focused={focused ? "true" : undefined}
@@ -80,7 +87,15 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
         setHovered(false);
         onMouseLeave?.(event);
       }}
-      {...props}
     />
   );
 });
+
+function resolveNonEmptyLabel(label: string | undefined) {
+  if (typeof label !== "string") {
+    return undefined;
+  }
+
+  const normalized = label.trim();
+  return normalized.length > 0 ? normalized : undefined;
+}

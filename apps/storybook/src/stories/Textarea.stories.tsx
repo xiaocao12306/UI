@@ -63,6 +63,43 @@ export const InvalidWithHelper: Story = {
   )
 };
 
+export const BlankAriaLabelFallback: Story = {
+  render: () => (
+    <div style={{ width: 360, display: "grid", gap: 8 }}>
+      <label htmlFor="storybook-textarea-blank-label" style={{ color: "var(--aurora-text-primary)", fontSize: 13 }}>
+        Release summary label
+      </label>
+      <Textarea id="storybook-textarea-blank-label" aria-label="   " defaultValue="Release summary draft..." />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textarea = canvas.getByRole("textbox", { name: "Release summary label" });
+    await expect(textarea).not.toHaveAttribute("aria-label");
+  }
+};
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ width: 360, display: "grid", gap: 8 }}>
+      <p id="storybook-textarea-heading" style={{ margin: 0, color: "var(--aurora-text-primary)", fontSize: 13 }}>
+        Release summary heading
+      </p>
+      <Textarea
+        aria-label="Fallback release summary"
+        aria-labelledby="storybook-textarea-heading"
+        defaultValue="Heading-driven label should win."
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textarea = canvas.getByRole("textbox", { name: "Release summary heading" });
+    await expect(textarea).toHaveAttribute("aria-labelledby", "storybook-textarea-heading");
+    await expect(textarea).not.toHaveAttribute("aria-label");
+  }
+};
+
 export const DisabledAndReadOnly: Story = {
   render: () => (
     <div style={{ width: 360, display: "grid", gap: 12 }}>

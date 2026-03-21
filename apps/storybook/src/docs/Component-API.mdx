@@ -229,9 +229,12 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `invalid` | `boolean` | Adds `aria-invalid` and invalid token styles. |
 | `readOnly` / `disabled` | `boolean` | Preserves semantic behavior and visual state boundaries. |
+| `aria-label` / `aria-labelledby` | `string` | Blank values are ignored; when both are provided, `aria-labelledby` takes precedence so visible context headings remain canonical. |
 | `aria-describedby` | `string` | Supports helper/error hint linkage for form narration. |
 
 <Canvas of={TextareaStories.InvalidWithHelper} />
+<Canvas of={TextareaStories.BlankAriaLabelFallback} />
+<Canvas of={TextareaStories.LabelledByPrecedence} />
 
 ## Overlay
 

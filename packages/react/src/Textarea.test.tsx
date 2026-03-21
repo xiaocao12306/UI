@@ -34,6 +34,39 @@ describe("Textarea", () => {
     expect(textarea).toHaveAttribute("data-invalid", "true");
   });
 
+  it("ignores blank aria-label and falls back to associated label naming", () => {
+    render(
+      <div>
+        <label htmlFor="release-summary">Release summary</label>
+        <Textarea id="release-summary" aria-label="   " />
+      </div>
+    );
+
+    const textarea = screen.getByRole("textbox", { name: "Release summary" });
+    expect(textarea).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank aria-labelledby and keeps aria-label naming", () => {
+    render(<Textarea aria-label="Release summary" aria-labelledby="   " />);
+
+    const textarea = screen.getByRole("textbox", { name: "Release summary" });
+    expect(textarea).toHaveAttribute("aria-label", "Release summary");
+    expect(textarea).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("prefers aria-labelledby naming over aria-label when both are provided", () => {
+    render(
+      <div>
+        <p id="release-summary-heading">Release summary heading</p>
+        <Textarea aria-label="Fallback summary label" aria-labelledby="release-summary-heading" />
+      </div>
+    );
+
+    const textarea = screen.getByRole("textbox", { name: "Release summary heading" });
+    expect(textarea).toHaveAttribute("aria-labelledby", "release-summary-heading");
+    expect(textarea).not.toHaveAttribute("aria-label");
+  });
+
   it("tracks focus state for visual feedback", () => {
     render(<Textarea aria-label="Description" />);
     const textarea = screen.getByRole("textbox", { name: "Description" });
