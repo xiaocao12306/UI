@@ -163,18 +163,30 @@ export function Table<T>({
     key: string;
     direction: TableSortDirection;
   } | null>(() => resolveInitialSortState(columns, defaultSortKey, defaultSortDirection));
-  const sortableNavigationKeys = React.useMemo(() => {
+  const resolvedColumnRenderKeys = React.useMemo(() => {
+    const counts = new Map<string, number>();
+    return columns.map((column) => {
+      const key = String(column.key);
+      const count = counts.get(key) ?? 0;
+      counts.set(key, count + 1);
+      return count === 0 ? key : `${key}__duplicate-${count}`;
+    });
+  }, [columns]);
+  const sortableNavigationRenderKeys = React.useMemo(() => {
     if (loading || data.length <= 1) {
       return [];
     }
 
-    return columns.reduce<string[]>((keys, column) => {
+    return columns.reduce<string[]>((keys, column, index) => {
       if (column.sortable) {
-        keys.push(String(column.key));
+        keys.push(
+          resolvedColumnRenderKeys[index] ??
+            `${String(column.key)}__index-${index}`
+        );
       }
       return keys;
     }, []);
-  }, [columns, data.length, loading]);
+  }, [columns, data.length, loading, resolvedColumnRenderKeys]);
 
   React.useEffect(() => {
     if (!sortState) {
@@ -293,7 +305,7 @@ export function Table<T>({
         .map((key) => `"${key}"`)
         .join(
           ", "
-        )}. Ensure columns[].key values are unique to keep header associations and sorting behavior deterministic.`
+        )}. Ensure columns[].key values are unique to keep header associations and sorting behavior deterministic. Duplicate render keys are auto-suffixed by column index for stability.`
     );
   }, [columns]);
 
@@ -481,8 +493,11 @@ export function Table<T>({
         ) : null}
         <thead>
           <tr>
-            {columns.map((column) => {
+            {columns.map((column, columnIndex) => {
               const key = String(column.key);
+              const columnRenderKey =
+                resolvedColumnRenderKeys[columnIndex] ??
+                `${key}__index-${columnIndex}`;
               const sortable = Boolean(column.sortable);
               const hasMultiRowData = sortedEntries.length > 1;
               const activeSortDirection =
@@ -509,12 +524,12 @@ export function Table<T>({
               const sortDisabled = loading || !hasMultiRowData;
               const sortKeyShortcuts = sortDisabled
                 ? undefined
-                : sortableNavigationKeys.length > 1
+                : sortableNavigationRenderKeys.length > 1
                   ? sortableHeaderKeyboardShortcuts
                   : sortableHeaderActivationKeyboardShortcuts;
-              const hovered = !sortDisabled && hoveredSortKey === key;
-              const pressed = !sortDisabled && pressedSortKey === key;
-              const focusVisible = !sortDisabled && focusVisibleSortKey === key;
+              const hovered = !sortDisabled && hoveredSortKey === columnRenderKey;
+              const pressed = !sortDisabled && pressedSortKey === columnRenderKey;
+              const focusVisible = !sortDisabled && focusVisibleSortKey === columnRenderKey;
               const interactive = hovered || focusVisible;
               const activateSort = () => {
                 if (sortDisabled) {
@@ -527,7 +542,7 @@ export function Table<T>({
 
               return (
                 <th
-                  key={key}
+                  key={columnRenderKey}
                   scope="col"
                   aria-sort={ariaSort}
                   style={{
@@ -546,7 +561,7 @@ export function Table<T>({
                       data-aurora-reduced-motion="transition"
                       type="button"
                       ref={(node) => {
-                        sortButtonRefs.current[key] = node;
+                        sortButtonRefs.current[columnRenderKey] = node;
                       }}
                       aria-label={resolvedSortAriaLabel}
                       aria-keyshortcuts={sortKeyShortcuts}
@@ -556,7 +571,7 @@ export function Table<T>({
                           Date.now() - keyboardActivationTimestampRef.current;
                         const clickFromKeyboardActivation =
                           event.detail === 0 &&
-                          keyboardActivationSortKeyRef.current === key &&
+                          keyboardActivationSortKeyRef.current === columnRenderKey &&
                           keyboardActivationTimestampRef.current > 0 &&
                           keyboardActivationAgeMs <= keyboardSortClickDedupeWindowMs;
                         clearKeyboardActivationLatch();
@@ -571,11 +586,15 @@ export function Table<T>({
                           return;
                         }
 
-                        setHoveredSortKey(key);
+                        setHoveredSortKey(columnRenderKey);
                       }}
                       onMouseLeave={() => {
-                        setHoveredSortKey((currentKey) => (currentKey === key ? null : currentKey));
-                        setPressedSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                        setHoveredSortKey((currentKey) =>
+                          currentKey === columnRenderKey ? null : currentKey
+                        );
+                        setPressedSortKey((currentKey) =>
+                          currentKey === columnRenderKey ? null : currentKey
+                        );
                       }}
                       onMouseDown={(event) => {
                         if (sortDisabled) {
@@ -588,41 +607,43 @@ export function Table<T>({
 
                         sortFocusIntentRef.current = false;
                         setFocusVisibleSortKey((currentKey) =>
-                          currentKey === key ? null : currentKey
+                          currentKey === columnRenderKey ? null : currentKey
                         );
-                        setPressedSortKey(key);
+                        setPressedSortKey(columnRenderKey);
                       }}
                       onMouseUp={(event) => {
                         if (event.button === 0) {
                           setPressedSortKey((currentKey) =>
-                            currentKey === key ? null : currentKey
+                            currentKey === columnRenderKey ? null : currentKey
                           );
                         }
                       }}
                       onFocus={() => {
                         if (sortDisabled) {
                           setFocusVisibleSortKey((currentKey) =>
-                            currentKey === key ? null : currentKey
+                            currentKey === columnRenderKey ? null : currentKey
                           );
                           return;
                         }
 
                         setFocusVisibleSortKey((currentKey) =>
                           resolveFocusVisibleState(
-                            sortButtonRefs.current[key],
+                            sortButtonRefs.current[columnRenderKey],
                             sortFocusIntentRef.current
                           )
-                            ? key
-                            : currentKey === key
+                            ? columnRenderKey
+                            : currentKey === columnRenderKey
                               ? null
                               : currentKey
                         );
                       }}
                       onBlur={() => {
                         setFocusVisibleSortKey((currentKey) =>
-                          currentKey === key ? null : currentKey
+                          currentKey === columnRenderKey ? null : currentKey
                         );
-                        setPressedSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                        setPressedSortKey((currentKey) =>
+                          currentKey === columnRenderKey ? null : currentKey
+                        );
                       }}
                       onKeyDown={(event) => {
                         sortFocusIntentRef.current = true;
@@ -631,7 +652,7 @@ export function Table<T>({
                         }
 
                         if (event.key === "Home") {
-                          const firstKey = sortableNavigationKeys[0];
+                          const firstKey = sortableNavigationRenderKeys[0];
                           if (!firstKey) {
                             return;
                           }
@@ -641,7 +662,8 @@ export function Table<T>({
                         }
 
                         if (event.key === "End") {
-                          const lastKey = sortableNavigationKeys[sortableNavigationKeys.length - 1];
+                          const lastKey =
+                            sortableNavigationRenderKeys[sortableNavigationRenderKeys.length - 1];
                           if (!lastKey) {
                             return;
                           }
@@ -651,7 +673,8 @@ export function Table<T>({
                         }
 
                         if (event.key === "PageDown" || event.key === "PageUp") {
-                          const currentPosition = sortableNavigationKeys.indexOf(key);
+                          const currentPosition =
+                            sortableNavigationRenderKeys.indexOf(columnRenderKey);
                           if (currentPosition < 0) {
                             return;
                           }
@@ -659,20 +682,24 @@ export function Table<T>({
                           const delta = event.key === "PageDown" ? 1 : -1;
                           const nextPosition = Math.max(
                             0,
-                            Math.min(sortableNavigationKeys.length - 1, currentPosition + delta)
+                            Math.min(
+                              sortableNavigationRenderKeys.length - 1,
+                              currentPosition + delta
+                            )
                           );
                           if (nextPosition === currentPosition) {
                             return;
                           }
 
                           event.preventDefault();
-                          const nextKey = sortableNavigationKeys[nextPosition];
+                          const nextKey = sortableNavigationRenderKeys[nextPosition];
                           sortButtonRefs.current[nextKey]?.focus();
                           return;
                         }
 
                         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-                          const currentPosition = sortableNavigationKeys.indexOf(key);
+                          const currentPosition =
+                            sortableNavigationRenderKeys.indexOf(columnRenderKey);
                           if (currentPosition < 0) {
                             return;
                           }
@@ -696,14 +723,17 @@ export function Table<T>({
                           const delta = event.key === movesForwardKey ? 1 : -1;
                           const nextPosition = Math.max(
                             0,
-                            Math.min(sortableNavigationKeys.length - 1, currentPosition + delta)
+                            Math.min(
+                              sortableNavigationRenderKeys.length - 1,
+                              currentPosition + delta
+                            )
                           );
                           if (nextPosition === currentPosition) {
                             return;
                           }
 
                           event.preventDefault();
-                          const nextKey = sortableNavigationKeys[nextPosition];
+                          const nextKey = sortableNavigationRenderKeys[nextPosition];
                           sortButtonRefs.current[nextKey]?.focus();
                           return;
                         }
@@ -720,8 +750,8 @@ export function Table<T>({
                         if (event.repeat) {
                           return;
                         }
-                        setPressedSortKey(key);
-                        keyboardActivationSortKeyRef.current = key;
+                        setPressedSortKey(columnRenderKey);
+                        keyboardActivationSortKeyRef.current = columnRenderKey;
                         keyboardActivationTimestampRef.current = Date.now();
                         const ownerWindow = event.currentTarget.ownerDocument.defaultView ?? window;
                         if (keyboardActivationResetTimerRef.current !== null) {
@@ -744,7 +774,9 @@ export function Table<T>({
                           return;
                         }
 
-                        setPressedSortKey((currentKey) => (currentKey === key ? null : currentKey));
+                        setPressedSortKey((currentKey) =>
+                          currentKey === columnRenderKey ? null : currentKey
+                        );
                       }}
                       style={{
                         border: interactive
@@ -830,10 +862,13 @@ export function Table<T>({
                     background: index % 2 === 0 ? "transparent" : "var(--aurora-surface-elevated)"
                   }}
                 >
-                  {columns.map((column) => {
+                  {columns.map((column, columnIndex) => {
                     const content = column.render
                       ? column.render(row, index, entry.sourceIndex)
                       : String((row as Record<string, unknown>)[String(column.key)] ?? "");
+                    const columnRenderKey =
+                      resolvedColumnRenderKeys[columnIndex] ??
+                      `${String(column.key)}__index-${columnIndex}`;
                     const cellStyle: React.CSSProperties = {
                       padding: "10px 12px",
                       borderBottom: "1px solid var(--aurora-border-default)",
@@ -845,7 +880,7 @@ export function Table<T>({
                     if (column.rowHeader) {
                       return (
                         <th
-                          key={String(column.key)}
+                          key={columnRenderKey}
                           scope="row"
                           style={{ ...cellStyle, fontWeight: "var(--aurora-font-weight-medium)" }}
                         >
@@ -855,7 +890,7 @@ export function Table<T>({
                     }
 
                     return (
-                      <td key={String(column.key)} style={cellStyle}>
+                      <td key={columnRenderKey} style={cellStyle}>
                         {content}
                       </td>
                     );

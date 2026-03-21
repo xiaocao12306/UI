@@ -112,6 +112,42 @@ describe("Table", () => {
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining('Duplicate column keys detected: "name"')
       );
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("auto-suffixed by column index"));
+      const duplicateKeyErrors = errorSpy.mock.calls.filter(([message]) =>
+        typeof message === "string" && message.includes("same key")
+      );
+      expect(duplicateKeyErrors).toHaveLength(0);
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("keeps sortable-header focus navigation stable when duplicate column keys are present", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            { key: "name", header: "Name", sortable: true },
+            { key: "name", header: "Name copy", sortable: true },
+            { key: "status", header: "Status", sortable: true }
+          ]}
+          data={[
+            { name: "Button", status: "Stable" },
+            { name: "Dialog", status: "Ready" }
+          ]}
+        />
+      );
+
+      const copySort = screen.getByRole("button", { name: "Name copy sort ascending" });
+      const statusSort = screen.getByRole("button", { name: "Status sort ascending" });
+      fireEvent.focus(copySort);
+
+      fireEvent.keyDown(copySort, { key: "ArrowRight" });
+      expect(statusSort).toHaveFocus();
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
