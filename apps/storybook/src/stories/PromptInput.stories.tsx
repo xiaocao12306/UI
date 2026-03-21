@@ -86,6 +86,8 @@ export const WithAiRequestState: Story = {
     const canvas = within(canvasElement);
     const textbox = await canvas.findByRole("textbox", { name: "Prompt input" });
     await expect(textbox).toHaveAttribute("aria-keyshortcuts", "Control+Enter Meta+Enter");
+    const shortcutHint = canvas.getByText("Ctrl/Cmd + Enter to send");
+    await expect(textbox).toHaveAttribute("aria-describedby", shortcutHint.getAttribute("id"));
     const sendButton = canvas.getByRole("button", { name: "Send" });
 
     await expect(sendButton).toBeDisabled();
@@ -125,7 +127,9 @@ export const LocalizedCopy: Story = {
     const canvas = within(canvasElement);
     const textbox = await canvas.findByRole("textbox", { name: "智能提示输入" });
     await expect(textbox).toHaveAttribute("aria-keyshortcuts", "Control+Enter Meta+Enter");
-    await expect(canvas.getByText("按 Ctrl/Cmd + Enter 提交")).toBeInTheDocument();
+    const shortcutHint = canvas.getByText("按 Ctrl/Cmd + Enter 提交");
+    await expect(shortcutHint).toBeInTheDocument();
+    await expect(textbox).toHaveAttribute("aria-describedby", shortcutHint.getAttribute("id"));
   }
 };
 

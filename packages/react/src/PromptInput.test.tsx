@@ -10,6 +10,8 @@ describe("PromptInput", () => {
     const textbox = screen.getByPlaceholderText("Type your prompt...");
     expect(textbox).toHaveAttribute("aria-label", "Prompt input");
     expect(textbox).toHaveAttribute("aria-keyshortcuts", "Control+Enter Meta+Enter");
+    const hint = screen.getByText("Ctrl/Cmd + Enter to send");
+    expect(textbox).toHaveAttribute("aria-describedby", hint.getAttribute("id"));
 
     fireEvent.change(textbox, { target: { value: "Draft release notes" } });
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
@@ -102,7 +104,12 @@ describe("PromptInput", () => {
       "aria-keyshortcuts",
       "Control+Enter Meta+Enter"
     );
-    expect(screen.getByText("按 Ctrl/Cmd + Enter 提交")).toBeInTheDocument();
+    const hint = screen.getByText("按 Ctrl/Cmd + Enter 提交");
+    expect(hint).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "智能提示输入" })).toHaveAttribute(
+      "aria-describedby",
+      hint.getAttribute("id")
+    );
     expect(screen.queryByText("正在生成建议...")).not.toBeInTheDocument();
   });
 

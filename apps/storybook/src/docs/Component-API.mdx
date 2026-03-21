@@ -770,6 +770,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `ariaLabel` | `string` | Optional textarea accessible name override; blank values are ignored and fallback to `Prompt input`. |
 | `shortcutHint` / `submittingHint` | `ReactNode` | Customizable idle/pending helper copy for localization and product voice alignment. |
 | keyboard metadata | `aria-keyshortcuts="Control+Enter Meta+Enter"` | Prompt textarea exposes submit shortcut hints for QA/AT discoverability. |
+| helper hint binding | `aria-describedby` | Prompt textarea links to live helper copy so screen readers announce current shortcut or pending state guidance. |
 
 <Canvas of={PromptInputStories.LocalizedCopy} />
 

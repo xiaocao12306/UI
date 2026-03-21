@@ -21,6 +21,7 @@ export function PromptInput({
 }: PromptInputProps) {
   const [value, setValue] = React.useState("");
   const composingRef = React.useRef(false);
+  const hintId = React.useId();
   const trimmedValue = value.trim();
   const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel) ?? "Prompt input";
 
@@ -50,6 +51,7 @@ export function PromptInput({
         onChange={(event) => setValue(event.target.value)}
         placeholder={placeholder}
         aria-label={resolvedAriaLabel}
+        aria-describedby={hintId}
         aria-keyshortcuts="Control+Enter Meta+Enter"
         disabled={submitting}
         rows={4}
@@ -70,7 +72,7 @@ export function PromptInput({
         }}
       />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <small aria-live="polite" style={{ color: "var(--aurora-text-secondary)" }}>
+        <small id={hintId} aria-live="polite" style={{ color: "var(--aurora-text-secondary)" }}>
           {submitting ? submittingHint : shortcutHint}
         </small>
         <Button onClick={submit} disabled={submitting || !trimmedValue}>
