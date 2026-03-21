@@ -987,19 +987,51 @@ describe("Tabs", () => {
     expect(screen.getByRole("tab", { name: "Three" })).not.toHaveAttribute("aria-keyshortcuts");
   });
 
-  it("does not expose manual-only keyboard shortcut metadata in automatic mode", () => {
+  it("exposes navigation keyboard shortcut metadata in automatic horizontal mode", () => {
     render(
       <Tabs
         defaultValue="one"
         items={[
           { key: "one", label: "One", content: <div>Panel One</div> },
-          { key: "two", label: "Two", content: <div>Panel Two</div> }
+          { key: "two", label: "Two", content: <div>Panel Two</div> },
+          { key: "three", label: "Three", content: <div>Panel Three</div>, disabled: true }
         ]}
       />
     );
 
-    expect(screen.getByRole("tab", { name: "One" })).not.toHaveAttribute("aria-keyshortcuts");
-    expect(screen.getByRole("tab", { name: "Two" })).not.toHaveAttribute("aria-keyshortcuts");
+    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home End PageDown PageUp ArrowLeft ArrowRight"
+    );
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home End PageDown PageUp ArrowLeft ArrowRight"
+    );
+    expect(screen.getByRole("tab", { name: "Three" })).not.toHaveAttribute("aria-keyshortcuts");
+  });
+
+  it("exposes navigation keyboard shortcut metadata in automatic vertical mode", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        orientation="vertical"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> },
+          { key: "three", label: "Three", content: <div>Panel Three</div>, disabled: true }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home End PageDown PageUp ArrowUp ArrowDown"
+    );
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home End PageDown PageUp ArrowUp ArrowDown"
+    );
+    expect(screen.getByRole("tab", { name: "Three" })).not.toHaveAttribute("aria-keyshortcuts");
   });
 
   it("supports manual activation mode with Space", () => {

@@ -308,6 +308,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Use `activationMode="manual"` when arrow-key navigation should not immediately trigger expensive panel renders.
 - Use `loop={false}` when boundary tabs should trap Arrow navigation (for linear workflows where wrap-around can feel like a jump).
 - Keep modified shortcuts (`Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space`) on host/browser behavior; tabs should only react to unmodified navigation/activation keys.
+- Keep automatic-tab shortcut hints orientation-aware: horizontal tabs expose `aria-keyshortcuts="Home End PageDown PageUp ArrowLeft ArrowRight"` and vertical tabs expose `aria-keyshortcuts="Home End PageDown PageUp ArrowUp ArrowDown"`; disabled tabs should omit the hint.
 - Keep `Shift + Enter/Space` available for manual tab activation; only `Ctrl/Meta/Alt` combinations should be filtered from activation paths.
 - Keep manual-tab shortcut hints orientation-aware: horizontal tabs expose `aria-keyshortcuts="Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"` and vertical tabs expose `aria-keyshortcuts="Enter Space Home End PageDown PageUp ArrowUp ArrowDown"`; disabled tabs should omit the hint.
 - Keep manual tabs compatible with legacy `Spacebar` key values so activation remains consistent across browser engines.

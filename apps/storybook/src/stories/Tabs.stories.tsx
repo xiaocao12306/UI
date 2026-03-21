@@ -29,6 +29,8 @@ const storyTelemetryLabelStyle: React.CSSProperties = {
 };
 
 const tabsShowcaseMaxWidth = "min(100%, 620px)";
+const automaticHorizontalTabShortcuts = "Home End PageDown PageUp ArrowLeft ArrowRight";
+const automaticVerticalTabShortcuts = "Home End PageDown PageUp ArrowUp ArrowDown";
 const manualHorizontalTabShortcuts = "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight";
 const manualVerticalTabShortcuts = "Enter Space Home End PageDown PageUp ArrowUp ArrowDown";
 
@@ -384,7 +386,13 @@ export const KeyboardNavigationGuide: Story = {
 
     await userEvent.click(specTab);
     await expect(specTab).toHaveAttribute("aria-selected", "true");
+    await expect(specTab).toHaveAttribute("aria-keyshortcuts", automaticHorizontalTabShortcuts);
+    await expect(releaseTab).toHaveAttribute(
+      "aria-keyshortcuts",
+      automaticHorizontalTabShortcuts
+    );
     await expect(blockedTab).toHaveAttribute("aria-disabled", "true");
+    await expect(blockedTab).not.toHaveAttribute("aria-keyshortcuts");
 
     await userEvent.keyboard("{End}");
     await expect(releaseTab).toHaveAttribute("aria-selected", "true");
@@ -522,12 +530,15 @@ export const Vertical: Story = {
     await expect(tabList).toHaveAttribute("aria-orientation", "vertical");
 
     const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const reviewTab = canvas.getByRole("tab", { name: "Review" });
+    const releaseTab = canvas.getByRole("tab", { name: "Release" });
     await userEvent.click(specTab);
+    await expect(specTab).toHaveAttribute("aria-keyshortcuts", automaticVerticalTabShortcuts);
+    await expect(releaseTab).toHaveAttribute("aria-keyshortcuts", automaticVerticalTabShortcuts);
+    await expect(reviewTab).not.toHaveAttribute("aria-keyshortcuts");
+
     await userEvent.keyboard("{ArrowDown}");
-    await expect(canvas.getByRole("tab", { name: "Release" })).toHaveAttribute(
-      "aria-selected",
-      "true"
-    );
+    await expect(releaseTab).toHaveAttribute("aria-selected", "true");
   }
 };
 

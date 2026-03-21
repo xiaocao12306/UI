@@ -20,9 +20,15 @@ export type TabsProps = {
   onValueChange?: (value: string) => void;
 };
 
-const manualTabKeyShortcutsByOrientation = {
+const tabKeyShortcutsByOrientation = {
+  automatic: {
+    horizontal: "Home End PageDown PageUp ArrowLeft ArrowRight",
+    vertical: "Home End PageDown PageUp ArrowUp ArrowDown"
+  },
+  manual: {
   horizontal: "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight",
   vertical: "Enter Space Home End PageDown PageUp ArrowUp ArrowDown"
+  }
 } as const;
 
 function buildKeyIndexMap(items: TabItem[]) {
@@ -383,9 +389,7 @@ export function Tabs({
               aria-controls={`${baseId}-panel-${index}`}
               aria-disabled={disabled || undefined}
               aria-keyshortcuts={
-                activationMode === "manual" && !disabled
-                  ? getManualTabKeyShortcuts(orientation)
-                  : undefined
+                disabled ? undefined : getTabKeyShortcuts(activationMode, orientation)
               }
               tabIndex={focusTargetValue === item.key ? 0 : -1}
               disabled={disabled}
@@ -610,10 +614,11 @@ function isTabActivationKey(key: string) {
   return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
 }
 
-function getManualTabKeyShortcuts(orientation: "horizontal" | "vertical") {
-  return orientation === "vertical"
-    ? manualTabKeyShortcutsByOrientation.vertical
-    : manualTabKeyShortcutsByOrientation.horizontal;
+function getTabKeyShortcuts(
+  activationMode: "automatic" | "manual",
+  orientation: "horizontal" | "vertical"
+) {
+  return tabKeyShortcutsByOrientation[activationMode][orientation];
 }
 
 function isComposingActivationEvent(event: React.KeyboardEvent<HTMLButtonElement>) {
