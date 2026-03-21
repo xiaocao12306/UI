@@ -662,6 +662,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `searchAriaLabel` | `string` | Localizable accessible name for the search combobox; blank values are ignored and fallback to `Search commands`. |
 | `placeholder` | `string` | Custom search input hint text for product-specific command vocabulary. |
 | `closeLabel` | `string` | Localizable close-button accessible name; blank values are ignored and fallback to `Close dialog`. |
+| close-button key hints | `aria-keyshortcuts="Enter Space"` | Inherited from dialog close affordance so QA/AT tooling can discover deterministic keyboard dismiss activation keys. |
 | `closeOnSelect` | `boolean` | Defaults to `true`; set `false` for batch workflows that keep the palette open after each command. |
 | `clearQueryOnEscape` | `boolean` | Defaults to `true`; first Escape clears active query before dismiss is allowed, reducing accidental close during search refinement. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls whether overlay dismisses on Escape or outside pointer interactions for blocking approval flows. |

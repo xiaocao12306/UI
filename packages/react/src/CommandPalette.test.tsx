@@ -1061,7 +1061,10 @@ describe("CommandPalette", () => {
       />
     );
 
-    expect(screen.getByRole("button", { name: "关闭命令面板" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "关闭命令面板" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space"
+    );
   });
 
   it("ignores blank closeLabel and falls back to default close-button name", () => {

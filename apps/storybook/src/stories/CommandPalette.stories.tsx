@@ -776,7 +776,9 @@ export const CloseReasonTelemetry: Story = {
 
     await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
-    await userEvent.click(canvas.getByRole("button", { name: "Close dialog" }));
+    const closeButton = canvas.getByRole("button", { name: "Close dialog" });
+    await expect(closeButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    await userEvent.click(closeButton);
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("close-button");
     await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent(
       "reason:close-button -> open:false"
