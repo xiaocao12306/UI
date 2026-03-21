@@ -1890,7 +1890,7 @@ describe("Table", () => {
     expect(alphaCellAfter).toBe(alphaCellBefore);
   });
 
-  it("passes source row index to rowKey so sorting does not churn index-based keys", () => {
+  it("passes source row index to rowKey and keeps sort-only rerenders from re-evaluating keys", () => {
     const rowKey = vi.fn((row: { name: string }, rowIndex: number) => `${rowIndex}-${row.name}`);
 
     render(
@@ -1909,12 +1909,55 @@ describe("Table", () => {
       />
     );
 
+    expect(rowKey).toHaveBeenCalledTimes(3);
+    expect(rowKey).toHaveBeenNthCalledWith(1, { name: "Alpha", score: 1 }, 0);
+    expect(rowKey).toHaveBeenNthCalledWith(2, { name: "Beta", score: 2 }, 1);
+    expect(rowKey).toHaveBeenNthCalledWith(3, { name: "Gamma", score: 3 }, 2);
+
     rowKey.mockClear();
     fireEvent.click(screen.getByRole("button", { name: "Score sort descending" }));
 
-    expect(rowKey).toHaveBeenCalledWith({ name: "Gamma", score: 3 }, 2);
-    expect(rowKey).toHaveBeenCalledWith({ name: "Beta", score: 2 }, 1);
-    expect(rowKey).toHaveBeenCalledWith({ name: "Alpha", score: 1 }, 0);
+    expect(rowKey).not.toHaveBeenCalled();
+  });
+
+  it("re-evaluates rowKey when source data changes", () => {
+    const rowKey = vi.fn((row: { name: string }, rowIndex: number) => `${rowIndex}-${row.name}`);
+    const columns = [
+      { key: "name", header: "Name" },
+      { key: "score", header: "Score", sortable: true }
+    ];
+    const { rerender } = render(
+      <Table
+        columns={columns}
+        data={[
+          { name: "Alpha", score: 1 },
+          { name: "Beta", score: 2 }
+        ]}
+        rowKey={rowKey}
+        defaultSortKey="score"
+      />
+    );
+
+    expect(rowKey).toHaveBeenCalledTimes(2);
+    rowKey.mockClear();
+
+    rerender(
+      <Table
+        columns={columns}
+        data={[
+          { name: "Alpha", score: 1 },
+          { name: "Beta", score: 2 },
+          { name: "Gamma", score: 3 }
+        ]}
+        rowKey={rowKey}
+        defaultSortKey="score"
+      />
+    );
+
+    expect(rowKey).toHaveBeenCalledTimes(3);
+    expect(rowKey).toHaveBeenNthCalledWith(1, { name: "Alpha", score: 1 }, 0);
+    expect(rowKey).toHaveBeenNthCalledWith(2, { name: "Beta", score: 2 }, 1);
+    expect(rowKey).toHaveBeenNthCalledWith(3, { name: "Gamma", score: 3 }, 2);
   });
 
   it("passes both visual row index and source row index to column render callbacks", () => {

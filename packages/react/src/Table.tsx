@@ -807,7 +807,7 @@ export function Table<T>({
             sortedEntries.map((entry, index) => {
               const row = entry.row;
               const fallbackKey = String(entry.sourceIndex);
-              const resolvedRowKey = rowKey ? rowKey(row, entry.sourceIndex) : fallbackKey;
+              const resolvedRowKey = sourceRowKeys[entry.sourceIndex] ?? fallbackKey;
 
               return (
                 <tr
