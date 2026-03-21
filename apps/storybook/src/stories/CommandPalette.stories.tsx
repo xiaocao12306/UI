@@ -274,6 +274,21 @@ function DisabledOnlyResultsPalette() {
   );
 }
 
+function SingleActionableShortcutHintPalette() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <CommandPalette
+      open={open}
+      onOpenChange={setOpen}
+      commands={[
+        { key: "open-settings", label: "Open Settings", keywords: ["settings"] },
+        { key: "publish-release", label: "Publish Release", keywords: ["release"], disabled: true }
+      ]}
+    />
+  );
+}
+
 function DisabledCommandGuardPalette() {
   const [open, setOpen] = React.useState(true);
   const [executedCount, setExecutedCount] = React.useState(0);
@@ -1031,6 +1046,30 @@ export const DisabledOnlyResults: Story = {
   }
 };
 
+export const SingleActionableShortcutHints: Story = {
+  render: () => <SingleActionableShortcutHintPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "Enter Escape");
+    const activeDescendant = input.getAttribute("aria-activedescendant");
+    expect(activeDescendant).toBeTruthy();
+
+    for (const key of ["ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp"]) {
+      const keyEvent = new KeyboardEvent("keydown", {
+        key,
+        bubbles: true,
+        cancelable: true
+      });
+      input.dispatchEvent(keyEvent);
+      await expect(keyEvent.defaultPrevented).toBe(false);
+    }
+
+    await expect(input.getAttribute("aria-activedescendant")).toBe(activeDescendant);
+  }
+};
+
 export const DisabledCommandGuard: Story = {
   render: () => <DisabledCommandGuardPalette />,
   play: async ({ canvasElement }) => {
@@ -1257,7 +1296,7 @@ export const EscapeShortcutHintPrecision: Story = {
     await expect(canvas.getByTestId("escape-hint-query")).toHaveTextContent("release");
     await expect(input).toHaveAttribute(
       "aria-keyshortcuts",
-      "ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
+      "Enter Escape"
     );
 
     fireEvent.keyDown(input, { key: "Escape", ctrlKey: true });

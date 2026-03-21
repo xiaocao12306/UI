@@ -264,18 +264,22 @@ export function CommandPalette({
     () => filtered.reduce((count, command) => (command.disabled ? count : count + 1), 0),
     [filtered]
   );
-  const canNavigateCommandList = !loading && enabledCount > 0;
+  const canNavigateCommandList = !loading && enabledCount > 1;
+  const canActivateCommandList = !loading && enabledCount > 0;
   const hasResults = !loading && filtered.length > 0;
   const searchKeyShortcuts = React.useMemo(() => {
     const shortcuts: string[] = [];
     if (canNavigateCommandList) {
-      shortcuts.push("ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp", "Enter");
+      shortcuts.push("ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp");
+    }
+    if (canActivateCommandList) {
+      shortcuts.push("Enter");
     }
     if (closeOnEscape || (clearQueryOnEscape && query.length > 0)) {
       shortcuts.push("Escape");
     }
     return shortcuts.length > 0 ? shortcuts.join(" ") : undefined;
-  }, [canNavigateCommandList, clearQueryOnEscape, closeOnEscape, query.length]);
+  }, [canActivateCommandList, canNavigateCommandList, clearQueryOnEscape, closeOnEscape, query.length]);
 
   const resultsStatusText = React.useMemo(() => {
     if (loading) {

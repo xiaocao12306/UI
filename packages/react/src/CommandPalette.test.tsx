@@ -897,7 +897,7 @@ describe("CommandPalette", () => {
 
     expect(screen.getByRole("combobox", { name: "Search commands" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "ArrowDown ArrowUp Home End PageDown PageUp Enter"
+      "Enter"
     );
   });
 
@@ -915,21 +915,45 @@ describe("CommandPalette", () => {
     const input = screen.getByRole("combobox", { name: "Search commands" });
     expect(input).toHaveAttribute(
       "aria-keyshortcuts",
-      "ArrowDown ArrowUp Home End PageDown PageUp Enter"
+      "Enter"
     );
 
     fireEvent.change(input, { target: { value: "settings" } });
     expect(input).toHaveAttribute(
       "aria-keyshortcuts",
-      "ArrowDown ArrowUp Home End PageDown PageUp Enter Escape"
+      "Enter Escape"
     );
 
     fireEvent.keyDown(input, { key: "Escape" });
     expect(input).toHaveValue("");
     expect(input).toHaveAttribute(
       "aria-keyshortcuts",
-      "ArrowDown ArrowUp Home End PageDown PageUp Enter"
+      "Enter"
     );
+  });
+
+  it("keeps navigation keys passive and omits navigation hints when only one command is actionable", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "publish", label: "Publish", disabled: true }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Enter Escape");
+
+    const initialActiveDescendant = input.getAttribute("aria-activedescendant");
+    for (const key of ["ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp"]) {
+      const keyEvent = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+      input.dispatchEvent(keyEvent);
+      expect(keyEvent.defaultPrevented).toBe(false);
+      expect(input.getAttribute("aria-activedescendant")).toBe(initialActiveDescendant);
+    }
   });
 
   it("ignores non-primary outside pointer interactions", () => {
