@@ -128,12 +128,13 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Ignore dropdown typeahead key matching during IME composition, including legacy browsers that only expose `keyCode=229`, so CJK input confirmation does not shift active menu focus unexpectedly.
 - When app-level shortcuts preempt Escape with `preventDefault()`, keep dropdown-level Escape hooks side-effect free and rely on built-in preemption skip behavior.
 - When app-level shortcuts preempt Escape with `preventDefault()`, keep popover-level Escape hooks side-effect free and rely on built-in preemption skip behavior.
-- Use popover `onCloseReason` for deterministic telemetry (`trigger-click` / `escape-key` / `outside-pointer`) instead of inferring dismiss origin from focus and pointer side effects.
+- Use popover `onCloseReason` for deterministic telemetry (`trigger-click` / `escape-key` / `outside-pointer` / `tab-key`) instead of inferring dismiss origin from focus and pointer side effects.
 - Use dropdown `onCloseReason` for deterministic telemetry (`trigger-click` / `item-select` / `escape-key` / `outside-pointer` / `tab-key`) instead of inferring close origin from focus/state side effects.
 - Keep popover/dropdown close callbacks ordered and single-purpose: close paths should emit `onCloseReason` before `onOpenChange(false)`, while dropdown `item-select` should run `onSelect` before close callbacks.
 - Keep popover trigger keyboard-open behavior scoped to unmodified `ArrowDown`; `Ctrl/Meta/Alt + ArrowDown` should remain available for host/browser shortcut handling.
 - Keep popover trigger shortcut hints explicit (`aria-keyshortcuts="ArrowDown"`) only while closed so keyboard-open affordance stays discoverable without advertising unavailable shortcuts once open.
-- Keep popover dialog Escape shortcut hints explicit (`aria-keyshortcuts="Escape"`) only when `closeOnEscape` is enabled so dismiss hint metadata matches runtime policy.
+- Keep popover boundary Tab behavior aligned with document order: keep popover open while focus stays inside, then close on first/last boundary Tab and continue focus to adjacent controls.
+- Keep popover dialog shortcut hints explicit (`aria-keyshortcuts="Tab [Escape]"`): always advertise boundary Tab dismiss, and include `Escape` only when `closeOnEscape` is enabled.
 - Keep dropdown `Tab` behavior aligned with document order: close menu and continue focus to next control.
 - Keep dropdown `Shift+Tab` behavior aligned with document order: close menu and continue focus to the previous control.
 - For controlled dropdowns, treat Escape/outside/trigger dismiss as close intent only; apply final visual close in parent rerender to avoid state race conditions.
@@ -172,6 +173,8 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={DropdownStories.NestedOutsideDismissOrder} />
 <Canvas of={PopoverStories.CloseReasonTelemetry} />
 <Canvas of={PopoverStories.TriggerArrowDownModifierGuard} />
+<Canvas of={PopoverStories.TabDismissToNextControl} />
+<Canvas of={PopoverStories.ShiftTabDismissToPreviousControl} />
 <Canvas of={PopoverStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={PopoverStories.EscapeRepeatGuard} />
 <Canvas of={PopoverStories.EscapeIgnoresImeComposition} />

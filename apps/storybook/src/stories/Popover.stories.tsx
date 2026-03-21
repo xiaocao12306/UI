@@ -29,7 +29,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Popover supports controlled/uncontrolled mode with Escape and outside pointer dismissal. Use ArrowDown on trigger for keyboard open."
+          "Popover supports controlled/uncontrolled mode with Escape/outside dismissal plus boundary Tab dismiss focus transfer. Use ArrowDown on trigger for keyboard open."
       }
     }
   },
@@ -63,7 +63,7 @@ export const Default: Story = {
     await userEvent.click(trigger);
     const dialog = canvas.getByRole("dialog", { name: "Popover content" });
     await expect(dialog).toBeInTheDocument();
-    await expect(dialog).toHaveAttribute("aria-keyshortcuts", "Escape");
+    await expect(dialog).toHaveAttribute("aria-keyshortcuts", "Tab Escape");
     await expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
 
     await userEvent.keyboard("{Escape}");
@@ -176,7 +176,7 @@ export const NonDismissible: Story = {
     await userEvent.click(trigger);
     const dialog = canvas.getByRole("dialog", { name: "Popover content" });
     await expect(dialog).toBeInTheDocument();
-    await expect(dialog).not.toHaveAttribute("aria-keyshortcuts");
+    await expect(dialog).toHaveAttribute("aria-keyshortcuts", "Tab");
 
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
@@ -414,6 +414,54 @@ export const OutsideDismissFocusTransfer: Story = {
   }
 };
 
+export const TabDismissToNextControl: Story = {
+  render: () => (
+    <PopoverShowcase>
+      <Popover triggerLabel="Tab Flow Popover">
+        <button type="button">Popover Tab Boundary Action</button>
+      </Popover>
+      <button type="button">Popover Next Focus Target</button>
+    </PopoverShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Tab Flow Popover" });
+    const nextTarget = canvas.getByRole("button", { name: "Popover Next Focus Target" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Popover Tab Boundary Action" })).toHaveFocus();
+
+    await userEvent.keyboard("{Tab}");
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(nextTarget).toHaveFocus();
+  }
+};
+
+export const ShiftTabDismissToPreviousControl: Story = {
+  render: () => (
+    <PopoverShowcase>
+      <button type="button">Popover Previous Focus Target</button>
+      <Popover triggerLabel="Shift+Tab Flow Popover">
+        <button type="button">Popover Shift+Tab Boundary Action</button>
+      </Popover>
+    </PopoverShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Shift+Tab Flow Popover" });
+    const previousTarget = canvas.getByRole("button", { name: "Popover Previous Focus Target" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Popover Shift+Tab Boundary Action" })).toHaveFocus();
+
+    await userEvent.keyboard("{Shift>}{Tab}{/Shift}");
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(previousTarget).toHaveFocus();
+  }
+};
+
 function CloseReasonTelemetryPopoverDemo() {
   const [lastReason, setLastReason] = React.useState("none");
   const [lastTrace, setLastTrace] = React.useState("none");
@@ -444,7 +492,7 @@ function CloseReasonTelemetryPopoverDemo() {
           setLastTrace(`reason:${reason}`);
         }}
       >
-        <p style={{ margin: 0 }}>Track trigger / Escape / outside close behavior.</p>
+        <button type="button">Telemetry primary action</button>
       </Popover>
       <button type="button">Outside target</button>
     </PopoverShowcase>
@@ -454,7 +502,7 @@ function CloseReasonTelemetryPopoverDemo() {
 export const CloseReasonTelemetry: Story = {
   args: {
     triggerLabel: "Telemetry popover",
-    children: <p style={{ margin: 0 }}>Track trigger / Escape / outside close behavior.</p>
+    children: <button type="button">Telemetry primary action</button>
   },
   render: () => <CloseReasonTelemetryPopoverDemo />,
   play: async ({ canvasElement }) => {
@@ -474,6 +522,13 @@ export const CloseReasonTelemetry: Story = {
     await userEvent.click(outsideTarget);
     await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("outside-pointer");
     await expect(canvas.getByTestId("popover-close-trace")).toHaveTextContent("reason:outside-pointer -> open:false");
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("button", { name: "Telemetry primary action" })).toHaveFocus();
+    await userEvent.keyboard("{Tab}");
+    await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("tab-key");
+    await expect(canvas.getByTestId("popover-close-trace")).toHaveTextContent("reason:tab-key -> open:false");
+    await expect(outsideTarget).toHaveFocus();
 
     await userEvent.click(trigger);
     await userEvent.click(trigger);

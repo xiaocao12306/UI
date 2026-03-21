@@ -3,7 +3,7 @@ import { DismissableLayer } from "@aurora-ui/primitives";
 import { Button } from "./Button";
 
 export type PopoverAlign = "start" | "end";
-export type PopoverCloseReason = "trigger-click" | "escape-key" | "outside-pointer";
+export type PopoverCloseReason = "trigger-click" | "escape-key" | "outside-pointer" | "tab-key";
 
 export type PopoverProps = {
   triggerLabel: React.ReactNode;
@@ -23,6 +23,7 @@ export type PopoverProps = {
 };
 
 const popoverTriggerKeyboardShortcut = "ArrowDown";
+const popoverContentKeyboardShortcuts = "Tab";
 
 export function Popover({
   triggerLabel,
@@ -73,6 +74,18 @@ export function Popover({
     [onCloseReason, setOpen]
   );
 
+  const dismissWithTabNavigation = React.useCallback(
+    (event: React.KeyboardEvent<HTMLElement>) => {
+      event.preventDefault();
+      const ownerDocument = event.currentTarget.ownerDocument;
+      const fallbackAnchor = event.target instanceof HTMLElement ? event.target : event.currentTarget;
+      const focusAnchor = triggerRef.current ?? fallbackAnchor;
+      focusAdjacentTabbable(ownerDocument, focusAnchor, event.shiftKey ? -1 : 1, contentRef.current);
+      closeWithReason("tab-key");
+    },
+    [closeWithReason]
+  );
+
   React.useEffect(() => {
     if (!isOpen) {
       return;
@@ -110,6 +123,11 @@ export function Popover({
           setOpen(true);
         }}
         onKeyDown={(event) => {
+          if (event.key === "Tab" && isOpen) {
+            dismissWithTabNavigation(event);
+            return;
+          }
+
           if (event.key !== "ArrowDown" || isOpen) {
             return;
           }
@@ -130,8 +148,24 @@ export function Popover({
           ref={contentRef}
           role="dialog"
           aria-label={resolvedContentLabel}
-          aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
+          aria-keyshortcuts={
+            closeOnEscape ? `${popoverContentKeyboardShortcuts} Escape` : popoverContentKeyboardShortcuts
+          }
           tabIndex={-1}
+          onKeyDown={(event) => {
+            if (event.key !== "Tab") {
+              return;
+            }
+            if (event.altKey || event.ctrlKey || event.metaKey) {
+              return;
+            }
+
+            if (!shouldDismissOnTabBoundary(event.currentTarget, event.shiftKey)) {
+              return;
+            }
+
+            dismissWithTabNavigation(event);
+          }}
           onEscapeKeyDown={(event) => {
             onEscapeKeyDown?.(event);
             if (event.defaultPrevented || !closeOnEscape) {
@@ -175,4 +209,91 @@ export function Popover({
       ) : null}
     </div>
   );
+}
+
+function shouldDismissOnTabBoundary(layer: HTMLElement, reverse: boolean) {
+  const ownerDocument = layer.ownerDocument;
+  const activeElement = ownerDocument.activeElement;
+  if (!(activeElement instanceof HTMLElement) || !layer.contains(activeElement)) {
+    return false;
+  }
+
+  const tabbableElements = getTabbableElements(layer);
+  if (tabbableElements.length === 0) {
+    return true;
+  }
+
+  const activeIndex = tabbableElements.indexOf(activeElement);
+  if (activeIndex < 0) {
+    return true;
+  }
+
+  return reverse ? activeIndex === 0 : activeIndex === tabbableElements.length - 1;
+}
+
+function focusAdjacentTabbable(
+  ownerDocument: Document,
+  currentElement: HTMLElement,
+  direction: 1 | -1,
+  excludedContainer: HTMLElement | null = null
+) {
+  const tabbableElements = Array.from(
+    ownerDocument.querySelectorAll<HTMLElement>(
+      'a[href], button, input:not([type="hidden"]), select, textarea, [tabindex]'
+    )
+  ).filter((element) => {
+    if (element === currentElement) {
+      return true;
+    }
+
+    if (excludedContainer && excludedContainer.contains(element)) {
+      return false;
+    }
+
+    if (element.hasAttribute("disabled")) {
+      return false;
+    }
+
+    return isElementTabbable(element);
+  });
+
+  if (tabbableElements.length === 0) {
+    return;
+  }
+
+  const fallbackActiveElement =
+    ownerDocument.activeElement instanceof HTMLElement ? ownerDocument.activeElement : null;
+  const currentIndex = tabbableElements.indexOf(currentElement);
+  const activeIndex = fallbackActiveElement ? tabbableElements.indexOf(fallbackActiveElement) : -1;
+  const startIndex = currentIndex >= 0 ? currentIndex : activeIndex;
+  let nextIndex = startIndex + direction;
+
+  while (nextIndex >= 0 && nextIndex < tabbableElements.length) {
+    const candidate = tabbableElements[nextIndex];
+    if (candidate) {
+      candidate.focus();
+      return;
+    }
+    nextIndex += direction;
+  }
+}
+
+function getTabbableElements(container: HTMLElement) {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button, input:not([type="hidden"]), select, textarea, [tabindex]'
+    )
+  ).filter((element) => isElementTabbable(element));
+}
+
+function isElementTabbable(element: HTMLElement) {
+  if (element.tabIndex < 0) {
+    return false;
+  }
+
+  if (element.getAttribute("aria-hidden") === "true") {
+    return false;
+  }
+
+  return true;
 }

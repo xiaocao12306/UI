@@ -73,7 +73,7 @@ describe("Popover", () => {
     expect(screen.getByRole("button", { name: "Primary action" })).toHaveFocus();
   });
 
-  it("exposes Escape shortcut hints on popover content only when closeOnEscape is enabled", () => {
+  it("exposes Tab/Escape shortcut hints on popover content when closeOnEscape is enabled", () => {
     const { rerender } = render(
       <Popover triggerLabel="Escape hint popover">
         <p>Hint content</p>
@@ -83,7 +83,7 @@ describe("Popover", () => {
     fireEvent.click(screen.getByRole("button", { name: "Escape hint popover" }));
     expect(screen.getByRole("dialog", { name: "Popover content" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "Escape"
+      "Tab Escape"
     );
 
     rerender(
@@ -91,9 +91,57 @@ describe("Popover", () => {
         <p>Hint content</p>
       </Popover>
     );
-    expect(screen.getByRole("dialog", { name: "Popover content" })).not.toHaveAttribute(
-      "aria-keyshortcuts"
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Tab"
     );
+  });
+
+  it("dismisses on boundary Tab/Shift+Tab and keeps in-popover Tab navigation intact", () => {
+    const onCloseReason = vi.fn();
+
+    render(
+      <div>
+        <button type="button">Popover previous control</button>
+        <Popover triggerLabel="Popover tab flow" onCloseReason={onCloseReason}>
+          <div style={{ display: "grid", gap: 8 }}>
+            <input aria-label="Popover first field" />
+            <button type="button">Popover final action</button>
+          </div>
+        </Popover>
+        <button type="button">Popover next control</button>
+      </div>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Popover tab flow" });
+    const previousControl = screen.getByRole("button", { name: "Popover previous control" });
+    const nextControl = screen.getByRole("button", { name: "Popover next control" });
+
+    fireEvent.click(trigger);
+    const firstField = screen.getByRole("textbox", { name: "Popover first field" });
+    const finalAction = screen.getByRole("button", { name: "Popover final action" });
+    expect(firstField).toHaveFocus();
+
+    finalAction.focus();
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    expect(finalAction).toHaveFocus();
+    expect(onCloseReason).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(finalAction, { key: "Tab" });
+    expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+    expect(nextControl).toHaveFocus();
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "tab-key");
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole("textbox", { name: "Popover first field" })).toHaveFocus();
+
+    fireEvent.keyDown(screen.getByRole("textbox", { name: "Popover first field" }), {
+      key: "Tab",
+      shiftKey: true
+    });
+    expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+    expect(previousControl).toHaveFocus();
+    expect(onCloseReason).toHaveBeenNthCalledWith(2, "tab-key");
   });
 
   it("ignores modified ArrowDown combinations for trigger keyboard open", () => {
