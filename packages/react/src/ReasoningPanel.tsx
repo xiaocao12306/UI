@@ -22,8 +22,8 @@ export function ReasoningPanel({
   const [open, setOpen] = React.useState(defaultOpen);
   const panelId = React.useId();
   const resolvedExpandLabel = resolveNonEmptyLabel(expandLabel) ?? "Expand reasoning panel";
-  const resolvedCollapseLabel = resolveNonEmptyLabel(collapseLabel) ?? "Collapse reasoning panel";
-  const resolvedListAriaLabel = resolveNonEmptyLabel(listAriaLabel) ?? "Reasoning steps";
+const resolvedCollapseLabel = resolveNonEmptyLabel(collapseLabel) ?? "Collapse reasoning panel";
+const resolvedListAriaLabel = resolveNonEmptyLabel(listAriaLabel) ?? "Reasoning steps";
 
   return (
     <section
@@ -40,6 +40,7 @@ export function ReasoningPanel({
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={open ? resolvedCollapseLabel : resolvedExpandLabel}
+        aria-keyshortcuts="Enter Space"
         style={{
           width: "100%",
           height: 38,

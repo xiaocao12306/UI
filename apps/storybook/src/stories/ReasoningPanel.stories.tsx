@@ -29,6 +29,7 @@ export const Default: Story = {
     const toggle = await canvas.findByRole("button", { name: "Expand reasoning panel" });
 
     await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(toggle).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     await userEvent.click(toggle);
     await expect(toggle).toHaveAttribute("aria-expanded", "true");
     await expect(toggle).toHaveAttribute("aria-label", "Collapse reasoning panel");

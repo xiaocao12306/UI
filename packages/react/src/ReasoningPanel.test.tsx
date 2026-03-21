@@ -8,6 +8,7 @@ describe("ReasoningPanel", () => {
 
     const toggle = screen.getByRole("button", { name: "Expand reasoning panel" });
     expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     expect(screen.queryByRole("list")).toBeNull();
 
     fireEvent.click(toggle);
@@ -26,6 +27,10 @@ describe("ReasoningPanel", () => {
     render(<ReasoningPanel title="Reasoning trace" defaultOpen steps={[]} />);
 
     expect(screen.getByRole("button", { name: "Collapse reasoning panel" })).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("button", { name: "Collapse reasoning panel" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space"
+    );
     expect(screen.getByText("No reasoning steps captured.")).toBeInTheDocument();
     expect(screen.getByRole("list", { name: "Reasoning steps" })).toBeInTheDocument();
   });
