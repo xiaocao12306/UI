@@ -135,6 +135,7 @@ export function RadioGroup({
               value={option.value}
               checked={currentValue === option.value}
               disabled={optionDisabled}
+              aria-keyshortcuts={optionDisabled ? undefined : "Space"}
               data-focused={isFocused ? "true" : undefined}
               data-focus-visible={isFocusVisible ? "true" : undefined}
               onChange={() => handleChange(option.value, option.disabled)}

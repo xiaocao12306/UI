@@ -78,6 +78,26 @@ export const DisabledOption: Story = {
   }
 };
 
+export const ShortcutHintPrecision: Story = {
+  args: {
+    name: "Shortcut hints",
+    options: [
+      { label: "Enabled radio option", value: "enabled" },
+      { label: "Disabled radio option", value: "disabled", disabled: true }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("radio", { name: "Enabled radio option" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Space"
+    );
+    await expect(canvas.getByRole("radio", { name: "Disabled radio option" })).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
+  }
+};
+
 export const LabelledByPrecedence: Story = {
   render: () => (
     <div style={{ width: 340, display: "grid", gap: 12 }}>

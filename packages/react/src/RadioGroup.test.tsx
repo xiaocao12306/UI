@@ -50,6 +50,21 @@ describe("RadioGroup", () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it("exposes shortcut hints only for actionable options", () => {
+    render(
+      <RadioGroup
+        name="Shortcut hints group"
+        options={[
+          { label: "Enabled option", value: "enabled" },
+          { label: "Disabled option", value: "disabled", disabled: true }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("radio", { name: "Enabled option" })).toHaveAttribute("aria-keyshortcuts", "Space");
+    expect(screen.getByRole("radio", { name: "Disabled option" })).not.toHaveAttribute("aria-keyshortcuts");
+  });
+
   it("wires invalid semantics to the radiogroup container", () => {
     render(<RadioGroup name="Invalid group" invalid options={baseOptions} />);
     expect(screen.getByRole("radiogroup", { name: "Invalid group" })).toHaveAttribute("aria-invalid", "true");
