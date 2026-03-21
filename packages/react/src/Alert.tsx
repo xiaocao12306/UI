@@ -157,7 +157,7 @@ export function Alert({
               setCloseButtonPressed(false);
             }}
             onMouseDown={(event) => {
-              if (event.button !== 0) {
+              if (event.button !== 0 || event.ctrlKey) {
                 return;
               }
               focusVisibleIntentRef.current = false;
@@ -170,7 +170,7 @@ export function Alert({
               }
             }}
             onPointerDown={(event) => {
-              if (event.button !== 0) {
+              if (event.button !== 0 || event.ctrlKey) {
                 return;
               }
               focusVisibleIntentRef.current = false;

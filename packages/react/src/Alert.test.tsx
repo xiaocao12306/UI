@@ -149,6 +149,9 @@ describe("Alert", () => {
     fireEvent.mouseDown(closeButton, { button: 1 });
     expect(closeButton).not.toHaveAttribute("data-pressed");
 
+    fireEvent.mouseDown(closeButton, { button: 0, ctrlKey: true });
+    expect(closeButton).not.toHaveAttribute("data-pressed");
+
     fireEvent.mouseDown(closeButton, { button: 0 });
     expect(closeButton).toHaveAttribute("data-pressed", "true");
 

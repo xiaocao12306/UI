@@ -1188,6 +1188,9 @@ describe("Toast", () => {
 
     fireEvent.mouseDown(closeButton, { button: 2 });
     expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.mouseDown(closeButton, { button: 0, ctrlKey: true });
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
     matchesSpy.mockRestore();
   });
 
@@ -1196,6 +1199,9 @@ describe("Toast", () => {
 
     const closeButton = screen.getByRole("button", { name: "Close toast" });
     fireEvent.mouseDown(closeButton, { button: 2 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.mouseDown(closeButton, { button: 0, ctrlKey: true });
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
 
     fireEvent.mouseDown(closeButton);

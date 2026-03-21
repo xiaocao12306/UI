@@ -588,7 +588,7 @@ export function Toast({
             setCloseButtonPressed(false);
           }}
           onMouseDown={(event) => {
-            if (event.button !== 0) {
+            if (event.button !== 0 || event.ctrlKey) {
               return;
             }
             closeButtonFocusIntentRef.current = false;
