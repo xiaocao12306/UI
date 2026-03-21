@@ -22,6 +22,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
     onKeyUp,
     onPointerDown,
     "aria-invalid": ariaInvalid,
+    "aria-label": ariaLabel,
+    "aria-labelledby": ariaLabelledBy,
     ...props
   },
   ref
@@ -34,6 +36,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
   const isInteractionDisabled = Boolean(disabled);
+  const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
+  const resolvedAriaLabel = resolvedAriaLabelledBy ? undefined : resolveNonEmptyLabel(ariaLabel);
 
   React.useEffect(() => {
     if (!isInteractionDisabled) {
@@ -53,6 +57,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
       readOnly={readOnly}
       data-aurora-input="true"
       aria-invalid={resolvedInvalidAria}
+      aria-label={resolvedAriaLabel}
+      aria-labelledby={resolvedAriaLabelledBy}
       data-invalid={isInvalid ? "true" : undefined}
       data-focused={focused ? "true" : undefined}
       data-focus-visible={focusVisible ? "true" : undefined}
@@ -176,4 +182,12 @@ function resolveFocusVisibleState(target: HTMLInputElement, fallback: boolean) {
   } catch {
     return fallback;
   }
+}
+
+function resolveNonEmptyLabel(label: string | undefined) {
+  if (typeof label === "string" && label.trim().length > 0) {
+    return label.trim();
+  }
+
+  return undefined;
 }

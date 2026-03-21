@@ -191,3 +191,22 @@ export const InvalidTokenSemantics: Story = {
     await expect(input).toHaveAttribute("aria-invalid", "grammar");
   }
 };
+
+export const BlankAriaLabelFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 560px)" gap={8}>
+      <FormField label="Release scope">
+        <Input aria-label="   " defaultValue="stable" />
+      </FormField>
+      <small style={storyMutedTextStyle}>
+        Blank <code>aria-label</code> values are ignored so visible label association remains the
+        accessible name source.
+      </small>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByRole("textbox", { name: "Release scope" });
+    await expect(input).not.toHaveAttribute("aria-label");
+  }
+};

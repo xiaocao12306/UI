@@ -174,4 +174,37 @@ describe("Input", () => {
     expect(input.style.borderColor).toBe("var(--aurora-color-red-500)");
     expect(input.style.boxShadow).toContain("--aurora-color-red-500");
   });
+
+  it("ignores blank aria-label and falls back to associated label naming", () => {
+    render(
+      <>
+        <label htmlFor="release-scope">Release scope</label>
+        <Input id="release-scope" aria-label="   " />
+      </>
+    );
+
+    const input = screen.getByRole("textbox", { name: "Release scope" });
+    expect(input).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank aria-labelledby and keeps aria-label naming", () => {
+    render(<Input aria-label="Input search" aria-labelledby="   " />);
+    const input = screen.getByRole("textbox", { name: "Input search" });
+
+    expect(input).not.toHaveAttribute("aria-labelledby");
+    expect(input).toHaveAttribute("aria-label", "Input search");
+  });
+
+  it("prefers aria-labelledby naming over aria-label when both are provided", () => {
+    render(
+      <>
+        <span id="input-filter-heading">Input filter heading</span>
+        <Input aria-label="Input fallback name" aria-labelledby="input-filter-heading" />
+      </>
+    );
+
+    const input = screen.getByRole("textbox", { name: "Input filter heading" });
+    expect(input).toHaveAttribute("aria-labelledby", "input-filter-heading");
+    expect(input).not.toHaveAttribute("aria-label");
+  });
 });
