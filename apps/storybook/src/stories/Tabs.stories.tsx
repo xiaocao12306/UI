@@ -219,7 +219,11 @@ export const KeyboardFocusRingShiftTabReentry: Story = {
         Pointer focus keeps ring hidden, then reverse keyboard navigation (Shift+Tab) restores
         focus-visible ring for the active tab.
       </p>
-      <Tabs ariaLabel="Shift+Tab focus ring fallback tabs" defaultValue="spec" items={productTabs} />
+      <Tabs
+        ariaLabel="Shift+Tab focus ring fallback tabs"
+        defaultValue="spec"
+        items={productTabs}
+      />
       <button type="button">After tabs</button>
     </TabsShowcase>
   ),
@@ -264,7 +268,10 @@ export const RemovedActiveTabFallback: Story = {
     const canvas = within(canvasElement);
     const removeButton = canvas.getByRole("button", { name: "Remove Build tab" });
 
-    await expect(canvas.getByRole("tab", { name: "Build" })).toHaveAttribute("aria-selected", "true");
+    await expect(canvas.getByRole("tab", { name: "Build" })).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
     await userEvent.click(removeButton);
 
     const releaseTab = canvas.getByRole("tab", { name: "Release" });
@@ -393,6 +400,52 @@ export const AllTabsDisabled: Story = {
   }
 };
 
+export const SingleActionableTab: Story = {
+  render: () => (
+    <Tabs
+      ariaLabel="Single actionable tab example"
+      activationMode="manual"
+      items={[
+        {
+          key: "spec",
+          label: "Spec",
+          content: "Specification stage is active."
+        },
+        {
+          key: "security",
+          label: "Security Review",
+          content: "Security review is blocked.",
+          disabled: true
+        },
+        {
+          key: "release",
+          label: "Release",
+          content: "Release stage is blocked.",
+          disabled: true
+        }
+      ]}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const securityTab = canvas.getByRole("tab", { name: "Security Review" });
+    const releaseTab = canvas.getByRole("tab", { name: "Release" });
+
+    await expect(specTab).not.toHaveAttribute("aria-keyshortcuts");
+    await expect(securityTab).not.toHaveAttribute("aria-keyshortcuts");
+    await expect(releaseTab).not.toHaveAttribute("aria-keyshortcuts");
+
+    specTab.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    await userEvent.keyboard("{Enter}");
+
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+    await expect(specTab).toHaveFocus();
+    await expect(canvas.getByText("Specification stage is active.")).toBeInTheDocument();
+  }
+};
+
 export const KeyboardNavigationGuide: Story = {
   render: () => (
     <TabsShowcase>
@@ -422,10 +475,7 @@ export const KeyboardNavigationGuide: Story = {
     await userEvent.click(specTab);
     await expect(specTab).toHaveAttribute("aria-selected", "true");
     await expect(specTab).toHaveAttribute("aria-keyshortcuts", automaticHorizontalTabShortcuts);
-    await expect(releaseTab).toHaveAttribute(
-      "aria-keyshortcuts",
-      automaticHorizontalTabShortcuts
-    );
+    await expect(releaseTab).toHaveAttribute("aria-keyshortcuts", automaticHorizontalTabShortcuts);
     await expect(blockedTab).toHaveAttribute("aria-disabled", "true");
     await expect(blockedTab).not.toHaveAttribute("aria-keyshortcuts");
 

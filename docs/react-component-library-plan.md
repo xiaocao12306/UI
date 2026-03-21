@@ -873,6 +873,7 @@
   - Release dry-run 证据刷新（2026-03-22 latest+190：本地复验 `pnpm release:dry-run` 通过，`@aurora-ui/react` `84.8 kB / 529.5 kB`、`@aurora-ui/primitives` `15.1 kB / 75.1 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`，并确认 dry-run 版本文件自动回滚）
   - Tooltip Escape 策略开关收口（2026-03-22 latest+191：Tooltip 新增 `closeOnEscape`（默认 `true`）并在关闭策略禁用时去除 `aria-keyshortcuts=\"Escape\"`，补齐 `Tooltip.test.tsx` 非关闭策略回归、Storybook `EscapeDisabled` 交互场景、Component API/Best Practices 文档同步；复验 `pnpm --filter @aurora-ui/react exec vitest run src/Tooltip.test.tsx`、`pnpm storybook:build`、`pnpm storybook:test:grep \"Tooltip.stories.tsx\"` 与 docs parity 相关检查通过）
   - CommandPalette 选项快捷键提示可发现性收口（2026-03-22 latest+192：CommandPalette 可执行 option 新增 `aria-keyshortcuts=\"Enter Space\"`，禁用项明确不暴露快捷键提示，补齐 `CommandPalette.test.tsx` 断言、Storybook `OptionActivationKeyGuard/DisabledCommandGuard` 交互回归与 Component API/Best Practices 文档口径；复验 `pnpm --filter @aurora-ui/react exec vitest run src/CommandPalette.test.tsx`、`pnpm storybook:build`、`pnpm storybook:test:grep \"CommandPalette.stories.tsx\"` 与 docs parity 相关检查通过）
+  - Tabs 单可用项快捷键提示收口（2026-03-22 latest+193：Tabs 在“仅一个可操作 tab”场景下不再暴露 `aria-keyshortcuts`，避免向 QA/AT 暗示不可用的导航/激活路径；补齐 `Tabs.test.tsx` 回归、Storybook `SingleActionableTab` 场景与 Component API/Best Practices 文档口径，复验 `pnpm --filter @aurora-ui/react exec vitest run src/Tabs.test.tsx`、`pnpm storybook:build`、`pnpm storybook:test:grep \"Tabs.stories.tsx\"` 与 docs parity 相关检查通过）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

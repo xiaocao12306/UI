@@ -26,8 +26,8 @@ const tabKeyShortcutsByOrientation = {
     vertical: "Home End PageDown PageUp ArrowUp ArrowDown"
   },
   manual: {
-  horizontal: "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight",
-  vertical: "Enter Space Home End PageDown PageUp ArrowUp ArrowDown"
+    horizontal: "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight",
+    vertical: "Enter Space Home End PageDown PageUp ArrowUp ArrowDown"
   }
 } as const;
 
@@ -84,7 +84,11 @@ function getLastEnabledIndex(items: TabItem[]) {
   return -1;
 }
 
-function getNearestEnabledKey(items: TabItem[], anchorIndex: number | undefined, fallbackKey: string | undefined) {
+function getNearestEnabledKey(
+  items: TabItem[],
+  anchorIndex: number | undefined,
+  fallbackKey: string | undefined
+) {
   if (!Array.isArray(items) || items.length === 0) {
     return fallbackKey;
   }
@@ -143,6 +147,10 @@ export function Tabs({
   const [focusVisibleTabKey, setFocusVisibleTabKey] = React.useState<string | null>(null);
   const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel, "Tabs");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
+  const enabledTabCount = React.useMemo(
+    () => items.reduce((count, item) => (item.disabled ? count : count + 1), 0),
+    [items]
+  );
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {
@@ -270,11 +278,7 @@ export function Tabs({
     }
 
     if (value === undefined && currentRawValue && !currentItem) {
-      return getNearestEnabledKey(
-        items,
-        recentKeyIndexMap[currentRawValue],
-        firstEnabledKey
-      );
+      return getNearestEnabledKey(items, recentKeyIndexMap[currentRawValue], firstEnabledKey);
     }
 
     return firstEnabledKey;
@@ -389,7 +393,9 @@ export function Tabs({
               aria-controls={`${baseId}-panel-${index}`}
               aria-disabled={disabled || undefined}
               aria-keyshortcuts={
-                disabled ? undefined : getTabKeyShortcuts(activationMode, orientation)
+                disabled || enabledTabCount <= 1
+                  ? undefined
+                  : getTabKeyShortcuts(activationMode, orientation)
               }
               tabIndex={focusTargetValue === item.key ? 0 : -1}
               disabled={disabled}
@@ -672,7 +678,8 @@ function isElementDirectionRtl(element: HTMLElement | null) {
     return false;
   }
 
-  const ownerWindow = element.ownerDocument.defaultView ?? (typeof window !== "undefined" ? window : null);
+  const ownerWindow =
+    element.ownerDocument.defaultView ?? (typeof window !== "undefined" ? window : null);
   if (!ownerWindow) {
     return false;
   }
@@ -719,7 +726,10 @@ function hasReadableTextNode(node: React.ReactNode): boolean {
     return false;
   }
 
-  if (typeof elementProps["aria-label"] === "string" && elementProps["aria-label"].trim().length > 0) {
+  if (
+    typeof elementProps["aria-label"] === "string" &&
+    elementProps["aria-label"].trim().length > 0
+  ) {
     return true;
   }
 

@@ -31,8 +31,14 @@ describe("Tabs", () => {
       />
     );
 
-    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute("data-aurora-reduced-motion", "transition");
-    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute("data-aurora-reduced-motion", "transition");
+    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute(
+      "data-aurora-reduced-motion",
+      "transition"
+    );
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute(
+      "data-aurora-reduced-motion",
+      "transition"
+    );
   });
 
   it("supports keyboard navigation", () => {
@@ -103,17 +109,19 @@ describe("Tabs", () => {
 
   it("falls back to computed style direction when no dir attribute is present", () => {
     const originalGetComputedStyle = window.getComputedStyle;
-    const getComputedStyleSpy = vi.spyOn(window, "getComputedStyle").mockImplementation((element, pseudoElt) => {
-      const style = originalGetComputedStyle.call(window, element, pseudoElt);
-      return new Proxy(style, {
-        get(target, property, receiver) {
-          if (property === "direction") {
-            return "rtl";
+    const getComputedStyleSpy = vi
+      .spyOn(window, "getComputedStyle")
+      .mockImplementation((element, pseudoElt) => {
+        const style = originalGetComputedStyle.call(window, element, pseudoElt);
+        return new Proxy(style, {
+          get(target, property, receiver) {
+            if (property === "direction") {
+              return "rtl";
+            }
+            return Reflect.get(target, property, receiver);
           }
-          return Reflect.get(target, property, receiver);
-        }
-      }) as CSSStyleDeclaration;
-    });
+        }) as CSSStyleDeclaration;
+      });
 
     render(
       <Tabs
@@ -140,17 +148,19 @@ describe("Tabs", () => {
 
   it("prefers nearest explicit ltr direction over computed style fallback", () => {
     const originalGetComputedStyle = window.getComputedStyle;
-    const getComputedStyleSpy = vi.spyOn(window, "getComputedStyle").mockImplementation((element, pseudoElt) => {
-      const style = originalGetComputedStyle.call(window, element, pseudoElt);
-      return new Proxy(style, {
-        get(target, property, receiver) {
-          if (property === "direction") {
-            return "rtl";
+    const getComputedStyleSpy = vi
+      .spyOn(window, "getComputedStyle")
+      .mockImplementation((element, pseudoElt) => {
+        const style = originalGetComputedStyle.call(window, element, pseudoElt);
+        return new Proxy(style, {
+          get(target, property, receiver) {
+            if (property === "direction") {
+              return "rtl";
+            }
+            return Reflect.get(target, property, receiver);
           }
-          return Reflect.get(target, property, receiver);
-        }
-      }) as CSSStyleDeclaration;
-    });
+        }) as CSSStyleDeclaration;
+      });
 
     render(
       <div dir="ltr">
@@ -186,17 +196,19 @@ describe("Tabs", () => {
     iframeDocument.body.append(host);
 
     const originalGetComputedStyle = iframeWindow.getComputedStyle;
-    const getComputedStyleSpy = vi.spyOn(iframeWindow, "getComputedStyle").mockImplementation((element, pseudoElt) => {
-      const style = originalGetComputedStyle.call(iframeWindow, element, pseudoElt);
-      return new Proxy(style, {
-        get(target, property, receiver) {
-          if (property === "direction") {
-            return "rtl";
+    const getComputedStyleSpy = vi
+      .spyOn(iframeWindow, "getComputedStyle")
+      .mockImplementation((element, pseudoElt) => {
+        const style = originalGetComputedStyle.call(iframeWindow, element, pseudoElt);
+        return new Proxy(style, {
+          get(target, property, receiver) {
+            if (property === "direction") {
+              return "rtl";
+            }
+            return Reflect.get(target, property, receiver);
           }
-          return Reflect.get(target, property, receiver);
-        }
-      }) as CSSStyleDeclaration;
-    });
+        }) as CSSStyleDeclaration;
+      });
 
     render(
       <Tabs
@@ -471,7 +483,11 @@ describe("Tabs", () => {
       render(
         <Tabs
           items={[
-            { key: "icon-only", label: <span aria-hidden="true">⚙</span>, content: <div>Panel One</div> },
+            {
+              key: "icon-only",
+              label: <span aria-hidden="true">⚙</span>,
+              content: <div>Panel One</div>
+            },
             { key: "two", label: "Two", content: <div>Panel Two</div> }
           ]}
         />
@@ -1067,6 +1083,36 @@ describe("Tabs", () => {
     expect(screen.getByRole("tab", { name: "Three" })).not.toHaveAttribute("aria-keyshortcuts");
   });
 
+  it("omits shortcut metadata when only one tab is actionable", () => {
+    const onValueChange = vi.fn();
+
+    render(
+      <Tabs
+        defaultValue="one"
+        activationMode="manual"
+        onValueChange={onValueChange}
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div>, disabled: true },
+          { key: "three", label: "Three", content: <div>Panel Three</div>, disabled: true }
+        ]}
+      />
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    const threeTab = screen.getByRole("tab", { name: "Three" });
+
+    expect(oneTab).not.toHaveAttribute("aria-keyshortcuts");
+    expect(twoTab).not.toHaveAttribute("aria-keyshortcuts");
+    expect(threeTab).not.toHaveAttribute("aria-keyshortcuts");
+
+    fireEvent.keyDown(oneTab, { key: "ArrowRight" });
+    fireEvent.keyDown(oneTab, { key: "Enter" });
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
   it("supports manual activation mode with Space", () => {
     render(
       <Tabs
@@ -1343,7 +1389,9 @@ describe("Tabs", () => {
       expect(oneTab.style.boxShadow).toBe("none");
 
       fireEvent.blur(oneTab);
-      secondaryDocument.dispatchEvent(new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true }));
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
       fireEvent.focus(oneTab);
       expect(oneTab.style.boxShadow).toContain("0 0 0 3px");
     } finally {
