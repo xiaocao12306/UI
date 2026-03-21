@@ -175,17 +175,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
         onMouseLeave?.(event);
       }}
       onMouseDown={(event) => {
-        if (event.button === 0) {
+        if (event.button === 0 && !event.ctrlKey) {
           focusVisibleIntentRef.current = false;
           setFocusVisible(false);
         }
-        if (!isInteractionDisabled && !readOnly && event.button === 0) {
+        if (!isInteractionDisabled && !readOnly && event.button === 0 && !event.ctrlKey) {
           setActive(true);
         }
         onMouseDown?.(event);
       }}
       onPointerDown={(event) => {
-        if (event.button === 0) {
+        if (event.button === 0 && !event.ctrlKey) {
           focusVisibleIntentRef.current = false;
           setFocusVisible(false);
         }

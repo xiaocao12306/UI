@@ -89,6 +89,9 @@ describe("Button", () => {
 
     fireEvent.mouseDown(button, { button: 2 });
     expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.mouseDown(button, { button: 0, ctrlKey: true });
+    expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
     matchesSpy.mockRestore();
   });
 
@@ -217,6 +220,9 @@ describe("Button", () => {
     const button = screen.getByRole("button", { name: "Primary Only" });
 
     fireEvent.mouseDown(button, { button: 2 });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+
+    fireEvent.mouseDown(button, { button: 0, ctrlKey: true });
     expect(button.getAttribute("style")).not.toContain("translateY(1px)");
 
     fireEvent.mouseDown(button, { button: 0 });

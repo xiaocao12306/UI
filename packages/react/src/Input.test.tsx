@@ -208,6 +208,9 @@ describe("Input", () => {
     fireEvent.pointerDown(input, { button: 2 });
     expect(input).toHaveAttribute("data-focus-visible", "true");
 
+    fireEvent.mouseDown(input, { button: 0, ctrlKey: true });
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
     fireEvent.mouseDown(input, { button: 0 });
     expect(input).not.toHaveAttribute("data-focus-visible");
   });

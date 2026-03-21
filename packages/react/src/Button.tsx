@@ -261,17 +261,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         onMouseLeave?.(event);
       }}
       onMouseDown={(event) => {
-        if (event.button === 0) {
+        if (event.button === 0 && !event.ctrlKey) {
           focusVisibleIntentRef.current = false;
           setFocusVisible(false);
         }
-        if (!interactionDisabled && event.button === 0) {
+        if (!interactionDisabled && event.button === 0 && !event.ctrlKey) {
           setPressed(true);
         }
         onMouseDown?.(event);
       }}
       onPointerDown={(event) => {
-        if (event.button === 0) {
+        if (event.button === 0 && !event.ctrlKey) {
           focusVisibleIntentRef.current = false;
           setFocusVisible(false);
         }

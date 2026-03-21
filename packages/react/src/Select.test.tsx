@@ -186,6 +186,9 @@ describe("Select", () => {
     fireEvent.focus(select);
     expect(select).toHaveAttribute("data-focus-visible", "true");
 
+    fireEvent.mouseDown(select, { button: 0, ctrlKey: true });
+    expect(select).toHaveAttribute("data-focus-visible", "true");
+
     fireEvent.mouseDown(select, { button: 0 });
     expect(select).not.toHaveAttribute("data-focus-visible");
   });

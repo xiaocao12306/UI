@@ -86,6 +86,9 @@ describe("Textarea", () => {
     fireEvent.focus(textarea);
     expect(textarea).toHaveAttribute("data-focus-visible", "true");
 
+    fireEvent.mouseDown(textarea, { button: 0, ctrlKey: true });
+    expect(textarea).toHaveAttribute("data-focus-visible", "true");
+
     fireEvent.mouseDown(textarea, { button: 0 });
     expect(textarea).not.toHaveAttribute("data-focus-visible");
   });
