@@ -725,7 +725,7 @@ describe("Table", () => {
     expect(onSortChange).toHaveBeenCalledTimes(2);
   });
 
-  it("supports Home/End keyboard focus navigation across sortable headers", async () => {
+  it("supports Arrow/Home/End/Page keyboard focus navigation across sortable headers", async () => {
     const user = userEvent.setup();
 
     render(
@@ -750,6 +750,12 @@ describe("Table", () => {
     await user.tab();
     expect(nameSort).toHaveFocus();
 
+    fireEvent.keyDown(nameSort, { key: "ArrowRight" });
+    expect(scoreSort).toHaveFocus();
+
+    fireEvent.keyDown(scoreSort, { key: "ArrowLeft" });
+    expect(nameSort).toHaveFocus();
+
     fireEvent.keyDown(nameSort, { key: "End" });
     expect(statusSort).toHaveFocus();
 
@@ -763,7 +769,7 @@ describe("Table", () => {
     expect(nameSort).toHaveFocus();
   });
 
-  it("keeps Home/End/PageUp/PageDown navigation inactive when sortable controls are disabled", () => {
+  it("keeps Arrow/Home/End/Page navigation inactive when sortable controls are disabled", () => {
     const onSortChange = vi.fn();
 
     render(
@@ -779,6 +785,8 @@ describe("Table", () => {
 
     const nameSort = screen.getByRole("button", { name: "Name sort ascending" });
 
+    fireEvent.keyDown(nameSort, { key: "ArrowRight" });
+    fireEvent.keyDown(nameSort, { key: "ArrowLeft" });
     fireEvent.keyDown(nameSort, { key: "End" });
     fireEvent.keyDown(nameSort, { key: "Home" });
     fireEvent.keyDown(nameSort, { key: "PageDown" });
@@ -786,6 +794,39 @@ describe("Table", () => {
 
     expect(onSortChange).not.toHaveBeenCalled();
     expect(nameSort).toBeDisabled();
+  });
+
+  it("keeps ArrowLeft/ArrowRight focus navigation aligned with visual order in RTL", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <div dir="rtl">
+        <Table
+          columns={[
+            { key: "name", header: "Name", sortable: true },
+            { key: "score", header: "Score", sortable: true },
+            { key: "status", header: "Status", sortable: true }
+          ]}
+          data={[
+            { name: "Dialog", score: 80, status: "review" },
+            { name: "Button", score: 95, status: "ready" }
+          ]}
+          defaultSortKey="name"
+        />
+      </div>
+    );
+
+    const nameSort = screen.getByRole("button", { name: "Name sort descending" });
+    const scoreSort = screen.getByRole("button", { name: "Score sort ascending" });
+
+    await user.tab();
+    expect(nameSort).toHaveFocus();
+
+    fireEvent.keyDown(nameSort, { key: "ArrowLeft" });
+    expect(scoreSort).toHaveFocus();
+
+    fireEvent.keyDown(scoreSort, { key: "ArrowRight" });
+    expect(nameSort).toHaveFocus();
   });
 
   it("deduplicates synthesized keyboard-origin click after Enter activation", () => {
@@ -886,6 +927,8 @@ describe("Table", () => {
     await user.keyboard("{Alt>}{Home}{/Alt}");
     await user.keyboard("{Meta>}{PageDown}{/Meta}");
     await user.keyboard("{Control>}{PageUp}{/Control}");
+    await user.keyboard("{Control>}{ArrowRight}{/Control}");
+    await user.keyboard("{Alt>}{ArrowLeft}{/Alt}");
     expect(sortButton).toHaveFocus();
     expect(scoreSort).not.toHaveFocus();
 
@@ -921,7 +964,7 @@ describe("Table", () => {
 
     expect(screen.getByRole("button", { name: "Name sort descending" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "Enter Space Home End PageDown PageUp"
+      "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
     );
   });
 

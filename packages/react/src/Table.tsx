@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const sortableHeaderKeyboardShortcuts = "Enter Space Home End PageDown PageUp";
+const sortableHeaderKeyboardShortcuts = "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight";
 
 export type TableAlign = "left" | "center" | "right";
 export type TableSortDirection = "asc" | "desc";
@@ -630,6 +630,39 @@ export function Table<T>({
                           }
 
                           const delta = event.key === "PageDown" ? 1 : -1;
+                          const nextPosition = Math.max(
+                            0,
+                            Math.min(sortableNavigationKeys.length - 1, currentPosition + delta)
+                          );
+                          if (nextPosition === currentPosition) {
+                            return;
+                          }
+
+                          event.preventDefault();
+                          const nextKey = sortableNavigationKeys[nextPosition];
+                          sortButtonRefs.current[nextKey]?.focus();
+                          return;
+                        }
+
+                        if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+                          const currentPosition = sortableNavigationKeys.indexOf(key);
+                          if (currentPosition < 0) {
+                            return;
+                          }
+
+                          const ownerWindow = event.currentTarget.ownerDocument.defaultView ?? window;
+                          const styleDirection = ownerWindow.getComputedStyle(event.currentTarget).direction;
+                          const attributeDirection =
+                            event.currentTarget.closest("[dir]")?.getAttribute("dir");
+                          const computedDirection =
+                            styleDirection === "rtl" || styleDirection === "ltr"
+                              ? styleDirection
+                              : attributeDirection === "rtl"
+                                ? "rtl"
+                                : "ltr";
+                          const movesForwardKey =
+                            computedDirection === "rtl" ? "ArrowLeft" : "ArrowRight";
+                          const delta = event.key === movesForwardKey ? 1 : -1;
                           const nextPosition = Math.max(
                             0,
                             Math.min(sortableNavigationKeys.length - 1, currentPosition + delta)

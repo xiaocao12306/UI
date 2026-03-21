@@ -1016,6 +1016,34 @@ test("updates table sort telemetry across click and keyboard sort paths", async 
   await expect(telemetry).toHaveText("status:desc");
 });
 
+test("navigates demo table sortable headers with ArrowLeft/ArrowRight", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table");
+  const telemetry = page.getByTestId("table-sort-telemetry");
+  const componentSortDesc = table.getByRole("button", { name: "Component sort descending" });
+  const statusSort = table.getByRole("button", { name: "Status sort ascending" });
+  const coverageSort = table.getByRole("button", { name: "Coverage sort ascending" });
+
+  await expect(componentSortDesc).toHaveAttribute(
+    "aria-keyshortcuts",
+    "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
+  );
+
+  await componentSortDesc.focus();
+  await componentSortDesc.press("ArrowRight");
+  await expect(statusSort).toBeFocused();
+  await statusSort.press("ArrowRight");
+  await expect(coverageSort).toBeFocused();
+  await coverageSort.press("ArrowLeft");
+  await expect(statusSort).toBeFocused();
+
+  await statusSort.press("Control+ArrowRight");
+  await statusSort.press("Meta+ArrowLeft");
+  await expect(statusSort).toBeFocused();
+  await expect(telemetry).toHaveText("component:asc");
+});
+
 test("sorts demo table with keyboard activation", async ({ page }) => {
   await page.goto("/");
 

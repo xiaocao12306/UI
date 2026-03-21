@@ -426,10 +426,17 @@ export const SortTelemetry: Story = {
     const issueSort = canvas.getByRole("button", { name: "Issue sort descending" });
     await expect(issueSort).toHaveAttribute(
       "aria-keyshortcuts",
-      "Enter Space Home End PageDown PageUp"
+      "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
     );
 
     issueSort.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    const componentSortArrow = canvas.getByRole("button", { name: "Component sort ascending" });
+    await expect(componentSortArrow).toHaveFocus();
+
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(issueSort).toHaveFocus();
+
     await userEvent.keyboard("{End}");
     const statusSort = canvas.getByRole("button", { name: "Status sort ascending" });
     await expect(statusSort).toHaveFocus();
@@ -438,8 +445,8 @@ export const SortTelemetry: Story = {
     await expect(issueSort).toHaveFocus();
 
     await userEvent.keyboard("{PageDown}");
-    const componentSort = canvas.getByRole("button", { name: "Component sort ascending" });
-    await expect(componentSort).toHaveFocus();
+    const componentSortPage = canvas.getByRole("button", { name: "Component sort ascending" });
+    await expect(componentSortPage).toHaveFocus();
 
     await userEvent.keyboard("{PageUp}");
     await expect(issueSort).toHaveFocus();
@@ -467,6 +474,8 @@ export const SortTelemetry: Story = {
 
     const issueSortDesc = canvas.getByRole("button", { name: "Issue sort descending" });
     issueSortDesc.focus();
+    fireEvent.keyDown(issueSortDesc, { key: "ArrowRight", ctrlKey: true });
+    fireEvent.keyDown(issueSortDesc, { key: "ArrowLeft", metaKey: true });
     fireEvent.keyDown(issueSortDesc, { key: "End", ctrlKey: true });
     fireEvent.keyDown(issueSortDesc, { key: "Home", altKey: true });
     fireEvent.keyDown(issueSortDesc, { key: "PageDown", metaKey: true });

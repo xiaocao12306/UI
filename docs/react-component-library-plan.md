@@ -807,6 +807,7 @@
   - 嵌套 Overlay outside-pointer 关闭顺序验收补齐（2026-03-21 latest+124：补齐 Dropdown/CommandPalette 在 Popover 嵌套场景下的 outside-pointer top-layer-first 单测（首次 outside 仅关闭内层，二次 outside 再关闭外层），并新增 Demo Playwright 回归 `preserves nested overlay top-layer close order for outside pointer` 锁定真实链路 trace 顺序）
   - Storybook Dropdown outside-pointer 嵌套关闭顺序验收补齐（2026-03-21 latest+125：新增 `NestedOutsideDismissOrder` 场景，锁定 Popover+Dropdown 嵌套时 outside-pointer 的 top-layer-first 关闭语义，并同步 Component API/Best Practices 引用；复验 `pnpm storybook:test:grep \"Dropdown.stories.tsx\"` 与 docs parity 相关检查通过）
   - Popover outside-pointer 嵌套关闭顺序验收补齐（2026-03-21 latest+126：新增 nested-popover outside-pointer top-layer-first 单测与 Storybook `NestedOutsideDismissOrder` 场景，锁定“首次 outside 仅关闭 inner popover、二次 outside 再关闭 outer popover”的关闭语义，并同步 Component API/Best Practices 引用）
+  - Table 左右方向键列头导航收口（2026-03-21 latest+127：sortable header 新增 `ArrowLeft/ArrowRight` 焦点导航并按视觉方向处理 RTL，`aria-keyshortcuts` 扩展为 `Enter Space Home End PageDown PageUp ArrowLeft ArrowRight`；补齐 `Table.test.tsx`、Storybook `SortTelemetry`、Demo E2E 与 Component API/Best Practices 文档，复验 `pnpm --filter @aurora-ui/react exec vitest run src/Table.test.tsx`、`pnpm storybook:test:grep \"Table.stories.tsx\"`、`pnpm demo:e2e:grep \"navigates demo table sortable headers with ArrowLeft/ArrowRight\"` 及 docs parity 相关检查）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

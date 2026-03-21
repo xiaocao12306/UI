@@ -284,12 +284,12 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Expose `aria-sort` only on the actively sorted header so assistive narration reflects current sort state without repeating neutral columns.
 - Keep non-sortable headers free of `aria-sort` so assistive tech does not announce inert columns as interactive.
 - Validate sortable headers with both pointer and keyboard (`Enter`/`Space`, including legacy `Spacebar`) so non-pointer workflows stay first-class.
-- Support sortable-header focus traversal with `Home` / `End` / `PageUp` / `PageDown` so keyboard users can move between columns without forcing sort changes.
-- Keep modified shortcuts (`Ctrl/Meta/Alt + Home/End/PageUp/PageDown/Enter/Space`) on host/browser behavior; sortable headers should only react to unmodified focus/activation keys.
+- Support sortable-header focus traversal with `ArrowLeft` / `ArrowRight` / `Home` / `End` / `PageUp` / `PageDown` so keyboard users can move between columns without forcing sort changes.
+- Keep modified shortcuts (`Ctrl/Meta/Alt + ArrowLeft/ArrowRight/Home/End/PageUp/PageDown/Enter/Space`) on host/browser behavior; sortable headers should only react to unmodified focus/activation keys.
 - Keep `Shift + Enter/Space` available on sortable headers; only `Ctrl/Meta/Alt` combinations should be filtered from sort activation.
 - Treat long-press keyboard repeat (`event.repeat`) for sortable-header activation keys (`Enter` / `Space` / `Spacebar`) as no-op after the first toggle to prevent sort churn and telemetry jitter.
 - Guard against synthesized keyboard-origin click (`detail=0`) after handled sort keydown so one keyboard action maps to one telemetry event.
-- Keep sortable-header focus-visible feedback and `aria-keyshortcuts="Enter Space Home End PageDown PageUp"` in place so activation and focus-jump affordances stay explicit in QA and audits.
+- Keep sortable-header focus-visible feedback and `aria-keyshortcuts="Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"` in place so activation and focus-jump affordances stay explicit in QA and audits.
 - Keep sortable-header pressed-state feedback active during keyboard `Enter/Space` key hold (and clear on keyup) so non-pointer activation has equivalent active affordance.
 - Keep tab and sortable-header focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible rings.
 - For iframe/multi-document hosts, keep tab/sort focus-intent tracking bound to each component `ownerDocument` so keyboard focus-visible semantics remain stable outside the top-level document.
