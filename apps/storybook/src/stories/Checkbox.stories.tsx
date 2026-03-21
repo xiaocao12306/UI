@@ -80,6 +80,32 @@ export const InvalidAndDisabled: Story = {
   )
 };
 
+export const ShortcutHintPrecision: Story = {
+  render: () => (
+    <div style={{ width: 320, display: "grid", gap: 14 }}>
+      <Checkbox
+        label="Shortcut metadata checkbox"
+        description="Actionable checkboxes should expose Space shortcut hints."
+      />
+      <Checkbox
+        label="Blocked shortcut metadata checkbox"
+        description="Disabled checkboxes should not advertise keyboard shortcuts."
+        disabled
+        defaultChecked
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvas.getByRole("checkbox", { name: /^Shortcut metadata checkbox/ })
+    ).toHaveAttribute("aria-keyshortcuts", "Space");
+    await expect(
+      canvas.getByRole("checkbox", { name: /^Blocked shortcut metadata checkbox/ })
+    ).not.toHaveAttribute("aria-keyshortcuts");
+  }
+};
+
 export const LabelledByPrecedence: Story = {
   render: () => (
     <div style={{ width: 320, display: "grid", gap: 10 }}>

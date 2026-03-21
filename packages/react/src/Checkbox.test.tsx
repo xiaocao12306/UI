@@ -38,6 +38,33 @@ describe("Checkbox", () => {
     expect(document.getElementById(describedById as string)).toHaveTextContent("Requires 2 approvals");
   });
 
+  it("exposes default keyboard shortcut hints only when actionable", () => {
+    render(
+      <div>
+        <Checkbox label="Actionable checkbox" />
+        <Checkbox label="Disabled checkbox" disabled />
+      </div>
+    );
+
+    expect(screen.getByRole("checkbox", { name: "Actionable checkbox" })).toHaveAttribute("aria-keyshortcuts", "Space");
+    expect(screen.getByRole("checkbox", { name: "Disabled checkbox" })).not.toHaveAttribute("aria-keyshortcuts");
+  });
+
+  it("accepts explicit shortcut hints and ignores blank overrides", () => {
+    render(
+      <div>
+        <Checkbox label="Custom shortcut checkbox" aria-keyshortcuts="Space Enter" />
+        <Checkbox label="Blank shortcut checkbox" aria-keyshortcuts="   " />
+      </div>
+    );
+
+    expect(screen.getByRole("checkbox", { name: "Custom shortcut checkbox" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Space Enter"
+    );
+    expect(screen.getByRole("checkbox", { name: "Blank shortcut checkbox" })).toHaveAttribute("aria-keyshortcuts", "Space");
+  });
+
   it("supports indeterminate state", () => {
     render(<Checkbox label="Partial selection" indeterminate aria-label="Partial selection" />);
     const checkbox = screen.getByRole("checkbox", { name: "Partial selection" }) as HTMLInputElement;

@@ -24,6 +24,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
     "aria-invalid": ariaInvalid,
     "aria-label": rawAriaLabel,
     "aria-labelledby": rawAriaLabelledBy,
+    "aria-keyshortcuts": rawAriaKeyShortcuts,
     ...restProps
   },
   forwardedRef
@@ -38,6 +39,9 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
   const isInteractionDisabled = Boolean(disabled);
   const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
   const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
+  const ariaKeyShortcuts = isInteractionDisabled
+    ? undefined
+    : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "Space";
   const describedBy = [restProps["aria-describedby"], description ? descriptionId : undefined].filter(Boolean).join(" ") || undefined;
 
   React.useEffect(() => {
@@ -118,6 +122,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
         aria-invalid={resolvedInvalidAria}
         aria-checked={indeterminate ? "mixed" : restProps["aria-checked"]}
         aria-describedby={describedBy}
+        aria-keyshortcuts={ariaKeyShortcuts}
         data-focused={focused ? "true" : undefined}
         data-focus-visible={focusVisible ? "true" : undefined}
         style={{
