@@ -44,7 +44,9 @@ export const Default: Story = {
     const trigger = await canvas.findByRole("button", { name: "Keyboard Shortcut" });
 
     await userEvent.hover(trigger);
-    await expect(await canvas.findByRole("tooltip")).toHaveTextContent("Use Cmd/Ctrl + K to open command palette.");
+    await expect(await canvas.findByRole("tooltip")).toHaveTextContent(
+      "Use Cmd/Ctrl + K to open command palette."
+    );
     await expect(canvas.getByRole("tooltip")).toHaveAttribute("aria-keyshortcuts", "Escape");
     await userEvent.unhover(trigger);
     await waitFor(() => {
@@ -52,7 +54,9 @@ export const Default: Story = {
     });
 
     trigger.focus();
-    await expect(await canvas.findByRole("tooltip")).toHaveTextContent("Use Cmd/Ctrl + K to open command palette.");
+    await expect(await canvas.findByRole("tooltip")).toHaveTextContent(
+      "Use Cmd/Ctrl + K to open command palette."
+    );
     await userEvent.keyboard("{Escape}");
     await waitFor(() => {
       expect(canvas.queryByRole("tooltip")).not.toBeInTheDocument();
@@ -88,13 +92,47 @@ export const EscapeModifierGuard: Story = {
   }
 };
 
+export const EscapeDisabled: Story = {
+  args: {
+    closeOnEscape: false,
+    content: "Escape is disabled; blur or pointer leave should close this tooltip.",
+    children: <Button variant="outline">Escape Disabled Trigger</Button>
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Escape Disabled Trigger" });
+
+    trigger.focus();
+    const tooltip = await canvas.findByRole("tooltip");
+    await expect(tooltip).toHaveTextContent(
+      "Escape is disabled; blur or pointer leave should close this tooltip."
+    );
+    await expect(tooltip).not.toHaveAttribute("aria-keyshortcuts");
+
+    fireEvent.keyDown(trigger, { key: "Escape" });
+    await expect(canvas.getByRole("tooltip")).toBeInTheDocument();
+
+    fireEvent.blur(trigger);
+    await userEvent.unhover(trigger);
+    await waitFor(() => {
+      expect(canvas.queryByRole("tooltip")).not.toBeInTheDocument();
+    });
+  }
+};
+
 export const InlineHint: Story = {
   args: {
     content: "Theme tokens are inherited from AuroraProvider.",
     children: (
       <button
         type="button"
-        style={{ border: 0, background: "transparent", color: "var(--aurora-text-secondary)", textDecoration: "underline", cursor: "pointer" }}
+        style={{
+          border: 0,
+          background: "transparent",
+          color: "var(--aurora-text-secondary)",
+          textDecoration: "underline",
+          cursor: "pointer"
+        }}
       >
         Token inheritance
       </button>
@@ -118,11 +156,19 @@ export const Disabled: Story = {
   }
 };
 
-function ControlledTooltipStory({ content, children }: { content: React.ReactNode; children: React.ReactElement }) {
+function ControlledTooltipStory({
+  content,
+  children
+}: {
+  content: React.ReactNode;
+  children: React.ReactElement;
+}) {
   const [open, setOpen] = React.useState(false);
   return (
     <TooltipShowcase>
-      <Button onClick={() => setOpen((previous) => !previous)}>{open ? "Hide tooltip" : "Show tooltip"}</Button>
+      <Button onClick={() => setOpen((previous) => !previous)}>
+        {open ? "Hide tooltip" : "Show tooltip"}
+      </Button>
       <Tooltip open={open} onOpenChange={setOpen} content={content}>
         {children}
       </Tooltip>
@@ -135,13 +181,17 @@ export const Controlled: Story = {
     content: "Controlled tooltip content",
     children: <Button variant="outline">Controlled target</Button>
   },
-  render: (args) => <ControlledTooltipStory content={args.content}>{args.children}</ControlledTooltipStory>,
+  render: (args) => (
+    <ControlledTooltipStory content={args.content}>{args.children}</ControlledTooltipStory>
+  ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const toggleButton = await canvas.findByRole("button", { name: "Show tooltip" });
 
     await userEvent.click(toggleButton);
-    await expect(await canvas.findByRole("tooltip")).toHaveTextContent("Controlled tooltip content");
+    await expect(await canvas.findByRole("tooltip")).toHaveTextContent(
+      "Controlled tooltip content"
+    );
     const target = await canvas.findByRole("button", { name: "Controlled target" });
     target.focus();
     await userEvent.keyboard("{Escape}");

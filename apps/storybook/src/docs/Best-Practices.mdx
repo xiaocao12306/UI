@@ -1,30 +1,31 @@
-import { Meta, Title, Subtitle, Description, Canvas } from '@storybook/blocks';
-import * as ButtonStories from '../stories/Button.stories';
-import * as FormFieldStories from '../stories/FormField.stories';
-import * as InputStories from '../stories/Input.stories';
-import * as DatePickerStories from '../stories/DatePicker.stories';
-import * as DialogStories from '../stories/Dialog.stories';
-import * as DrawerStories from '../stories/Drawer.stories';
-import * as PopoverStories from '../stories/Popover.stories';
-import * as DropdownStories from '../stories/Dropdown.stories';
-import * as TooltipStories from '../stories/Tooltip.stories';
-import * as CommandPaletteStories from '../stories/CommandPalette.stories';
-import * as PromptInputStories from '../stories/PromptInput.stories';
-import * as MessageBubbleStories from '../stories/MessageBubble.stories';
-import * as ReasoningPanelStories from '../stories/ReasoningPanel.stories';
-import * as StreamingCodeBlockStories from '../stories/StreamingCodeBlock.stories';
-import * as AlertStories from '../stories/Alert.stories';
-import * as ToastStories from '../stories/Toast.stories';
-import * as TabsStories from '../stories/Tabs.stories';
-import * as TableStories from '../stories/Table.stories';
-import * as PaginationStories from '../stories/Pagination.stories';
+import { Meta, Title, Subtitle, Description, Canvas } from "@storybook/blocks";
+import * as ButtonStories from "../stories/Button.stories";
+import * as FormFieldStories from "../stories/FormField.stories";
+import * as InputStories from "../stories/Input.stories";
+import * as DatePickerStories from "../stories/DatePicker.stories";
+import * as DialogStories from "../stories/Dialog.stories";
+import * as DrawerStories from "../stories/Drawer.stories";
+import * as PopoverStories from "../stories/Popover.stories";
+import * as DropdownStories from "../stories/Dropdown.stories";
+import * as TooltipStories from "../stories/Tooltip.stories";
+import * as CommandPaletteStories from "../stories/CommandPalette.stories";
+import * as PromptInputStories from "../stories/PromptInput.stories";
+import * as MessageBubbleStories from "../stories/MessageBubble.stories";
+import * as ReasoningPanelStories from "../stories/ReasoningPanel.stories";
+import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.stories";
+import * as AlertStories from "../stories/Alert.stories";
+import * as ToastStories from "../stories/Toast.stories";
+import * as TabsStories from "../stories/Tabs.stories";
+import * as TableStories from "../stories/Table.stories";
+import * as PaginationStories from "../stories/Pagination.stories";
 
 <Meta title="Docs/Best Practices" />
 
 <Title />
 <Subtitle>Design + Engineering Checklist</Subtitle>
 <Description>
-Use these rules to keep components consistent with the Aurora plan and avoid regressions in accessibility or theming.
+  Use these rules to keep components consistent with the Aurora plan and avoid regressions in
+  accessibility or theming.
 </Description>
 
 ## API Design
@@ -97,6 +98,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={ButtonStories.IconOnlyAccessibleName} />
 <Canvas of={TooltipStories.DescribedByLifecycle} />
 <Canvas of={TooltipStories.EscapeModifierGuard} />
+<Canvas of={TooltipStories.EscapeDisabled} />
 <Canvas of={DialogStories.Interactive} />
 
 ## Overlay Policies
@@ -118,6 +120,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For overlays built on `DismissableLayer`, keep `Ctrl/Meta/Alt + Escape` on host/app shortcut behavior; modified Escape should not trigger dismiss hooks or close transitions.
 - For overlays built on `DismissableLayer`, treat repeated Escape keydown (`event.repeat`) as no-op so long-press does not close multiple overlay layers or duplicate close telemetry.
 - Keep tooltip Escape close behavior scoped to unmodified, non-repeat, non-IME keydown so host shortcut chords and CJK composition confirmation cannot collapse hint overlays unexpectedly.
+- For persistent hint workflows, set tooltip `closeOnEscape={false}` and rely on blur/pointer-leave close paths; ensure shortcut hints do not expose `aria-keyshortcuts="Escape"` when Escape dismiss is disabled.
 - For dialog/drawer in iframe or multi-root hosts, rely on owner-document portal mounting (`ownerDocument.body`) so overlay content and scroll-lock scope stay inside the invoking document.
 - For popover/dropdown in iframe or multi-root hosts, validate Escape/outside-pointer dismissal against the overlay `ownerDocument`; cross-document events should not close the active surface.
 - For dialog/drawer flows under app-level shortcuts, rely on built-in Escape preemption behavior so `onEscapeKeyDown` hooks stay side-effect free when Escape is already prevented.

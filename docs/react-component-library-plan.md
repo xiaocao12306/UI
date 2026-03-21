@@ -871,6 +871,7 @@
   - Tooltip Escape 修饰键防误触收口（2026-03-22 latest+188：Tooltip 补齐 Escape 处理防抖与修饰键防误触（忽略 `Ctrl/Meta/Alt + Escape`、`event.repeat` 与 IME 组合输入 Escape），并暴露 `aria-keyshortcuts=\"Escape\"`；同步 `Tooltip.tsx`、`Tooltip.test.tsx`、Storybook `EscapeModifierGuard` 与 Component API/Best Practices 文档，复验 `pnpm --filter @aurora-ui/react exec vitest run src/Tooltip.test.tsx`、`pnpm storybook:test:grep \"Tooltip.stories.tsx\"` 与 docs parity 相关检查通过）
   - Demo Tooltip Escape 防误触验收补齐（2026-03-22 latest+189：新增 demo E2E 覆盖 Tooltip 在修饰键/重复键/IME 组合输入下的 Escape 防误触行为，并锁定 `Shift+Escape` 仍可正常关闭；同步 `e2e/demo.spec.ts` 并复验 `pnpm demo:e2e:grep \"keeps tooltip open on modified/repeated/IME Escape\"` 通过）
   - Release dry-run 证据刷新（2026-03-22 latest+190：本地复验 `pnpm release:dry-run` 通过，`@aurora-ui/react` `84.8 kB / 529.5 kB`、`@aurora-ui/primitives` `15.1 kB / 75.1 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`，并确认 dry-run 版本文件自动回滚）
+  - Tooltip Escape 策略开关收口（2026-03-22 latest+191：Tooltip 新增 `closeOnEscape`（默认 `true`）并在关闭策略禁用时去除 `aria-keyshortcuts=\"Escape\"`，补齐 `Tooltip.test.tsx` 非关闭策略回归、Storybook `EscapeDisabled` 交互场景、Component API/Best Practices 文档同步；复验 `pnpm --filter @aurora-ui/react exec vitest run src/Tooltip.test.tsx`、`pnpm storybook:build`、`pnpm storybook:test:grep \"Tooltip.stories.tsx\"` 与 docs parity 相关检查通过）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

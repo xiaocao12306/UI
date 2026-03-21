@@ -9,6 +9,7 @@ export type TooltipProps = {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   disabled?: boolean;
+  closeOnEscape?: boolean;
   delayDuration?: number;
   closeDelay?: number;
   side?: TooltipSide;
@@ -37,6 +38,7 @@ export function Tooltip({
   defaultOpen,
   onOpenChange,
   disabled = false,
+  closeOnEscape = true,
   delayDuration = 250,
   closeDelay = 80,
   side = "top",
@@ -53,7 +55,10 @@ export function Tooltip({
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
 
-  const getOwnerWindow = React.useCallback(() => rootRef.current?.ownerDocument.defaultView ?? window, []);
+  const getOwnerWindow = React.useCallback(
+    () => rootRef.current?.ownerDocument.defaultView ?? window,
+    []
+  );
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -159,18 +164,24 @@ export function Tooltip({
   const visible = isOpen && !disabled;
   const child = React.Children.only(children) as React.ReactElement<Record<string, unknown>>;
   const childProps = child.props;
-  const mergedDescribedBy = [childProps["aria-describedby"], visible ? tooltipId : undefined].filter(Boolean).join(" ") || undefined;
+  const mergedDescribedBy =
+    [childProps["aria-describedby"], visible ? tooltipId : undefined].filter(Boolean).join(" ") ||
+    undefined;
   // eslint-disable-next-line react-hooks/refs -- timer refs are read only inside DOM event callbacks.
   const trigger = React.cloneElement(child, {
     "aria-describedby": mergedDescribedBy,
     onMouseEnter: (event: React.MouseEvent<HTMLElement>) => {
-      (childProps.onMouseEnter as ((value: React.MouseEvent<HTMLElement>) => void) | undefined)?.(event);
+      (childProps.onMouseEnter as ((value: React.MouseEvent<HTMLElement>) => void) | undefined)?.(
+        event
+      );
       if (!event.defaultPrevented) {
         scheduleOpen();
       }
     },
     onMouseLeave: (event: React.MouseEvent<HTMLElement>) => {
-      (childProps.onMouseLeave as ((value: React.MouseEvent<HTMLElement>) => void) | undefined)?.(event);
+      (childProps.onMouseLeave as ((value: React.MouseEvent<HTMLElement>) => void) | undefined)?.(
+        event
+      );
       if (!event.defaultPrevented) {
         scheduleClose();
       }
@@ -188,9 +199,12 @@ export function Tooltip({
       }
     },
     onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
-      (childProps.onKeyDown as ((value: React.KeyboardEvent<HTMLElement>) => void) | undefined)?.(event);
+      (childProps.onKeyDown as ((value: React.KeyboardEvent<HTMLElement>) => void) | undefined)?.(
+        event
+      );
       if (
         !event.defaultPrevented &&
+        closeOnEscape &&
         event.key === "Escape" &&
         !event.altKey &&
         !event.ctrlKey &&
@@ -210,7 +224,7 @@ export function Tooltip({
         <span
           id={tooltipId}
           role="tooltip"
-          aria-keyshortcuts="Escape"
+          aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
           onMouseEnter={scheduleOpen}
           onMouseLeave={scheduleClose}
           style={{

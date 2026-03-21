@@ -80,6 +80,27 @@ describe("Tooltip", () => {
     expect(screen.queryByRole("tooltip")).toBeNull();
   });
 
+  it("keeps tooltip open on Escape when closeOnEscape is disabled", () => {
+    render(
+      <Tooltip content="Tooltip content" closeDelay={0} closeOnEscape={false}>
+        <button type="button">Escape disabled trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Escape disabled trigger" });
+    fireEvent.focus(trigger);
+
+    const tooltip = screen.getByRole("tooltip");
+    expect(tooltip).toBeInTheDocument();
+    expect(tooltip).not.toHaveAttribute("aria-keyshortcuts");
+
+    fireEvent.keyDown(trigger, { key: "Escape" });
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+
+    fireEvent.blur(trigger);
+    expect(screen.queryByRole("tooltip")).toBeNull();
+  });
+
   it("supports controlled mode and emits onOpenChange", () => {
     const onOpenChange = vi.fn();
 
@@ -163,7 +184,9 @@ describe("Tooltip", () => {
   });
 
   it("respects preventDefault from trigger handlers", () => {
-    const onMouseEnter = vi.fn((event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault());
+    const onMouseEnter = vi.fn((event: React.MouseEvent<HTMLButtonElement>) =>
+      event.preventDefault()
+    );
     const onFocus = vi.fn((event: React.FocusEvent<HTMLButtonElement>) => event.preventDefault());
 
     render(
@@ -184,9 +207,13 @@ describe("Tooltip", () => {
   });
 
   it("respects preventDefault from trigger close handlers", () => {
-    const onMouseLeave = vi.fn((event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault());
+    const onMouseLeave = vi.fn((event: React.MouseEvent<HTMLButtonElement>) =>
+      event.preventDefault()
+    );
     const onBlur = vi.fn((event: React.FocusEvent<HTMLButtonElement>) => event.preventDefault());
-    const onKeyDown = vi.fn((event: React.KeyboardEvent<HTMLButtonElement>) => event.preventDefault());
+    const onKeyDown = vi.fn((event: React.KeyboardEvent<HTMLButtonElement>) =>
+      event.preventDefault()
+    );
 
     render(
       <Tooltip content="Tooltip content" delayDuration={0} closeDelay={0}>
@@ -214,7 +241,12 @@ describe("Tooltip", () => {
     const onOpenChange = vi.fn();
 
     render(
-      <Tooltip content="Tooltip content" delayDuration={0} closeDelay={0} onOpenChange={onOpenChange}>
+      <Tooltip
+        content="Tooltip content"
+        delayDuration={0}
+        closeDelay={0}
+        onOpenChange={onOpenChange}
+      >
         <button type="button">No duplicate open trigger</button>
       </Tooltip>
     );
@@ -230,7 +262,13 @@ describe("Tooltip", () => {
 
   it("applies side and sideOffset positioning styles", () => {
     render(
-      <Tooltip content="Tooltip content" side="right" sideOffset={14} delayDuration={0} closeDelay={0}>
+      <Tooltip
+        content="Tooltip content"
+        side="right"
+        sideOffset={14}
+        delayDuration={0}
+        closeDelay={0}
+      >
         <button type="button">Positioned trigger</button>
       </Tooltip>
     );
