@@ -741,6 +741,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `closeLabel` | `string` | Localizable close-button accessible name; blank values are ignored and fallback to `Close dialog`. |
 | dismiss key hints | `aria-keyshortcuts="Escape"` when `closeOnEscape` is enabled | Inherited from dialog dismiss policy so QA/AT tooling can discover Escape dismiss affordance only when that behavior is actionable. |
 | close-button key hints | `aria-keyshortcuts="Enter Space"` | Inherited from dialog close affordance so QA/AT tooling can discover deterministic keyboard dismiss activation keys. |
+| close-button focus fallback | owner-document `keydown` / pointer intent tracking | Inherited from dialog close affordance so `:focus-visible` fallback still restores close-button focus ring on keyboard re-entry (for example `Shift+Tab` from the search input), including iframe hosts. |
 | `closeOnSelect` | `boolean` | Defaults to `true`; set `false` for batch workflows that keep the palette open after each command. |
 | `clearQueryOnEscape` | `boolean` | Defaults to `true`; first Escape clears active query before dismiss is allowed, reducing accidental close during search refinement. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls whether overlay dismisses on Escape or outside pointer interactions for blocking approval flows. |
@@ -770,6 +771,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
 <Canvas of={CommandPaletteStories.LoadingState} />
 <Canvas of={CommandPaletteStories.CloseReasonTelemetry} />
+<Canvas of={CommandPaletteStories.CloseButtonFocusIntentReentry} />
 <Canvas of={CommandPaletteStories.NestedDismissOrder} />
 <Canvas of={CommandPaletteStories.EmptyStateAriaControlsLifecycle} />
 <Canvas of={CommandPaletteStories.LocalizedResultsLabel} />

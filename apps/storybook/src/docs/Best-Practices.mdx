@@ -244,6 +244,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
 - Keep streaming-code narration `live="off"` for high-frequency token output; enable `live="polite"` only when progressive code updates must be announced.
 - Provide explicit `label` for streaming code regions so screen-reader users can distinguish concurrent AI outputs.
+- Keep command-palette close-button keyboard-intent tracking document-scoped so keyboard re-entry (for example `Shift+Tab` from search input) restores focus-visible fallback consistently, including iframe hosts.
 
 <Canvas of={PromptInputStories.WithAiRequestState} />
 <Canvas of={PromptInputStories.LocalizedCopy} />
@@ -257,6 +258,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
 <Canvas of={CommandPaletteStories.LoadingState} />
 <Canvas of={CommandPaletteStories.CloseReasonTelemetry} />
+<Canvas of={CommandPaletteStories.CloseButtonFocusIntentReentry} />
 <Canvas of={CommandPaletteStories.DisabledCommandGuard} />
 <Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />
 <Canvas of={CommandPaletteStories.IconOnlyCommandNaming} />

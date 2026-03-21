@@ -539,6 +539,32 @@ describe("CommandPalette", () => {
     expect(closeButton).toHaveFocus();
   });
 
+  it("restores close-button focus fallback after pointer intent when keyboard re-enters from search input", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is unsupported");
+    });
+
+    fireEvent.mouseDown(input, { button: 0 });
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+    fireEvent.blur(closeButton);
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+    matchesSpy.mockRestore();
+  });
+
   it("supports immediate keyboard query and Enter selection after opening from closed state", async () => {
     const onOpenChange = vi.fn();
     const onRunE2E = vi.fn();

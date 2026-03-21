@@ -909,6 +909,33 @@ export const CloseReasonTelemetry: Story = {
   }
 };
 
+export const CloseButtonFocusIntentReentry: Story = {
+  render: () => (
+    <CommandPalette
+      open
+      onOpenChange={() => {}}
+      title="Command Palette"
+      description="Shift+Tab from search input should restore close-button focus ring fallback."
+      commands={[
+        { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
+        { key: "run-e2e", label: "Run E2E Smoke", keywords: ["playwright", "test"] }
+      ]}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+    const closeButton = await canvas.findByRole("button", { name: "Close dialog" });
+
+    await userEvent.click(input);
+    await expect(input).toHaveFocus();
+
+    await userEvent.tab({ shift: true });
+    await expect(closeButton).toHaveFocus();
+    await expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+  }
+};
+
 export const EmptyStateAriaControlsLifecycle: Story = {
   render: () => <QueryTelemetryPalette />,
   play: async ({ canvasElement }) => {
