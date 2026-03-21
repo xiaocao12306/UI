@@ -210,6 +210,17 @@ describe("Toast", () => {
     expect(onCloseReason).toHaveBeenCalledWith("escape-key");
   });
 
+  it("supports Shift+Escape to close", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(<Toast open title="Escapable" onOpenChange={onOpenChange} onCloseReason={onCloseReason} />);
+    fireEvent.keyDown(document, { key: "Escape", shiftKey: true });
+
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onCloseReason).toHaveBeenCalledWith("escape-key");
+  });
+
   it("ignores repeated Escape keydown to prevent long-press duplicate close", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();
