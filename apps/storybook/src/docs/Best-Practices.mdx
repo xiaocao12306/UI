@@ -379,7 +379,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep sortable-header shortcut hints stateful: always expose `Enter Space`, append `Home/End/PageUp/PageDown/ArrowLeft/ArrowRight` only when multiple sortable headers are actionable, and omit hints when sorting is disabled.
 - Keep sortable-header pressed-state feedback active during keyboard `Enter/Space` key hold (and clear on keyup) so non-pointer activation has equivalent active affordance.
 - Keep sortable-header focus-visible fallback resilient for both `Tab` and `Shift+Tab` keyboard re-entry after pointer interactions so reverse keyboard traversal preserves header focus affordance.
-- Keep tab and sortable-header focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible rings.
+- Keep tab and sortable-header focus intent primary-only so non-primary pointer interactions and `Ctrl + primary click` context-click paths do not clear keyboard-origin focus-visible rings.
 - Keep tab and sortable-header owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - For iframe/multi-document hosts, keep tab/sort focus-intent tracking bound to each component `ownerDocument` so keyboard focus-visible semantics remain stable outside the top-level document.
 - When sortable headers have no readable text (for example icon-only markup), provide `columns[].sortLabel` so aria labels and live narration stay human-readable; rich headers with visible text or inline `aria-label` are auto-extracted.

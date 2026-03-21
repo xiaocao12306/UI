@@ -1351,6 +1351,9 @@ describe("Table", () => {
     fireEvent.mouseDown(sortButton, { button: 2 });
     expect(sortButton.style.transform).toBe("translateY(0)");
 
+    fireEvent.mouseDown(sortButton, { button: 0, ctrlKey: true });
+    expect(sortButton.style.transform).toBe("translateY(0)");
+
     fireEvent.mouseDown(sortButton, { button: 0 });
     expect(sortButton.style.transform).toBe("translateY(1px)");
 
@@ -1386,6 +1389,9 @@ describe("Table", () => {
     expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
 
     fireEvent.mouseDown(sortButton, { button: 2 });
+    expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.mouseDown(sortButton, { button: 0, ctrlKey: true });
     expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
 
     fireEvent.mouseDown(sortButton, { button: 0 });

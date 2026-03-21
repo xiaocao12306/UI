@@ -438,7 +438,7 @@ export function Tabs({
                   return;
                 }
 
-                if (event.button !== 0) {
+                if (event.button !== 0 || event.ctrlKey) {
                   return;
                 }
 

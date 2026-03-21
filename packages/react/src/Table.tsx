@@ -607,7 +607,7 @@ export function Table<T>({
                           return;
                         }
 
-                        if (event.button !== 0) {
+                        if (event.button !== 0 || event.ctrlKey) {
                           return;
                         }
 

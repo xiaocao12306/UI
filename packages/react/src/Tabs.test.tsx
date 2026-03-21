@@ -1566,6 +1566,9 @@ describe("Tabs", () => {
     fireEvent.mouseDown(twoTab, { button: 2 });
     expect(twoTab.style.transform).toBe("translateY(0)");
 
+    fireEvent.mouseDown(twoTab, { button: 0, ctrlKey: true });
+    expect(twoTab.style.transform).toBe("translateY(0)");
+
     fireEvent.mouseDown(twoTab, { button: 0 });
     expect(twoTab.style.transform).toBe("translateY(1px)");
 
@@ -1597,6 +1600,9 @@ describe("Tabs", () => {
     expect(twoTab.style.boxShadow).toContain("0 0 0 3px");
 
     fireEvent.mouseDown(twoTab, { button: 2 });
+    expect(twoTab.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.mouseDown(twoTab, { button: 0, ctrlKey: true });
     expect(twoTab.style.boxShadow).toContain("0 0 0 3px");
 
     fireEvent.mouseDown(twoTab, { button: 0 });
