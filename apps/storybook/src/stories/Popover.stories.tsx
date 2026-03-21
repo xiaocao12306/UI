@@ -103,6 +103,10 @@ function TriggerArrowDownModifierGuardPopoverDemo() {
 }
 
 export const TriggerArrowDownModifierGuard: Story = {
+  args: {
+    triggerLabel: "ArrowDown Guard Popover",
+    children: <p style={{ margin: 0 }}>Only unmodified ArrowDown should open this popover.</p>
+  },
   render: () => <TriggerArrowDownModifierGuardPopoverDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -262,6 +266,11 @@ function NestedDismissOrderPopoverDemo() {
 }
 
 export const NestedDismissOrder: Story = {
+  args: {
+    triggerLabel: "Outer popover",
+    contentLabel: "Outer popover content",
+    children: <p style={{ margin: 0 }}>Outer layer content.</p>
+  },
   render: () => <NestedDismissOrderPopoverDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -335,6 +344,11 @@ function NestedOutsideDismissOrderPopoverDemo() {
 }
 
 export const NestedOutsideDismissOrder: Story = {
+  args: {
+    triggerLabel: "Outer outside-order popover",
+    contentLabel: "Outer outside-order popover content",
+    children: <p style={{ margin: 0 }}>Outer layer content.</p>
+  },
   render: () => <NestedOutsideDismissOrderPopoverDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
