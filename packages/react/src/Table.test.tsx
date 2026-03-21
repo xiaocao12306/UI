@@ -101,14 +101,13 @@ describe("Table", () => {
             { key: "name", header: "Name", sortable: true },
             { key: "name", header: "Name copy", sortable: true }
           ]}
-          data={[
-            { name: "Button" },
-            { name: "Dialog" }
-          ]}
+          data={[{ name: "Button" }, { name: "Dialog" }]}
         />
       );
 
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Duplicate column keys detected: "name"'));
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Duplicate column keys detected: "name"')
+      );
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
@@ -239,7 +238,9 @@ describe("Table", () => {
       );
 
       expect(warnSpy).not.toHaveBeenCalled();
-      expect(screen.getByRole("button", { name: "Release status sort ascending" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Release status sort ascending" })
+      ).toBeInTheDocument();
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
@@ -975,6 +976,27 @@ describe("Table", () => {
     );
   });
 
+  it("exposes activation-only keyboard shortcuts when only one sortable header is actionable", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score" }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space"
+    );
+  });
+
   it("omits sortable-header keyboard hints when sorting is disabled", () => {
     render(
       <Table
@@ -1145,7 +1167,9 @@ describe("Table", () => {
       expect(sortButton.style.boxShadow).toBe("none");
 
       fireEvent.blur(sortButton);
-      secondaryDocument.dispatchEvent(new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true }));
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
       fireEvent.focus(sortButton);
       expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
     } finally {

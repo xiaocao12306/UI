@@ -1,6 +1,7 @@
 import * as React from "react";
 
-const sortableHeaderKeyboardShortcuts = "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight";
+const sortableHeaderActivationKeyboardShortcuts = "Enter Space";
+const sortableHeaderKeyboardShortcuts = `${sortableHeaderActivationKeyboardShortcuts} Home End PageDown PageUp ArrowLeft ArrowRight`;
 
 export type TableAlign = "left" | "center" | "right";
 export type TableSortDirection = "asc" | "desc";
@@ -191,7 +192,11 @@ export function Table<T>({
       return;
     }
 
-    const nextInitialSortState = resolveInitialSortState(columns, defaultSortKey, defaultSortDirection);
+    const nextInitialSortState = resolveInitialSortState(
+      columns,
+      defaultSortKey,
+      defaultSortDirection
+    );
     if (!nextInitialSortState) {
       return;
     }
@@ -272,7 +277,9 @@ export function Table<T>({
     console.warn(
       `[Table] Duplicate column keys detected: ${Array.from(duplicateColumnKeys)
         .map((key) => `"${key}"`)
-        .join(", ")}. Ensure columns[].key values are unique to keep header associations and sorting behavior deterministic.`
+        .join(
+          ", "
+        )}. Ensure columns[].key values are unique to keep header associations and sorting behavior deterministic.`
     );
   }, [columns]);
 
@@ -411,7 +418,7 @@ export function Table<T>({
           ? undefined
           : resolvedAriaLabelledBy
             ? undefined
-            : resolvedAriaLabel ?? "Data table scroll container"
+            : (resolvedAriaLabel ?? "Data table scroll container")
       }
       aria-labelledby={hasActionableSortControls ? undefined : resolvedAriaLabelledBy}
       style={{
@@ -486,6 +493,11 @@ export function Table<T>({
                 })
               );
               const sortDisabled = loading || !hasMultiRowData;
+              const sortKeyShortcuts = sortDisabled
+                ? undefined
+                : sortableNavigationKeys.length > 1
+                  ? sortableHeaderKeyboardShortcuts
+                  : sortableHeaderActivationKeyboardShortcuts;
               const hovered = !sortDisabled && hoveredSortKey === key;
               const pressed = !sortDisabled && pressedSortKey === key;
               const focusVisible = !sortDisabled && focusVisibleSortKey === key;
@@ -523,10 +535,11 @@ export function Table<T>({
                         sortButtonRefs.current[key] = node;
                       }}
                       aria-label={resolvedSortAriaLabel}
-                      aria-keyshortcuts={sortDisabled ? undefined : sortableHeaderKeyboardShortcuts}
+                      aria-keyshortcuts={sortKeyShortcuts}
                       disabled={sortDisabled}
                       onClick={(event) => {
-                        const keyboardActivationAgeMs = Date.now() - keyboardActivationTimestampRef.current;
+                        const keyboardActivationAgeMs =
+                          Date.now() - keyboardActivationTimestampRef.current;
                         const clickFromKeyboardActivation =
                           event.detail === 0 &&
                           keyboardActivationSortKeyRef.current === key &&
@@ -650,10 +663,14 @@ export function Table<T>({
                             return;
                           }
 
-                          const ownerWindow = event.currentTarget.ownerDocument.defaultView ?? window;
-                          const styleDirection = ownerWindow.getComputedStyle(event.currentTarget).direction;
-                          const attributeDirection =
-                            event.currentTarget.closest("[dir]")?.getAttribute("dir");
+                          const ownerWindow =
+                            event.currentTarget.ownerDocument.defaultView ?? window;
+                          const styleDirection = ownerWindow.getComputedStyle(
+                            event.currentTarget
+                          ).direction;
+                          const attributeDirection = event.currentTarget
+                            .closest("[dir]")
+                            ?.getAttribute("dir");
                           const computedDirection =
                             styleDirection === "rtl" || styleDirection === "ltr"
                               ? styleDirection
@@ -694,7 +711,8 @@ export function Table<T>({
                         keyboardActivationTimestampRef.current = Date.now();
                         const ownerWindow = event.currentTarget.ownerDocument.defaultView ?? window;
                         if (keyboardActivationResetTimerRef.current !== null) {
-                          const timerWindow = keyboardActivationTimerWindowRef.current ?? ownerWindow;
+                          const timerWindow =
+                            keyboardActivationTimerWindowRef.current ?? ownerWindow;
                           timerWindow.clearTimeout(keyboardActivationResetTimerRef.current);
                         }
                         keyboardActivationTimerWindowRef.current = ownerWindow;

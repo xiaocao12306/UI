@@ -2,11 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Table, type TableColumn } from "@aurora-ui/react";
 import * as React from "react";
 import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
-import {
-  StoryShowcaseFrame,
-  storyEmphasisTextStyle,
-  storyMutedTextStyle
-} from "./storyShowcase";
+import { StoryShowcaseFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
 
 type ReleaseRow = {
   id: string;
@@ -185,6 +181,38 @@ export const SingleRowSortDisabled: Story = {
   }
 };
 
+export const SingleSortableColumnShortcutHints: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
+      <Table
+        columns={[
+          { key: "id", header: "Issue", sortable: true, rowHeader: true },
+          { key: "component", header: "Component" },
+          { key: "owner", header: "Owner" },
+          { key: "status", header: "Status" }
+        ]}
+        data={rows}
+        defaultSortKey="id"
+        rowKey={(row) => row.id}
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const issueSortButton = canvas.getByRole("button", { name: "Issue sort descending" });
+
+    await expect(issueSortButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    issueSortButton.focus();
+
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(issueSortButton).toHaveFocus();
+    await expect(canvas.getByRole("columnheader", { name: /Issue/ })).toHaveAttribute(
+      "aria-sort",
+      "ascending"
+    );
+  }
+};
+
 export const KeyboardReachableScrollContainer: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
@@ -245,8 +273,8 @@ export const KeyboardFocusRingShiftTabReentry: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
       <p style={storyMutedTextStyle}>
-        Sort button hides focus ring on pointer focus, then reverse keyboard navigation
-        (Shift+Tab) restores focus-visible ring for the sortable header.
+        Sort button hides focus ring on pointer focus, then reverse keyboard navigation (Shift+Tab)
+        restores focus-visible ring for the sortable header.
       </p>
       <Table columns={columns} data={rows} defaultSortKey="id" />
       <button type="button">After table</button>
@@ -676,8 +704,12 @@ export const SortLabelForCustomHeader: Story = {
     await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Release date ascending.");
     const descendingButton = canvas.getByRole("button", { name: "Release date sort descending" });
     await userEvent.click(descendingButton);
-    await expect(canvas.getByRole("button", { name: "Release date sort ascending" })).toBeInTheDocument();
-    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Release date descending.");
+    await expect(
+      canvas.getByRole("button", { name: "Release date sort ascending" })
+    ).toBeInTheDocument();
+    await expect(canvas.getByRole("status")).toHaveTextContent(
+      "Sorted by Release date descending."
+    );
   }
 };
 
@@ -707,7 +739,9 @@ export const RichTextHeaderAutoSortLabel: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Release status ascending.");
+    await expect(canvas.getByRole("status")).toHaveTextContent(
+      "Sorted by Release status ascending."
+    );
     const descendingButton = canvas.getByRole("button", {
       name: "Release status sort descending"
     });
@@ -744,7 +778,9 @@ export const AriaLabelHeaderAutoSortLabel: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Release status ascending.");
+    await expect(canvas.getByRole("status")).toHaveTextContent(
+      "Sorted by Release status ascending."
+    );
     const descendingButton = canvas.getByRole("button", {
       name: "Release status sort descending"
     });
@@ -805,7 +841,12 @@ function DeferredColumnsDefaultSortRecoveryDemo() {
       <button type="button" onClick={() => setStatusSortable(true)}>
         Load status sortable schema
       </button>
-      <Table columns={deferredColumns} data={rows} rowKey={(row) => row.id} defaultSortKey="status" />
+      <Table
+        columns={deferredColumns}
+        data={rows}
+        rowKey={(row) => row.id}
+        defaultSortKey="status"
+      />
     </StoryShowcaseFrame>
   );
 }
