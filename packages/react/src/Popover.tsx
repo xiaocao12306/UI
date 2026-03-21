@@ -22,6 +22,8 @@ export type PopoverProps = {
   contentLabel?: string;
 };
 
+const popoverTriggerKeyboardShortcut = "ArrowDown";
+
 export function Popover({
   triggerLabel,
   triggerAriaLabel,
@@ -98,6 +100,7 @@ export function Popover({
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         aria-controls={isOpen ? contentId : undefined}
+        aria-keyshortcuts={isOpen ? undefined : popoverTriggerKeyboardShortcut}
         onClick={() => {
           if (isOpen) {
             closeWithReason("trigger-click");

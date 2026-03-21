@@ -48,16 +48,20 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = await canvas.findByRole("button", { name: "Open Popover" });
+    await expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown");
 
     await userEvent.click(trigger);
     await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
 
     await userEvent.keyboard("{Escape}");
     await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown");
 
     trigger.focus();
     await userEvent.keyboard("{ArrowDown}");
     await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
   }
 };
 
@@ -91,6 +95,7 @@ export const TriggerArrowDownModifierGuard: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = await canvas.findByRole("button", { name: "ArrowDown Guard Popover" });
+    await expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown");
 
     trigger.focus();
     fireEvent.keyDown(trigger, { key: "ArrowDown", ctrlKey: true });
@@ -101,6 +106,7 @@ export const TriggerArrowDownModifierGuard: Story = {
 
     await userEvent.keyboard("{ArrowDown}");
     await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
     await expect(canvas.getByTestId("popover-arrowdown-open-calls")).toHaveTextContent("1");
   }
 };

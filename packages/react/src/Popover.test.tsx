@@ -15,16 +15,19 @@ describe("Popover", () => {
 
     const trigger = screen.getByRole("button", { name: "Open popover" });
     expect(trigger).not.toHaveAttribute("aria-controls");
+    expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown");
     expect(screen.queryByText("Popover content")).toBeNull();
 
     fireEvent.click(trigger);
     const dialog = screen.getByRole("dialog", { name: "Popover content" });
     expect(trigger).toHaveAttribute("aria-controls", dialog.id);
+    expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
     expect(screen.getByText("Popover content")).toBeInTheDocument();
     expect(trigger).not.toHaveFocus();
 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(trigger).not.toHaveAttribute("aria-controls");
+    expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown");
     expect(screen.queryByText("Popover content")).toBeNull();
     expect(trigger).toHaveFocus();
     expect(onCloseReason).toHaveBeenNthCalledWith(1, "escape-key");
@@ -61,10 +64,12 @@ describe("Popover", () => {
     );
 
     const trigger = screen.getByRole("button", { name: "Keyboard open" });
+    expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown");
     fireEvent.focus(trigger);
     fireEvent.keyDown(trigger, { key: "ArrowDown" });
 
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
     expect(screen.getByRole("button", { name: "Primary action" })).toHaveFocus();
   });
 
