@@ -1,5 +1,5 @@
 import * as React from "react";
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Pagination } from "./Pagination";
 
@@ -188,18 +188,22 @@ describe("Pagination", () => {
     expect(onPageChange).toHaveBeenCalledWith(10);
   });
 
-  it("keeps boundary Home/End keys passive when already at first/last page", () => {
+  it("keeps boundary Home/End keys passive when already at first/last page", async () => {
     const onPageChange = vi.fn();
     const { rerender } = render(<Pagination page={1} pageCount={10} onPageChange={onPageChange} />);
 
     const firstButton = screen.getByRole("button", { name: "Current page, 1" });
     const homeEvent = new KeyboardEvent("keydown", { key: "Home", bubbles: true, cancelable: true });
-    firstButton.dispatchEvent(homeEvent);
+    await act(async () => {
+      firstButton.dispatchEvent(homeEvent);
+    });
     expect(homeEvent.defaultPrevented).toBe(false);
     expect(onPageChange).not.toHaveBeenCalled();
 
     const endEvent = new KeyboardEvent("keydown", { key: "End", bubbles: true, cancelable: true });
-    firstButton.dispatchEvent(endEvent);
+    await act(async () => {
+      firstButton.dispatchEvent(endEvent);
+    });
     expect(endEvent.defaultPrevented).toBe(true);
     expect(onPageChange).toHaveBeenCalledWith(10);
 
@@ -207,12 +211,16 @@ describe("Pagination", () => {
     rerender(<Pagination page={10} pageCount={10} onPageChange={onPageChange} />);
     const lastButton = screen.getByRole("button", { name: "Current page, 10" });
     const endBoundaryEvent = new KeyboardEvent("keydown", { key: "End", bubbles: true, cancelable: true });
-    lastButton.dispatchEvent(endBoundaryEvent);
+    await act(async () => {
+      lastButton.dispatchEvent(endBoundaryEvent);
+    });
     expect(endBoundaryEvent.defaultPrevented).toBe(false);
     expect(onPageChange).not.toHaveBeenCalled();
 
     const homeBoundaryEvent = new KeyboardEvent("keydown", { key: "Home", bubbles: true, cancelable: true });
-    lastButton.dispatchEvent(homeBoundaryEvent);
+    await act(async () => {
+      lastButton.dispatchEvent(homeBoundaryEvent);
+    });
     expect(homeBoundaryEvent.defaultPrevented).toBe(true);
     expect(onPageChange).toHaveBeenCalledWith(1);
   });
@@ -226,14 +234,20 @@ describe("Pagination", () => {
     render(<ControlledPaginationHarness />);
 
     const currentButton = screen.getByRole("button", { name: "Current page, 4" });
-    currentButton.focus();
-    fireEvent.keyDown(currentButton, { key: "End" });
+    await act(async () => {
+      currentButton.focus();
+    });
+    await act(async () => {
+      fireEvent.keyDown(currentButton, { key: "End" });
+    });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: "Current page, 10" })).toHaveFocus();
     });
 
-    fireEvent.keyDown(screen.getByRole("button", { name: "Current page, 10" }), { key: "Home" });
+    await act(async () => {
+      fireEvent.keyDown(screen.getByRole("button", { name: "Current page, 10" }), { key: "Home" });
+    });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: "Current page, 1" })).toHaveFocus();
@@ -249,14 +263,20 @@ describe("Pagination", () => {
     render(<ControlledPaginationHarness />);
 
     const currentButton = screen.getByRole("button", { name: "Current page, 4" });
-    currentButton.focus();
-    fireEvent.keyDown(currentButton, { key: "ArrowRight" });
+    await act(async () => {
+      currentButton.focus();
+    });
+    await act(async () => {
+      fireEvent.keyDown(currentButton, { key: "ArrowRight" });
+    });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: "Current page, 5" })).toHaveFocus();
     });
 
-    fireEvent.keyDown(screen.getByRole("button", { name: "Current page, 5" }), { key: "ArrowLeft" });
+    await act(async () => {
+      fireEvent.keyDown(screen.getByRole("button", { name: "Current page, 5" }), { key: "ArrowLeft" });
+    });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: "Current page, 4" })).toHaveFocus();

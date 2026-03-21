@@ -82,6 +82,7 @@ export function Pagination({
 }: PaginationProps) {
   const navRef = React.useRef<HTMLElement>(null);
   const pendingFocusPageRef = React.useRef<number | null>(null);
+  const suppressProgrammaticFocusStateRef = React.useRef(false);
   const focusVisibleIntentRef = React.useRef(false);
   const [focusedButtonId, setFocusedButtonId] = React.useState<string | null>(null);
   const [focusVisibleButtonId, setFocusVisibleButtonId] = React.useState<string | null>(null);
@@ -175,14 +176,20 @@ export function Pagination({
     onPageChange(resolvedPage);
   };
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (pendingFocusPageRef.current === null) {
       return;
     }
     const targetPage = pendingFocusPageRef.current;
     pendingFocusPageRef.current = null;
     const target = navRef.current?.querySelector<HTMLButtonElement>(`button[data-aurora-pagination-page="${targetPage}"]`);
-    target?.focus();
+    if (!target) {
+      return;
+    }
+
+    suppressProgrammaticFocusStateRef.current = true;
+    target.focus();
+    suppressProgrammaticFocusStateRef.current = false;
   }, [currentPage]);
 
   const goToPageWithFocus = (nextPage: number) => {
@@ -191,6 +198,11 @@ export function Pagination({
       pendingFocusPageRef.current = null;
       return;
     }
+    const targetButtonId = `page-${resolvedPage}`;
+    setFocusedButtonId(targetButtonId);
+    setFocusVisibleButtonId(
+      focusVisibleIntentRef.current ? targetButtonId : null
+    );
     pendingFocusPageRef.current = resolvedPage;
     goToPage(resolvedPage);
   };
@@ -243,6 +255,9 @@ export function Pagination({
       "data-focus-visible":
         focusedButtonId === buttonId && focusVisibleButtonId === buttonId ? "true" : undefined,
       onFocus: (event: React.FocusEvent<HTMLButtonElement>) => {
+        if (suppressProgrammaticFocusStateRef.current) {
+          return;
+        }
         setFocusedButtonId(buttonId);
         setFocusVisibleButtonId(
           resolveFocusVisibleState(event.currentTarget, focusVisibleIntentRef.current)
@@ -251,6 +266,9 @@ export function Pagination({
         );
       },
       onBlur: () => {
+        if (suppressProgrammaticFocusStateRef.current) {
+          return;
+        }
         setFocusedButtonId((current) => (current === buttonId ? null : current));
         setFocusVisibleButtonId((current) => (current === buttonId ? null : current));
       },
