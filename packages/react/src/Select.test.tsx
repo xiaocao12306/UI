@@ -212,6 +212,16 @@ describe("Select", () => {
     expect(select).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.blur(select);
+    fireEvent.mouseDown(document.body, { button: 2 });
+    fireEvent.focus(select);
+    expect(select).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(select);
+    fireEvent.mouseDown(document.body, { button: 0, ctrlKey: true });
+    fireEvent.focus(select);
+    expect(select).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(select);
     fireEvent.mouseDown(document.body, { button: 0 });
     fireEvent.focus(select);
     expect(select).not.toHaveAttribute("data-focus-visible");

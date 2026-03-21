@@ -165,7 +165,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Deduplicate synthesized keyboard-origin click (`detail=0`) after handled dropdown item activation keydown so one keyboard action maps to one item side effect and one close telemetry event.
 - Expose dropdown menu-item `aria-keyshortcuts="Enter Space"` only on actionable items; disabled items should omit shortcut hints to avoid false affordance.
 - For icon-only popover/dropdown triggers, provide non-empty `triggerAriaLabel` to preserve an explicit control name.
-- Keep field/button focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible rings before actual activation intent.
+- Keep field/button focus intent primary-only so non-primary pointer interactions and `Ctrl + primary click` (for example macOS context click) do not clear keyboard-origin focus-visible rings before actual activation intent.
 - Keep dialog/drawer close-button focus intent owner-document aware so keyboard re-entry (Tab from neighboring controls, including iframe hosts) restores focus-visible fallback when `:focus-visible` matching is unavailable.
 - Keep dialog/drawer close-button focus intent fallback scoped to unmodified owner-document keydown only; ignore `Ctrl/Meta/Alt + key` chords so host shortcuts do not falsely restore keyboard focus-visible rings.
 - Keep dialog/drawer close-button owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.

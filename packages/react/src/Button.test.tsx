@@ -112,6 +112,16 @@ describe("Button", () => {
     expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
 
     fireEvent.blur(button);
+    fireEvent.mouseDown(document.body, { button: 2 });
+    fireEvent.focus(button);
+    expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.blur(button);
+    fireEvent.mouseDown(document.body, { button: 0, ctrlKey: true });
+    fireEvent.focus(button);
+    expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.blur(button);
     fireEvent.mouseDown(document.body, { button: 0 });
     fireEvent.focus(button);
     expect(button.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
