@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { FormField } from "./FormField";
 import { Input } from "./Input";
 
@@ -200,6 +200,7 @@ describe("FormField", () => {
   });
 
   it("does not emit dangling htmlFor when child is non-clonable and htmlFor is absent", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     render(
       <FormField label="Composite field">
         <>
@@ -210,9 +211,14 @@ describe("FormField", () => {
 
     const label = screen.getByText("Composite field").closest("label");
     expect(label).not.toHaveAttribute("for");
+    expect(warnSpy).toHaveBeenCalledWith(
+      "[FormField] Could not associate label with a form control because children is not a single clonable element and htmlFor was not provided. Provide htmlFor and a matching control id."
+    );
+    warnSpy.mockRestore();
   });
 
   it("respects explicit htmlFor even when child is non-clonable", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     render(
       <FormField label="External field" htmlFor="external-control">
         <>
@@ -222,5 +228,7 @@ describe("FormField", () => {
     );
 
     expect(screen.getByLabelText("External field")).toHaveAttribute("id", "external-control");
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
   });
 });

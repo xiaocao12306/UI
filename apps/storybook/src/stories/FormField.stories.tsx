@@ -73,3 +73,23 @@ export const InheritedControlSemantics: Story = {
     await expect(disabledInput).toBeDisabled();
   }
 };
+
+export const ExternalControlAssociation: Story = {
+  render: () => (
+    <div style={{ width: 520 }}>
+      <FormField label="External field" htmlFor="external-control">
+        <>
+          <Input id="external-control" defaultValue="owner@aurora.dev" />
+        </>
+      </FormField>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox", { name: "External field" });
+    const label = canvas.getByText("External field");
+
+    await expect(input).toHaveAttribute("id", "external-control");
+    await expect(label).toHaveAttribute("for", "external-control");
+  }
+};

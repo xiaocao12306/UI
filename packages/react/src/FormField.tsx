@@ -44,6 +44,24 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const mergedLabelledBy = resolvedChildAriaLabel
     ? childLabelledBy
     : mergeAriaReferenceIds(childLabelledBy, labelId);
+  const warnedMissingAssociationRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+    if (warnedMissingAssociationRef.current) {
+      return;
+    }
+    if (canCloneControl || controlId) {
+      return;
+    }
+
+    warnedMissingAssociationRef.current = true;
+    console.warn(
+      "[FormField] Could not associate label with a form control because children is not a single clonable element and htmlFor was not provided. Provide htmlFor and a matching control id."
+    );
+  }, [canCloneControl, controlId]);
 
   const control =
     canCloneControl
