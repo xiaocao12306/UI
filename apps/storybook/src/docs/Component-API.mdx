@@ -339,6 +339,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | trigger relation | conditional `aria-controls` | Trigger references content ID only while open to avoid dangling ARIA links. |
 | dismiss focus policy | Escape restores trigger focus; outside pointer keeps target focus | Prevents keyboard dead-ends without stealing pointer intent. |
 | nested dismiss order | top layer first | Nested popovers dismiss one layer per Escape/outside interaction so parent overlays remain stable until directly dismissed. |
+| IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`isComposing`) and legacy fallback paths that only expose `keyCode=229`, so CJK confirmation does not collapse the popover unexpectedly. |
 | modifier-key guard | ignores `Ctrl/Meta/Alt + Escape` | Preserves host/browser modified-key shortcuts and avoids accidental popover dismiss/hook side effects from combined key chords. |
 | dismiss key hints | `aria-keyshortcuts="Escape"` when `closeOnEscape` is enabled | Popover surface exposes Escape shortcut metadata for QA/AT discoverability only when Escape dismiss is actionable; disabled Escape policy omits the hint. |
 | trigger keyboard-open guard | ignores `Ctrl/Meta/Alt + ArrowDown` | Trigger keyboard open shortcut responds only to unmodified `ArrowDown`, preserving host/browser shortcut chords. |
@@ -356,6 +357,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={PopoverStories.TriggerArrowDownModifierGuard} />
 <Canvas of={PopoverStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={PopoverStories.EscapeRepeatGuard} />
+<Canvas of={PopoverStories.EscapeIgnoresImeComposition} />
 
 ### Dropdown
 

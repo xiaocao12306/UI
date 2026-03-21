@@ -41,6 +41,16 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+function dispatchLegacyImeEscape(ownerDocument: Document) {
+  const event = new KeyboardEvent("keydown", {
+    key: "Escape",
+    bubbles: true,
+    cancelable: true
+  });
+  Object.defineProperty(event, "keyCode", { value: 229 });
+  ownerDocument.dispatchEvent(event);
+}
+
 export const Default: Story = {
   args: {
     children: <p style={{ margin: 0 }}>Popover content for quick context editing.</p>
@@ -576,5 +586,40 @@ export const EscapeRepeatGuard: Story = {
     await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
     await expect(canvas.getByTestId("popover-repeat-escape-calls")).toHaveTextContent("1");
     await expect(canvas.getByTestId("popover-repeat-close-reason")).toHaveTextContent("escape-key");
+  }
+};
+
+function EscapeImeCompositionPopoverDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <PopoverShowcase>
+      <Popover triggerLabel="IME composition popover" open={open} onOpenChange={setOpen}>
+        <p style={{ margin: 0 }}>Escape during IME composition should not dismiss this popover.</p>
+      </Popover>
+    </PopoverShowcase>
+  );
+}
+
+export const EscapeIgnoresImeComposition: Story = {
+  args: {
+    triggerLabel: "IME composition popover",
+    children: <p style={{ margin: 0 }}>Escape during IME composition should not dismiss this popover.</p>
+  },
+  render: () => <EscapeImeCompositionPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const ownerDocument = canvasElement.ownerDocument;
+    const trigger = await canvas.findByRole("button", { name: "IME composition popover" });
+
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    fireEvent.keyDown(ownerDocument, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    dispatchLegacyImeEscape(ownerDocument);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    await userEvent.click(trigger);
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
   }
 };

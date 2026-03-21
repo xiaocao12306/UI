@@ -1788,6 +1788,32 @@ test("keeps popover open when Escape is combined with modifier shortcuts", async
   await expect(popover).toBeHidden();
 });
 
+test("keeps popover open when Escape is dispatched during IME composition", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Popover" }).click();
+  const popover = page.getByRole("dialog", { name: "Popover content" });
+  await expect(popover).toBeVisible();
+
+  await page.evaluate(() => {
+    const event = new KeyboardEvent("keydown", { key: "Escape", bubbles: true });
+    Object.defineProperty(event, "isComposing", { value: true });
+    Object.defineProperty(event, "keyCode", { value: 229 });
+    document.dispatchEvent(event);
+  });
+  await expect(popover).toBeVisible();
+
+  await page.evaluate(() => {
+    const event = new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true });
+    Object.defineProperty(event, "keyCode", { value: 229 });
+    document.dispatchEvent(event);
+  });
+  await expect(popover).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(popover).toBeHidden();
+});
+
 test("reports popover close reason telemetry for trigger, Escape, and outside pointer", async ({
   page
 }) => {

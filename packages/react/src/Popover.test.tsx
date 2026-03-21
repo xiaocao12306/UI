@@ -282,6 +282,43 @@ describe("Popover", () => {
     expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
   });
 
+  it("ignores Escape dismiss while IME composition is active", () => {
+    const onEscapeKeyDown = vi.fn();
+    const onOpenChange = vi.fn();
+
+    render(
+      <Popover triggerLabel="IME safe popover" onEscapeKeyDown={onEscapeKeyDown} onOpenChange={onOpenChange}>
+        <p>IME guard content</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "IME safe popover" }));
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    onEscapeKeyDown.mockClear();
+    onOpenChange.mockClear();
+
+    fireEvent.keyDown(document, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    const legacyEscapeEvent = new KeyboardEvent("keydown", {
+      key: "Escape",
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(legacyEscapeEvent, "keyCode", { value: 229 });
+    document.dispatchEvent(legacyEscapeEvent);
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+  });
+
   it("skips escape callback and dismiss when Escape is preempted upstream", () => {
     const onEscapeKeyDown = vi.fn();
     const onCloseReason = vi.fn();
