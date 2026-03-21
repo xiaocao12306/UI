@@ -1220,6 +1220,9 @@ describe("Toast", () => {
     fireEvent.keyUp(closeButton, { key: "Enter", ctrlKey: true });
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
 
+    fireEvent.keyDown(closeButton, { key: "Enter", repeat: true });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
     fireEvent.keyDown(closeButton, { key: "Spacebar" });
     expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
     fireEvent.keyUp(closeButton, { key: "Spacebar" });

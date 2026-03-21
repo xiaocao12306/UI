@@ -602,7 +602,8 @@ export function Toast({
             }
             if (
               isToastCloseButtonActivationKey(event.key) &&
-              !isModifiedToastCloseButtonActivationChord(event)
+              !isModifiedToastCloseButtonActivationChord(event) &&
+              !event.repeat
             ) {
               setCloseButtonPressed(true);
             }
