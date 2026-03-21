@@ -36,6 +36,17 @@ function findNextEnabledIndex(options: ComboboxOption[], startIndex: number, dir
   return -1;
 }
 
+function isComboboxManagedKeyboardKey(key: string) {
+  return (
+    key === "Escape" ||
+    key === "ArrowDown" ||
+    key === "ArrowUp" ||
+    key === "Home" ||
+    key === "End" ||
+    key === "Enter"
+  );
+}
+
 function isPrimaryPointerDownEvent(event: PointerEvent) {
   const button = typeof event.button === "number" ? event.button : 0;
   if (button > 0) {
@@ -227,6 +238,10 @@ export function Combobox({
         }}
         onKeyDown={(event) => {
           if (disabled) {
+            return;
+          }
+
+          if ((event.altKey || event.ctrlKey || event.metaKey) && isComboboxManagedKeyboardKey(event.key)) {
             return;
           }
 

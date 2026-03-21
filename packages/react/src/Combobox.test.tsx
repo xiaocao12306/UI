@@ -103,6 +103,32 @@ describe("Combobox", () => {
     expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
   });
 
+  it("ignores modified navigation, selection, and dismiss key combinations", () => {
+    const onValueChange = vi.fn();
+    render(<Combobox options={options} onValueChange={onValueChange} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "ArrowDown", ctrlKey: true });
+    fireEvent.keyDown(input, { key: "End", altKey: true });
+    fireEvent.keyDown(input, { key: "Home", metaKey: true });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "Enter", ctrlKey: true });
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+
+    fireEvent.keyDown(input, { key: "Escape", metaKey: true });
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onValueChange).toHaveBeenCalledWith("vue");
+  });
+
   it("closes popup on Escape and blur outside", () => {
     render(<Combobox options={options} onValueChange={() => {}} />);
 

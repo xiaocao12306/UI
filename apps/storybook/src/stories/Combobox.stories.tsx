@@ -87,6 +87,51 @@ export const KeyboardDismissPaths: Story = {
   }
 };
 
+function ModifierGuardComboboxDemo() {
+  const [value, setValue] = React.useState("react");
+
+  return (
+    <div style={{ width: 400, display: "grid", gap: 10 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ color: "var(--aurora-text-secondary)" }}>Selected framework</span>
+        <Badge tone="default" data-testid="combobox-modifier-selected-value">
+          {value}
+        </Badge>
+      </div>
+      <Combobox
+        options={frameworkOptions}
+        value={value}
+        onValueChange={setValue}
+        ariaLabel="Framework modifier guard"
+      />
+    </div>
+  );
+}
+
+export const ModifierKeyGuard: Story = {
+  render: () => <ModifierGuardComboboxDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Framework modifier guard" });
+
+    await userEvent.click(input);
+    await expect(canvas.getByRole("listbox", { name: "Framework modifier guard options" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("combobox-modifier-selected-value")).toHaveTextContent("react");
+
+    await userEvent.keyboard("{Control>}{ArrowDown}{/Control}");
+    await userEvent.keyboard("{Control>}{Enter}{/Control}");
+    await expect(canvas.getByTestId("combobox-modifier-selected-value")).toHaveTextContent("react");
+    await expect(canvas.getByRole("listbox", { name: "Framework modifier guard options" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Meta>}{Escape}{/Meta}");
+    await expect(canvas.getByRole("listbox", { name: "Framework modifier guard options" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("listbox", { name: "Framework modifier guard options" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("combobox-modifier-selected-value")).toHaveTextContent("react");
+  }
+};
+
 export const BlankAriaLabelFallback: Story = {
   args: {
     ariaLabel: "   "

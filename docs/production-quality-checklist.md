@@ -261,6 +261,7 @@
 - Dialog/Drawer keyboard press parity hardening: overlay close buttons now expose pressed-state feedback for unmodified `Enter/Space/Spacebar`, ignore `Ctrl/Meta/Alt` chords, and include aligned Storybook interaction coverage.
 - Dropdown keyboard-activation dedupe hardening: menuitem activation now ignores synthesized keyboard-origin click follow-ups (`detail=0`) after handled keydown, with timeout release to keep later keyboard-origin clicks actionable.
 - Popover trigger shortcut hardening: keyboard open now responds only to unmodified `ArrowDown`, so `Ctrl/Meta/Alt + ArrowDown` remains available for host/browser shortcut handling.
+- Combobox keyboard shortcut hardening: combobox-managed navigation/selection/dismiss keys now ignore `Ctrl/Meta/Alt` modified chords so host/browser shortcuts are not hijacked.
 - Docs command-parity hardening: README/Storybook/Release docs now converge on root aliases (`demo:dev/demo:build`, `release:preflight:chromatic|publish`) and mark GitHub Pages as primary Storybook external link with rawcdn fallback.
 - CommandPalette Storybook brand hardening: trigger/reopen/blocking toggle controls now reuse Aurora `Button` variants (outside-target boundary probes stay native), improving visual consistency without weakening dismiss-behavior coverage.
 - Toast multi-document stack hardening: Escape and visual stack registries are now partitioned by `ownerDocument`, preventing cross-root/iframe dismissal interference while preserving stack-order semantics in each document context.
