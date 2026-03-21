@@ -44,6 +44,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Ensure keyboard dismissal paths for overlay components.
 - Keep visible labels or accessible names for form controls.
 - For icon-only buttons, provide non-empty `aria-label` or `aria-labelledby` on the button itself; inline child `aria-label` is treated as fallback only, and decorative glyph text should remain `aria-hidden`.
+- Keep button pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`/`Spacebar`); ignore `Ctrl/Meta/Alt` chords so host shortcuts do not flash pressed visuals.
 - Respect OS reduced-motion preferences: keep `GlobalStyles` mounted so surfaces tagged with `data-aurora-reduced-motion` disable shimmer/spin/indeterminate motion (Button loading spinner, Progress indeterminate bar, Skeleton shimmer) under `prefers-reduced-motion`, and keep timer-driven feedback (`LoadingDots`, `StreamingText`) on default `respectReducedMotion` behavior unless the product explicitly requires animated narration.
 - Prefer `FormField` wrappers for helper/error copy so `aria-describedby` and `aria-errormessage` stay in sync.
 - Keep input Enter active feedback scoped to unmodified keys: ignore `Ctrl/Meta/Alt + Enter` shortcut chords, while allowing normal `Enter` and `Shift+Enter` intent.

@@ -767,6 +767,7 @@
   - Release Dry-Run 证据刷新（2026-03-21 latest+82：重跑 `pnpm release:dry-run` 并确认发布包产物可发布，`@aurora-ui/react` `79.1 kB / 487.9 kB`、`@aurora-ui/primitives` `15.0 kB / 74.5 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`）
   - Input 修饰键 Enter 交互收口（2026-03-21 latest+83：Input active 视觉反馈改为忽略 `Ctrl/Meta/Alt + Enter`（避免与宿主快捷键冲突），保留 `Enter/Shift+Enter` 语义；同步单测/Storybook/文档验收，`pnpm --filter @aurora-ui/react exec vitest run src/Input.test.tsx` 通过（`14/14`），`pnpm --filter @aurora-ui/storybook-app typecheck && pnpm storybook:docs:check && pnpm storybook:docs:parity:check && pnpm storybook:docs:structure:check && pnpm storybook:play:check` 通过，`pnpm storybook:test:grep \"Input.stories.tsx\"` 通过（`9/9`））
   - Release Gate 漂移恢复与证据刷新（2026-03-21 latest+84：Input 收口后首次 `pnpm release:gate:ci` 在 `demo:dist:check` 检测到 `apps/demo/dist` 漂移，已同步 Demo 静态产物并再次全链路复验通过，含 verify + release:exports:check + coverage（`43 files / 630 tests`）+ demo e2e `98/98` + storybook interaction `228/228`）
+  - Button 修饰键按压反馈收口（2026-03-21 latest+85：Button 按压视觉反馈改为忽略 `Ctrl/Meta/Alt` 修饰键激活组合，保留未修饰/`Shift` 的 `Enter` 与 `Space`（含 `Spacebar`）语义；同步单测/Storybook/文档验收，`pnpm --filter @aurora-ui/react exec vitest run src/Button.test.tsx` 通过（`20/20`），`pnpm --filter @aurora-ui/storybook-app typecheck && pnpm storybook:docs:check && pnpm storybook:docs:parity:check && pnpm storybook:docs:structure:check && pnpm storybook:play:check` 通过，`pnpm storybook:test:grep \"Button.stories.tsx\"` 通过（`6/6`））
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

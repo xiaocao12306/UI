@@ -103,6 +103,25 @@ describe("Button", () => {
     expect(button.getAttribute("style")).not.toContain("translateY(1px)");
   });
 
+  it("ignores modified activation chords for pressed feedback while keeping Shift activation", () => {
+    render(<Button>Shortcut Guard</Button>);
+    const button = screen.getByRole("button", { name: "Shortcut Guard" });
+
+    fireEvent.keyDown(button, { key: "Enter", ctrlKey: true });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+
+    fireEvent.keyDown(button, { key: "Enter", metaKey: true });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+
+    fireEvent.keyDown(button, { key: "Spacebar", altKey: true });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+
+    fireEvent.keyDown(button, { key: "Enter", shiftKey: true });
+    expect(button.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.keyUp(button, { key: "Enter", shiftKey: true });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+  });
+
   it("only uses primary mouse button for pressed feedback lifecycle", () => {
     render(<Button>Primary Only</Button>);
     const button = screen.getByRole("button", { name: "Primary Only" });

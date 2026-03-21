@@ -249,7 +249,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       }}
       onKeyDown={(event) => {
         focusVisibleIntentRef.current = true;
-        if (!interactionDisabled && isButtonActivationKey(event.key)) {
+        if (
+          !interactionDisabled &&
+          isButtonActivationKey(event.key) &&
+          !isModifiedActivationChord(event)
+        ) {
           setPressed(true);
         }
         onKeyDown?.(event);
@@ -287,6 +291,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
 
 function isButtonActivationKey(key: string) {
   return key === "Enter" || key === " " || key === "Spacebar";
+}
+
+function isModifiedActivationChord(event: React.KeyboardEvent<HTMLButtonElement>) {
+  return event.ctrlKey || event.metaKey || event.altKey;
 }
 
 function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {

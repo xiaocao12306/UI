@@ -56,6 +56,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `loading` / `loadingText` | `boolean` / `ReactNode` | Locks interactions, sets `aria-busy`, and shows deterministic loading copy. |
 | reduced-motion fallback | loading spinner tagged with `data-aurora-reduced-motion="animate"` | With `GlobalStyles`, spinner animation auto-disables under `prefers-reduced-motion` without changing loading semantics. |
 | icon-only naming | non-empty `aria-label` / `aria-labelledby` | Recommended on the button itself when visible children are icon-only; rich child content with inline `aria-label` is auto-detected, and development builds warn when naming is still missing. |
+| keyboard press feedback policy | unmodified `Enter`/`Space` (+ legacy `Spacebar`) and `Shift` variants | Ignores `Ctrl/Meta/Alt` modified activation chords so host shortcut combinations do not trigger pressed visuals. |
 | focus intent policy | primary pointer clears focus-visible | Non-primary pointer interactions keep focus ring state; primary pointer resets keyboard-intent ring before press feedback. |
 | native button props | `ButtonHTMLAttributes` | Supports `type`, `disabled`, `onClick`, keyboard handlers. |
 

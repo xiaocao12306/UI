@@ -121,7 +121,19 @@ export const KeyboardActivation: Story = {
     const runAction = await canvas.findByRole("button", { name: "Run Action" });
 
     runAction.focus();
-    await userEvent.keyboard("{Enter}");
+    fireEvent.keyDown(runAction, { key: "Enter", ctrlKey: true });
+    fireEvent.keyUp(runAction, { key: "Enter", ctrlKey: true });
+    await expect(canvas.getByTestId("activation-count")).toHaveTextContent("0");
+
+    fireEvent.keyDown(runAction, { key: "Enter", metaKey: true });
+    fireEvent.keyUp(runAction, { key: "Enter", metaKey: true });
+    await expect(canvas.getByTestId("activation-count")).toHaveTextContent("0");
+
+    fireEvent.keyDown(runAction, { key: " ", altKey: true });
+    fireEvent.keyUp(runAction, { key: " ", altKey: true });
+    await expect(canvas.getByTestId("activation-count")).toHaveTextContent("0");
+
+    await userEvent.keyboard("{Shift>}{Enter}{/Shift}");
     await userEvent.keyboard(" ");
     await expect(canvas.getByTestId("activation-count")).toHaveTextContent("2");
 
