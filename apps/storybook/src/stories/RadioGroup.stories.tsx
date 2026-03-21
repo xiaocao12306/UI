@@ -100,3 +100,34 @@ export const LabelledByPrecedence: Story = {
     await expect(group).not.toHaveAttribute("aria-label");
   }
 };
+
+export const FocusIntentReentry: Story = {
+  render: () => (
+    <div style={{ width: 340, display: "grid", gap: 12 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        Click the trigger first, then press Tab to verify keyboard re-entry restores radio
+        focus-visible state.
+      </p>
+      <button type="button">Before radio group</button>
+      <RadioGroup
+        name="Focus intent group"
+        defaultValue="m"
+        options={[
+          { label: "Small", value: "s", description: "Compact layout" },
+          { label: "Medium", value: "m", description: "Balanced layout" },
+          { label: "Large", value: "l", description: "Readable layout" }
+        ]}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before radio group" });
+    const medium = canvas.getByRole("radio", { name: /^Medium/ });
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(medium).toHaveFocus();
+    await expect(medium).toHaveAttribute("data-focus-visible", "true");
+  }
+};

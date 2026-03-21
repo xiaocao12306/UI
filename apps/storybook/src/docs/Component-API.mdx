@@ -148,11 +148,13 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `value` / `defaultValue` | `string` | Controlled and uncontrolled single-choice flows. |
 | `ariaLabel` / `ariaLabelledBy` | `string` / `string` | Optional radiogroup naming override; blank values are ignored, and `ariaLabelledBy` takes precedence when both are provided (`ariaLabel` otherwise falls back to `name`). |
 | `options[].disabled` | `boolean` | Disable specific choices without removing context. |
+| document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores radio focus-visible state consistently, including iframe hosts. |
 | `invalid` | `boolean` | Applies `aria-invalid` to the `radiogroup` container for screen-reader narration. |
 | `direction` | `'vertical' \| 'horizontal'` | Layout direction for stacked vs inline groups. |
 
 <Canvas of={RadioGroupStories.InvalidState} />
 <Canvas of={RadioGroupStories.LabelledByPrecedence} />
+<Canvas of={RadioGroupStories.FocusIntentReentry} />
 
 ### Switch
 

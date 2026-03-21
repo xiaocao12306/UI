@@ -100,4 +100,90 @@ describe("RadioGroup", () => {
     expect(group).not.toHaveAttribute("aria-labelledby");
     expect(group).toHaveAttribute("aria-label", "Fallback group name");
   });
+
+  it("tracks keyboard focus-visible intent and clears it on primary pointer interaction", () => {
+    render(<RadioGroup name="Focus ring group" options={baseOptions} defaultValue="m" />);
+
+    const medium = screen.getByRole("radio", { name: /^Medium/ });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(medium);
+    expect(medium).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(medium, { button: 1 });
+    expect(medium).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(medium, { button: 0 });
+    expect(medium).not.toHaveAttribute("data-focus-visible");
+  });
+
+  it("tracks ownerDocument keyboard focus intent when focus-visible matching is unavailable", () => {
+    render(
+      <div>
+        <button type="button">Before radio group</button>
+        <RadioGroup name="Document intent group" defaultValue="m" options={baseOptions} />
+      </div>
+    );
+
+    const medium = screen.getByRole("radio", { name: /^Medium/ });
+    const beforeButton = screen.getByRole("button", { name: "Before radio group" });
+    const matchesSpy = vi.spyOn(medium, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(medium);
+    expect(medium).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(medium);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(medium);
+    expect(medium).not.toHaveAttribute("data-focus-visible");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted radio groups", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+
+    const { getByRole } = render(
+      <RadioGroup name="Iframe group" defaultValue="m" options={baseOptions} />,
+      {
+        container: secondaryContainer,
+        baseElement: secondaryDocument.body
+      }
+    );
+    const medium = getByRole("radio", { name: /^Medium/ });
+    const matchesSpy = vi.spyOn(medium, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(medium);
+      expect(medium).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(medium);
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(medium);
+      expect(medium).not.toHaveAttribute("data-focus-visible");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
 });
