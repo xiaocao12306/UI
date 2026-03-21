@@ -232,6 +232,43 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Two" })).toHaveFocus();
   });
 
+  it("reduces menu shortcut hints when only one dropdown item is actionable", () => {
+    render(
+      <Dropdown
+        label="Single Actionable"
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two", disabled: true }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Single Actionable" }));
+    expect(screen.getByRole("menu", { name: "Single Actionable" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Tab Escape"
+    );
+  });
+
+  it("shows only Tab shortcut hint when single actionable menu disables Escape close", () => {
+    render(
+      <Dropdown
+        label="Single Actionable No Escape"
+        closeOnEscape={false}
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two", disabled: true }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Single Actionable No Escape" }));
+    expect(screen.getByRole("menu", { name: "Single Actionable No Escape" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Tab"
+    );
+  });
+
   it("opens from trigger with ArrowUp and focuses the last enabled item", () => {
     render(
       <Dropdown
@@ -409,6 +446,7 @@ describe("Dropdown", () => {
     const trigger = screen.getByRole("button", { name: "All disabled" });
     fireEvent.click(trigger);
     const menu = screen.getByRole("menu", { name: "All disabled" });
+    expect(menu).toHaveAttribute("aria-keyshortcuts", "Tab Escape");
     const menuItems = screen.getAllByRole("menuitem");
 
     menuItems.forEach((item) => {

@@ -28,7 +28,8 @@ export type DropdownProps = {
 };
 
 const dropdownTriggerKeyboardShortcuts = "ArrowDown ArrowUp";
-const dropdownMenuNavigationShortcuts = "ArrowDown ArrowUp Home End PageDown PageUp Tab";
+const dropdownMenuDismissShortcut = "Tab";
+const dropdownMenuNavigationShortcuts = "ArrowDown ArrowUp Home End PageDown PageUp";
 const dropdownItemKeyboardClickDedupeWindowMs = 400;
 
 function getNextEnabledIndex(items: DropdownItem[], currentIndex: number, direction: 1 | -1) {
@@ -175,9 +176,17 @@ export function Dropdown({
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
   const resolvedTriggerAriaLabel = resolveNonEmptyLabel(triggerAriaLabel);
-  const menuKeyboardShortcuts = closeOnEscape
-    ? `${dropdownMenuNavigationShortcuts} Escape`
-    : dropdownMenuNavigationShortcuts;
+  const enabledItemCount = items.reduce((count, item) => count + (item.disabled ? 0 : 1), 0);
+  const menuKeyboardShortcuts = React.useMemo(() => {
+    const shortcuts = [dropdownMenuDismissShortcut];
+    if (enabledItemCount > 1) {
+      shortcuts.unshift(dropdownMenuNavigationShortcuts);
+    }
+    if (closeOnEscape) {
+      shortcuts.push("Escape");
+    }
+    return shortcuts.join(" ");
+  }, [closeOnEscape, enabledItemCount]);
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {

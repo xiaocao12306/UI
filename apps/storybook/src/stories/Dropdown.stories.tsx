@@ -728,6 +728,7 @@ export const AllItemsDisabledKeyboardNoop: Story = {
 
     await userEvent.click(trigger);
     const menu = canvas.getByRole("menu", { name: "All Disabled Keyboard" });
+    await expect(menu).toHaveAttribute("aria-keyshortcuts", "Tab Escape");
     const menuItems = canvas.getAllByRole("menuitem");
 
     menuItems.forEach((item) => {
@@ -747,6 +748,33 @@ export const AllItemsDisabledKeyboardNoop: Story = {
     menuItems.forEach((item) => {
       expect(item).toHaveAttribute("tabindex", "-1");
     });
+  }
+};
+
+export const SingleActionableShortcutHints: Story = {
+  args: {
+    label: "Single Actionable Keyboard",
+    items: [
+      { key: "duplicate", label: "Duplicate" },
+      { key: "archive", label: "Archive", disabled: true }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Single Actionable Keyboard" });
+
+    await userEvent.click(trigger);
+    const menu = canvas.getByRole("menu", { name: "Single Actionable Keyboard" });
+    await expect(menu).toHaveAttribute("aria-keyshortcuts", "Tab Escape");
+    await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "ArrowDown" });
+    await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+    await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space"
+    );
+    await expect(canvas.getByRole("menuitem", { name: "Archive" })).not.toHaveAttribute("aria-keyshortcuts");
   }
 };
 

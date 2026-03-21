@@ -150,7 +150,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep open-menu roving focus stable under modified `ArrowDown/ArrowUp`; `Ctrl/Meta/Alt` arrow chords should not move dropdown active item.
 - Keep dropdown trigger shortcut hints explicit (`aria-keyshortcuts="ArrowDown ArrowUp"`) only while closed so keyboard-open affordance stays discoverable without advertising unavailable shortcuts once open.
 - Keep dropdown trigger open targeting stable: `ArrowDown` should focus the first enabled item, and `ArrowUp` should focus the last enabled item for immediate tail-action access.
-- Keep dropdown menu shortcut hints explicit (`aria-keyshortcuts="ArrowDown ArrowUp Home End PageDown PageUp Tab [Escape]"`), and omit `Escape` from the hint when `closeOnEscape={false}` so dismiss metadata matches runtime policy.
+- Keep dropdown menu shortcut hints state-aware (`aria-keyshortcuts="[ArrowDown ArrowUp Home End PageDown PageUp] Tab [Escape]"`): always expose `Tab`, expose `Escape` only when `closeOnEscape` is enabled, and omit navigation hints when at most one item is actionable so QA/AT metadata does not advertise unavailable movement paths.
 - For long dropdown menus, rely on `PageUp` / `PageDown` jumps to move across actionable items in larger steps while still skipping disabled entries.
 - Treat dropdown menu-item activation repeat (`event.repeat`) as no-op after first keydown to prevent duplicate command execution and telemetry jitter during long-press.
 - Deduplicate synthesized keyboard-origin click (`detail=0`) after handled dropdown item activation keydown so one keyboard action maps to one item side effect and one close telemetry event.
@@ -176,6 +176,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={DropdownStories.TypeaheadIgnoresImeComposition} />
 <Canvas of={DropdownStories.DismissGuardHooks} />
 <Canvas of={DropdownStories.NestedOutsideDismissOrder} />
+<Canvas of={DropdownStories.SingleActionableShortcutHints} />
 <Canvas of={PopoverStories.CloseReasonTelemetry} />
 <Canvas of={PopoverStories.TriggerArrowDownModifierGuard} />
 <Canvas of={PopoverStories.TabDismissToNextControl} />
