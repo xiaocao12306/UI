@@ -325,9 +325,11 @@ export const SelectionTelemetry: Story = {
     const canvas = within(canvasElement);
     const trigger = await canvas.findByRole("button", { name: "Release Actions" });
     await expect(canvas.getByTestId("dropdown-selected-action")).toHaveTextContent("none");
+    await expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp");
 
     await userEvent.click(trigger);
     await expect(canvas.getByRole("menu")).toBeInTheDocument();
+    await expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
     const duplicateItem = canvas.getByRole("menuitem", { name: "Duplicate" });
     const archiveItem = canvas.getByRole("menuitem", { name: "Archive" });
     await expect(duplicateItem).toHaveAttribute("aria-keyshortcuts", "Enter Space");
@@ -344,11 +346,13 @@ export const SelectionTelemetry: Story = {
     await expect(canvas.getByTestId("dropdown-selected-action")).toHaveTextContent("none");
     await userEvent.keyboard("{Enter}");
     await expect(canvas.queryByRole("menu")).not.toBeInTheDocument();
+    await expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp");
     await expect(canvas.getByTestId("dropdown-selected-action")).toHaveTextContent("Delete");
 
     trigger.focus();
     await userEvent.keyboard("{ArrowDown}");
     await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+    await expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
   }
 };
 

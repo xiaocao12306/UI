@@ -26,6 +26,8 @@ export type DropdownProps = {
   onPointerDownOutside?: (event: PointerEvent) => void;
   onCloseReason?: (reason: DropdownCloseReason) => void;
 };
+
+const dropdownTriggerKeyboardShortcuts = "ArrowDown ArrowUp";
 const dropdownItemKeyboardClickDedupeWindowMs = 400;
 
 function getNextEnabledIndex(items: DropdownItem[], currentIndex: number, direction: 1 | -1) {
@@ -338,6 +340,7 @@ export function Dropdown({
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
+        aria-keyshortcuts={isOpen ? undefined : dropdownTriggerKeyboardShortcuts}
         onClick={() => {
           if (isOpen) {
             closeWithReason("trigger-click");

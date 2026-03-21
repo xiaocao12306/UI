@@ -113,6 +113,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For icon-only/non-text dropdown items, provide `items[].textValue` unless the rich label already exposes readable text or inline `aria-label`; buffered typeahead relies on one of these metadata paths.
 - Keep dropdown menu-item keyboard activation explicit and cross-browser (`Enter` / `Space` / legacy `Spacebar`) so non-pointer flows can execute actions without click simulation.
 - Keep dropdown navigation/activation/dismiss scoped to unmodified keys; `Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space/Escape` should stay on host/browser shortcut behavior.
+- Keep dropdown trigger shortcut hints explicit (`aria-keyshortcuts="ArrowDown ArrowUp"`) only while closed so keyboard-open affordance stays discoverable without advertising unavailable shortcuts once open.
 - For long dropdown menus, rely on `PageUp` / `PageDown` jumps to move across actionable items in larger steps while still skipping disabled entries.
 - Treat dropdown menu-item activation repeat (`event.repeat`) as no-op after first keydown to prevent duplicate command execution and telemetry jitter during long-press.
 - Deduplicate synthesized keyboard-origin click (`detail=0`) after handled dropdown item activation keydown so one keyboard action maps to one item side effect and one close telemetry event.

@@ -21,15 +21,18 @@ describe("Dropdown", () => {
 
     const trigger = screen.getByRole("button", { name: "Actions" });
     expect(trigger).not.toHaveAttribute("aria-controls");
+    expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp");
 
     fireEvent.click(trigger);
     const menu = screen.getByRole("menu", { name: "Actions" });
     expect(trigger).toHaveAttribute("aria-controls", menu.id);
+    expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
     fireEvent.click(screen.getByRole("menuitem", { name: "Duplicate" }));
 
     expect(onSelect).toHaveBeenCalledTimes(1);
     expect(onCloseReason).toHaveBeenCalledWith("item-select");
     expect(screen.queryByRole("menu")).toBeNull();
+    expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp");
   });
 
   it("warns when duplicate dropdown item keys are provided", () => {
@@ -181,8 +184,10 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menu")).toBeInTheDocument();
 
     const trigger = screen.getByRole("button", { name: "Options" });
+    expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
     fireEvent.keyDown(document, { key: "Escape" });
     expect(screen.queryByRole("menu")).toBeNull();
+    expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp");
     expect(trigger).toHaveFocus();
     expect(onCloseReason).toHaveBeenNthCalledWith(1, "escape-key");
 
@@ -209,11 +214,13 @@ describe("Dropdown", () => {
     );
 
     const trigger = screen.getByRole("button", { name: "Keyboard" });
+    expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp");
     fireEvent.focus(trigger);
     fireEvent.keyDown(trigger, { key: "ArrowDown" });
 
     const menu = screen.getByRole("menu");
     expect(menu).toBeInTheDocument();
+    expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
     expect(screen.getByRole("menuitem", { name: "One" })).toHaveFocus();
 
     fireEvent.keyDown(menu, { key: "ArrowDown" });
