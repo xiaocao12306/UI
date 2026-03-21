@@ -101,7 +101,8 @@ export function Dialog({
               return;
             }
 
-            onCloseReason?.("escape-key");
+            event.preventDefault();
+            closeWithReason("escape-key");
           }}
           onPointerDownOutside={(event) => {
             onPointerDownOutside?.(event);
@@ -113,7 +114,8 @@ export function Dialog({
               return;
             }
 
-            onCloseReason?.("outside-pointer");
+            event.preventDefault();
+            closeWithReason("outside-pointer");
           }}
           onDismiss={() => onOpenChange(false)}
         >

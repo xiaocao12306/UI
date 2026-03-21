@@ -92,7 +92,8 @@ export function Drawer({
               return;
             }
 
-            onCloseReason?.("escape-key");
+            event.preventDefault();
+            closeWithReason("escape-key");
           }}
           onPointerDownOutside={(event) => {
             onPointerDownOutside?.(event);
@@ -104,7 +105,8 @@ export function Drawer({
               return;
             }
 
-            onCloseReason?.("outside-pointer");
+            event.preventDefault();
+            closeWithReason("outside-pointer");
           }}
           onDismiss={() => onOpenChange(false)}
         >

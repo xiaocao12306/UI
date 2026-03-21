@@ -147,6 +147,38 @@ describe("Drawer", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("prevents default on handled Escape and outside-pointer dismiss events", () => {
+    const keyboardDefaultPrevented: boolean[] = [];
+    const pointerDefaultPrevented: boolean[] = [];
+    const onDocumentKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        keyboardDefaultPrevented.push(event.defaultPrevented);
+      }
+    };
+    const onDocumentPointerdown = (event: PointerEvent) => {
+      pointerDefaultPrevented.push(event.defaultPrevented);
+    };
+
+    try {
+      render(
+        <Drawer open onOpenChange={() => {}} title="Dismiss event preemption drawer">
+          <p>Drawer content</p>
+        </Drawer>
+      );
+      document.addEventListener("keydown", onDocumentKeydown);
+      document.addEventListener("pointerdown", onDocumentPointerdown);
+
+      fireEvent.keyDown(document, { key: "Escape" });
+      fireEvent.pointerDown(document.body);
+
+      expect(keyboardDefaultPrevented).toEqual([true]);
+      expect(pointerDefaultPrevented).toEqual([true]);
+    } finally {
+      document.removeEventListener("keydown", onDocumentKeydown);
+      document.removeEventListener("pointerdown", onDocumentPointerdown);
+    }
+  });
+
   it("ignores repeated Escape keydown before first non-repeat dismiss", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();

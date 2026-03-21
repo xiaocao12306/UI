@@ -370,6 +370,38 @@ describe("Dialog", () => {
     expect(onOpenChange).toHaveBeenNthCalledWith(2, false);
   });
 
+  it("prevents default on handled Escape and outside-pointer dismiss events", () => {
+    const keyboardDefaultPrevented: boolean[] = [];
+    const pointerDefaultPrevented: boolean[] = [];
+    const onDocumentKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        keyboardDefaultPrevented.push(event.defaultPrevented);
+      }
+    };
+    const onDocumentPointerdown = (event: PointerEvent) => {
+      pointerDefaultPrevented.push(event.defaultPrevented);
+    };
+
+    try {
+      render(
+        <Dialog open onOpenChange={() => {}} title="Dismiss event preemption dialog">
+          <p>Body</p>
+        </Dialog>
+      );
+      document.addEventListener("keydown", onDocumentKeydown);
+      document.addEventListener("pointerdown", onDocumentPointerdown);
+
+      fireEvent.keyDown(document, { key: "Escape" });
+      fireEvent.pointerDown(document.body);
+
+      expect(keyboardDefaultPrevented).toEqual([true]);
+      expect(pointerDefaultPrevented).toEqual([true]);
+    } finally {
+      document.removeEventListener("keydown", onDocumentKeydown);
+      document.removeEventListener("pointerdown", onDocumentPointerdown);
+    }
+  });
+
   it("does not emit close reason when dialog escape handler prevents dismiss", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();
