@@ -168,8 +168,11 @@ describe("CommandPalette", () => {
 
       expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenLastCalledWith(
-        expect.stringContaining('Duplicate command keys detected: "deploy"')
+        expect.stringContaining(
+          'Duplicate command keys detected: "deploy". Keys should be unique to keep aria-activedescendant and selection behavior deterministic. Duplicate option keys are auto-suffixed by filtered index for render stability.'
+        )
       );
+      expect(errorSpy).not.toHaveBeenCalled();
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();

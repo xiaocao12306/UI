@@ -218,7 +218,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 
 - Always expose pending/loading states for AI request actions.
 - Keep command labels explicit and searchable.
-- Keep `commands[].key` unique and stable; development builds now warn on duplicate keys to avoid active-option and telemetry drift.
+- Keep `commands[].key` unique and stable; development builds warn on duplicate keys to avoid active-option and telemetry drift, and runtime auto-suffixes duplicate option keys by filtered index to prevent React key-collision remount churn.
 - Provide `textValue` aliases for non-string command labels and accent-friendly matching terms.
 - For icon/non-text command labels, provide `commands[].ariaLabel` unless the rich label already exposes inline `aria-label`; development builds warn when both are missing.
 - For non-text command labels, ensure `textValue` or searchable `keywords` are present; development builds warn when both are missing.

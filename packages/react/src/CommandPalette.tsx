@@ -163,7 +163,7 @@ export function CommandPalette({
         .map((key) => `"${key}"`)
         .join(
           ", "
-        )}. Keys should be unique to keep aria-activedescendant and selection behavior deterministic.`
+        )}. Keys should be unique to keep aria-activedescendant and selection behavior deterministic. Duplicate option keys are auto-suffixed by filtered index for render stability.`
     );
   }, [commands]);
 
@@ -260,6 +260,18 @@ export function CommandPalette({
       return normalizeSearchText(haystack).includes(normalizedQuery);
     });
   }, [commands, normalizedQuery]);
+  const filteredRenderKeys = React.useMemo(() => {
+    const seenCounts = new Map<string, number>();
+    return filtered.map((item, index) => {
+      const seenCount = seenCounts.get(item.key) ?? 0;
+      seenCounts.set(item.key, seenCount + 1);
+      if (seenCount === 0) {
+        return item.key;
+      }
+
+      return `${item.key}__dup-${index}`;
+    });
+  }, [filtered]);
   const enabledCount = React.useMemo(
     () => filtered.reduce((count, command) => (command.disabled ? count : count + 1), 0),
     [filtered]
@@ -598,7 +610,7 @@ export function CommandPalette({
               const optionAriaLabel = resolveNonEmptyLabel(item.ariaLabel);
               return (
                 <div
-                  key={item.key}
+                  key={filteredRenderKeys[index] ?? `${item.key}__dup-${index}`}
                   id={`${listId}-option-${index}`}
                   role="option"
                   aria-selected={active}
