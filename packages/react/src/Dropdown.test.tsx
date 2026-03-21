@@ -53,8 +53,37 @@ describe("Dropdown", () => {
 
       expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenLastCalledWith(
-        expect.stringContaining('Duplicate item keys detected: "deploy"')
+        expect.stringContaining(
+          'Duplicate item keys detected: "deploy". Keys should be unique to keep focus and close telemetry deterministic. Duplicate render keys are auto-suffixed by item index for stability.'
+        )
       );
+      expect(errorSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not emit React duplicate-key errors when duplicate dropdown keys are rendered", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dropdown
+          label="Render duplicate keys"
+          items={[
+            { key: "deploy", label: "Deploy now" },
+            { key: "deploy", label: "Deploy later" }
+          ]}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button", { name: "Render duplicate keys" }));
+      const menu = screen.getByRole("menu", { name: "Render duplicate keys" });
+      expect(within(menu).getByRole("menuitem", { name: "Deploy now" })).toBeInTheDocument();
+      expect(within(menu).getByRole("menuitem", { name: "Deploy later" })).toBeInTheDocument();
+      expect(errorSpy).not.toHaveBeenCalled();
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();

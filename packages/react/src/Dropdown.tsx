@@ -163,7 +163,7 @@ export function Dropdown({
   const itemRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const typeaheadStateRef = React.useRef<{ query: string; timestamp: number }>({ query: "", timestamp: 0 });
   const pendingOpenActiveIndexRef = React.useRef<number | null>(null);
-  const keyboardActivationItemKeyRef = React.useRef<string | null>(null);
+  const keyboardActivationItemIndexRef = React.useRef<number | null>(null);
   const keyboardActivationTimestampRef = React.useRef(0);
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const keyboardActivationTimerWindowRef = React.useRef<Window | null>(null);
@@ -176,6 +176,18 @@ export function Dropdown({
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
   const resolvedTriggerAriaLabel = resolveNonEmptyLabel(triggerAriaLabel);
+  const itemRenderKeys = React.useMemo(() => {
+    const seenCounts = new Map<string, number>();
+    return items.map((item, index) => {
+      const seenCount = seenCounts.get(item.key) ?? 0;
+      seenCounts.set(item.key, seenCount + 1);
+      if (seenCount === 0) {
+        return item.key;
+      }
+
+      return `${item.key}__dup-${index}`;
+    });
+  }, [items]);
   const enabledItemCount = items.reduce((count, item) => count + (item.disabled ? 0 : 1), 0);
   const menuKeyboardShortcuts = React.useMemo(() => {
     const shortcuts = [dropdownMenuDismissShortcut];
@@ -207,7 +219,7 @@ export function Dropdown({
   );
 
   const clearKeyboardActivationLatch = React.useCallback(() => {
-    keyboardActivationItemKeyRef.current = null;
+    keyboardActivationItemIndexRef.current = null;
     keyboardActivationTimestampRef.current = 0;
     if (keyboardActivationResetTimerRef.current !== null) {
       const timerWindow = keyboardActivationTimerWindowRef.current ?? window;
@@ -264,7 +276,9 @@ export function Dropdown({
     console.warn(
       `[Dropdown] Duplicate item keys detected: ${Array.from(duplicateKeys)
         .map((key) => `"${key}"`)
-        .join(", ")}. Keys should be unique to keep focus and close telemetry deterministic.`
+        .join(
+          ", "
+        )}. Keys should be unique to keep focus and close telemetry deterministic. Duplicate render keys are auto-suffixed by item index for stability.`
     );
   }, [items]);
 
@@ -556,7 +570,7 @@ export function Dropdown({
               const isActive = index === activeIndex;
               const resolvedItemAriaLabel = resolveNonEmptyLabel(item.ariaLabel);
               return (
-                <li key={item.key} role="none">
+                <li key={itemRenderKeys[index] ?? `${item.key}__dup-${index}`} role="none">
                   <button
                     ref={(node) => {
                       itemRefs.current[index] = node;
@@ -587,7 +601,7 @@ export function Dropdown({
                         return;
                       }
 
-                      keyboardActivationItemKeyRef.current = item.key;
+                      keyboardActivationItemIndexRef.current = index;
                       keyboardActivationTimestampRef.current = Date.now();
                       const ownerWindow = event.currentTarget.ownerDocument.defaultView ?? window;
                       if (keyboardActivationResetTimerRef.current !== null) {
@@ -607,7 +621,7 @@ export function Dropdown({
                       const keyboardActivationAgeMs = Date.now() - keyboardActivationTimestampRef.current;
                       const clickFromKeyboardActivation =
                         event.detail === 0 &&
-                        keyboardActivationItemKeyRef.current === item.key &&
+                        keyboardActivationItemIndexRef.current === index &&
                         keyboardActivationTimestampRef.current > 0 &&
                         keyboardActivationAgeMs <= dropdownItemKeyboardClickDedupeWindowMs;
                       clearKeyboardActivationLatch();
