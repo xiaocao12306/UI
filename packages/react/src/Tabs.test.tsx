@@ -1267,6 +1267,47 @@ describe("Tabs", () => {
     matchesSpy.mockRestore();
   });
 
+  it("restores fallback focus ring when re-entering via user Shift+Tab navigation", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <div>
+        <Tabs
+          defaultValue="one"
+          items={[
+            { key: "one", label: "One", content: <div>Panel One</div> },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />
+        <button type="button">After tabs</button>
+      </div>
+    );
+
+    const afterButton = screen.getByRole("button", { name: "After tabs" });
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    const panel = screen.getByRole("tabpanel");
+    const nativeMatches = oneTab.matches.bind(oneTab);
+    const matchesSpy = vi.spyOn(oneTab, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        throw new Error("focus-visible is not supported in this environment");
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.mouseDown(oneTab);
+    fireEvent.focus(oneTab);
+    expect(oneTab.style.boxShadow).toBe("none");
+
+    await user.click(afterButton);
+    await user.tab({ shift: true });
+    expect(panel).toHaveFocus();
+    await user.tab({ shift: true });
+    expect(oneTab).toHaveFocus();
+    expect(oneTab.style.boxShadow).toContain("0 0 0 3px");
+    matchesSpy.mockRestore();
+  });
+
   it("tracks keyboard focus intent in ownerDocument for cross-document tab renders", () => {
     const iframe = document.createElement("iframe");
     document.body.appendChild(iframe);

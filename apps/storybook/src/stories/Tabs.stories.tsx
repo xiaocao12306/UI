@@ -212,6 +212,35 @@ export const KeyboardFocusRingAfterPointer: Story = {
   }
 };
 
+export const KeyboardFocusRingShiftTabReentry: Story = {
+  render: () => (
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
+        Pointer focus keeps ring hidden, then reverse keyboard navigation (Shift+Tab) restores
+        focus-visible ring for the active tab.
+      </p>
+      <Tabs ariaLabel="Shift+Tab focus ring fallback tabs" defaultValue="spec" items={productTabs} />
+      <button type="button">After tabs</button>
+    </TabsShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const afterButton = canvas.getByRole("button", { name: "After tabs" });
+    const panel = canvas.getByRole("tabpanel");
+
+    fireEvent.mouseDown(specTab);
+    specTab.focus();
+
+    await userEvent.click(afterButton);
+    await userEvent.tab({ shift: true });
+    await expect(panel).toHaveFocus();
+    await userEvent.tab({ shift: true });
+    await expect(specTab).toHaveFocus();
+    await expect(specTab.style.boxShadow).toContain("0 0 0 3px");
+  }
+};
+
 export const DisabledTabVisualReset: Story = {
   render: () => <DisableVisualResetTabsDemo />,
   play: async ({ canvasElement }) => {

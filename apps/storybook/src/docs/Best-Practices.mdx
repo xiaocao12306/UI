@@ -380,6 +380,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - In controlled mode, ensure `value` always maps to an enabled tab key; development builds now warn when `value` is missing/disabled and fallback selection is applied.
 - Keep tab panels mounted and toggle `hidden` so tab `aria-controls` always points to a real panel.
 - Avoid duplicate telemetry from tabs by emitting `onValueChange` only on actual key transitions.
+- Keep tab focus-visible fallback resilient for both `Tab` and `Shift+Tab` keyboard re-entry after pointer interactions so reverse keyboard traversal preserves active-tab focus affordance.
 
 <Canvas of={TabsStories.KeyboardNavigationGuide} />
 <Canvas of={TabsStories.NoLoopNavigation} />
@@ -391,6 +392,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={TabsStories.ManualVerticalActivation} />
 <Canvas of={TabsStories.ImeCompositionGuard} />
 <Canvas of={TabsStories.PrimaryPointerOnlyPressedState} />
+<Canvas of={TabsStories.KeyboardFocusRingShiftTabReentry} />
 <Canvas of={TableStories.ReleaseChecklist} />
 <Canvas of={TableStories.SortTelemetry} />
 <Canvas of={TableStories.RtlArrowNavigation} />
