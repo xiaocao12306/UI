@@ -92,6 +92,75 @@ describe("Button", () => {
     matchesSpy.mockRestore();
   });
 
+  it("tracks keyboard focus intent from ownerDocument when focus-visible fallback is used", () => {
+    render(
+      <div>
+        <button type="button">Before action</button>
+        <Button>Document intent button</Button>
+      </div>
+    );
+
+    const button = screen.getByRole("button", { name: "Document intent button" });
+    const beforeButton = screen.getByRole("button", { name: "Before action" });
+    const matchesSpy = vi.spyOn(button, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(button);
+    expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.blur(button);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(button);
+    expect(button.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+
+    const { getByRole } = render(<Button>Iframe action</Button>, {
+      container: secondaryContainer,
+      baseElement: secondaryDocument.body
+    });
+
+    const button = getByRole("button", { name: "Iframe action" });
+    const matchesSpy = vi.spyOn(button, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(button);
+      expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+      fireEvent.blur(button);
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(button);
+      expect(button.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("supports Space and legacy Spacebar key values for pressed-state feedback", () => {
     render(<Button>Space key aliases</Button>);
     const button = screen.getByRole("button", { name: "Space key aliases" });

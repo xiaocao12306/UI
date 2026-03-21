@@ -116,6 +116,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   },
   ref
 ) {
+  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
   const [hovered, setHovered] = React.useState(false);
   const [pressed, setPressed] = React.useState(false);
   const [focusVisible, setFocusVisible] = React.useState(false);
@@ -150,6 +151,49 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   }, [interactionDisabled]);
 
   React.useEffect(() => {
+    const ownerDocument = buttonRef.current?.ownerDocument ?? document;
+    const markKeyboardIntent = (event: KeyboardEvent) => {
+      if (event.metaKey || event.altKey || event.ctrlKey) {
+        return;
+      }
+      focusVisibleIntentRef.current = true;
+    };
+    const markPointerIntent = (event: Event) => {
+      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+        return;
+      }
+      focusVisibleIntentRef.current = false;
+    };
+
+    ownerDocument.addEventListener("keydown", markKeyboardIntent, true);
+    ownerDocument.addEventListener("pointerdown", markPointerIntent, true);
+    ownerDocument.addEventListener("mousedown", markPointerIntent, true);
+    ownerDocument.addEventListener("touchstart", markPointerIntent, true);
+
+    return () => {
+      ownerDocument.removeEventListener("keydown", markKeyboardIntent, true);
+      ownerDocument.removeEventListener("pointerdown", markPointerIntent, true);
+      ownerDocument.removeEventListener("mousedown", markPointerIntent, true);
+      ownerDocument.removeEventListener("touchstart", markPointerIntent, true);
+    };
+  }, []);
+
+  const setRefs = React.useCallback(
+    (node: HTMLButtonElement | null) => {
+      buttonRef.current = node;
+      if (typeof ref === "function") {
+        ref(node);
+        return;
+      }
+
+      if (ref) {
+        ref.current = node;
+      }
+    },
+    [ref]
+  );
+
+  React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {
       return;
     }
@@ -175,7 +219,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   return (
     <button
       data-aurora-reduced-motion="transition"
-      ref={ref}
+      ref={setRefs}
       type={type ?? "button"}
       disabled={interactionDisabled}
       aria-busy={loading || undefined}

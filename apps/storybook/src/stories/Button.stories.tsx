@@ -157,6 +157,35 @@ export const KeyboardActivation: Story = {
   }
 };
 
+function FocusIntentReentryDemo() {
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 560px)" gap={10}>
+      <p style={storyMutedTextStyle}>
+        Click first, then press <kbd>Tab</kbd> to re-enter and verify button focus-visible
+        fallback.
+      </p>
+      <button type="button">Before button</button>
+      <Button variant="outline">Focus intent target</Button>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const FocusIntentReentry: Story = {
+  render: () => <FocusIntentReentryDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before button" });
+    const target = canvas.getByRole("button", { name: "Focus intent target" });
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(target).toHaveFocus();
+    await waitFor(() => {
+      expect(target.style.boxShadow).toContain("0 0 0 3px");
+    });
+  }
+};
+
 export const PrimaryPointerOnly: Story = {
   render: function RenderPrimaryPointerOnly() {
     const [count, setCount] = React.useState(0);

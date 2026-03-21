@@ -48,6 +48,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep visible labels or accessible names for form controls.
 - For icon-only buttons, provide non-empty `aria-label` or `aria-labelledby` on the button itself; inline child `aria-label` is treated as fallback only, and decorative glyph text should remain `aria-hidden`.
 - Keep button pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); ignore `Ctrl/Meta/Alt` chords so host shortcuts do not flash pressed visuals.
+- Keep button keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Respect OS reduced-motion preferences: keep `GlobalStyles` mounted so surfaces tagged with `data-aurora-reduced-motion` disable shimmer/spin/indeterminate motion (Button loading spinner, Progress indeterminate bar, Skeleton shimmer) under `prefers-reduced-motion`, and keep timer-driven feedback (`LoadingDots`, `StreamingText`) on default `respectReducedMotion` behavior unless the product explicitly requires animated narration.
 - Prefer `FormField` wrappers for helper/error copy so `aria-describedby` and `aria-errormessage` stay in sync.
 - For composite/non-clonable field controls, provide `htmlFor` on `FormField` and a matching control `id`; otherwise label association cannot be inferred.
