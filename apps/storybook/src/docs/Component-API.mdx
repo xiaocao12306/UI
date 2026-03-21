@@ -789,8 +789,10 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `shortcutHint` / `submittingHint` | `ReactNode` | Customizable idle/pending helper copy for localization and product voice alignment. |
 | keyboard metadata | `aria-keyshortcuts="Control+Enter Meta+Enter"` | Prompt textarea exposes submit shortcut hints for QA/AT discoverability. |
 | helper hint binding | `aria-describedby` | Prompt textarea links to live helper copy so screen readers announce current shortcut or pending state guidance. |
+| document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores prompt textarea focus-visible state consistently, including iframe hosts. |
 
 <Canvas of={PromptInputStories.LocalizedCopy} />
+<Canvas of={PromptInputStories.FocusIntentReentry} />
 
 ### MessageBubble
 

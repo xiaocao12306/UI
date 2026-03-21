@@ -232,6 +232,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Guard Ctrl/Cmd + Enter submission against active IME composition, including legacy browsers that only expose `keyCode=229`, to avoid accidental sends for CJK input.
 - Localize prompt input naming and helper copy with `ariaLabel`, `shortcutHint`, and `submittingHint`; keep `aria-keyshortcuts="Control+Enter Meta+Enter"` exposed for shortcut discoverability.
 - Keep prompt helper text bound through `aria-describedby` so assistive tech announces shortcut/pending guidance from the same live hint node.
+- Keep prompt textarea keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Localize message-bubble narration with `speakerLabel` or explicit `ariaLabel`; blank values should be omitted so speaker-based fallback naming remains valid.
 - Localize message semantics with `roleDescription` when product vocabulary differs from plain `message`; blank values should fallback to default role description.
 - Localize reasoning disclosure semantics with `expandLabel`/`collapseLabel` and `listAriaLabel` so assistive-tech narration matches product language.
@@ -243,6 +244,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 
 <Canvas of={PromptInputStories.WithAiRequestState} />
 <Canvas of={PromptInputStories.LocalizedCopy} />
+<Canvas of={PromptInputStories.FocusIntentReentry} />
 <Canvas of={MessageBubbleStories.Conversation} />
 <Canvas of={MessageBubbleStories.LocalizedNaming} />
 <Canvas of={ReasoningPanelStories.Default} />

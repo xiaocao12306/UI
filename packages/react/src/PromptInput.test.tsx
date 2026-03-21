@@ -119,4 +119,86 @@ describe("PromptInput", () => {
     const textbox = screen.getByRole("textbox", { name: "Prompt input" });
     expect(textbox).toHaveAttribute("aria-label", "Prompt input");
   });
+
+  it("tracks keyboard focus-visible intent and clears it only on primary pointer interaction", () => {
+    render(<PromptInput ariaLabel="Focus-visible prompt" />);
+
+    const textbox = screen.getByRole("textbox", { name: "Focus-visible prompt" });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(textbox);
+    expect(textbox).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(textbox, { button: 1 });
+    expect(textbox).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(textbox, { button: 0 });
+    expect(textbox).not.toHaveAttribute("data-focus-visible");
+  });
+
+  it("tracks ownerDocument keyboard focus intent when focus-visible matching is unavailable", () => {
+    render(
+      <div>
+        <button type="button">Before prompt input</button>
+        <PromptInput ariaLabel="Document intent prompt" />
+      </div>
+    );
+
+    const beforeButton = screen.getByRole("button", { name: "Before prompt input" });
+    const textbox = screen.getByRole("textbox", { name: "Document intent prompt" });
+    const matchesSpy = vi.spyOn(textbox, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(textbox);
+    expect(textbox).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(textbox);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(textbox);
+    expect(textbox).not.toHaveAttribute("data-focus-visible");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    const iframeWindow = iframe.contentWindow;
+    if (!iframeDocument || !iframeWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    const { getByRole } = render(<PromptInput ariaLabel="Iframe prompt" />, {
+      container: iframeContainer,
+      baseElement: iframeDocument.body
+    });
+    const textbox = getByRole("textbox", { name: "Iframe prompt" });
+    const matchesSpy = vi.spyOn(textbox, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      iframeDocument.dispatchEvent(
+        new iframeWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(textbox);
+      expect(textbox).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(textbox);
+      iframeDocument.dispatchEvent(
+        new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(textbox);
+      expect(textbox).not.toHaveAttribute("data-focus-visible");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
 });

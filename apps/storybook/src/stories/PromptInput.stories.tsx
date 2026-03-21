@@ -177,3 +177,26 @@ export const MultiActionFeedback: Story = {
     });
   }
 };
+
+export const FocusIntentReentry: Story = {
+  render: () => (
+    <PromptInputShowcase>
+      <p style={promptTelemetryTextStyle}>
+        Click the trigger first, then press Tab to verify keyboard re-entry restores prompt
+        focus-visible state.
+      </p>
+      <button type="button">Before prompt input</button>
+      <PromptInput ariaLabel="Focus intent prompt" />
+    </PromptInputShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before prompt input" });
+    const textbox = canvas.getByRole("textbox", { name: "Focus intent prompt" });
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(textbox).toHaveFocus();
+    await expect(textbox).toHaveAttribute("data-focus-visible", "true");
+  }
+};
