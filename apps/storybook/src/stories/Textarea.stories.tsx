@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Textarea } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Form/Textarea",
@@ -138,6 +138,9 @@ export const FocusIntentReentry: Story = {
     await userEvent.click(beforeButton);
     await userEvent.tab();
     await expect(textarea).toHaveFocus();
+    await expect(textarea).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(textarea, { button: 0, ctrlKey: true });
     await expect(textarea).toHaveAttribute("data-focus-visible", "true");
   }
 };

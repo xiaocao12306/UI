@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Select } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 import { StoryShowcaseFrame, storyMutedTextStyle } from "./storyShowcase";
 
 function SelectShowcase({ children, gap = 10 }: { children: React.ReactNode; gap?: number }) {
@@ -183,6 +183,9 @@ export const FocusIntentReentry: Story = {
     await userEvent.click(beforeButton);
     await userEvent.tab();
     await expect(select).toHaveFocus();
+    await expect(select).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(select, { button: 0, ctrlKey: true });
     await expect(select).toHaveAttribute("data-focus-visible", "true");
   }
 };

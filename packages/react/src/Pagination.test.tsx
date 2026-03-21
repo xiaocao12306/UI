@@ -367,6 +367,13 @@ describe("Pagination", () => {
 
       fireEvent.blur(currentButton);
       iframeDocument.dispatchEvent(
+        new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0, ctrlKey: true })
+      );
+      fireEvent.focus(currentButton);
+      expect(currentButton).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(currentButton);
+      iframeDocument.dispatchEvent(
         new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
       );
       fireEvent.focus(currentButton);

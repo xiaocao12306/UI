@@ -161,6 +161,13 @@ describe("Textarea", () => {
 
       fireEvent.blur(textarea);
       secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0, ctrlKey: true })
+      );
+      fireEvent.focus(textarea);
+      expect(textarea).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(textarea);
+      secondaryDocument.dispatchEvent(
         new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
       );
       fireEvent.focus(textarea);

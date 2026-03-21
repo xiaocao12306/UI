@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Pagination } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Data/Pagination",
@@ -285,6 +285,9 @@ export const FocusIntentReentry: Story = {
     await userEvent.click(beforeButton);
     await userEvent.tab();
     await expect(firstButton).toHaveFocus();
+    await expect(firstButton).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(firstButton, { button: 0, ctrlKey: true });
     await expect(firstButton).toHaveAttribute("data-focus-visible", "true");
   }
 };
