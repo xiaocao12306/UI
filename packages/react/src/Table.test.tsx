@@ -1065,6 +1065,48 @@ describe("Table", () => {
     matchesSpy.mockRestore();
   });
 
+  it("restores sort-button fallback focus ring when re-entering via user Shift+Tab navigation", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <div>
+        <Table
+          columns={[
+            { key: "name", header: "Name", sortable: true },
+            { key: "score", header: "Score", sortable: true }
+          ]}
+          data={[
+            { name: "Dialog", score: 80 },
+            { name: "Button", score: 95 }
+          ]}
+          defaultSortKey="name"
+        />
+        <button type="button">After table</button>
+      </div>
+    );
+
+    const afterButton = screen.getByRole("button", { name: "After table" });
+    const scoreSortButton = screen.getByRole("button", { name: "Score sort ascending" });
+    const nativeMatches = scoreSortButton.matches.bind(scoreSortButton);
+    const matchesSpy = vi.spyOn(scoreSortButton, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        throw new Error("focus-visible is not supported in this environment");
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.mouseDown(scoreSortButton);
+    fireEvent.focus(scoreSortButton);
+    expect(scoreSortButton.style.boxShadow).toBe("none");
+
+    await user.click(afterButton);
+    await user.tab({ shift: true });
+    expect(scoreSortButton).toHaveFocus();
+    expect(scoreSortButton.style.boxShadow).toContain("0 0 0 3px");
+    matchesSpy.mockRestore();
+  });
+
   it("tracks sort-button keyboard focus intent in ownerDocument for cross-document table renders", () => {
     const iframe = document.createElement("iframe");
     document.body.appendChild(iframe);

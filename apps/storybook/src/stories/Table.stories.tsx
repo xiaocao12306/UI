@@ -241,6 +241,32 @@ export const KeyboardFocusRingAfterPointer: Story = {
   }
 };
 
+export const KeyboardFocusRingShiftTabReentry: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
+      <p style={storyMutedTextStyle}>
+        Sort button hides focus ring on pointer focus, then reverse keyboard navigation
+        (Shift+Tab) restores focus-visible ring for the sortable header.
+      </p>
+      <Table columns={columns} data={rows} defaultSortKey="id" />
+      <button type="button">After table</button>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const statusSortButton = canvas.getByRole("button", { name: "Status sort ascending" });
+    const afterButton = canvas.getByRole("button", { name: "After table" });
+
+    fireEvent.mouseDown(statusSortButton);
+    statusSortButton.focus();
+
+    await userEvent.click(afterButton);
+    await userEvent.tab({ shift: true });
+    await expect(statusSortButton).toHaveFocus();
+    await expect(statusSortButton.style.boxShadow).toContain("0 0 0 3px");
+  }
+};
+
 export const LoadingState: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 780px)">
