@@ -1917,7 +1917,7 @@ test("keeps popover open when Escape is dispatched during IME composition", asyn
   await expect(popover).toBeHidden();
 });
 
-test("reports popover close reason telemetry for trigger, Escape, and outside pointer", async ({
+test("reports popover close reason telemetry for trigger, Escape, outside pointer, and Tab boundary dismiss", async ({
   page
 }) => {
   await page.goto("/");
@@ -1940,6 +1940,13 @@ test("reports popover close reason telemetry for trigger, Escape, and outside po
   await outsideTarget.click();
   await expect(telemetry).toHaveText("outside-pointer");
   await expect(traceTelemetry).toHaveText("reason:outside-pointer -> open:false");
+
+  await trigger.click();
+  await expect(page.getByRole("dialog", { name: "Popover content" })).toBeVisible();
+  await page.keyboard.press("Tab");
+  await expect(telemetry).toHaveText("tab-key");
+  await expect(traceTelemetry).toHaveText("reason:tab-key -> open:false");
+  await expect(page.getByRole("button", { name: "Actions" })).toBeFocused();
 
   await trigger.click();
   await trigger.click();
@@ -2249,6 +2256,22 @@ test("tabs out of dropdown menu and moves focus to next control", async ({ page 
   await page.keyboard.press("Tab");
   await expect(page.getByRole("menu")).toBeHidden();
   await expect(nextButton).toBeFocused();
+});
+
+test("shift-tabs out of popover boundary and moves focus to previous launcher", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Open Popover" });
+  const previousButton = page.getByRole("button", { name: "Hover me" });
+  const popover = page.getByRole("dialog", { name: "Popover content" });
+
+  await trigger.focus();
+  await trigger.press("Enter");
+  await expect(popover).toBeVisible();
+
+  await page.keyboard.press("Shift+Tab");
+  await expect(popover).toBeHidden();
+  await expect(previousButton).toBeFocused();
 });
 
 test("shift-tabs out of dropdown menu and moves focus to previous control", async ({ page }) => {
