@@ -26,11 +26,12 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const toggle = await canvas.findByRole("button", { name: /Model reasoning/ });
+    const toggle = await canvas.findByRole("button", { name: "Expand reasoning panel" });
 
     await expect(toggle).toHaveAttribute("aria-expanded", "false");
     await userEvent.click(toggle);
     await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(toggle).toHaveAttribute("aria-label", "Collapse reasoning panel");
     await expect(canvas.getByText("Understand release scope")).toBeInTheDocument();
   }
 };
@@ -44,5 +45,23 @@ export const OpenByDefault: Story = {
 export const EmptyFallback: Story = {
   args: {
     steps: []
+  }
+};
+
+export const LocalizedLabels: Story = {
+  args: {
+    title: "推理过程",
+    steps: ["收集上下文", "梳理约束", "输出执行计划"],
+    expandLabel: "展开推理面板",
+    collapseLabel: "收起推理面板",
+    listAriaLabel: "推理步骤",
+    emptyText: "暂无推理步骤。"
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toggle = await canvas.findByRole("button", { name: "展开推理面板" });
+    await userEvent.click(toggle);
+    await expect(canvas.getByRole("button", { name: "收起推理面板" })).toHaveAttribute("aria-expanded", "true");
+    await expect(canvas.getByRole("list", { name: "推理步骤" })).toBeInTheDocument();
   }
 };

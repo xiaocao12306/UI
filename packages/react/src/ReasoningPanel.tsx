@@ -4,11 +4,26 @@ export type ReasoningPanelProps = {
   title?: React.ReactNode;
   steps: string[];
   defaultOpen?: boolean;
+  expandLabel?: string;
+  collapseLabel?: string;
+  emptyText?: React.ReactNode;
+  listAriaLabel?: string;
 };
 
-export function ReasoningPanel({ title = "Model reasoning", steps, defaultOpen = false }: ReasoningPanelProps) {
+export function ReasoningPanel({
+  title = "Model reasoning",
+  steps,
+  defaultOpen = false,
+  expandLabel = "Expand reasoning panel",
+  collapseLabel = "Collapse reasoning panel",
+  emptyText = "No reasoning steps captured.",
+  listAriaLabel = "Reasoning steps"
+}: ReasoningPanelProps) {
   const [open, setOpen] = React.useState(defaultOpen);
   const panelId = React.useId();
+  const resolvedExpandLabel = resolveNonEmptyLabel(expandLabel) ?? "Expand reasoning panel";
+  const resolvedCollapseLabel = resolveNonEmptyLabel(collapseLabel) ?? "Collapse reasoning panel";
+  const resolvedListAriaLabel = resolveNonEmptyLabel(listAriaLabel) ?? "Reasoning steps";
 
   return (
     <section
@@ -24,6 +39,7 @@ export function ReasoningPanel({ title = "Model reasoning", steps, defaultOpen =
         onClick={() => setOpen((prev) => !prev)}
         aria-expanded={open}
         aria-controls={panelId}
+        aria-label={open ? resolvedCollapseLabel : resolvedExpandLabel}
         style={{
           width: "100%",
           height: 38,
@@ -36,20 +52,32 @@ export function ReasoningPanel({ title = "Model reasoning", steps, defaultOpen =
           cursor: "pointer"
         }}
       >
-        {open ? "▼" : "▶"} {title}
+        <span aria-hidden="true" style={{ marginRight: 8 }}>
+          {open ? "▼" : "▶"}
+        </span>
+        <span>{title}</span>
       </button>
       {open ? (
         <ol
           id={panelId}
+          aria-label={resolvedListAriaLabel}
           style={{ margin: 0, padding: "0 12px 12px 28px", color: "var(--aurora-text-secondary)", display: "grid", gap: 8 }}
         >
           {steps.length > 0 ? (
             steps.map((step, index) => <li key={`${index}-${step}`}>{step}</li>)
           ) : (
-            <li>No reasoning steps captured.</li>
+            <li>{emptyText}</li>
           )}
         </ol>
       ) : null}
     </section>
   );
+}
+
+function resolveNonEmptyLabel(value: string | undefined) {
+  if (typeof value === "string" && value.trim().length > 0) {
+    return value.trim();
+  }
+
+  return undefined;
 }

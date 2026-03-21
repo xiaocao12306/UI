@@ -6,24 +6,53 @@ describe("ReasoningPanel", () => {
   it("toggles open state and exposes aria-expanded", () => {
     render(<ReasoningPanel steps={["Gather requirements", "Draft API contract"]} />);
 
-    const toggle = screen.getByRole("button", { name: "▶ Model reasoning" });
+    const toggle = screen.getByRole("button", { name: "Expand reasoning panel" });
     expect(toggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByRole("list")).toBeNull();
 
     fireEvent.click(toggle);
     expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(toggle).toHaveAttribute("aria-label", "Collapse reasoning panel");
     expect(screen.getByRole("list")).toBeInTheDocument();
     expect(screen.getByText("Gather requirements")).toBeInTheDocument();
 
     fireEvent.click(toggle);
     expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveAttribute("aria-label", "Expand reasoning panel");
     expect(screen.queryByRole("list")).toBeNull();
   });
 
   it("supports defaultOpen and empty-state fallback", () => {
     render(<ReasoningPanel title="Reasoning trace" defaultOpen steps={[]} />);
 
-    expect(screen.getByRole("button", { name: "▼ Reasoning trace" })).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("button", { name: "Collapse reasoning panel" })).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText("No reasoning steps captured.")).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "Reasoning steps" })).toBeInTheDocument();
+  });
+
+  it("supports localized toggle and list labels", () => {
+    render(
+      <ReasoningPanel
+        title="推理过程"
+        steps={["收集上下文", "整理变更点"]}
+        expandLabel="展开推理面板"
+        collapseLabel="收起推理面板"
+        listAriaLabel="推理步骤"
+      />
+    );
+
+    const toggle = screen.getByRole("button", { name: "展开推理面板" });
+    fireEvent.click(toggle);
+    expect(screen.getByRole("button", { name: "收起推理面板" })).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("list", { name: "推理步骤" })).toBeInTheDocument();
+  });
+
+  it("falls back to default labels when localization props are blank", () => {
+    render(<ReasoningPanel steps={[]} expandLabel="   " collapseLabel="   " listAriaLabel="   " />);
+
+    const toggle = screen.getByRole("button", { name: "Expand reasoning panel" });
+    fireEvent.click(toggle);
+    expect(screen.getByRole("button", { name: "Collapse reasoning panel" })).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "Reasoning steps" })).toBeInTheDocument();
   });
 });

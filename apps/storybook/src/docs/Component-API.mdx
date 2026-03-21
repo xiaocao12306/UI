@@ -793,6 +793,11 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `title` | `ReactNode` | Toggle trigger title. |
 | `steps` | `string[]` | Ordered reasoning steps; empty arrays show fallback state. |
 | `defaultOpen` | `boolean` | Initial expanded state for diagnostics-oriented views. |
+| `expandLabel` / `collapseLabel` | `string` | Localizable button accessible labels for collapsed/expanded states; blank values fallback to default English labels. |
+| `listAriaLabel` | `string` | Accessible name for the reasoning list region; blank values fallback to `Reasoning steps`. |
+| `emptyText` | `ReactNode` | Empty-state copy when no reasoning steps are present. |
+
+<Canvas of={ReasoningPanelStories.LocalizedLabels} />
 
 ### StreamingCodeBlock
 
