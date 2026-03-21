@@ -764,6 +764,7 @@
   - Demo Shift 键盘激活验收补齐（2026-03-21 latest+79：新增 Playwright 回归覆盖 `Shift + Enter` 激活 manual Tabs 与 `Shift + Enter/Space` 激活 Table 排序，锁定 Demo 真实路径与组件单测/Storybook 语义一致；复验 `pnpm demo:e2e:grep \"keeps manual tabs panel stable until Shift|sorts demo table with Shift-modified keyboard activation|sorts demo table with keyboard activation|keeps manual tabs panel stable until Enter activation\"` 通过（`3/3`）并单测 `Shift+Enter` 用例通过（`1/1`））
   - Storybook Toast 关闭原因交互稳定性收口（2026-03-21 latest+80：`CloseReasonTelemetry` 改为聚焦 toast 后走真实键盘路径并使用 `waitFor` 断言，修复全量 runner 下偶发读到旧 `close-button` 状态的竞态；同步 `apps/storybook/storybook-static` 后复验 `pnpm storybook:test:ci` 全链路通过（coverage/docs/parity/structure/play/static/a11y gate + interaction `228/228`））
   - Release Gate 证据刷新（2026-03-21 latest+81：完成 Toast 关闭原因 Story 稳定性修复并同步 Storybook 静态产物后，重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`43 files / 629 tests`）+ demo e2e `98/98` + storybook interaction `228/228`）
+  - Release Dry-Run 证据刷新（2026-03-21 latest+82：重跑 `pnpm release:dry-run` 并确认发布包产物可发布，`@aurora-ui/react` `79.1 kB / 487.9 kB`、`@aurora-ui/primitives` `15.0 kB / 74.5 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
