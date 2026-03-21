@@ -139,7 +139,7 @@ export const CloseButtonKeyboardPressedState: Story = {
       <Alert
         tone="warning"
         title="Pending action"
-        description="Close button should expose pressed-state feedback only for unmodified Enter/Space."
+        description="Close button should expose pressed-state feedback only for unmodified Enter/Space, and ignore IME composition keys."
         onClose={() => {}}
         closeLabel="Pressed-state dismiss"
       />
@@ -153,6 +153,10 @@ export const CloseButtonKeyboardPressedState: Story = {
     await expect(closeButton).toHaveFocus();
     await expect(closeButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });
+    await expect(closeButton).not.toHaveAttribute("data-pressed");
+    fireEvent.keyDown(closeButton, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    await expect(closeButton).not.toHaveAttribute("data-pressed");
+    fireEvent.keyDown(closeButton, { key: "Enter", keyCode: 229, which: 229 });
     await expect(closeButton).not.toHaveAttribute("data-pressed");
   }
 };

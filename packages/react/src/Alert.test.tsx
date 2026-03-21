@@ -163,6 +163,12 @@ describe("Alert", () => {
     expect(closeButton).toHaveAttribute("data-pressed", "true");
     fireEvent.keyUp(closeButton, { key: "Spacebar" });
     expect(closeButton).not.toHaveAttribute("data-pressed");
+
+    fireEvent.keyDown(closeButton, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    expect(closeButton).not.toHaveAttribute("data-pressed");
+
+    fireEvent.keyDown(closeButton, { key: "Enter", keyCode: 229, which: 229 });
+    expect(closeButton).not.toHaveAttribute("data-pressed");
   });
 
   it("ignores Ctrl/Meta/Alt-modified close-button activation keys for pressed-state feedback", () => {

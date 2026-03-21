@@ -175,6 +175,9 @@ export function Alert({
             }}
             onKeyDown={(event) => {
               focusVisibleIntentRef.current = true;
+              if (isComposingAlertActivationEvent(event)) {
+                return;
+              }
               if ((event.ctrlKey || event.metaKey || event.altKey) && isAlertActivationKey(event.key)) {
                 return;
               }
@@ -219,6 +222,15 @@ export function Alert({
 
 function isAlertActivationKey(key: string) {
   return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
+}
+
+function isComposingAlertActivationEvent(event: React.KeyboardEvent<HTMLButtonElement>) {
+  const nativeEvent = event.nativeEvent;
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }
 
 function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {
