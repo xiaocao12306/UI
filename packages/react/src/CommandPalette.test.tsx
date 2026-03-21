@@ -1635,6 +1635,25 @@ describe("CommandPalette", () => {
     expect(onDeploy).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
 
+    const legacyArrowDownEvent = new KeyboardEvent("keydown", {
+      key: "ArrowDown",
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(legacyArrowDownEvent, "keyCode", { value: 229 });
+    input.dispatchEvent(legacyArrowDownEvent);
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    const legacyEnterEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(legacyEnterEvent, "keyCode", { value: 229 });
+    input.dispatchEvent(legacyEnterEvent);
+    expect(onDeploy).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+
     fireEvent.keyDown(input, { key: "ArrowDown" });
     fireEvent.keyDown(input, { key: "Enter" });
     expect(onDeploy).toHaveBeenCalledTimes(1);
@@ -1664,6 +1683,18 @@ describe("CommandPalette", () => {
     expect(input).toHaveValue("deploy");
 
     fireEvent.keyDown(input, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    expect(input).toHaveValue("deploy");
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    const legacyEscapeEvent = new KeyboardEvent("keydown", {
+      key: "Escape",
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(legacyEscapeEvent, "keyCode", { value: 229 });
+    input.dispatchEvent(legacyEscapeEvent);
     expect(input).toHaveValue("deploy");
     expect(onEscapeKeyDown).not.toHaveBeenCalled();
     expect(onCloseReason).not.toHaveBeenCalled();

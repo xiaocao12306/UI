@@ -710,7 +710,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | long-list keyboard jump | `PageUp` / `PageDown` | Page keys jump by 5 actionable commands while skipping disabled options, reducing Arrow-key repetition in dense command sets. |
 | modifier-key guard | ignores `Ctrl/Meta/Alt + ArrowDown/ArrowUp/Home/End/Page/Enter/Escape` command handling | Preserves native input editing shortcuts and avoids hijacking app-level modified key flows during search/dismiss; `Shift + Escape` remains available for query-clear/dismiss progression. |
 | search matching | accent-insensitive + lowercase normalization | Plain query text like `cafe` can match `Café` labels/aliases. |
-| IME safety | composition key guard | Arrow/Enter command handling and query-clearing Escape behavior are ignored while `isComposing` (or legacy `keyCode=229`) so CJK composition confirmation does not execute commands or clear active query. |
+| IME safety | composition key guard | Arrow/Enter command handling and query-clearing Escape behavior are ignored while `isComposing` and legacy fallback paths that only expose `keyCode=229`, so CJK composition confirmation does not execute commands or clear active query. |
 | Escape priority | preempted events skip palette hook/dismiss | If higher-level handlers already `preventDefault()` Escape, palette keeps dialog open and does not fire `onEscapeKeyDown`. |
 
 <Canvas of={CommandPaletteStories.QueryTelemetry} />

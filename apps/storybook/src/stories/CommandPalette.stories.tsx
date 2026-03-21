@@ -39,6 +39,16 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+function dispatchLegacyImeKeyDown(element: HTMLElement, key: string) {
+  const event = new KeyboardEvent("keydown", {
+    key,
+    bubbles: true,
+    cancelable: true
+  });
+  Object.defineProperty(event, "keyCode", { value: 229 });
+  element.dispatchEvent(event);
+}
+
 function OpenPalette() {
   const [open, setOpen] = React.useState(true);
   return (
@@ -1326,6 +1336,9 @@ export const ImeCompositionGuard: Story = {
     fireEvent.keyDown(input, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
     fireEvent.keyDown(input, { key: "ArrowDown", isComposing: true, keyCode: 229, which: 229 });
     fireEvent.keyDown(input, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    dispatchLegacyImeKeyDown(input, "Escape");
+    dispatchLegacyImeKeyDown(input, "ArrowDown");
+    dispatchLegacyImeKeyDown(input, "Enter");
     await expect(canvas.getByTestId("ime-selection-count")).toHaveTextContent("0");
     await expect(canvas.getByTestId("ime-query-value")).toHaveTextContent("deploy");
     await expect(canvas.getByTestId("ime-open-state")).toHaveTextContent("open");

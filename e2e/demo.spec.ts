@@ -717,6 +717,36 @@ test("ignores command palette navigation and selection keys during IME compositi
   await expect(page.getByRole("dialog", { name: "Dialog Example" })).toBeVisible();
 });
 
+test("ignores command palette navigation and selection when only legacy IME keyCode is present", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  const searchInput = palette.getByRole("combobox", { name: "Search commands" });
+
+  await expect(palette).toBeVisible();
+  const activeBefore = await searchInput.getAttribute("aria-activedescendant");
+
+  await searchInput.evaluate((element) => {
+    const arrowEvent = new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true, cancelable: true });
+    Object.defineProperty(arrowEvent, "keyCode", { value: 229 });
+    element.dispatchEvent(arrowEvent);
+
+    const enterEvent = new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true });
+    Object.defineProperty(enterEvent, "keyCode", { value: 229 });
+    element.dispatchEvent(enterEvent);
+  });
+  await expect(searchInput).toHaveAttribute("aria-activedescendant", activeBefore ?? "");
+  await expect(palette).toBeVisible();
+
+  await searchInput.press("ArrowDown");
+  await searchInput.press("Enter");
+  await expect(palette).toBeHidden();
+  await expect(page.getByRole("dialog", { name: "Dialog Example" })).toBeVisible();
+});
+
 test("keeps command palette navigation stable for modified arrow/page shortcuts", async ({
   page
 }) => {
