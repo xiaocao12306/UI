@@ -168,7 +168,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep field/button focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible rings before actual activation intent.
 - Keep dialog/drawer close-button focus intent owner-document aware so keyboard re-entry (Tab from neighboring controls, including iframe hosts) restores focus-visible fallback when `:focus-visible` matching is unavailable.
 - Keep dialog/drawer close-button focus intent fallback scoped to unmodified owner-document keydown only; ignore `Ctrl/Meta/Alt + key` chords so host shortcuts do not falsely restore keyboard focus-visible rings.
-- Keep dialog/drawer close-button owner-document pointer intent primary-only; non-primary pointer buttons (for example right/middle click) should not clear fallback keyboard focus intent.
+- Keep dialog/drawer close-button owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - Keep dialog/drawer close buttons visually state-complete (`hover`/`focus-visible`/`active`) so overlay dismissal affordances match the rest of the component system.
 - Command palette and combobox-style overlays should keep text input as the primary focus anchor for navigation.
 
@@ -324,8 +324,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep toast close-button focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible feedback.
 - Keep toast close-button keyboard pressed-state feedback scoped to unmodified non-repeat activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); keep `aria-keyshortcuts="Enter Space"` visible for AT/QA discoverability, and ensure `event.repeat`, `Ctrl/Meta/Alt` chords, plus IME composition key paths (`isComposing` / `keyCode=229`) do not trigger pressed visuals.
 - Keep toast close-button keyboard-intent tracking document-scoped (including iframe hosts) so keyboard re-entry after pointer interactions restores focus-visible fallback consistently.
-- Keep toast close-button owner-document pointer intent primary-only; non-primary pointer buttons (for example right/middle click) should not clear fallback keyboard focus intent.
-- Keep toast close-button owner-document pointer intent primary-only; non-primary pointer buttons (for example right/middle click) should not clear fallback keyboard focus intent.
+- Keep toast close-button owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - Keep alert close-button keyboard-intent tracking document-scoped so keyboard re-entry after pointer interactions restores focus-visible fallback consistently.
 - Keep alert close-button keyboard pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); keep `aria-keyshortcuts="Enter Space"` visible for AT/QA discoverability, and ensure `Ctrl/Meta/Alt` chords plus IME composition key paths (`isComposing` / `keyCode=229`) do not trigger pressed visuals.
 - For toast titles without readable text, provide `ariaLabel`; rich title nodes that expose inline `aria-label` are auto-detected, and development builds warn only when both are missing.
@@ -374,7 +373,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep sortable-header pressed-state feedback active during keyboard `Enter/Space` key hold (and clear on keyup) so non-pointer activation has equivalent active affordance.
 - Keep sortable-header focus-visible fallback resilient for both `Tab` and `Shift+Tab` keyboard re-entry after pointer interactions so reverse keyboard traversal preserves header focus affordance.
 - Keep tab and sortable-header focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible rings.
-- Keep tab and sortable-header owner-document pointer intent primary-only; non-primary pointer buttons (for example right/middle click) should not clear fallback keyboard focus intent.
+- Keep tab and sortable-header owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - For iframe/multi-document hosts, keep tab/sort focus-intent tracking bound to each component `ownerDocument` so keyboard focus-visible semantics remain stable outside the top-level document.
 - When sortable headers have no readable text (for example icon-only markup), provide `columns[].sortLabel` so aria labels and live narration stay human-readable; rich headers with visible text or inline `aria-label` are auto-extracted.
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.

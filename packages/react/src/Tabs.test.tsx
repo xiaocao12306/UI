@@ -1401,6 +1401,11 @@ describe("Tabs", () => {
     expect(oneTab.style.boxShadow).toContain("0 0 0 3px");
 
     fireEvent.blur(oneTab);
+    fireEvent.mouseDown(document.body, { button: 0, ctrlKey: true });
+    fireEvent.focus(oneTab);
+    expect(oneTab.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.blur(oneTab);
     fireEvent.mouseDown(document.body, { button: 0 });
     fireEvent.focus(oneTab);
     expect(oneTab.style.boxShadow).toBe("none");

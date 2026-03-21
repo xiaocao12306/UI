@@ -1089,6 +1089,11 @@ describe("Table", () => {
     expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
 
     fireEvent.blur(sortButton);
+    fireEvent.mouseDown(document.body, { button: 0, ctrlKey: true });
+    fireEvent.focus(sortButton);
+    expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.blur(sortButton);
     fireEvent.mouseDown(document.body, { button: 0 });
     fireEvent.focus(sortButton);
     expect(sortButton.style.boxShadow).toBe("none");
