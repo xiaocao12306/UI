@@ -299,6 +299,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | close lifecycle order | `onCloseReason -> onOpenChange(false)` | Close-button/Escape/outside-pointer paths use deterministic callback order for telemetry and reducer side effects. |
 | dismiss-event preemption | handled Escape/outside-pointer calls `event.preventDefault()` | Dialog consumes handled dismiss events so downstream global handlers can detect preempted dismiss intent (`defaultPrevented=true`) and avoid duplicate close side effects. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer down keeps keyboard-intent ring state to avoid accidental ring loss during context/right-click interactions. |
+| document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from a preceding control) still restores dialog close-button focus-visible state consistently, including iframe hosts. |
 | dismiss key hints | `aria-keyshortcuts="Escape"` when `closeOnEscape` is enabled | Dialog surface exposes Escape shortcut metadata for QA/AT discoverability only when Escape dismiss is actionable; disabled Escape policy omits the hint. |
 | close-button pressed feedback | primary pointer + unmodified `Enter`/`Space` (+ `Space` / legacy `Spacebar` key values) + `aria-keyshortcuts="Enter Space"` | Close button exposes pressed offset/background on primary pointer down and keyboard activation key hold with explicit shortcut hints; `Ctrl/Meta/Alt` chords are ignored so host shortcuts do not flash pressed visuals. |
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside dialog | Modal focus scope keeps keyboard focus inside dialog controls while open. |
@@ -313,6 +314,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={DialogStories.DismissGuardHooks} />
 <Canvas of={DialogStories.CloseReasonTelemetry} />
 <Canvas of={DialogStories.FocusTrapKeyboardCycle} />
+<Canvas of={DialogStories.FocusIntentReentry} />
 <Canvas of={DialogStories.CloseButtonKeyboardPressedState} />
 <Canvas of={DialogStories.EscapeIgnoresImeComposition} />
 <Canvas of={DialogStories.EscapePreemptedByGlobalHandler} />

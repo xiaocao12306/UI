@@ -194,6 +194,42 @@ export const FocusIntentPrimaryPointerOnly: Story = {
   }
 };
 
+function FocusIntentReentryDialog() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryShowcaseFrame gap={12}>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Focus intent re-entry dialog"
+        closeLabel="Focus intent close dialog"
+      >
+        <p style={storyParagraphStyle}>
+          Click the in-dialog action first, then Tab to verify owner-document keyboard intent restores close-button focus ring.
+        </p>
+        <button type="button">Dialog content action</button>
+      </Dialog>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const FocusIntentReentry: Story = {
+  render: () => <FocusIntentReentryDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const dialogAction = await body.findByRole("button", { name: "Dialog content action" });
+    const closeButton = await body.findByRole("button", { name: "Focus intent close dialog" });
+
+    await userEvent.click(dialogAction);
+    await expect(dialogAction).toHaveFocus();
+
+    await userEvent.tab();
+    await expect(closeButton).toHaveFocus();
+    await expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+  }
+};
+
 function CloseButtonKeyboardPressedDialog() {
   const [open, setOpen] = React.useState(true);
 
