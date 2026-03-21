@@ -589,8 +589,19 @@ export function Toast({
             }
             setCloseButtonPressed(false);
           }}
-          onKeyDown={() => {
+          onKeyDown={(event) => {
             closeButtonFocusIntentRef.current = true;
+            if (
+              isToastCloseButtonActivationKey(event.key) &&
+              !isModifiedToastCloseButtonActivationChord(event)
+            ) {
+              setCloseButtonPressed(true);
+            }
+          }}
+          onKeyUp={(event) => {
+            if (isToastCloseButtonActivationKey(event.key)) {
+              setCloseButtonPressed(false);
+            }
           }}
           onFocus={(event) => {
             setCloseButtonFocusVisible(resolveFocusVisibleState(event.currentTarget, closeButtonFocusIntentRef.current));
@@ -641,6 +652,14 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
   } catch {
     return fallback;
   }
+}
+
+function isToastCloseButtonActivationKey(key: string) {
+  return key === "Enter" || key === " " || key === "Spacebar";
+}
+
+function isModifiedToastCloseButtonActivationChord(event: React.KeyboardEvent<HTMLButtonElement>) {
+  return event.ctrlKey || event.metaKey || event.altKey;
 }
 
 function hasReadableTextNode(node: React.ReactNode): boolean {

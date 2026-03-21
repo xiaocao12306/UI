@@ -144,6 +144,54 @@ export const CloseButtonPrimaryPointerOnly: Story = {
   }
 };
 
+function CloseButtonKeyboardPressedStateDemo() {
+  return (
+    <ToastShowcase align="start">
+      <Toast
+        open
+        onOpenChange={() => {}}
+        duration={0}
+        title="Keyboard pressed close affordance"
+        description="Close button should expose pressed-state feedback for unmodified Enter/Space only."
+        tone="info"
+      />
+    </ToastShowcase>
+  );
+}
+
+export const CloseButtonKeyboardPressedState: Story = {
+  render: () => <CloseButtonKeyboardPressedStateDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const closeButton = canvas.getByRole("button", { name: "Close toast" });
+
+    closeButton.focus();
+    fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+    fireEvent.keyUp(closeButton, { key: "Enter", ctrlKey: true });
+
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(1px)");
+    });
+    fireEvent.keyUp(closeButton, { key: "Enter" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+
+    fireEvent.keyDown(closeButton, { key: "Spacebar" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(1px)");
+    });
+    fireEvent.keyUp(closeButton, { key: "Spacebar" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+  }
+};
+
 function ActionRequiredToastDemo() {
   const [open, setOpen] = React.useState(true);
 

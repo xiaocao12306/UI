@@ -1123,6 +1123,27 @@ describe("Toast", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 
+  it("applies pressed transform for unmodified keyboard activation keys and ignores modified chords", () => {
+    render(<Toast open title="Keyboard pressable" duration={0} />);
+
+    const closeButton = screen.getByRole("button", { name: "Close toast" });
+
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.keyUp(closeButton, { key: "Enter" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+    fireEvent.keyUp(closeButton, { key: "Enter", ctrlKey: true });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.keyDown(closeButton, { key: "Spacebar" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.keyUp(closeButton, { key: "Spacebar" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+  });
+
   it("applies close-button hover visuals and keyboard-intended focus fallback when focus-visible is unavailable", () => {
     render(<Toast open title="Hover + fallback" duration={0} />);
 
