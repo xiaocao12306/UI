@@ -47,7 +47,7 @@ describe("Alert", () => {
     expect(screen.getByRole("status")).not.toHaveAttribute("aria-label");
   });
 
-  it("tracks keyboard focus-visible intent and clears it only on primary pointer interaction", () => {
+  it("tracks keyboard focus-visible intent and clears it only on plain primary pointer interaction", () => {
     render(<Alert title="Notice" onClose={() => {}} closeLabel="Focus-visible dismiss" />);
 
     const closeButton = screen.getByRole("button", { name: "Focus-visible dismiss" });
@@ -56,6 +56,9 @@ describe("Alert", () => {
     expect(closeButton).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(closeButton, { button: 1 });
+    expect(closeButton).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(closeButton, { button: 0, ctrlKey: true });
     expect(closeButton).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(closeButton, { button: 0 });
@@ -126,6 +129,13 @@ describe("Alert", () => {
     try {
       iframeDocument.dispatchEvent(
         new iframeWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(closeButton);
+      expect(closeButton).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(closeButton);
+      iframeDocument.dispatchEvent(
+        new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0, ctrlKey: true })
       );
       fireEvent.focus(closeButton);
       expect(closeButton).toHaveAttribute("data-focus-visible", "true");
