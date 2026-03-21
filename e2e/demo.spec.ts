@@ -799,6 +799,21 @@ test("highlights active section in anchor nav", async ({ page }) => {
   await expect(statesLink).toHaveAttribute("aria-current", "location");
 });
 
+test("keeps active section telemetry unchanged for modified section-nav clicks", async ({ page }) => {
+  await page.goto("/");
+
+  const activeSectionStatus = page.getByTestId("active-section-status");
+  const baselineStatus = (await activeSectionStatus.textContent())?.trim();
+  expect(baselineStatus).toBeTruthy();
+
+  const statesLink = page.getByRole("link", { name: "Feedback & States", exact: true });
+  await statesLink.evaluate((node) => {
+    node.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, ctrlKey: true, button: 0 }));
+  });
+
+  await expect(activeSectionStatus).toHaveText(baselineStatus!);
+});
+
 test("announces current active section after section navigation actions", async ({ page }) => {
   await page.goto("/");
 
@@ -818,6 +833,23 @@ test("announces current active section after section navigation actions", async 
   await overlaysCardLink.click();
   await expect(activeSectionStatus).toHaveText("Current section: Overlays & Navigation");
   await expect(activeSectionPill).toHaveText("Viewing: Overlays & Navigation");
+});
+
+test("keeps hero-card telemetry unchanged for modified clicks", async ({ page }) => {
+  await page.goto("/");
+
+  const activeSectionStatus = page.getByTestId("active-section-status");
+  const baselineStatus = (await activeSectionStatus.textContent())?.trim();
+  expect(baselineStatus).toBeTruthy();
+
+  const overlaysCardLink = page.getByRole("link", {
+    name: "Jump to Overlays and Navigation section"
+  });
+  await overlaysCardLink.evaluate((node) => {
+    node.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, metaKey: true, button: 0 }));
+  });
+
+  await expect(activeSectionStatus).toHaveText(baselineStatus!);
 });
 
 test("navigates to target sections from hero stat cards", async ({ page }) => {

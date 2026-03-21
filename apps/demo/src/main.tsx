@@ -287,6 +287,27 @@ const telemetryValueStyle: React.CSSProperties = {
   fontWeight: "var(--aurora-font-weight-medium)"
 };
 
+function shouldSyncSectionStateFromClick(event: React.MouseEvent<HTMLAnchorElement>) {
+  if (event.defaultPrevented || event.button !== 0) {
+    return false;
+  }
+
+  if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
+    return false;
+  }
+
+  const target = event.currentTarget.getAttribute("target");
+  if (target && target !== "_self") {
+    return false;
+  }
+
+  if (event.currentTarget.hasAttribute("download")) {
+    return false;
+  }
+
+  return true;
+}
+
 function Section({
   id,
   title,
@@ -353,7 +374,7 @@ function SectionNavLink({
   id: string;
   label: string;
   active: boolean;
-  onNavigate: () => void;
+  onNavigate: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }) {
   return (
     <a
@@ -380,7 +401,7 @@ function HeroStatCard({
   targetId: string;
   targetLabel: string;
   active: boolean;
-  onNavigate: (targetId: string) => void;
+  onNavigate: (targetId: string, event: React.MouseEvent<HTMLAnchorElement>) => void;
   label: string;
   value: string;
   description: string;
@@ -391,8 +412,8 @@ function HeroStatCard({
       href={`#${targetId}`}
       aria-label={`Jump to ${targetLabel} section`}
       aria-current={active ? "location" : undefined}
-      onClick={() => {
-        onNavigate(targetId);
+      onClick={(event) => {
+        onNavigate(targetId, event);
       }}
       style={{
         ...heroStatCardStyle,
@@ -480,6 +501,17 @@ function App() {
   const tableRows = tableEmpty ? [] : readinessRows;
   const activeSectionLabel =
     sectionLinks.find((section) => section.id === activeSection)?.label ?? sectionLinks[0].label;
+  const handleSectionNavigationIntent = React.useCallback(
+    (targetId: string, event: React.MouseEvent<HTMLAnchorElement>) => {
+      if (!shouldSyncSectionStateFromClick(event)) {
+        event.preventDefault();
+        return;
+      }
+
+      setActiveSection(targetId);
+    },
+    []
+  );
 
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -746,7 +778,7 @@ function App() {
                 targetId="basic-components"
                 targetLabel="Basic Components"
                 active={activeSection === "basic-components"}
-                onNavigate={setActiveSection}
+                onNavigate={handleSectionNavigationIntent}
                 label="Quality Gate"
                 value="Production confidence"
                 description="Core controls and forms with production-grade interaction and a11y defaults."
@@ -755,7 +787,7 @@ function App() {
                 targetId="overlays-navigation"
                 targetLabel="Overlays and Navigation"
                 active={activeSection === "overlays-navigation"}
-                onNavigate={setActiveSection}
+                onNavigate={handleSectionNavigationIntent}
                 label="Active Workstream"
                 value="Production Refinement"
                 description="Overlay close policy, focus flow, and telemetry consistency across dismissal paths."
@@ -764,7 +796,7 @@ function App() {
                 targetId="feedback-states"
                 targetLabel="Feedback and States"
                 active={activeSection === "feedback-states"}
-                onNavigate={setActiveSection}
+                onNavigate={handleSectionNavigationIntent}
                 label="Theme Pack"
                 value={theme}
                 description="Token-first surface, accent, and typography language across all feedback states."
@@ -781,7 +813,14 @@ function App() {
                     id={item.id}
                     label={item.label}
                     active={activeSection === item.id}
-                    onNavigate={() => setActiveSection(item.id)}
+                    onNavigate={(event) => {
+                      if (!shouldSyncSectionStateFromClick(event)) {
+                        event.preventDefault();
+                        return;
+                      }
+
+                      setActiveSection(item.id);
+                    }}
                   />
                 ))}
               </nav>
