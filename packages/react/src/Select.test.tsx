@@ -108,6 +108,94 @@ describe("Select", () => {
     expect(select).not.toHaveAttribute("data-focused");
   });
 
+  it("tracks keyboard focus-visible intent and clears it on primary pointer interaction", () => {
+    render(
+      <Select aria-label="Focus-visible select">
+        <option value="one">One</option>
+      </Select>
+    );
+    const select = screen.getByRole("combobox", { name: "Focus-visible select" });
+
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(select);
+    expect(select).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(select, { button: 0 });
+    expect(select).not.toHaveAttribute("data-focus-visible");
+  });
+
+  it("tracks keyboard focus intent from ownerDocument when focus-visible fallback is used", () => {
+    render(
+      <div>
+        <button type="button">Before select</button>
+        <Select aria-label="Document intent select">
+          <option value="react">React</option>
+        </Select>
+      </div>
+    );
+
+    const select = screen.getByRole("combobox", { name: "Document intent select" });
+    const beforeButton = screen.getByRole("button", { name: "Before select" });
+    const matchesSpy = vi.spyOn(select, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(select);
+    expect(select).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(select);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(select);
+    expect(select).not.toHaveAttribute("data-focus-visible");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+
+    const { getByRole } = render(
+      <Select aria-label="Iframe select">
+        <option value="react">React</option>
+      </Select>,
+      { container: secondaryContainer, baseElement: secondaryDocument.body }
+    );
+    const select = getByRole("combobox", { name: "Iframe select" });
+    const matchesSpy = vi.spyOn(select, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(select);
+      expect(select).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(select);
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(select);
+      expect(select).not.toHaveAttribute("data-focus-visible");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("forwards change and hover handlers", () => {
     const onChange = vi.fn();
     const onMouseEnter = vi.fn();

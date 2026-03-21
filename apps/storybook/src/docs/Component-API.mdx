@@ -183,10 +183,12 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `invalid` | `boolean` | Adds `aria-invalid` and error-token border/ring semantics. |
 | `disabled` | `boolean` | Applies disabled semantics and visual de-emphasis. |
 | `aria-label` / `aria-labelledby` | `string` | Blank values are ignored; when both are provided, `aria-labelledby` takes precedence so visible external headings remain canonical. |
+| document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores select focus-visible state consistently, including iframe hosts. |
 
 <Canvas of={SelectStories.InvalidState} />
 <Canvas of={SelectStories.BlankAriaLabelFallback} />
 <Canvas of={SelectStories.LabelledByPrecedence} />
+<Canvas of={SelectStories.FocusIntentReentry} />
 
 ### Combobox
 

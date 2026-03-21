@@ -135,3 +135,29 @@ export const DisabledState: Story = {
     ]
   }
 };
+
+export const FocusIntentReentry: Story = {
+  render: () => (
+    <SelectShowcase gap={8}>
+      <p style={storyMutedTextStyle}>
+        Click the trigger first, then press Tab to verify keyboard re-entry restores select
+        focus-visible state.
+      </p>
+      <button type="button">Before select</button>
+      <Select aria-label="Focus intent select" defaultValue="react">
+        <option value="react">React</option>
+        <option value="vue">Vue</option>
+      </Select>
+    </SelectShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before select" });
+    const select = canvas.getByRole("combobox", { name: "Focus intent select" });
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(select).toHaveFocus();
+    await expect(select).toHaveAttribute("data-focus-visible", "true");
+  }
+};
