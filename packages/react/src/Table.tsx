@@ -215,6 +215,18 @@ export function Table<T>({
       }),
     [data, rowKey]
   );
+  const resolvedSourceRowKeys = React.useMemo(() => {
+    const seenCounts = new Map<string, number>();
+    return sourceRowKeys.map((key, sourceIndex) => {
+      const seenCount = seenCounts.get(key) ?? 0;
+      seenCounts.set(key, seenCount + 1);
+      if (seenCount === 0) {
+        return key;
+      }
+
+      return `${key}__dup-${sourceIndex}`;
+    });
+  }, [sourceRowKeys]);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production" || !rowKey) {
@@ -244,7 +256,9 @@ export function Table<T>({
     console.warn(
       `[Table] Duplicate row keys detected: ${Array.from(duplicates)
         .map((key) => `"${key}"`)
-        .join(", ")}. Ensure rowKey returns a unique, stable value for each source row.`
+        .join(
+          ", "
+        )}. Ensure rowKey returns a unique, stable value for each source row. Duplicate keys are auto-suffixed with source index for render stability.`
     );
   }, [rowKey, sourceRowKeys]);
 
@@ -807,7 +821,7 @@ export function Table<T>({
             sortedEntries.map((entry, index) => {
               const row = entry.row;
               const fallbackKey = String(entry.sourceIndex);
-              const resolvedRowKey = sourceRowKeys[entry.sourceIndex] ?? fallbackKey;
+              const resolvedRowKey = resolvedSourceRowKeys[entry.sourceIndex] ?? fallbackKey;
 
               return (
                 <tr

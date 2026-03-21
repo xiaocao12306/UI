@@ -1,3 +1,4 @@
+import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
@@ -82,8 +83,11 @@ describe("Table", () => {
 
       expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenLastCalledWith(
-        expect.stringContaining('Duplicate row keys detected: "duplicate-key"')
+        expect.stringContaining(
+          'Duplicate row keys detected: "duplicate-key". Ensure rowKey returns a unique, stable value for each source row. Duplicate keys are auto-suffixed with source index for render stability.'
+        )
       );
+      expect(errorSpy).not.toHaveBeenCalled();
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
@@ -1918,6 +1922,56 @@ describe("Table", () => {
     fireEvent.click(screen.getByRole("button", { name: "Score sort descending" }));
 
     expect(rowKey).not.toHaveBeenCalled();
+  });
+
+  it("keeps row-local state stable when duplicate rowKey values are auto-suffixed", async () => {
+    const user = userEvent.setup();
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const NoteCell = ({ name }: { name: string }) => {
+      const [value, setValue] = React.useState("");
+      return (
+        <input
+          aria-label={`${name} note`}
+          value={value}
+          onChange={(event) => {
+            setValue(event.currentTarget.value);
+          }}
+        />
+      );
+    };
+
+    try {
+      render(
+        <Table
+          columns={[
+            {
+              key: "name",
+              header: "Name",
+              sortable: true,
+              render: (row: { name: string }) => <NoteCell name={row.name} />
+            },
+            { key: "score", header: "Score", sortable: true }
+          ]}
+          data={[
+            { name: "Alpha", score: 1 },
+            { name: "Beta", score: 2 },
+            { name: "Gamma", score: 3 }
+          ]}
+          rowKey={() => "duplicate-key"}
+          defaultSortKey="score"
+        />
+      );
+
+      await user.type(screen.getByRole("textbox", { name: "Alpha note" }), "persist");
+      fireEvent.click(screen.getByRole("button", { name: "Score sort descending" }));
+
+      expect(screen.getByRole("textbox", { name: "Alpha note" })).toHaveValue("persist");
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Duplicate row keys detected: "duplicate-key"')
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
   });
 
   it("re-evaluates rowKey when source data changes", () => {
