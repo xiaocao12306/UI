@@ -299,9 +299,15 @@ export const CloseReasonTelemetry: Story = {
     fireEvent.keyDown(doc, { key: "Escape", ctrlKey: true });
     await expect(canvas.getByRole("status", { name: "Close reason telemetry" })).toBeInTheDocument();
     await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("close-button");
-    fireEvent.keyDown(doc, { key: "Escape", shiftKey: true });
-    await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("escape-key");
-    await expect(canvas.getByTestId("toast-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
+    const telemetryToast = canvas.getByRole("status", { name: "Close reason telemetry" });
+    telemetryToast.focus();
+    await userEvent.keyboard("{Shift>}{Escape}{/Shift}");
+    await waitFor(() => {
+      expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("escape-key");
+    });
+    await waitFor(() => {
+      expect(canvas.getByTestId("toast-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
+    });
   }
 };
 
