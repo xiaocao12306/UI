@@ -285,6 +285,7 @@ export const CloseReasonTelemetry: Story = {
   render: () => <CloseReasonTelemetryDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
+    const doc = canvasElement.ownerDocument;
     await waitFor(() => {
       expect(canvas.getByRole("status", { name: "Close reason telemetry" })).toHaveAttribute("aria-keyshortcuts", "Escape");
     });
@@ -295,10 +296,10 @@ export const CloseReasonTelemetry: Story = {
     await expect(canvas.getByTestId("toast-close-trace")).toHaveTextContent("reason:close-button -> open:false");
 
     await userEvent.click(canvas.getByRole("button", { name: "Reopen Toast" }));
-    fireEvent.keyDown(canvasElement.ownerDocument, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(doc, { key: "Escape", ctrlKey: true });
     await expect(canvas.getByRole("status", { name: "Close reason telemetry" })).toBeInTheDocument();
     await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("close-button");
-    await userEvent.keyboard("{Escape}");
+    fireEvent.keyDown(doc, { key: "Escape", shiftKey: true });
     await expect(canvas.getByTestId("toast-close-reason")).toHaveTextContent("escape-key");
     await expect(canvas.getByTestId("toast-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
   }
