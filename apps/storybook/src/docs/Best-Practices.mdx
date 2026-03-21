@@ -49,6 +49,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Respect OS reduced-motion preferences: keep `GlobalStyles` mounted so surfaces tagged with `data-aurora-reduced-motion` disable shimmer/spin/indeterminate motion (Button loading spinner, Progress indeterminate bar, Skeleton shimmer) under `prefers-reduced-motion`, and keep timer-driven feedback (`LoadingDots`, `StreamingText`) on default `respectReducedMotion` behavior unless the product explicitly requires animated narration.
 - Prefer `FormField` wrappers for helper/error copy so `aria-describedby` and `aria-errormessage` stay in sync.
 - For composite/non-clonable field controls, provide `htmlFor` on `FormField` and a matching control `id`; otherwise label association cannot be inferred.
+- If a wrapped control already provides `aria-labelledby`, avoid passing `aria-label` together; keep `aria-labelledby` as the canonical name source.
 - Treat blank input `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Keep input Enter active feedback scoped to unmodified keys: ignore `Ctrl/Meta/Alt + Enter` shortcut chords, while allowing normal `Enter` and `Shift+Enter` intent.
 - For guarded approval flows, use control-level `onClick(event.preventDefault())` on switch-like toggles to block pointer state mutation while preserving keyboard/readout semantics.
@@ -70,6 +71,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 
 <Canvas of={FormFieldStories.WithInputControl} />
 <Canvas of={FormFieldStories.ExternalControlAssociation} />
+<Canvas of={FormFieldStories.LabelledByPrecedence} />
 <Canvas of={InputStories.BlankAriaLabelFallback} />
 <Canvas of={ButtonStories.IconOnlyAccessibleName} />
 <Canvas of={TooltipStories.DescribedByLifecycle} />

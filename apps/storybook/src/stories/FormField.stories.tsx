@@ -93,3 +93,31 @@ export const ExternalControlAssociation: Story = {
     await expect(label).toHaveAttribute("for", "external-control");
   }
 };
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ width: 520, display: "grid", gap: 10 }}>
+      <p id="custom-formfield-name" style={{ margin: 0 }}>
+        Custom field heading
+      </p>
+      <FormField label="Internal label">
+        <Input aria-label="Should be ignored" aria-labelledby="custom-formfield-name" />
+      </FormField>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox");
+    const label = canvas.getByText("Internal label");
+    const labelledBy = input.getAttribute("aria-labelledby") ?? "";
+
+    await expect(input).not.toHaveAttribute("aria-label");
+    await expect(labelledBy.split(" ")).toContain("custom-formfield-name");
+    await expect(label).toHaveAttribute("id");
+    const labelId = label.getAttribute("id");
+    if (!labelId) {
+      throw new Error("expected generated label id");
+    }
+    await expect(labelledBy.split(" ")).toContain(labelId);
+  }
+};

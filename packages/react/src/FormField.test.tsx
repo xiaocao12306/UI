@@ -148,6 +148,25 @@ describe("FormField", () => {
     expect(input).not.toHaveAttribute("aria-labelledby");
   });
 
+  it("prioritizes aria-labelledby over aria-label when both are provided", () => {
+    render(
+      <>
+        <span id="custom-field-name">Custom field name</span>
+        <FormField label="Internal label">
+          <Input aria-label="Should be ignored" aria-labelledby="custom-field-name" />
+        </FormField>
+      </>
+    );
+
+    const input = screen.getByRole("textbox");
+    const label = screen.getByText("Internal label").closest("label");
+    const labelledBy = input.getAttribute("aria-labelledby") ?? "";
+
+    expect(input).not.toHaveAttribute("aria-label");
+    expect(labelledBy.split(" ")).toContain("custom-field-name");
+    expect(label?.id ? labelledBy.split(" ").includes(label.id) : false).toBe(true);
+  });
+
   it("ignores blank aria-label and falls back to generated label association", () => {
     render(
       <FormField label="Release scope">

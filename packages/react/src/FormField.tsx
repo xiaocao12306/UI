@@ -28,8 +28,14 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const childInvalid = childProps?.["aria-invalid"] as React.AriaAttributes["aria-invalid"] | undefined;
   const childLabelledBy = childProps?.["aria-labelledby"] as string | undefined;
   const childAriaLabel = childProps?.["aria-label"] as string | undefined;
+  const resolvedChildLabelledBy =
+    typeof childLabelledBy === "string" && childLabelledBy.trim().length > 0
+      ? childLabelledBy.trim()
+      : undefined;
   const resolvedChildAriaLabel =
-    typeof childAriaLabel === "string" && childAriaLabel.trim().length > 0
+    resolvedChildLabelledBy
+      ? undefined
+      : typeof childAriaLabel === "string" && childAriaLabel.trim().length > 0
       ? childAriaLabel.trim()
       : undefined;
   const childRequired = resolveRequiredState(
@@ -42,8 +48,8 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const mergedDescribedBy = mergeAriaReferenceIds(childDescribedBy, description ? describedById : undefined, error ? errorId : undefined);
   const mergedErrorMessage = mergeAriaReferenceIds(childErrorMessage, error ? errorId : undefined);
   const mergedLabelledBy = resolvedChildAriaLabel
-    ? childLabelledBy
-    : mergeAriaReferenceIds(childLabelledBy, labelId);
+    ? resolvedChildLabelledBy
+    : mergeAriaReferenceIds(resolvedChildLabelledBy, labelId);
   const warnedMissingAssociationRef = React.useRef(false);
 
   React.useEffect(() => {
