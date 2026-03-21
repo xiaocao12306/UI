@@ -546,6 +546,8 @@ describe("Dropdown", () => {
     const runItem = screen.getByRole("menuitem", { name: "Run" });
     expect(runItem).toHaveFocus();
 
+    fireEvent.keyDown(menu, { key: "ArrowDown", ctrlKey: true });
+    fireEvent.keyDown(menu, { key: "ArrowUp", metaKey: true });
     fireEvent.keyDown(menu, { key: "End", ctrlKey: true });
     fireEvent.keyDown(menu, { key: "PageDown", altKey: true });
     expect(runItem).toHaveFocus();

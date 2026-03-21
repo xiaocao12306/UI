@@ -373,6 +373,31 @@ export const SelectionTelemetry: Story = {
   }
 };
 
+export const ModifierArrowNavigationGuard: Story = {
+  args: {
+    label: "Modifier Arrow Guard",
+    items
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Modifier Arrow Guard" });
+
+    await userEvent.click(trigger);
+    const menu = canvas.getByRole("menu", { name: "Modifier Arrow Guard" });
+    const duplicateItem = canvas.getByRole("menuitem", { name: "Duplicate" });
+    await expect(duplicateItem).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "ArrowDown", ctrlKey: true });
+    fireEvent.keyDown(menu, { key: "ArrowUp", metaKey: true });
+    fireEvent.keyDown(menu, { key: "ArrowDown", altKey: true });
+    await expect(duplicateItem).toHaveFocus();
+    await expect(menu).toBeInTheDocument();
+
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(canvas.getByRole("menuitem", { name: "Rename" })).toHaveFocus();
+  }
+};
+
 function KeyboardActivationDedupeDropdown() {
   const [selectionCount, setSelectionCount] = React.useState(0);
   const [closeCount, setCloseCount] = React.useState(0);

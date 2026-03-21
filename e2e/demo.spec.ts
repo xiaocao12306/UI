@@ -1890,6 +1890,31 @@ test("keeps dropdown open when Escape is combined with modifier shortcuts", asyn
   await expect(menu).toBeHidden();
 });
 
+test("keeps dropdown focus stable for modified Arrow navigation shortcuts", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  await trigger.click();
+  const menu = page.getByRole("menu", { name: "Actions" });
+  const duplicateItem = page.getByRole("menuitem", { name: "Duplicate" });
+  await expect(menu).toBeVisible();
+  await expect(duplicateItem).toBeFocused();
+
+  await menu.evaluate((element) => {
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowDown", ctrlKey: true, bubbles: true })
+    );
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp", metaKey: true, bubbles: true }));
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", altKey: true, bubbles: true }));
+  });
+
+  await expect(duplicateItem).toBeFocused();
+  await expect(menu).toBeVisible();
+
+  await duplicateItem.press("ArrowDown");
+  await expect(page.getByRole("menuitem", { name: "Archive" })).toBeFocused();
+});
+
 test("tabs out of dropdown menu and moves focus to next control", async ({ page }) => {
   await page.goto("/");
 
