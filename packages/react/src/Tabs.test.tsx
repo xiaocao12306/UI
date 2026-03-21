@@ -1286,6 +1286,34 @@ describe("Tabs", () => {
     expect(twoTab.style.transform).toBe("translateY(0)");
   });
 
+  it("applies pressed offset for manual keyboard activation keys and clears on keyup", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        activationMode="manual"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+
+    fireEvent.keyDown(twoTab, { key: "Enter" });
+    expect(twoTab.style.transform).toBe("translateY(1px)");
+    fireEvent.keyUp(twoTab, { key: "Enter" });
+    expect(twoTab.style.transform).toBe("translateY(0)");
+
+    fireEvent.keyDown(twoTab, { key: "Spacebar" });
+    expect(twoTab.style.transform).toBe("translateY(1px)");
+    fireEvent.keyUp(twoTab, { key: "Spacebar" });
+    expect(twoTab.style.transform).toBe("translateY(0)");
+
+    fireEvent.keyDown(twoTab, { key: "Enter", ctrlKey: true });
+    expect(twoTab.style.transform).toBe("translateY(0)");
+  });
+
   it("ignores non-primary pointer buttons for pressed offset lifecycle", () => {
     render(
       <Tabs

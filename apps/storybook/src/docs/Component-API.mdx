@@ -399,6 +399,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `activationMode` | `'automatic' \| 'manual'` | Automatic mode switches panels on arrow navigation; manual mode requires `Enter`/`Space` (including legacy `Spacebar`) to activate focused tab. |
 | manual activation key hints | `aria-keyshortcuts="Enter Space"` | In manual mode, enabled tabs expose keyboard shortcut metadata so QA/AT tooling can discover activation keys; disabled tabs omit the hint. |
 | manual activation repeat guard | ignores repeated keydown | Manual-mode activation ignores repeated `Enter`/`Space` (`event.repeat=true`) so long-press does not emit duplicate tab-change events. |
+| manual activation pressed feedback | activation keydown sets pressed, keyup clears | In manual mode, tab triggers expose pressed offset while `Enter`/`Space`/`Spacebar` is held so keyboard activation has the same active affordance as pointer interactions. |
 | modifier-key guard | ignores `Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space` | Preserves host app/browser modified-key shortcuts and avoids unexpected tab navigation/activation hijack; `Shift + Enter/Space` remains valid for manual activation flows. |
 | focus intent policy | primary pointer clears focus-visible | Non-primary pointer interactions keep keyboard-intent ring state; primary pointer down clears focus-visible and drives pressed offset lifecycle. |
 | `loop` | `boolean` | Defaults to `true`; set `false` to stop Arrow navigation at first/last enabled tab instead of wrapping. |
@@ -412,6 +413,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={TabsStories.RtlKeyboardNavigation} />
 <Canvas of={TabsStories.LabelledByHeading} />
 <Canvas of={TabsStories.ManualActivation} />
+<Canvas of={TabsStories.ManualActivationPressedFeedback} />
 <Canvas of={TabsStories.ManualFocusResetOnBlur} />
 <Canvas of={TabsStories.ManualVerticalActivation} />
 <Canvas of={TabsStories.PrimaryPointerOnlyPressedState} />

@@ -461,6 +461,7 @@ export function Tabs({
                   if (event.repeat) {
                     return;
                   }
+                  setPressedTabKey(item.key);
                   keyboardActivationTabKeyRef.current = item.key;
                   const ownerWindow = event.currentTarget.ownerDocument.defaultView ?? window;
                   if (keyboardActivationResetTimerRef.current !== null) {
@@ -531,6 +532,11 @@ export function Tabs({
 
                 const nextIndex = getNextEnabledIndex(items, index, moveDirection, loop);
                 moveToIndex(nextIndex);
+              }}
+              onKeyUp={(event) => {
+                if (isTabActivationKey(event.key)) {
+                  setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                }
               }}
               style={{
                 height: 34,

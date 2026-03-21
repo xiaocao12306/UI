@@ -608,6 +608,56 @@ export const ManualActivation: Story = {
   }
 };
 
+export const ManualActivationPressedFeedback: Story = {
+  render: () => (
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
+        Manual activation tab triggers expose pressed-state feedback while Enter/Space is held, and
+        clear it on keyup.
+      </p>
+      <Tabs
+        ariaLabel="Manual pressed feedback tabs"
+        activationMode="manual"
+        defaultValue="spec"
+        items={[
+          { key: "spec", label: "Spec", content: "Specification stage." },
+          { key: "build", label: "Build", content: "Build stage." },
+          { key: "release", label: "Release", content: "Release stage." }
+        ]}
+      />
+    </TabsShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+
+    fireEvent.keyDown(buildTab, { key: "Enter", ctrlKey: true });
+    await waitFor(() => {
+      expect(buildTab.style.transform).toContain("translateY(0");
+    });
+
+    fireEvent.keyDown(buildTab, { key: "Enter" });
+    await waitFor(() => {
+      expect(buildTab.style.transform).toBe("translateY(1px)");
+    });
+
+    fireEvent.keyUp(buildTab, { key: "Enter" });
+    await waitFor(() => {
+      expect(buildTab.style.transform).toContain("translateY(0");
+    });
+
+    fireEvent.keyDown(buildTab, { key: "Spacebar" });
+    await waitFor(() => {
+      expect(buildTab.style.transform).toBe("translateY(1px)");
+    });
+
+    fireEvent.keyUp(buildTab, { key: "Spacebar" });
+    await waitFor(() => {
+      expect(buildTab.style.transform).toContain("translateY(0");
+    });
+  }
+};
+
 function ManualActivationRepeatGuardDemo() {
   const [value, setValue] = React.useState("spec");
   const [changes, setChanges] = React.useState(0);

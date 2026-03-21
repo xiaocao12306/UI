@@ -288,6 +288,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep `Shift + Enter/Space` available for manual tab activation; only `Ctrl/Meta/Alt` combinations should be filtered from activation paths.
 - Keep manual tabs compatible with legacy `Spacebar` key values so activation remains consistent across browser engines.
 - Treat manual-tab activation key repeat (`Enter`/`Space`, `event.repeat`) as no-op after first activation to prevent duplicate change telemetry.
+- Keep manual-tab pressed-state feedback active during `Enter`/`Space` hold (and clear on keyup) so keyboard activation has the same tactile affordance as pointer activation.
 - In controlled mode, ensure `value` always maps to an enabled tab key; development builds now warn when `value` is missing/disabled and fallback selection is applied.
 - Keep tab panels mounted and toggle `hidden` so tab `aria-controls` always points to a real panel.
 - Avoid duplicate telemetry from tabs by emitting `onValueChange` only on actual key transitions.
@@ -298,6 +299,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={TabsStories.RtlKeyboardNavigation} />
 <Canvas of={TabsStories.LabelledByHeading} />
 <Canvas of={TabsStories.ManualActivation} />
+<Canvas of={TabsStories.ManualActivationPressedFeedback} />
 <Canvas of={TabsStories.ManualVerticalActivation} />
 <Canvas of={TabsStories.PrimaryPointerOnlyPressedState} />
 <Canvas of={TableStories.ReleaseChecklist} />
