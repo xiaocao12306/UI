@@ -67,6 +67,38 @@ describe("Combobox", () => {
       expect(warnSpy).toHaveBeenLastCalledWith(
         expect.stringContaining('Duplicate option values detected: "react"')
       );
+      expect(warnSpy).toHaveBeenLastCalledWith(expect.stringContaining("render-key suffixes"));
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("keeps duplicate option values from emitting React duplicate-key errors", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Combobox
+          options={[
+            { value: "react", label: "React core" },
+            { value: "react", label: "React legacy" },
+            { value: "vue", label: "Vue" }
+          ]}
+          onValueChange={() => {}}
+        />
+      );
+
+      const input = screen.getByRole("combobox", { name: "Combobox" });
+      fireEvent.focus(input);
+      expect(screen.getAllByRole("option")).toHaveLength(3);
+
+      const duplicateKeyErrors = errorSpy.mock.calls.filter(([message]) =>
+        typeof message === "string" && message.includes("same key")
+      );
+      expect(duplicateKeyErrors).toHaveLength(0);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();

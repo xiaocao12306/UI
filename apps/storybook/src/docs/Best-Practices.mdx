@@ -83,7 +83,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For tooltip-enhanced controls that already have helper text, keep `aria-describedby` lifecycle clean: append tooltip ID only while visible and remove it on close.
 - Avoid `autoFocus`; use intentional focus management when opening overlays.
 - For value-selection combobox/listbox patterns, map `aria-selected` to the committed value, not temporary active focus.
-- Keep `Combobox.options[].value` unique and stable; development builds now warn on duplicate values to prevent selected/active state ambiguity.
+- Keep `Combobox.options[].value` unique and stable; development builds warn on duplicate values and runtime render keys now auto-suffix duplicates to avoid React key collisions, but unique values remain required for deterministic selected/active semantics.
 - Treat blank combobox `ariaLabel` as missing so both combobox and listbox names fall back to readable defaults (`Combobox` / `Combobox options`) instead of empty labels.
 - For command-palette `aria-activedescendant` flows, keep `aria-selected` on the active option so screen readers announce current keyboard focus target.
 - For `aria-activedescendant` combobox flows, keep listbox options out of tab order and preserve input focus during pointer selection.

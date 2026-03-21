@@ -137,7 +137,7 @@ export function Combobox({
     console.warn(
       `[Combobox] Duplicate option values detected: ${Array.from(duplicateValues)
         .map((item) => `"${item}"`)
-        .join(", ")}. Values should be unique to keep selection and active option semantics deterministic.`
+        .join(", ")}. Values should be unique to keep selection and active option semantics deterministic; duplicate values now receive render-key suffixes to avoid React key collisions.`
     );
   }, [options]);
 
@@ -183,6 +183,14 @@ export function Combobox({
       return haystack.includes(normalized);
     });
   }, [options, query]);
+  const filteredRenderKeys = React.useMemo(() => {
+    const counts = new Map<string, number>();
+    return filtered.map((item) => {
+      const count = counts.get(item.value) ?? 0;
+      counts.set(item.value, count + 1);
+      return count === 0 ? item.value : `${item.value}__duplicate-${count}`;
+    });
+  }, [filtered]);
 
   React.useEffect(() => {
     if (!open) {
@@ -327,7 +335,7 @@ export function Combobox({
               const selected = item.value === currentValue;
               return (
                 <button
-                  key={item.value}
+                  key={filteredRenderKeys[index] ?? `${item.value}__index-${index}`}
                   id={`${listId}-option-${index}`}
                   type="button"
                   role="option"
