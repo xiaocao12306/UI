@@ -83,6 +83,9 @@ export function Pagination({
 }: PaginationProps) {
   const navRef = React.useRef<HTMLElement>(null);
   const pendingFocusPageRef = React.useRef<number | null>(null);
+  const focusVisibleIntentRef = React.useRef(false);
+  const [focusedButtonId, setFocusedButtonId] = React.useState<string | null>(null);
+  const [focusVisibleButtonId, setFocusVisibleButtonId] = React.useState<string | null>(null);
   const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel, "Pagination");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedPageCount = Math.max(pageCount, 1);
@@ -103,6 +106,43 @@ export function Pagination({
       ),
     [getItemAriaLabel]
   );
+
+  React.useEffect(() => {
+    if (!disabled) {
+      return;
+    }
+
+    setFocusedButtonId(null);
+    setFocusVisibleButtonId(null);
+  }, [disabled]);
+
+  React.useEffect(() => {
+    const ownerDocument = navRef.current?.ownerDocument ?? document;
+    const markKeyboardIntent = (event: KeyboardEvent) => {
+      if (event.metaKey || event.altKey || event.ctrlKey) {
+        return;
+      }
+      focusVisibleIntentRef.current = true;
+    };
+    const markPointerIntent = (event: Event) => {
+      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+        return;
+      }
+      focusVisibleIntentRef.current = false;
+    };
+
+    ownerDocument.addEventListener("keydown", markKeyboardIntent, true);
+    ownerDocument.addEventListener("pointerdown", markPointerIntent, true);
+    ownerDocument.addEventListener("mousedown", markPointerIntent, true);
+    ownerDocument.addEventListener("touchstart", markPointerIntent, true);
+
+    return () => {
+      ownerDocument.removeEventListener("keydown", markKeyboardIntent, true);
+      ownerDocument.removeEventListener("pointerdown", markPointerIntent, true);
+      ownerDocument.removeEventListener("mousedown", markPointerIntent, true);
+      ownerDocument.removeEventListener("touchstart", markPointerIntent, true);
+    };
+  }, []);
 
   const goToPage = (nextPage: number) => {
     if (disabled || pageCount <= 1) {
@@ -136,6 +176,7 @@ export function Pagination({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    focusVisibleIntentRef.current = true;
     if (disabled) {
       return;
     }
@@ -163,6 +204,40 @@ export function Pagination({
     goToPageWithFocus(currentPage + arrowDelta);
   };
 
+  const createButtonFocusIntentProps = React.useCallback(
+    (buttonId: string) => ({
+      "data-focus-visible":
+        focusedButtonId === buttonId && focusVisibleButtonId === buttonId ? "true" : undefined,
+      onFocus: (event: React.FocusEvent<HTMLButtonElement>) => {
+        setFocusedButtonId(buttonId);
+        setFocusVisibleButtonId(
+          resolveFocusVisibleState(event.currentTarget, focusVisibleIntentRef.current)
+            ? buttonId
+            : null
+        );
+      },
+      onBlur: () => {
+        setFocusedButtonId((current) => (current === buttonId ? null : current));
+        setFocusVisibleButtonId((current) => (current === buttonId ? null : current));
+      },
+      onMouseDown: (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (event.button !== 0) {
+          return;
+        }
+        focusVisibleIntentRef.current = false;
+        setFocusVisibleButtonId((current) => (current === buttonId ? null : current));
+      },
+      onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => {
+        if (event.button !== 0) {
+          return;
+        }
+        focusVisibleIntentRef.current = false;
+        setFocusVisibleButtonId((current) => (current === buttonId ? null : current));
+      }
+    }),
+    [focusedButtonId, focusVisibleButtonId]
+  );
+
   if (pageCount <= 1) {
     return null;
   }
@@ -187,13 +262,18 @@ export function Pagination({
         {showFirstLast ? (
           <li>
             <button
+              {...createButtonFocusIntentProps("first")}
               type="button"
               disabled={!canGoPrevious}
               onClick={() => goToPage(1)}
               onKeyDown={handleKeyDown}
               aria-label={resolveItemAriaLabel("first", 1)}
               aria-keyshortcuts={!canGoPrevious ? undefined : paginationKeyboardShortcuts}
-              style={buttonStyle(false, !canGoPrevious)}
+              style={buttonStyle(
+                false,
+                !canGoPrevious,
+                focusedButtonId === "first" && focusVisibleButtonId === "first"
+              )}
             >
               «
             </button>
@@ -201,13 +281,18 @@ export function Pagination({
         ) : null}
         <li>
           <button
+            {...createButtonFocusIntentProps("previous")}
             type="button"
             disabled={!canGoPrevious}
             onClick={() => goToPage(previousPage)}
             onKeyDown={handleKeyDown}
             aria-label={resolveItemAriaLabel("previous", previousPage)}
             aria-keyshortcuts={!canGoPrevious ? undefined : paginationKeyboardShortcuts}
-            style={buttonStyle(false, !canGoPrevious)}
+            style={buttonStyle(
+              false,
+              !canGoPrevious,
+              focusedButtonId === "previous" && focusVisibleButtonId === "previous"
+            )}
           >
             ‹
           </button>
@@ -222,9 +307,11 @@ export function Pagination({
           }
 
           const selected = token === currentPage;
+          const buttonId = `page-${token}`;
           return (
             <li key={token}>
               <button
+                {...createButtonFocusIntentProps(buttonId)}
                 type="button"
                 onClick={() => goToPage(token)}
                 disabled={disabled}
@@ -237,7 +324,11 @@ export function Pagination({
                     : resolveItemAriaLabel("page", token)
                 }
                 aria-keyshortcuts={disabled ? undefined : paginationKeyboardShortcuts}
-                style={buttonStyle(selected, disabled)}
+                style={buttonStyle(
+                  selected,
+                  disabled,
+                  focusedButtonId === buttonId && focusVisibleButtonId === buttonId
+                )}
               >
                 {token}
               </button>
@@ -246,13 +337,18 @@ export function Pagination({
         })}
         <li>
           <button
+            {...createButtonFocusIntentProps("next")}
             type="button"
             disabled={!canGoNext}
             onClick={() => goToPage(nextPage)}
             onKeyDown={handleKeyDown}
             aria-label={resolveItemAriaLabel("next", nextPage)}
             aria-keyshortcuts={!canGoNext ? undefined : paginationKeyboardShortcuts}
-            style={buttonStyle(false, !canGoNext)}
+            style={buttonStyle(
+              false,
+              !canGoNext,
+              focusedButtonId === "next" && focusVisibleButtonId === "next"
+            )}
           >
             ›
           </button>
@@ -260,13 +356,18 @@ export function Pagination({
         {showFirstLast ? (
           <li>
             <button
+              {...createButtonFocusIntentProps("last")}
               type="button"
               disabled={!canGoNext}
               onClick={() => goToPage(pageCount)}
               onKeyDown={handleKeyDown}
               aria-label={resolveItemAriaLabel("last", pageCount)}
               aria-keyshortcuts={!canGoNext ? undefined : paginationKeyboardShortcuts}
-              style={buttonStyle(false, !canGoNext)}
+              style={buttonStyle(
+                false,
+                !canGoNext,
+                focusedButtonId === "last" && focusVisibleButtonId === "last"
+              )}
             >
               »
             </button>
@@ -338,7 +439,7 @@ function defaultGetItemAriaLabel(
   }
 }
 
-function buttonStyle(selected: boolean, disabled: boolean): React.CSSProperties {
+function buttonStyle(selected: boolean, disabled: boolean, focusVisible: boolean): React.CSSProperties {
   return {
     minWidth: 32,
     height: 32,
@@ -350,7 +451,11 @@ function buttonStyle(selected: boolean, disabled: boolean): React.CSSProperties 
       : "var(--aurora-surface-default)",
     color: disabled ? "color-mix(in srgb, var(--aurora-text-secondary) 65%, transparent)" : "var(--aurora-text-primary)",
     cursor: disabled ? "not-allowed" : "pointer",
-    font: "inherit"
+    font: "inherit",
+    boxShadow:
+      !disabled && focusVisible
+        ? "0 0 0 3px color-mix(in srgb, var(--aurora-accent-default) 24%, transparent)"
+        : "none"
   };
 }
 
@@ -360,4 +465,12 @@ function resolveNonEmptyLabel(label: string | undefined, fallback?: string): str
   }
 
   return fallback;
+}
+
+function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {
+  try {
+    return target.matches(":focus-visible") || fallback;
+  } catch {
+    return fallback;
+  }
 }

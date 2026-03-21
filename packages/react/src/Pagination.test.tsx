@@ -211,6 +211,87 @@ describe("Pagination", () => {
     });
   });
 
+  it("tracks keyboard focus-visible intent and clears it only on primary pointer interaction", () => {
+    render(<Pagination page={4} pageCount={10} onPageChange={() => {}} />);
+
+    const currentButton = screen.getByRole("button", { name: "Current page, 4" });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(currentButton);
+    expect(currentButton).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(currentButton, { button: 1 });
+    expect(currentButton).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(currentButton, { button: 0 });
+    expect(currentButton).not.toHaveAttribute("data-focus-visible");
+  });
+
+  it("tracks ownerDocument keyboard focus intent when focus-visible matching is unavailable", () => {
+    render(
+      <div>
+        <button type="button">Before pagination</button>
+        <Pagination page={4} pageCount={10} onPageChange={() => {}} />
+      </div>
+    );
+
+    const beforeButton = screen.getByRole("button", { name: "Before pagination" });
+    const currentButton = screen.getByRole("button", { name: "Current page, 4" });
+    const matchesSpy = vi.spyOn(currentButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(currentButton);
+    expect(currentButton).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(currentButton);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(currentButton);
+    expect(currentButton).not.toHaveAttribute("data-focus-visible");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.append(iframe);
+    const iframeDocument = iframe.contentDocument;
+    const iframeWindow = iframe.contentWindow;
+    if (!iframeDocument || !iframeWindow) {
+      throw new Error("iframe contentDocument/window is unavailable");
+    }
+    const host = iframeDocument.createElement("div");
+    iframeDocument.body.append(host);
+
+    const { getByRole } = render(
+      <Pagination page={4} pageCount={10} onPageChange={() => {}} />,
+      { container: host, baseElement: iframeDocument.body }
+    );
+    const currentButton = getByRole("button", { name: "Current page, 4" });
+    const matchesSpy = vi.spyOn(currentButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      iframeDocument.dispatchEvent(
+        new iframeWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(currentButton);
+      expect(currentButton).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(currentButton);
+      iframeDocument.dispatchEvent(
+        new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(currentButton);
+      expect(currentButton).not.toHaveAttribute("data-focus-visible");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("mirrors ArrowLeft/ArrowRight keyboard shortcuts in rtl containers", () => {
     const onPageChange = vi.fn();
     render(

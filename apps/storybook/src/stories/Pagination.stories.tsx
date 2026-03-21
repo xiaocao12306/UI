@@ -230,3 +230,26 @@ export const LabelledByHeading: Story = {
     await expect(nav).not.toHaveAttribute("aria-label");
   }
 };
+
+export const FocusIntentReentry: Story = {
+  render: () => (
+    <div style={{ width: 640, display: "grid", gap: 12 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        Click the trigger first, then press Tab to verify keyboard re-entry restores pagination
+        focus-visible state.
+      </p>
+      <button type="button">Before pagination</button>
+      <Pagination page={4} pageCount={12} onPageChange={() => {}} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before pagination" });
+    const firstButton = canvas.getByRole("button", { name: "Go to first page" });
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(firstButton).toHaveFocus();
+    await expect(firstButton).toHaveAttribute("data-focus-visible", "true");
+  }
+};
