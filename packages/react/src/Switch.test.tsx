@@ -41,6 +41,29 @@ describe("Switch", () => {
     expect(onCheckedChange).toHaveBeenCalledWith(true);
   });
 
+  it("supports keyboard toggle with Space alias key values", () => {
+    const onCheckedChange = vi.fn();
+    render(<Switch label="Space alias toggle" checked={false} onCheckedChange={onCheckedChange} />);
+
+    const control = screen.getByRole("switch", { name: "Space alias toggle" });
+    fireEvent.keyDown(control, { key: "Space" });
+    fireEvent.keyDown(control, { key: "Spacebar" });
+
+    expect(onCheckedChange).toHaveBeenCalledTimes(2);
+  });
+
+  it("ignores modified keyboard toggle combinations", () => {
+    const onCheckedChange = vi.fn();
+    render(<Switch label="Modified keyboard toggle" checked={false} onCheckedChange={onCheckedChange} />);
+
+    const control = screen.getByRole("switch", { name: "Modified keyboard toggle" });
+    fireEvent.keyDown(control, { key: " ", ctrlKey: true });
+    fireEvent.keyDown(control, { key: "Space", metaKey: true });
+    fireEvent.keyDown(control, { key: "Spacebar", altKey: true });
+
+    expect(onCheckedChange).not.toHaveBeenCalled();
+  });
+
   it("does not toggle when click handler prevents default", () => {
     const onCheckedChange = vi.fn();
     render(
@@ -134,5 +157,18 @@ describe("Switch", () => {
     const control = screen.getByRole("switch", { name: "Release gate" });
     expect(control).toHaveAttribute("aria-labelledby");
     expect((control.getAttribute("aria-labelledby") ?? "").trim().length).toBeGreaterThan(0);
+  });
+
+  it("prioritizes aria-labelledby over aria-label when both are provided", () => {
+    render(
+      <div>
+        <p id="switch-name-source">Switch heading</p>
+        <Switch label="Release gate" aria-label="Fallback switch name" aria-labelledby="switch-name-source" />
+      </div>
+    );
+
+    const control = screen.getByRole("switch", { name: "Switch heading" });
+    expect(control).toHaveAttribute("aria-labelledby", "switch-name-source");
+    expect(control).not.toHaveAttribute("aria-label");
   });
 });

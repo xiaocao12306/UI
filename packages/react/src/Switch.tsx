@@ -48,14 +48,8 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
 
   const isControlled = checked !== undefined;
   const currentChecked = isControlled ? checked : internalChecked;
-  const ariaLabel =
-    typeof rawAriaLabel === "string" && rawAriaLabel.trim().length > 0
-      ? rawAriaLabel.trim()
-      : undefined;
-  const ariaLabelledBy =
-    typeof rawAriaLabelledBy === "string" && rawAriaLabelledBy.trim().length > 0
-      ? rawAriaLabelledBy.trim()
-      : undefined;
+  const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
+  const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
   const describedBy = [props["aria-describedby"], description ? descriptionId : undefined].filter(Boolean).join(" ") || undefined;
   const labelledBy =
     ariaLabel || ariaLabelledBy || !label ? ariaLabelledBy : labelId;
@@ -162,7 +156,12 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         if (event.defaultPrevented || disabled) {
           return;
         }
-        if (event.key === " " || event.key === "Spacebar") {
+
+        if ((event.ctrlKey || event.metaKey || event.altKey) && isSwitchActivationKey(event.key)) {
+          return;
+        }
+
+        if (isSwitchActivationKey(event.key)) {
           event.preventDefault();
           handleToggle();
         }
@@ -213,3 +212,16 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     </button>
   );
 });
+
+function isSwitchActivationKey(key: string) {
+  return key === " " || key === "Space" || key === "Spacebar";
+}
+
+function resolveNonEmptyLabel(label: string | undefined) {
+  if (typeof label !== "string") {
+    return undefined;
+  }
+
+  const normalized = label.trim();
+  return normalized.length > 0 ? normalized : undefined;
+}

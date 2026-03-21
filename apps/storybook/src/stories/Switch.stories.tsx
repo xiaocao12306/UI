@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Switch } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 import { StoryShowcaseFrame } from "./storyShowcase";
 
 const meta = {
@@ -89,6 +89,50 @@ export const KeyboardToggle: Story = {
     control.focus();
     await userEvent.keyboard("[Space]");
     await expect(control).toHaveAttribute("aria-checked", "true");
+  }
+};
+
+export const KeyboardModifierGuard: Story = {
+  args: {
+    defaultChecked: false,
+    label: "Modified keyboard mode",
+    description: "Ctrl/Meta/Alt + Space should not toggle this switch."
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const control = canvas.getByRole("switch", { name: "Modified keyboard mode" });
+
+    control.focus();
+    fireEvent.keyDown(control, { key: " ", ctrlKey: true });
+    fireEvent.keyDown(control, { key: "Space", metaKey: true });
+    fireEvent.keyDown(control, { key: "Spacebar", altKey: true });
+    await expect(control).toHaveAttribute("aria-checked", "false");
+
+    await userEvent.keyboard("[Space]");
+    await expect(control).toHaveAttribute("aria-checked", "true");
+  }
+};
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 380px)" gap={12}>
+      <p id="switch-labelledby-heading" style={{ margin: 0, color: "var(--aurora-text-primary)" }}>
+        Approval switch heading
+      </p>
+      <Switch
+        label="Approval gate"
+        description="aria-labelledby should stay canonical when both naming props exist."
+        aria-label="Fallback approval switch name"
+        aria-labelledby="switch-labelledby-heading"
+        defaultChecked={false}
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const control = canvas.getByRole("switch", { name: "Approval switch heading" });
+    await expect(control).toHaveAttribute("aria-labelledby", "switch-labelledby-heading");
+    await expect(control).not.toHaveAttribute("aria-label");
   }
 };
 
