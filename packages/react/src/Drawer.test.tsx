@@ -486,6 +486,94 @@ describe("Drawer", () => {
     matchesSpy.mockRestore();
   });
 
+  it("tracks ownerDocument keyboard focus intent when focus-visible matching is unavailable", () => {
+    render(
+      <div>
+        <button type="button">Before drawer close</button>
+        <Drawer open onOpenChange={() => {}} title="Document focus intent drawer" closeLabel="Document intent close">
+          <p>Drawer content</p>
+        </Drawer>
+      </div>
+    );
+
+    const beforeButton = screen.getByRole("button", { name: "Before drawer close" });
+    const closeButton = screen.getByRole("button", { name: "Document intent close" });
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+    fireEvent.blur(closeButton);
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    fireEvent.blur(closeButton);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    const iframeWindow = iframe.contentWindow;
+    if (!iframeDocument || !iframeWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    const { getByRole, unmount } = render(
+      <div>
+        <button type="button">Before iframe drawer close</button>
+        <Drawer open onOpenChange={() => {}} title="Iframe drawer" closeLabel="Iframe drawer close">
+          <p>Drawer content</p>
+        </Drawer>
+      </div>,
+      {
+        container: iframeContainer,
+        baseElement: iframeDocument.body
+      }
+    );
+    const beforeButton = getByRole("button", { name: "Before iframe drawer close" });
+    const closeButton = getByRole("button", { name: "Iframe drawer close" });
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      fireEvent.mouseDown(beforeButton, { button: 0 });
+      fireEvent.focus(closeButton);
+      expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+      fireEvent.blur(closeButton);
+      iframeDocument.dispatchEvent(
+        new iframeWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(closeButton);
+      expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+      fireEvent.blur(closeButton);
+      iframeDocument.dispatchEvent(
+        new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(closeButton);
+      expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+    } finally {
+      unmount();
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("applies pressed transform only for primary-button close-button pointer paths", () => {
     render(
       <Drawer open onOpenChange={() => {}} title="Pressable drawer">

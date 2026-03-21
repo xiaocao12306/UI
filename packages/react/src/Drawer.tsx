@@ -66,6 +66,32 @@ export function Drawer({
     return lockBodyScroll(panelElement.ownerDocument);
   }, [open, panelElement]);
 
+  React.useEffect(() => {
+    if (!open || !panelElement) {
+      return;
+    }
+
+    const ownerDocument = panelElement.ownerDocument;
+    const markKeyboardIntent = () => {
+      closeButtonFocusIntentRef.current = true;
+    };
+    const markPointerIntent = () => {
+      closeButtonFocusIntentRef.current = false;
+    };
+
+    ownerDocument.addEventListener("keydown", markKeyboardIntent, true);
+    ownerDocument.addEventListener("pointerdown", markPointerIntent, true);
+    ownerDocument.addEventListener("mousedown", markPointerIntent, true);
+    ownerDocument.addEventListener("touchstart", markPointerIntent, true);
+
+    return () => {
+      ownerDocument.removeEventListener("keydown", markKeyboardIntent, true);
+      ownerDocument.removeEventListener("pointerdown", markPointerIntent, true);
+      ownerDocument.removeEventListener("mousedown", markPointerIntent, true);
+      ownerDocument.removeEventListener("touchstart", markPointerIntent, true);
+    };
+  }, [open, panelElement]);
+
   if (!open) {
     return null;
   }

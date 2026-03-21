@@ -219,6 +219,44 @@ export const CloseButtonPrimaryPointerOnly: Story = {
   }
 };
 
+function FocusIntentReentryDrawerDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <Drawer
+        open={open}
+        onOpenChange={setOpen}
+        title="Focus intent re-entry drawer"
+        closeLabel="Focus intent close drawer"
+      >
+        <div style={storyContentStackStyle}>
+          <p style={storyParagraphStyle}>
+            Click the in-drawer action first, then Tab to verify owner-document keyboard intent restores close-button focus ring.
+          </p>
+          <button type="button">Drawer content action</button>
+        </div>
+      </Drawer>
+    </StoryFullscreenFrame>
+  );
+}
+
+export const FocusIntentReentry: Story = {
+  render: () => <FocusIntentReentryDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const drawerAction = await body.findByRole("button", { name: "Drawer content action" });
+    const closeButton = await body.findByRole("button", { name: "Focus intent close drawer" });
+
+    await userEvent.click(drawerAction);
+    await expect(drawerAction).toHaveFocus();
+
+    await userEvent.tab();
+    await expect(closeButton).toHaveFocus();
+    await expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+  }
+};
+
 function CloseButtonKeyboardPressedDrawerDemo() {
   const [open, setOpen] = React.useState(true);
 
