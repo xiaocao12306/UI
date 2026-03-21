@@ -20,6 +20,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
     "aria-invalid": ariaInvalid,
     "aria-label": rawAriaLabel,
     "aria-labelledby": rawAriaLabelledBy,
+    "aria-keyshortcuts": rawAriaKeyShortcuts,
     ...restProps
   },
   ref
@@ -34,6 +35,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
   const isInteractionDisabled = Boolean(disabled);
   const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
   const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
+  const ariaKeyShortcuts = isInteractionDisabled
+    ? undefined
+    : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "ArrowDown ArrowUp";
 
   React.useEffect(() => {
     if (!isInteractionDisabled) {
@@ -96,6 +100,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
       aria-invalid={resolvedInvalidAria}
+      aria-keyshortcuts={ariaKeyShortcuts}
       data-invalid={isInvalid ? "true" : undefined}
       data-focused={focused ? "true" : undefined}
       data-focus-visible={focusVisible ? "true" : undefined}

@@ -16,6 +16,49 @@ describe("Select", () => {
     expect(select).toHaveAttribute("data-aurora-reduced-motion", "transition");
   });
 
+  it("exposes default shortcut hints only when actionable", () => {
+    render(
+      <div>
+        <Select aria-label="Actionable select">
+          <option value="react">React</option>
+        </Select>
+        <Select aria-label="Disabled select shortcuts" disabled>
+          <option value="react">React</option>
+        </Select>
+      </div>
+    );
+
+    expect(screen.getByRole("combobox", { name: "Actionable select" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp"
+    );
+    expect(screen.getByRole("combobox", { name: "Disabled select shortcuts" })).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
+  });
+
+  it("accepts explicit shortcut hints and ignores blank overrides", () => {
+    render(
+      <div>
+        <Select aria-label="Custom shortcut select" aria-keyshortcuts="ArrowDown Enter">
+          <option value="react">React</option>
+        </Select>
+        <Select aria-label="Blank shortcut select" aria-keyshortcuts="   ">
+          <option value="react">React</option>
+        </Select>
+      </div>
+    );
+
+    expect(screen.getByRole("combobox", { name: "Custom shortcut select" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown Enter"
+    );
+    expect(screen.getByRole("combobox", { name: "Blank shortcut select" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp"
+    );
+  });
+
   it("applies invalid accessibility attributes", () => {
     render(
       <Select invalid aria-label="Environment">

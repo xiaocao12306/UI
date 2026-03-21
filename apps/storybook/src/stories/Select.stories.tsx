@@ -136,6 +136,31 @@ export const DisabledState: Story = {
   }
 };
 
+export const ShortcutHintPrecision: Story = {
+  render: () => (
+    <SelectShowcase gap={8}>
+      <Select aria-label="Actionable select shortcuts" defaultValue="react">
+        <option value="react">React</option>
+        <option value="vue">Vue</option>
+      </Select>
+      <Select aria-label="Disabled select shortcuts" disabled defaultValue="react">
+        <option value="react">React</option>
+        <option value="vue">Vue</option>
+      </Select>
+    </SelectShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("combobox", { name: "Actionable select shortcuts" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp"
+    );
+    await expect(canvas.getByRole("combobox", { name: "Disabled select shortcuts" })).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
+  }
+};
+
 export const FocusIntentReentry: Story = {
   render: () => (
     <SelectShowcase gap={8}>
