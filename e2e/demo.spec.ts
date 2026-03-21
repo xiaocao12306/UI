@@ -2251,6 +2251,23 @@ test("tabs out of dropdown menu and moves focus to next control", async ({ page 
   await expect(nextButton).toBeFocused();
 });
 
+test("shift-tabs out of dropdown menu and moves focus to previous control", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  const previousButton = page.getByRole("button", { name: "Open Popover" });
+  const firstItem = page.getByRole("menuitem", { name: "Duplicate" });
+
+  await trigger.focus();
+  await trigger.press("ArrowDown");
+  await expect(page.getByRole("menu")).toBeVisible();
+  await expect(firstItem).toBeFocused();
+
+  await page.keyboard.press("Shift+Tab");
+  await expect(page.getByRole("menu")).toBeHidden();
+  await expect(previousButton).toBeFocused();
+});
+
 test("reports toast close reason telemetry for Escape, close button, and timeout", async ({
   page
 }) => {
