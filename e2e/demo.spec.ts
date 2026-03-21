@@ -1629,6 +1629,33 @@ test("reports dropdown close reason telemetry for all dismiss paths", async ({ p
   await expect(traceTelemetry).toHaveText("reason:tab-key -> open:false");
 });
 
+test("preserves nested overlay top-layer close order for Escape", async ({ page }) => {
+  await page.goto("/");
+
+  const nestedTrigger = page.getByRole("button", { name: "Open Nested Overlay" });
+  const nestedTrace = page.getByTestId("nested-overlay-close-trace-demo");
+
+  await expect(nestedTrace).toHaveText("none");
+
+  await nestedTrigger.click();
+  const nestedPopover = page.getByRole("dialog", { name: "Nested overlay shell" });
+  await expect(nestedPopover).toBeVisible();
+
+  await page.getByRole("button", { name: "Nested Actions" }).click();
+  await expect(page.getByRole("menuitem", { name: "Approve Release" })).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("menuitem", { name: "Approve Release" })).toBeHidden();
+  await expect(nestedPopover).toBeVisible();
+  await expect(nestedTrace).toHaveText("dropdown:reason:escape-key -> dropdown:open:false");
+
+  await page.keyboard.press("Escape");
+  await expect(nestedPopover).toBeHidden();
+  await expect(nestedTrace).toHaveText(
+    "dropdown:reason:escape-key -> dropdown:open:false -> popover:reason:escape-key -> popover:open:false"
+  );
+});
+
 test("keeps dropdown open on non-primary outside pointer interaction", async ({ page }) => {
   await page.goto("/");
 

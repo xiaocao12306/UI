@@ -475,6 +475,7 @@ function App() {
   const [popoverCloseTrace, setPopoverCloseTrace] = React.useState("none");
   const [dropdownCloseReason, setDropdownCloseReason] = React.useState("none");
   const [dropdownCloseTrace, setDropdownCloseTrace] = React.useState("none");
+  const [nestedOverlayCloseTrace, setNestedOverlayCloseTrace] = React.useState("none");
   const [dialogCloseReason, setDialogCloseReason] = React.useState("none");
   const [dialogCloseTrace, setDialogCloseTrace] = React.useState("none");
   const [drawerCloseReason, setDrawerCloseReason] = React.useState("none");
@@ -667,6 +668,42 @@ function App() {
       current === "select" ? `select -> reason:${reason}` : `reason:${reason}`
     );
   }, []);
+
+  const appendNestedOverlayTrace = React.useCallback((entry: string) => {
+    setNestedOverlayCloseTrace((current) => (current === "none" ? entry : `${current} -> ${entry}`));
+  }, []);
+
+  const handleNestedPopoverOpenChange = React.useCallback(
+    (nextOpen: boolean) => {
+      if (!nextOpen) {
+        appendNestedOverlayTrace("popover:open:false");
+      }
+    },
+    [appendNestedOverlayTrace]
+  );
+
+  const handleNestedPopoverCloseReason = React.useCallback(
+    (reason: string) => {
+      appendNestedOverlayTrace(`popover:reason:${reason}`);
+    },
+    [appendNestedOverlayTrace]
+  );
+
+  const handleNestedDropdownOpenChange = React.useCallback(
+    (nextOpen: boolean) => {
+      if (!nextOpen) {
+        appendNestedOverlayTrace("dropdown:open:false");
+      }
+    },
+    [appendNestedOverlayTrace]
+  );
+
+  const handleNestedDropdownCloseReason = React.useCallback(
+    (reason: string) => {
+      appendNestedOverlayTrace(`dropdown:reason:${reason}`);
+    },
+    [appendNestedOverlayTrace]
+  );
 
   const handlePaletteOpenChange = React.useCallback((nextOpen: boolean) => {
     setPaletteOpen(nextOpen);
@@ -1399,6 +1436,27 @@ function App() {
                           { key: "c", label: "Delete" }
                         ]}
                       />
+                      <Popover
+                        triggerLabel="Open Nested Overlay"
+                        contentLabel="Nested overlay shell"
+                        onOpenChange={handleNestedPopoverOpenChange}
+                        onCloseReason={handleNestedPopoverCloseReason}
+                      >
+                        <div style={{ display: "grid", gap: 8 }}>
+                          <p style={{ margin: 0 }}>
+                            Escape should close nested dropdown first, then this popover.
+                          </p>
+                          <Dropdown
+                            label="Nested Actions"
+                            onOpenChange={handleNestedDropdownOpenChange}
+                            onCloseReason={handleNestedDropdownCloseReason}
+                            items={[
+                              { key: "approve-release", label: "Approve Release" },
+                              { key: "request-changes", label: "Request Changes" }
+                            ]}
+                          />
+                        </div>
+                      </Popover>
                       <Button onClick={() => setDialogOpen(true)}>Open Dialog</Button>
                       <Button variant="outline" onClick={() => setDrawerOpen(true)}>
                         Open Drawer
@@ -1453,6 +1511,12 @@ function App() {
                     Dropdown close trace:{" "}
                     <strong data-testid="dropdown-close-trace-demo" style={telemetryValueStyle}>
                       {dropdownCloseTrace}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Nested overlay close trace:{" "}
+                    <strong data-testid="nested-overlay-close-trace-demo" style={telemetryValueStyle}>
+                      {nestedOverlayCloseTrace}
                     </strong>
                   </p>
                   <p style={mutedBodyStyle}>

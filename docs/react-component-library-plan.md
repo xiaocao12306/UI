@@ -272,7 +272,6 @@
   - Demo Table 排序遥测验收（新增可视 telemetry 指示 + Playwright click/keyboard 双路径回归）
   - Demo Dropdown 焦点策略场景（Escape 回焦 trigger / outside pointer 保持目标焦点 / Tab 自然前进）与 Playwright 回归
   - Demo Dropdown 关闭原因验收（新增可视 telemetry 指示 + Playwright 回归，覆盖 item-select/escape/outside/trigger/tab）
-  - Demo Popover/Dropdown 关闭顺序验收（新增 close trace telemetry + Playwright 回归，锁定 `Popover: reason -> open:false` 与 `Dropdown item-select: select -> reason -> open:false`）
   - Tabs manual 模式键盘边界补强（`Home/End` 仅移动焦点，`Enter/Space` 才激活）并补单测 + Storybook 交互断言
   - Tabs 回绕策略收口（新增 `loop`，支持 Arrow 到边界后停留不回绕，补齐单测 + Storybook `NoLoopNavigation`）
   - Toast Escape 事件优先级补测（`defaultPrevented` 分支单测，避免与上层快捷键处理冲突）
@@ -804,6 +803,7 @@
   - Toast 与 Overlay Escape 优先级验收补齐（2026-03-21 latest+120：新增 toast-with-popover 集成回归与 Storybook `EscapePreemptedByOverlayLayer` 场景，锁定“上层 overlay 先消费 Escape，toast 延后到下一次 Escape 才关闭”的 top-layer-first 行为；同步 Component API/Best Practices 文档并复验 `pnpm --filter @aurora-ui/react exec vitest run src/Toast.test.tsx`、`pnpm storybook:test:grep \"Toast.stories.tsx\"` 及 docs parity 相关检查）
   - Toast 交互优先级验收补齐（2026-03-21 latest+121：补齐 Storybook `FocusedToastEscapesFirst` 交互断言（焦点与悬停双路径）与 Demo Playwright `prioritizes hovered toast` 回归，锁定“当前交互 toast 提升栈顶，Escape 优先关闭当前操作通知”的真实链路；复验 `pnpm storybook:test:grep \"Toast.stories.tsx\"` 与 `pnpm demo:e2e:grep \"prioritizes focused toast|prioritizes hovered toast\"` 通过）
   - CommandPalette 空结果 `aria-activedescendant` 语义验收补齐（2026-03-21 latest+122：补齐 “无匹配结果时清空 `aria-activedescendant`，恢复结果后重新绑定有效 option” 的单测与 Storybook `EmptyStateAriaControlsLifecycle` 交互断言，并同步 Component API/Best Practices 文档；复验 `pnpm --filter @aurora-ui/react exec vitest run src/CommandPalette.test.tsx`、`pnpm storybook:test:grep \"CommandPalette.stories.tsx\"` 与 docs parity 相关检查）
+  - Demo 嵌套 Overlay 关闭顺序验收补齐（2026-03-21 latest+123：在 Overlay 区块新增 `Open Nested Overlay`（Popover 内嵌 Dropdown）场景与 `nested-overlay-close-trace-demo` 遥测链路，新增 Playwright 回归 `preserves nested overlay top-layer close order for Escape`，锁定“一次 Escape 仅关闭内层 dropdown，二次 Escape 再关闭外层 popover”的 top-layer-first 行为，并校验 trace 顺序 `dropdown:reason -> dropdown:open:false -> popover:reason -> popover:open:false`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
