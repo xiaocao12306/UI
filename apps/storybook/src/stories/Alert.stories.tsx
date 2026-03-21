@@ -81,3 +81,25 @@ export const Dismissible: Story = {
     await expect(canvas.getByRole("status")).toBeInTheDocument();
   }
 };
+
+export const AccessibilityMetadata: Story = {
+  args: {
+    title: "Release readiness",
+    description: "Status copy is exposed through an explicit accessible name.",
+    ariaLabel: "Release readiness alert"
+  },
+  render: (args) => (
+    <AlertShowcase>
+      <Alert {...args} onClose={() => {}} closeLabel="Dismiss release readiness alert" />
+    </AlertShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole("status", { name: "Release readiness alert" });
+    await expect(alert).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Dismiss release readiness alert" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space"
+    );
+  }
+};

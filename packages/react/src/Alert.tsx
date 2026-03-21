@@ -6,6 +6,7 @@ export type AlertProps = React.ComponentPropsWithoutRef<"div"> & {
   title?: React.ReactNode;
   description?: React.ReactNode;
   live?: "polite" | "assertive" | "off";
+  ariaLabel?: string;
   onClose?: () => void;
   closeLabel?: string;
 };
@@ -38,6 +39,7 @@ export function Alert({
   title,
   description,
   live,
+  ariaLabel,
   onClose,
   closeLabel = "Dismiss alert",
   children,
@@ -50,11 +52,14 @@ export function Alert({
     typeof closeLabel === "string" && closeLabel.trim().length > 0
       ? closeLabel.trim()
       : "Dismiss alert";
+  const resolvedAriaLabel =
+    typeof ariaLabel === "string" && ariaLabel.trim().length > 0 ? ariaLabel.trim() : undefined;
 
   return (
     <div
       role={role}
       aria-live={ariaLive}
+      aria-label={resolvedAriaLabel}
       style={{
         borderRadius: "var(--aurora-radius-md)",
         border: "1px solid",
@@ -76,6 +81,7 @@ export function Alert({
           <button
             type="button"
             aria-label={resolvedCloseLabel}
+            aria-keyshortcuts="Enter Space"
             onClick={() => onClose()}
             style={{
               borderRadius: "var(--aurora-radius-sm)",

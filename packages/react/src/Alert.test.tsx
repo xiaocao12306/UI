@@ -28,12 +28,22 @@ describe("Alert", () => {
     const onClose = vi.fn();
     render(<Alert title="Notice" onClose={onClose} closeLabel="Close notice" />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Close notice" }));
+    const closeButton = screen.getByRole("button", { name: "Close notice" });
+    expect(closeButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    fireEvent.click(closeButton);
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it("ignores blank closeLabel and falls back to default dismiss button name", () => {
     render(<Alert title="Notice" onClose={() => {}} closeLabel="   " />);
     expect(screen.getByRole("button", { name: "Dismiss alert" })).toBeInTheDocument();
+  });
+
+  it("supports explicit ariaLabel and ignores blank values", () => {
+    const { rerender } = render(<Alert title="Named alert" ariaLabel="Release readiness status" />);
+    expect(screen.getByRole("status", { name: "Release readiness status" })).toBeInTheDocument();
+
+    rerender(<Alert title="Named alert" ariaLabel="   " />);
+    expect(screen.getByRole("status")).not.toHaveAttribute("aria-label");
   });
 });

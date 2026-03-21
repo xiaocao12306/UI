@@ -13,6 +13,7 @@ import * as PromptInputStories from '../stories/PromptInput.stories';
 import * as MessageBubbleStories from '../stories/MessageBubble.stories';
 import * as ReasoningPanelStories from '../stories/ReasoningPanel.stories';
 import * as StreamingCodeBlockStories from '../stories/StreamingCodeBlock.stories';
+import * as AlertStories from '../stories/Alert.stories';
 import * as ToastStories from '../stories/Toast.stories';
 import * as TabsStories from '../stories/Tabs.stories';
 import * as TableStories from '../stories/Table.stories';
@@ -256,6 +257,8 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 
 ## Notification Behavior
 
+- For alert banners, provide `ariaLabel` when title/body copy is icon-heavy or ambiguous; keep blank values out so status naming stays deterministic.
+- Keep alert dismiss buttons discoverable with `aria-keyshortcuts="Enter Space"` and localized `closeLabel` copy for assistive-tech audits.
 - Actionable toasts are persistent by default (`duration` omitted -> `0`); set explicit `duration` only when product requires timed dismissal.
 - If a toast includes `action`, treat it as an interactive surface (`dialog` / `alertdialog`) and keep CTA labels explicit.
 - Keep `closeOnEscape` aligned with task criticality; disable Escape only for must-read states.
@@ -295,6 +298,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={ToastStories.EscapeGuardedByToastHandler} />
 <Canvas of={ToastStories.EscapeIgnoresImeComposition} />
 <Canvas of={ToastStories.LiveRegionOff} />
+<Canvas of={AlertStories.AccessibilityMetadata} />
 
 ## Data Presentation Patterns
 

@@ -636,7 +636,11 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `description` | `ReactNode` | Main alert body copy under title. |
 | `onClose` | `() => void` | Enables dismiss button branch for actionable notices. |
 | `closeLabel` | `string` | Localizable dismiss-button accessible name; blank values are ignored and fallback to `Dismiss alert`. |
+| close-button keyboard hints | `aria-keyshortcuts="Enter Space"` | Dismiss button exposes keyboard shortcut metadata for QA/AT discoverability. |
+| `ariaLabel` | `string` | Optional status-region accessible name override; blank values are ignored. |
 | `live` | `'polite' \| 'assertive' \| 'off'` | Overrides default aria-live behavior. |
+
+<Canvas of={AlertStories.AccessibilityMetadata} />
 
 ### Toast
 
