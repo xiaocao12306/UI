@@ -1406,7 +1406,10 @@ test("toggles table loading state and disables sort controls", async ({ page }) 
   await loadingToggle.click();
   await expect(table).not.toHaveAttribute("aria-busy");
   await expect(sortButton).toBeEnabled();
-  await expect(sortButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await expect(sortButton).toHaveAttribute(
+    "aria-keyshortcuts",
+    "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
+  );
   await expect(table.getByRole("rowheader", { name: "Button" })).toBeVisible();
 });
 
@@ -1425,7 +1428,10 @@ test("shows empty table state and keeps sort controls disabled", async ({ page }
 
   await emptyToggle.click();
   await expect(sortButton).toBeEnabled();
-  await expect(sortButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await expect(sortButton).toHaveAttribute(
+    "aria-keyshortcuts",
+    "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
+  );
   await expect(table.getByRole("rowheader", { name: "Button" })).toBeVisible();
 });
 
@@ -1438,8 +1444,14 @@ test("keeps manual tabs panel stable until Enter activation", async ({ page }) =
   const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
   const reviewPanel = page.locator(`#${await reviewTab.getAttribute("aria-controls")}`);
 
-  await expect(draftTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
-  await expect(reviewTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await expect(draftTab).toHaveAttribute(
+    "aria-keyshortcuts",
+    "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
+  );
+  await expect(reviewTab).toHaveAttribute(
+    "aria-keyshortcuts",
+    "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
+  );
 
   await draftTab.focus();
   await draftTab.press("ArrowRight");
@@ -1540,8 +1552,14 @@ test("keeps manual tabs panel stable until Space activation", async ({ page }) =
   const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
   const shipPanel = page.locator(`#${await shipTab.getAttribute("aria-controls")}`);
 
-  await expect(draftTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
-  await expect(shipTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await expect(draftTab).toHaveAttribute(
+    "aria-keyshortcuts",
+    "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
+  );
+  await expect(shipTab).toHaveAttribute(
+    "aria-keyshortcuts",
+    "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
+  );
 
   await draftTab.focus();
   await draftTab.press("End");
@@ -1564,8 +1582,14 @@ test("keeps manual tabs panel stable until legacy Spacebar activation", async ({
   const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
   const reviewPanel = page.locator(`#${await reviewTab.getAttribute("aria-controls")}`);
 
-  await expect(draftTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
-  await expect(reviewTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await expect(draftTab).toHaveAttribute(
+    "aria-keyshortcuts",
+    "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
+  );
+  await expect(reviewTab).toHaveAttribute(
+    "aria-keyshortcuts",
+    "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
+  );
 
   await draftTab.focus();
   await draftTab.press("ArrowRight");
@@ -1592,8 +1616,14 @@ test("keeps manual vertical tabs panel stable until Enter activation", async ({ 
   const backlogPanel = page.locator(`#${await backlogTab.getAttribute("aria-controls")}`);
   const shipPanel = page.locator(`#${await shipTab.getAttribute("aria-controls")}`);
 
-  await expect(backlogTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
-  await expect(shipTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await expect(backlogTab).toHaveAttribute(
+    "aria-keyshortcuts",
+    "Enter Space Home End PageDown PageUp ArrowUp ArrowDown"
+  );
+  await expect(shipTab).toHaveAttribute(
+    "aria-keyshortcuts",
+    "Enter Space Home End PageDown PageUp ArrowUp ArrowDown"
+  );
   await expect(reviewTab).toHaveAttribute("aria-disabled", "true");
   await expect(reviewTab).not.toHaveAttribute("aria-keyshortcuts");
 
