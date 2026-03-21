@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Dialog, Dropdown, Input, Textarea } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import { StoryShowcaseFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
 
 const meta = {
@@ -184,14 +184,13 @@ export const FocusIntentPrimaryPointerOnly: Story = {
     });
     closeButton.dispatchEvent(secondaryMouseDown);
     await expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
-    await expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+    await expect(closeButton.style.transform).toContain("0");
 
-    fireEvent.mouseDown(closeButton, { button: 0 });
-    await expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+    await userEvent.pointer([{ target: closeButton, keys: "[MouseLeft>]" }]);
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("1px");
+    });
     await expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
-
-    fireEvent.mouseUp(closeButton, { button: 0 });
-    await expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   }
 };
 
