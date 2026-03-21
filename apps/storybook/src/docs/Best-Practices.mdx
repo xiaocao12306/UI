@@ -67,6 +67,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Prefer `ariaLabelledBy` for radio groups when a visible heading already exists; use `ariaLabel` for standalone groups without nearby title context.
 - Keep radio option shortcut hints precise: expose `aria-keyshortcuts="Space"` only on actionable options, and remove shortcut metadata from disabled options.
 - Keep `RadioGroup.options[].value` unique and stable; development builds warn on duplicate values and runtime render keys auto-suffix duplicates for React stability, but unique values are still required for deterministic checked/focus semantics.
+- Keep radio-group `direction` aligned with visual layout so `aria-orientation` stays truthful (`horizontal` for inline groups, `vertical` for stacked groups).
 - Keep input Enter active feedback scoped to unmodified keys: ignore `Ctrl/Meta/Alt + Enter` shortcut chords, while allowing normal `Enter` and `Shift+Enter` intent.
 - Keep input shortcut hints precise: expose default `aria-keyshortcuts="Enter"` only for actionable text-like inputs (`text/search/email/url/tel/password`), and remove default hints for non-text types plus read-only/disabled states.
 - Keep date-picker shortcut hints explicit: native `type="date"` should not expose default Enter shortcut metadata; only pass `aria-keyshortcuts` when product workflows require a custom documented shortcut.

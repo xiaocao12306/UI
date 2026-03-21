@@ -129,6 +129,14 @@ describe("RadioGroup", () => {
     expect(screen.getByRole("radiogroup", { name: "Invalid group" })).toHaveAttribute("aria-invalid", "true");
   });
 
+  it("exposes radiogroup orientation semantics from direction", () => {
+    const { rerender } = render(<RadioGroup name="Direction group" direction="vertical" options={baseOptions} />);
+    expect(screen.getByRole("radiogroup", { name: "Direction group" })).toHaveAttribute("aria-orientation", "vertical");
+
+    rerender(<RadioGroup name="Direction group" direction="horizontal" options={baseOptions} />);
+    expect(screen.getByRole("radiogroup", { name: "Direction group" })).toHaveAttribute("aria-orientation", "horizontal");
+  });
+
   it("accepts invalid semantics from aria-invalid on the group", () => {
     render(<RadioGroup name="Aria group" aria-invalid="true" options={baseOptions} />);
     expect(screen.getByRole("radiogroup", { name: "Aria group" })).toHaveAttribute("aria-invalid", "true");

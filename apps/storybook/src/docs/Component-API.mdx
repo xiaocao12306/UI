@@ -156,7 +156,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | option shortcut hints                 | actionable options expose `aria-keyshortcuts="Space"` | Keyboard-discoverability metadata is attached only to actionable radio options; disabled options omit hints so QA/AT metadata does not advertise unavailable activation paths.                  |
 | document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores radio focus-visible state consistently, including iframe hosts. |
 | `invalid`                             | `boolean`                                    | Applies `aria-invalid` to the `radiogroup` container for screen-reader narration.                                                                                                               |
-| `direction`                           | `'vertical' \| 'horizontal'`                 | Layout direction for stacked vs inline groups.                                                                                                                                                  |
+| `direction`                           | `'vertical' \| 'horizontal'`                 | Layout direction for stacked vs inline groups; also maps to `aria-orientation` on the `radiogroup` container.                                                                                 |
 
 <Canvas of={RadioGroupStories.InvalidState} />
 <Canvas of={RadioGroupStories.ShortcutHintPrecision} />

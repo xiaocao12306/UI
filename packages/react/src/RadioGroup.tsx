@@ -151,6 +151,7 @@ export function RadioGroup({
       role="radiogroup"
       aria-label={resolvedAriaLabelledBy ? undefined : resolvedAriaLabel ?? name}
       aria-labelledby={resolvedAriaLabelledBy}
+      aria-orientation={direction}
       aria-invalid={resolvedInvalidAria}
     >
       {options.map((option, index) => {
