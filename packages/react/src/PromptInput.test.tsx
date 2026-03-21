@@ -8,6 +8,8 @@ describe("PromptInput", () => {
 
     render(<PromptInput onSubmit={onSubmit} />);
     const textbox = screen.getByPlaceholderText("Type your prompt...");
+    expect(textbox).toHaveAttribute("aria-label", "Prompt input");
+    expect(textbox).toHaveAttribute("aria-keyshortcuts", "Control+Enter Meta+Enter");
 
     fireEvent.change(textbox, { target: { value: "Draft release notes" } });
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
@@ -85,5 +87,29 @@ describe("PromptInput", () => {
 
     fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
     expect(onSubmit).toHaveBeenCalledWith("Legacy fallback draft");
+  });
+
+  it("supports localized aria label and hint copy", () => {
+    render(
+      <PromptInput
+        ariaLabel="智能提示输入"
+        shortcutHint="按 Ctrl/Cmd + Enter 提交"
+        submittingHint="正在生成建议..."
+      />
+    );
+
+    expect(screen.getByRole("textbox", { name: "智能提示输入" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Control+Enter Meta+Enter"
+    );
+    expect(screen.getByText("按 Ctrl/Cmd + Enter 提交")).toBeInTheDocument();
+    expect(screen.queryByText("正在生成建议...")).not.toBeInTheDocument();
+  });
+
+  it("falls back to default prompt label when ariaLabel is blank", () => {
+    render(<PromptInput ariaLabel="   " />);
+
+    const textbox = screen.getByRole("textbox", { name: "Prompt input" });
+    expect(textbox).toHaveAttribute("aria-label", "Prompt input");
   });
 });

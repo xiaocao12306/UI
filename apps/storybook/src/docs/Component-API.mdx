@@ -763,6 +763,11 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onSubmit` | `(prompt: string) => void` | Triggered by send button or Ctrl/Cmd + Enter shortcut; ignored during IME composition and legacy fallback paths that only expose `keyCode=229`. |
 | `submitting` | `boolean` | Locks input + button and updates live hint during AI request execution. |
 | `placeholder` | `string` | Optional prompt guidance text. |
+| `ariaLabel` | `string` | Optional textarea accessible name override; blank values are ignored and fallback to `Prompt input`. |
+| `shortcutHint` / `submittingHint` | `ReactNode` | Customizable idle/pending helper copy for localization and product voice alignment. |
+| keyboard metadata | `aria-keyshortcuts="Control+Enter Meta+Enter"` | Prompt textarea exposes submit shortcut hints for QA/AT discoverability. |
+
+<Canvas of={PromptInputStories.LocalizedCopy} />
 
 ### MessageBubble
 
