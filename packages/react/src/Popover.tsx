@@ -107,10 +107,16 @@ export function Popover({
           setOpen(true);
         }}
         onKeyDown={(event) => {
-          if (event.key === "ArrowDown" && !isOpen) {
-            event.preventDefault();
-            setOpen(true);
+          if (event.key !== "ArrowDown" || isOpen) {
+            return;
           }
+
+          if (event.altKey || event.ctrlKey || event.metaKey) {
+            return;
+          }
+
+          event.preventDefault();
+          setOpen(true);
         }}
       >
         {triggerLabel}

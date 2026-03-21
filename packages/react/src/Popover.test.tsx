@@ -68,6 +68,25 @@ describe("Popover", () => {
     expect(screen.getByRole("button", { name: "Primary action" })).toHaveFocus();
   });
 
+  it("ignores modified ArrowDown combinations for trigger keyboard open", () => {
+    render(
+      <Popover triggerLabel="Arrow guard popover">
+        <button type="button">Primary action</button>
+      </Popover>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Arrow guard popover" });
+    fireEvent.focus(trigger);
+
+    fireEvent.keyDown(trigger, { key: "ArrowDown", ctrlKey: true });
+    fireEvent.keyDown(trigger, { key: "ArrowDown", altKey: true });
+    fireEvent.keyDown(trigger, { key: "ArrowDown", metaKey: true });
+    expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  });
+
   it("focuses popover container when no focusable content exists", () => {
     render(
       <Popover triggerLabel="No focusables">

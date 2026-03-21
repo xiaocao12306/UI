@@ -61,6 +61,50 @@ export const Default: Story = {
   }
 };
 
+function TriggerArrowDownModifierGuardPopoverDemo() {
+  const [openCount, setOpenCount] = React.useState(0);
+
+  return (
+    <PopoverShowcase>
+      <p style={popoverTelemetryTextStyle}>
+        ArrowDown open calls:{" "}
+        <strong data-testid="popover-arrowdown-open-calls" style={popoverTelemetryValueStyle}>
+          {openCount}
+        </strong>
+      </p>
+      <Popover
+        triggerLabel="ArrowDown Guard Popover"
+        onOpenChange={(nextOpen) => {
+          if (nextOpen) {
+            setOpenCount((count) => count + 1);
+          }
+        }}
+      >
+        <p style={{ margin: 0 }}>Only unmodified ArrowDown should open this popover.</p>
+      </Popover>
+    </PopoverShowcase>
+  );
+}
+
+export const TriggerArrowDownModifierGuard: Story = {
+  render: () => <TriggerArrowDownModifierGuardPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "ArrowDown Guard Popover" });
+
+    trigger.focus();
+    fireEvent.keyDown(trigger, { key: "ArrowDown", ctrlKey: true });
+    fireEvent.keyDown(trigger, { key: "ArrowDown", altKey: true });
+    fireEvent.keyDown(trigger, { key: "ArrowDown", metaKey: true });
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-arrowdown-open-calls")).toHaveTextContent("0");
+
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-arrowdown-open-calls")).toHaveTextContent("1");
+  }
+};
+
 export const WithInteractiveContent: Story = {
   args: {
     triggerLabel: "Edit Name",

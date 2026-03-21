@@ -328,6 +328,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | trigger relation | conditional `aria-controls` | Trigger references content ID only while open to avoid dangling ARIA links. |
 | dismiss focus policy | Escape restores trigger focus; outside pointer keeps target focus | Prevents keyboard dead-ends without stealing pointer intent. |
 | modifier-key guard | ignores `Ctrl/Meta/Alt + Escape` | Preserves host/browser modified-key shortcuts and avoids accidental popover dismiss/hook side effects from combined key chords. |
+| trigger keyboard-open guard | ignores `Ctrl/Meta/Alt + ArrowDown` | Trigger keyboard open shortcut responds only to unmodified `ArrowDown`, preserving host/browser shortcut chords. |
 | Escape repeat guard | ignores repeated keydown | Long-press Escape (`event.repeat=true`) is ignored so one key press closes at most one popover and avoids duplicate dismiss telemetry. |
 | Escape priority | preempted events skip popover hook/dismiss | If higher-level handlers already `preventDefault()` Escape, popover stays open and does not fire `onEscapeKeyDown`. |
 | dismiss event scope | `ownerDocument`-scoped layer listeners | Escape/outside-pointer dismiss responds only to events from the popover document root; cross-document events are ignored. |
@@ -336,6 +337,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={PopoverStories.DismissGuardHooks} />
 <Canvas of={PopoverStories.OutsideDismissFocusTransfer} />
 <Canvas of={PopoverStories.CloseReasonTelemetry} />
+<Canvas of={PopoverStories.TriggerArrowDownModifierGuard} />
 <Canvas of={PopoverStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={PopoverStories.EscapeRepeatGuard} />
 
