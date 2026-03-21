@@ -47,6 +47,7 @@ describe("Tooltip", () => {
 
     fireEvent.focus(trigger);
     expect(screen.getByRole("tooltip")).toBeInTheDocument();
+    expect(screen.getByRole("tooltip")).toHaveAttribute("aria-keyshortcuts", "Escape");
 
     fireEvent.keyDown(trigger, { key: "Escape" });
     expect(screen.queryByRole("tooltip")).toBeNull();
@@ -54,6 +55,28 @@ describe("Tooltip", () => {
     fireEvent.focus(trigger);
     expect(screen.getByRole("tooltip")).toBeInTheDocument();
     fireEvent.blur(trigger);
+    expect(screen.queryByRole("tooltip")).toBeNull();
+  });
+
+  it("ignores modified/repeated/IME Escape keydowns and closes on plain Escape", () => {
+    render(
+      <Tooltip content="Tooltip content" closeDelay={0}>
+        <button type="button">Escape guard trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Escape guard trigger" });
+    fireEvent.focus(trigger);
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+
+    fireEvent.keyDown(trigger, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(trigger, { key: "Escape", altKey: true });
+    fireEvent.keyDown(trigger, { key: "Escape", metaKey: true });
+    fireEvent.keyDown(trigger, { key: "Escape", repeat: true });
+    fireEvent.keyDown(trigger, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+
+    fireEvent.keyDown(trigger, { key: "Escape", shiftKey: true });
     expect(screen.queryByRole("tooltip")).toBeNull();
   });
 

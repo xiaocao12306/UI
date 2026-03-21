@@ -189,7 +189,15 @@ export function Tooltip({
     },
     onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
       (childProps.onKeyDown as ((value: React.KeyboardEvent<HTMLElement>) => void) | undefined)?.(event);
-      if (!event.defaultPrevented && event.key === "Escape") {
+      if (
+        !event.defaultPrevented &&
+        event.key === "Escape" &&
+        !event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.repeat &&
+        !isComposingTooltipKeyEvent(event)
+      ) {
         closeImmediately();
       }
     }
@@ -202,6 +210,7 @@ export function Tooltip({
         <span
           id={tooltipId}
           role="tooltip"
+          aria-keyshortcuts="Escape"
           onMouseEnter={scheduleOpen}
           onMouseLeave={scheduleClose}
           style={{
@@ -222,4 +231,13 @@ export function Tooltip({
       ) : null}
     </span>
   );
+}
+
+function isComposingTooltipKeyEvent(event: React.KeyboardEvent<HTMLElement>) {
+  const nativeEvent = event.nativeEvent;
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }

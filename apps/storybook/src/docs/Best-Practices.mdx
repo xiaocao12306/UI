@@ -96,6 +96,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={DatePickerStories.LabelledByPrecedence} />
 <Canvas of={ButtonStories.IconOnlyAccessibleName} />
 <Canvas of={TooltipStories.DescribedByLifecycle} />
+<Canvas of={TooltipStories.EscapeModifierGuard} />
 <Canvas of={DialogStories.Interactive} />
 
 ## Overlay Policies
@@ -116,6 +117,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For overlays built on `DismissableLayer`, ignore Escape while IME composition is active, including legacy browsers that only expose `keyCode=229`, so CJK text confirmation does not close parent surfaces unexpectedly.
 - For overlays built on `DismissableLayer`, keep `Ctrl/Meta/Alt + Escape` on host/app shortcut behavior; modified Escape should not trigger dismiss hooks or close transitions.
 - For overlays built on `DismissableLayer`, treat repeated Escape keydown (`event.repeat`) as no-op so long-press does not close multiple overlay layers or duplicate close telemetry.
+- Keep tooltip Escape close behavior scoped to unmodified, non-repeat, non-IME keydown so host shortcut chords and CJK composition confirmation cannot collapse hint overlays unexpectedly.
 - For dialog/drawer in iframe or multi-root hosts, rely on owner-document portal mounting (`ownerDocument.body`) so overlay content and scroll-lock scope stay inside the invoking document.
 - For popover/dropdown in iframe or multi-root hosts, validate Escape/outside-pointer dismissal against the overlay `ownerDocument`; cross-document events should not close the active surface.
 - For dialog/drawer flows under app-level shortcuts, rely on built-in Escape preemption behavior so `onEscapeKeyDown` hooks stay side-effect free when Escape is already prevented.

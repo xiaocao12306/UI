@@ -277,9 +277,12 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `delayDuration` / `closeDelay` | `number` | Fine-grained pointer open/close timing control. |
 | `disabled` | `boolean` | Prevents open behavior and closes active tooltip state. |
 | `side` / `sideOffset` | `'top' \| 'right' \| 'bottom' \| 'left'` / `number` | Controls overlay placement around trigger. |
+| dismiss key hints | `aria-keyshortcuts="Escape"` (while visible) | Tooltip surface exposes Escape shortcut metadata for QA/AT discoverability when dismiss is available. |
+| modifier/repeat guard | ignores `Ctrl/Meta/Alt + Escape`, repeated keydown, and IME composition Escape (`keyCode=229`) | Preserves host/browser shortcuts and avoids accidental tooltip dismissal while handling long-press or CJK composition confirmation. |
 
 <Canvas of={TooltipStories.Controlled} />
 <Canvas of={TooltipStories.DescribedByLifecycle} />
+<Canvas of={TooltipStories.EscapeModifierGuard} />
 
 ### Dialog
 

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Tooltip } from "@aurora-ui/react";
-import { expect, userEvent, waitFor, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import * as React from "react";
 import { StoryShowcaseFrame, storyMutedTextStyle } from "./storyShowcase";
 
@@ -45,6 +45,7 @@ export const Default: Story = {
 
     await userEvent.hover(trigger);
     await expect(await canvas.findByRole("tooltip")).toHaveTextContent("Use Cmd/Ctrl + K to open command palette.");
+    await expect(canvas.getByRole("tooltip")).toHaveAttribute("aria-keyshortcuts", "Escape");
     await userEvent.unhover(trigger);
     await waitFor(() => {
       expect(canvas.queryByRole("tooltip")).not.toBeInTheDocument();
@@ -53,6 +54,34 @@ export const Default: Story = {
     trigger.focus();
     await expect(await canvas.findByRole("tooltip")).toHaveTextContent("Use Cmd/Ctrl + K to open command palette.");
     await userEvent.keyboard("{Escape}");
+    await waitFor(() => {
+      expect(canvas.queryByRole("tooltip")).not.toBeInTheDocument();
+    });
+  }
+};
+
+export const EscapeModifierGuard: Story = {
+  args: {
+    content: "Only unmodified Escape should close this tooltip.",
+    children: <Button variant="outline">Escape Guard Trigger</Button>
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Escape Guard Trigger" });
+
+    trigger.focus();
+    await expect(await canvas.findByRole("tooltip")).toHaveTextContent(
+      "Only unmodified Escape should close this tooltip."
+    );
+
+    fireEvent.keyDown(trigger, { key: "Escape", ctrlKey: true });
+    fireEvent.keyDown(trigger, { key: "Escape", altKey: true });
+    fireEvent.keyDown(trigger, { key: "Escape", metaKey: true });
+    fireEvent.keyDown(trigger, { key: "Escape", repeat: true });
+    fireEvent.keyDown(trigger, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    await expect(canvas.getByRole("tooltip")).toBeInTheDocument();
+
+    await userEvent.keyboard("{Shift>}{Escape}{/Shift}");
     await waitFor(() => {
       expect(canvas.queryByRole("tooltip")).not.toBeInTheDocument();
     });
