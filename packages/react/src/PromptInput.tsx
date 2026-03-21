@@ -52,7 +52,7 @@ export function PromptInput({
         placeholder={placeholder}
         aria-label={resolvedAriaLabel}
         aria-describedby={hintId}
-        aria-keyshortcuts="Control+Enter Meta+Enter"
+        aria-keyshortcuts={submitting ? undefined : "Control+Enter Meta+Enter"}
         disabled={submitting}
         rows={4}
         onCompositionStart={() => {

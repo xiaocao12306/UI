@@ -108,11 +108,13 @@ export const WithAiRequestState: Story = {
 
     const loadingButton = canvas.getByRole("button", { name: "Sending..." });
     await expect(loadingButton).toBeDisabled();
+    await expect(textbox).not.toHaveAttribute("aria-keyshortcuts");
     await userEvent.click(loadingButton);
     await expect(canvas.getByText(/Submission count:/)).toHaveTextContent("Submission count: 1");
 
     await waitFor(() => {
       expect(canvas.getByRole("button", { name: "Send" })).toBeDisabled();
+      expect(textbox).toHaveAttribute("aria-keyshortcuts", "Control+Enter Meta+Enter");
     });
   }
 };

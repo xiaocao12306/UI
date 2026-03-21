@@ -49,9 +49,22 @@ describe("PromptInput", () => {
 
     expect(loadingButton).toBeDisabled();
     expect(textbox).toBeDisabled();
+    expect(textbox).not.toHaveAttribute("aria-keyshortcuts");
     fireEvent.click(loadingButton);
     fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
     expect(onSubmit).not.toHaveBeenCalled();
+  });
+
+  it("restores shortcut metadata after submitting state exits", () => {
+    const { rerender } = render(<PromptInput submitting />);
+    const textbox = screen.getByRole("textbox", { name: "Prompt input" });
+    expect(textbox).not.toHaveAttribute("aria-keyshortcuts");
+
+    rerender(<PromptInput submitting={false} />);
+    expect(screen.getByRole("textbox", { name: "Prompt input" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Control+Enter Meta+Enter"
+    );
   });
 
   it("does not submit while IME composition is active", () => {
