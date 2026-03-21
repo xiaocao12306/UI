@@ -46,4 +46,89 @@ describe("Alert", () => {
     rerender(<Alert title="Named alert" ariaLabel="   " />);
     expect(screen.getByRole("status")).not.toHaveAttribute("aria-label");
   });
+
+  it("tracks keyboard focus-visible intent and clears it only on primary pointer interaction", () => {
+    render(<Alert title="Notice" onClose={() => {}} closeLabel="Focus-visible dismiss" />);
+
+    const closeButton = screen.getByRole("button", { name: "Focus-visible dismiss" });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(closeButton);
+    expect(closeButton).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(closeButton, { button: 1 });
+    expect(closeButton).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(closeButton, { button: 0 });
+    expect(closeButton).not.toHaveAttribute("data-focus-visible");
+  });
+
+  it("tracks ownerDocument keyboard focus intent when focus-visible matching is unavailable", () => {
+    render(
+      <div>
+        <button type="button">Before alert close</button>
+        <Alert title="Notice" onClose={() => {}} closeLabel="Document intent dismiss" />
+      </div>
+    );
+
+    const beforeButton = screen.getByRole("button", { name: "Before alert close" });
+    const closeButton = screen.getByRole("button", { name: "Document intent dismiss" });
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(closeButton);
+    expect(closeButton).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(closeButton);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(closeButton);
+    expect(closeButton).not.toHaveAttribute("data-focus-visible");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    const iframeWindow = iframe.contentWindow;
+    if (!iframeDocument || !iframeWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    const { getByRole } = render(
+      <Alert title="Notice" onClose={() => {}} closeLabel="Iframe dismiss" />,
+      {
+        container: iframeContainer,
+        baseElement: iframeDocument.body
+      }
+    );
+    const closeButton = getByRole("button", { name: "Iframe dismiss" });
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      iframeDocument.dispatchEvent(
+        new iframeWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(closeButton);
+      expect(closeButton).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(closeButton);
+      iframeDocument.dispatchEvent(
+        new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(closeButton);
+      expect(closeButton).not.toHaveAttribute("data-focus-visible");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
 });

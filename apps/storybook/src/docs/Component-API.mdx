@@ -657,10 +657,13 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onClose` | `() => void` | Enables dismiss button branch for actionable notices. |
 | `closeLabel` | `string` | Localizable dismiss-button accessible name; blank values are ignored and fallback to `Dismiss alert`. |
 | close-button keyboard hints | `aria-keyshortcuts="Enter Space"` | Dismiss button exposes keyboard shortcut metadata for QA/AT discoverability. |
+| close-button focus intent | primary pointer clears focus-visible | Non-primary dismiss-button pointer interactions keep keyboard-intent ring state to avoid accidental focus-ring loss during context/right-click paths. |
+| document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores alert close-button focus-visible state consistently, including iframe hosts. |
 | `ariaLabel` | `string` | Optional status-region accessible name override; blank values are ignored. |
 | `live` | `'polite' \| 'assertive' \| 'off'` | Overrides default aria-live behavior. |
 
 <Canvas of={AlertStories.AccessibilityMetadata} />
+<Canvas of={AlertStories.FocusIntentReentry} />
 
 ### Toast
 

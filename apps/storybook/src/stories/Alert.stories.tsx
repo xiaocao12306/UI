@@ -103,3 +103,32 @@ export const AccessibilityMetadata: Story = {
     );
   }
 };
+
+export const FocusIntentReentry: Story = {
+  render: () => (
+    <AlertShowcase>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        Click the trigger first, then press Tab to verify keyboard re-entry restores close-button
+        focus-visible state.
+      </p>
+      <button type="button">Before alert close</button>
+      <Alert
+        tone="warning"
+        title="Pending action"
+        description="Close affordance should restore keyboard focus ring on re-entry."
+        onClose={() => {}}
+        closeLabel="Focus intent dismiss"
+      />
+    </AlertShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before alert close" });
+    const closeButton = canvas.getByRole("button", { name: "Focus intent dismiss" });
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(closeButton).toHaveFocus();
+    await expect(closeButton).toHaveAttribute("data-focus-visible", "true");
+  }
+};
