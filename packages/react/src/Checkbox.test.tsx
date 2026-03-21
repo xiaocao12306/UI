@@ -63,6 +63,86 @@ describe("Checkbox", () => {
     expect(onBlur).toHaveBeenCalledTimes(1);
   });
 
+  it("tracks keyboard focus-visible intent and clears it on primary pointer interaction", () => {
+    render(<Checkbox label="Focus-visible checkbox" />);
+    const checkbox = screen.getByRole("checkbox", { name: "Focus-visible checkbox" });
+
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(checkbox);
+    expect(checkbox).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(checkbox, { button: 0 });
+    expect(checkbox).not.toHaveAttribute("data-focus-visible");
+  });
+
+  it("tracks keyboard focus intent from ownerDocument when focus-visible fallback is used", () => {
+    render(
+      <div>
+        <button type="button">Before checkbox</button>
+        <Checkbox label="Document intent checkbox" />
+      </div>
+    );
+
+    const checkbox = screen.getByRole("checkbox", { name: "Document intent checkbox" });
+    const beforeButton = screen.getByRole("button", { name: "Before checkbox" });
+    const matchesSpy = vi.spyOn(checkbox, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(checkbox);
+    expect(checkbox).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(checkbox);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(checkbox);
+    expect(checkbox).not.toHaveAttribute("data-focus-visible");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+
+    const { getByRole } = render(<Checkbox label="Iframe checkbox" />, {
+      container: secondaryContainer,
+      baseElement: secondaryDocument.body
+    });
+    const checkbox = getByRole("checkbox", { name: "Iframe checkbox" });
+    const matchesSpy = vi.spyOn(checkbox, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(checkbox);
+      expect(checkbox).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(checkbox);
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(checkbox);
+      expect(checkbox).not.toHaveAttribute("data-focus-visible");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("ignores blank aria-label and keeps visible label as accessible name", () => {
     render(<Checkbox label="Release gate" aria-label="   " />);
 

@@ -131,10 +131,12 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `indeterminate` | `boolean` | Sets mixed state semantics (`aria-checked="mixed"`). |
 | `description` | `ReactNode` | Automatically wires helper text into `aria-describedby`. |
 | `aria-label` / `aria-labelledby` | `string` | Optional explicit naming; blank values are ignored, and `aria-labelledby` takes precedence when both are provided. |
+| document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores checkbox focus-visible state consistently, including iframe hosts. |
 | `invalid` | `boolean` | Applies invalid state with `aria-invalid`. |
 
 <Canvas of={CheckboxStories.InvalidAndDisabled} />
 <Canvas of={CheckboxStories.LabelledByPrecedence} />
+<Canvas of={CheckboxStories.FocusIntentReentry} />
 
 ### RadioGroup
 

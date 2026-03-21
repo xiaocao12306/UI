@@ -101,3 +101,29 @@ export const LabelledByPrecedence: Story = {
     await expect(checkbox).not.toHaveAttribute("aria-label");
   }
 };
+
+export const FocusIntentReentry: Story = {
+  render: () => (
+    <div style={{ width: 320, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        Click the trigger first, then press Tab to verify keyboard re-entry restores checkbox
+        focus-visible state.
+      </p>
+      <button type="button">Before checkbox</button>
+      <Checkbox
+        label="Focus intent checkbox"
+        description="Keyboard re-entry should restore focus ring semantics."
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before checkbox" });
+    const checkbox = canvas.getByRole("checkbox", { name: /^Focus intent checkbox/ });
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(checkbox).toHaveFocus();
+    await expect(checkbox).toHaveAttribute("data-focus-visible", "true");
+  }
+};
