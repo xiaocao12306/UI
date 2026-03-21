@@ -29,6 +29,8 @@ const storyTelemetryLabelStyle: React.CSSProperties = {
 };
 
 const tabsShowcaseMaxWidth = "min(100%, 620px)";
+const manualHorizontalTabShortcuts = "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight";
+const manualVerticalTabShortcuts = "Enter Space Home End PageDown PageUp ArrowUp ArrowDown";
 
 function TabsShowcase({
   children,
@@ -583,8 +585,8 @@ export const ManualActivation: Story = {
 
     await userEvent.click(specTab);
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
-    await expect(specTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
-    await expect(releaseTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    await expect(specTab).toHaveAttribute("aria-keyshortcuts", manualHorizontalTabShortcuts);
+    await expect(releaseTab).toHaveAttribute("aria-keyshortcuts", manualHorizontalTabShortcuts);
 
     await userEvent.keyboard("{ArrowRight}");
     const buildTab = canvas.getByRole("tab", { name: "Build" });
@@ -849,8 +851,8 @@ export const ManualVerticalActivation: Story = {
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
       "Backlog scope and release intent."
     );
-    await expect(backlogTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
-    await expect(shipTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    await expect(backlogTab).toHaveAttribute("aria-keyshortcuts", manualVerticalTabShortcuts);
+    await expect(shipTab).toHaveAttribute("aria-keyshortcuts", manualVerticalTabShortcuts);
     await expect(reviewTab).toHaveAttribute("aria-disabled", "true");
     await expect(reviewTab).not.toHaveAttribute("aria-keyshortcuts");
 

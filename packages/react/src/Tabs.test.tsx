@@ -938,7 +938,7 @@ describe("Tabs", () => {
     });
   });
 
-  it("exposes Enter/Space keyboard shortcuts metadata in manual activation mode", () => {
+  it("exposes activation and navigation keyboard shortcuts metadata in manual horizontal mode", () => {
     render(
       <Tabs
         defaultValue="one"
@@ -953,11 +953,36 @@ describe("Tabs", () => {
 
     expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "Enter Space"
+      "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
     );
     expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "Enter Space"
+      "Enter Space Home End PageDown PageUp ArrowLeft ArrowRight"
+    );
+    expect(screen.getByRole("tab", { name: "Three" })).not.toHaveAttribute("aria-keyshortcuts");
+  });
+
+  it("exposes activation and navigation keyboard shortcuts metadata in manual vertical mode", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        orientation="vertical"
+        activationMode="manual"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> },
+          { key: "three", label: "Three", content: <div>Panel Three</div>, disabled: true }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space Home End PageDown PageUp ArrowUp ArrowDown"
+    );
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space Home End PageDown PageUp ArrowUp ArrowDown"
     );
     expect(screen.getByRole("tab", { name: "Three" })).not.toHaveAttribute("aria-keyshortcuts");
   });
