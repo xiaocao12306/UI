@@ -2268,6 +2268,21 @@ test("shift-tabs out of dropdown menu and moves focus to previous control", asyn
   await expect(previousButton).toBeFocused();
 });
 
+test("tabs out immediately after opening dropdown from trigger", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  const nextButton = page.getByRole("button", { name: "Open Nested Overlay" });
+
+  await trigger.focus();
+  await trigger.press("ArrowDown");
+  await expect(page.getByRole("menu")).toBeVisible();
+
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("menu")).toBeHidden();
+  await expect(nextButton).toBeFocused();
+});
+
 test("reports toast close reason telemetry for Escape, close button, and timeout", async ({
   page
 }) => {
