@@ -1885,4 +1885,29 @@ describe("CommandPalette", () => {
     fireEvent.mouseDown(firstOption);
     expect(input).toHaveFocus();
   });
+
+  it("ignores modified activation keys and repeated keydown on focused options", () => {
+    const onSelect = vi.fn();
+    render(
+      <CommandPalette
+        open
+        closeOnSelect={false}
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings", onSelect },
+          { key: "create-project", label: "Create Project" }
+        ]}
+      />
+    );
+
+    const option = screen.getByRole("option", { name: "Open Settings" });
+
+    fireEvent.keyDown(option, { key: "Enter", ctrlKey: true });
+    fireEvent.keyDown(option, { key: "Space", metaKey: true });
+    fireEvent.keyDown(option, { key: "Enter", repeat: true });
+    expect(onSelect).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(option, { key: "Enter" });
+    expect(onSelect).toHaveBeenCalledTimes(1);
+  });
 });

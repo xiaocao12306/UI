@@ -605,6 +605,10 @@ export function CommandPalette({
                       return;
                     }
 
+                    if (event.altKey || event.ctrlKey || event.metaKey) {
+                      return;
+                    }
+
                     if (
                       event.key === "Enter" ||
                       event.key === " " ||
@@ -612,6 +616,9 @@ export function CommandPalette({
                       event.key === "Spacebar"
                     ) {
                       event.preventDefault();
+                      if (event.repeat) {
+                        return;
+                      }
                       selectItem(index);
                     }
                   }}
