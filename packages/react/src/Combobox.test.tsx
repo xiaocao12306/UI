@@ -347,7 +347,7 @@ describe("Combobox", () => {
     expect(ctrlPrimaryMouseDown.defaultPrevented).toBe(false);
   });
 
-  it("tracks keyboard focus-visible intent and clears it only on primary pointer interaction", () => {
+  it("tracks keyboard focus-visible intent and clears it only on plain primary pointer interaction", () => {
     render(<Combobox options={options} onValueChange={() => {}} ariaLabel="Focus-visible combobox" />);
 
     const input = screen.getByRole("combobox", { name: "Focus-visible combobox" });
@@ -356,6 +356,9 @@ describe("Combobox", () => {
     expect(input).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(input, { button: 1 });
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(input, { button: 0, ctrlKey: true });
     expect(input).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(input, { button: 0 });
@@ -378,6 +381,16 @@ describe("Combobox", () => {
 
     fireEvent.mouseDown(beforeButton, { button: 0 });
     fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(input);
+    fireEvent.mouseDown(document.body, { button: 2 });
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(input);
+    fireEvent.mouseDown(document.body, { button: 0, ctrlKey: true });
     fireEvent.focus(input);
     expect(input).toHaveAttribute("data-focus-visible", "true");
 
@@ -413,6 +426,13 @@ describe("Combobox", () => {
     try {
       iframeDocument.dispatchEvent(
         new iframeWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(input);
+      expect(input).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(input);
+      iframeDocument.dispatchEvent(
+        new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0, ctrlKey: true })
       );
       fireEvent.focus(input);
       expect(input).toHaveAttribute("data-focus-visible", "true");

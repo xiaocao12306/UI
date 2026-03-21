@@ -80,6 +80,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep switch keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep checkbox keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep radio-group keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
+- Keep combobox focus intent primary-only so non-primary pointer interactions and `Ctrl + primary click` context-click paths do not clear keyboard-origin focus-visible state.
 - Keep switch/checkbox/radio owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - Keep switch/checkbox/radio local pointer focus/pressed handling primary-only; non-primary pointer interactions and `Ctrl + primary click` context-click paths should not clear focus-visible state or trigger pressed feedback.
 - Keep date-picker keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
