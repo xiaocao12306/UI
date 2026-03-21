@@ -894,9 +894,14 @@ describe("Table", () => {
     fireEvent.keyDown(sortButton, { key: "Spacebar", altKey: true });
     expect(onSortChange).not.toHaveBeenCalled();
 
-    fireEvent.keyDown(sortButton, { key: "Enter" });
+    fireEvent.keyDown(sortButton, { key: "Enter", shiftKey: true });
     expect(onSortChange).toHaveBeenCalledTimes(1);
     expect(onSortChange).toHaveBeenCalledWith("name", "desc");
+
+    const sortAscending = screen.getByRole("button", { name: "Name sort ascending" });
+    fireEvent.keyDown(sortAscending, { key: " ", shiftKey: true });
+    expect(onSortChange).toHaveBeenCalledTimes(2);
+    expect(onSortChange).toHaveBeenLastCalledWith("name", "asc");
   });
 
   it("exposes Enter/Space keyboard shortcuts on sortable headers", () => {

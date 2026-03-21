@@ -590,7 +590,8 @@ export const ManualActivation: Story = {
     await expect(canvas.getByRole("tab", { name: "Build" })).toHaveFocus();
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
 
-    await userEvent.keyboard("{Enter}");
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+    fireEvent.keyDown(buildTab, { key: "Enter", shiftKey: true });
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
 
     await userEvent.keyboard("{End}");
@@ -598,7 +599,7 @@ export const ManualActivation: Story = {
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
 
     releaseTab.focus();
-    await userEvent.keyboard("{Space}");
+    fireEvent.keyDown(releaseTab, { key: " ", shiftKey: true });
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Release stage.");
   }
 };

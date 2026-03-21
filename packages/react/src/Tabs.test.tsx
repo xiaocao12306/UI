@@ -890,6 +890,15 @@ describe("Tabs", () => {
     fireEvent.keyDown(oneTab, { key: "Enter", altKey: true });
     expect(oneTab).toHaveAttribute("aria-selected", "true");
     expect(screen.getByText("Panel One")).toBeInTheDocument();
+
+    fireEvent.keyDown(oneTab, { key: "ArrowRight", shiftKey: true });
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    expect(twoTab).toHaveFocus();
+    expect(oneTab).toHaveAttribute("aria-selected", "true");
+
+    fireEvent.keyDown(twoTab, { key: "Enter", shiftKey: true });
+    expect(twoTab).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
   it("resets manual roving focus target back to selected tab after leaving tablist", async () => {

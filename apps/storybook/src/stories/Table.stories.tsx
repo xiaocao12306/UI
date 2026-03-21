@@ -474,6 +474,15 @@ export const SortTelemetry: Story = {
     fireEvent.keyDown(issueSortDesc, { key: "Space", metaKey: true });
     await expect(canvas.getByText("id asc")).toBeInTheDocument();
     await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
+
+    fireEvent.keyDown(issueSortDesc, { key: "Enter", shiftKey: true });
+    await expect(canvas.getByText("id desc")).toBeInTheDocument();
+    await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
+
+    const issueSortAscAfterShift = canvas.getByRole("button", { name: "Issue sort ascending" });
+    fireEvent.keyDown(issueSortAscAfterShift, { key: " ", shiftKey: true });
+    await expect(canvas.getByText("id asc")).toBeInTheDocument();
+    await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
   }
 };
 
