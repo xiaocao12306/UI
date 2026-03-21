@@ -235,11 +235,13 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `invalid` | `boolean` | Adds `aria-invalid` to communicate validation state. |
 | `aria-label` / `aria-labelledby` | `string` | Blank values are ignored; when both naming props are provided, `aria-labelledby` remains canonical. |
 | `errorMessageId` | `string` | Appends error helper ID into `aria-describedby` and `aria-errormessage` when `invalid` is true (deduped if ID already exists). |
+| document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores date input focus-visible state consistently, including iframe hosts. |
 
 <Canvas of={DatePickerStories.InvalidWithHelper} />
 <Canvas of={DatePickerStories.StateMatrix} />
 <Canvas of={DatePickerStories.BlankAriaLabelFallback} />
 <Canvas of={DatePickerStories.LabelledByPrecedence} />
+<Canvas of={DatePickerStories.FocusIntentReentry} />
 
 ### Textarea
 

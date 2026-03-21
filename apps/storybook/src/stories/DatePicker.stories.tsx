@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, DatePicker } from "@aurora-ui/react";
-import { expect, fireEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Form/DatePicker",
@@ -152,5 +152,28 @@ export const LabelledByPrecedence: Story = {
     const input = canvas.getByLabelText("Release calendar");
     await expect(input).toHaveAttribute("aria-labelledby", "release-calendar-heading");
     await expect(input).not.toHaveAttribute("aria-label");
+  }
+};
+
+export const FocusIntentReentry: Story = {
+  render: () => (
+    <div style={{ width: 360, display: "grid", gap: 8 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        Click the trigger first, then press Tab to verify keyboard re-entry restores date input
+        focus-visible state.
+      </p>
+      <button type="button">Before date input</button>
+      <DatePicker aria-label="Focus intent date" defaultValue="2026-08-15" onValueChange={() => {}} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before date input" });
+    const input = canvas.getByLabelText("Focus intent date");
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(input).toHaveFocus();
+    await expect(input).toHaveAttribute("data-focus-visible", "true");
   }
 };

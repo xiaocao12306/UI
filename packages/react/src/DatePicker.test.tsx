@@ -137,4 +137,90 @@ describe("DatePicker", () => {
     expect(input).toHaveAttribute("aria-labelledby", "release-summary");
     expect(input).not.toHaveAttribute("aria-label");
   });
+
+  it("tracks keyboard focus-visible intent and clears it on primary pointer interaction", () => {
+    render(<DatePicker aria-label="Focus-visible date" onValueChange={() => {}} />);
+    const input = screen.getByLabelText("Focus-visible date");
+
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(input, { button: 1 });
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(input, { button: 0 });
+    expect(input).not.toHaveAttribute("data-focus-visible");
+  });
+
+  it("tracks ownerDocument keyboard focus intent when focus-visible matching is unavailable", () => {
+    render(
+      <div>
+        <button type="button">Before date input</button>
+        <DatePicker aria-label="Document intent date" onValueChange={() => {}} />
+      </div>
+    );
+
+    const beforeButton = screen.getByRole("button", { name: "Before date input" });
+    const input = screen.getByLabelText("Document intent date");
+    const matchesSpy = vi.spyOn(input, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(input);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(input);
+    expect(input).not.toHaveAttribute("data-focus-visible");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+
+    const { getByLabelText } = render(
+      <DatePicker aria-label="Iframe date" onValueChange={() => {}} />,
+      {
+        container: secondaryContainer,
+        baseElement: secondaryDocument.body
+      }
+    );
+    const input = getByLabelText("Iframe date");
+    const matchesSpy = vi.spyOn(input, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(input);
+      expect(input).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(input);
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(input);
+      expect(input).not.toHaveAttribute("data-focus-visible");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
 });
