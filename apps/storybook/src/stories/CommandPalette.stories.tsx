@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button, CommandPalette, type CommandItem } from "@aurora-ui/react";
+import { Button, CommandPalette, Popover, type CommandItem } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import {
   StoryFullscreenFrame,
@@ -686,6 +686,34 @@ function EscapePreemptedPalette() {
   );
 }
 
+function NestedDismissOrderPalette() {
+  const [paletteOpen, setPaletteOpen] = React.useState(false);
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <Popover triggerLabel="Open container popover" contentLabel="Command container popover">
+        <div style={{ display: "grid", gap: 10 }}>
+          <p style={{ margin: 0, ...storyMutedTextStyle }}>
+            First Escape should close the command palette, second Escape should close the popover.
+          </p>
+          <Button size="sm" variant="outline" onClick={() => setPaletteOpen(true)}>
+            Open nested palette
+          </Button>
+          <CommandPalette
+            open={paletteOpen}
+            onOpenChange={setPaletteOpen}
+            title="Nested command palette"
+            commands={[
+              { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
+              { key: "run-e2e", label: "Run E2E Smoke", keywords: ["playwright", "test"] }
+            ]}
+          />
+        </div>
+      </Popover>
+    </StoryFullscreenFrame>
+  );
+}
+
 export const SearchCommands: Story = {
   render: () => <OpenPalette />,
   play: async ({ canvasElement }) => {
@@ -1226,5 +1254,31 @@ export const EscapePreemptedByGlobalHandler: Story = {
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
     await expect(canvas.getByTestId("command-escape-calls")).toHaveTextContent("0");
+  }
+};
+
+export const NestedDismissOrder: Story = {
+  render: () => <NestedDismissOrderPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const outerTrigger = await canvas.findByRole("button", { name: "Open container popover" });
+
+    await userEvent.click(outerTrigger);
+    await expect(canvas.getByRole("dialog", { name: "Command container popover" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Open nested palette" }));
+    await expect(canvas.getByRole("dialog", { name: "Nested command palette" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => {
+      expect(canvas.queryByRole("dialog", { name: "Nested command palette" })).not.toBeInTheDocument();
+    });
+    await expect(canvas.getByRole("dialog", { name: "Command container popover" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => {
+      expect(canvas.queryByRole("dialog", { name: "Command container popover" })).not.toBeInTheDocument();
+    });
+    await expect(outerTrigger).toHaveFocus();
   }
 };

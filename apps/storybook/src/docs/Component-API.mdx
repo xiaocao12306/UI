@@ -680,6 +680,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `clearQueryOnEscape` | `boolean` | Defaults to `true`; first Escape clears active query before dismiss is allowed, reducing accidental close during search refinement. |
 | `closeOnEscape` / `closeOnOutsidePointer` | `boolean` | Controls whether overlay dismisses on Escape or outside pointer interactions for blocking approval flows. |
 | dismiss event scope | `ownerDocument`-scoped layer listeners | Escape/outside-pointer dismissal only responds to events from the palette's own document root; cross-document events are ignored to prevent accidental closes in iframe/multi-root hosts. |
+| nested overlay dismiss | top layer first | When nested inside another dismissable surface, first Escape/outside interaction closes the command palette layer and preserves parent overlay state until the next dismiss action. |
 | `onEscapeKeyDown` / `onPointerDownOutside` | `(event) => void` | Low-level dismiss hooks; call `event.preventDefault()` for conditional approval guards while keeping default close policy enabled. |
 | `emptyMessage` | `ReactNode` | Custom empty-state guidance for no-match queries. |
 | `resultsAriaLabel` | `string` | Localized accessible name for the command result listbox; blank values are ignored and fallback to `Command results`. |
@@ -703,6 +704,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
 <Canvas of={CommandPaletteStories.CloseReasonTelemetry} />
+<Canvas of={CommandPaletteStories.NestedDismissOrder} />
 <Canvas of={CommandPaletteStories.EmptyStateAriaControlsLifecycle} />
 <Canvas of={CommandPaletteStories.LocalizedResultsLabel} />
 <Canvas of={CommandPaletteStories.LocalizedDialogCopy} />
