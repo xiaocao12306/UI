@@ -749,6 +749,7 @@
   - 基础控件动效降级证据刷新（2026-03-21 latest+64：为 Button/Input/Textarea/Select/Switch 过渡面补齐 `data-aurora-reduced-motion=\"transition\"` 标记并新增回归断言，`pnpm --filter @aurora-ui/react exec vitest run src/Button.test.tsx src/Input.test.tsx src/Textarea.test.tsx src/Select.test.tsx src/Switch.test.tsx` 通过（`59/59`））
   - Overlay 动效降级证据刷新（2026-03-21 latest+65：为 Dialog/Drawer 关闭按钮补齐 `data-aurora-reduced-motion=\"transition\"` 标记并新增回归断言，`pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx src/Drawer.test.tsx` 通过（`51/51`））
   - Release Gate 证据刷新（2026-03-21 latest+66：完成 `apps/storybook/storybook-static` 同步后重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`42 files / 617 tests`）+ demo e2e `92/92` + storybook interaction `454/454`）
+  - Primitives 语义回归补齐（2026-03-21 latest+67：新增 `Box/Text/VisuallyHidden` 基础渲染、`asChild` 透传与样式合并回归测试，`pnpm --filter @aurora-ui/primitives exec vitest run src/LayoutPrimitives.test.tsx` 通过（`8/8`））
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
