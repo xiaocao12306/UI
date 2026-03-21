@@ -140,6 +140,24 @@ test("dismisses dialog when Escape is combined with Shift", async ({ page }) => 
   await expect(dialog).toBeHidden();
 });
 
+test("keeps dialog open when only legacy IME keyCode Escape is dispatched", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Dialog" }).click();
+  const dialog = page.getByRole("dialog").filter({ hasText: "Dialog Example" });
+  await expect(dialog).toBeVisible();
+
+  await page.evaluate(() => {
+    const event = new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true });
+    Object.defineProperty(event, "keyCode", { value: 229 });
+    document.dispatchEvent(event);
+  });
+  await expect(dialog).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+});
+
 test("keeps dialog open on repeated Escape keydown until initial keydown event", async ({ page }) => {
   await page.goto("/");
 
@@ -262,6 +280,24 @@ test("opens and dismisses drawer with keyboard", async ({ page }) => {
   const drawer = page.getByRole("dialog", { name: "Drawer Example" });
   await expect(drawer).toBeVisible();
   await expect(drawer).toContainText("Contextual panel for filters, details, and quick actions.");
+
+  await page.keyboard.press("Escape");
+  await expect(drawer).toBeHidden();
+});
+
+test("keeps drawer open when only legacy IME keyCode Escape is dispatched", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Drawer" }).click();
+  const drawer = page.getByRole("dialog", { name: "Drawer Example" });
+  await expect(drawer).toBeVisible();
+
+  await page.evaluate(() => {
+    const event = new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true });
+    Object.defineProperty(event, "keyCode", { value: 229 });
+    document.dispatchEvent(event);
+  });
+  await expect(drawer).toBeVisible();
 
   await page.keyboard.press("Escape");
   await expect(drawer).toBeHidden();
