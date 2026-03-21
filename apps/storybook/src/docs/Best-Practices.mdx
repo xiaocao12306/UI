@@ -65,6 +65,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep input keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep textarea keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep select keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
+- Keep switch keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - For guarded approval flows, use control-level `onClick(event.preventDefault())` on switch-like toggles to block pointer state mutation while preserving keyboard/readout semantics.
 - When using standalone DatePicker error messaging, pass `errorMessageId` with `invalid` so both `aria-describedby` and `aria-errormessage` stay aligned.
 - Preserve nuanced `aria-invalid` values (`grammar`/`spelling`) when integrating validation services; avoid normalizing them to generic `true`.

@@ -165,12 +165,14 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `description` | `ReactNode` | Auto-wires helper copy to `aria-describedby`. |
 | `aria-label` / `aria-labelledby` | `string` | Optional explicit naming; blank string values are ignored, and `aria-labelledby` takes precedence when both are provided. |
 | keyboard modifier guard | ignores `Ctrl/Meta/Alt + Space` switch handling | Preserves host/browser shortcut chords and avoids accidental toggle from modified key combinations. |
+| document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores switch focus-visible state consistently, including iframe hosts. |
 | `invalid` | `boolean` | Applies invalid semantics and error-token visual states. |
 
 <Canvas of={SwitchStories.InvalidAndDisabled} />
 <Canvas of={SwitchStories.KeyboardModifierGuard} />
 <Canvas of={SwitchStories.LabelledByPrecedence} />
 <Canvas of={SwitchStories.ClickPreventDefaultGuard} />
+<Canvas of={SwitchStories.FocusIntentReentry} />
 
 ### Select
 

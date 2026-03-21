@@ -28,6 +28,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     onMouseLeave,
     onMouseDown,
     onMouseUp,
+    onPointerDown,
     onKeyDown,
     "aria-invalid": ariaInvalid,
     "aria-label": rawAriaLabel,
@@ -38,8 +39,11 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
 ) {
   const [internalChecked, setInternalChecked] = React.useState(defaultChecked);
   const [focused, setFocused] = React.useState(false);
+  const [focusVisible, setFocusVisible] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
   const [pressed, setPressed] = React.useState(false);
+  const focusVisibleIntentRef = React.useRef(true);
+  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
 
@@ -72,6 +76,60 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         ? "var(--aurora-accent-default)"
         : "var(--aurora-surface-elevated)";
 
+  React.useEffect(() => {
+    if (!disabled) {
+      return;
+    }
+
+    setFocused(false);
+    setFocusVisible(false);
+    setHovered(false);
+    setPressed(false);
+  }, [disabled]);
+
+  React.useEffect(() => {
+    const ownerDocument = buttonRef.current?.ownerDocument ?? document;
+    const markKeyboardIntent = (event: KeyboardEvent) => {
+      if (event.metaKey || event.altKey || event.ctrlKey) {
+        return;
+      }
+      focusVisibleIntentRef.current = true;
+    };
+    const markPointerIntent = (event: Event) => {
+      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+        return;
+      }
+      focusVisibleIntentRef.current = false;
+    };
+
+    ownerDocument.addEventListener("keydown", markKeyboardIntent, true);
+    ownerDocument.addEventListener("pointerdown", markPointerIntent, true);
+    ownerDocument.addEventListener("mousedown", markPointerIntent, true);
+    ownerDocument.addEventListener("touchstart", markPointerIntent, true);
+
+    return () => {
+      ownerDocument.removeEventListener("keydown", markKeyboardIntent, true);
+      ownerDocument.removeEventListener("pointerdown", markPointerIntent, true);
+      ownerDocument.removeEventListener("mousedown", markPointerIntent, true);
+      ownerDocument.removeEventListener("touchstart", markPointerIntent, true);
+    };
+  }, []);
+
+  const assignRef = React.useCallback(
+    (node: HTMLButtonElement | null) => {
+      buttonRef.current = node;
+      if (typeof forwardedRef === "function") {
+        forwardedRef(node);
+        return;
+      }
+
+      if (forwardedRef) {
+        forwardedRef.current = node;
+      }
+    },
+    [forwardedRef]
+  );
+
   const handleToggle = React.useCallback(() => {
     if (disabled) {
       return;
@@ -86,7 +144,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
   return (
     <button
       {...props}
-      ref={forwardedRef}
+      ref={assignRef}
       type={type ?? "button"}
       role="switch"
       aria-checked={currentChecked}
@@ -99,6 +157,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       data-state={currentChecked ? "checked" : "unchecked"}
       data-invalid={isInvalid ? "true" : undefined}
       data-pressed={pressed ? "true" : undefined}
+      data-focus-visible={focusVisible ? "true" : undefined}
       style={{
         border: "none",
         margin: 0,
@@ -123,15 +182,21 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       }}
       onFocus={(event) => {
         setFocused(true);
+        setFocusVisible(
+          resolveFocusVisibleState(event.currentTarget, focusVisibleIntentRef.current)
+        );
         onFocus?.(event);
       }}
       onBlur={(event) => {
         setFocused(false);
+        setFocusVisible(false);
         setPressed(false);
         onBlur?.(event);
       }}
       onMouseEnter={(event) => {
-        setHovered(true);
+        if (!disabled) {
+          setHovered(true);
+        }
         onMouseEnter?.(event);
       }}
       onMouseLeave={(event) => {
@@ -140,10 +205,21 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         onMouseLeave?.(event);
       }}
       onMouseDown={(event) => {
+        if (event.button === 0) {
+          focusVisibleIntentRef.current = false;
+          setFocusVisible(false);
+        }
         if (!disabled && event.button === 0) {
           setPressed(true);
         }
         onMouseDown?.(event);
+      }}
+      onPointerDown={(event) => {
+        if (event.button === 0) {
+          focusVisibleIntentRef.current = false;
+          setFocusVisible(false);
+        }
+        onPointerDown?.(event);
       }}
       onMouseUp={(event) => {
         if (event.button === 0) {
@@ -152,6 +228,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         onMouseUp?.(event);
       }}
       onKeyDown={(event) => {
+        focusVisibleIntentRef.current = true;
         onKeyDown?.(event);
         if (event.defaultPrevented || disabled) {
           return;
@@ -180,7 +257,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
           display: "flex",
           alignItems: "center",
           boxSizing: "border-box",
-          boxShadow: focused ? `0 0 0 3px ${focusRingColor}` : "none",
+          boxShadow: focused && focusVisible ? `0 0 0 3px ${focusRingColor}` : "none",
           transition:
             "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
         }}
@@ -224,4 +301,12 @@ function resolveNonEmptyLabel(label: string | undefined) {
 
   const normalized = label.trim();
   return normalized.length > 0 ? normalized : undefined;
+}
+
+function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {
+  try {
+    return target.matches(":focus-visible") || fallback;
+  } catch {
+    return fallback;
+  }
 }

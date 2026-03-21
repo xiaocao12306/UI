@@ -184,3 +184,30 @@ export const PointerPrimaryOnly: Story = {
     await expect(control).not.toHaveAttribute("data-pressed");
   }
 };
+
+export const FocusIntentReentry: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 380px)" gap={10}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        Click the trigger first, then press Tab to verify keyboard re-entry restores switch
+        focus-visible state.
+      </p>
+      <button type="button">Before switch</button>
+      <Switch
+        label="Focus intent switch"
+        description="Keyboard re-entry should restore focus ring semantics."
+        defaultChecked={false}
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before switch" });
+    const control = canvas.getByRole("switch", { name: "Focus intent switch" });
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(control).toHaveFocus();
+    await expect(control).toHaveAttribute("data-focus-visible", "true");
+  }
+};

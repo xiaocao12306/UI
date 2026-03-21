@@ -101,6 +101,86 @@ describe("Switch", () => {
     expect(control).not.toHaveAttribute("data-pressed");
   });
 
+  it("tracks keyboard focus-visible intent and clears it on primary pointer interaction", () => {
+    render(<Switch label="Focus-visible switch" defaultChecked={false} />);
+    const control = screen.getByRole("switch", { name: "Focus-visible switch" });
+
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(control);
+    expect(control).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(control, { button: 0 });
+    expect(control).not.toHaveAttribute("data-focus-visible");
+  });
+
+  it("tracks keyboard focus intent from ownerDocument when focus-visible fallback is used", () => {
+    render(
+      <div>
+        <button type="button">Before switch</button>
+        <Switch label="Document intent switch" />
+      </div>
+    );
+
+    const control = screen.getByRole("switch", { name: "Document intent switch" });
+    const beforeButton = screen.getByRole("button", { name: "Before switch" });
+    const matchesSpy = vi.spyOn(control, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(control);
+    expect(control).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(control);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(control);
+    expect(control).not.toHaveAttribute("data-focus-visible");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+
+    const { getByRole } = render(<Switch label="Iframe switch" />, {
+      container: secondaryContainer,
+      baseElement: secondaryDocument.body
+    });
+    const control = getByRole("switch", { name: "Iframe switch" });
+    const matchesSpy = vi.spyOn(control, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(control);
+      expect(control).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(control);
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(control);
+      expect(control).not.toHaveAttribute("data-focus-visible");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("does not toggle when disabled", () => {
     const onCheckedChange = vi.fn();
     render(<Switch label="Readonly mode" checked onCheckedChange={onCheckedChange} disabled />);
