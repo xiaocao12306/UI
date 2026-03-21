@@ -130,6 +130,21 @@ describe("Pagination", () => {
     expect(onPageChange).toHaveBeenNthCalledWith(4, 5);
   });
 
+  it("ignores Ctrl/Meta/Alt-modified Home/End/arrow shortcuts", () => {
+    const onPageChange = vi.fn();
+    render(<Pagination page={4} pageCount={10} onPageChange={onPageChange} />);
+
+    const activeButton = screen.getByRole("button", { name: "Current page, 4" });
+    fireEvent.keyDown(activeButton, { key: "Home", ctrlKey: true });
+    fireEvent.keyDown(activeButton, { key: "End", metaKey: true });
+    fireEvent.keyDown(activeButton, { key: "ArrowLeft", altKey: true });
+    fireEvent.keyDown(activeButton, { key: "ArrowRight", ctrlKey: true });
+    expect(onPageChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(activeButton, { key: "End", shiftKey: true });
+    expect(onPageChange).toHaveBeenCalledWith(10);
+  });
+
   it("keeps focus on the newly active page button after keyboard page changes", async () => {
     function ControlledPaginationHarness() {
       const [page, setPage] = React.useState(4);

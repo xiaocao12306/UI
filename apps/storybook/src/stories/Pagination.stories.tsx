@@ -83,6 +83,44 @@ export const KeyboardShortcuts: Story = {
   }
 };
 
+function ModifierGuardPaginationDemo() {
+  const [page, setPage] = React.useState(4);
+
+  return (
+    <div style={{ width: 640, display: "grid", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ color: "var(--aurora-text-secondary)" }}>Modifier guard page</span>
+        <Badge tone="default" data-testid="pagination-modifier-guard-page">
+          {page}
+        </Badge>
+      </div>
+      <Pagination page={page} pageCount={12} onPageChange={setPage} />
+    </div>
+  );
+}
+
+export const ModifierKeyGuard: Story = {
+  render: () => <ModifierGuardPaginationDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const current = await canvas.findByRole("button", { name: "Current page, 4" });
+
+    current.focus();
+    await expect(current).toHaveFocus();
+    await expect(canvas.getByTestId("pagination-modifier-guard-page")).toHaveTextContent("4");
+
+    await userEvent.keyboard("{Control>}{End}{/Control}");
+    await userEvent.keyboard("{Meta>}{ArrowRight}{/Meta}");
+    await userEvent.keyboard("{Alt>}{Home}{/Alt}");
+    await expect(canvas.getByTestId("pagination-modifier-guard-page")).toHaveTextContent("4");
+    await expect(canvas.getByRole("button", { name: "Current page, 4" })).toHaveFocus();
+
+    await userEvent.keyboard("{End}");
+    await expect(canvas.getByTestId("pagination-modifier-guard-page")).toHaveTextContent("12");
+    await expect(await canvas.findByRole("button", { name: "Current page, 12" })).toHaveFocus();
+  }
+};
+
 function RtlKeyboardShortcutsDemo() {
   const [page, setPage] = React.useState(4);
 

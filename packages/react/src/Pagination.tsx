@@ -138,6 +138,12 @@ export function Pagination({
     if (disabled) {
       return;
     }
+    if (
+      (event.altKey || event.ctrlKey || event.metaKey) &&
+      isPaginationManagedKeyboardKey(event.key)
+    ) {
+      return;
+    }
     if (event.key === "Home") {
       event.preventDefault();
       goToPageWithFocus(1);
@@ -263,6 +269,10 @@ export function Pagination({
       </ul>
     </nav>
   );
+}
+
+function isPaginationManagedKeyboardKey(key: string) {
+  return key === "Home" || key === "End" || key === "ArrowLeft" || key === "ArrowRight";
 }
 
 function getPaginationArrowDelta(key: string, target: HTMLButtonElement) {
