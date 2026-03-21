@@ -343,6 +343,35 @@ function PersistentSelectionPalette() {
   );
 }
 
+function OptionActivationKeyGuardPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [selectedCount, setSelectedCount] = React.useState(0);
+
+  return (
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
+        Option activation count:{" "}
+        <strong data-testid="option-activation-count" style={storyEmphasisTextStyle}>
+          {selectedCount}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        closeOnSelect={false}
+        commands={[
+          {
+            key: "run-lint",
+            label: "Run Lint",
+            onSelect: () => setSelectedCount((count) => count + 1)
+          },
+          { key: "run-tests", label: "Run Tests" }
+        ]}
+      />
+    </StoryFullscreenFrame>
+  );
+}
+
 function NonDismissiblePalette() {
   const [open, setOpen] = React.useState(false);
 
@@ -935,6 +964,26 @@ export const PersistentSelection: Story = {
     await waitFor(() => {
       expect(canvas.getByTestId("selection-count")).toHaveTextContent("1");
     });
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  }
+};
+
+export const OptionActivationKeyGuard: Story = {
+  render: () => <OptionActivationKeyGuardPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const option = await canvas.findByRole("option", { name: "Run Lint" });
+
+    await expect(canvas.getByTestId("option-activation-count")).toHaveTextContent("0");
+    fireEvent.keyDown(option, { key: "Enter", ctrlKey: true });
+    fireEvent.keyDown(option, { key: " ", metaKey: true });
+    fireEvent.keyDown(option, { key: "Enter", repeat: true });
+    fireEvent.keyDown(option, { key: "Spacebar", altKey: true });
+    await expect(canvas.getByTestId("option-activation-count")).toHaveTextContent("0");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+    fireEvent.keyDown(option, { key: "Enter" });
+    await expect(canvas.getByTestId("option-activation-count")).toHaveTextContent("1");
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   }
 };

@@ -754,6 +754,7 @@
   - Table 列键稳定性收口（2026-03-21 latest+69：新增 `columns[].key` 重复告警与单测，避免表头关联/排序引用发散；`pnpm --filter @aurora-ui/react exec vitest run src/Table.test.tsx` 通过（`66/66`），并复验 `pnpm storybook:docs:check && pnpm storybook:docs:parity:check && pnpm storybook:docs:structure:check`）
   - CommandPalette 选项键盘防串扰收口（2026-03-21 latest+70：选项级 `Enter/Space` 仅响应未修饰且非 `repeat` 键盘事件，避免 `Ctrl/Meta/Alt` 快捷键和长按触发误执行；补齐单测与 Storybook API/Best-Practices 文档，`pnpm --filter @aurora-ui/react exec vitest run src/CommandPalette.test.tsx` 通过（`71/71`））
   - Release Gate 证据刷新（2026-03-21 latest+71：同步 demo/storybook 静态产物漂移后重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`43 files / 627 tests`）+ demo e2e `94/94` + storybook interaction `227/227`）
+  - Storybook 命令面板选项激活验收补齐（2026-03-21 latest+72：新增 `OptionActivationKeyGuard` story 与 `play` 断言，覆盖 option 级 `Ctrl/Meta/Alt + Enter/Space` 与 `repeat` no-op；同步 Component API/Best Practices 画布引用，`pnpm --filter @aurora-ui/storybook-app typecheck`、`pnpm storybook:docs:check && pnpm storybook:docs:parity:check && pnpm storybook:docs:structure:check && pnpm storybook:play:check` 通过）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
