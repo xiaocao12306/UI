@@ -870,6 +870,7 @@
   - Demo Popover 内容交互成品化（2026-03-22 latest+187：将 demo Overlay Launchers 中 Popover 升级为真实交互内容（含行动按钮），并把 outside-dismiss E2E 采样统一为页面空白区域点击以避免覆盖层遮挡导致的脆弱点击路径；同步 `apps/demo/src/main.tsx`、`apps/demo/src/main.css`、`e2e/demo.spec.ts` 与 `apps/demo/dist`，并复验 `pnpm demo:e2e:grep \"popover close reason telemetry|keeps popover open on non-primary outside pointer interaction|shift-tabs out of popover boundary\"` 通过）
   - Tooltip Escape 修饰键防误触收口（2026-03-22 latest+188：Tooltip 补齐 Escape 处理防抖与修饰键防误触（忽略 `Ctrl/Meta/Alt + Escape`、`event.repeat` 与 IME 组合输入 Escape），并暴露 `aria-keyshortcuts=\"Escape\"`；同步 `Tooltip.tsx`、`Tooltip.test.tsx`、Storybook `EscapeModifierGuard` 与 Component API/Best Practices 文档，复验 `pnpm --filter @aurora-ui/react exec vitest run src/Tooltip.test.tsx`、`pnpm storybook:test:grep \"Tooltip.stories.tsx\"` 与 docs parity 相关检查通过）
   - Demo Tooltip Escape 防误触验收补齐（2026-03-22 latest+189：新增 demo E2E 覆盖 Tooltip 在修饰键/重复键/IME 组合输入下的 Escape 防误触行为，并锁定 `Shift+Escape` 仍可正常关闭；同步 `e2e/demo.spec.ts` 并复验 `pnpm demo:e2e:grep \"keeps tooltip open on modified/repeated/IME Escape\"` 通过）
+  - Release dry-run 证据刷新（2026-03-22 latest+190：本地复验 `pnpm release:dry-run` 通过，`@aurora-ui/react` `84.8 kB / 529.5 kB`、`@aurora-ui/primitives` `15.1 kB / 75.1 kB`、`@aurora-ui/tokens` `3.2 kB / 17.3 kB`，并确认 dry-run 版本文件自动回滚）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
