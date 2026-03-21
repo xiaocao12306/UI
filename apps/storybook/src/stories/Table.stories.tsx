@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Table, type TableColumn } from "@aurora-ui/react";
 import * as React from "react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import {
   StoryShowcaseFrame,
   storyEmphasisTextStyle,
@@ -475,14 +475,19 @@ export const SortTelemetry: Story = {
     await expect(canvas.getByText("id asc")).toBeInTheDocument();
     await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
 
-    fireEvent.keyDown(issueSortDesc, { key: "Enter", shiftKey: true });
-    await expect(canvas.getByText("id desc")).toBeInTheDocument();
-    await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
+    await userEvent.keyboard("{Shift>}{Enter}{/Shift}");
+    await waitFor(() => {
+      expect(canvas.getByText("id desc")).toBeInTheDocument();
+      expect(issueHeader).toHaveAttribute("aria-sort", "descending");
+    });
 
     const issueSortAscAfterShift = canvas.getByRole("button", { name: "Issue sort ascending" });
-    fireEvent.keyDown(issueSortAscAfterShift, { key: " ", shiftKey: true });
-    await expect(canvas.getByText("id asc")).toBeInTheDocument();
-    await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
+    issueSortAscAfterShift.focus();
+    await userEvent.keyboard("{Shift>}{Space}{/Shift}");
+    await waitFor(() => {
+      expect(canvas.getByText("id asc")).toBeInTheDocument();
+      expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
+    });
   }
 };
 

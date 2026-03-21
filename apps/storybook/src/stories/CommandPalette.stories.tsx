@@ -973,16 +973,17 @@ export const OptionActivationKeyGuard: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
     const option = await canvas.findByRole("option", { name: "Run Lint" });
+    option.focus();
 
     await expect(canvas.getByTestId("option-activation-count")).toHaveTextContent("0");
-    fireEvent.keyDown(option, { key: "Enter", ctrlKey: true });
-    fireEvent.keyDown(option, { key: " ", metaKey: true });
+    await userEvent.keyboard("{Control>}{Enter}{/Control}");
+    await userEvent.keyboard("{Meta>}{Space}{/Meta}");
     fireEvent.keyDown(option, { key: "Enter", repeat: true });
     fireEvent.keyDown(option, { key: "Spacebar", altKey: true });
     await expect(canvas.getByTestId("option-activation-count")).toHaveTextContent("0");
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
 
-    fireEvent.keyDown(option, { key: "Enter" });
+    await userEvent.keyboard("{Enter}");
     await expect(canvas.getByTestId("option-activation-count")).toHaveTextContent("1");
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   }

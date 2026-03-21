@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Tabs, type TabItem } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import { StoryShowcaseFrame, storyMutedTextStyle } from "./storyShowcase";
 
 const productTabs: TabItem[] = [
@@ -587,20 +587,24 @@ export const ManualActivation: Story = {
     await expect(releaseTab).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 
     await userEvent.keyboard("{ArrowRight}");
-    await expect(canvas.getByRole("tab", { name: "Build" })).toHaveFocus();
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+    await expect(buildTab).toHaveFocus();
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
 
-    const buildTab = canvas.getByRole("tab", { name: "Build" });
-    fireEvent.keyDown(buildTab, { key: "Enter", shiftKey: true });
-    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
+    await userEvent.keyboard("{Shift>}{Enter}{/Shift}");
+    await waitFor(() => {
+      expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
+    });
 
     await userEvent.keyboard("{End}");
     await expect(releaseTab).toHaveFocus();
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Build stage.");
 
     releaseTab.focus();
-    fireEvent.keyDown(releaseTab, { key: " ", shiftKey: true });
-    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Release stage.");
+    await userEvent.keyboard("{Shift>}{Space}{/Shift}");
+    await waitFor(() => {
+      expect(canvas.getByRole("tabpanel")).toHaveTextContent("Release stage.");
+    });
   }
 };
 
