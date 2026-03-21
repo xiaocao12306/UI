@@ -2271,6 +2271,27 @@ test("keeps toast open when Escape is dispatched during IME composition", async 
   await expect(toast).toBeHidden();
 });
 
+test("keeps toast open when only legacy IME keyCode is dispatched", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await palette.getByRole("option", { name: "Create Project" }).click();
+
+  const toast = page.getByRole("status").filter({ hasText: "Prompt submitted" });
+  await expect(toast).toBeVisible();
+
+  await page.evaluate(() => {
+    const event = new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true });
+    Object.defineProperty(event, "keyCode", { value: 229 });
+    document.dispatchEvent(event);
+  });
+  await expect(toast).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(toast).toBeHidden();
+});
+
 test("renders silent toast with aria-live off for passive updates", async ({ page }) => {
   await page.goto("/");
 

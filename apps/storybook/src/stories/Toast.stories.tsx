@@ -52,6 +52,16 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+function dispatchLegacyImeEscape(doc: Document) {
+  const event = new KeyboardEvent("keydown", {
+    key: "Escape",
+    bubbles: true,
+    cancelable: true
+  });
+  Object.defineProperty(event, "keyCode", { value: 229 });
+  doc.dispatchEvent(event);
+}
+
 export const Default: Story = {};
 
 function ToneMatrixDemo() {
@@ -859,6 +869,8 @@ export const EscapeIgnoresImeComposition: Story = {
     await expect(canvas.getByRole("dialog", { name: "IME composition guard" })).toBeInTheDocument();
 
     fireEvent.keyDown(doc, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    await expect(canvas.getByRole("dialog", { name: "IME composition guard" })).toBeInTheDocument();
+    dispatchLegacyImeEscape(doc);
     await expect(canvas.getByRole("dialog", { name: "IME composition guard" })).toBeInTheDocument();
 
     await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));

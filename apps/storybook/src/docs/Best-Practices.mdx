@@ -245,7 +245,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Ensure upper-layer shortcuts that `preventDefault()` on Escape can preempt toast dismiss when required.
 - When toast coexists with other dismissable overlays, keep top-layer-first Escape handling explicit: first Escape should close the top overlay and only subsequent Escape should dismiss the toast.
 - When Escape is preempted upstream, avoid side effects in toast-level analytics/guards by relying on the built-in hook-skip behavior.
-- Ignore Escape dismissal while IME composition is active so CJK text confirmation inside toast actions does not close the notification unexpectedly.
+- Ignore Escape dismissal while IME composition is active, including legacy browsers that only expose `keyCode=229`, so CJK text confirmation inside toast actions does not close the notification unexpectedly.
 - For stacked notifications, rely on Escape handling that dismisses one toast per key press, prioritizing the latest or most recently interacted toast.
 - Treat repeated Escape keydown (`event.repeat`) as no-op for toast dismissal so long-press does not close multiple stacked notices or duplicate telemetry.
 - Keep toast Escape dismissal scoped to unmodified keys; `Ctrl/Meta/Alt + Escape` should stay on host/app shortcut behavior even in stacked-toast flows.

@@ -691,6 +691,16 @@ describe("Toast", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
     expect(screen.getByRole("status", { name: "Composing" })).toBeInTheDocument();
 
+    const legacyEscapeEvent = new KeyboardEvent("keydown", {
+      key: "Escape",
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(legacyEscapeEvent, "keyCode", { value: 229 });
+    document.dispatchEvent(legacyEscapeEvent);
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("status", { name: "Composing" })).toBeInTheDocument();
+
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
@@ -701,6 +711,16 @@ describe("Toast", () => {
     render(<Toast open title="Composing" onEscapeKeyDown={onEscapeKeyDown} onOpenChange={() => {}} />);
 
     fireEvent.keyDown(document, { key: "Escape", isComposing: true, keyCode: 229, which: 229 });
+    expect(onEscapeKeyDown).not.toHaveBeenCalled();
+    expect(screen.getByRole("status", { name: "Composing" })).toBeInTheDocument();
+
+    const legacyEscapeEvent = new KeyboardEvent("keydown", {
+      key: "Escape",
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(legacyEscapeEvent, "keyCode", { value: 229 });
+    document.dispatchEvent(legacyEscapeEvent);
     expect(onEscapeKeyDown).not.toHaveBeenCalled();
     expect(screen.getByRole("status", { name: "Composing" })).toBeInTheDocument();
   });
