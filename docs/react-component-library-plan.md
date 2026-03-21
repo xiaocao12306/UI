@@ -802,6 +802,7 @@
   - Dropdown 嵌套层级关闭顺序单测补齐（2026-03-21 latest+117：新增 dropdown-in-popover 集成回归，锁定 top-layer-first 关闭语义（首次 Escape 关闭 inner menu，二次 Escape 关闭 outer popover）并验证焦点返回稳定；复验 `pnpm --filter @aurora-ui/react exec vitest run src/Dropdown.test.tsx` 通过（`48/48`），`pnpm storybook:test:grep \"Dropdown.stories.tsx\"` 通过（`19/19`））
   - CommandPalette 嵌套层级关闭顺序单测补齐（2026-03-21 latest+118：新增 command-palette-in-popover 集成回归，锁定 top-layer-first 关闭语义（首次 Escape 关闭 inner palette，二次 Escape 关闭 outer popover）并验证焦点返回稳定；复验 `pnpm --filter @aurora-ui/react exec vitest run src/CommandPalette.test.tsx` 通过（`74/74`），`pnpm storybook:test:grep \"CommandPalette.stories.tsx\"` 通过（`24/24`））
   - CommandPalette 嵌套层级 Storybook 验收补齐（2026-03-21 latest+119：新增 `NestedDismissOrder` 场景，锁定命令面板嵌套在 popover 时“一次 Escape 关闭内层、二次 Escape 关闭外层”的可视化验收链路；同步 Component API/Best Practices 文档并复验 `pnpm storybook:test:grep \"CommandPalette.stories.tsx\"` 与 `pnpm storybook:docs:check && pnpm storybook:docs:parity:check && pnpm storybook:docs:structure:check`）
+  - Toast 与 Overlay Escape 优先级验收补齐（2026-03-21 latest+120：新增 toast-with-popover 集成回归与 Storybook `EscapePreemptedByOverlayLayer` 场景，锁定“上层 overlay 先消费 Escape，toast 延后到下一次 Escape 才关闭”的 top-layer-first 行为；同步 Component API/Best Practices 文档并复验 `pnpm --filter @aurora-ui/react exec vitest run src/Toast.test.tsx`、`pnpm storybook:test:grep \"Toast.stories.tsx\"` 及 docs parity 相关检查）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { Popover } from "./Popover";
 import { Toast } from "./Toast";
 
 describe("Toast", () => {
@@ -219,6 +220,38 @@ describe("Toast", () => {
 
     expect(onOpenChange).toHaveBeenCalledWith(false);
     expect(onCloseReason).toHaveBeenCalledWith("escape-key");
+  });
+
+  it("keeps toast open when a top overlay layer handles Escape first", async () => {
+    function ToastWithTopPopoverLayer() {
+      const [toastOpen, setToastOpen] = React.useState(true);
+
+      return (
+        <>
+          <Popover triggerLabel="Open overlay" contentLabel="Escape overlay">
+            <p>Overlay content</p>
+          </Popover>
+          <Toast open={toastOpen} onOpenChange={setToastOpen} title="Overlay-aware toast" duration={0} />
+        </>
+      );
+    }
+
+    render(<ToastWithTopPopoverLayer />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open overlay" }));
+    expect(screen.getByRole("dialog", { name: "Escape overlay" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "Overlay-aware toast" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Escape overlay" })).toBeNull();
+    });
+    expect(screen.getByRole("status", { name: "Overlay-aware toast" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    await waitFor(() => {
+      expect(screen.queryByRole("status", { name: "Overlay-aware toast" })).toBeNull();
+    });
   });
 
   it("ignores repeated Escape keydown to prevent long-press duplicate close", () => {

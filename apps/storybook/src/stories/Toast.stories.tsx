@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button, Toast } from "@aurora-ui/react";
+import { Button, Popover, Toast } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import { StoryFullscreenFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
 
@@ -730,6 +730,26 @@ function EscapePreemptedSkipsHookDemo() {
   );
 }
 
+function EscapePreemptedByOverlayLayerDemo() {
+  const [toastOpen, setToastOpen] = React.useState(true);
+
+  return (
+    <ToastShowcase align="start">
+      <Popover triggerLabel="Open escape overlay" contentLabel="Escape overlay">
+        <p style={{ margin: 0 }}>This overlay should consume the first Escape key press.</p>
+      </Popover>
+      <Toast
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        duration={0}
+        title="Overlay-aware toast"
+        description="Escape closes this toast only after the top overlay layer is gone."
+        tone="info"
+      />
+    </ToastShowcase>
+  );
+}
+
 export const EscapePreemptedByGlobalHandler: Story = {
   render: () => <EscapePreemptedDemo />,
   play: async ({ canvasElement }) => {
@@ -757,6 +777,29 @@ export const EscapePreemptedSkipsToastHook: Story = {
     fireEvent.keyDown(doc, { key: "Escape" });
     await expect(canvas.getByTestId("escape-hook-count")).toHaveTextContent("0");
     await expect(canvas.getByRole("status", { name: "Preempted escape skips toast hook" })).toBeInTheDocument();
+  }
+};
+
+export const EscapePreemptedByOverlayLayer: Story = {
+  render: () => <EscapePreemptedByOverlayLayerDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const doc = canvasElement.ownerDocument;
+
+    await expect(canvas.getByRole("status", { name: "Overlay-aware toast" })).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Open escape overlay" }));
+    await expect(canvas.getByRole("dialog", { name: "Escape overlay" })).toBeInTheDocument();
+
+    fireEvent.keyDown(doc, { key: "Escape" });
+    await waitFor(() => {
+      expect(canvas.queryByRole("dialog", { name: "Escape overlay" })).not.toBeInTheDocument();
+    });
+    await expect(canvas.getByRole("status", { name: "Overlay-aware toast" })).toBeInTheDocument();
+
+    fireEvent.keyDown(doc, { key: "Escape" });
+    await waitFor(() => {
+      expect(canvas.queryByRole("status", { name: "Overlay-aware toast" })).not.toBeInTheDocument();
+    });
   }
 };
 

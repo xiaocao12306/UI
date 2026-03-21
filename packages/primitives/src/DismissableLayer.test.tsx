@@ -1,7 +1,7 @@
 import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { DismissableLayer } from "./DismissableLayer";
+import { DismissableLayer, hasActiveDismissableLayer } from "./DismissableLayer";
 
 function NestedDismissableLayers() {
   const [outerOpen, setOuterOpen] = React.useState(true);
@@ -81,6 +81,56 @@ describe("DismissableLayer", () => {
       fireEvent.keyDown(iframeDocument, { key: "Escape" });
       expect(onIframeDismiss).toHaveBeenCalledTimes(1);
     } finally {
+      iframe.remove();
+    }
+  });
+
+  it("reports active-layer presence per owner document", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      throw new Error("iframe contentDocument is unavailable");
+    }
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    let unmountMain: (() => void) | undefined;
+    let unmountIframe: (() => void) | undefined;
+
+    try {
+      expect(hasActiveDismissableLayer(document)).toBe(false);
+      expect(hasActiveDismissableLayer(iframeDocument)).toBe(false);
+
+      ({ unmount: unmountMain } = render(
+        <DismissableLayer>
+          <div>Main layer</div>
+        </DismissableLayer>
+      ));
+      expect(hasActiveDismissableLayer(document)).toBe(true);
+      expect(hasActiveDismissableLayer(iframeDocument)).toBe(false);
+
+      ({ unmount: unmountIframe } = render(
+        <DismissableLayer>
+          <div>Iframe layer</div>
+        </DismissableLayer>,
+        { container: iframeContainer, baseElement: iframeDocument.body }
+      ));
+      expect(hasActiveDismissableLayer(document)).toBe(true);
+      expect(hasActiveDismissableLayer(iframeDocument)).toBe(true);
+
+      unmountMain();
+      unmountMain = undefined;
+      expect(hasActiveDismissableLayer(document)).toBe(false);
+      expect(hasActiveDismissableLayer(iframeDocument)).toBe(true);
+
+      unmountIframe();
+      unmountIframe = undefined;
+      expect(hasActiveDismissableLayer(document)).toBe(false);
+      expect(hasActiveDismissableLayer(iframeDocument)).toBe(false);
+    } finally {
+      unmountMain?.();
+      unmountIframe?.();
       iframe.remove();
     }
   });

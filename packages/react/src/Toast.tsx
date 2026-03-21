@@ -1,4 +1,5 @@
 import * as React from "react";
+import { hasActiveDismissableLayer } from "@aurora-ui/primitives";
 
 export type ToastTone = "info" | "success" | "warning" | "danger";
 export type ToastPosition = "bottom-right" | "bottom-left" | "top-right" | "top-left";
@@ -456,6 +457,10 @@ export function Toast({
 
       const element = rootRef.current;
       if (!element || !isTopCloseableToast(element.ownerDocument, element)) {
+        return;
+      }
+
+      if (hasActiveDismissableLayer(element.ownerDocument)) {
         return;
       }
 

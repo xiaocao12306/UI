@@ -45,6 +45,10 @@ function isTopLayer(element: HTMLElement) {
   return stack[stack.length - 1] === element;
 }
 
+export function hasActiveDismissableLayer(ownerDocument: Document) {
+  return getDismissableLayerDocumentState(ownerDocument).stack.length > 0;
+}
+
 function isComposingKeyEvent(event: KeyboardEvent) {
   return event.isComposing || event.keyCode === 229;
 }

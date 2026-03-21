@@ -14,4 +14,5 @@ export { FocusScope } from "./FocusScope";
 export type { FocusScopeProps } from "./FocusScope";
 
 export { DismissableLayer } from "./DismissableLayer";
+export { hasActiveDismissableLayer } from "./DismissableLayer";
 export type { DismissableLayerProps } from "./DismissableLayer";

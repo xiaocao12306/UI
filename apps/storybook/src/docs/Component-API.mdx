@@ -636,6 +636,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | close callback order | `onCloseReason` -> `onClose` -> `onOpenChange(false)` | Close lifecycle is deterministic across button/Escape/timeout paths, so telemetry and state reducers can avoid duplicate side effects. |
 | IME safety | Escape composition guard | Escape dismissal ignores active IME composition (`isComposing` / `keyCode=229`) to avoid accidental close while confirming CJK text input. |
 | Escape priority | preempted events skip toast hook | If higher-level handlers already `preventDefault()` Escape, toast does not run `onEscapeKeyDown` or close. |
+| overlay-layer preemption | top dismissable overlay consumes first Escape | When a higher overlay layer handles Escape and marks the event as preempted, toast remains open until the next Escape after that overlay closes. |
 | stacked Escape order | top-priority toast first | In multi-toast layouts, Escape dismisses the top toast (latest opened or most recently focused/hovered). |
 | Escape scope isolation | `ownerDocument` stack isolation | Escape-priority stacks and shortcut hints are isolated per document root, so key events in another document do not close this toast stack. |
 | stacked viewport layout | per-position visual offset | Same-corner toast stacks apply deterministic offset so older notifications remain visible under the latest toast. |
@@ -654,6 +655,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 <Canvas of={ToastStories.CloseButtonPrimaryPointerOnly} />
 <Canvas of={ToastStories.CloseButtonKeyboardPressedState} />
 <Canvas of={ToastStories.EscapePreemptedByGlobalHandler} />
+<Canvas of={ToastStories.EscapePreemptedByOverlayLayer} />
 <Canvas of={ToastStories.EscapePreemptedSkipsToastHook} />
 <Canvas of={ToastStories.EscapeGuardedByToastHandler} />
 <Canvas of={ToastStories.EscapeIgnoresImeComposition} />
