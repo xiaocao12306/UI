@@ -113,3 +113,44 @@ export const StateMatrix: Story = {
     </div>
   )
 };
+
+export const BlankAriaLabelFallback: Story = {
+  render: () => (
+    <div style={{ width: 360, display: "grid", gap: 8 }}>
+      <label
+        id="release-window-label"
+        style={{ color: "var(--aurora-text-primary)", fontWeight: 600 }}
+      >
+        Release window
+      </label>
+      <DatePicker aria-label="   " aria-labelledby="release-window-label" defaultValue="2026-11-09" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByLabelText("Release window");
+    await expect(input).toHaveAttribute("aria-labelledby", "release-window-label");
+    await expect(input).not.toHaveAttribute("aria-label");
+  }
+};
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ width: 360, display: "grid", gap: 8 }}>
+      <h3 id="release-calendar-heading" style={{ margin: 0, color: "var(--aurora-text-primary)" }}>
+        Release calendar
+      </h3>
+      <DatePicker
+        aria-label="Release date"
+        aria-labelledby="release-calendar-heading"
+        defaultValue="2026-06-15"
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByLabelText("Release calendar");
+    await expect(input).toHaveAttribute("aria-labelledby", "release-calendar-heading");
+    await expect(input).not.toHaveAttribute("aria-label");
+  }
+};

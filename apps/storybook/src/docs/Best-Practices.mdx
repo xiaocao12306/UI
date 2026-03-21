@@ -2,6 +2,7 @@ import { Meta, Title, Subtitle, Description, Canvas } from '@storybook/blocks';
 import * as ButtonStories from '../stories/Button.stories';
 import * as FormFieldStories from '../stories/FormField.stories';
 import * as InputStories from '../stories/Input.stories';
+import * as DatePickerStories from '../stories/DatePicker.stories';
 import * as DialogStories from '../stories/Dialog.stories';
 import * as DrawerStories from '../stories/Drawer.stories';
 import * as PopoverStories from '../stories/Popover.stories';
@@ -55,6 +56,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Treat blank select `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank textarea `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank switch `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
+- Treat blank date-picker `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Keep switch keyboard toggle scoped to unmodified `Space` keys (` ` / `Space` / `Spacebar`); `Ctrl/Meta/Alt + Space` should remain host shortcut behavior.
 - Prefer `ariaLabelledBy` for radio groups when a visible heading already exists; use `ariaLabel` for standalone groups without nearby title context.
 - Keep input Enter active feedback scoped to unmodified keys: ignore `Ctrl/Meta/Alt + Enter` shortcut chords, while allowing normal `Enter` and `Shift+Enter` intent.
@@ -80,6 +82,8 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={FormFieldStories.ExternalControlAssociation} />
 <Canvas of={FormFieldStories.LabelledByPrecedence} />
 <Canvas of={InputStories.BlankAriaLabelFallback} />
+<Canvas of={DatePickerStories.BlankAriaLabelFallback} />
+<Canvas of={DatePickerStories.LabelledByPrecedence} />
 <Canvas of={ButtonStories.IconOnlyAccessibleName} />
 <Canvas of={TooltipStories.DescribedByLifecycle} />
 <Canvas of={DialogStories.Interactive} />

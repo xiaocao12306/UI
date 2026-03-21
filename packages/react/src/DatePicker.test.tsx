@@ -103,4 +103,38 @@ describe("DatePicker", () => {
     expect(input).not.toHaveAttribute("aria-invalid");
     expect(input).not.toHaveAttribute("data-invalid");
   });
+
+  it("ignores blank aria-label when aria-labelledby is present", () => {
+    render(
+      <>
+        <h2 id="release-heading">Release schedule</h2>
+        <DatePicker aria-label="   " aria-labelledby="release-heading" onValueChange={() => {}} />
+      </>
+    );
+
+    const input = screen.getByLabelText("Release schedule");
+    expect(input).toHaveAttribute("aria-labelledby", "release-heading");
+    expect(input).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank aria-labelledby and preserves aria-label", () => {
+    render(<DatePicker aria-label="Release date" aria-labelledby="   " onValueChange={() => {}} />);
+
+    const input = screen.getByLabelText("Release date");
+    expect(input).toHaveAttribute("aria-label", "Release date");
+    expect(input).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("prefers aria-labelledby over aria-label when both are provided", () => {
+    render(
+      <>
+        <h2 id="release-summary">Release summary</h2>
+        <DatePicker aria-label="Release date" aria-labelledby="release-summary" onValueChange={() => {}} />
+      </>
+    );
+
+    const input = screen.getByLabelText("Release summary");
+    expect(input).toHaveAttribute("aria-labelledby", "release-summary");
+    expect(input).not.toHaveAttribute("aria-label");
+  });
 });
