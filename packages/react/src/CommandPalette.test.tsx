@@ -872,6 +872,34 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
+  it("keeps Shift+Escape available for query-clear and dismiss flow", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.change(input, { target: { value: "release" } });
+    expect(input).toHaveValue("release");
+
+    fireEvent.keyDown(input, { key: "Escape", shiftKey: true });
+    expect(input).toHaveValue("");
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+    fireEvent.keyDown(input, { key: "Escape", shiftKey: true });
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onCloseReason).toHaveBeenCalledWith("escape-key");
+  });
+
   it("allows custom dismiss guards by preventing escape/outside events", () => {
     const onOpenChange = vi.fn();
 
