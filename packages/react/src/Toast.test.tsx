@@ -1290,6 +1290,16 @@ describe("Toast", () => {
     fireEvent.keyDown(document, { key: "Tab" });
     fireEvent.focus(closeButton);
     expect(closeButton.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.blur(closeButton);
+    fireEvent.mouseDown(document.body, { button: 2 });
+    fireEvent.focus(closeButton);
+    expect(closeButton.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.blur(closeButton);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(closeButton);
+    expect(closeButton.style.boxShadow).toBe("none");
     matchesSpy.mockRestore();
   });
 
