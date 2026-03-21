@@ -537,6 +537,11 @@ export const Vertical: Story = {
     await expect(releaseTab).toHaveAttribute("aria-keyshortcuts", automaticVerticalTabShortcuts);
     await expect(reviewTab).not.toHaveAttribute("aria-keyshortcuts");
 
+    fireEvent.keyDown(specTab, { key: "ArrowDown", ctrlKey: true });
+    fireEvent.keyDown(specTab, { key: "ArrowUp", metaKey: true });
+    await expect(specTab).toHaveFocus();
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+
     await userEvent.keyboard("{ArrowDown}");
     await expect(releaseTab).toHaveAttribute("aria-selected", "true");
   }

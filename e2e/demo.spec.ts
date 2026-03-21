@@ -1472,6 +1472,30 @@ test("navigates vertical tabs with ArrowDown and ArrowUp", async ({ page }) => {
   await expect(backlogPanel).not.toHaveAttribute("hidden");
 });
 
+test("keeps vertical tabs stable for modified ArrowUp/ArrowDown shortcuts", async ({ page }) => {
+  await page.goto("/");
+
+  const verticalTablist = page.getByRole("tablist", { name: "Vertical release stage tabs" });
+  const backlogTab = verticalTablist.getByRole("tab", { name: "Backlog" });
+  const inProgressTab = verticalTablist.getByRole("tab", { name: "In Progress" });
+
+  await backlogTab.focus();
+  await expect(backlogTab).toHaveAttribute("aria-selected", "true");
+
+  await backlogTab.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", ctrlKey: true, bubbles: true }));
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp", metaKey: true, bubbles: true }));
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", altKey: true, bubbles: true }));
+  });
+
+  await expect(backlogTab).toBeFocused();
+  await expect(backlogTab).toHaveAttribute("aria-selected", "true");
+
+  await backlogTab.press("ArrowDown");
+  await expect(inProgressTab).toBeFocused();
+  await expect(inProgressTab).toHaveAttribute("aria-selected", "true");
+});
+
 test("paginates release activity feed", async ({ page }) => {
   await page.goto("/");
 

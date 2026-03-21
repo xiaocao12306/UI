@@ -901,6 +901,34 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel Two")).toBeInTheDocument();
   });
 
+  it("ignores modified ArrowUp and ArrowDown in vertical orientation", () => {
+    render(
+      <Tabs
+        orientation="vertical"
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> },
+          { key: "three", label: "Three", content: <div>Panel Three</div> }
+        ]}
+      />
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    fireEvent.focus(oneTab);
+    fireEvent.keyDown(oneTab, { key: "ArrowDown", ctrlKey: true });
+    fireEvent.keyDown(oneTab, { key: "ArrowUp", metaKey: true });
+    expect(oneTab).toHaveAttribute("tabindex", "0");
+    expect(oneTab).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+
+    fireEvent.keyDown(oneTab, { key: "ArrowDown" });
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    expect(twoTab).toHaveFocus();
+    expect(twoTab).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Panel Two")).toBeInTheDocument();
+  });
+
   it("resets manual roving focus target back to selected tab after leaving tablist", async () => {
     const user = userEvent.setup();
     render(
