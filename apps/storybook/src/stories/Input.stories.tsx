@@ -155,6 +155,13 @@ export const ShortcutHintPrecision: Story = {
       >
         <Input />
       </FormField>
+
+      <FormField
+        label="Date shortcut input"
+        description="Non-text input types should not expose default Enter shortcut hints."
+      >
+        <Input type="date" aria-label="Date shortcut input control" />
+      </FormField>
     </StoryShowcaseFrame>
   ),
   play: async ({ canvasElement }) => {
@@ -168,6 +175,9 @@ export const ShortcutHintPrecision: Story = {
     await expect(
       canvas.getByRole("textbox", { name: /^Disabled shortcut input/ })
     ).not.toHaveAttribute("aria-keyshortcuts");
+    await expect(canvas.getByLabelText("Date shortcut input control")).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
   }
 };
 

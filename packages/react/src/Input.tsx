@@ -9,6 +9,7 @@ export type InputProps = React.ComponentPropsWithoutRef<"input"> & {
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
   {
     style,
+    type,
     invalid,
     disabled,
     readOnly,
@@ -40,10 +41,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
   const isInteractionDisabled = Boolean(disabled);
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel = resolvedAriaLabelledBy ? undefined : resolveNonEmptyLabel(ariaLabel);
+  const resolvedInputType = type ?? "text";
+  const supportsEnterKeyboardFeedback = isTextLikeInputType(resolvedInputType);
   const ariaKeyShortcuts =
     isInteractionDisabled || readOnly
       ? undefined
-      : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "Enter";
+      : resolveNonEmptyLabel(rawAriaKeyShortcuts) ??
+        (supportsEnterKeyboardFeedback ? "Enter" : undefined);
 
   React.useEffect(() => {
     if (!isInteractionDisabled) {
@@ -102,6 +106,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
   return (
     <input
       ref={setRefs}
+      type={resolvedInputType}
       disabled={disabled}
       readOnly={readOnly}
       data-aurora-input="true"
@@ -194,6 +199,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
         if (
           !isInteractionDisabled &&
           !readOnly &&
+          supportsEnterKeyboardFeedback &&
           isInputActivationKey(event.key) &&
           !isModifiedActivationChord(event) &&
           !isComposingKeyboardEvent(event)
@@ -203,7 +209,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
         onKeyDown?.(event);
       }}
       onKeyUp={(event) => {
-        if (isInputActivationKey(event.key) && !isComposingKeyboardEvent(event)) {
+        if (
+          supportsEnterKeyboardFeedback &&
+          isInputActivationKey(event.key) &&
+          !isComposingKeyboardEvent(event)
+        ) {
           setActive(false);
         }
         onKeyUp?.(event);
@@ -240,4 +250,15 @@ function resolveNonEmptyLabel(label: string | undefined) {
   }
 
   return undefined;
+}
+
+function isTextLikeInputType(type: string) {
+  return (
+    type === "text" ||
+    type === "search" ||
+    type === "email" ||
+    type === "url" ||
+    type === "tel" ||
+    type === "password"
+  );
 }

@@ -103,6 +103,29 @@ describe("Input", () => {
     );
   });
 
+  it("does not expose default Enter shortcut hints for non-text input types", () => {
+    render(<Input type="date" aria-label="Release date input" />);
+    const input = screen.getByLabelText("Release date input");
+
+    expect(input).toHaveAttribute("type", "date");
+    expect(input).not.toHaveAttribute("aria-keyshortcuts");
+  });
+
+  it("does not apply Enter active feedback for non-text input types", () => {
+    render(<Input type="date" aria-label="Date active input" />);
+    const input = screen.getByLabelText("Date active input");
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(input).not.toHaveAttribute("data-active");
+  });
+
+  it("allows explicit shortcut hints for non-text input types", () => {
+    render(<Input type="date" aria-label="Date shortcut input" aria-keyshortcuts="Enter" />);
+    const input = screen.getByLabelText("Date shortcut input");
+
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
+  });
+
   it("tracks hover and active interaction states", () => {
     render(<Input aria-label="Stateful field" />);
     const input = screen.getByRole("textbox", { name: "Stateful field" });

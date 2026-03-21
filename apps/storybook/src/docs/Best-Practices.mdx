@@ -67,7 +67,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Prefer `ariaLabelledBy` for radio groups when a visible heading already exists; use `ariaLabel` for standalone groups without nearby title context.
 - Keep radio option shortcut hints precise: expose `aria-keyshortcuts="Space"` only on actionable options, and remove shortcut metadata from disabled options.
 - Keep input Enter active feedback scoped to unmodified keys: ignore `Ctrl/Meta/Alt + Enter` shortcut chords, while allowing normal `Enter` and `Shift+Enter` intent.
-- Keep input shortcut hints precise: expose `aria-keyshortcuts="Enter"` only while actionable, and remove shortcut metadata when input is read-only or disabled.
+- Keep input shortcut hints precise: expose default `aria-keyshortcuts="Enter"` only for actionable text-like inputs (`text/search/email/url/tel/password`), and remove default hints for non-text types plus read-only/disabled states.
 - Keep input keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep textarea keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep select keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.

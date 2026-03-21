@@ -41,6 +41,12 @@ describe("DatePicker", () => {
     expect(input).toBeDisabled();
   });
 
+  it("does not expose default Enter shortcut hints for native date inputs", () => {
+    render(<DatePicker aria-label="Release date" onValueChange={() => {}} />);
+
+    expect(screen.getByLabelText("Release date")).not.toHaveAttribute("aria-keyshortcuts");
+  });
+
   it("wires invalid helper description through aria-describedby", () => {
     render(
       <DatePicker
