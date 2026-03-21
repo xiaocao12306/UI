@@ -37,6 +37,16 @@ const storyStackStyle: React.CSSProperties = { display: "grid", gap: 12, justify
 const storyTelemetryStackStyle: React.CSSProperties = { display: "grid", gap: 8, justifyItems: "start" };
 const storyParagraphStyle: React.CSSProperties = { margin: 0 };
 
+function dispatchLegacyImeKeyDown(element: HTMLElement, key: string) {
+  const event = new KeyboardEvent("keydown", {
+    key,
+    bubbles: true,
+    cancelable: true
+  });
+  Object.defineProperty(event, "keyCode", { value: 229 });
+  element.dispatchEvent(event);
+}
+
 export const Default: Story = {};
 
 export const DenseActions: Story = {
@@ -694,6 +704,9 @@ export const TypeaheadIgnoresImeComposition: Story = {
     await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
 
     fireEvent.keyDown(menu, { key: "a", isComposing: true, keyCode: 229, which: 229 });
+    await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+
+    dispatchLegacyImeKeyDown(menu, "a");
     await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
 
     await userEvent.keyboard("a");

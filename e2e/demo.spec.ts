@@ -2054,6 +2054,27 @@ test("keeps dropdown focus stable for modified Arrow navigation shortcuts", asyn
   await expect(page.getByRole("menuitem", { name: "Archive" })).toBeFocused();
 });
 
+test("ignores dropdown typeahead when only legacy IME keyCode is present", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Actions" });
+  await trigger.click();
+  const menu = page.getByRole("menu", { name: "Actions" });
+  const duplicateItem = page.getByRole("menuitem", { name: "Duplicate" });
+  await expect(menu).toBeVisible();
+  await expect(duplicateItem).toBeFocused();
+
+  await menu.evaluate((element) => {
+    const event = new KeyboardEvent("keydown", { key: "a", bubbles: true, cancelable: true });
+    Object.defineProperty(event, "keyCode", { value: 229 });
+    element.dispatchEvent(event);
+  });
+  await expect(duplicateItem).toBeFocused();
+
+  await page.keyboard.press("a");
+  await expect(page.getByRole("menuitem", { name: "Archive" })).toBeFocused();
+});
+
 test("tabs out of dropdown menu and moves focus to next control", async ({ page }) => {
   await page.goto("/");
 

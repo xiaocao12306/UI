@@ -104,7 +104,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep dialog/drawer close callbacks ordered and single-purpose: dismiss paths should emit `onCloseReason` before `onOpenChange(false)` to avoid telemetry/state reducer race conditions.
 - Keep dialog/drawer handled dismiss events preempted (`event.preventDefault()` on accepted Escape/outside-pointer paths) so downstream document-level shortcuts can detect `defaultPrevented` and skip duplicate close side effects.
 - For dropdown typeahead, set `textValue` when item labels are non-string or need locale/accent-friendly buffered matching aliases.
-- Ignore dropdown typeahead key matching during IME composition so CJK input confirmation does not shift active menu focus unexpectedly.
+- Ignore dropdown typeahead key matching during IME composition, including legacy browsers that only expose `keyCode=229`, so CJK input confirmation does not shift active menu focus unexpectedly.
 - When app-level shortcuts preempt Escape with `preventDefault()`, keep dropdown-level Escape hooks side-effect free and rely on built-in preemption skip behavior.
 - When app-level shortcuts preempt Escape with `preventDefault()`, keep popover-level Escape hooks side-effect free and rely on built-in preemption skip behavior.
 - Use popover `onCloseReason` for deterministic telemetry (`trigger-click` / `escape-key` / `outside-pointer`) instead of inferring dismiss origin from focus and pointer side effects.

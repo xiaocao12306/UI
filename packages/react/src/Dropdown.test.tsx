@@ -758,6 +758,15 @@ describe("Dropdown", () => {
     fireEvent.keyDown(menu, { key: "a", isComposing: true, keyCode: 229, which: 229 });
     expect(screen.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
 
+    const legacyImeEvent = new KeyboardEvent("keydown", {
+      key: "a",
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(legacyImeEvent, "keyCode", { value: 229 });
+    menu.dispatchEvent(legacyImeEvent);
+    expect(screen.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+
     fireEvent.keyDown(menu, { key: "a" });
     expect(screen.getByRole("menuitem", { name: "Archive" })).toHaveFocus();
   });
