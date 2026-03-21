@@ -2238,11 +2238,13 @@ test("tabs out of dropdown menu and moves focus to next control", async ({ page 
   await page.goto("/");
 
   const trigger = page.getByRole("button", { name: "Actions" });
-  const nextButton = page.getByRole("button", { name: "Open Dialog" });
+  const nextButton = page.getByRole("button", { name: "Open Nested Overlay" });
+  const firstItem = page.getByRole("menuitem", { name: "Duplicate" });
 
   await trigger.focus();
   await trigger.press("ArrowDown");
   await expect(page.getByRole("menu")).toBeVisible();
+  await expect(firstItem).toBeFocused();
 
   await page.keyboard.press("Tab");
   await expect(page.getByRole("menu")).toBeHidden();
@@ -2599,7 +2601,10 @@ test("updates ai section prompt and reasoning trace", async ({ page }) => {
     "Generate release rollout checklist"
   );
 
-  const reasoningToggle = aiSection.getByRole("button", { name: /Model reasoning/ });
+  const reasoningToggle = aiSection
+    .locator('button[aria-controls][aria-expanded]')
+    .filter({ hasText: "Model reasoning" });
+  await expect(reasoningToggle).toHaveCount(1);
   await expect(reasoningToggle).toHaveAttribute("aria-expanded", "false");
   await reasoningToggle.click();
   await expect(reasoningToggle).toHaveAttribute("aria-expanded", "true");

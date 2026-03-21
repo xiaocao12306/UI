@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Dropdown } from "./Dropdown";
 import { Popover } from "./Popover";
@@ -1139,7 +1139,7 @@ describe("Dropdown", () => {
     expect(screen.queryByRole("menu", { name: "Trigger Pointer" })).toBeNull();
   });
 
-  it("emits close callbacks in deterministic order for item-select and Tab dismiss", () => {
+  it("emits close callbacks in deterministic order for item-select and Tab dismiss", async () => {
     const events: string[] = [];
     render(
       <Dropdown
@@ -1174,10 +1174,12 @@ describe("Dropdown", () => {
     events.length = 0;
 
     fireEvent.keyDown(screen.getByRole("menu", { name: "Order" }), { key: "Tab" });
-    expect(events).toEqual(["reason:tab-key", "open:false"]);
+    await waitFor(() => {
+      expect(events).toEqual(["reason:tab-key", "open:false"]);
+    });
   });
 
-  it("closes menu on Tab without forcing trigger focus", () => {
+  it("closes menu on Tab without forcing trigger focus", async () => {
     const onCloseReason = vi.fn();
 
     render(
@@ -1200,9 +1202,74 @@ describe("Dropdown", () => {
     expect(menu).toBeInTheDocument();
 
     fireEvent.keyDown(menu, { key: "Tab" });
-    expect(screen.queryByRole("menu", { name: "Keyboard exit" })).toBeNull();
+    await waitFor(() => {
+      expect(screen.queryByRole("menu", { name: "Keyboard exit" })).toBeNull();
+    });
     expect(trigger).not.toHaveFocus();
     expect(onCloseReason).toHaveBeenCalledWith("tab-key");
+  });
+
+  it("closes menu when Tab is pressed on trigger before menu item focus settles", async () => {
+    const onCloseReason = vi.fn();
+
+    render(
+      <Dropdown
+        label="Trigger tab dismiss"
+        onCloseReason={onCloseReason}
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "Trigger tab dismiss" });
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    expect(screen.getByRole("menu", { name: "Trigger tab dismiss" })).toBeInTheDocument();
+
+    fireEvent.keyDown(trigger, { key: "Tab" });
+    await waitFor(() => {
+      expect(screen.queryByRole("menu", { name: "Trigger tab dismiss" })).toBeNull();
+    });
+    expect(onCloseReason).toHaveBeenCalledWith("tab-key");
+  });
+
+  it("moves focus to adjacent controls on Tab and Shift+Tab dismiss", () => {
+    render(
+      <div>
+        <button type="button">Previous control</button>
+        <Dropdown
+          label="Tab focus transfer"
+          items={[
+            { key: "one", label: "One" },
+            { key: "two", label: "Two" }
+          ]}
+        />
+        <button type="button">Next control</button>
+      </div>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Tab focus transfer" });
+    const previousControl = screen.getByRole("button", { name: "Previous control" });
+    const nextControl = screen.getByRole("button", { name: "Next control" });
+
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    const firstItem = screen.getByRole("menuitem", { name: "One" });
+    expect(firstItem).toHaveFocus();
+
+    fireEvent.keyDown(firstItem, { key: "Tab" });
+    expect(screen.queryByRole("menu", { name: "Tab focus transfer" })).toBeNull();
+    expect(nextControl).toHaveFocus();
+
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    expect(screen.getByRole("menuitem", { name: "One" })).toHaveFocus();
+
+    fireEvent.keyDown(screen.getByRole("menuitem", { name: "One" }), { key: "Tab", shiftKey: true });
+    expect(screen.queryByRole("menu", { name: "Tab focus transfer" })).toBeNull();
+    expect(previousControl).toHaveFocus();
   });
 
   it("preserves outside pointer target focus when dismissing", () => {

@@ -158,6 +158,7 @@ export function Dropdown({
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false);
   const [activeIndex, setActiveIndex] = React.useState(-1);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const menuRef = React.useRef<HTMLUListElement>(null);
   const itemRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const typeaheadStateRef = React.useRef<{ query: string; timestamp: number }>({ query: "", timestamp: 0 });
   const pendingOpenActiveIndexRef = React.useRef<number | null>(null);
@@ -206,6 +207,18 @@ export function Dropdown({
     }
     keyboardActivationTimerWindowRef.current = null;
   }, []);
+
+  const dismissWithTabNavigation = React.useCallback(
+    (event: React.KeyboardEvent<HTMLElement>) => {
+      event.preventDefault();
+      const ownerDocument = event.currentTarget.ownerDocument;
+      const fallbackAnchor = event.target instanceof HTMLElement ? event.target : event.currentTarget;
+      const focusAnchor = triggerRef.current ?? fallbackAnchor;
+      focusAdjacentTabbable(ownerDocument, focusAnchor, event.shiftKey ? -1 : 1, menuRef.current);
+      closeWithReason("tab-key");
+    },
+    [closeWithReason]
+  );
 
   React.useEffect(
     () => () => {
@@ -367,6 +380,11 @@ export function Dropdown({
           setOpen(true);
         }}
         onKeyDown={(event) => {
+          if (event.key === "Tab" && isOpen) {
+            dismissWithTabNavigation(event);
+            return;
+          }
+
           if (
             (event.key !== "ArrowDown" && event.key !== "ArrowUp") ||
             event.altKey ||
@@ -422,6 +440,7 @@ export function Dropdown({
           }}
         >
           <ul
+            ref={menuRef}
             id={menuId}
             role="menu"
             aria-labelledby={triggerId}
@@ -490,7 +509,7 @@ export function Dropdown({
               }
 
               if (event.key === "Tab") {
-                closeWithReason("tab-key");
+                dismissWithTabNavigation(event);
                 return;
               }
 
@@ -629,6 +648,65 @@ function isComposingDropdownKeyEvent(event: React.KeyboardEvent<HTMLElement>) {
   }
 
   return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
+}
+
+function focusAdjacentTabbable(
+  ownerDocument: Document,
+  currentElement: HTMLElement,
+  direction: 1 | -1,
+  excludedContainer: HTMLElement | null = null
+) {
+  const tabbableElements = Array.from(
+    ownerDocument.querySelectorAll<HTMLElement>(
+      'a[href], button, input:not([type="hidden"]), select, textarea, [tabindex]'
+    )
+  ).filter((element) => {
+    if (element === currentElement) {
+      return true;
+    }
+
+    if (excludedContainer && excludedContainer.contains(element)) {
+      return false;
+    }
+
+    if (element.hasAttribute("disabled")) {
+      return false;
+    }
+
+    return isElementTabbable(element);
+  });
+
+  if (tabbableElements.length === 0) {
+    return;
+  }
+
+  const fallbackActiveElement =
+    ownerDocument.activeElement instanceof HTMLElement ? ownerDocument.activeElement : null;
+  const currentIndex = tabbableElements.indexOf(currentElement);
+  const activeIndex = fallbackActiveElement ? tabbableElements.indexOf(fallbackActiveElement) : -1;
+  const startIndex = currentIndex >= 0 ? currentIndex : activeIndex;
+  let nextIndex = startIndex + direction;
+
+  while (nextIndex >= 0 && nextIndex < tabbableElements.length) {
+    const candidate = tabbableElements[nextIndex];
+    if (candidate !== currentElement && isElementTabbable(candidate)) {
+      candidate.focus();
+      return;
+    }
+    nextIndex += direction;
+  }
+}
+
+function isElementTabbable(element: HTMLElement) {
+  if (element.tabIndex < 0) {
+    return false;
+  }
+
+  if (element.hidden || element.getAttribute("aria-hidden") === "true") {
+    return false;
+  }
+
+  return true;
 }
 
 function getReadableTextNode(node: React.ReactNode): string {
