@@ -81,6 +81,45 @@ export const InvalidState: Story = {
   )
 };
 
+export const BlankAriaLabelFallback: Story = {
+  render: () => (
+    <SelectShowcase gap={8}>
+      <label htmlFor="storybook-select-blank-label" style={storyMutedTextStyle}>
+        Framework label
+      </label>
+      <Select id="storybook-select-blank-label" aria-label="   " defaultValue="react">
+        <option value="react">React</option>
+        <option value="vue">Vue</option>
+      </Select>
+    </SelectShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const select = canvas.getByRole("combobox", { name: "Framework label" });
+    await expect(select).not.toHaveAttribute("aria-label");
+  }
+};
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <SelectShowcase gap={8}>
+      <p id="storybook-select-heading" style={storyMutedTextStyle}>
+        Framework heading
+      </p>
+      <Select aria-label="Framework fallback name" aria-labelledby="storybook-select-heading" defaultValue="react">
+        <option value="react">React</option>
+        <option value="vue">Vue</option>
+      </Select>
+    </SelectShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const select = canvas.getByRole("combobox", { name: "Framework heading" });
+    await expect(select).toHaveAttribute("aria-labelledby", "storybook-select-heading");
+    await expect(select).not.toHaveAttribute("aria-label");
+  }
+};
+
 export const DisabledState: Story = {
   args: {
     "aria-label": "Disabled framework select",

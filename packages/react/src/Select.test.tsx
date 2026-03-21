@@ -52,6 +52,47 @@ describe("Select", () => {
     expect(select).toHaveAttribute("data-invalid", "true");
   });
 
+  it("ignores blank aria-label and falls back to associated label naming", () => {
+    render(
+      <div>
+        <label htmlFor="release-framework">Framework</label>
+        <Select id="release-framework" aria-label="   ">
+          <option value="react">React</option>
+        </Select>
+      </div>
+    );
+
+    const select = screen.getByRole("combobox", { name: "Framework" });
+    expect(select).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank aria-labelledby and keeps aria-label naming", () => {
+    render(
+      <Select aria-label="Framework picker" aria-labelledby="   ">
+        <option value="react">React</option>
+      </Select>
+    );
+
+    const select = screen.getByRole("combobox", { name: "Framework picker" });
+    expect(select).not.toHaveAttribute("aria-labelledby");
+    expect(select).toHaveAttribute("aria-label", "Framework picker");
+  });
+
+  it("prefers aria-labelledby naming over aria-label when both are provided", () => {
+    render(
+      <div>
+        <p id="framework-heading">Framework heading</p>
+        <Select aria-label="Fallback framework name" aria-labelledby="framework-heading">
+          <option value="react">React</option>
+        </Select>
+      </div>
+    );
+
+    const select = screen.getByRole("combobox", { name: "Framework heading" });
+    expect(select).toHaveAttribute("aria-labelledby", "framework-heading");
+    expect(select).not.toHaveAttribute("aria-label");
+  });
+
   it("tracks focus state for visual feedback", () => {
     render(
       <Select aria-label="Focus state">
