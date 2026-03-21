@@ -321,12 +321,14 @@ function shouldSyncSectionStateFromClick(event: React.MouseEvent<HTMLAnchorEleme
 
 function Section({
   id,
+  index,
   title,
   description,
   status,
   children
 }: {
   id: string;
+  index: number;
   title: string;
   description?: string;
   status?: { label: string; note: string };
@@ -338,6 +340,9 @@ function Section({
     <section id={id} aria-labelledby={headingId} className="demo-section" style={sectionStyle}>
       <header className="demo-section-header" style={sectionHeaderStyle}>
         <div style={sectionHeadingRowStyle}>
+          <span aria-hidden="true" className="demo-section-index-badge">
+            {formatSectionIndex(index)}
+          </span>
           <p className="demo-section-eyebrow" style={sectionEyebrowStyle}>
             {id.replaceAll("-", " ")}
           </p>
@@ -378,11 +383,13 @@ function Section({
 
 function SectionNavLink({
   id,
+  index,
   label,
   active,
   onNavigate
 }: {
   id: string;
+  index: number;
   label: string;
   active: boolean;
   onNavigate: (event: React.MouseEvent<HTMLAnchorElement>) => void;
@@ -395,9 +402,16 @@ function SectionNavLink({
       onClick={onNavigate}
       style={sectionNavLinkStyle}
     >
-      {label}
+      <span aria-hidden="true" className="demo-section-nav-index">
+        {formatSectionIndex(index)}
+      </span>
+      <span>{label}</span>
     </a>
   );
+}
+
+function formatSectionIndex(index: number) {
+  return String(index + 1).padStart(2, "0");
 }
 
 function HeroStatCard({
@@ -857,10 +871,11 @@ function App() {
                 Jump to section
               </p>
               <nav aria-label="Demo sections" className="demo-section-nav" style={sectionNavStyle}>
-                {sectionLinks.map((item) => (
+                {sectionLinks.map((item, index) => (
                   <SectionNavLink
                     key={item.id}
                     id={item.id}
+                    index={index}
                     label={item.label}
                     active={activeSection === item.id}
                     onNavigate={(event) => {
@@ -890,6 +905,7 @@ function App() {
 
           <Section
             id="basic-components"
+            index={0}
             title="Basic Components"
             description="Core controls and form primitives with theme-driven tokens."
             status={sectionReadinessById["basic-components"]}
@@ -1007,6 +1023,7 @@ function App() {
 
           <Section
             id="data-navigation"
+            index={1}
             title="Data & Navigation"
             description="Common data surfaces and navigation containers."
             status={sectionReadinessById["data-navigation"]}
@@ -1321,6 +1338,7 @@ function App() {
 
           <Section
             id="feedback-states"
+            index={2}
             title="Feedback & States"
             description="System status, loading skeletons, and streaming indicators."
             status={sectionReadinessById["feedback-states"]}
@@ -1427,6 +1445,7 @@ function App() {
 
           <Section
             id="overlays-navigation"
+            index={3}
             title="Overlays & Navigation"
             description="Layered surfaces with keyboard and pointer dismissal behavior."
             status={sectionReadinessById["overlays-navigation"]}
@@ -1662,6 +1681,7 @@ function App() {
 
           <Section
             id="ai-components"
+            index={4}
             title="AI Components"
             description="Prompt, reasoning, and streaming response building blocks."
             status={sectionReadinessById["ai-components"]}

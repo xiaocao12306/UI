@@ -452,6 +452,27 @@
   );
 }
 
+.demo-section-index-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--aurora-accent-default) 44%, var(--aurora-border-default));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--aurora-accent-default) 16%, transparent),
+    color-mix(in srgb, var(--aurora-accent-default) 8%, transparent)
+  );
+  color: color-mix(in srgb, var(--aurora-accent-default) 86%, var(--aurora-text-primary));
+  font-family: var(--demo-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  font-weight: var(--aurora-font-weight-semibold);
+}
+
 .demo-section-card::before {
   content: "";
   position: absolute;
@@ -536,10 +557,38 @@
   pointer-events: none;
 }
 
+.demo-section-nav-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--aurora-border-default) 78%, transparent);
+  background: color-mix(in srgb, var(--aurora-surface-elevated) 90%, var(--aurora-surface-default));
+  font-family: var(--demo-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--aurora-text-secondary);
+  transition:
+    border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard),
+    color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard),
+    background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard);
+}
+
 .demo-section-nav-pill[aria-current="location"]::before,
 .demo-section-nav-pill:hover::before,
 .demo-section-nav-pill:focus-visible::before {
   background: var(--aurora-accent-default);
+}
+
+.demo-section-nav-pill[aria-current="location"] .demo-section-nav-index,
+.demo-section-nav-pill:hover .demo-section-nav-index,
+.demo-section-nav-pill:focus-visible .demo-section-nav-index {
+  border-color: color-mix(in srgb, var(--aurora-accent-default) 56%, var(--aurora-border-default));
+  color: color-mix(in srgb, var(--aurora-accent-default) 86%, var(--aurora-text-primary));
+  background: color-mix(in srgb, var(--aurora-accent-default) 14%, var(--aurora-surface-default));
 }
 
 .demo-section-nav-pill:hover {
