@@ -1034,6 +1034,31 @@ test("sorts demo table with keyboard activation", async ({ page }) => {
   await expect(firstRow).toContainText("Button");
 });
 
+test("sorts demo table with Shift-modified keyboard activation", async ({ page }) => {
+  await page.goto("/");
+
+  const table = page.getByRole("table");
+  const telemetry = page.getByTestId("table-sort-telemetry");
+  const componentColumn = table.getByRole("columnheader", { name: /Component/ });
+  const componentSortButton = table.getByRole("button", { name: /Component/ });
+  const firstRow = table.locator("tbody tr").first();
+
+  await componentSortButton.focus();
+  await componentSortButton.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", shiftKey: true, bubbles: true }));
+  });
+  await expect(componentColumn).toHaveAttribute("aria-sort", "descending");
+  await expect(firstRow).toContainText("StreamingCodeBlock");
+  await expect(telemetry).toHaveText("component:desc");
+
+  await componentSortButton.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: " ", shiftKey: true, bubbles: true }));
+  });
+  await expect(componentColumn).toHaveAttribute("aria-sort", "ascending");
+  await expect(firstRow).toContainText("Button");
+  await expect(telemetry).toHaveText("component:asc");
+});
+
 test("keeps demo table sort stable for modified activation keys", async ({ page }) => {
   await page.goto("/");
 
@@ -1192,6 +1217,28 @@ test("keeps manual tabs panel stable until Enter activation", async ({ page }) =
   await expect(reviewPanel).toHaveAttribute("hidden");
 
   await reviewTab.press("Enter");
+  await expect(reviewPanel).toContainText("Cross-team review and accessibility signoff.");
+  await expect(reviewPanel).not.toHaveAttribute("hidden");
+});
+
+test("keeps manual tabs panel stable until Shift+Enter activation", async ({ page }) => {
+  await page.goto("/");
+
+  const manualTablist = page.getByRole("tablist", { name: "Manual release workflow tabs" });
+  const draftTab = manualTablist.getByRole("tab", { name: "Draft" });
+  const reviewTab = manualTablist.getByRole("tab", { name: "Review" });
+  const draftPanel = page.locator(`#${await draftTab.getAttribute("aria-controls")}`);
+  const reviewPanel = page.locator(`#${await reviewTab.getAttribute("aria-controls")}`);
+
+  await draftTab.focus();
+  await draftTab.press("ArrowRight");
+  await expect(reviewTab).toBeFocused();
+  await expect(draftPanel).not.toHaveAttribute("hidden");
+  await expect(reviewPanel).toHaveAttribute("hidden");
+
+  await reviewTab.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", shiftKey: true, bubbles: true }));
+  });
   await expect(reviewPanel).toContainText("Cross-team review and accessibility signoff.");
   await expect(reviewPanel).not.toHaveAttribute("hidden");
 });
