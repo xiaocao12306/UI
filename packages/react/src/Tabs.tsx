@@ -147,6 +147,7 @@ export function Tabs({
   const [focusVisibleTabKey, setFocusVisibleTabKey] = React.useState<string | null>(null);
   const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel, "Tabs");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
+  const tabDomIds = React.useMemo(() => createTabDomIds(baseId, items), [baseId, items]);
   const enabledTabCount = React.useMemo(
     () => items.reduce((count, item) => (item.disabled ? count : count + 1), 0),
     [items]
@@ -370,6 +371,7 @@ export function Tabs({
         }}
       >
         {items.map((item, index) => {
+          const domIds = tabDomIds[index];
           const selected = item.key === currentValue;
           const disabled = Boolean(item.disabled);
           const hovered = !disabled && hoveredTabKey === item.key;
@@ -385,12 +387,12 @@ export function Tabs({
               ref={(node) => {
                 tabRefs.current[index] = node;
               }}
-              id={`${baseId}-tab-${index}`}
+              id={domIds?.tabId ?? `${baseId}-tab-${index}`}
               type="button"
               role="tab"
               aria-label={itemAriaLabel}
               aria-selected={selected}
-              aria-controls={`${baseId}-panel-${index}`}
+              aria-controls={domIds?.panelId ?? `${baseId}-panel-${index}`}
               aria-disabled={disabled || undefined}
               aria-keyshortcuts={
                 disabled || enabledTabCount <= 1
@@ -590,14 +592,15 @@ export function Tabs({
       </div>
 
       {items.map((item, index) => {
+        const domIds = tabDomIds[index];
         const selected = item.key === currentValue;
 
         return (
           <div
             key={item.key}
-            id={`${baseId}-panel-${index}`}
+            id={domIds?.panelId ?? `${baseId}-panel-${index}`}
             role="tabpanel"
-            aria-labelledby={`${baseId}-tab-${index}`}
+            aria-labelledby={domIds?.tabId ?? `${baseId}-tab-${index}`}
             tabIndex={selected ? 0 : -1}
             hidden={!selected}
             style={{
@@ -742,4 +745,24 @@ function resolveNonEmptyLabel(label: string | undefined, fallback?: string): str
   }
 
   return fallback;
+}
+
+function createTabDomIds(baseId: string, items: TabItem[]) {
+  const seenSegmentCounts = new Map<string, number>();
+  return items.map((item) => {
+    const normalizedSegment = normalizeTabKeyForDomId(item.key);
+    const seenCount = (seenSegmentCounts.get(normalizedSegment) ?? 0) + 1;
+    seenSegmentCounts.set(normalizedSegment, seenCount);
+
+    const dedupedSegment = seenCount > 1 ? `${normalizedSegment}-${seenCount}` : normalizedSegment;
+    return {
+      tabId: `${baseId}-tab-${dedupedSegment}`,
+      panelId: `${baseId}-panel-${dedupedSegment}`
+    };
+  });
+}
+
+function normalizeTabKeyForDomId(key: string) {
+  const encoded = encodeURIComponent(key).replace(/%/g, "_");
+  return encoded.length > 0 ? encoded : "item";
 }

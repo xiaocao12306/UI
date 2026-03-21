@@ -401,6 +401,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep manual-tab pressed-state feedback active during `Enter`/`Space` hold (and clear on keyup) so keyboard activation has the same tactile affordance as pointer activation.
 - In controlled mode, ensure `value` always maps to an enabled tab key; development builds now warn when `value` is missing/disabled and fallback selection is applied.
 - Keep tab panels mounted and toggle `hidden` so tab `aria-controls` always points to a real panel.
+- Keep `items[].key` stable across rerenders/reordering; tab and panel id refs are key-derived, so changing keys at runtime forces new accessibility relationships.
 - Avoid duplicate telemetry from tabs by emitting `onValueChange` only on actual key transitions.
 - Keep tab focus-visible fallback resilient for both `Tab` and `Shift+Tab` keyboard re-entry after pointer interactions so reverse keyboard traversal preserves active-tab focus affordance.
 

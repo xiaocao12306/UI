@@ -342,30 +342,47 @@ describe("Tabs", () => {
     expect(twoPanel).toHaveAttribute("tabindex", "0");
   });
 
-  it("keeps tab and panel id wiring stable when keys contain special characters", () => {
-    render(
+  it("keeps tab and panel id wiring stable when keys contain special characters and items reorder", () => {
+    const baseItems = [
+      { key: "Roadmap / 2026", label: "Roadmap", content: <div>Roadmap panel</div> },
+      { key: "验收项 #1", label: "验收项", content: <div>验收 panel</div> }
+    ];
+    const { rerender } = render(
       <Tabs
         defaultValue="Roadmap / 2026"
-        items={[
-          { key: "Roadmap / 2026", label: "Roadmap", content: <div>Roadmap panel</div> },
-          { key: "验收项 #1", label: "验收项", content: <div>验收 panel</div> }
-        ]}
+        items={baseItems}
       />
     );
 
     const roadmapTab = screen.getByRole("tab", { name: "Roadmap" });
     const acceptanceTab = screen.getByRole("tab", { name: "验收项" });
-    expect(roadmapTab.id).toMatch(/-tab-\d+$/);
-    expect(acceptanceTab.id).toMatch(/-tab-\d+$/);
+    const roadmapTabId = roadmapTab.id;
+    const acceptanceTabId = acceptanceTab.id;
+    const roadmapPanelId = roadmapTab.getAttribute("aria-controls");
+    const acceptancePanelId = acceptanceTab.getAttribute("aria-controls");
+    expect(roadmapTabId).toContain("-tab-Roadmap_20_2F_202026");
+    expect(acceptanceTabId).toContain("-tab-_E9_AA_8C_E6_94_B6_E9_A1_B9_20_231");
 
-    const roadmapPanel = document.getElementById(roadmapTab.getAttribute("aria-controls") ?? "");
-    const acceptancePanel = document.getElementById(
-      acceptanceTab.getAttribute("aria-controls") ?? ""
+    rerender(
+      <Tabs
+        defaultValue="Roadmap / 2026"
+        items={[baseItems[1], baseItems[0]]}
+      />
     );
+
+    const roadmapTabAfterReorder = screen.getByRole("tab", { name: "Roadmap" });
+    const acceptanceTabAfterReorder = screen.getByRole("tab", { name: "验收项" });
+    expect(roadmapTabAfterReorder.id).toBe(roadmapTabId);
+    expect(acceptanceTabAfterReorder.id).toBe(acceptanceTabId);
+    expect(roadmapTabAfterReorder).toHaveAttribute("aria-controls", roadmapPanelId);
+    expect(acceptanceTabAfterReorder).toHaveAttribute("aria-controls", acceptancePanelId);
+
+    const roadmapPanel = document.getElementById(roadmapPanelId ?? "");
+    const acceptancePanel = document.getElementById(acceptancePanelId ?? "");
     expect(roadmapPanel).not.toBeNull();
     expect(acceptancePanel).not.toBeNull();
-    expect(roadmapPanel).toHaveAttribute("aria-labelledby", roadmapTab.id);
-    expect(acceptancePanel).toHaveAttribute("aria-labelledby", acceptanceTab.id);
+    expect(roadmapPanel).toHaveAttribute("aria-labelledby", roadmapTabAfterReorder.id);
+    expect(acceptancePanel).toHaveAttribute("aria-labelledby", acceptanceTabAfterReorder.id);
   });
 
   it("skips disabled tabs during keyboard navigation", () => {
