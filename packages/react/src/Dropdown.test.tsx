@@ -231,6 +231,26 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Two" })).toHaveFocus();
   });
 
+  it("opens from trigger with ArrowUp and focuses the last enabled item", () => {
+    render(
+      <Dropdown
+        label="Keyboard Up"
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two", disabled: true },
+          { key: "three", label: "Three" }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "Keyboard Up" });
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "ArrowUp" });
+
+    expect(screen.getByRole("menu", { name: "Keyboard Up" })).toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: "Three" })).toHaveFocus();
+  });
+
   it("ignores modified trigger navigation keys", () => {
     render(
       <Dropdown

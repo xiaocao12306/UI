@@ -363,6 +363,13 @@ export const SelectionTelemetry: Story = {
     await userEvent.keyboard("{ArrowDown}");
     await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
     await expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("menu")).not.toBeInTheDocument();
+
+    trigger.focus();
+    await userEvent.keyboard("{ArrowUp}");
+    await expect(canvas.getByRole("menuitem", { name: "Delete" })).toHaveFocus();
   }
 };
 

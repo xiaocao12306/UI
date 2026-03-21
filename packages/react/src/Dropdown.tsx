@@ -160,6 +160,7 @@ export function Dropdown({
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const itemRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
   const typeaheadStateRef = React.useRef<{ query: string; timestamp: number }>({ query: "", timestamp: 0 });
+  const pendingOpenActiveIndexRef = React.useRef<number | null>(null);
   const keyboardActivationItemKeyRef = React.useRef<string | null>(null);
   const keyboardActivationTimestampRef = React.useRef(0);
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
@@ -318,7 +319,20 @@ export function Dropdown({
     if (!isOpen) {
       setActiveIndex(-1);
       typeaheadStateRef.current = { query: "", timestamp: 0 };
+      pendingOpenActiveIndexRef.current = null;
       clearKeyboardActivationLatch();
+      return;
+    }
+
+    const pendingIndex = pendingOpenActiveIndexRef.current;
+    pendingOpenActiveIndexRef.current = null;
+    if (
+      typeof pendingIndex === "number" &&
+      pendingIndex >= 0 &&
+      pendingIndex < items.length &&
+      !items[pendingIndex]?.disabled
+    ) {
+      setActiveIndex(pendingIndex);
       return;
     }
 
@@ -363,11 +377,17 @@ export function Dropdown({
           }
 
           event.preventDefault();
+          const nextIndex =
+            event.key === "ArrowDown"
+              ? getNextEnabledIndex(items, -1, 1)
+              : getNextEnabledIndex(items, 0, -1);
+
           if (!isOpen) {
+            pendingOpenActiveIndexRef.current = nextIndex;
             setOpen(true);
+            return;
           }
 
-          const nextIndex = event.key === "ArrowDown" ? getNextEnabledIndex(items, -1, 1) : getNextEnabledIndex(items, 0, -1);
           setActiveIndex(nextIndex);
         }}
       >

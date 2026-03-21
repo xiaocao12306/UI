@@ -116,6 +116,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep dropdown menu-item keyboard activation explicit and cross-browser (`Enter` / `Space` / legacy `Spacebar`) so non-pointer flows can execute actions without click simulation.
 - Keep dropdown navigation/activation/dismiss scoped to unmodified keys; `Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space/Escape` should stay on host/browser shortcut behavior.
 - Keep dropdown trigger shortcut hints explicit (`aria-keyshortcuts="ArrowDown ArrowUp"`) only while closed so keyboard-open affordance stays discoverable without advertising unavailable shortcuts once open.
+- Keep dropdown trigger open targeting stable: `ArrowDown` should focus the first enabled item, and `ArrowUp` should focus the last enabled item for immediate tail-action access.
 - Keep dropdown menu shortcut hints explicit (`aria-keyshortcuts="ArrowDown ArrowUp Home End PageDown PageUp Tab [Escape]"`), and omit `Escape` from the hint when `closeOnEscape={false}` so dismiss metadata matches runtime policy.
 - For long dropdown menus, rely on `PageUp` / `PageDown` jumps to move across actionable items in larger steps while still skipping disabled entries.
 - Treat dropdown menu-item activation repeat (`event.repeat`) as no-op after first keydown to prevent duplicate command execution and telemetry jitter during long-press.
