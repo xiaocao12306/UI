@@ -666,6 +666,34 @@ test("ignores command palette navigation and selection keys during IME compositi
   await expect(page.getByRole("dialog", { name: "Dialog Example" })).toBeVisible();
 });
 
+test("keeps command palette navigation stable for modified arrow/page shortcuts", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  const searchInput = palette.getByRole("combobox", { name: "Search commands" });
+  await expect(palette).toBeVisible();
+  await expect(searchInput).toHaveAttribute("aria-activedescendant", /option-0$/);
+
+  await searchInput.evaluate((element) => {
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowDown", ctrlKey: true, bubbles: true })
+    );
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "ArrowUp", metaKey: true, bubbles: true })
+    );
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "PageDown", ctrlKey: true, bubbles: true })
+    );
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "End", altKey: true, bubbles: true }));
+  });
+
+  await expect(searchInput).toHaveAttribute("aria-activedescendant", /option-0$/);
+  await expect(palette).toBeVisible();
+});
+
 test("keeps command option activation stable for modified and repeated keydown", async ({ page }) => {
   await page.goto("/");
 

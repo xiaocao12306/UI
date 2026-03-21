@@ -1211,6 +1211,8 @@ export const PagedKeyboardNavigation: Story = {
 
     fireEvent.keyDown(input, { key: "PageDown", ctrlKey: true });
     fireEvent.keyDown(input, { key: "End", metaKey: true });
+    fireEvent.keyDown(input, { key: "ArrowDown", ctrlKey: true });
+    fireEvent.keyDown(input, { key: "ArrowUp", metaKey: true });
     await expect(input).toHaveAttribute(
       "aria-activedescendant",
       expect.stringContaining("option-6")
