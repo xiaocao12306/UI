@@ -51,6 +51,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - For composite/non-clonable field controls, provide `htmlFor` on `FormField` and a matching control `id`; otherwise label association cannot be inferred.
 - If a wrapped control already provides `aria-labelledby`, avoid passing `aria-label` together; keep `aria-labelledby` as the canonical name source.
 - Treat blank input `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
+- Treat blank checkbox `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank select `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank textarea `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank switch `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.

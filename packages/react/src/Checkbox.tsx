@@ -9,7 +9,20 @@ export type CheckboxProps = Omit<React.ComponentPropsWithoutRef<"input">, "type"
 };
 
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
-  { label, description, invalid, indeterminate = false, disabled, style, onFocus, onBlur, "aria-invalid": ariaInvalid, ...props },
+  {
+    label,
+    description,
+    invalid,
+    indeterminate = false,
+    disabled,
+    style,
+    onFocus,
+    onBlur,
+    "aria-invalid": ariaInvalid,
+    "aria-label": rawAriaLabel,
+    "aria-labelledby": rawAriaLabelledBy,
+    ...restProps
+  },
   forwardedRef
 ) {
   const [focused, setFocused] = React.useState(false);
@@ -17,7 +30,9 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
   const descriptionId = React.useId();
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
-  const describedBy = [props["aria-describedby"], description ? descriptionId : undefined].filter(Boolean).join(" ") || undefined;
+  const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
+  const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
+  const describedBy = [restProps["aria-describedby"], description ? descriptionId : undefined].filter(Boolean).join(" ") || undefined;
 
   React.useEffect(() => {
     if (localRef.current) {
@@ -51,12 +66,14 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
       }}
     >
       <input
-        {...props}
+        {...restProps}
         ref={assignRef}
         type="checkbox"
         disabled={disabled}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
         aria-invalid={resolvedInvalidAria}
-        aria-checked={indeterminate ? "mixed" : props["aria-checked"]}
+        aria-checked={indeterminate ? "mixed" : restProps["aria-checked"]}
         aria-describedby={describedBy}
         data-focused={focused ? "true" : undefined}
         style={{
@@ -91,3 +108,12 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
     </label>
   );
 });
+
+function resolveNonEmptyLabel(label: string | undefined) {
+  if (typeof label !== "string") {
+    return undefined;
+  }
+
+  const normalized = label.trim();
+  return normalized.length > 0 ? normalized : undefined;
+}

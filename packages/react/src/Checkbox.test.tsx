@@ -62,4 +62,32 @@ describe("Checkbox", () => {
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onBlur).toHaveBeenCalledTimes(1);
   });
+
+  it("ignores blank aria-label and keeps visible label as accessible name", () => {
+    render(<Checkbox label="Release gate" aria-label="   " />);
+
+    const checkbox = screen.getByRole("checkbox", { name: "Release gate" });
+    expect(checkbox).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank aria-labelledby and keeps aria-label naming", () => {
+    render(<Checkbox aria-label="Release gate" aria-labelledby="   " />);
+
+    const checkbox = screen.getByRole("checkbox", { name: "Release gate" });
+    expect(checkbox).toHaveAttribute("aria-label", "Release gate");
+    expect(checkbox).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("prioritizes aria-labelledby over aria-label when both are provided", () => {
+    render(
+      <div>
+        <p id="checkbox-heading">Checkbox heading</p>
+        <Checkbox aria-label="Fallback checkbox name" aria-labelledby="checkbox-heading" />
+      </div>
+    );
+
+    const checkbox = screen.getByRole("checkbox", { name: "Checkbox heading" });
+    expect(checkbox).toHaveAttribute("aria-labelledby", "checkbox-heading");
+    expect(checkbox).not.toHaveAttribute("aria-label");
+  });
 });

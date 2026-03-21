@@ -79,3 +79,25 @@ export const InvalidAndDisabled: Story = {
     </div>
   )
 };
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ width: 320, display: "grid", gap: 10 }}>
+      <p id="checkbox-story-heading" style={{ margin: 0, color: "var(--aurora-text-primary)" }}>
+        Checkbox heading
+      </p>
+      <Checkbox
+        aria-label="Fallback checkbox name"
+        aria-labelledby="checkbox-story-heading"
+        label="Release gate"
+        description="aria-labelledby should remain canonical."
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole("checkbox", { name: "Checkbox heading" });
+    await expect(checkbox).toHaveAttribute("aria-labelledby", "checkbox-story-heading");
+    await expect(checkbox).not.toHaveAttribute("aria-label");
+  }
+};
