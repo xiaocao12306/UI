@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Alert, Button } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 import { StoryShowcaseFrame } from "./storyShowcase";
 
 function AlertShowcase({ children }: { children: React.ReactNode }) {
@@ -130,5 +130,29 @@ export const FocusIntentReentry: Story = {
     await userEvent.tab();
     await expect(closeButton).toHaveFocus();
     await expect(closeButton).toHaveAttribute("data-focus-visible", "true");
+  }
+};
+
+export const CloseButtonKeyboardPressedState: Story = {
+  render: () => (
+    <AlertShowcase>
+      <Alert
+        tone="warning"
+        title="Pending action"
+        description="Close button should expose pressed-state feedback only for unmodified Enter/Space."
+        onClose={() => {}}
+        closeLabel="Pressed-state dismiss"
+      />
+    </AlertShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const closeButton = canvas.getByRole("button", { name: "Pressed-state dismiss" });
+
+    closeButton.focus();
+    await expect(closeButton).toHaveFocus();
+    await expect(closeButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });
+    await expect(closeButton).not.toHaveAttribute("data-pressed");
   }
 };

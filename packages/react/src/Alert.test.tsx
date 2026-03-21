@@ -131,4 +131,49 @@ describe("Alert", () => {
       iframe.remove();
     }
   });
+
+  it("applies close-button pressed state only for primary pointer", () => {
+    render(<Alert title="Notice" onClose={() => {}} closeLabel="Pointer dismiss" />);
+    const closeButton = screen.getByRole("button", { name: "Pointer dismiss" });
+
+    fireEvent.mouseDown(closeButton, { button: 1 });
+    expect(closeButton).not.toHaveAttribute("data-pressed");
+
+    fireEvent.mouseDown(closeButton, { button: 0 });
+    expect(closeButton).toHaveAttribute("data-pressed", "true");
+
+    fireEvent.mouseUp(closeButton, { button: 1 });
+    expect(closeButton).toHaveAttribute("data-pressed", "true");
+
+    fireEvent.mouseUp(closeButton, { button: 0 });
+    expect(closeButton).not.toHaveAttribute("data-pressed");
+  });
+
+  it("supports keyboard pressed-state feedback for unmodified Enter/Space keys", () => {
+    render(<Alert title="Notice" onClose={() => {}} closeLabel="Keyboard dismiss" />);
+    const closeButton = screen.getByRole("button", { name: "Keyboard dismiss" });
+
+    fireEvent.focus(closeButton);
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    expect(closeButton).toHaveAttribute("data-pressed", "true");
+    fireEvent.keyUp(closeButton, { key: "Enter" });
+    expect(closeButton).not.toHaveAttribute("data-pressed");
+
+    fireEvent.keyDown(closeButton, { key: "Spacebar" });
+    expect(closeButton).toHaveAttribute("data-pressed", "true");
+    fireEvent.keyUp(closeButton, { key: "Spacebar" });
+    expect(closeButton).not.toHaveAttribute("data-pressed");
+  });
+
+  it("ignores Ctrl/Meta/Alt-modified close-button activation keys for pressed-state feedback", () => {
+    render(<Alert title="Notice" onClose={() => {}} closeLabel="Modifier dismiss" />);
+    const closeButton = screen.getByRole("button", { name: "Modifier dismiss" });
+
+    fireEvent.focus(closeButton);
+    fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });
+    fireEvent.keyDown(closeButton, { key: " ", metaKey: true });
+    fireEvent.keyDown(closeButton, { key: "Space", altKey: true });
+
+    expect(closeButton).not.toHaveAttribute("data-pressed");
+  });
 });

@@ -296,6 +296,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep toast close-button keyboard pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); keep `aria-keyshortcuts="Enter Space"` visible for AT/QA discoverability, and ensure `Ctrl/Meta/Alt` chords do not trigger pressed visuals.
 - Keep toast close-button keyboard-intent tracking document-scoped so keyboard re-entry after pointer interactions restores focus-visible fallback consistently.
 - Keep alert close-button keyboard-intent tracking document-scoped so keyboard re-entry after pointer interactions restores focus-visible fallback consistently.
+- Keep alert close-button keyboard pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); keep `aria-keyshortcuts="Enter Space"` visible for AT/QA discoverability, and ensure `Ctrl/Meta/Alt` chords do not trigger pressed visuals.
 - For toast titles without readable text, provide `ariaLabel`; rich title nodes that expose inline `aria-label` are auto-detected, and development builds warn only when both are missing.
 - For high-frequency passive updates, set `live="off"` to reduce assistive-tech interruption while keeping visual toast context.
 
@@ -315,6 +316,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={ToastStories.LiveRegionOff} />
 <Canvas of={AlertStories.AccessibilityMetadata} />
 <Canvas of={AlertStories.FocusIntentReentry} />
+<Canvas of={AlertStories.CloseButtonKeyboardPressedState} />
 
 ## Data Presentation Patterns
 
