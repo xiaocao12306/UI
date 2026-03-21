@@ -804,6 +804,7 @@
   - Toast 交互优先级验收补齐（2026-03-21 latest+121：补齐 Storybook `FocusedToastEscapesFirst` 交互断言（焦点与悬停双路径）与 Demo Playwright `prioritizes hovered toast` 回归，锁定“当前交互 toast 提升栈顶，Escape 优先关闭当前操作通知”的真实链路；复验 `pnpm storybook:test:grep \"Toast.stories.tsx\"` 与 `pnpm demo:e2e:grep \"prioritizes focused toast|prioritizes hovered toast\"` 通过）
   - CommandPalette 空结果 `aria-activedescendant` 语义验收补齐（2026-03-21 latest+122：补齐 “无匹配结果时清空 `aria-activedescendant`，恢复结果后重新绑定有效 option” 的单测与 Storybook `EmptyStateAriaControlsLifecycle` 交互断言，并同步 Component API/Best Practices 文档；复验 `pnpm --filter @aurora-ui/react exec vitest run src/CommandPalette.test.tsx`、`pnpm storybook:test:grep \"CommandPalette.stories.tsx\"` 与 docs parity 相关检查）
   - Demo 嵌套 Overlay 关闭顺序验收补齐（2026-03-21 latest+123：在 Overlay 区块新增 `Open Nested Overlay`（Popover 内嵌 Dropdown）场景与 `nested-overlay-close-trace-demo` 遥测链路，新增 Playwright 回归 `preserves nested overlay top-layer close order for Escape`，锁定“一次 Escape 仅关闭内层 dropdown，二次 Escape 再关闭外层 popover”的 top-layer-first 行为，并校验 trace 顺序 `dropdown:reason -> dropdown:open:false -> popover:reason -> popover:open:false`）
+  - 嵌套 Overlay outside-pointer 关闭顺序验收补齐（2026-03-21 latest+124：补齐 Dropdown/CommandPalette 在 Popover 嵌套场景下的 outside-pointer top-layer-first 单测（首次 outside 仅关闭内层，二次 outside 再关闭外层），并新增 Demo Playwright 回归 `preserves nested overlay top-layer close order for outside pointer` 锁定真实链路 trace 顺序）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

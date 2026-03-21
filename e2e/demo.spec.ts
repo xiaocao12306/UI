@@ -1656,6 +1656,32 @@ test("preserves nested overlay top-layer close order for Escape", async ({ page 
   );
 });
 
+test("preserves nested overlay top-layer close order for outside pointer", async ({ page }) => {
+  await page.goto("/");
+
+  const nestedTrigger = page.getByRole("button", { name: "Open Nested Overlay" });
+  const nestedTrace = page.getByTestId("nested-overlay-close-trace-demo");
+  const outsideTarget = page.getByLabel("Overlay outside focus target");
+
+  await nestedTrigger.click();
+  const nestedPopover = page.getByRole("dialog", { name: "Nested overlay shell" });
+  await expect(nestedPopover).toBeVisible();
+
+  await page.getByRole("button", { name: "Nested Actions" }).click();
+  await expect(page.getByRole("menuitem", { name: "Approve Release" })).toBeVisible();
+
+  await outsideTarget.click();
+  await expect(page.getByRole("menuitem", { name: "Approve Release" })).toBeHidden();
+  await expect(nestedPopover).toBeVisible();
+  await expect(nestedTrace).toHaveText("dropdown:reason:outside-pointer -> dropdown:open:false");
+
+  await outsideTarget.click();
+  await expect(nestedPopover).toBeHidden();
+  await expect(nestedTrace).toHaveText(
+    "dropdown:reason:outside-pointer -> dropdown:open:false -> popover:reason:outside-pointer -> popover:open:false"
+  );
+});
+
 test("keeps dropdown open on non-primary outside pointer interaction", async ({ page }) => {
   await page.goto("/");
 

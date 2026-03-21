@@ -1309,6 +1309,34 @@ describe("Dropdown", () => {
     expect(outerTrigger).toHaveFocus();
   });
 
+  it("dismisses nested dropdown layer before parent popover layer on outside pointer", () => {
+    render(
+      <Popover triggerLabel="Outer container" contentLabel="Outer container content">
+        <Dropdown
+          label="Inner menu"
+          items={[
+            { key: "duplicate", label: "Duplicate" },
+            { key: "archive", label: "Archive" }
+          ]}
+        />
+      </Popover>
+    );
+
+    const outerTrigger = screen.getByRole("button", { name: "Outer container" });
+    fireEvent.click(outerTrigger);
+    expect(screen.getByRole("dialog", { name: "Outer container content" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Inner menu" }));
+    expect(screen.getByRole("menu", { name: "Inner menu" })).toBeInTheDocument();
+
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole("menu", { name: "Inner menu" })).toBeNull();
+    expect(screen.getByRole("dialog", { name: "Outer container content" })).toBeInTheDocument();
+
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole("dialog", { name: "Outer container content" })).toBeNull();
+  });
+
   it("ignores non-primary outside pointer interactions", () => {
     const onCloseReason = vi.fn();
 
