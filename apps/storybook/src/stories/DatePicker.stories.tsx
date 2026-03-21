@@ -114,6 +114,30 @@ export const StateMatrix: Story = {
   )
 };
 
+export const ShortcutHintPrecision: Story = {
+  render: () => (
+    <div style={{ width: 360, display: "grid", gap: 12 }}>
+      <DatePicker aria-label="Date shortcut hint input" defaultValue="2026-08-15" onValueChange={() => {}} />
+      <DatePicker
+        aria-label="Date shortcut custom input"
+        aria-keyshortcuts="Enter"
+        defaultValue="2026-08-16"
+        onValueChange={() => {}}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByLabelText("Date shortcut hint input")).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
+    await expect(canvas.getByLabelText("Date shortcut custom input")).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter"
+    );
+  }
+};
+
 export const BlankAriaLabelFallback: Story = {
   render: () => (
     <div style={{ width: 360, display: "grid", gap: 8 }}>

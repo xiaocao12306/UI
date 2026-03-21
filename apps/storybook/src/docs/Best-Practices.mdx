@@ -68,6 +68,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep radio option shortcut hints precise: expose `aria-keyshortcuts="Space"` only on actionable options, and remove shortcut metadata from disabled options.
 - Keep input Enter active feedback scoped to unmodified keys: ignore `Ctrl/Meta/Alt + Enter` shortcut chords, while allowing normal `Enter` and `Shift+Enter` intent.
 - Keep input shortcut hints precise: expose default `aria-keyshortcuts="Enter"` only for actionable text-like inputs (`text/search/email/url/tel/password`), and remove default hints for non-text types plus read-only/disabled states.
+- Keep date-picker shortcut hints explicit: native `type="date"` should not expose default Enter shortcut metadata; only pass `aria-keyshortcuts` when product workflows require a custom documented shortcut.
 - Keep input keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep textarea keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep select keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
