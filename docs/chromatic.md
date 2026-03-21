@@ -26,6 +26,9 @@ pnpm chromatic
 5. 若手动触发且 `enforce=true`：token 缺失时直接失败（hard-gate）
 6. 无论上传/跳过/失败，都会写入 `GITHUB_STEP_SUMMARY`（mode、token 状态、build URL、storybook URL、change/error 计数）
 
+注意：
+- `soft-skip` 的结论是 `skipped/not-run`，表示本次没有执行视觉回归上传，不等于“视觉回归通过”。
+
 `enforce` 使用建议：
 - 日常 PR：保持默认 `false`，避免在未配置 token 的仓库里阻塞开发流。
 - 发布前人工验收：手动触发 workflow_dispatch 并设置 `enforce=true`，将视觉回归升级为硬门禁。

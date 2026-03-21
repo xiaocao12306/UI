@@ -119,15 +119,15 @@ Run this before Chromatic upload or npm publish:
 
 ```bash
 pnpm release:preflight
-pnpm release:preflight -- --scope=chromatic
-pnpm release:preflight -- --scope=publish
+pnpm release:preflight:chromatic
+pnpm release:preflight:publish
 ```
 
 Expected behavior:
 
 - `release:preflight`: checks `CHROMATIC_PROJECT_TOKEN + NPM_TOKEN`
-- `release:preflight -- --scope=chromatic`: checks `CHROMATIC_PROJECT_TOKEN` only
-- `release:preflight -- --scope=publish`: checks `NPM_TOKEN` only
+- `release:preflight:chromatic` (or `release:preflight -- --scope=chromatic`): checks `CHROMATIC_PROJECT_TOKEN` only
+- `release:preflight:publish` (or `release:preflight -- --scope=publish`): checks `NPM_TOKEN` only
 - any missing token in selected scope: command prints `MISSING` line(s), points to `docs/secrets.md`, and exits with code `1`
 
 Common signatures:
@@ -270,6 +270,7 @@ Separate workflows:
 - Chromatic visual regression upload: `.github/workflows/chromatic.yml` (when `CHROMATIC_PROJECT_TOKEN` is configured)
   - supports `workflow_dispatch` input `enforce=true` to fail hard when token is missing (release/manual audit mode)
   - default behavior remains soft-skip (`enforce=false`) when token is absent
+  - soft-skip result is `skipped/not-run` (visual upload not executed), not a visual-pass signal
   - writes upload status/build URL/storybook URL/change/error counts into `GITHUB_STEP_SUMMARY`
 - release PR + npm publish: `.github/workflows/release.yml` (when `NPM_TOKEN` is configured)
   - supports `workflow_dispatch` input `enforce=true` to hard-fail on missing `NPM_TOKEN`

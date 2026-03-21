@@ -63,6 +63,7 @@ jobs:
             echo "- enforce mode: \`${{ steps.token.outputs.enforce }}\`"
             echo "- chromatic token configured: \`${{ steps.token.outputs.enabled }}\`"
             echo "- token-missing policy: \`enforce=false => soft-skip\`, \`enforce=true => hard-fail\`"
+            echo "- token-missing verdict: \`skipped/not-run\` (not a visual-pass result)"
             echo "- local preflight: \`pnpm release:preflight:chromatic\`"
             echo "- manual audit rerun: \`gh workflow run chromatic.yml -f enforce=true\`"
             echo "- docs: \`docs/secrets.md\`"
@@ -135,6 +136,7 @@ jobs:
             echo "## Chromatic Upload Skipped"
             echo
             echo "- status: \`skipped\`"
+            echo "- verdict: \`not-run\` (visual regression upload was not executed)"
             echo "- mode: \`enforce=false\`"
             echo "- reason: \`CHROMATIC_PROJECT_TOKEN\` is not configured."
             echo "- build url: n/a"

@@ -758,6 +758,7 @@
   - Demo 命令选项键盘防串扰验收补齐（2026-03-21 latest+73：新增 Playwright 回归，锁定命令选项 `Ctrl + Enter` 与 `Enter repeat` 不触发执行，首次有效 `Enter` 才触发动作并关闭面板；`pnpm demo:e2e:grep \"keeps command option activation stable for modified and repeated keydown|filters command palette and triggers drawer action|ignores command palette navigation and selection keys during IME composition\"` 通过（`3/3`））
   - Toast Shift+Escape 行为验收补齐（2026-03-21 latest+74：新增 Toast 单测与 Demo E2E，锁定 `Shift + Escape` 仍按 `escape-key` 正常关闭（仅过滤 `Ctrl/Meta/Alt` 组合键）；`pnpm --filter @aurora-ui/react exec vitest run src/Toast.test.tsx` 通过（`61/61`），`pnpm demo:e2e:grep \"dismisses toast with Shift|dismisses toast with escape key\"` 通过（`2/2`））
   - Storybook Toast Shift+Escape 验收补齐（2026-03-21 latest+75：`CloseReasonTelemetry` story 新增 `Shift + Escape` 交互断言，锁定 `Ctrl/Meta/Alt + Escape` no-op 且 `Shift + Escape` 仍触发 `escape-key`；同步 Component API/Best Practices 文档说明并复验 `pnpm --filter @aurora-ui/storybook-app typecheck`、`pnpm storybook:docs:check && pnpm storybook:docs:parity:check && pnpm storybook:docs:structure:check && pnpm storybook:play:check` 通过）
+  - 文档/门禁口径收口（2026-03-21 latest+76：统一 README/Storybook/Release/Chromatic 文档与 `chromatic.yml` 对缺失 `CHROMATIC_PROJECT_TOKEN` 的 `skipped/not-run` 语义，明确“跳过不等于视觉回归通过”；同时将 `testing-and-release.md` preflight 命令收敛到 `release:preflight:chromatic|publish` 别名并复验 `pnpm docs:commands:check` 通过）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

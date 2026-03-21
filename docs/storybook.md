@@ -229,6 +229,7 @@ pnpm chromatic
 ```
 
 - 默认模式（`enforce=false`）：若仓库未配置 `CHROMATIC_PROJECT_TOKEN`，工作流 soft-skip 上传并输出 warning + summary。
+- `soft-skip` 结果语义为 `skipped/not-run`，表示本次未执行视觉回归上传，不等于视觉回归通过。
 - 审核模式（`workflow_dispatch` + `enforce=true`）：缺失 token 会升级为硬失败，避免发布验收误判为已完成视觉回归。
 - 手动触发 enforce（GitHub CLI）：
 

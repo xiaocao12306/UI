@@ -165,6 +165,7 @@ pnpm chromatic
 - `release:gate` also has no real publish side-effect
 - real publish is only in `.github/workflows/release.yml` when `NPM_TOKEN` exists
 - Chromatic upload is only in `.github/workflows/chromatic.yml` when `CHROMATIC_PROJECT_TOKEN` exists
+- if Chromatic token is missing in default mode (`enforce=false`), workflow result is `skipped/not-run` (not a visual-pass signal)
 - `workflow_dispatch` supports `enforce=true`:
   - `chromatic.yml`: missing `CHROMATIC_PROJECT_TOKEN` fails hard
   - `release.yml`: missing `NPM_TOKEN` fails hard
