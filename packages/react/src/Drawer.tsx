@@ -118,6 +118,7 @@ export function Drawer({
               aria-modal="true"
               aria-labelledby={titleId}
               aria-describedby={description ? descriptionId : undefined}
+              aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
               data-side={side}
               style={{
                 position: "absolute",

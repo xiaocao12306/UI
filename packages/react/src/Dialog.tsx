@@ -127,6 +127,7 @@ export function Dialog({
               aria-modal="true"
               aria-labelledby={titleId}
               aria-describedby={description ? descriptionId : undefined}
+              aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
               data-state="open"
               style={{
                 width: dialogSizeMap[size],

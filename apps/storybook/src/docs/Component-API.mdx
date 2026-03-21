@@ -262,6 +262,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for dialog-dismiss analytics and workflow tracing. |
 | close lifecycle order | `onCloseReason -> onOpenChange(false)` | Close-button/Escape/outside-pointer paths use deterministic callback order for telemetry and reducer side effects. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer down keeps keyboard-intent ring state to avoid accidental ring loss during context/right-click interactions. |
+| dismiss key hints | `aria-keyshortcuts="Escape"` when `closeOnEscape` is enabled | Dialog surface exposes Escape shortcut metadata for QA/AT discoverability only when Escape dismiss is actionable; disabled Escape policy omits the hint. |
 | close-button pressed feedback | primary pointer + unmodified `Enter`/`Space` (+ `Space` / legacy `Spacebar` key values) + `aria-keyshortcuts="Enter Space"` | Close button exposes pressed offset/background on primary pointer down and keyboard activation key hold with explicit shortcut hints; `Ctrl/Meta/Alt` chords are ignored so host shortcuts do not flash pressed visuals. |
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside dialog | Modal focus scope keeps keyboard focus inside dialog controls while open. |
 | IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`isComposing` / `keyCode=229`) to prevent accidental close while confirming CJK input. |
@@ -295,6 +296,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | close lifecycle order | `onCloseReason -> onOpenChange(false)` | Close-button/Escape/outside-pointer paths keep callback order deterministic for telemetry reducers. |
 | `showCloseButton` | `boolean` | Allows explicit in-panel action-only dismissal. |
 | `closeLabel` | `string` | Localizable close-button accessible name; blank values are ignored and fallback to `Close drawer`. |
+| dismiss key hints | `aria-keyshortcuts="Escape"` when `closeOnEscape` is enabled | Drawer surface exposes Escape shortcut metadata for QA/AT discoverability only when Escape dismiss is actionable; disabled Escape policy omits the hint. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer down keeps keyboard-intent ring state to avoid accidental ring loss during context/right-click interactions. |
 | close-button pressed feedback | primary pointer + unmodified `Enter`/`Space` (+ `Space` / legacy `Spacebar` key values) + `aria-keyshortcuts="Enter Space"` | Close button exposes pressed offset/background on primary pointer down and keyboard activation key hold with explicit shortcut hints; `Ctrl/Meta/Alt` chords are ignored so host shortcuts do not flash pressed visuals. |
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside drawer | Modal focus scope keeps keyboard focus inside drawer controls while open. |

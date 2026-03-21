@@ -213,6 +213,8 @@ export const CloseButtonKeyboardPressedState: Story = {
   render: () => <CloseButtonKeyboardPressedDialog />,
   play: async ({ canvasElement }) => {
     const body = within(canvasElement.ownerDocument.body);
+    const dialog = await body.findByRole("dialog", { name: "Keyboard pressed close affordance" });
+    await expect(dialog).toHaveAttribute("aria-keyshortcuts", "Escape");
     const closeButton = await body.findByRole("button", { name: "Close dialog" });
     await expect(closeButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 
@@ -286,8 +288,10 @@ export const NonDismissable: Story = {
   render: () => <NonDismissableDialog />,
   play: async ({ canvasElement }) => {
     const body = within(canvasElement.ownerDocument.body);
+    const dialog = await body.findByRole("dialog", { name: "Critical Confirmation" });
 
-    await expect(await body.findByRole("dialog", { name: "Critical Confirmation" })).toBeInTheDocument();
+    await expect(dialog).toBeInTheDocument();
+    await expect(dialog).not.toHaveAttribute("aria-keyshortcuts");
     await userEvent.keyboard("{Escape}");
     await expect(body.getByRole("dialog", { name: "Critical Confirmation" })).toBeInTheDocument();
 

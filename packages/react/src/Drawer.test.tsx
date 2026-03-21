@@ -65,6 +65,29 @@ describe("Drawer", () => {
     );
   });
 
+  it("exposes Escape keyboard shortcut hints only when closeOnEscape is enabled", () => {
+    const { rerender } = render(
+      <Drawer open onOpenChange={() => {}} title="Escape hints drawer">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    expect(screen.getByRole("dialog", { name: "Escape hints drawer" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Escape"
+    );
+
+    rerender(
+      <Drawer open onOpenChange={() => {}} title="Escape hints drawer" closeOnEscape={false}>
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    expect(screen.getByRole("dialog", { name: "Escape hints drawer" })).not.toHaveAttribute(
+      "aria-keyshortcuts"
+    );
+  });
+
   it("ignores blank closeLabel and falls back to default close button name", () => {
     render(
       <Drawer open onOpenChange={() => {}} title="Fallback close label drawer" closeLabel="   ">
