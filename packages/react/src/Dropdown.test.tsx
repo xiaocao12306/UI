@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Dropdown } from "./Dropdown";
+import { Popover } from "./Popover";
 import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 describe("Dropdown", () => {
@@ -1275,6 +1276,37 @@ describe("Dropdown", () => {
       unmountMain?.();
       iframe.remove();
     }
+  });
+
+  it("dismisses nested dropdown layer before parent popover layer", () => {
+    render(
+      <Popover triggerLabel="Outer container" contentLabel="Outer container content">
+        <Dropdown
+          label="Inner menu"
+          items={[
+            { key: "duplicate", label: "Duplicate" },
+            { key: "archive", label: "Archive" }
+          ]}
+        />
+      </Popover>
+    );
+
+    const outerTrigger = screen.getByRole("button", { name: "Outer container" });
+    fireEvent.click(outerTrigger);
+    expect(screen.getByRole("dialog", { name: "Outer container content" })).toBeInTheDocument();
+
+    const innerTrigger = screen.getByRole("button", { name: "Inner menu" });
+    fireEvent.click(innerTrigger);
+    expect(screen.getByRole("menu", { name: "Inner menu" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("menu", { name: "Inner menu" })).toBeNull();
+    expect(screen.getByRole("dialog", { name: "Outer container content" })).toBeInTheDocument();
+    expect(innerTrigger).toHaveFocus();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Outer container content" })).toBeNull();
+    expect(outerTrigger).toHaveFocus();
   });
 
   it("ignores non-primary outside pointer interactions", () => {
