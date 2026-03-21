@@ -771,6 +771,8 @@
   - Release Gate 证据刷新（2026-03-21 latest+86：Button 收口后首次门禁在 `demo:dist:check` 提示 Demo 产物漂移，已同步 `apps/demo/dist` 并重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`43 files / 631 tests`）+ demo e2e `98/98` + storybook interaction `228/228`）
   - Dialog 关闭按钮按下态收口（2026-03-21 latest+87：Dialog close-button 补齐 `active/pressed` 视觉反馈与位移回弹，统一 Drawer/Toast 状态语言；同步单测、Storybook `FocusIntentPrimaryPointerOnly` 与 Component API/Best Practices 文档，`pnpm --filter @aurora-ui/react exec vitest run src/Dialog.test.tsx` 通过（`28/28`），`pnpm storybook:test:grep \"Dialog.stories.tsx\"` 通过（`12/12`））
   - Release Gate 证据刷新（2026-03-21 latest+88：修复 Dialog Storybook 断言稳定性并同步 `apps/storybook/storybook-static` 后重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`43 files / 632 tests`）+ demo e2e `98/98` + storybook interaction `228/228`）
+  - Table 键盘按压态收口（2026-03-21 latest+89：sortable header 新增键盘 `Enter/Space` 长按按压态反馈与抬起回弹，补齐 `Table.test.tsx` 键盘按压断言并同步 Component API/Best Practices 文档，`pnpm --filter @aurora-ui/react exec vitest run src/Table.test.tsx` 通过（`67/67`），`pnpm storybook:test:grep \"Table.stories.tsx\"` 通过（`25/25`））
+  - Release Gate 证据刷新（2026-03-21 latest+90：完成 Table 按压态收口并同步 Storybook/Demo 静态产物后重跑 `pnpm release:gate:ci` 全链路通过，含 verify + release:exports:check + coverage（`43 files / 633 tests`）+ demo e2e `98/98` + storybook interaction `228/228`）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）
