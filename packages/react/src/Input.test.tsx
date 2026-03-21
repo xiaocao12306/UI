@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Input } from "./Input";
 
 describe("Input", () => {
@@ -148,6 +148,74 @@ describe("Input", () => {
 
     fireEvent.mouseDown(input, { button: 0 });
     expect(input).not.toHaveAttribute("data-focus-visible");
+  });
+
+  it("tracks keyboard focus intent from ownerDocument when focus-visible fallback is used", () => {
+    render(
+      <div>
+        <button type="button">Before input</button>
+        <Input aria-label="Document intent input" />
+      </div>
+    );
+
+    const input = screen.getByRole("textbox", { name: "Document intent input" });
+    const beforeButton = screen.getByRole("button", { name: "Before input" });
+    const matchesSpy = vi.spyOn(input, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(input);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(input);
+    expect(input).not.toHaveAttribute("data-focus-visible");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const secondaryDocument = iframe.contentDocument;
+    const secondaryWindow = iframe.contentWindow;
+
+    if (!secondaryDocument || !secondaryWindow) {
+      throw new Error("expected iframe document/window to exist");
+    }
+
+    const secondaryContainer = secondaryDocument.createElement("div");
+    secondaryDocument.body.appendChild(secondaryContainer);
+
+    const { getByRole } = render(<Input aria-label="Iframe input" />, {
+      container: secondaryContainer,
+      baseElement: secondaryDocument.body
+    });
+    const input = getByRole("textbox", { name: "Iframe input" });
+    const matchesSpy = vi.spyOn(input, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(input);
+      expect(input).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(input);
+      secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(input);
+      expect(input).not.toHaveAttribute("data-focus-visible");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
   });
 
   it("suppresses hover and active states when disabled", () => {

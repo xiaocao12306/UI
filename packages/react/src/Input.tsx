@@ -28,6 +28,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
   },
   ref
 ) {
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
   const [focused, setFocused] = React.useState(false);
   const [focusVisible, setFocusVisible] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
@@ -50,9 +51,52 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
     setActive(false);
   }, [isInteractionDisabled]);
 
+  React.useEffect(() => {
+    const ownerDocument = inputRef.current?.ownerDocument ?? document;
+    const markKeyboardIntent = (event: KeyboardEvent) => {
+      if (event.metaKey || event.altKey || event.ctrlKey) {
+        return;
+      }
+      focusVisibleIntentRef.current = true;
+    };
+    const markPointerIntent = (event: Event) => {
+      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+        return;
+      }
+      focusVisibleIntentRef.current = false;
+    };
+
+    ownerDocument.addEventListener("keydown", markKeyboardIntent, true);
+    ownerDocument.addEventListener("pointerdown", markPointerIntent, true);
+    ownerDocument.addEventListener("mousedown", markPointerIntent, true);
+    ownerDocument.addEventListener("touchstart", markPointerIntent, true);
+
+    return () => {
+      ownerDocument.removeEventListener("keydown", markKeyboardIntent, true);
+      ownerDocument.removeEventListener("pointerdown", markPointerIntent, true);
+      ownerDocument.removeEventListener("mousedown", markPointerIntent, true);
+      ownerDocument.removeEventListener("touchstart", markPointerIntent, true);
+    };
+  }, []);
+
+  const setRefs = React.useCallback(
+    (node: HTMLInputElement | null) => {
+      inputRef.current = node;
+      if (typeof ref === "function") {
+        ref(node);
+        return;
+      }
+
+      if (ref) {
+        ref.current = node;
+      }
+    },
+    [ref]
+  );
+
   return (
     <input
-      ref={ref}
+      ref={setRefs}
       disabled={disabled}
       readOnly={readOnly}
       data-aurora-input="true"

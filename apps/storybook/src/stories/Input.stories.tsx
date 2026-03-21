@@ -131,6 +131,36 @@ export const InteractionA11yParity: Story = {
   }
 };
 
+function FocusIntentReentryDemo() {
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={10}>
+      <p style={storyMutedTextStyle}>
+        Click first, then press <kbd>Tab</kbd> to verify keyboard re-entry restores focus-visible
+        state on input.
+      </p>
+      <button type="button">Before input</button>
+      <Input aria-label="Focus intent re-entry input" placeholder="Tab back into this field" />
+    </StoryShowcaseFrame>
+  );
+}
+
+export const FocusIntentReentry: Story = {
+  render: () => <FocusIntentReentryDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before input" });
+    const input = canvas.getByRole("textbox", { name: "Focus intent re-entry input" });
+
+    await userEvent.click(input);
+    await expect(input).toHaveAttribute("data-focused", "true");
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(input).toHaveFocus();
+    await expect(input).toHaveAttribute("data-focus-visible", "true");
+  }
+};
+
 function ValidationFlowDemo() {
   const [value, setValue] = React.useState("");
   const [touched, setTouched] = React.useState(false);
