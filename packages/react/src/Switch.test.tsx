@@ -41,6 +41,19 @@ describe("Switch", () => {
     expect(onCheckedChange).toHaveBeenCalledWith(true);
   });
 
+  it("exposes keyboard pressed-state feedback only while activation key is held", () => {
+    const onCheckedChange = vi.fn();
+    render(<Switch label="Keyboard pressed switch" checked={false} onCheckedChange={onCheckedChange} />);
+
+    const control = screen.getByRole("switch", { name: "Keyboard pressed switch" });
+    fireEvent.keyDown(control, { key: " " });
+    expect(control).toHaveAttribute("data-pressed", "true");
+    expect(onCheckedChange).toHaveBeenCalledWith(true);
+
+    fireEvent.keyUp(control, { key: " " });
+    expect(control).not.toHaveAttribute("data-pressed");
+  });
+
   it("supports keyboard toggle with Space alias key values", () => {
     const onCheckedChange = vi.fn();
     render(<Switch label="Space alias toggle" checked={false} onCheckedChange={onCheckedChange} />);
@@ -62,6 +75,20 @@ describe("Switch", () => {
     fireEvent.keyDown(control, { key: "Spacebar", altKey: true });
 
     expect(onCheckedChange).not.toHaveBeenCalled();
+    expect(control).not.toHaveAttribute("data-pressed");
+  });
+
+  it("ignores IME composition activation keys for toggle and pressed-state feedback", () => {
+    const onCheckedChange = vi.fn();
+    render(<Switch label="IME guarded switch" checked={false} onCheckedChange={onCheckedChange} />);
+
+    const control = screen.getByRole("switch", { name: "IME guarded switch" });
+    fireEvent.keyDown(control, { key: " ", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(control, { key: " ", keyCode: 229, which: 229 });
+
+    expect(onCheckedChange).not.toHaveBeenCalled();
+    expect(control).toHaveAttribute("aria-checked", "false");
+    expect(control).not.toHaveAttribute("data-pressed");
   });
 
   it("does not toggle when click handler prevents default", () => {

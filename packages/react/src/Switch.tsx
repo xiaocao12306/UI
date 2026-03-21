@@ -30,6 +30,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     onMouseUp,
     onPointerDown,
     onKeyDown,
+    onKeyUp,
     "aria-invalid": ariaInvalid,
     "aria-label": rawAriaLabel,
     "aria-labelledby": rawAriaLabelledBy,
@@ -234,14 +235,23 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
           return;
         }
 
-        if ((event.ctrlKey || event.metaKey || event.altKey) && isSwitchActivationKey(event.key)) {
+        if (!isSwitchActivationKey(event.key)) {
           return;
         }
 
-        if (isSwitchActivationKey(event.key)) {
-          event.preventDefault();
-          handleToggle();
+        if (isComposingSwitchActivationEvent(event) || isModifiedSwitchActivationChord(event)) {
+          return;
         }
+
+        event.preventDefault();
+        setPressed(true);
+        handleToggle();
+      }}
+      onKeyUp={(event) => {
+        if (isSwitchActivationKey(event.key)) {
+          setPressed(false);
+        }
+        onKeyUp?.(event);
       }}
     >
       <span
@@ -292,6 +302,19 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
 
 function isSwitchActivationKey(key: string) {
   return key === " " || key === "Space" || key === "Spacebar";
+}
+
+function isModifiedSwitchActivationChord(event: React.KeyboardEvent<HTMLButtonElement>) {
+  return event.ctrlKey || event.metaKey || event.altKey;
+}
+
+function isComposingSwitchActivationEvent(event: React.KeyboardEvent<HTMLButtonElement>) {
+  const nativeEvent = event.nativeEvent;
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }
 
 function resolveNonEmptyLabel(label: string | undefined) {

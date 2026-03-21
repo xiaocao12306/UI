@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Switch } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import { StoryShowcaseFrame } from "./storyShowcase";
 
 const meta = {
@@ -80,15 +80,22 @@ export const KeyboardToggle: Story = {
   args: {
     defaultChecked: false,
     label: "Keyboard mode",
-    description: "Press Space to toggle this switch."
+    description: "Press and hold Space to toggle with visible pressed feedback."
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const control = canvas.getByRole("switch", { name: "Keyboard mode" });
 
     control.focus();
-    await userEvent.keyboard("[Space]");
+    fireEvent.keyDown(control, { key: " " });
+    await waitFor(() => {
+      expect(control).toHaveAttribute("data-pressed", "true");
+    });
     await expect(control).toHaveAttribute("aria-checked", "true");
+    fireEvent.keyUp(control, { key: " " });
+    await waitFor(() => {
+      expect(control).not.toHaveAttribute("data-pressed");
+    });
   }
 };
 
@@ -107,6 +114,29 @@ export const KeyboardModifierGuard: Story = {
     fireEvent.keyDown(control, { key: "Space", metaKey: true });
     fireEvent.keyDown(control, { key: "Spacebar", altKey: true });
     await expect(control).toHaveAttribute("aria-checked", "false");
+    await expect(control).not.toHaveAttribute("data-pressed");
+
+    await userEvent.keyboard("[Space]");
+    await expect(control).toHaveAttribute("aria-checked", "true");
+  }
+};
+
+export const ImeCompositionGuard: Story = {
+  args: {
+    defaultChecked: false,
+    label: "IME keyboard mode",
+    description:
+      "IME composition keydown should not toggle or trigger keyboard pressed visuals."
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const control = canvas.getByRole("switch", { name: "IME keyboard mode" });
+
+    control.focus();
+    fireEvent.keyDown(control, { key: " ", isComposing: true, keyCode: 229, which: 229 });
+    fireEvent.keyDown(control, { key: " ", keyCode: 229, which: 229 });
+    await expect(control).toHaveAttribute("aria-checked", "false");
+    await expect(control).not.toHaveAttribute("data-pressed");
 
     await userEvent.keyboard("[Space]");
     await expect(control).toHaveAttribute("aria-checked", "true");
