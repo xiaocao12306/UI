@@ -114,7 +114,12 @@ export const NonDismissible: Story = {
     const canvas = within(canvasElement);
     const trigger = await canvas.findByRole("button", { name: "Blocking actions" });
     await userEvent.click(trigger);
-    await expect(canvas.getByRole("menu", { name: "Blocking actions" })).toBeInTheDocument();
+    const blockingMenu = canvas.getByRole("menu", { name: "Blocking actions" });
+    await expect(blockingMenu).toBeInTheDocument();
+    await expect(blockingMenu).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Tab"
+    );
 
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByRole("menu", { name: "Blocking actions" })).toBeInTheDocument();
@@ -328,7 +333,12 @@ export const SelectionTelemetry: Story = {
     await expect(trigger).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp");
 
     await userEvent.click(trigger);
-    await expect(canvas.getByRole("menu")).toBeInTheDocument();
+    const menu = canvas.getByRole("menu");
+    await expect(menu).toBeInTheDocument();
+    await expect(menu).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Tab Escape"
+    );
     await expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
     const duplicateItem = canvas.getByRole("menuitem", { name: "Duplicate" });
     const archiveItem = canvas.getByRole("menuitem", { name: "Archive" });

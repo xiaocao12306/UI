@@ -28,6 +28,7 @@ export type DropdownProps = {
 };
 
 const dropdownTriggerKeyboardShortcuts = "ArrowDown ArrowUp";
+const dropdownMenuNavigationShortcuts = "ArrowDown ArrowUp Home End PageDown PageUp Tab";
 const dropdownItemKeyboardClickDedupeWindowMs = 400;
 
 function getNextEnabledIndex(items: DropdownItem[], currentIndex: number, direction: 1 | -1) {
@@ -172,6 +173,9 @@ export function Dropdown({
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
   const resolvedTriggerAriaLabel = resolveNonEmptyLabel(triggerAriaLabel);
+  const menuKeyboardShortcuts = closeOnEscape
+    ? `${dropdownMenuNavigationShortcuts} Escape`
+    : dropdownMenuNavigationShortcuts;
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -402,6 +406,7 @@ export function Dropdown({
             role="menu"
             aria-labelledby={triggerId}
             aria-orientation="vertical"
+            aria-keyshortcuts={menuKeyboardShortcuts}
             style={{
               position: "absolute",
               top: "calc(100% + 6px)",

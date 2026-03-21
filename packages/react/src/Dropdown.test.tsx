@@ -220,6 +220,10 @@ describe("Dropdown", () => {
 
     const menu = screen.getByRole("menu");
     expect(menu).toBeInTheDocument();
+    expect(menu).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Tab Escape"
+    );
     expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
     expect(screen.getByRole("menuitem", { name: "One" })).toHaveFocus();
 
@@ -910,6 +914,10 @@ describe("Dropdown", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Policy" }));
     expect(screen.getByRole("menu", { name: "Policy" })).toBeInTheDocument();
+    expect(screen.getByRole("menu", { name: "Policy" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowDown ArrowUp Home End PageDown PageUp Tab"
+    );
 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onEscapeKeyDown).toHaveBeenCalledTimes(1);
