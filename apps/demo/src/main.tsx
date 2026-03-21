@@ -1454,7 +1454,12 @@ function App() {
                         onOpenChange={handlePopoverOpenChange}
                         onCloseReason={handlePopoverCloseReason}
                       >
-                        <p style={{ margin: 0 }}>This popover is built with Aurora primitives.</p>
+                        <div className="demo-popover-content">
+                          <p style={{ margin: 0 }}>This popover is built with Aurora primitives.</p>
+                          <Button size="sm" variant="outline">
+                            Review launch checklist
+                          </Button>
+                        </div>
                       </Popover>
                       <Dropdown
                         label="Actions"

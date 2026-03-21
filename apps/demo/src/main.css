@@ -690,6 +690,12 @@
   font-size: 13px;
 }
 
+.demo-popover-content {
+  display: grid;
+  gap: 8px;
+  min-width: 220px;
+}
+
 .demo-form-grid {
   display: grid;
   gap: 12px;

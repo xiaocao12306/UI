@@ -1925,7 +1925,6 @@ test("reports popover close reason telemetry for trigger, Escape, outside pointe
   const trigger = page.getByRole("button", { name: "Open Popover" });
   const telemetry = page.getByTestId("popover-close-reason-demo");
   const traceTelemetry = page.getByTestId("popover-close-trace-demo");
-  const outsideTarget = page.getByLabel("Overlay outside focus target");
 
   await expect(telemetry).toHaveText("none");
   await expect(traceTelemetry).toHaveText("none");
@@ -1937,7 +1936,7 @@ test("reports popover close reason telemetry for trigger, Escape, outside pointe
   await expect(traceTelemetry).toHaveText("reason:escape-key -> open:false");
 
   await trigger.click();
-  await outsideTarget.click();
+  await page.mouse.click(8, 8);
   await expect(telemetry).toHaveText("outside-pointer");
   await expect(traceTelemetry).toHaveText("reason:outside-pointer -> open:false");
 
@@ -1959,18 +1958,17 @@ test("keeps popover open on non-primary outside pointer interaction", async ({ p
 
   const trigger = page.getByRole("button", { name: "Open Popover" });
   const telemetry = page.getByTestId("popover-close-reason-demo");
-  const outsideTarget = page.getByLabel("Overlay outside focus target");
   const popover = page.getByRole("dialog", { name: "Popover content" });
 
   await expect(telemetry).toHaveText("none");
   await trigger.click();
   await expect(popover).toBeVisible();
 
-  await outsideTarget.click({ button: "right" });
+  await page.mouse.click(8, 8, { button: "right" });
   await expect(popover).toBeVisible();
   await expect(telemetry).toHaveText("none");
 
-  await outsideTarget.click();
+  await page.mouse.click(8, 8);
   await expect(popover).toBeHidden();
   await expect(telemetry).toHaveText("outside-pointer");
 });
