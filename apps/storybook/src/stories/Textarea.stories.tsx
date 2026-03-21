@@ -118,3 +118,26 @@ export const DisabledAndReadOnly: Story = {
     </div>
   )
 };
+
+export const FocusIntentReentry: Story = {
+  render: () => (
+    <div style={{ width: 360, display: "grid", gap: 8 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        Click the trigger first, then press Tab to verify keyboard re-entry restores textarea
+        focus-visible state.
+      </p>
+      <button type="button">Before textarea</button>
+      <Textarea aria-label="Focus intent textarea" defaultValue="Release summary draft" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before textarea" });
+    const textarea = canvas.getByRole("textbox", { name: "Focus intent textarea" });
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(textarea).toHaveFocus();
+    await expect(textarea).toHaveAttribute("data-focus-visible", "true");
+  }
+};
