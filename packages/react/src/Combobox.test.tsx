@@ -246,6 +246,88 @@ describe("Combobox", () => {
     expect(input).toHaveFocus();
   });
 
+  it("tracks keyboard focus-visible intent and clears it only on primary pointer interaction", () => {
+    render(<Combobox options={options} onValueChange={() => {}} ariaLabel="Focus-visible combobox" />);
+
+    const input = screen.getByRole("combobox", { name: "Focus-visible combobox" });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(input, { button: 1 });
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(input, { button: 0 });
+    expect(input).not.toHaveAttribute("data-focus-visible");
+  });
+
+  it("tracks ownerDocument keyboard focus intent when focus-visible matching is unavailable", () => {
+    render(
+      <div>
+        <button type="button">Before combobox</button>
+        <Combobox options={options} onValueChange={() => {}} ariaLabel="Document intent combobox" />
+      </div>
+    );
+
+    const beforeButton = screen.getByRole("button", { name: "Before combobox" });
+    const input = screen.getByRole("combobox", { name: "Document intent combobox" });
+    const matchesSpy = vi.spyOn(input, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    fireEvent.mouseDown(beforeButton, { button: 0 });
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(input);
+    expect(input).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.blur(input);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(input);
+    expect(input).not.toHaveAttribute("data-focus-visible");
+
+    matchesSpy.mockRestore();
+  });
+
+  it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    const iframeWindow = iframe.contentWindow;
+    if (!iframeDocument || !iframeWindow) {
+      throw new Error("iframe contentDocument/window is unavailable");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    const { getByRole } = render(
+      <Combobox options={options} onValueChange={() => {}} ariaLabel="Iframe combobox" />,
+      { container: iframeContainer, baseElement: iframeDocument.body }
+    );
+    const input = getByRole("combobox", { name: "Iframe combobox" });
+    const matchesSpy = vi.spyOn(input, "matches").mockImplementation(() => {
+      throw new Error("focus-visible is not supported in this environment");
+    });
+
+    try {
+      iframeDocument.dispatchEvent(
+        new iframeWindow.KeyboardEvent("keydown", { key: "Tab", bubbles: true })
+      );
+      fireEvent.focus(input);
+      expect(input).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(input);
+      iframeDocument.dispatchEvent(
+        new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
+      );
+      fireEvent.focus(input);
+      expect(input).not.toHaveAttribute("data-focus-visible");
+    } finally {
+      matchesSpy.mockRestore();
+      iframe.remove();
+    }
+  });
+
   it("shows custom empty message for no matches", () => {
     render(<Combobox options={options} onValueChange={() => {}} emptyMessage="No frameworks available." />);
 

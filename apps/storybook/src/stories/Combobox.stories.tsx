@@ -235,3 +235,26 @@ export const DisabledState: Story = {
     await expect(canvas.queryByRole("listbox")).toBeNull();
   }
 };
+
+export const FocusIntentReentry: Story = {
+  render: () => (
+    <div style={{ width: 400, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        Click the trigger first, then press Tab to verify keyboard re-entry restores combobox
+        focus-visible state.
+      </p>
+      <button type="button">Before combobox</button>
+      <Combobox options={frameworkOptions} onValueChange={() => {}} ariaLabel="Focus intent combobox" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", { name: "Before combobox" });
+    const input = canvas.getByRole("combobox", { name: "Focus intent combobox" });
+
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(input).toHaveFocus();
+    await expect(input).toHaveAttribute("data-focus-visible", "true");
+  }
+};
