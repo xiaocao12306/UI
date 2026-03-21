@@ -778,6 +778,10 @@ When controls are available, Storybook reflects the runtime API contract directl
 | --- | --- | --- |
 | `speaker` | `'user' \| 'assistant' \| 'system'` | Applies alignment and semantic labeling (`aria-label`). |
 | `children` | `ReactNode` | Message content body. |
+| `speakerLabel` | `string` | Optional localized speaker text used to compose fallback accessible label (`\`${speakerLabel} message\``); blank values are ignored. |
+| `ariaLabel` | `string` | Explicit accessible label override; blank values are ignored and fallback to speaker-derived naming. |
+
+<Canvas of={MessageBubbleStories.LocalizedNaming} />
 
 ### ReasoningPanel
 

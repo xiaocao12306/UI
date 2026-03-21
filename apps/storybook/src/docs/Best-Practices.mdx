@@ -221,6 +221,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep callback side effects ordered and single-purpose: `item-select` path should treat `onSelect` as action commit, then `onCloseReason`, then `onOpenChange(false)`; close-button path should use `onCloseReason` before `onOpenChange(false)`.
 - Guard Ctrl/Cmd + Enter submission against active IME composition, including legacy browsers that only expose `keyCode=229`, to avoid accidental sends for CJK input.
 - Localize prompt input naming and helper copy with `ariaLabel`, `shortcutHint`, and `submittingHint`; keep `aria-keyshortcuts="Control+Enter Meta+Enter"` exposed for shortcut discoverability.
+- Localize message-bubble narration with `speakerLabel` or explicit `ariaLabel`; blank values should be omitted so speaker-based fallback naming remains valid.
 - Show reasoning disclosure with explicit user intent (default collapsed).
 - Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
 - Keep streaming-code narration `live="off"` for high-frequency token output; enable `live="polite"` only when progressive code updates must be announced.
@@ -229,6 +230,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={PromptInputStories.WithAiRequestState} />
 <Canvas of={PromptInputStories.LocalizedCopy} />
 <Canvas of={MessageBubbleStories.Conversation} />
+<Canvas of={MessageBubbleStories.LocalizedNaming} />
 <Canvas of={ReasoningPanelStories.Default} />
 <Canvas of={StreamingCodeBlockStories.Default} />
 <Canvas of={CommandPaletteStories.AiInteractionFlow} />

@@ -21,4 +21,27 @@ describe("MessageBubble", () => {
     render(<MessageBubble speaker="system">Pipeline paused.</MessageBubble>);
     expect(screen.getByRole("article", { name: "System message" })).toHaveAttribute("data-speaker", "system");
   });
+
+  it("supports localized speaker labels when ariaLabel is not provided", () => {
+    render(<MessageBubble speaker="assistant" speakerLabel="助手">已完成草稿生成。</MessageBubble>);
+
+    expect(screen.getByRole("article", { name: "助手 message" })).toHaveTextContent("已完成草稿生成。");
+  });
+
+  it("prefers explicit ariaLabel over speakerLabel and ignores blank values", () => {
+    const { rerender } = render(
+      <MessageBubble speaker="user" ariaLabel="发布摘要气泡" speakerLabel="用户">
+        Draft summary ready.
+      </MessageBubble>
+    );
+
+    expect(screen.getByRole("article", { name: "发布摘要气泡" })).toHaveTextContent("Draft summary ready.");
+
+    rerender(
+      <MessageBubble speaker="user" ariaLabel="   " speakerLabel="   ">
+        Fallback label.
+      </MessageBubble>
+    );
+    expect(screen.getByRole("article", { name: "User message" })).toHaveTextContent("Fallback label.");
+  });
 });

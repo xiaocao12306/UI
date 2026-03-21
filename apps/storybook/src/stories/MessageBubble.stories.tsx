@@ -44,3 +44,25 @@ export const Conversation: Story = {
     </StoryFullscreenFrame>
   )
 };
+
+export const LocalizedNaming: Story = {
+  render: () => (
+    <StoryFullscreenFrame minHeight={260}>
+      <MessageBubble speaker="system" speakerLabel="系统">
+        模型已切换到发布模式。
+      </MessageBubble>
+      <MessageBubble speaker="user" speakerLabel="产品经理">
+        请输出 v0.2 发布摘要。
+      </MessageBubble>
+      <MessageBubble speaker="assistant" ariaLabel="发布助手回复">
+        已生成按模块拆分的发布摘要。
+      </MessageBubble>
+    </StoryFullscreenFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("article", { name: "系统 message" })).toBeInTheDocument();
+    await expect(canvas.getByRole("article", { name: "产品经理 message" })).toBeInTheDocument();
+    await expect(canvas.getByRole("article", { name: "发布助手回复" })).toBeInTheDocument();
+  }
+};

@@ -5,6 +5,8 @@ export type MessageSpeaker = "user" | "assistant" | "system";
 export type MessageBubbleProps = {
   speaker: MessageSpeaker;
   children: React.ReactNode;
+  ariaLabel?: string;
+  speakerLabel?: string;
 };
 
 const speakerStyles: Record<MessageSpeaker, React.CSSProperties> = {
@@ -34,10 +36,13 @@ const speakerLabels: Record<MessageSpeaker, string> = {
   system: "System"
 };
 
-export function MessageBubble({ speaker, children }: MessageBubbleProps) {
+export function MessageBubble({ speaker, children, ariaLabel, speakerLabel }: MessageBubbleProps) {
+  const resolvedSpeakerLabel = resolveNonEmptyLabel(speakerLabel) ?? speakerLabels[speaker];
+  const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel) ?? `${resolvedSpeakerLabel} message`;
+
   return (
     <article
-      aria-label={`${speakerLabels[speaker]} message`}
+      aria-label={resolvedAriaLabel}
       data-speaker={speaker}
       style={{
         maxWidth: "min(680px, 90%)",
@@ -50,4 +55,12 @@ export function MessageBubble({ speaker, children }: MessageBubbleProps) {
       {children}
     </article>
   );
+}
+
+function resolveNonEmptyLabel(label: string | undefined) {
+  if (typeof label === "string" && label.trim().length > 0) {
+    return label.trim();
+  }
+
+  return undefined;
 }
