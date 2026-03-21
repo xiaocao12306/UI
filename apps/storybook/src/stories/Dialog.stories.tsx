@@ -184,9 +184,14 @@ export const FocusIntentPrimaryPointerOnly: Story = {
     });
     closeButton.dispatchEvent(secondaryMouseDown);
     await expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+    await expect(closeButton.getAttribute("style")).toContain("translateY(0)");
 
-    await userEvent.pointer([{ target: closeButton, keys: "[MouseLeft>]" }]);
+    fireEvent.mouseDown(closeButton, { button: 0 });
+    await expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
     await expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+    fireEvent.mouseUp(closeButton, { button: 0 });
+    await expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   }
 };
 

@@ -47,6 +47,7 @@ export function Dialog({
   const titleId = React.useId();
   const descriptionId = React.useId();
   const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
+  const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
   const closeButtonFocusIntentRef = React.useRef(true);
   const panelRef = React.useRef<HTMLElement | null>(null);
@@ -162,13 +163,21 @@ export function Dialog({
                     }}
                     onMouseLeave={() => {
                       setCloseButtonHovered(false);
+                      setCloseButtonPressed(false);
                     }}
                     onMouseDown={(event) => {
-                      if (event.button !== 0) {
-                        return;
+                      if (event.button === 0) {
+                        closeButtonFocusIntentRef.current = false;
+                        setCloseButtonFocusVisible(false);
                       }
-                      closeButtonFocusIntentRef.current = false;
-                      setCloseButtonFocusVisible(false);
+                      if (event.button === 0) {
+                        setCloseButtonPressed(true);
+                      }
+                    }}
+                    onMouseUp={(event) => {
+                      if (event.button === 0) {
+                        setCloseButtonPressed(false);
+                      }
                     }}
                     onKeyDown={() => {
                       closeButtonFocusIntentRef.current = true;
@@ -178,13 +187,19 @@ export function Dialog({
                     }}
                     onBlur={() => {
                       setCloseButtonFocusVisible(false);
+                      setCloseButtonPressed(false);
                     }}
                     style={{
                       borderRadius: "var(--aurora-radius-sm)",
-                      border: closeButtonHovered ? "1px solid var(--aurora-border-strong)" : "1px solid var(--aurora-border-default)",
-                      background: closeButtonHovered
-                        ? "color-mix(in srgb, var(--aurora-surface-elevated) 78%, var(--aurora-surface-default))"
-                        : "var(--aurora-surface-elevated)",
+                      border:
+                        closeButtonHovered || closeButtonFocusVisible
+                          ? "1px solid var(--aurora-border-strong)"
+                          : "1px solid var(--aurora-border-default)",
+                      background: closeButtonPressed
+                        ? "color-mix(in srgb, var(--aurora-surface-elevated) 66%, var(--aurora-surface-default))"
+                        : closeButtonHovered
+                          ? "color-mix(in srgb, var(--aurora-surface-elevated) 82%, var(--aurora-surface-default))"
+                          : "var(--aurora-surface-elevated)",
                       color: closeButtonHovered ? "var(--aurora-text-primary)" : "var(--aurora-text-secondary)",
                       boxShadow: closeButtonFocusVisible
                         ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 45%, transparent)"
@@ -192,8 +207,9 @@ export function Dialog({
                       width: 30,
                       height: 30,
                       cursor: "pointer",
+                      transform: closeButtonPressed ? "translateY(1px)" : "translateY(0)",
                       transition:
-                        "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
+                        "background-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), border-color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), color var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), box-shadow var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard), transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)"
                     }}
                   >
                     ×

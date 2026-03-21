@@ -256,6 +256,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onCloseReason` | `(reason: 'close-button' \| 'escape-key' \| 'outside-pointer') => void` | Emits structured close telemetry for dialog-dismiss analytics and workflow tracing. |
 | close lifecycle order | `onCloseReason -> onOpenChange(false)` | Close-button/Escape/outside-pointer paths use deterministic callback order for telemetry and reducer side effects. |
 | close-button focus intent | primary pointer clears focus-visible | Non-primary close-button pointer down keeps keyboard-intent ring state to avoid accidental ring loss during context/right-click interactions. |
+| close-button pressed feedback | primary pointer only active state | Close button exposes pressed offset/background on primary pointer down and resets on mouseup/blur for deterministic active-state visuals. |
 | focus trap cycle | `Tab` / `Shift+Tab` loop inside dialog | Modal focus scope keeps keyboard focus inside dialog controls while open. |
 | IME Escape safety | composition guard | Escape dismiss is ignored during active IME composition (`isComposing` / `keyCode=229`) to prevent accidental close while confirming CJK input. |
 | modifier-key guard | ignores `Ctrl/Meta/Alt + Escape` | Preserves host/browser modified-key shortcuts and avoids accidental dialog dismiss/hook side effects from combined key chords. |

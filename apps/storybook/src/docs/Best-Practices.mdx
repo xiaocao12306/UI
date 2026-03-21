@@ -109,6 +109,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Expose dropdown menu-item `aria-keyshortcuts="Enter Space"` only on actionable items; disabled items should omit shortcut hints to avoid false affordance.
 - For icon-only popover/dropdown triggers, provide non-empty `triggerAriaLabel` to preserve an explicit control name.
 - Keep field/button focus intent primary-only so non-primary pointer interactions do not clear keyboard-origin focus-visible rings before actual activation intent.
+- Keep dialog/drawer close buttons visually state-complete (`hover`/`focus-visible`/`active`) so overlay dismissal affordances match the rest of the component system.
 - Command palette and combobox-style overlays should keep text input as the primary focus anchor for navigation.
 
 <Canvas of={DropdownStories.OutsideDismissFocusTransfer} />

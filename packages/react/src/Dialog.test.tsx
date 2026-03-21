@@ -145,6 +145,32 @@ describe("Dialog", () => {
     matchesSpy.mockRestore();
   });
 
+  it("shows pressed feedback on close button only for primary pointer interactions", () => {
+    render(
+      <Dialog open onOpenChange={() => {}} title="Pressed close button dialog">
+        <p>Body</p>
+      </Dialog>
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.mouseDown(closeButton, { button: 1 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.mouseDown(closeButton, { button: 0 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+
+    fireEvent.mouseUp(closeButton, { button: 0 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.mouseDown(closeButton, { button: 0 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+
+    fireEvent.blur(closeButton);
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+  });
+
   it("keeps close-button focus-visible state on non-primary mouse down", () => {
     render(
       <Dialog open onOpenChange={() => {}} title="Focus intent dialog">
