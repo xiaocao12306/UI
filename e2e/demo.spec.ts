@@ -1086,6 +1086,13 @@ test("mirrors demo table ArrowLeft/ArrowRight navigation in rtl mode", async ({ 
   await expect(directionTelemetry).toHaveText("rtl");
 
   await componentSortDesc.focus();
+  await componentSortDesc.evaluate((element) => {
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", ctrlKey: true, bubbles: true }));
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", metaKey: true, bubbles: true }));
+    element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", altKey: true, bubbles: true }));
+  });
+  await expect(componentSortDesc).toBeFocused();
+
   await componentSortDesc.press("ArrowRight");
   await expect(componentSortDesc).toBeFocused();
 

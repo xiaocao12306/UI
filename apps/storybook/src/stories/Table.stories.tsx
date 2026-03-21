@@ -520,6 +520,11 @@ export const RtlArrowNavigation: Story = {
     const componentSort = canvas.getByRole("button", { name: "Component sort ascending" });
 
     issueSort.focus();
+    fireEvent.keyDown(issueSort, { key: "ArrowLeft", ctrlKey: true });
+    fireEvent.keyDown(issueSort, { key: "ArrowRight", metaKey: true });
+    fireEvent.keyDown(issueSort, { key: "ArrowLeft", altKey: true });
+    await expect(issueSort).toHaveFocus();
+
     await userEvent.keyboard("{ArrowRight}");
     await expect(issueSort).toHaveFocus();
 

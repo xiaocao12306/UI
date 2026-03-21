@@ -822,7 +822,14 @@ describe("Table", () => {
     await user.tab();
     expect(nameSort).toHaveFocus();
 
+    fireEvent.keyDown(nameSort, { key: "ArrowLeft", ctrlKey: true });
+    fireEvent.keyDown(nameSort, { key: "ArrowRight", metaKey: true });
+    expect(nameSort).toHaveFocus();
+
     fireEvent.keyDown(nameSort, { key: "ArrowLeft" });
+    expect(scoreSort).toHaveFocus();
+
+    fireEvent.keyDown(scoreSort, { key: "ArrowRight", altKey: true });
     expect(scoreSort).toHaveFocus();
 
     fireEvent.keyDown(scoreSort, { key: "ArrowRight" });
