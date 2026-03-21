@@ -232,6 +232,49 @@ export const DismissGuardHooks: Story = {
   }
 };
 
+function NestedDismissOrderPopoverDemo() {
+  return (
+    <PopoverShowcase>
+      <p style={popoverTelemetryTextStyle}>
+        Nested popovers should dismiss one layer at a time: first Escape closes inner, second
+        Escape closes outer.
+      </p>
+      <Popover triggerLabel="Outer popover" contentLabel="Outer popover content">
+        <div style={{ display: "grid", gap: 8 }}>
+          <p style={{ margin: 0 }}>Outer layer content.</p>
+          <Popover triggerLabel="Inner popover" contentLabel="Inner popover content">
+            <p style={{ margin: 0 }}>Inner layer content.</p>
+          </Popover>
+        </div>
+      </Popover>
+    </PopoverShowcase>
+  );
+}
+
+export const NestedDismissOrder: Story = {
+  render: () => <NestedDismissOrderPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const outerTrigger = await canvas.findByRole("button", { name: "Outer popover" });
+
+    await userEvent.click(outerTrigger);
+    await expect(canvas.getByRole("dialog", { name: "Outer popover content" })).toBeInTheDocument();
+
+    const innerTrigger = canvas.getByRole("button", { name: "Inner popover" });
+    await userEvent.click(innerTrigger);
+    await expect(canvas.getByRole("dialog", { name: "Inner popover content" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("dialog", { name: "Inner popover content" })).not.toBeInTheDocument();
+    await expect(canvas.getByRole("dialog", { name: "Outer popover content" })).toBeInTheDocument();
+    await expect(innerTrigger).toHaveFocus();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("dialog", { name: "Outer popover content" })).not.toBeInTheDocument();
+    await expect(outerTrigger).toHaveFocus();
+  }
+};
+
 export const OutsideDismissFocusTransfer: Story = {
   args: {
     triggerLabel: "Focus Policy",

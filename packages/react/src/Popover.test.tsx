@@ -362,6 +362,50 @@ describe("Popover", () => {
     }
   });
 
+  it("dismisses nested popovers from top layer first", () => {
+    const outerCloseReason = vi.fn();
+    const innerCloseReason = vi.fn();
+
+    render(
+      <Popover
+        triggerLabel="Outer popover"
+        contentLabel="Outer popover content"
+        onCloseReason={outerCloseReason}
+      >
+        <div style={{ display: "grid", gap: 8 }}>
+          <p>Outer body</p>
+          <Popover
+            triggerLabel="Inner popover"
+            contentLabel="Inner popover content"
+            onCloseReason={innerCloseReason}
+          >
+            <p>Inner body</p>
+          </Popover>
+        </div>
+      </Popover>
+    );
+
+    const outerTrigger = screen.getByRole("button", { name: "Outer popover" });
+    fireEvent.click(outerTrigger);
+    expect(screen.getByRole("dialog", { name: "Outer popover content" })).toBeInTheDocument();
+
+    const innerTrigger = screen.getByRole("button", { name: "Inner popover" });
+    fireEvent.click(innerTrigger);
+    expect(screen.getByRole("dialog", { name: "Inner popover content" })).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Inner popover content" })).toBeNull();
+    expect(screen.getByRole("dialog", { name: "Outer popover content" })).toBeInTheDocument();
+    expect(innerCloseReason).toHaveBeenCalledWith("escape-key");
+    expect(outerCloseReason).not.toHaveBeenCalled();
+    expect(innerTrigger).toHaveFocus();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Outer popover content" })).toBeNull();
+    expect(outerCloseReason).toHaveBeenCalledWith("escape-key");
+    expect(outerTrigger).toHaveFocus();
+  });
+
   it("emits trigger-click close reason when trigger toggles open popover", () => {
     const onCloseReason = vi.fn();
     const onPointerDownOutside = vi.fn();
