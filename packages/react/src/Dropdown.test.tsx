@@ -1272,6 +1272,59 @@ describe("Dropdown", () => {
     expect(previousControl).toHaveFocus();
   });
 
+  it("moves focus to adjacent controls on Tab and Shift+Tab dismiss for iframe-hosted renders", () => {
+    const iframe = document.createElement("iframe");
+    document.body.appendChild(iframe);
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      throw new Error("expected iframe document to exist");
+    }
+
+    const iframeContainer = iframeDocument.createElement("div");
+    iframeDocument.body.appendChild(iframeContainer);
+
+    const { getByRole, queryByRole, unmount } = render(
+      <div>
+        <button type="button">Iframe previous control</button>
+        <Dropdown
+          label="Iframe tab focus transfer"
+          items={[
+            { key: "one", label: "One" },
+            { key: "two", label: "Two" }
+          ]}
+        />
+        <button type="button">Iframe next control</button>
+      </div>,
+      { container: iframeContainer, baseElement: iframeDocument.body }
+    );
+
+    try {
+      const trigger = getByRole("button", { name: "Iframe tab focus transfer" });
+      const previousControl = getByRole("button", { name: "Iframe previous control" });
+      const nextControl = getByRole("button", { name: "Iframe next control" });
+
+      fireEvent.focus(trigger);
+      fireEvent.keyDown(trigger, { key: "ArrowDown" });
+      const firstItem = getByRole("menuitem", { name: "One" });
+      expect(firstItem).toHaveFocus();
+
+      fireEvent.keyDown(firstItem, { key: "Tab" });
+      expect(queryByRole("menu", { name: "Iframe tab focus transfer" })).toBeNull();
+      expect(nextControl).toHaveFocus();
+
+      fireEvent.focus(trigger);
+      fireEvent.keyDown(trigger, { key: "ArrowDown" });
+      expect(getByRole("menuitem", { name: "One" })).toHaveFocus();
+
+      fireEvent.keyDown(getByRole("menuitem", { name: "One" }), { key: "Tab", shiftKey: true });
+      expect(queryByRole("menu", { name: "Iframe tab focus transfer" })).toBeNull();
+      expect(previousControl).toHaveFocus();
+    } finally {
+      unmount();
+      iframe.remove();
+    }
+  });
+
   it("preserves outside pointer target focus when dismissing", () => {
     render(
       <div>

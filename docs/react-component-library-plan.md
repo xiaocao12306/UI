@@ -863,6 +863,7 @@
   - CommandPalette 跨文档关闭按钮焦点回流验收补齐（2026-03-22 latest+180：补齐命令面板在 iframe ownerDocument 场景下“指针进入输入框后 `Shift+Tab` 回流关闭按钮”的 focus-visible 回退单测，锁定多文档 AI 工作流中的关闭按钮键盘焦点环一致性；同步 `CommandPalette.test.tsx` 并复验 `pnpm --filter @aurora-ui/react exec vitest run src/CommandPalette.test.tsx` 通过）
   - Tabs `Shift+Tab` 焦点回流验收补齐（2026-03-22 latest+181：补齐 tabs 在“指针交互后 `Shift+Tab` 反向回流 active tab”路径下的 focus-visible 回退验收，锁定反向键盘导航时焦点环一致性；同步 `Tabs.test.tsx`、Storybook `KeyboardFocusRingShiftTabReentry` 与 Component API/Best Practices 文档，并复验 `pnpm --filter @aurora-ui/react exec vitest run src/Tabs.test.tsx`、`pnpm storybook:test:grep \"Tabs.stories.tsx\"` 与 docs parity 相关检查通过）
   - Table `Shift+Tab` 焦点回流验收补齐（2026-03-22 latest+182：补齐 sortable header 在“指针交互后 `Shift+Tab` 反向回流”路径下的 focus-visible 回退验收，锁定反向键盘导航时排序头焦点环一致性；同步 `Table.test.tsx`、Storybook `KeyboardFocusRingShiftTabReentry` 与 Component API/Best Practices 文档，并复验 `pnpm --filter @aurora-ui/react exec vitest run src/Table.test.tsx`、`pnpm storybook:test:grep \"Table.stories.tsx\"` 与 docs parity 相关检查通过）
+  - Dropdown 跨文档 Tab 退焦迁移验收补齐（2026-03-22 latest+183：补齐 dropdown 在 iframe ownerDocument 场景下 `Tab`/`Shift+Tab` 退焦关闭后的焦点迁移回归，锁定跨文档菜单关闭后焦点会稳定落到相邻控件；同步 `Dropdown.test.tsx`、Storybook `ShiftTabDismissToPreviousControl` 与 Component API/Best Practices 文档，并复验 `pnpm --filter @aurora-ui/react exec vitest run src/Dropdown.test.tsx`、`pnpm storybook:test:grep \"Dropdown.stories.tsx\"` 与 docs parity 相关检查通过）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

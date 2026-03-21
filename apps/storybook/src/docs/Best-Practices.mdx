@@ -135,6 +135,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 - Keep popover trigger shortcut hints explicit (`aria-keyshortcuts="ArrowDown"`) only while closed so keyboard-open affordance stays discoverable without advertising unavailable shortcuts once open.
 - Keep popover dialog Escape shortcut hints explicit (`aria-keyshortcuts="Escape"`) only when `closeOnEscape` is enabled so dismiss hint metadata matches runtime policy.
 - Keep dropdown `Tab` behavior aligned with document order: close menu and continue focus to next control.
+- Keep dropdown `Shift+Tab` behavior aligned with document order: close menu and continue focus to the previous control.
 - For controlled dropdowns, treat Escape/outside/trigger dismiss as close intent only; apply final visual close in parent rerender to avoid state race conditions.
 - For icon-only/non-text dropdown items, provide `items[].ariaLabel` unless the rich label already exposes inline `aria-label`; development builds warn when both are missing.
 - For icon-only/non-text dropdown items, provide `items[].textValue` unless the rich label already exposes readable text or inline `aria-label`; buffered typeahead relies on one of these metadata paths.
@@ -159,6 +160,7 @@ Use these rules to keep components consistent with the Aurora plan and avoid reg
 <Canvas of={DropdownStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={DropdownStories.EscapeRepeatGuard} />
 <Canvas of={DropdownStories.TabDismissToNextControl} />
+<Canvas of={DropdownStories.ShiftTabDismissToPreviousControl} />
 <Canvas of={DropdownStories.CloseReasonTelemetry} />
 <Canvas of={DropdownStories.ModifierArrowNavigationGuard} />
 <Canvas of={DropdownStories.KeyboardActivationDedupe} />

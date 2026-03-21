@@ -814,6 +814,27 @@ export const TabDismissToNextControl: Story = {
   }
 };
 
+export const ShiftTabDismissToPreviousControl: Story = {
+  render: () => (
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
+        <button type="button">Before Menu Control</button>
+        <Dropdown label="Shift+Tab Flow Menu" items={items} />
+      </div>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Shift+Tab Flow Menu" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Shift+Tab Flow Menu" })).toBeInTheDocument();
+    await userEvent.keyboard("{Shift>}{Tab}{/Shift}");
+    await expect(canvas.queryByRole("menu", { name: "Shift+Tab Flow Menu" })).not.toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Before Menu Control" })).toHaveFocus();
+  }
+};
+
 export const NestedDismissOrder: Story = {
   render: () => (
     <StoryShowcaseFrame gap={8}>
