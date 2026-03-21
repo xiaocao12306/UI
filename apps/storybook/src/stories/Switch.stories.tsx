@@ -76,6 +76,34 @@ export const InvalidAndDisabled: Story = {
   )
 };
 
+export const ShortcutHintPrecision: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 380px)" gap={12}>
+      <Switch
+        label="Shortcut metadata switch"
+        description="Actionable switches should expose Space shortcut hints."
+        defaultChecked={false}
+      />
+      <Switch
+        label="Blocked shortcut metadata switch"
+        description="Disabled switches should not advertise keyboard shortcuts."
+        disabled
+        defaultChecked
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("switch", { name: "Shortcut metadata switch" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Space"
+    );
+    await expect(
+      canvas.getByRole("switch", { name: "Blocked shortcut metadata switch" })
+    ).not.toHaveAttribute("aria-keyshortcuts");
+  }
+};
+
 export const KeyboardToggle: Story = {
   args: {
     defaultChecked: false,

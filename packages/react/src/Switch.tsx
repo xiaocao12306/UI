@@ -34,6 +34,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     "aria-invalid": ariaInvalid,
     "aria-label": rawAriaLabel,
     "aria-labelledby": rawAriaLabelledBy,
+    "aria-keyshortcuts": rawAriaKeyShortcuts,
     ...props
   },
   forwardedRef
@@ -55,6 +56,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
   const currentChecked = isControlled ? checked : internalChecked;
   const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
   const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
+  const ariaKeyShortcuts = disabled ? undefined : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "Space";
   const describedBy = [props["aria-describedby"], description ? descriptionId : undefined].filter(Boolean).join(" ") || undefined;
   const labelledBy =
     ariaLabel || ariaLabelledBy || !label ? ariaLabelledBy : labelId;
@@ -154,6 +156,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       aria-label={ariaLabel}
       aria-describedby={describedBy}
       aria-labelledby={labelledBy}
+      aria-keyshortcuts={ariaKeyShortcuts}
       disabled={disabled}
       data-state={currentChecked ? "checked" : "unchecked"}
       data-invalid={isInvalid ? "true" : undefined}

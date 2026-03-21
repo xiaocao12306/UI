@@ -165,6 +165,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | ------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `checked` / `defaultChecked`          | `boolean`                                       | Controlled and uncontrolled switch flows.                                                                                                                                                        |
 | `onCheckedChange`                     | `(checked: boolean) => void`                    | Triggered from pointer and keyboard activation (`Space`, `Spacebar`, ` `).                                                                                                                       |
+| keyboard shortcut hints               | default `aria-keyshortcuts="Space"`             | Actionable switches expose `Space` shortcut metadata for QA/AT discoverability; disabled switches omit hints so metadata never advertises unavailable keyboard actions.                           |
 | keyboard pressed feedback policy      | unmodified `Space` (` ` / `Space` / `Spacebar`) | Switch exposes `data-pressed` only while an unmodified activation key is held; `Ctrl/Meta/Alt` chords and IME composition paths (`isComposing` / `keyCode=229`) stay passive to avoid false feedback. |
 | click guard                           | `onClick(event.preventDefault())`               | Pointer toggle respects consumer click guards; blocked clicks do not emit `onCheckedChange`.                                                                                                     |
 | `description`                         | `ReactNode`                                     | Auto-wires helper copy to `aria-describedby`.                                                                                                                                                    |
@@ -174,6 +175,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `invalid`                             | `boolean`                                       | Applies invalid semantics and error-token visual states.                                                                                                                                         |
 
 <Canvas of={SwitchStories.InvalidAndDisabled} />
+<Canvas of={SwitchStories.ShortcutHintPrecision} />
 <Canvas of={SwitchStories.KeyboardModifierGuard} />
 <Canvas of={SwitchStories.ImeCompositionGuard} />
 <Canvas of={SwitchStories.LabelledByPrecedence} />

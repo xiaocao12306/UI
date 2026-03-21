@@ -61,6 +61,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat blank switch `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank date-picker `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Keep switch keyboard toggle and pressed-state feedback scoped to unmodified `Space` keys (` ` / `Space` / `Spacebar`); `Ctrl/Meta/Alt + Space` should remain host shortcut behavior, and IME composition key paths (`isComposing` / `keyCode=229`) should stay no-op.
+- Keep switch shortcut hints precise: expose `aria-keyshortcuts="Space"` only while actionable, and remove shortcut metadata when switch is disabled.
 - Prefer `ariaLabelledBy` for radio groups when a visible heading already exists; use `ariaLabel` for standalone groups without nearby title context.
 - Keep input Enter active feedback scoped to unmodified keys: ignore `Ctrl/Meta/Alt + Enter` shortcut chords, while allowing normal `Enter` and `Shift+Enter` intent.
 - Keep input keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.

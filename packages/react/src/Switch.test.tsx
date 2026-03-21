@@ -241,6 +241,33 @@ describe("Switch", () => {
     expect(screen.getByRole("switch", { name: "Aria invalid switch" })).toHaveAttribute("aria-invalid", "true");
   });
 
+  it("exposes default keyboard shortcut hints only when actionable", () => {
+    render(
+      <div>
+        <Switch label="Actionable switch" />
+        <Switch label="Disabled switch" disabled />
+      </div>
+    );
+
+    expect(screen.getByRole("switch", { name: "Actionable switch" })).toHaveAttribute("aria-keyshortcuts", "Space");
+    expect(screen.getByRole("switch", { name: "Disabled switch" })).not.toHaveAttribute("aria-keyshortcuts");
+  });
+
+  it("accepts explicit shortcut hints and ignores blank overrides", () => {
+    render(
+      <div>
+        <Switch label="Custom shortcut switch" aria-keyshortcuts="Space Enter" />
+        <Switch label="Blank shortcut switch" aria-keyshortcuts="   " />
+      </div>
+    );
+
+    expect(screen.getByRole("switch", { name: "Custom shortcut switch" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Space Enter"
+    );
+    expect(screen.getByRole("switch", { name: "Blank shortcut switch" })).toHaveAttribute("aria-keyshortcuts", "Space");
+  });
+
   it("preserves grammar invalid semantics from aria-invalid", () => {
     render(<Switch label="Grammar switch" aria-invalid="grammar" />);
     expect(screen.getByRole("switch", { name: "Grammar switch" })).toHaveAttribute("aria-invalid", "grammar");
