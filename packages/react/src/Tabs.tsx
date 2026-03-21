@@ -257,7 +257,10 @@ export function Tabs({
       }
       focusIntentRef.current = true;
     };
-    const markPointerIntent = () => {
+    const markPointerIntent = (event: Event) => {
+      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+        return;
+      }
       focusIntentRef.current = false;
     };
 

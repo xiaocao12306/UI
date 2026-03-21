@@ -1394,6 +1394,16 @@ describe("Tabs", () => {
     await user.tab({ shift: true });
     expect(oneTab).toHaveFocus();
     expect(oneTab.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.blur(oneTab);
+    fireEvent.mouseDown(document.body, { button: 2 });
+    fireEvent.focus(oneTab);
+    expect(oneTab.style.boxShadow).toContain("0 0 0 3px");
+
+    fireEvent.blur(oneTab);
+    fireEvent.mouseDown(document.body, { button: 0 });
+    fireEvent.focus(oneTab);
+    expect(oneTab.style.boxShadow).toBe("none");
     matchesSpy.mockRestore();
   });
 

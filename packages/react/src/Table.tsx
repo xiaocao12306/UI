@@ -124,7 +124,10 @@ export function Table<T>({
       }
       sortFocusIntentRef.current = true;
     };
-    const markPointerIntent = () => {
+    const markPointerIntent = (event: Event) => {
+      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+        return;
+      }
       sortFocusIntentRef.current = false;
     };
 
