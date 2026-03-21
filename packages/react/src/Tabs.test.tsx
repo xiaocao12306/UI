@@ -484,8 +484,34 @@ describe("Tabs", () => {
 
       expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenLastCalledWith(
-        expect.stringContaining('Duplicate item keys detected: "one"')
+        expect.stringContaining(
+          'Duplicate item keys detected: "one". Keys should be unique to keep aria bindings and focus behavior deterministic. Duplicate render keys are auto-suffixed by item index for stability.'
+        )
       );
+      expect(errorSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not emit React duplicate-key errors when duplicate tab keys are rendered", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Tabs
+          items={[
+            { key: "one", label: "One", content: <div>Panel one</div> },
+            { key: "one", label: "One copy", content: <div>Panel one copy</div> }
+          ]}
+        />
+      );
+
+      expect(screen.getByRole("tab", { name: "One" })).toBeInTheDocument();
+      expect(screen.getByRole("tab", { name: "One copy" })).toBeInTheDocument();
+      expect(errorSpy).not.toHaveBeenCalled();
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();

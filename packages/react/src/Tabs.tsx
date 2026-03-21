@@ -148,6 +148,7 @@ export function Tabs({
   const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel, "Tabs");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const tabDomIds = React.useMemo(() => createTabDomIds(baseId, items), [baseId, items]);
+  const itemRenderKeys = React.useMemo(() => createItemRenderKeys(items), [items]);
   const enabledTabCount = React.useMemo(
     () => items.reduce((count, item) => (item.disabled ? count : count + 1), 0),
     [items]
@@ -181,7 +182,9 @@ export function Tabs({
     console.warn(
       `[Tabs] Duplicate item keys detected: ${Array.from(duplicateKeys)
         .map((key) => `"${key}"`)
-        .join(", ")}. Keys should be unique to keep aria bindings and focus behavior deterministic.`
+        .join(
+          ", "
+        )}. Keys should be unique to keep aria bindings and focus behavior deterministic. Duplicate render keys are auto-suffixed by item index for stability.`
     );
   }, [items]);
 
@@ -383,7 +386,7 @@ export function Tabs({
           return (
             <button
               data-aurora-reduced-motion="transition"
-              key={item.key}
+              key={itemRenderKeys[index] ?? `${item.key}__dup-${index}`}
               ref={(node) => {
                 tabRefs.current[index] = node;
               }}
@@ -597,7 +600,7 @@ export function Tabs({
 
         return (
           <div
-            key={item.key}
+            key={`${itemRenderKeys[index] ?? `${item.key}__dup-${index}`}__panel`}
             id={domIds?.panelId ?? `${baseId}-panel-${index}`}
             role="tabpanel"
             aria-labelledby={domIds?.tabId ?? `${baseId}-tab-${index}`}
@@ -759,6 +762,19 @@ function createTabDomIds(baseId: string, items: TabItem[]) {
       tabId: `${baseId}-tab-${dedupedSegment}`,
       panelId: `${baseId}-panel-${dedupedSegment}`
     };
+  });
+}
+
+function createItemRenderKeys(items: TabItem[]) {
+  const seenCounts = new Map<string, number>();
+  return items.map((item, index) => {
+    const seenCount = seenCounts.get(item.key) ?? 0;
+    seenCounts.set(item.key, seenCount + 1);
+    if (seenCount === 0) {
+      return item.key;
+    }
+
+    return `${item.key}__dup-${index}`;
   });
 }
 
