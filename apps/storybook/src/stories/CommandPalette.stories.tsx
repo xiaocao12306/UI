@@ -827,6 +827,10 @@ export const EmptyStateAriaControlsLifecycle: Story = {
     await expect(initialListboxId).toBeTruthy();
     await expect(input).toHaveAttribute("aria-expanded", "true");
     await expect(input).toHaveAttribute("aria-controls", initialListboxId!);
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-0")
+    );
 
     await userEvent.clear(input);
     await userEvent.type(input, "no-match");
@@ -835,11 +839,16 @@ export const EmptyStateAriaControlsLifecycle: Story = {
     ).not.toBeInTheDocument();
     await expect(input).toHaveAttribute("aria-expanded", "false");
     await expect(input).not.toHaveAttribute("aria-controls");
+    await expect(input).not.toHaveAttribute("aria-activedescendant");
 
     await userEvent.clear(input);
     const restoredListbox = await canvas.findByRole("listbox", { name: "Command results" });
     await expect(input).toHaveAttribute("aria-expanded", "true");
     await expect(input).toHaveAttribute("aria-controls", restoredListbox.getAttribute("id"));
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-0")
+    );
   }
 };
 

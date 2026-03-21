@@ -320,6 +320,7 @@
 - Table loading-sort semantics parity: loading mode now clears header `aria-sort` so assistive tech does not announce stale sorted state while rows and sort controls are non-interactive.
 - Table loading-label parity: when sort state exists, loading mode now preserves sortable-header next-direction label (`aria-label`) while keeping controls disabled and `aria-sort` suppressed.
 - CommandPalette activedescendant parity: combobox now sanitizes active option references during query/command updates so `aria-activedescendant` never points to missing or disabled options.
+- CommandPalette empty-result activedescendant parity: when filtering yields no results, combobox now clears `aria-activedescendant` and restores it only after valid options return, with unit + Storybook `EmptyStateAriaControlsLifecycle` coverage.
 - Demo section-nav parity: `activeSection` now tracks viewport sections via `IntersectionObserver`, so hero cards and nav pills stay aligned during scroll (not only hash changes).
 - Gate observability parity: CI/Release workflows now upload Storybook/Demo/Release gate raw logs as artifacts and include Storybook coverage issue counters in summaries for faster triage.
 - Demo interaction-state parity: section nav and hero stat cards now use CSS state selectors (`:hover`, `:focus-visible`, `[aria-current]`) instead of component-local hover/focus state machines.

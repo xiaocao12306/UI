@@ -693,7 +693,7 @@ When controls are available, Storybook reflects the runtime API contract directl
 | `onOpenChange` | `(open: boolean) => void` | Required controlled dialog state. |
 | combobox relation | conditional `aria-controls` + listbox mount | Search input references listbox only while filtered results exist, avoiding empty-state dangling IDs. |
 | focus model | combobox + `aria-activedescendant` | Options stay outside tab order to keep keyboard flow anchored on the search input. |
-| activedescendant validity | enabled option only | Active option references are sanitized during command/query updates so combobox never points to missing or disabled options. |
+| activedescendant validity | enabled option only | Active option references are sanitized during command/query updates so combobox never points to missing or disabled options, and `aria-activedescendant` is cleared when filtered results are empty. |
 | search key hints | `aria-keyshortcuts="ArrowDown ArrowUp Home End PageDown PageUp [Enter] [Escape]"` | Combobox exposes command-navigation metadata for QA/AT discoverability; `Enter` hint is omitted when no enabled command is currently actionable, and `Escape` hint is omitted when both `closeOnEscape` and `clearQueryOnEscape` are disabled. |
 | Enter repeat guard | ignores repeated keydown | Command execution ignores repeated `Enter` (`event.repeat=true`) so long-press does not trigger duplicate actions or telemetry noise. |
 | Escape repeat guard | ignores repeated keydown | Repeated `Escape` (`event.repeat=true`) is ignored for both query-clear and dismiss paths so long-press does not trigger accidental close or duplicate telemetry. |

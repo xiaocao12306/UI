@@ -1327,16 +1327,19 @@ describe("CommandPalette", () => {
     expect(listboxId).toBeTruthy();
     expect(input).toHaveAttribute("aria-expanded", "true");
     expect(input).toHaveAttribute("aria-controls", listboxId!);
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
 
     fireEvent.change(input, { target: { value: "no-match" } });
     expect(screen.queryByRole("listbox", { name: "Command results" })).toBeNull();
     expect(input).toHaveAttribute("aria-expanded", "false");
     expect(input).not.toHaveAttribute("aria-controls");
+    expect(input).not.toHaveAttribute("aria-activedescendant");
 
     fireEvent.change(input, { target: { value: "settings" } });
     const restoredListbox = screen.getByRole("listbox", { name: "Command results" });
     expect(input).toHaveAttribute("aria-expanded", "true");
     expect(input).toHaveAttribute("aria-controls", restoredListbox.getAttribute("id"));
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
   });
 
   it("renders filtered results as listbox options", () => {
