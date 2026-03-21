@@ -209,6 +209,9 @@ export function Drawer({
                     }}
                     onKeyDown={(event) => {
                       closeButtonFocusIntentRef.current = true;
+                      if (isComposingDrawerCloseButtonActivationEvent(event)) {
+                        return;
+                      }
                       if (
                         isDrawerCloseButtonActivationKey(event.key) &&
                         !isModifiedDrawerCloseButtonActivationChord(event)
@@ -278,4 +281,15 @@ function isDrawerCloseButtonActivationKey(key: string) {
 
 function isModifiedDrawerCloseButtonActivationChord(event: Pick<KeyboardEvent, "altKey" | "ctrlKey" | "metaKey">) {
   return event.altKey || event.ctrlKey || event.metaKey;
+}
+
+function isComposingDrawerCloseButtonActivationEvent(
+  event: React.KeyboardEvent<HTMLButtonElement>
+) {
+  const nativeEvent = event.nativeEvent;
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }

@@ -623,6 +623,12 @@ describe("Drawer", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
     fireEvent.keyUp(closeButton, { key: "Space" });
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.keyDown(closeButton, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.keyDown(closeButton, { key: "Enter", keyCode: 229, which: 229 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 
   it("keeps Tab/Shift+Tab focus cycling inside drawer", async () => {

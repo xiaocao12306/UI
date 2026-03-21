@@ -211,6 +211,9 @@ export function Dialog({
                     }}
                     onKeyDown={(event) => {
                       closeButtonFocusIntentRef.current = true;
+                      if (isComposingDialogCloseButtonActivationEvent(event)) {
+                        return;
+                      }
                       if (
                         isDialogCloseButtonActivationKey(event.key) &&
                         !isModifiedDialogCloseButtonActivationChord(event)
@@ -282,4 +285,15 @@ function isDialogCloseButtonActivationKey(key: string) {
 
 function isModifiedDialogCloseButtonActivationChord(event: Pick<KeyboardEvent, "altKey" | "ctrlKey" | "metaKey">) {
   return event.altKey || event.ctrlKey || event.metaKey;
+}
+
+function isComposingDialogCloseButtonActivationEvent(
+  event: React.KeyboardEvent<HTMLButtonElement>
+) {
+  const nativeEvent = event.nativeEvent;
+  if (nativeEvent.isComposing) {
+    return true;
+  }
+
+  return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }
