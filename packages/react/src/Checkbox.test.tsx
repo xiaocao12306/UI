@@ -90,12 +90,15 @@ describe("Checkbox", () => {
     expect(onBlur).toHaveBeenCalledTimes(1);
   });
 
-  it("tracks keyboard focus-visible intent and clears it on primary pointer interaction", () => {
+  it("tracks keyboard focus-visible intent and clears it on plain primary pointer interaction", () => {
     render(<Checkbox label="Focus-visible checkbox" />);
     const checkbox = screen.getByRole("checkbox", { name: "Focus-visible checkbox" });
 
     fireEvent.keyDown(document, { key: "Tab" });
     fireEvent.focus(checkbox);
+    expect(checkbox).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(checkbox, { button: 0, ctrlKey: true });
     expect(checkbox).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(checkbox, { button: 0 });

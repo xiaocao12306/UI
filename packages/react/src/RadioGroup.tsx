@@ -198,14 +198,14 @@ export function RadioGroup({
                 setFocusVisibleIndex((current) => (current === index ? null : current));
               }}
               onMouseDown={(event) => {
-                if (event.button !== 0) {
+                if (event.button !== 0 || event.ctrlKey) {
                   return;
                 }
                 focusVisibleIntentRef.current = false;
                 setFocusVisibleIndex((current) => (current === index ? null : current));
               }}
               onPointerDown={(event) => {
-                if (event.button !== 0) {
+                if (event.button !== 0 || event.ctrlKey) {
                   return;
                 }
                 focusVisibleIntentRef.current = false;

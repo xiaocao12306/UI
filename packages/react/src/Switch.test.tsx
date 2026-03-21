@@ -111,11 +111,14 @@ describe("Switch", () => {
     expect(onCheckedChange).not.toHaveBeenCalled();
   });
 
-  it("applies pressed state only for primary mouse button", () => {
+  it("applies pressed state only for plain primary mouse button", () => {
     render(<Switch label="Pointer semantics" defaultChecked={false} />);
     const control = screen.getByRole("switch", { name: "Pointer semantics" });
 
     fireEvent.mouseDown(control, { button: 1 });
+    expect(control).not.toHaveAttribute("data-pressed");
+
+    fireEvent.mouseDown(control, { button: 0, ctrlKey: true });
     expect(control).not.toHaveAttribute("data-pressed");
 
     fireEvent.mouseDown(control, { button: 0 });
@@ -128,12 +131,15 @@ describe("Switch", () => {
     expect(control).not.toHaveAttribute("data-pressed");
   });
 
-  it("tracks keyboard focus-visible intent and clears it on primary pointer interaction", () => {
+  it("tracks keyboard focus-visible intent and clears it on plain primary pointer interaction", () => {
     render(<Switch label="Focus-visible switch" defaultChecked={false} />);
     const control = screen.getByRole("switch", { name: "Focus-visible switch" });
 
     fireEvent.keyDown(document, { key: "Tab" });
     fireEvent.focus(control);
+    expect(control).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(control, { button: 0, ctrlKey: true });
     expect(control).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(control, { button: 0 });

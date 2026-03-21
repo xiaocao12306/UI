@@ -183,7 +183,7 @@ describe("RadioGroup", () => {
     expect(group).toHaveAttribute("aria-label", "Fallback group name");
   });
 
-  it("tracks keyboard focus-visible intent and clears it on primary pointer interaction", () => {
+  it("tracks keyboard focus-visible intent and clears it on plain primary pointer interaction", () => {
     render(<RadioGroup name="Focus ring group" options={baseOptions} defaultValue="m" />);
 
     const medium = screen.getByRole("radio", { name: /^Medium/ });
@@ -192,6 +192,9 @@ describe("RadioGroup", () => {
     expect(medium).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(medium, { button: 1 });
+    expect(medium).toHaveAttribute("data-focus-visible", "true");
+
+    fireEvent.mouseDown(medium, { button: 0, ctrlKey: true });
     expect(medium).toHaveAttribute("data-focus-visible", "true");
 
     fireEvent.mouseDown(medium, { button: 0 });

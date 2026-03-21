@@ -151,14 +151,14 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
           onBlur?.(event);
         }}
         onMouseDown={(event) => {
-          if (event.button === 0) {
+          if (event.button === 0 && !event.ctrlKey) {
             focusVisibleIntentRef.current = false;
             setFocusVisible(false);
           }
           onMouseDown?.(event);
         }}
         onPointerDown={(event) => {
-          if (event.button === 0) {
+          if (event.button === 0 && !event.ctrlKey) {
             focusVisibleIntentRef.current = false;
             setFocusVisible(false);
           }

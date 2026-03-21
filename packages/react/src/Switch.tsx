@@ -212,17 +212,17 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         onMouseLeave?.(event);
       }}
       onMouseDown={(event) => {
-        if (event.button === 0) {
+        if (event.button === 0 && !event.ctrlKey) {
           focusVisibleIntentRef.current = false;
           setFocusVisible(false);
         }
-        if (!disabled && event.button === 0) {
+        if (!disabled && event.button === 0 && !event.ctrlKey) {
           setPressed(true);
         }
         onMouseDown?.(event);
       }}
       onPointerDown={(event) => {
-        if (event.button === 0) {
+        if (event.button === 0 && !event.ctrlKey) {
           focusVisibleIntentRef.current = false;
           setFocusVisible(false);
         }
