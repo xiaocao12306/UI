@@ -1917,6 +1917,45 @@ test("keeps popover open when Escape is dispatched during IME composition", asyn
   await expect(popover).toBeHidden();
 });
 
+test("keeps tooltip open on modified/repeated/IME Escape keydowns and closes on plain Escape", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Hover me" });
+  const tooltip = page.getByRole("tooltip");
+
+  await trigger.focus();
+  await expect(tooltip).toBeVisible();
+  await expect(tooltip).toHaveAttribute("aria-keyshortcuts", "Escape");
+
+  await trigger.evaluate((element) => {
+    const dispatchEscape = (init: KeyboardEventInit, withLegacyImeCode = false) => {
+      const event = new KeyboardEvent("keydown", {
+        key: "Escape",
+        bubbles: true,
+        cancelable: true,
+        ...init
+      });
+      if (withLegacyImeCode) {
+        Object.defineProperty(event, "keyCode", { value: 229 });
+        Object.defineProperty(event, "which", { value: 229 });
+      }
+      element.dispatchEvent(event);
+    };
+
+    dispatchEscape({ ctrlKey: true });
+    dispatchEscape({ altKey: true });
+    dispatchEscape({ metaKey: true });
+    dispatchEscape({ repeat: true });
+    dispatchEscape({ isComposing: true }, true);
+  });
+  await expect(tooltip).toBeVisible();
+
+  await page.keyboard.press("Shift+Escape");
+  await expect(tooltip).toBeHidden();
+});
+
 test("reports popover close reason telemetry for trigger, Escape, outside pointer, and Tab boundary dismiss", async ({
   page
 }) => {
