@@ -117,12 +117,12 @@ export const StateMatrix: Story = {
 export const BlankAriaLabelFallback: Story = {
   render: () => (
     <div style={{ width: 360, display: "grid", gap: 8 }}>
-      <label
+      <p
         id="release-window-label"
-        style={{ color: "var(--aurora-text-primary)", fontWeight: 600 }}
+        style={{ margin: 0, color: "var(--aurora-text-primary)", fontWeight: 600 }}
       >
         Release window
-      </label>
+      </p>
       <DatePicker aria-label="   " aria-labelledby="release-window-label" defaultValue="2026-11-09" />
     </div>
   ),
