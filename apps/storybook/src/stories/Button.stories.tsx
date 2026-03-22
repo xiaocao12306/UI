@@ -286,3 +286,27 @@ export const IconOnlyAccessibleName: Story = {
     await expect(canvas.getByRole("button", { name: "Open settings" })).toBeInTheDocument();
   }
 };
+
+export const IconOnlyLabelledByPrecedence: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 560px)" gap={10}>
+      <h3 id="button-icon-heading" style={{ margin: 0 }}>
+        Release quick action
+      </h3>
+      <Button aria-label="Fallback quick action" aria-labelledby="button-icon-heading" variant="outline">
+        <span aria-hidden="true">+</span>
+      </Button>
+      <small style={storyMutedTextStyle}>
+        When both naming props exist, <code>aria-labelledby</code> stays canonical and{" "}
+        <code>aria-label</code> fallback is suppressed.
+      </small>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = await canvas.findByRole("button", { name: "Release quick action" });
+
+    await expect(button).toHaveAttribute("aria-labelledby", "button-icon-heading");
+    await expect(button).not.toHaveAttribute("aria-label");
+  }
+};

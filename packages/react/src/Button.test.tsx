@@ -313,6 +313,38 @@ describe("Button", () => {
     warnSpy.mockRestore();
   });
 
+  it("does not warn for icon-only button when aria-labelledby is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    render(
+      <>
+        <span id="button-name-heading">Add release note</span>
+        <Button aria-labelledby="button-name-heading">
+          <span aria-hidden="true">+</span>
+        </Button>
+      </>
+    );
+
+    expect(warnSpy).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: "Add release note" })).toBeInTheDocument();
+    warnSpy.mockRestore();
+  });
+
+  it("prioritizes aria-labelledby over aria-label for icon-only naming", () => {
+    render(
+      <>
+        <span id="button-name-heading">Linked heading name</span>
+        <Button aria-label="Fallback name" aria-labelledby="button-name-heading">
+          <span aria-hidden="true">+</span>
+        </Button>
+      </>
+    );
+
+    const button = screen.getByRole("button", { name: "Linked heading name" });
+    expect(button).toHaveAttribute("aria-labelledby", "button-name-heading");
+    expect(button).not.toHaveAttribute("aria-label");
+  });
+
   it("warns for icon-only button when aria-label is empty", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 

@@ -47,7 +47,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 
 - Ensure keyboard dismissal paths for overlay components.
 - Keep visible labels or accessible names for form controls.
-- For icon-only buttons, provide non-empty `aria-label` or `aria-labelledby` on the button itself; inline child `aria-label` is treated as fallback only, and decorative glyph text should remain `aria-hidden`.
+- For icon-only buttons, provide non-empty `aria-label` or `aria-labelledby` on the button itself; blank values are invalid, `aria-labelledby` stays canonical when both are present, inline child `aria-label` is treated as fallback only, and decorative glyph text should remain `aria-hidden`.
 - Keep button pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); ignore `Ctrl/Meta/Alt` chords and IME composition key paths (`isComposing` / `keyCode=229`) so host shortcuts and CJK confirmation do not flash pressed visuals.
 - Keep button keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Respect OS reduced-motion preferences: keep `GlobalStyles` mounted so surfaces tagged with `data-aurora-reduced-motion` disable shimmer/spin/indeterminate motion (Button loading spinner, Progress indeterminate bar, Skeleton shimmer) under `prefers-reduced-motion`, and keep timer-driven feedback (`LoadingDots`, `StreamingText`) on default `respectReducedMotion` behavior unless the product explicitly requires animated narration.

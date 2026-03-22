@@ -125,13 +125,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   const focusVisibleIntentRef = React.useRef(true);
   const missingA11yNameWarnedRef = React.useRef(false);
   const interactionDisabled = disabled || loading;
-  const ariaLabel =
-    typeof rawAriaLabel === "string" && rawAriaLabel.trim().length > 0
-      ? rawAriaLabel.trim()
-      : undefined;
   const ariaLabelledBy =
     typeof rawAriaLabelledBy === "string" && rawAriaLabelledBy.trim().length > 0
       ? rawAriaLabelledBy.trim()
+      : undefined;
+  const ariaLabel =
+    ariaLabelledBy === undefined && typeof rawAriaLabel === "string" && rawAriaLabel.trim().length > 0
+      ? rawAriaLabel.trim()
       : undefined;
   const title = props.title;
   const variantStyles = variantStyleMap[variant];
