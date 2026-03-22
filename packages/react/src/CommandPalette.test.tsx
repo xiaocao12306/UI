@@ -6,6 +6,43 @@ import { Popover } from "./Popover";
 import { dispatchCtrlPrimaryPointerDown, dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 describe("CommandPalette", () => {
+  it("prefers ariaLabelledBy over ariaLabel for dialog naming", () => {
+    render(
+      <div>
+        <h2 id="command-palette-heading">AI release command center</h2>
+        <CommandPalette
+          open
+          onOpenChange={() => {}}
+          title={<span aria-hidden>⌘</span>}
+          ariaLabel="Fallback command palette label"
+          ariaLabelledBy="command-palette-heading"
+          commands={[{ key: "open-settings", label: "Open Settings" }]}
+        />
+      </div>
+    );
+
+    const dialog = screen.getByRole("dialog", { name: "AI release command center" });
+    expect(dialog).toHaveAttribute("aria-labelledby", "command-palette-heading");
+    expect(dialog).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and keeps ariaLabel naming fallback", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        title={<span aria-hidden>⌘</span>}
+        ariaLabel="AI release command center"
+        ariaLabelledBy="   "
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    const dialog = screen.getByRole("dialog", { name: "AI release command center" });
+    expect(dialog).toHaveAttribute("aria-label", "AI release command center");
+    expect(dialog).not.toHaveAttribute("aria-labelledby");
+  });
+
   it("filters commands and handles selection", () => {
     const onOpenChange = vi.fn();
     const onCreateProject = vi.fn();

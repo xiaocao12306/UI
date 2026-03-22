@@ -1038,6 +1038,33 @@ export const LocalizedDialogCopy: Story = {
   }
 };
 
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <StoryFullscreenFrame align="start">
+      <h3 id="command-palette-heading" style={{ margin: 0 }}>
+        AI release command center
+      </h3>
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        title={<span aria-hidden>⌘</span>}
+        ariaLabel="Fallback AI command center"
+        ariaLabelledBy="command-palette-heading"
+        commands={[
+          { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
+          { key: "run-e2e", label: "Run E2E Smoke", keywords: ["test"] }
+        ]}
+      />
+    </StoryFullscreenFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const dialog = await canvas.findByRole("dialog", { name: "AI release command center" });
+    await expect(dialog).toHaveAttribute("aria-labelledby", "command-palette-heading");
+    await expect(dialog).not.toHaveAttribute("aria-label");
+  }
+};
+
 export const DisabledOnlyResults: Story = {
   render: () => <DisabledOnlyResultsPalette />,
   play: async ({ canvasElement }) => {

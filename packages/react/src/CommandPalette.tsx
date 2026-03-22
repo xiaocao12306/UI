@@ -18,6 +18,8 @@ export type CommandPaletteProps = {
   commands: CommandItem[];
   title?: React.ReactNode;
   description?: React.ReactNode;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
   searchAriaLabel?: string;
   resultsAriaLabel?: string;
   closeOnSelect?: boolean;
@@ -53,6 +55,8 @@ export function CommandPalette({
   commands,
   title = "Command Palette",
   description = "Quickly search and execute workspace actions.",
+  ariaLabel,
+  ariaLabelledBy,
   searchAriaLabel = "Search commands",
   resultsAriaLabel = "Command results",
   closeOnSelect = true,
@@ -85,6 +89,11 @@ export function CommandPalette({
   const resolvedSearchAriaLabel = resolveNonEmptyLabel(searchAriaLabel, "Search commands");
   const resolvedResultsAriaLabel = resolveNonEmptyLabel(resultsAriaLabel, "Command results");
   const resolvedCloseLabel = resolveNonEmptyLabel(closeLabel, "Close dialog");
+  const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
+  const resolvedAriaLabel =
+    resolvedAriaLabelledBy === undefined
+      ? resolveNonEmptyLabel(ariaLabel)
+      : undefined;
   const resolvedLoadingStatusText = React.useMemo(
     () => resolveLoadingStatusText(loadingContent),
     [loadingContent]
@@ -445,6 +454,8 @@ export function CommandPalette({
       onOpenChange={handleOpenChange}
       title={title}
       description={description}
+      ariaLabel={resolvedAriaLabel}
+      ariaLabelledBy={resolvedAriaLabelledBy}
       closeLabel={resolvedCloseLabel}
       size="md"
       closeOnEscape={closeOnEscape}
