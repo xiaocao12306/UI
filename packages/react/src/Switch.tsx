@@ -102,8 +102,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       return;
     }
 
-    const hasReadableLabelText =
-      getReadableSwitchTextNode(label).length > 0 || getReadableSwitchTextNode(description).length > 0;
+    const hasReadableLabelText = getReadableSwitchTextNode(label).length > 0;
     const hasExplicitAriaLabel = ariaLabel !== undefined || ariaLabelledBy !== undefined;
     if (hasReadableLabelText || hasExplicitAriaLabel) {
       warnedMissingAriaLabelSignatureRef.current = null;
@@ -117,7 +116,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     warnedMissingAriaLabelSignatureRef.current = signature;
 
     console.warn("[Switch] Non-text label content should provide aria-label or aria-labelledby.");
-  }, [ariaLabel, ariaLabelledBy, description, label]);
+  }, [ariaLabel, ariaLabelledBy, label]);
 
   React.useEffect(() => {
     const ownerDocument = buttonRef.current?.ownerDocument ?? document;

@@ -386,6 +386,24 @@ describe("Switch", () => {
     }
   });
 
+  it("warns when non-text switch labels only provide description text", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Switch
+          label={<span aria-hidden="true">🧠</span>}
+          description="Icon-only switch still requires an explicit accessible name."
+        />
+      );
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Switch] Non-text label content should provide aria-label or aria-labelledby."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("does not warn when non-text switch labels expose inline aria-label", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
