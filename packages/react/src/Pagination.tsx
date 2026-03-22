@@ -102,10 +102,10 @@ export function Pagination({
 
     const shortcuts: string[] = [];
     if (canGoPrevious) {
-      shortcuts.push("Home");
+      shortcuts.push("Home", "PageUp");
     }
     if (canGoNext) {
-      shortcuts.push("End");
+      shortcuts.push("End", "PageDown");
     }
     if (canGoPrevious || canGoNext) {
       shortcuts.push("ArrowLeft", "ArrowRight");
@@ -233,6 +233,24 @@ export function Pagination({
       }
       event.preventDefault();
       goToPageWithFocus(resolvedPageCount);
+      return;
+    }
+
+    if (event.key === "PageUp") {
+      if (currentPage === 1) {
+        return;
+      }
+      event.preventDefault();
+      goToPageWithFocus(currentPage - 1);
+      return;
+    }
+
+    if (event.key === "PageDown") {
+      if (currentPage === resolvedPageCount) {
+        return;
+      }
+      event.preventDefault();
+      goToPageWithFocus(currentPage + 1);
       return;
     }
 
@@ -431,7 +449,14 @@ export function Pagination({
 }
 
 function isPaginationManagedKeyboardKey(key: string) {
-  return key === "Home" || key === "End" || key === "ArrowLeft" || key === "ArrowRight";
+  return (
+    key === "Home" ||
+    key === "End" ||
+    key === "PageUp" ||
+    key === "PageDown" ||
+    key === "ArrowLeft" ||
+    key === "ArrowRight"
+  );
 }
 
 function getPaginationArrowDelta(key: string, target: HTMLButtonElement) {

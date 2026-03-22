@@ -114,7 +114,7 @@ describe("Pagination", () => {
     expect(onPageChange).not.toHaveBeenCalled();
   });
 
-  it("supports Home/End and arrow keyboard shortcuts on navigation", () => {
+  it("supports Home/End/PageUp/PageDown and arrow keyboard shortcuts on navigation", () => {
     const onPageChange = vi.fn();
     render(<Pagination page={4} pageCount={10} onPageChange={onPageChange} />);
 
@@ -123,11 +123,15 @@ describe("Pagination", () => {
     fireEvent.keyDown(activeButton, { key: "End" });
     fireEvent.keyDown(activeButton, { key: "ArrowLeft" });
     fireEvent.keyDown(activeButton, { key: "ArrowRight" });
+    fireEvent.keyDown(activeButton, { key: "PageUp" });
+    fireEvent.keyDown(activeButton, { key: "PageDown" });
 
     expect(onPageChange).toHaveBeenNthCalledWith(1, 1);
     expect(onPageChange).toHaveBeenNthCalledWith(2, 10);
     expect(onPageChange).toHaveBeenNthCalledWith(3, 3);
     expect(onPageChange).toHaveBeenNthCalledWith(4, 5);
+    expect(onPageChange).toHaveBeenNthCalledWith(5, 3);
+    expect(onPageChange).toHaveBeenNthCalledWith(6, 5);
   });
 
   it("exposes keyboard shortcut hints on enabled controls and omits them on disabled controls", () => {
@@ -135,15 +139,15 @@ describe("Pagination", () => {
 
     expect(screen.getByRole("button", { name: "Go to first page" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "Home End ArrowLeft ArrowRight"
+      "Home PageUp End PageDown ArrowLeft ArrowRight"
     );
     expect(screen.getByRole("button", { name: "Current page, 4" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "Home End ArrowLeft ArrowRight"
+      "Home PageUp End PageDown ArrowLeft ArrowRight"
     );
     expect(screen.getByRole("button", { name: "Go to next page" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "Home End ArrowLeft ArrowRight"
+      "Home PageUp End PageDown ArrowLeft ArrowRight"
     );
 
     rerender(<Pagination page={4} pageCount={10} onPageChange={() => {}} disabled />);
@@ -155,31 +159,33 @@ describe("Pagination", () => {
 
     expect(screen.getByRole("button", { name: "Current page, 1" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "End ArrowLeft ArrowRight"
+      "End PageDown ArrowLeft ArrowRight"
     );
     expect(screen.getByRole("button", { name: "Go to next page" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "End ArrowLeft ArrowRight"
+      "End PageDown ArrowLeft ArrowRight"
     );
 
     rerender(<Pagination page={10} pageCount={10} onPageChange={() => {}} />);
     expect(screen.getByRole("button", { name: "Current page, 10" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "Home ArrowLeft ArrowRight"
+      "Home PageUp ArrowLeft ArrowRight"
     );
     expect(screen.getByRole("button", { name: "Go to previous page" })).toHaveAttribute(
       "aria-keyshortcuts",
-      "Home ArrowLeft ArrowRight"
+      "Home PageUp ArrowLeft ArrowRight"
     );
   });
 
-  it("ignores Ctrl/Meta/Alt-modified Home/End/arrow shortcuts", () => {
+  it("ignores Ctrl/Meta/Alt-modified Home/End/PageUp/PageDown/arrow shortcuts", () => {
     const onPageChange = vi.fn();
     render(<Pagination page={4} pageCount={10} onPageChange={onPageChange} />);
 
     const activeButton = screen.getByRole("button", { name: "Current page, 4" });
     fireEvent.keyDown(activeButton, { key: "Home", ctrlKey: true });
     fireEvent.keyDown(activeButton, { key: "End", metaKey: true });
+    fireEvent.keyDown(activeButton, { key: "PageUp", ctrlKey: true });
+    fireEvent.keyDown(activeButton, { key: "PageDown", metaKey: true });
     fireEvent.keyDown(activeButton, { key: "ArrowLeft", altKey: true });
     fireEvent.keyDown(activeButton, { key: "ArrowRight", ctrlKey: true });
     expect(onPageChange).not.toHaveBeenCalled();
@@ -188,7 +194,7 @@ describe("Pagination", () => {
     expect(onPageChange).toHaveBeenCalledWith(10);
   });
 
-  it("keeps boundary Home/End keys passive when already at first/last page", async () => {
+  it("keeps boundary Home/End/PageUp/PageDown keys passive when already at first/last page", async () => {
     const onPageChange = vi.fn();
     const { rerender } = render(<Pagination page={1} pageCount={10} onPageChange={onPageChange} />);
 
@@ -198,6 +204,13 @@ describe("Pagination", () => {
       firstButton.dispatchEvent(homeEvent);
     });
     expect(homeEvent.defaultPrevented).toBe(false);
+    expect(onPageChange).not.toHaveBeenCalled();
+
+    const pageUpEvent = new KeyboardEvent("keydown", { key: "PageUp", bubbles: true, cancelable: true });
+    await act(async () => {
+      firstButton.dispatchEvent(pageUpEvent);
+    });
+    expect(pageUpEvent.defaultPrevented).toBe(false);
     expect(onPageChange).not.toHaveBeenCalled();
 
     const endEvent = new KeyboardEvent("keydown", { key: "End", bubbles: true, cancelable: true });
@@ -215,6 +228,17 @@ describe("Pagination", () => {
       lastButton.dispatchEvent(endBoundaryEvent);
     });
     expect(endBoundaryEvent.defaultPrevented).toBe(false);
+    expect(onPageChange).not.toHaveBeenCalled();
+
+    const pageDownBoundaryEvent = new KeyboardEvent("keydown", {
+      key: "PageDown",
+      bubbles: true,
+      cancelable: true
+    });
+    await act(async () => {
+      lastButton.dispatchEvent(pageDownBoundaryEvent);
+    });
+    expect(pageDownBoundaryEvent.defaultPrevented).toBe(false);
     expect(onPageChange).not.toHaveBeenCalled();
 
     const homeBoundaryEvent = new KeyboardEvent("keydown", { key: "Home", bubbles: true, cancelable: true });

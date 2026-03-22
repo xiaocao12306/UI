@@ -241,6 +241,7 @@
 - Demo navigation accessibility hardening: Skip Link now programmatically focuses the first section heading, and section nav pills support `ArrowLeft/ArrowRight/Home/End` keyboard traversal with Playwright regression coverage.
 - CommandPalette caret-priority hardening: Home/End now keeps native caret-edit behavior when cursor is in the middle of query text, and only switches active command at text boundaries.
 - Combobox caret-priority hardening: Home/End now keeps native caret-edit behavior when cursor is in the middle of query text, and only switches active option at text boundaries.
+- Pagination page-jump hardening: added `PageUp/PageDown` keyboard paging with state-aware `aria-keyshortcuts` hints (`Home/PageUp` + `End/PageDown` boundary pruning) so discoverability matches runtime behavior.
 - Pointer-event type-safety hardening: ownerDocument focus-intent listeners across 14 components now use TS-safe primary-button guards (`event.button` narrowing), restoring `verify` typecheck gate without runtime behavior drift.
 - Textarea production hardening: aligned invalid/focus/hover/disabled/readOnly visual states with Input tokens, and added dedicated unit + Storybook coverage.
 - Select production hardening: aligned invalid/focus/hover/disabled state semantics with Input tokens, and added dedicated unit + Storybook coverage.

@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Pagination provides first/previous/number/next/last controls with compact ellipsis behavior and accessible page labels."
+          "Pagination provides first/previous/number/next/last controls with compact ellipsis behavior, accessible page labels, and Home/End/PageUp/PageDown keyboard paths."
       }
     }
   },
@@ -71,7 +71,20 @@ export const KeyboardShortcuts: Story = {
 
     current.focus();
     await expect(current).toHaveFocus();
-    await expect(current).toHaveAttribute("aria-keyshortcuts", "Home End ArrowLeft ArrowRight");
+    await expect(current).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home PageUp End PageDown ArrowLeft ArrowRight"
+    );
+    await userEvent.keyboard("{PageDown}");
+    const currentNext = await canvas.findByRole("button", { name: "Current page, 5" });
+    await expect(currentNext).toBeInTheDocument();
+    await expect(currentNext).toHaveFocus();
+
+    await userEvent.keyboard("{PageUp}");
+    const currentBack = await canvas.findByRole("button", { name: "Current page, 4" });
+    await expect(currentBack).toBeInTheDocument();
+    await expect(currentBack).toHaveFocus();
+
     await userEvent.keyboard("{End}");
     const currentLast = await canvas.findByRole("button", { name: "Current page, 12" });
     await expect(currentLast).toBeInTheDocument();
@@ -230,16 +243,28 @@ export const BoundaryShortcutHints: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const currentFirst = await canvas.findByRole("button", { name: "Current page, 1" });
-    await expect(currentFirst).toHaveAttribute("aria-keyshortcuts", "End ArrowLeft ArrowRight");
+    await expect(currentFirst).toHaveAttribute(
+      "aria-keyshortcuts",
+      "End PageDown ArrowLeft ArrowRight"
+    );
     currentFirst.focus();
     await expect(currentFirst).toHaveFocus();
+
+    await userEvent.keyboard("{PageUp}");
+    await expect(canvas.getByTestId("boundary-page-value")).toHaveTextContent("1");
 
     await userEvent.keyboard("{Home}");
     await expect(canvas.getByTestId("boundary-page-value")).toHaveTextContent("1");
 
     await userEvent.keyboard("{End}");
     const currentLast = await canvas.findByRole("button", { name: "Current page, 12" });
-    await expect(currentLast).toHaveAttribute("aria-keyshortcuts", "Home ArrowLeft ArrowRight");
+    await expect(currentLast).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home PageUp ArrowLeft ArrowRight"
+    );
+    await expect(canvas.getByTestId("boundary-page-value")).toHaveTextContent("12");
+
+    await userEvent.keyboard("{PageDown}");
     await expect(canvas.getByTestId("boundary-page-value")).toHaveTextContent("12");
   }
 };
