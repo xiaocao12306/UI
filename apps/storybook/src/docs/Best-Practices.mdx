@@ -399,6 +399,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep tab and sortable-header owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - For iframe/multi-document hosts, keep tab/sort focus-intent tracking bound to each component `ownerDocument` so keyboard focus-visible semantics remain stable outside the top-level document.
 - When sortable headers have no readable text (for example icon-only markup), provide `columns[].sortLabel` so aria labels and live narration stay human-readable; rich headers with visible text or inline `aria-label` are auto-extracted.
+- Prefer `columns[].sortLabelledBy` when an external visible heading already exists for icon-only sortable headers; use `sortLabel` as fallback narration text for standalone headers.
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - Use `getSortStatusText` to localize active-sort live narration so keyboard and pointer sorting changes remain equally discoverable to assistive tech users.
 - During async refreshes, set `loading` so table emits `aria-busy` and temporarily suppresses stale row actions/sorting.
@@ -455,6 +456,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={TableStories.SortLabelForCustomHeader} />
 <Canvas of={TableStories.RichTextHeaderAutoSortLabel} />
 <Canvas of={TableStories.AriaLabelHeaderAutoSortLabel} />
+<Canvas of={TableStories.SortLabelledByPrecedence} />
 <Canvas of={TableStories.SingleRowSortDisabled} />
 <Canvas of={TableStories.SingleSortableColumnShortcutHints} />
 <Canvas of={TableStories.PrimaryPointerOnlySortPress} />

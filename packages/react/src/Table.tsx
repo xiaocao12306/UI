@@ -10,6 +10,7 @@ export type TableColumn<T> = {
   key: keyof T | string;
   header: React.ReactNode;
   sortLabel?: string;
+  sortLabelledBy?: string;
   width?: number | string;
   align?: TableAlign;
   rowHeader?: boolean;
@@ -69,7 +70,13 @@ function resolveInitialSortState<T>(
   };
 }
 
-function resolveColumnSortLabel<T>(column: TableColumn<T>, fallbackKey: string) {
+function resolveColumnSortLabel<T>(
+  column: TableColumn<T>,
+  fallbackKey: string,
+  ownerDocument: Document | undefined
+) {
+  void ownerDocument;
+
   if (typeof column.sortLabel === "string" && column.sortLabel.trim().length > 0) {
     return column.sortLabel.trim();
   }
@@ -325,6 +332,10 @@ export function Table<T>({
         return keys;
       }
 
+      if (resolveNonEmptyLabel(column.sortLabelledBy)) {
+        return keys;
+      }
+
       if (typeof column.sortLabel === "string" && column.sortLabel.trim().length > 0) {
         return keys;
       }
@@ -419,7 +430,14 @@ export function Table<T>({
       return "";
     }
 
-    const columnHeader = resolveColumnSortLabel(activeSortColumn, String(activeSortColumn.key));
+    const ownerDocument =
+      scrollContainerRef.current?.ownerDocument ??
+      (typeof document === "undefined" ? undefined : document);
+    const columnHeader = resolveColumnSortLabel(
+      activeSortColumn,
+      String(activeSortColumn.key),
+      ownerDocument
+    );
     return getSortStatusText({
       columnKey: sortState.key,
       columnHeader,
@@ -429,6 +447,9 @@ export function Table<T>({
   const hasActionableSortControls =
     !loading && sortedEntries.length > 1 && columns.some((column) => column.sortable);
   const tableColSpan = Math.max(columns.length, 1);
+  const ownerDocument =
+    scrollContainerRef.current?.ownerDocument ??
+    (typeof document === "undefined" ? undefined : document);
 
   React.useEffect(() => {
     if (hasActionableSortControls) {
@@ -511,7 +532,7 @@ export function Table<T>({
               const sorted = !loading && hasMultiRowData ? activeSortDirection : undefined;
               const ariaSort = sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined;
               const textAlign = column.align ?? "left";
-              const headerLabel = resolveColumnSortLabel(column, key);
+              const headerLabel = resolveColumnSortLabel(column, key, ownerDocument);
               const nextDirection: TableSortDirection =
                 activeSortDirection === "asc" ? "desc" : "asc";
               const sortAriaLabel = getSortAriaLabel({
@@ -519,14 +540,17 @@ export function Table<T>({
                 columnHeader: headerLabel,
                 nextDirection
               });
-              const resolvedSortAriaLabel = resolveNonEmptyLabel(
-                sortAriaLabel,
-                defaultGetSortAriaLabel({
-                  columnKey: key,
-                  columnHeader: headerLabel,
-                  nextDirection
-                })
-              );
+              const resolvedSortLabelledBy = resolveNonEmptyLabel(column.sortLabelledBy);
+              const resolvedSortAriaLabel = resolvedSortLabelledBy
+                ? undefined
+                : resolveNonEmptyLabel(
+                    sortAriaLabel,
+                    defaultGetSortAriaLabel({
+                      columnKey: key,
+                      columnHeader: headerLabel,
+                      nextDirection
+                    })
+                  );
               const sortDisabled = loading || !hasMultiRowData;
               const sortKeyShortcuts = sortDisabled
                 ? undefined
@@ -569,6 +593,7 @@ export function Table<T>({
                       ref={(node) => {
                         sortButtonRefs.current[columnRenderKey] = node;
                       }}
+                      aria-labelledby={resolvedSortLabelledBy}
                       aria-label={resolvedSortAriaLabel}
                       aria-keyshortcuts={sortKeyShortcuts}
                       disabled={sortDisabled}

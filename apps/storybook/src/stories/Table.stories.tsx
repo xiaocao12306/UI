@@ -825,6 +825,45 @@ export const AriaLabelHeaderAutoSortLabel: Story = {
   }
 };
 
+export const SortLabelledByPrecedence: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)" gap={10}>
+      <h3 id="table-status-sort-heading" style={{ margin: 0, fontSize: "var(--aurora-font-size-sm)" }}>
+        Release status
+      </h3>
+      <Table
+        columns={[
+          {
+            key: "status",
+            header: <span aria-hidden="true">🚦</span>,
+            sortLabelledBy: "table-status-sort-heading",
+            sortLabel: "Fallback status",
+            sortable: true
+          },
+          { key: "component", header: "Component", sortable: true }
+        ]}
+        data={[
+          { status: "Review", component: "Dialog" },
+          { status: "Ready", component: "Button" }
+        ]}
+        defaultSortKey="status"
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const sortButton = canvas.getByRole("button", { name: "Release status" });
+    await expect(sortButton).toHaveAttribute("aria-labelledby", "table-status-sort-heading");
+    await expect(sortButton).not.toHaveAttribute("aria-label");
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Fallback status ascending.");
+
+    await userEvent.click(sortButton);
+    await expect(canvas.getByRole("status")).toHaveTextContent(
+      "Sorted by Fallback status descending."
+    );
+  }
+};
+
 export const InvalidDefaultSortKeyFallback: Story = {
   render: () => {
     const nonSortableStatusColumns: Array<TableColumn<ReleaseRow>> = [

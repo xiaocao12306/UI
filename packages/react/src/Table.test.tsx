@@ -217,6 +217,40 @@ describe("Table", () => {
     }
   });
 
+  it("does not warn for sortable non-text headers when sortLabelledBy is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <div>
+          <h2 id="status-sort-heading">Release status</h2>
+          <Table
+            columns={[
+              {
+                key: "status",
+                header: <span aria-hidden="true">⚙</span>,
+                sortLabelledBy: "status-sort-heading",
+                sortable: true
+              },
+              { key: "name", header: "Name" }
+            ]}
+            data={[
+              { name: "Button", status: "Stable" },
+              { name: "Dialog", status: "Stable" }
+            ]}
+          />
+        </div>
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+      expect(screen.getByRole("button", { name: "Release status" })).toBeInTheDocument();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("does not warn for sortable rich-text headers when readable text is present", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -1695,6 +1729,65 @@ describe("Table", () => {
     fireEvent.click(sortButton);
     expect(screen.getByRole("button", { name: "Release date sort ascending" })).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent("Sorted by Release date descending.");
+  });
+
+  it("prioritizes sortLabelledBy over sortLabel for sortable header naming", () => {
+    render(
+      <div>
+        <h2 id="release-status-heading">Release status</h2>
+        <Table
+          columns={[
+            {
+              key: "status",
+              header: <span aria-hidden="true">🚦</span>,
+              sortLabelledBy: "release-status-heading",
+              sortLabel: "Fallback status",
+              sortable: true
+            },
+            { key: "component", header: "Component" }
+          ]}
+          data={[
+            { status: "Review", component: "Dialog" },
+            { status: "Ready", component: "Button" }
+          ]}
+          defaultSortKey="status"
+        />
+      </div>
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Release status" });
+    expect(sortButton).toHaveAttribute("aria-labelledby", "release-status-heading");
+    expect(sortButton).not.toHaveAttribute("aria-label");
+    expect(screen.getByRole("status")).toHaveTextContent("Sorted by Fallback status ascending.");
+
+    fireEvent.click(sortButton);
+    expect(screen.getByRole("status")).toHaveTextContent("Sorted by Fallback status descending.");
+  });
+
+  it("ignores blank sortLabelledBy and falls back to sortLabel button naming", () => {
+    render(
+      <Table
+        columns={[
+          {
+            key: "releasedAt",
+            header: <span aria-hidden="true">📅</span>,
+            sortLabelledBy: "   ",
+            sortLabel: "Release date",
+            sortable: true
+          },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { releasedAt: "2026-03-19", status: "Ready" },
+          { releasedAt: "2026-01-10", status: "In review" }
+        ]}
+        defaultSortKey="releasedAt"
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Release date sort descending" });
+    expect(sortButton).not.toHaveAttribute("aria-labelledby");
+    expect(sortButton).toHaveAttribute("aria-label", "Release date sort descending");
   });
 
   it("sorts date values correctly when sortable accessor returns Date", () => {
