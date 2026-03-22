@@ -46,6 +46,44 @@ describe("LoadingDots", () => {
     expect(screen.getByRole("status", { name: "Loading" })).toBeInTheDocument();
   });
 
+  it("supports explicit ariaLabel override", () => {
+    render(<LoadingDots label="Loading suggestions" ariaLabel="Suggestion loading status" />);
+    const dots = screen.getByRole("status", { name: "Suggestion loading status" });
+    expect(dots).toHaveAttribute("aria-label", "Suggestion loading status");
+    expect(dots).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("prefers ariaLabelledBy over ariaLabel and label fallback", () => {
+    render(
+      <div>
+        <h3 id="loading-heading">Suggestion loading heading</h3>
+        <LoadingDots
+          label="Loading suggestions"
+          ariaLabel="Fallback loading status"
+          ariaLabelledBy="loading-heading"
+        />
+      </div>
+    );
+
+    const dots = screen.getByRole("status", { name: "Suggestion loading heading" });
+    expect(dots).toHaveAttribute("aria-labelledby", "loading-heading");
+    expect(dots).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and preserves ariaLabel naming", () => {
+    render(
+      <LoadingDots
+        label="Loading suggestions"
+        ariaLabel="Suggestion loading status"
+        ariaLabelledBy="   "
+      />
+    );
+
+    const dots = screen.getByRole("status", { name: "Suggestion loading status" });
+    expect(dots).toHaveAttribute("aria-label", "Suggestion loading status");
+    expect(dots).not.toHaveAttribute("aria-labelledby");
+  });
+
   it("uses ownerDocument window interval timers in iframe-hosted renders", () => {
     const iframe = document.createElement("iframe");
     document.body.append(iframe);

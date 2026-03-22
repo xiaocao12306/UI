@@ -52,3 +52,24 @@ export const Paused: Story = {
     await expect(dots).toHaveTextContent("....");
   }
 };
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 10 }}>
+      <h3 id="loading-heading" style={{ margin: 0 }}>
+        Suggestion loading heading
+      </h3>
+      <LoadingDots
+        label="Loading suggestions"
+        ariaLabel="Fallback loading status"
+        ariaLabelledBy="loading-heading"
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const dots = await canvas.findByRole("status", { name: "Suggestion loading heading" });
+    await expect(dots).toHaveAttribute("aria-labelledby", "loading-heading");
+    await expect(dots).not.toHaveAttribute("aria-label");
+  }
+};

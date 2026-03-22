@@ -3,6 +3,8 @@ import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
 export type LoadingDotsProps = React.ComponentPropsWithoutRef<"span"> & {
   label?: string;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
   interval?: number;
   dotCount?: number;
   running?: boolean;
@@ -16,6 +18,8 @@ function clampDotCount(dotCount: number) {
 
 export function LoadingDots({
   label = "Loading",
+  ariaLabel,
+  ariaLabelledBy,
   interval = 280,
   dotCount = 3,
   running = true,
@@ -32,6 +36,17 @@ export function LoadingDots({
     typeof label === "string" && label.trim().length > 0
       ? label.trim()
       : "Loading";
+  const resolvedAriaLabelledBy =
+    typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
+      ? ariaLabelledBy.trim()
+      : undefined;
+  const explicitAriaLabel =
+    resolvedAriaLabelledBy === undefined && typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+      ? ariaLabel.trim()
+      : undefined;
+  const resolvedAriaLabel = resolvedAriaLabelledBy
+    ? undefined
+    : explicitAriaLabel ?? resolvedLabel;
   const [index, setIndex] = React.useState(0);
 
   React.useEffect(() => {
@@ -61,7 +76,8 @@ export function LoadingDots({
     <span
       ref={rootRef}
       role="status"
-      aria-label={resolvedLabel}
+      aria-label={resolvedAriaLabel}
+      aria-labelledby={resolvedAriaLabelledBy}
       aria-live={ariaLive}
       aria-busy={running}
       style={{ color: "var(--aurora-text-secondary)", fontFamily: "var(--aurora-font-family-mono)", whiteSpace: "pre", ...style }}

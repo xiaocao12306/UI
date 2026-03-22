@@ -688,8 +688,10 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `interval` / `dotCount` | `number`                                      | Controls animation rhythm and max visible dots.                                                                |
 | `respectReducedMotion`  | `boolean`                                     | Defaults to `true`; when OS reduced-motion is enabled, dots stay static while loading semantics remain intact. |
 | `label` / `live`        | `string` / `'polite' \| 'assertive' \| 'off'` | Screen-reader narration and live-region urgency; blank `label` values are ignored and fallback to `Loading`.   |
+| `ariaLabel` / `ariaLabelledBy` | `string` / `string`                     | Optional status naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without explicit naming overrides, loading status naming falls back to `label` (`Loading` default). |
 
 <Canvas of={LoadingDotsStories.Paused} />
+<Canvas of={LoadingDotsStories.LabelledByPrecedence} />
 
 ### StreamingText
 
