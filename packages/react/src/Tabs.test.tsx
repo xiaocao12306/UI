@@ -1523,6 +1523,25 @@ describe("Tabs", () => {
     expect(twoTab.style.transform).toBe("translateY(0)");
   });
 
+  it("clears pressed offset when pointer interaction is canceled", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    fireEvent.mouseDown(twoTab, { button: 0 });
+    expect(twoTab.style.transform).toBe("translateY(1px)");
+
+    fireEvent.pointerCancel(twoTab);
+    expect(twoTab.style.transform).toBe("translateY(0)");
+  });
+
   it("applies pressed offset for manual keyboard activation keys and clears on keyup", () => {
     render(
       <Tabs

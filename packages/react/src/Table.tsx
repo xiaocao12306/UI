@@ -624,6 +624,11 @@ export function Table<T>({
                           );
                         }
                       }}
+                      onPointerCancel={() => {
+                        setPressedSortKey((currentKey) =>
+                          currentKey === columnRenderKey ? null : currentKey
+                        );
+                      }}
                       onFocus={() => {
                         if (sortDisabled) {
                           setFocusVisibleSortKey((currentKey) =>

@@ -453,6 +453,9 @@ export function Tabs({
                   setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
                 }
               }}
+              onPointerCancel={() => {
+                setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+              }}
               onFocus={() => {
                 setFocusedValue(item.key);
                 if (disabled) {
