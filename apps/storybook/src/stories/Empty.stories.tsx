@@ -72,3 +72,17 @@ export const ToneMatrix: Story = {
     </EmptyShowcase>
   )
 };
+
+export const NumericContentSemantics: Story = {
+  render: () => (
+    <EmptyShowcase maxWidth="min(100%, 360px)">
+      <Empty title="No numeric telemetry" description={0} action={0} icon={0} />
+    </EmptyShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const empty = await canvas.findByRole("status");
+    await expect(empty).toHaveAttribute("aria-describedby");
+    await expect(canvas.getAllByText("0").length).toBeGreaterThanOrEqual(3);
+  }
+};

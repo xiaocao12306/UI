@@ -44,13 +44,16 @@ export function Empty({
   const descriptionId = React.useId();
   const TitleElement = titleAs;
   const isCenter = align === "center";
+  const hasDescriptionContent = hasRenderableEmptyNode(description);
+  const hasActionContent = hasRenderableEmptyNode(action);
+  const hasIconContent = hasRenderableEmptyNode(icon);
 
   return (
     <div
       role={role ?? "status"}
       aria-live="polite"
       aria-labelledby={titleId}
-      aria-describedby={description ? descriptionId : undefined}
+      aria-describedby={hasDescriptionContent ? descriptionId : undefined}
       style={{
         border: "1px dashed var(--aurora-border-default)",
         borderRadius: "var(--aurora-radius-lg)",
@@ -64,16 +67,36 @@ export function Empty({
       }}
       {...props}
     >
-      {icon ? <div aria-hidden>{icon}</div> : null}
+      {hasIconContent ? <div aria-hidden>{icon}</div> : null}
       <TitleElement id={titleId} style={{ color: "var(--aurora-text-primary)", margin: 0, fontSize: "var(--aurora-font-size-md)" }}>
         {title}
       </TitleElement>
-      {description ? (
+      {hasDescriptionContent ? (
         <p id={descriptionId} style={{ color: "var(--aurora-text-secondary)", margin: 0 }}>
           {description}
         </p>
       ) : null}
-      {action ? <div>{action}</div> : null}
+      {hasActionContent ? <div>{action}</div> : null}
     </div>
   );
+}
+
+function hasRenderableEmptyNode(node: React.ReactNode): boolean {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return false;
+  }
+
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  if (typeof node === "number") {
+    return true;
+  }
+
+  if (Array.isArray(node)) {
+    return node.some((item) => hasRenderableEmptyNode(item));
+  }
+
+  return React.isValidElement(node);
 }

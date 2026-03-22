@@ -29,6 +29,16 @@ describe("Empty", () => {
     expect(screen.getByRole("button", { name: "Create release" })).toBeInTheDocument();
   });
 
+  it("keeps numeric description/action/icon semantics", () => {
+    render(<Empty title="No records" description={0} action={0} icon={0} />);
+
+    const empty = screen.getByRole("status");
+    const zeros = screen.getAllByText("0");
+
+    expect(zeros.length).toBeGreaterThanOrEqual(3);
+    expect(empty).toHaveAttribute("aria-describedby");
+  });
+
   it("respects custom role override", () => {
     render(<Empty title="No data" role="region" />);
     expect(screen.getByRole("region")).toBeInTheDocument();
