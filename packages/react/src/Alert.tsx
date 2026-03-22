@@ -48,14 +48,19 @@ export function Alert({
   style,
   ...props
 }: AlertProps) {
+  const titleId = React.useId();
   const [closeButtonFocused, setCloseButtonFocused] = React.useState(false);
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
   const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
   const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
+  const warnedMissingAriaLabelRef = React.useRef(false);
   const closeButtonRef = React.useRef<HTMLButtonElement | null>(null);
   const focusVisibleIntentRef = React.useRef(false);
   const role = tone === "danger" ? "alert" : "status";
   const ariaLive = live ?? (role === "alert" ? "assertive" : "polite");
+  const hasTitleContent = hasRenderableAlertNode(title);
+  const hasDescriptionContent = hasRenderableAlertNode(description);
+  const hasChildrenContent = hasRenderableAlertNode(children);
   const resolvedCloseLabel =
     typeof closeLabel === "string" && closeLabel.trim().length > 0
       ? closeLabel.trim()
@@ -64,15 +69,35 @@ export function Alert({
     typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
       ? ariaLabelledBy.trim()
       : undefined;
-  const resolvedAriaLabel =
+  const explicitAriaLabel =
     resolvedAriaLabelledBy === undefined &&
     typeof ariaLabel === "string" &&
     ariaLabel.trim().length > 0
       ? ariaLabel.trim()
       : undefined;
-  const hasTitleContent = hasRenderableAlertNode(title);
-  const hasDescriptionContent = hasRenderableAlertNode(description);
-  const hasChildrenContent = hasRenderableAlertNode(children);
+  const hasReadableTitleText = getReadableAlertTextNode(title).length > 0;
+  const hasExplicitAlertName = explicitAriaLabel !== undefined || resolvedAriaLabelledBy !== undefined;
+  const resolvedAriaLabel = resolvedAriaLabelledBy
+    ? undefined
+    : explicitAriaLabel ?? (hasTitleContent && !hasReadableTitleText ? "Alert" : undefined);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    if (!hasTitleContent || hasReadableTitleText || hasExplicitAlertName) {
+      warnedMissingAriaLabelRef.current = false;
+      return;
+    }
+
+    if (warnedMissingAriaLabelRef.current) {
+      return;
+    }
+    warnedMissingAriaLabelRef.current = true;
+
+    console.warn("[Alert] Non-text title should provide ariaLabel or ariaLabelledBy.");
+  }, [hasExplicitAlertName, hasReadableTitleText, hasTitleContent]);
 
   React.useEffect(() => {
     if (onClose) {
@@ -125,7 +150,7 @@ export function Alert({
       role={role}
       aria-live={ariaLive}
       aria-label={resolvedAriaLabel}
-      aria-labelledby={resolvedAriaLabelledBy}
+      aria-labelledby={resolvedAriaLabelledBy ?? (resolvedAriaLabel ? undefined : hasTitleContent ? titleId : undefined)}
       style={{
         borderRadius: "var(--aurora-radius-md)",
         border: "1px solid",
@@ -139,7 +164,7 @@ export function Alert({
     >
       <div style={{ display: "flex", gap: 8, alignItems: "start", justifyContent: "space-between" }}>
         <div style={{ display: "grid", gap: hasDescriptionContent || hasChildrenContent ? 4 : 0 }}>
-          {hasTitleContent ? <strong>{title}</strong> : null}
+          {hasTitleContent ? <strong id={titleId}>{title}</strong> : null}
           {hasDescriptionContent ? <div>{description}</div> : null}
           {hasChildrenContent ? <div>{children}</div> : null}
         </div>
@@ -289,4 +314,46 @@ function hasRenderableAlertNode(node: React.ReactNode): boolean {
   }
 
   return React.isValidElement(node);
+}
+
+function getReadableAlertTextNode(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return normalizeReadableAlertText(node);
+  }
+
+  if (typeof node === "number") {
+    return normalizeReadableAlertText(String(node));
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeReadableAlertText(
+      node
+        .map((item) => getReadableAlertTextNode(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  if (typeof elementProps["aria-label"] === "string" && elementProps["aria-label"].trim().length > 0) {
+    return normalizeReadableAlertText(elementProps["aria-label"]);
+  }
+
+  return getReadableAlertTextNode(elementProps.children);
+}
+
+function normalizeReadableAlertText(value: string): string {
+  return value.replace(/\s+/g, " ").trim();
 }

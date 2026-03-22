@@ -126,6 +126,20 @@ export const LabelledByPrecedence: Story = {
   }
 };
 
+export const NonTextTitleAutoNameFallback: Story = {
+  render: () => (
+    <AlertShowcase>
+      <Alert title={<span aria-hidden>✅</span>} description="Auto fallback name for icon-only title." />
+    </AlertShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole("status", { name: "Alert" });
+    await expect(alert).toHaveAttribute("aria-label", "Alert");
+    await expect(alert).not.toHaveAttribute("aria-labelledby");
+  }
+};
+
 export const NumericContentSemantics: Story = {
   render: () => (
     <AlertShowcase>

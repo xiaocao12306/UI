@@ -87,6 +87,69 @@ describe("Alert", () => {
     expect(alert).not.toHaveAttribute("aria-labelledby");
   });
 
+  it("falls back to Alert name when non-text title omits ariaLabel and ariaLabelledBy", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(<Alert title={<span aria-hidden>✅</span>} description="Fallback naming for icon-only title." />);
+      const alert = screen.getByRole("status", { name: "Alert" });
+      expect(alert).toHaveAttribute("aria-label", "Alert");
+      expect(alert).not.toHaveAttribute("aria-labelledby");
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Alert] Non-text title should provide ariaLabel or ariaLabelledBy."
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn when non-text title provides ariaLabel", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(<Alert title={<span aria-hidden>✅</span>} ariaLabel="Release readiness status" />);
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn when non-text title provides ariaLabelledBy", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <div>
+          <h2 id="alert-heading">Release readiness heading</h2>
+          <Alert title={<span aria-hidden>✅</span>} ariaLabelledBy="alert-heading" />
+        </div>
+      );
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn when rich non-text title exposes aria-label on inner node", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(<Alert title={<span aria-label="Release readiness status">✅</span>} />);
+      expect(warnSpy).not.toHaveBeenCalled();
+      expect(screen.getByRole("status", { name: "Release readiness status" })).toBeInTheDocument();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("tracks keyboard focus-visible intent and clears it only on plain primary pointer interaction", () => {
     render(<Alert title="Notice" onClose={() => {}} closeLabel="Focus-visible dismiss" />);
 
