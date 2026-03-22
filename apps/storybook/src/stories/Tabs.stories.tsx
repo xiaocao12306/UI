@@ -621,7 +621,8 @@ function NonTextFallbackNamingTabsDemo() {
     <TabsShowcase>
       <p style={storyMutedTextStyle}>
         Non-text tabs without explicit naming still get fallback accessible names derived from
-        <code> items[].key </code> to avoid unnamed tab controls in production.
+        <code> items[].key </code> and normalized for readability to avoid unnamed tab controls in
+        production.
       </p>
       <Tabs
         ariaLabel="Fallback naming tabs"
@@ -700,8 +701,8 @@ export const NonTextFallbackNaming: Story = {
   render: () => <NonTextFallbackNamingTabsDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const iconTab = canvas.getByRole("tab", { name: "overview-stage" });
-    await expect(iconTab).toHaveAttribute("aria-label", "overview-stage");
+    const iconTab = canvas.getByRole("tab", { name: "overview stage" });
+    await expect(iconTab).toHaveAttribute("aria-label", "overview stage");
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
       "Overview panel keeps fallback naming deterministic."
     );

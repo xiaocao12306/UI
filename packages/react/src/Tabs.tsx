@@ -807,8 +807,13 @@ function resolveNonEmptyLabel(label: string | undefined, fallback?: string): str
 }
 
 function resolveFallbackTabAriaLabel(key: string, index: number) {
-  const normalizedKey = key.trim();
-  if (normalizedKey.length > 0) {
+  const normalizedKey = normalizeReadableTabFallbackLabel(
+    key
+      .trim()
+      .replace(/[_-]+/g, " ")
+      .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+  );
+  if (normalizedKey.length > 0 && /[0-9A-Za-z]/.test(normalizedKey)) {
     return normalizedKey;
   }
 
@@ -846,4 +851,8 @@ function createItemRenderKeys(items: TabItem[]) {
 function normalizeTabKeyForDomId(key: string) {
   const encoded = encodeURIComponent(key).replace(/%/g, "_");
   return encoded.length > 0 ? encoded : "item";
+}
+
+function normalizeReadableTabFallbackLabel(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }

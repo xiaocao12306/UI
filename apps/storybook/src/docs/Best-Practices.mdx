@@ -468,6 +468,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Prefer `ariaLabelledBy` with a visible heading when tabs already have on-screen context labels; fall back to `ariaLabel` for standalone tab groups.
 - When all tabs are disabled, keep the tablist itself keyboard-reachable (`tabIndex=0`) so assistive users can still discover disabled workflow state instead of skipping the component entirely.
 - For icon/custom tab labels, prefer `items[].ariaLabelledBy` when a visible heading already exists; otherwise provide `items[].ariaLabel`. Rich labels that expose readable text or inline `aria-label` are auto-detected, and development builds warn when non-text labels omit both.
+- When tab labels are non-text and explicit naming is omitted, keep `items[].key` human-readable (for example `overview-stage` instead of opaque ids) because fallback names are normalized from key text; keys without readable characters fall back to `Tab N`.
 - Use `activationMode="manual"` when arrow-key navigation should not immediately trigger expensive panel renders.
 - Use `loop={false}` when boundary tabs should trap Arrow navigation (for linear workflows where wrap-around can feel like a jump).
 - Keep modified shortcuts (`Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space`) on host/browser behavior; tabs should only react to unmodified navigation/activation keys.
@@ -494,6 +495,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={TabsStories.Vertical} />
 <Canvas of={TabsStories.RtlKeyboardNavigation} />
 <Canvas of={TabsStories.LabelledByHeading} />
+<Canvas of={TabsStories.NonTextFallbackNaming} />
 <Canvas of={TabsStories.IconOnlyLabelledByPrecedence} />
 <Canvas of={TabsStories.ManualActivation} />
 <Canvas of={TabsStories.ManualActivationPressedFeedback} />

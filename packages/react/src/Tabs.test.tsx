@@ -541,8 +541,34 @@ describe("Tabs", () => {
           'Non-text labels should provide ariaLabel or ariaLabelledBy: "icon-only"'
         )
       );
-      const fallbackNamedTab = screen.getByRole("tab", { name: "icon-only" });
-      expect(fallbackNamedTab).toHaveAttribute("aria-label", "icon-only");
+      const fallbackNamedTab = screen.getByRole("tab", { name: "icon only" });
+      expect(fallbackNamedTab).toHaveAttribute("aria-label", "icon only");
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("normalizes non-text fallback names derived from separator-heavy keys", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Tabs
+          items={[
+            {
+              key: "release_overview-stage",
+              label: <span aria-hidden="true">⚙</span>,
+              content: <div>Panel One</div>
+            },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />
+      );
+
+      const fallbackNamedTab = screen.getByRole("tab", { name: "release overview stage" });
+      expect(fallbackNamedTab).toHaveAttribute("aria-label", "release overview stage");
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
@@ -558,6 +584,28 @@ describe("Tabs", () => {
         <Tabs
           items={[
             { key: "   ", label: <span aria-hidden="true">⚙</span>, content: <div>Panel One</div> },
+            { key: "release", label: "Release", content: <div>Panel Two</div> }
+          ]}
+        />
+      );
+
+      const fallbackNamedTab = screen.getByRole("tab", { name: "Tab 1" });
+      expect(fallbackNamedTab).toHaveAttribute("aria-label", "Tab 1");
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("falls back to indexed tab name when non-text key has no alphanumeric characters", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Tabs
+          items={[
+            { key: "@@@", label: <span aria-hidden="true">⚙</span>, content: <div>Panel One</div> },
             { key: "release", label: "Release", content: <div>Panel Two</div> }
           ]}
         />
