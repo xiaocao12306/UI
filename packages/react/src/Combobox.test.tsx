@@ -37,6 +37,47 @@ describe("Combobox", () => {
     expect(screen.getByRole("listbox", { name: "Framework picker options" })).toBeInTheDocument();
   });
 
+  it("supports ariaLabelledBy naming and suppresses aria-label fallback", () => {
+    render(
+      <div>
+        <h2 id="framework-heading">Framework chooser</h2>
+        <Combobox
+          options={options}
+          onValueChange={() => {}}
+          ariaLabel="Combobox fallback"
+          ariaLabelledBy="framework-heading"
+        />
+      </div>
+    );
+
+    const input = screen.getByRole("combobox", { name: "Framework chooser" });
+    expect(input).toHaveAttribute("aria-labelledby", "framework-heading");
+    expect(input).not.toHaveAttribute("aria-label");
+
+    fireEvent.focus(input);
+    const listbox = screen.getByRole("listbox", { name: "Framework chooser" });
+    expect(listbox).toHaveAttribute("aria-labelledby", "framework-heading");
+    expect(listbox).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and keeps ariaLabel naming", () => {
+    render(
+      <Combobox
+        options={options}
+        onValueChange={() => {}}
+        ariaLabel="Release framework picker"
+        ariaLabelledBy="   "
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Release framework picker" });
+    expect(input).not.toHaveAttribute("aria-labelledby");
+    expect(input).toHaveAttribute("aria-label", "Release framework picker");
+
+    fireEvent.focus(input);
+    expect(screen.getByRole("listbox", { name: "Release framework picker options" })).toBeInTheDocument();
+  });
+
   it("filters options by query", () => {
     render(<Combobox options={options} onValueChange={() => {}} />);
 

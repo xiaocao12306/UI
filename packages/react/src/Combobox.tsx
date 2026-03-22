@@ -18,6 +18,7 @@ export type ComboboxProps = {
   disabled?: boolean;
   id?: string;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
 };
 
 function findNextEnabledIndex(options: ComboboxOption[], startIndex: number, direction: 1 | -1) {
@@ -89,7 +90,8 @@ export function Combobox({
   emptyMessage = "No option found.",
   disabled = false,
   id,
-  ariaLabel = "Combobox"
+  ariaLabel = "Combobox",
+  ariaLabelledBy
 }: ComboboxProps) {
   const listId = React.useId();
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -99,11 +101,18 @@ export function Combobox({
   const [query, setQuery] = React.useState("");
   const [internalValue, setInternalValue] = React.useState(defaultValue);
   const warnedDuplicateValuesSignatureRef = React.useRef<string | null>(null);
+  const resolvedAriaLabelledBy =
+    typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
+      ? ariaLabelledBy.trim()
+      : undefined;
   const resolvedAriaLabel =
-    typeof ariaLabel === "string" && ariaLabel.trim().length > 0
-      ? ariaLabel.trim()
-      : "Combobox";
-  const resolvedListboxAriaLabel = `${resolvedAriaLabel} options`;
+    resolvedAriaLabelledBy === undefined
+      ? typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+        ? ariaLabel.trim()
+        : "Combobox"
+      : undefined;
+  const resolvedListboxAriaLabel =
+    resolvedAriaLabel === undefined ? undefined : `${resolvedAriaLabel} options`;
   const currentValue = value ?? internalValue;
 
   const selectedOption = React.useMemo(() => options.find((item) => item.value === currentValue), [currentValue, options]);
@@ -266,6 +275,7 @@ export function Combobox({
         aria-activedescendant={hasResults && activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined}
         aria-keyshortcuts={searchKeyShortcuts}
         aria-label={resolvedAriaLabel}
+        aria-labelledby={resolvedAriaLabelledBy}
         autoComplete="off"
         value={query}
         disabled={disabled}
@@ -352,6 +362,7 @@ export function Combobox({
           id={listId}
           role="listbox"
           aria-label={resolvedListboxAriaLabel}
+          aria-labelledby={resolvedAriaLabelledBy}
           style={{
             border: "1px solid var(--aurora-border-default)",
             borderRadius: "var(--aurora-radius-md)",

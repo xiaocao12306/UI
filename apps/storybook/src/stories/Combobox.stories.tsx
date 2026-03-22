@@ -217,6 +217,32 @@ export const BlankAriaLabelFallback: Story = {
   }
 };
 
+function LabelledByFallbackComboboxDemo() {
+  return (
+    <div style={{ width: 400, display: "grid", gap: 10 }}>
+      <h3 id="framework-heading" style={{ margin: 0 }}>
+        Framework heading
+      </h3>
+      <Combobox options={frameworkOptions} onValueChange={() => {}} ariaLabelledBy="framework-heading" />
+    </div>
+  );
+}
+
+export const LabelledByNameFallback: Story = {
+  render: () => <LabelledByFallbackComboboxDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Framework heading" });
+    await expect(input).toHaveAttribute("aria-labelledby", "framework-heading");
+    await expect(input).not.toHaveAttribute("aria-label");
+
+    await userEvent.click(input);
+    const listbox = canvas.getByRole("listbox", { name: "Framework heading" });
+    await expect(listbox).toHaveAttribute("aria-labelledby", "framework-heading");
+    await expect(listbox).not.toHaveAttribute("aria-label");
+  }
+};
+
 export const ActivedescendantFocusModel: Story = {
   args: {
     ariaLabel: "Framework focus model"
