@@ -22,6 +22,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
     onKeyDown,
     onKeyUp,
     onPointerDown,
+    onPointerUp,
+    onPointerCancel,
     "aria-invalid": ariaInvalid,
     "aria-label": ariaLabel,
     "aria-labelledby": ariaLabelledBy,
@@ -189,7 +191,29 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
           focusVisibleIntentRef.current = false;
           setFocusVisible(false);
         }
+        if (
+          !isInteractionDisabled &&
+          !readOnly &&
+          event.pointerType !== "mouse" &&
+          !event.ctrlKey &&
+          (typeof event.button !== "number" || event.button === 0)
+        ) {
+          setActive(true);
+        }
         onPointerDown?.(event);
+      }}
+      onPointerUp={(event) => {
+        if (
+          event.pointerType !== "mouse" &&
+          (typeof event.button !== "number" || event.button === 0)
+        ) {
+          setActive(false);
+        }
+        onPointerUp?.(event);
+      }}
+      onPointerCancel={(event) => {
+        setActive(false);
+        onPointerCancel?.(event);
       }}
       onMouseUp={(event) => {
         if (event.button === 0) {

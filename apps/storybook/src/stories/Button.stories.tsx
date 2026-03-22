@@ -224,6 +224,18 @@ export const PrimaryPointerOnly: Story = {
     fireEvent.mouseUp(button, { button: 2 });
     await expect(count).toHaveTextContent("0");
 
+    fireEvent.mouseDown(button);
+    await expect(button.style.transform).toContain("translateY(1px)");
+    fireEvent.pointerCancel(button);
+    await expect(button.style.transform).toContain("translateY(0");
+    await expect(count).toHaveTextContent("0");
+
+    fireEvent.pointerDown(button, { pointerType: "touch", button: 0 });
+    await expect(button.style.transform).toContain("translateY(1px)");
+    fireEvent.pointerUp(button, { pointerType: "touch", button: 0 });
+    await expect(button.style.transform).toContain("translateY(0");
+    await expect(count).toHaveTextContent("0");
+
     await userEvent.click(button);
     await expect(count).toHaveTextContent("1");
   }

@@ -117,6 +117,16 @@ export const InteractionA11yParity: Story = {
     fireEvent.keyUp(keyboardInput, { key: "Enter" });
     await expect(keyboardInput).not.toHaveAttribute("data-active");
 
+    fireEvent.pointerDown(keyboardInput, { pointerType: "touch", button: 0 });
+    await expect(keyboardInput).toHaveAttribute("data-active", "true");
+    fireEvent.pointerCancel(keyboardInput);
+    await expect(keyboardInput).not.toHaveAttribute("data-active");
+
+    fireEvent.pointerDown(keyboardInput, { pointerType: "touch", button: 0 });
+    await expect(keyboardInput).toHaveAttribute("data-active", "true");
+    fireEvent.pointerUp(keyboardInput, { pointerType: "touch", button: 0 });
+    await expect(keyboardInput).not.toHaveAttribute("data-active");
+
     const readOnlyInput = canvas.getByRole("textbox", { name: "Read-only propagated input" });
     await expect(readOnlyInput).toHaveAttribute("readonly");
     readOnlyInput.focus();
