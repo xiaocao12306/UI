@@ -415,6 +415,10 @@ export const OutsideDismissFocusTransfer: Story = {
 };
 
 export const TabDismissToNextControl: Story = {
+  args: {
+    triggerLabel: "Tab Flow Popover",
+    children: <button type="button">Popover Tab Boundary Action</button>
+  },
   render: () => (
     <PopoverShowcase>
       <Popover triggerLabel="Tab Flow Popover">
@@ -439,6 +443,10 @@ export const TabDismissToNextControl: Story = {
 };
 
 export const ShiftTabDismissToPreviousControl: Story = {
+  args: {
+    triggerLabel: "Shift+Tab Flow Popover",
+    children: <button type="button">Popover Shift+Tab Boundary Action</button>
+  },
   render: () => (
     <PopoverShowcase>
       <button type="button">Popover Previous Focus Target</button>
