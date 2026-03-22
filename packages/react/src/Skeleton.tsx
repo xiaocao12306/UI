@@ -7,6 +7,7 @@ export type SkeletonProps = React.ComponentPropsWithoutRef<"div"> & {
   variant?: "rect" | "text" | "circle";
   animated?: boolean;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
 };
 
 export function Skeleton({
@@ -16,6 +17,7 @@ export function Skeleton({
   variant = "rect",
   animated = true,
   ariaLabel,
+  ariaLabelledBy,
   style,
   ...props
 }: SkeletonProps) {
@@ -24,19 +26,27 @@ export function Skeleton({
     (variant === "circle" ? "9999px" : variant === "text" ? "var(--aurora-radius-pill)" : "var(--aurora-radius-sm)");
   const resolvedWidth = variant === "circle" ? width ?? height : width;
   const resolvedHeight = variant === "text" ? height ?? 14 : height;
+  const resolvedAriaLabelledBy =
+    typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
+      ? ariaLabelledBy.trim()
+      : undefined;
   const resolvedAriaLabel =
-    typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+    resolvedAriaLabelledBy === undefined &&
+    typeof ariaLabel === "string" &&
+    ariaLabel.trim().length > 0
       ? ariaLabel.trim()
       : undefined;
+  const narrated = resolvedAriaLabel !== undefined || resolvedAriaLabelledBy !== undefined;
 
   return (
     <div
       data-aurora-reduced-motion={animated ? "animate" : undefined}
-      role={resolvedAriaLabel ? "status" : undefined}
+      role={narrated ? "status" : undefined}
       aria-label={resolvedAriaLabel}
-      aria-live={resolvedAriaLabel ? "polite" : undefined}
-      aria-busy={resolvedAriaLabel ? true : undefined}
-      aria-hidden={resolvedAriaLabel ? undefined : true}
+      aria-labelledby={resolvedAriaLabelledBy}
+      aria-live={narrated ? "polite" : undefined}
+      aria-busy={narrated ? true : undefined}
+      aria-hidden={narrated ? undefined : true}
       style={{
         width: resolvedWidth,
         height: resolvedHeight,

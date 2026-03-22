@@ -643,10 +643,11 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `variant`                     | `'rect' \| 'text' \| 'circle'`                             | Shape selection for block/text/avatar placeholders.                                                                      |
 | `animated`                    | `boolean`                                                  | Toggle shimmer animation for reduced-motion or static placeholders.                                                      |
 | reduced-motion fallback       | shimmer tagged with `data-aurora-reduced-motion="animate"` | With `GlobalStyles`, shimmer auto-disables under `prefers-reduced-motion` while placeholder geometry stays stable.       |
-| `ariaLabel`                   | `string`                                                   | Enables narrated loading status semantics when needed; blank values are ignored so skeleton stays decorative by default. |
+| `ariaLabel` / `ariaLabelledBy` | `string` / `string`                                      | Enables narrated loading status semantics when needed. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. |
 | `width` / `height` / `radius` | `number \| string`                                         | Explicit geometry control for layout matching.                                                                           |
 
 <Canvas of={SkeletonStories.ProfileCard} />
+<Canvas of={SkeletonStories.LabelledByPrecedence} />
 
 ### LoadingDots
 

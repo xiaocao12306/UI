@@ -59,3 +59,26 @@ export const NarratedStatus: Story = {
     await expect(await canvas.findByRole("status", { name: "Loading release list" })).toBeInTheDocument();
   }
 };
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ width: 360, display: "grid", gap: 8 }}>
+      <h3 id="skeleton-heading" style={{ margin: 0 }}>
+        Loading release list heading
+      </h3>
+      <Skeleton
+        width={360}
+        height={18}
+        animated={false}
+        ariaLabel="Fallback loading release list"
+        ariaLabelledBy="skeleton-heading"
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const skeleton = await canvas.findByRole("status", { name: "Loading release list heading" });
+    await expect(skeleton).toHaveAttribute("aria-labelledby", "skeleton-heading");
+    await expect(skeleton).not.toHaveAttribute("aria-label");
+  }
+};

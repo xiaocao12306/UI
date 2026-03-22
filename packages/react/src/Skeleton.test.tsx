@@ -22,6 +22,27 @@ describe("Skeleton", () => {
     expect(skeleton).toHaveAttribute("aria-busy", "true");
   });
 
+  it("prefers ariaLabelledBy over ariaLabel", () => {
+    render(
+      <div>
+        <h2 id="skeleton-heading">Loading profile card</h2>
+        <Skeleton ariaLabel="Fallback loading label" ariaLabelledBy="skeleton-heading" />
+      </div>
+    );
+
+    const skeleton = screen.getByRole("status", { name: "Loading profile card" });
+    expect(skeleton).toHaveAttribute("aria-labelledby", "skeleton-heading");
+    expect(skeleton).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and preserves ariaLabel narration", () => {
+    render(<Skeleton ariaLabel="Loading profile card" ariaLabelledBy="   " />);
+    const skeleton = screen.getByRole("status", { name: "Loading profile card" });
+
+    expect(skeleton).toHaveAttribute("aria-label", "Loading profile card");
+    expect(skeleton).not.toHaveAttribute("aria-labelledby");
+  });
+
   it("ignores blank ariaLabel and keeps decorative semantics", () => {
     render(<Skeleton data-testid="skeleton-blank-label" ariaLabel="   " />);
     const skeleton = screen.getByTestId("skeleton-blank-label");
