@@ -38,12 +38,12 @@ describe("Checkbox", () => {
     expect(document.getElementById(describedById as string)).toHaveTextContent("Requires 2 approvals");
   });
 
-  it("keeps numeric label and description semantics", () => {
+  it("keeps numeric label semantics while wiring description to aria-describedby", () => {
     render(<Checkbox label={0} description={0} />);
     const checkbox = screen.getByRole("checkbox");
     const describedById = checkbox.getAttribute("aria-describedby");
 
-    expect(checkbox).toHaveAccessibleName("0 0");
+    expect(checkbox).toHaveAccessibleName("0");
     expect(describedById).toBeTruthy();
     expect(document.getElementById(describedById as string)).toHaveTextContent("0");
   });
@@ -240,6 +240,24 @@ describe("Checkbox", () => {
 
     try {
       render(<Checkbox label={<span aria-hidden="true">🧪</span>} />);
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Checkbox] Non-text label content should provide aria-label or aria-labelledby."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("warns when non-text checkbox labels only provide description text", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Checkbox
+          label={<span aria-hidden="true">🧪</span>}
+          description="Icon-only label still requires an explicit accessible name."
+        />
+      );
       expect(warnSpy).toHaveBeenCalledWith(
         "[Checkbox] Non-text label content should provide aria-label or aria-labelledby."
       );

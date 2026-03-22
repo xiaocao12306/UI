@@ -63,7 +63,8 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat blank input `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank checkbox `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Keep checkbox shortcut hints precise: expose `aria-keyshortcuts="Space"` only while actionable, and remove shortcut metadata when checkbox is disabled.
-- For icon/non-text checkbox label or description content, provide `aria-labelledby` when a visible heading exists, otherwise provide `aria-label`; rich content with inline `aria-label` is auto-detected, and development builds warn when naming is still missing.
+- For icon/non-text checkbox labels, provide `aria-labelledby` when a visible heading exists, otherwise provide `aria-label`; rich label content with inline `aria-label` is auto-detected, and development builds warn when naming is still missing.
+- Keep checkbox helper text in `description`; it is exposed through `aria-describedby` and should not be relied on as the checkbox name source.
 - Keep select shortcut hints precise: expose `aria-keyshortcuts="ArrowDown ArrowUp"` only while actionable, and remove shortcut metadata when select is disabled.
 - Keep native select `<option value>` entries unique and stable; development builds warn on duplicate values so selected-option semantics stay deterministic.
 - Treat blank select `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.

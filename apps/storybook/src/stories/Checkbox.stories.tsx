@@ -160,6 +160,7 @@ export const NumericContentSemantics: Story = {
     const checkbox = canvas.getByRole("checkbox");
     const describedById = checkbox.getAttribute("aria-describedby");
 
+    await expect(checkbox).toHaveAccessibleName("0");
     await expect(describedById).toBeTruthy();
     await expect(canvas.getAllByText("0").length).toBeGreaterThanOrEqual(2);
   }

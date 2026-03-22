@@ -35,6 +35,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
   const focusVisibleIntentRef = React.useRef(false);
   const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const descriptionId = React.useId();
+  const labelId = React.useId();
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
   const isInteractionDisabled = Boolean(disabled);
@@ -48,6 +49,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
   const describedBy = [restProps["aria-describedby"], hasDescriptionContent ? descriptionId : undefined]
     .filter(Boolean)
     .join(" ") || undefined;
+  const labelledBy =
+    ariaLabel || ariaLabelledBy || !hasLabelContent ? ariaLabelledBy : labelId;
 
   React.useEffect(() => {
     if (!isInteractionDisabled) {
@@ -94,8 +97,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
       return;
     }
 
-    const hasReadableLabelText =
-      getReadableCheckboxTextNode(label).length > 0 || getReadableCheckboxTextNode(description).length > 0;
+    const hasReadableLabelText = getReadableCheckboxTextNode(label).length > 0;
     const hasExplicitAriaLabel = ariaLabel !== undefined || ariaLabelledBy !== undefined;
     if (hasReadableLabelText || hasExplicitAriaLabel) {
       warnedMissingAriaLabelSignatureRef.current = null;
@@ -109,7 +111,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
     warnedMissingAriaLabelSignatureRef.current = signature;
 
     console.warn("[Checkbox] Non-text label content should provide aria-label or aria-labelledby.");
-  }, [ariaLabel, ariaLabelledBy, description, label]);
+  }, [ariaLabel, ariaLabelledBy, label]);
 
   React.useEffect(() => {
     if (localRef.current) {
@@ -148,7 +150,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
         type="checkbox"
         disabled={disabled}
         aria-label={ariaLabel}
-        aria-labelledby={ariaLabelledBy}
+        aria-labelledby={labelledBy}
         aria-invalid={resolvedInvalidAria}
         aria-checked={indeterminate ? "mixed" : restProps["aria-checked"]}
         aria-describedby={describedBy}
@@ -198,7 +200,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
       />
       {hasLabelContent || hasDescriptionContent ? (
         <span style={{ display: "grid", gap: hasDescriptionContent ? 2 : 0 }}>
-          {hasLabelContent ? <span>{label}</span> : null}
+          {hasLabelContent ? <span id={labelId}>{label}</span> : null}
           {hasDescriptionContent ? (
             <span id={descriptionId} style={{ color: "var(--aurora-text-secondary)", fontSize: "var(--aurora-font-size-xs)" }}>
               {description}
