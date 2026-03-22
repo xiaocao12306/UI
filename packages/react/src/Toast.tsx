@@ -231,6 +231,8 @@ export function Toast({
   const titleId = React.useId();
   const descriptionId = React.useId();
   const hasDescriptionContent = hasRenderableToastNode(description);
+  const readableDescriptionText = getReadableToastText(description);
+  const hasReadableDescriptionText = readableDescriptionText.length > 0;
   const resolvedAriaLabelledBy =
     typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
       ? ariaLabelledBy.trim()
@@ -244,7 +246,13 @@ export function Toast({
   const hasReadableTitleText = hasReadableTextNode(title);
   const resolvedAriaLabel = resolvedAriaLabelledBy
     ? undefined
-    : explicitAriaLabel ?? (hasReadableTitleText ? undefined : "Toast");
+    : explicitAriaLabel ??
+      (hasReadableTitleText ? undefined : hasReadableDescriptionText ? readableDescriptionText : "Toast");
+  const usesDescriptionAsFallbackName =
+    resolvedAriaLabelledBy === undefined &&
+    explicitAriaLabel === undefined &&
+    !hasReadableTitleText &&
+    hasReadableDescriptionText;
   const resolvedCloseLabel =
     typeof closeLabel === "string" && closeLabel.trim().length > 0
       ? closeLabel.trim()
@@ -524,7 +532,7 @@ export function Toast({
     }
 
     const hasExplicitName = Boolean(explicitAriaLabel || resolvedAriaLabelledBy);
-    if (hasExplicitName || hasReadableTitleText) {
+    if (hasExplicitName || hasReadableTitleText || hasReadableDescriptionText) {
       warnedMissingAriaLabelRef.current = false;
       return;
     }
@@ -537,7 +545,7 @@ export function Toast({
     console.warn(
       "[Toast] Non-text titles should provide ariaLabel or ariaLabelledBy so notification name remains accessible."
     );
-  }, [explicitAriaLabel, hasReadableTitleText, resolvedAriaLabelledBy]);
+  }, [explicitAriaLabel, hasReadableDescriptionText, hasReadableTitleText, resolvedAriaLabelledBy]);
 
   if (!open) {
     return null;
@@ -562,7 +570,7 @@ export function Toast({
       aria-keyshortcuts={showEscapeKeyShortcuts ? "Escape" : undefined}
       aria-label={resolvedAriaLabel}
       aria-labelledby={resolvedAriaLabelledBy ?? (resolvedAriaLabel ? undefined : titleId)}
-      aria-describedby={hasDescriptionContent ? descriptionId : undefined}
+      aria-describedby={hasDescriptionContent && !usesDescriptionAsFallbackName ? descriptionId : undefined}
       onMouseEnter={() => {
         promoteToTop();
         if (pauseOnHover) {
@@ -746,20 +754,29 @@ function isPrimaryPointerButton(button: number | undefined) {
 }
 
 function hasReadableTextNode(node: React.ReactNode): boolean {
+  return getReadableToastText(node).length > 0;
+}
+
+function getReadableToastText(node: React.ReactNode): string {
   if (typeof node === "string") {
-    return node.trim().length > 0;
+    return normalizeReadableToastText(node);
   }
 
   if (typeof node === "number") {
-    return true;
+    return String(node);
   }
 
   if (Array.isArray(node)) {
-    return node.some((child) => hasReadableTextNode(child));
+    return normalizeReadableToastText(
+      node
+        .map((child) => getReadableToastText(child))
+        .filter((childText) => childText.length > 0)
+        .join(" ")
+    );
   }
 
   if (!React.isValidElement(node)) {
-    return false;
+    return "";
   }
 
   const elementProps = node.props as {
@@ -769,14 +786,14 @@ function hasReadableTextNode(node: React.ReactNode): boolean {
   };
 
   if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
-    return false;
+    return "";
   }
 
   if (typeof elementProps["aria-label"] === "string" && elementProps["aria-label"].trim().length > 0) {
-    return true;
+    return normalizeReadableToastText(elementProps["aria-label"]);
   }
 
-  return hasReadableTextNode(elementProps.children);
+  return getReadableToastText(elementProps.children);
 }
 
 function hasRenderableToastNode(node: React.ReactNode): boolean {
@@ -959,4 +976,8 @@ function isInteractiveRole(role: string | undefined) {
   return role
     .split(/\s+/)
     .some((token) => interactiveAriaRoles.has(token.trim().toLowerCase()));
+}
+
+function normalizeReadableToastText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }

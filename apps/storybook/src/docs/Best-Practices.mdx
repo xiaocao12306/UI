@@ -390,7 +390,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep alert close-button local pointer press feedback primary-only and treat `Ctrl + primary click` as context-click intent so close-button pressed/focus visuals are not triggered on host context-click paths; pressed state should clear on `pointerup`/`pointercancel`, including touch/pen interactions.
 - Keep alert close-button keyboard pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); keep `aria-keyshortcuts="Enter Space"` visible for AT/QA discoverability, and ensure preempted keydown (`event.defaultPrevented`), `Ctrl/Meta/Alt` chords, plus IME composition key paths (`isComposing` / `keyCode=229`) do not trigger pressed visuals.
 - Prefer `ariaLabelledBy` for toast naming when a visible heading already exists; use `ariaLabel` for standalone icon/non-text titles without nearby heading context.
-- For toast titles without readable text, provide either `ariaLabelledBy` or `ariaLabel`; rich title nodes that expose inline `aria-label` are auto-detected, and development builds warn only when both are missing.
+- For toast titles without readable text, provide either `ariaLabelledBy` or `ariaLabel`; rich title nodes that expose inline `aria-label` are auto-detected, and readable `description` text now serves as naming fallback before generic `Toast` fallback.
 - For high-frequency passive updates, set `live="off"` to reduce assistive-tech interruption while keeping visual toast context.
 
 <Canvas of={ToastStories.ActionRequired} />
@@ -408,6 +408,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={ToastStories.EscapePreemptedSkipsToastHook} />
 <Canvas of={ToastStories.EscapeGuardedByToastHandler} />
 <Canvas of={ToastStories.EscapeIgnoresImeComposition} />
+<Canvas of={ToastStories.NonTextTitleDescriptionNameFallback} />
 <Canvas of={ToastStories.LiveRegionOff} />
 <Canvas of={AlertStories.AccessibilityMetadata} />
 <Canvas of={AlertStories.LabelledByPrecedence} />

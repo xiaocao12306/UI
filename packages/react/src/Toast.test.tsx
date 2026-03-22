@@ -135,6 +135,22 @@ describe("Toast", () => {
     }
   });
 
+  it("uses readable description as fallback name for non-text title", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(<Toast open title={<span aria-hidden>✅</span>} description="Build artifact is ready." />);
+      const toast = screen.getByRole("status", { name: "Build artifact is ready." });
+      expect(toast).toHaveAttribute("aria-label", "Build artifact is ready.");
+      expect(toast).not.toHaveAttribute("aria-describedby");
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("does not warn when non-text title provides ariaLabel", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});

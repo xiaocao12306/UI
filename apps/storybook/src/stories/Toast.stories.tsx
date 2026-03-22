@@ -1098,7 +1098,7 @@ export const LabelledByPrecedence: Story = {
 export const NonTextTitleAutoNameFallback: Story = {
   render: () => (
     <ToastShowcase align="start">
-      <Toast open duration={0} title={<span aria-hidden>✅</span>} description="Auto fallback name for icon-only title." />
+      <Toast open duration={0} title={<span aria-hidden>✅</span>} />
     </ToastShowcase>
   ),
   play: async ({ canvasElement }) => {
@@ -1106,6 +1106,26 @@ export const NonTextTitleAutoNameFallback: Story = {
     const toast = canvas.getByRole("status", { name: "Toast" });
     await expect(toast).toHaveAttribute("aria-label", "Toast");
     await expect(toast).not.toHaveAttribute("aria-labelledby");
+  }
+};
+
+export const NonTextTitleDescriptionNameFallback: Story = {
+  render: () => (
+    <ToastShowcase align="start">
+      <Toast
+        open
+        duration={0}
+        title={<span aria-hidden>✅</span>}
+        description="Auto fallback name for icon-only title."
+      />
+    </ToastShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const toast = canvas.getByRole("status", { name: "Auto fallback name for icon-only title." });
+    await expect(toast).toHaveAttribute("aria-label", "Auto fallback name for icon-only title.");
+    await expect(toast).not.toHaveAttribute("aria-labelledby");
+    await expect(toast).not.toHaveAttribute("aria-describedby");
   }
 };
 
