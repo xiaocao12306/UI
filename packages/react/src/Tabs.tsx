@@ -133,7 +133,7 @@ export function Tabs({
   const baseId = React.useId();
   const tabListRef = React.useRef<HTMLDivElement>(null);
   const tabRefs = React.useRef<Array<HTMLButtonElement | null>>([]);
-  const keyboardActivationTabKeyRef = React.useRef<string | null>(null);
+  const keyboardActivationTabRenderKeyRef = React.useRef<string | null>(null);
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const keyboardActivationTimerWindowRef = React.useRef<Window | null>(null);
   const warnedInvalidControlledValueRef = React.useRef<string | null>(null);
@@ -147,9 +147,9 @@ export function Tabs({
   const firstEnabledKey = items.find((item) => !item.disabled)?.key;
   const firstEnabledIndex = React.useMemo(() => getFirstEnabledIndex(items), [items]);
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
-  const [hoveredTabKey, setHoveredTabKey] = React.useState<string | null>(null);
-  const [pressedTabKey, setPressedTabKey] = React.useState<string | null>(null);
-  const [focusVisibleTabKey, setFocusVisibleTabKey] = React.useState<string | null>(null);
+  const [hoveredTabRenderKey, setHoveredTabRenderKey] = React.useState<string | null>(null);
+  const [pressedTabRenderKey, setPressedTabRenderKey] = React.useState<string | null>(null);
+  const [focusVisibleTabRenderKey, setFocusVisibleTabRenderKey] = React.useState<string | null>(null);
   const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel, "Tabs");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const hasTabItems = items.length > 0;
@@ -363,20 +363,22 @@ export function Tabs({
   }, []);
 
   React.useEffect(() => {
-    const enabledKeys = new Set(items.filter((item) => !item.disabled).map((item) => item.key));
-    setHoveredTabKey((currentKey) =>
-      currentKey && !enabledKeys.has(currentKey) ? null : currentKey
+    const enabledRenderKeys = new Set(
+      itemRenderKeys.filter((_, index) => !items[index]?.disabled)
     );
-    setPressedTabKey((currentKey) =>
-      currentKey && !enabledKeys.has(currentKey) ? null : currentKey
+    setHoveredTabRenderKey((currentKey) =>
+      currentKey && !enabledRenderKeys.has(currentKey) ? null : currentKey
     );
-    setFocusVisibleTabKey((currentKey) =>
-      currentKey && !enabledKeys.has(currentKey) ? null : currentKey
+    setPressedTabRenderKey((currentKey) =>
+      currentKey && !enabledRenderKeys.has(currentKey) ? null : currentKey
     );
-  }, [items]);
+    setFocusVisibleTabRenderKey((currentKey) =>
+      currentKey && !enabledRenderKeys.has(currentKey) ? null : currentKey
+    );
+  }, [itemRenderKeys, items]);
 
   const clearKeyboardActivationLatch = React.useCallback(() => {
-    keyboardActivationTabKeyRef.current = null;
+    keyboardActivationTabRenderKeyRef.current = null;
     if (keyboardActivationResetTimerRef.current !== null) {
       const timerWindow = keyboardActivationTimerWindowRef.current ?? window;
       timerWindow.clearTimeout(keyboardActivationResetTimerRef.current);
@@ -427,11 +429,12 @@ export function Tabs({
       >
         {items.map((item, index) => {
           const domIds = tabDomIds[index];
+          const itemRenderKey = itemRenderKeys[index] ?? `${item.key}__dup-${index}`;
           const selected = index === activeTabIndex;
           const disabled = Boolean(item.disabled);
-          const hovered = !disabled && hoveredTabKey === item.key;
-          const pressed = !disabled && pressedTabKey === item.key;
-          const focusVisible = !disabled && focusVisibleTabKey === item.key;
+          const hovered = !disabled && hoveredTabRenderKey === itemRenderKey;
+          const pressed = !disabled && pressedTabRenderKey === itemRenderKey;
+          const focusVisible = !disabled && focusVisibleTabRenderKey === itemRenderKey;
           const interactive = hovered || focusVisible;
           const itemAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
           const itemAriaLabel = itemAriaLabelledBy ? undefined : resolveNonEmptyLabel(item.ariaLabel);
@@ -444,7 +447,7 @@ export function Tabs({
           return (
             <button
               data-aurora-reduced-motion="transition"
-              key={itemRenderKeys[index] ?? `${item.key}__dup-${index}`}
+              key={itemRenderKey}
               ref={(node) => {
                 tabRefs.current[index] = node;
               }}
@@ -468,7 +471,7 @@ export function Tabs({
                 const clickFromKeyboardActivation =
                   activationMode === "manual" &&
                   event.detail === 0 &&
-                  keyboardActivationTabKeyRef.current === item.key;
+                  keyboardActivationTabRenderKeyRef.current === itemRenderKey;
                 clearKeyboardActivationLatch();
                 if (clickFromKeyboardActivation) {
                   return;
@@ -480,11 +483,15 @@ export function Tabs({
                   return;
                 }
 
-                setHoveredTabKey(item.key);
+                setHoveredTabRenderKey(itemRenderKey);
               }}
               onMouseLeave={() => {
-                setHoveredTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
-                setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                setHoveredTabRenderKey((currentKey) =>
+                  currentKey === itemRenderKey ? null : currentKey
+                );
+                setPressedTabRenderKey((currentKey) =>
+                  currentKey === itemRenderKey ? null : currentKey
+                );
               }}
               onPointerDown={(event) => {
                 if (disabled) {
@@ -499,14 +506,16 @@ export function Tabs({
                 }
 
                 focusIntentRef.current = false;
-                setFocusVisibleTabKey((currentKey) =>
-                  currentKey === item.key ? null : currentKey
+                setFocusVisibleTabRenderKey((currentKey) =>
+                  currentKey === itemRenderKey ? null : currentKey
                 );
-                setPressedTabKey(item.key);
+                setPressedTabRenderKey(itemRenderKey);
               }}
               onPointerUp={(event) => {
                 if (isPrimaryPointerButton(event.button)) {
-                  setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                  setPressedTabRenderKey((currentKey) =>
+                    currentKey === itemRenderKey ? null : currentKey
+                  );
                 }
               }}
               onMouseDown={(event) => {
@@ -519,41 +528,47 @@ export function Tabs({
                 }
 
                 focusIntentRef.current = false;
-                setFocusVisibleTabKey((currentKey) =>
-                  currentKey === item.key ? null : currentKey
+                setFocusVisibleTabRenderKey((currentKey) =>
+                  currentKey === itemRenderKey ? null : currentKey
                 );
-                setPressedTabKey(item.key);
+                setPressedTabRenderKey(itemRenderKey);
               }}
               onMouseUp={(event) => {
                 if (event.button === 0) {
-                  setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                  setPressedTabRenderKey((currentKey) =>
+                    currentKey === itemRenderKey ? null : currentKey
+                  );
                 }
               }}
               onPointerCancel={() => {
-                setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                setPressedTabRenderKey((currentKey) =>
+                  currentKey === itemRenderKey ? null : currentKey
+                );
               }}
               onFocus={() => {
                 setFocusedValue(item.key);
                 if (disabled) {
-                  setFocusVisibleTabKey((currentKey) =>
-                    currentKey === item.key ? null : currentKey
+                  setFocusVisibleTabRenderKey((currentKey) =>
+                    currentKey === itemRenderKey ? null : currentKey
                   );
                   return;
                 }
 
-                setFocusVisibleTabKey((currentKey) =>
+                setFocusVisibleTabRenderKey((currentKey) =>
                   resolveFocusVisibleState(tabRefs.current[index], focusIntentRef.current)
-                    ? item.key
-                    : currentKey === item.key
+                    ? itemRenderKey
+                    : currentKey === itemRenderKey
                       ? null
                       : currentKey
                 );
               }}
               onBlur={() => {
-                setFocusVisibleTabKey((currentKey) =>
-                  currentKey === item.key ? null : currentKey
+                setFocusVisibleTabRenderKey((currentKey) =>
+                  currentKey === itemRenderKey ? null : currentKey
                 );
-                setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                setPressedTabRenderKey((currentKey) =>
+                  currentKey === itemRenderKey ? null : currentKey
+                );
               }}
               onKeyDown={(event) => {
                 focusIntentRef.current = true;
@@ -572,8 +587,8 @@ export function Tabs({
                   if (event.repeat) {
                     return;
                   }
-                  setPressedTabKey(item.key);
-                  keyboardActivationTabKeyRef.current = item.key;
+                  setPressedTabRenderKey(itemRenderKey);
+                  keyboardActivationTabRenderKeyRef.current = itemRenderKey;
                   const ownerWindow = event.currentTarget.ownerDocument.defaultView ?? window;
                   if (keyboardActivationResetTimerRef.current !== null) {
                     const timerWindow = keyboardActivationTimerWindowRef.current ?? ownerWindow;
@@ -581,7 +596,7 @@ export function Tabs({
                   }
                   keyboardActivationTimerWindowRef.current = ownerWindow;
                   keyboardActivationResetTimerRef.current = ownerWindow.setTimeout(() => {
-                    keyboardActivationTabKeyRef.current = null;
+                    keyboardActivationTabRenderKeyRef.current = null;
                     keyboardActivationResetTimerRef.current = null;
                     keyboardActivationTimerWindowRef.current = null;
                   }, 0);
@@ -646,7 +661,9 @@ export function Tabs({
               }}
               onKeyUp={(event) => {
                 if (isTabActivationKey(event.key)) {
-                  setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                  setPressedTabRenderKey((currentKey) =>
+                    currentKey === itemRenderKey ? null : currentKey
+                  );
                 }
               }}
               style={{

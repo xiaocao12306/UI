@@ -595,6 +595,42 @@ describe("Tabs", () => {
     }
   });
 
+  it("isolates duplicate-key hover/focus/pressed visuals to the interacted occurrence", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Tabs
+          defaultValue="two"
+          items={[
+            { key: "one", label: "One", content: <div>Panel one</div> },
+            { key: "one", label: "One copy", content: <div>Panel one copy</div> },
+            { key: "two", label: "Two", content: <div>Panel two</div> }
+          ]}
+        />
+      );
+
+      const primaryDuplicateTab = screen.getByRole("tab", { name: "One" });
+      const secondaryDuplicateTab = screen.getByRole("tab", { name: "One copy" });
+
+      fireEvent.focus(secondaryDuplicateTab);
+      expect(secondaryDuplicateTab.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+      expect(primaryDuplicateTab.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+      fireEvent.mouseEnter(secondaryDuplicateTab);
+      expect(secondaryDuplicateTab.getAttribute("style")).toContain("var(--aurora-surface-elevated) 86%");
+      expect(primaryDuplicateTab.getAttribute("style")).not.toContain(
+        "var(--aurora-surface-elevated) 86%"
+      );
+
+      fireEvent.pointerDown(secondaryDuplicateTab, { button: 0, pointerType: "mouse" });
+      expect(secondaryDuplicateTab.getAttribute("style")).toContain("translateY(1px)");
+      expect(primaryDuplicateTab.getAttribute("style")).toContain("translateY(0)");
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("warns when non-text tab labels omit ariaLabel and ariaLabelledBy", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});

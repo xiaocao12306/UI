@@ -1028,6 +1028,26 @@ function DuplicateKeyRerenderStabilityDemo() {
   );
 }
 
+function DuplicateKeyInteractionIsolationDemo() {
+  return (
+    <TabsShowcase gap={10}>
+      <p style={storyMutedTextStyle}>
+        Duplicate-key tabs should keep hover, focus-ring, and pressed visuals scoped to the
+        interacted duplicate occurrence.
+      </p>
+      <Tabs
+        ariaLabel="Duplicate key interaction isolation tabs"
+        defaultValue="release"
+        items={[
+          { key: "build", label: "Build", content: "Build stage." },
+          { key: "build", label: "Build backup", content: "Build backup stage." },
+          { key: "release", label: "Release", content: "Release stage." }
+        ]}
+      />
+    </TabsShowcase>
+  );
+}
+
 function ManagedKeysPreemptedLocallyDemo() {
   const [value, setValue] = React.useState("spec");
   const [changes, setChanges] = React.useState(0);
@@ -1117,6 +1137,23 @@ export const DuplicateKeyRerenderStability: Story = {
     });
 
     await expect(canvas.getByRole("tab", { name: "Build backup" })).toBe(duplicateTab);
+  }
+};
+
+export const DuplicateKeyInteractionIsolation: Story = {
+  render: () => <DuplicateKeyInteractionIsolationDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const primaryDuplicateTab = canvas.getByRole("tab", { name: "Build" });
+    const secondaryDuplicateTab = canvas.getByRole("tab", { name: "Build backup" });
+
+    await userEvent.hover(secondaryDuplicateTab);
+    await expect(secondaryDuplicateTab.getAttribute("style")).toContain(
+      "var(--aurora-accent-default) 52%"
+    );
+    await expect(primaryDuplicateTab.getAttribute("style")).not.toContain(
+      "var(--aurora-accent-default) 52%"
+    );
   }
 };
 
