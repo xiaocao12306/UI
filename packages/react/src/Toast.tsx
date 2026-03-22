@@ -587,6 +587,25 @@ export function Toast({
             setCloseButtonHovered(false);
             setCloseButtonPressed(false);
           }}
+          onPointerDown={(event) => {
+            if (event.pointerType === "mouse" || event.ctrlKey) {
+              return;
+            }
+            if (typeof event.button === "number" && event.button !== 0) {
+              return;
+            }
+            closeButtonFocusIntentRef.current = false;
+            setCloseButtonFocusVisible(false);
+            setCloseButtonPressed(true);
+          }}
+          onPointerUp={(event) => {
+            if (
+              event.pointerType !== "mouse" &&
+              (typeof event.button !== "number" || event.button === 0)
+            ) {
+              setCloseButtonPressed(false);
+            }
+          }}
           onMouseDown={(event) => {
             if (event.button !== 0 || event.ctrlKey) {
               return;

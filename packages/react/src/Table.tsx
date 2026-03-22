@@ -602,6 +602,34 @@ export function Table<T>({
                           currentKey === columnRenderKey ? null : currentKey
                         );
                       }}
+                      onPointerDown={(event) => {
+                        if (sortDisabled) {
+                          return;
+                        }
+
+                        if (event.pointerType === "mouse" || event.ctrlKey) {
+                          return;
+                        }
+                        if (typeof event.button === "number" && event.button !== 0) {
+                          return;
+                        }
+
+                        sortFocusIntentRef.current = false;
+                        setFocusVisibleSortKey((currentKey) =>
+                          currentKey === columnRenderKey ? null : currentKey
+                        );
+                        setPressedSortKey(columnRenderKey);
+                      }}
+                      onPointerUp={(event) => {
+                        if (
+                          event.pointerType !== "mouse" &&
+                          (typeof event.button !== "number" || event.button === 0)
+                        ) {
+                          setPressedSortKey((currentKey) =>
+                            currentKey === columnRenderKey ? null : currentKey
+                          );
+                        }
+                      }}
                       onMouseDown={(event) => {
                         if (sortDisabled) {
                           return;

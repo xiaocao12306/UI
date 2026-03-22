@@ -1542,6 +1542,25 @@ describe("Tabs", () => {
     expect(twoTab.style.transform).toBe("translateY(0)");
   });
 
+  it("applies pressed offset for non-mouse primary pointer interactions", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    fireEvent.pointerDown(twoTab, { pointerType: "touch", button: 0 });
+    expect(twoTab.style.transform).toBe("translateY(1px)");
+
+    fireEvent.pointerUp(twoTab, { pointerType: "touch", button: 0 });
+    expect(twoTab.style.transform).toBe("translateY(0)");
+  });
+
   it("applies pressed offset for manual keyboard activation keys and clears on keyup", () => {
     render(
       <Tabs

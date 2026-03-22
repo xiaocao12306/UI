@@ -1222,6 +1222,17 @@ describe("Toast", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 
+  it("applies pressed transform for non-mouse primary pointer interactions", () => {
+    render(<Toast open title="Touch pressable" duration={0} />);
+
+    const closeButton = screen.getByRole("button", { name: "Close toast" });
+    fireEvent.pointerDown(closeButton, { pointerType: "touch", button: 0 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+
+    fireEvent.pointerUp(closeButton, { pointerType: "touch", button: 0 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+  });
+
   it("applies pressed transform for unmodified keyboard activation keys and ignores modified chords", () => {
     render(<Toast open title="Keyboard pressable" duration={0} />);
 

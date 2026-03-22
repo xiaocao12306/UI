@@ -1327,6 +1327,29 @@ describe("Table", () => {
     expect(sortButton.style.transform).toBe("translateY(0)");
   });
 
+  it("applies sortable-header pressed offset for non-mouse primary pointer interactions", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    fireEvent.pointerDown(sortButton, { pointerType: "touch", button: 0 });
+    expect(sortButton.style.transform).toBe("translateY(1px)");
+
+    fireEvent.pointerUp(sortButton, { pointerType: "touch", button: 0 });
+    expect(sortButton.style.transform).toBe("translateY(0)");
+  });
+
   it("applies pressed offset while keyboard activation key is held on sortable headers", async () => {
     const user = userEvent.setup();
 

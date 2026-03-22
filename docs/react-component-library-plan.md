@@ -935,6 +935,7 @@
   - Toast 关闭按钮 pointercancel 按下态收口（2026-03-22 latest+252：Toast close-button 增加 `onPointerCancel` 按下态清理，避免指针交互被浏览器/宿主中断后残留 `translateY(1px)` 的按下视觉；同步 `Toast.test.tsx` 回归断言，复验 `pnpm --filter @aurora-ui/react exec vitest run src/Toast.test.tsx` 通过）
   - Tabs/Table pointercancel 按下态一致性收口（2026-03-22 latest+253：Tabs tab 与 Table sortable-header 增加 `onPointerCancel` 按下态清理，避免拖拽中断/系统手势抢占后残留 `translateY(1px)` 视觉；同步 `Tabs.test.tsx`、`Table.test.tsx` 回归断言，复验 `pnpm --filter @aurora-ui/react exec vitest run src/Tabs.test.tsx src/Table.test.tsx` 通过）
   - Toast/Tabs/Table 主键按下态 Storybook 可视回归补齐（2026-03-22 latest+254：在 `CloseButtonPrimaryPointerOnly`、`PrimaryPointerOnlyPressedState`、`PrimaryPointerOnlySortPress` 的 play 测试中补齐 `pointercancel` 断言，确保验收面板同步覆盖指针中断后按下态回收语义；复验 `pnpm storybook:test:grep \"Toast.stories.tsx\"`、`pnpm storybook:test:grep \"Tabs.stories.tsx\"`、`pnpm storybook:test:grep \"Table.stories.tsx\"` 通过）
+  - Toast/Tabs/Table 非鼠标主键指针按下反馈收口（2026-03-22 latest+255：Toast close-button、Tabs tab、Table sortable-header 补齐 touch/pen 主键指针的 pressed 视觉生命周期（`pointerdown -> pointerup/pointercancel`），提升移动端交互一致性；同步三组件单测与 Storybook `PrimaryPointer*` 场景断言，复验 `pnpm --filter @aurora-ui/react exec vitest run src/Toast.test.tsx src/Tabs.test.tsx src/Table.test.tsx`、`pnpm storybook:test:grep \"Toast.stories.tsx\"`、`pnpm storybook:test:grep \"Tabs.stories.tsx\"`、`pnpm storybook:test:grep \"Table.stories.tsx\"` 通过）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

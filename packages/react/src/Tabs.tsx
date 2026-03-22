@@ -433,6 +433,32 @@ export function Tabs({
                 setHoveredTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
                 setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
               }}
+              onPointerDown={(event) => {
+                if (disabled) {
+                  return;
+                }
+
+                if (event.pointerType === "mouse" || event.ctrlKey) {
+                  return;
+                }
+                if (typeof event.button === "number" && event.button !== 0) {
+                  return;
+                }
+
+                focusIntentRef.current = false;
+                setFocusVisibleTabKey((currentKey) =>
+                  currentKey === item.key ? null : currentKey
+                );
+                setPressedTabKey(item.key);
+              }}
+              onPointerUp={(event) => {
+                if (
+                  event.pointerType !== "mouse" &&
+                  (typeof event.button !== "number" || event.button === 0)
+                ) {
+                  setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
+                }
+              }}
               onMouseDown={(event) => {
                 if (disabled) {
                   return;

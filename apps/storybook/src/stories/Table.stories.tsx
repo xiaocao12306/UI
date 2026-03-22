@@ -380,6 +380,12 @@ export const PrimaryPointerOnlySortPress: Story = {
     await expect(sortButton.style.transform).toContain("translateY(0");
     await expect(sortState).toHaveTextContent("id asc");
 
+    fireEvent.pointerDown(sortButton, { pointerType: "touch", button: 0 });
+    await expect(sortButton.style.transform).toContain("translateY(1px)");
+    fireEvent.pointerUp(sortButton, { pointerType: "touch", button: 0 });
+    await expect(sortButton.style.transform).toContain("translateY(0");
+    await expect(sortState).toHaveTextContent("id asc");
+
     await userEvent.click(sortButton);
     await expect(sortState).toHaveTextContent("id desc");
   }
