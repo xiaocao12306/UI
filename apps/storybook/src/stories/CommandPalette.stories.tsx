@@ -941,6 +941,8 @@ export const CloseButtonFocusIntentReentry: Story = {
     await userEvent.tab({ shift: true });
     await expect(closeButton).toHaveFocus();
     await expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+    fireEvent.mouseDown(closeButton, { button: 0, ctrlKey: true });
+    await expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
   }
 };
 
