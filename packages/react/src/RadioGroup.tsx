@@ -181,6 +181,9 @@ export function RadioGroup({
     if (disabled || optionDisabled) {
       return;
     }
+    if (currentValue === nextValue) {
+      return;
+    }
     if (value === undefined) {
       setInternalValue(nextValue);
     }

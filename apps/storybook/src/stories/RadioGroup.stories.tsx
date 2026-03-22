@@ -167,6 +167,9 @@ export const DuplicateValueSingleCheckedSemantics: Story = {
     const stable = canvas.getByRole("radio", { name: "React stable" });
     await expect(legacy).not.toBeChecked();
     await expect(stable).toBeChecked();
+    await userEvent.click(legacy);
+    await expect(stable).toBeChecked();
+    await expect(legacy).not.toBeChecked();
   }
 };
 

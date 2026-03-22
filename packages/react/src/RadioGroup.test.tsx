@@ -147,6 +147,30 @@ describe("RadioGroup", () => {
     }
   });
 
+  it("suppresses duplicate-value no-op onChange telemetry when selected value is unchanged", () => {
+    const onChange = vi.fn();
+    render(
+      <RadioGroup
+        name="Duplicate no-op telemetry"
+        value="react"
+        onChange={onChange}
+        options={[
+          { label: "React stable", value: "react" },
+          { label: "React legacy", value: "react" },
+          { label: "Vue", value: "vue" }
+        ]}
+      />
+    );
+
+    const stable = screen.getByRole("radio", { name: "React stable" });
+    const legacy = screen.getByRole("radio", { name: "React legacy" });
+    fireEvent.click(legacy);
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(stable).toBeChecked();
+    expect(legacy).not.toBeChecked();
+  });
+
   it("avoids duplicate-key errors and keeps focus styling isolated with duplicate values", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
