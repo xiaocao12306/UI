@@ -243,6 +243,15 @@ describe("Toast", () => {
     expect(screen.queryByRole("dialog", { name: "Passive update" })).toBeNull();
   });
 
+  it("treats blank-string action as non-actionable live region", () => {
+    render(<Toast open title="Passive update" action="   " />);
+
+    const toast = screen.getByRole("status", { name: "Passive update" });
+    expect(toast).toHaveAttribute("aria-live", "polite");
+    expect(toast).not.toHaveAttribute("aria-modal");
+    expect(screen.queryByRole("dialog", { name: "Passive update" })).toBeNull();
+  });
+
   it("supports overriding live-region politeness", () => {
     render(<Toast open title="Background sync" live="off" duration={0} />);
     expect(screen.getByRole("status", { name: "Background sync" })).toHaveAttribute("aria-live", "off");

@@ -370,6 +370,29 @@ export const ActionRequiredDanger: Story = {
   }
 };
 
+function BlankActionSemanticsDemo() {
+  return (
+    <ToastShowcase align="start">
+      <Toast
+        open
+        onOpenChange={() => {}}
+        title="Passive update"
+        description="Blank action content should not upgrade toast role semantics."
+        action="   "
+      />
+    </ToastShowcase>
+  );
+}
+
+export const BlankActionSemantics: Story = {
+  render: () => <BlankActionSemanticsDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await expect(canvas.getByRole("status", { name: "Passive update" })).toBeInTheDocument();
+    await expect(canvas.queryByRole("dialog", { name: "Passive update" })).toBeNull();
+  }
+};
+
 function CloseReasonTelemetryDemo() {
   const [open, setOpen] = React.useState(true);
   const [lastReason, setLastReason] = React.useState("none");

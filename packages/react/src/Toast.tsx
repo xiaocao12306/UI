@@ -203,7 +203,7 @@ export function Toast({
   const timeoutRef = React.useRef<number | null>(null);
   const timerWindowRef = React.useRef<Window | null>(null);
   const timerStartedAtRef = React.useRef(0);
-  const hasAction = React.Children.toArray(action).length > 0;
+  const hasAction = hasRenderableToastNode(action);
   const resolvedDuration = duration ?? (hasAction ? 0 : 4000);
   const remainingDurationRef = React.useRef(resolvedDuration);
   const [documentHidden, setDocumentHidden] = React.useState(false);
