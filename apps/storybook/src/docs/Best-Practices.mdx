@@ -70,12 +70,13 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat blank textarea `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank switch `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank date-picker `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
-- Keep switch keyboard toggle and pressed-state feedback scoped to unmodified `Space` keys (` ` / `Space` / `Spacebar`); `Ctrl/Meta/Alt + Space` should remain host shortcut behavior, and IME composition key paths (`isComposing` / `keyCode=229`) should stay no-op.
+- Keep switch keyboard toggle and pressed-state feedback scoped to unmodified `Space` keys (` ` / `Space` / `Spacebar`) and ignore `event.repeat` long-press pulses; `Ctrl/Meta/Alt + Space` should remain host shortcut behavior, and IME composition key paths (`isComposing` / `keyCode=229`) should stay no-op.
 - Keep switch shortcut hints precise: expose `aria-keyshortcuts="Space"` only while actionable, and remove shortcut metadata when switch is disabled.
 - For icon/non-text switch label or description content, provide `aria-labelledby` when a visible heading exists, otherwise provide `aria-label`; rich content with inline `aria-label` is auto-detected, and development builds warn when naming is still missing.
 - Prefer `ariaLabelledBy` for radio groups when a visible heading already exists; use `ariaLabel` for standalone groups without nearby title context.
 - Keep radio option shortcut hints precise: expose `aria-keyshortcuts="Space"` only on actionable options, and remove shortcut metadata from disabled options.
 - Keep `RadioGroup.options[].value` unique and stable; development builds warn on duplicate values and runtime render keys auto-suffix duplicates for React stability, but unique values are still required for deterministic checked/focus semantics.
+- When disabling an entire RadioGroup, prefer `disabled` at group level so all options become non-interactive and the container exposes `aria-disabled="true"` for assistive-tech clarity.
 - For icon/non-text radio options, prefer `options[].ariaLabelledBy` when a visible heading already exists; otherwise provide `options[].ariaLabel`. Rich labels that expose inline `aria-label` are auto-detected, and development builds warn when both naming paths are missing.
 - Keep radio-group `direction` aligned with visual layout so `aria-orientation` stays truthful (`horizontal` for inline groups, `vertical` for stacked groups).
 - Keep input Enter active feedback scoped to unmodified keys: ignore `Ctrl/Meta/Alt + Enter` shortcut chords, while allowing normal `Enter` and `Shift+Enter` intent.

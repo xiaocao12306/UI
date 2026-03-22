@@ -108,7 +108,7 @@ export const KeyboardToggle: Story = {
   args: {
     defaultChecked: false,
     label: "Keyboard mode",
-    description: "Press and hold Space to toggle with visible pressed feedback."
+    description: "Press and hold Space to toggle once with visible pressed feedback."
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -119,6 +119,9 @@ export const KeyboardToggle: Story = {
     await waitFor(() => {
       expect(control).toHaveAttribute("data-pressed", "true");
     });
+    await expect(control).toHaveAttribute("aria-checked", "true");
+    fireEvent.keyDown(control, { key: " ", repeat: true });
+    fireEvent.keyDown(control, { key: "Spacebar", repeat: true });
     await expect(control).toHaveAttribute("aria-checked", "true");
     fireEvent.keyUp(control, { key: " " });
     await waitFor(() => {

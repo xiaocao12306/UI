@@ -296,6 +296,9 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         }
 
         event.preventDefault();
+        if (event.repeat) {
+          return;
+        }
         setPressed(true);
         handleToggle();
       }}

@@ -50,6 +50,19 @@ describe("RadioGroup", () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it("exposes aria-disabled on radiogroup when group is disabled", () => {
+    render(<RadioGroup name="Disabled group" disabled options={baseOptions} />);
+
+    const group = screen.getByRole("radiogroup", { name: "Disabled group" });
+    expect(group).toHaveAttribute("aria-disabled", "true");
+    expect(screen.getByRole("radio", { name: "Small" })).toBeDisabled();
+  });
+
+  it("keeps radiogroup aria-disabled unset when group remains actionable", () => {
+    render(<RadioGroup name="Actionable group" disabled={false} options={baseOptions} />);
+    expect(screen.getByRole("radiogroup", { name: "Actionable group" })).not.toHaveAttribute("aria-disabled");
+  });
+
   it("renders numeric option descriptions instead of treating them as empty", () => {
     render(
       <RadioGroup

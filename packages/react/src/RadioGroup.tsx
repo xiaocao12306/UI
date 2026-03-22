@@ -193,6 +193,7 @@ export function RadioGroup({
       aria-labelledby={resolvedAriaLabelledBy}
       aria-orientation={direction}
       aria-invalid={resolvedInvalidAria}
+      aria-disabled={disabled || undefined}
     >
       {options.map((option, index) => {
         const optionDisabled = Boolean(disabled || option.disabled);

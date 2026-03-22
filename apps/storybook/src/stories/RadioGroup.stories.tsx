@@ -99,6 +99,24 @@ export const DisabledOption: Story = {
   }
 };
 
+export const GroupDisabledSemantics: Story = {
+  args: {
+    name: "Maintenance window",
+    disabled: true,
+    defaultValue: "stable",
+    options: [
+      { label: "Stable", value: "stable" },
+      { label: "Canary", value: "canary" }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const group = canvas.getByRole("radiogroup", { name: "Maintenance window" });
+    await expect(group).toHaveAttribute("aria-disabled", "true");
+    await expect(canvas.getByRole("radio", { name: "Stable" })).toBeDisabled();
+  }
+};
+
 export const NumericDescriptionSemantics: Story = {
   args: {
     name: "Numeric descriptions",

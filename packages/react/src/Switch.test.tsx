@@ -41,6 +41,19 @@ describe("Switch", () => {
     expect(onCheckedChange).toHaveBeenCalledWith(true);
   });
 
+  it("ignores repeated keyboard activation while Space is held", () => {
+    const onCheckedChange = vi.fn();
+    render(<Switch label="Repeat keyboard toggle" checked={false} onCheckedChange={onCheckedChange} />);
+
+    const control = screen.getByRole("switch", { name: "Repeat keyboard toggle" });
+    fireEvent.keyDown(control, { key: " " });
+    fireEvent.keyDown(control, { key: " ", repeat: true });
+    fireEvent.keyDown(control, { key: "Spacebar", repeat: true });
+
+    expect(onCheckedChange).toHaveBeenCalledTimes(1);
+    expect(onCheckedChange).toHaveBeenLastCalledWith(true);
+  });
+
   it("exposes keyboard pressed-state feedback only while activation key is held", () => {
     const onCheckedChange = vi.fn();
     render(<Switch label="Keyboard pressed switch" checked={false} onCheckedChange={onCheckedChange} />);
