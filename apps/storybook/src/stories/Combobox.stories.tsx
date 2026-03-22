@@ -206,6 +206,10 @@ export const ModifierKeyGuard: Story = {
     await expect(canvas.getByTestId("combobox-modifier-selected-value")).toHaveTextContent("react");
     await expect(canvas.getByRole("listbox", { name: "Framework modifier guard options" })).toBeInTheDocument();
 
+    fireEvent.keyDown(input, { key: "Enter", repeat: true });
+    await expect(canvas.getByRole("listbox", { name: "Framework modifier guard options" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("combobox-modifier-selected-value")).toHaveTextContent("react");
+
     await userEvent.keyboard("{Meta>}{Escape}{/Meta}");
     await expect(canvas.getByRole("listbox", { name: "Framework modifier guard options" })).toBeInTheDocument();
 

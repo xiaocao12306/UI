@@ -452,6 +452,9 @@ export function Combobox({
 
           if (event.key === "Enter" && open && activeIndex >= 0) {
             event.preventDefault();
+            if (event.repeat) {
+              return;
+            }
             const item = filtered[activeIndex];
             if (item) {
               selectOption(item);

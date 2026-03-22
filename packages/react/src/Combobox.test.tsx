@@ -404,6 +404,23 @@ describe("Combobox", () => {
     expect(onValueChange).toHaveBeenCalledWith("vue");
   });
 
+  it("ignores repeated Enter keydown to avoid duplicate selection", () => {
+    const onValueChange = vi.fn();
+    render(<Combobox options={options} onValueChange={onValueChange} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "Enter", repeat: true });
+
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+
+    fireEvent.keyDown(input, { key: "Enter", repeat: false });
+    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange).toHaveBeenCalledWith("vue");
+  });
+
   it("supports Home and End keyboard jumps", () => {
     render(<Combobox options={options} onValueChange={() => {}} />);
 
