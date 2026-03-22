@@ -154,6 +154,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For icon/non-text dialog/drawer titles, provide `ariaLabelledBy` when a visible heading exists, otherwise provide `ariaLabel`; development builds warn when both naming paths are missing.
 - Keep close-button focus intent primary-only in dialog/drawer surfaces so non-primary pointer interactions (for example context/right-click) do not clear keyboard focus-visible feedback.
 - Keep dialog/drawer close-button keyboard pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); keep `aria-keyshortcuts="Enter Space"` visible for AT/QA discoverability, and ensure preempted keydown (`event.defaultPrevented`), `Ctrl/Meta/Alt` chords, plus IME composition key paths (`isComposing` / `keyCode=229`) do not trigger pressed visuals.
+- Keep dialog/drawer focus-trap cycling scoped to unmodified `Tab`/`Shift+Tab`; `Ctrl/Meta/Alt + Tab` chords should pass through for host/browser shortcut handling.
 - Keep dialog/drawer Escape shortcut hints explicit (`aria-keyshortcuts="Escape"`) only when `closeOnEscape` is enabled so dismiss affordance metadata matches runtime policy.
 - Popover and Dropdown should restore focus to trigger on keyboard dismissal (Escape), but keep pointer target focus on outside-click dismissal.
 - For blocking confirmation/action menus, set `closeOnEscape={false}` + `closeOnOutsidePointer={false}` and provide an explicit close/confirm path.

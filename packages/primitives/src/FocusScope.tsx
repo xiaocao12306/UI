@@ -25,7 +25,8 @@ export function FocusScope({
       return;
     }
 
-    previouslyFocusedRef.current = document.activeElement as HTMLElement;
+    const ownerDocument = container.ownerDocument;
+    previouslyFocusedRef.current = ownerDocument.activeElement as HTMLElement;
 
     if (autoFocus) {
       const focusableElements = getFocusableElements(container);
@@ -49,11 +50,15 @@ export function FocusScope({
       if (!trapped || event.key !== "Tab") {
         return;
       }
+      if (event.altKey || event.ctrlKey || event.metaKey) {
+        return;
+      }
 
       const container = containerRef.current;
       if (!container) {
         return;
       }
+      const ownerDocument = container.ownerDocument;
 
       const focusables = getFocusableElements(container);
       if (focusables.length === 0) {
@@ -61,7 +66,7 @@ export function FocusScope({
         return;
       }
 
-      const currentIndex = focusables.indexOf(document.activeElement as HTMLElement);
+      const currentIndex = focusables.indexOf(ownerDocument.activeElement as HTMLElement);
       const isBackward = event.shiftKey;
 
       if (!loop && ((isBackward && currentIndex <= 0) || (!isBackward && currentIndex === focusables.length - 1))) {

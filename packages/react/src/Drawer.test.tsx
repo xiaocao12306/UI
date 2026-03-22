@@ -1,5 +1,5 @@
 import * as React from "react";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Dialog } from "./Dialog";
@@ -898,6 +898,43 @@ describe("Drawer", () => {
 
     await user.tab({ shift: true });
     expect(secondaryAction).toHaveFocus();
+  });
+
+  it("ignores modified Tab chords inside drawer focus trap", () => {
+    render(
+      <Drawer open onOpenChange={() => {}} title="Modified Tab focus trap drawer">
+        <button type="button">Primary action</button>
+        <button type="button">Secondary action</button>
+      </Drawer>
+    );
+
+    const secondaryAction = screen.getByRole("button", { name: "Secondary action" });
+    act(() => {
+      secondaryAction.focus();
+    });
+
+    const modifiedTabEvents = [
+      { ctrlKey: true },
+      { altKey: true },
+      { metaKey: true }
+    ] as const;
+
+    modifiedTabEvents.forEach((modifier) => {
+      act(() => {
+        secondaryAction.focus();
+      });
+      const tabEvent = new KeyboardEvent("keydown", {
+        key: "Tab",
+        bubbles: true,
+        cancelable: true,
+        ...modifier
+      });
+      act(() => {
+        secondaryAction.dispatchEvent(tabEvent);
+      });
+      expect(tabEvent.defaultPrevented).toBe(false);
+      expect(secondaryAction).toHaveFocus();
+    });
   });
 
   it("locks body scroll while open and restores when closed", () => {
