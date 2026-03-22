@@ -75,6 +75,11 @@ const readinessRows = [
   { component: "Dialog", status: "Stable", coverage: 88 },
   { component: "StreamingCodeBlock", status: "Beta", coverage: 73 }
 ];
+const nonSortableReadinessRows = [
+  { component: "Button", owner: "Design System", milestone: "Shipping signoff" },
+  { component: "Dialog", owner: "Platform UI", milestone: "Accessibility review" },
+  { component: "PromptInput", owner: "AI UX", milestone: "Integration staging" }
+];
 
 function parseReleaseEntry(entry: string) {
   const [versionSegment, ...detailSegments] = entry.split(":");
@@ -1293,6 +1298,39 @@ function App() {
                     ]}
                   />
                 </div>
+                <div className="demo-panel">
+                  <h3 style={sectionSubheadingStyle}>All-Disabled Discoverability</h3>
+                  <p style={mutedBodyStyle}>
+                    Even when every stage is disabled, the tablist stays keyboard-reachable so
+                    assistive users can still discover workflow lock state.
+                  </p>
+                  <Tabs
+                    ariaLabel="All disabled release workflow tabs"
+                    activationMode="manual"
+                    items={[
+                      {
+                        key: "draft-disabled",
+                        label: "Draft",
+                        content: (
+                          <p style={{ margin: 0 }}>
+                            Draft stage is locked until dependencies are complete.
+                          </p>
+                        ),
+                        disabled: true
+                      },
+                      {
+                        key: "release-disabled",
+                        label: "Release",
+                        content: (
+                          <p style={{ margin: 0 }}>
+                            Release stage is locked until release review is approved.
+                          </p>
+                        ),
+                        disabled: true
+                      }
+                    ]}
+                  />
+                </div>
               </div>
               <div className="demo-two-column">
                 <div className="demo-panel">
@@ -1349,6 +1387,28 @@ function App() {
                     <Button variant="outline" onClick={() => setTableRtl((value) => !value)}>
                       Toggle table RTL mode
                     </Button>
+                  </div>
+                  <div className="demo-inline-surface">
+                    <h4 style={sectionSubheadingStyle}>Non-Sortable Scroll Region</h4>
+                    <p style={mutedBodyStyle}>
+                      Focus this overflow region and use{" "}
+                      <kbd style={keyboardHintStyle}>ArrowLeft</kbd>/
+                      <kbd style={keyboardHintStyle}>ArrowRight</kbd>,{" "}
+                      <kbd style={keyboardHintStyle}>Home</kbd>/<kbd style={keyboardHintStyle}>End</kbd>,
+                      and <kbd style={keyboardHintStyle}>PageUp</kbd>/
+                      <kbd style={keyboardHintStyle}>PageDown</kbd> to pan horizontally.
+                    </p>
+                    <div className="demo-table-scroll-fallback-shell">
+                      <Table
+                        ariaLabel="Non-sortable readiness snapshot"
+                        columns={[
+                          { key: "component", header: "Component", rowHeader: true },
+                          { key: "owner", header: "Owner" },
+                          { key: "milestone", header: "Milestone" }
+                        ]}
+                        data={nonSortableReadinessRows}
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="demo-panel">

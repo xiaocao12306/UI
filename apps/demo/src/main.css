@@ -724,6 +724,24 @@
   gap: 8px;
 }
 
+.demo-inline-surface {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: var(--aurora-radius-sm);
+  border: 1px solid color-mix(in srgb, var(--aurora-border-default) 78%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--aurora-surface-elevated) 88%, var(--aurora-surface-default)),
+      color-mix(in srgb, var(--aurora-surface-elevated) 70%, var(--aurora-surface-default))
+    );
+}
+
+.demo-table-scroll-fallback-shell {
+  max-width: 340px;
+}
+
 .demo-overlay-groups {
   display: grid;
   gap: 10px;

@@ -1461,6 +1461,73 @@ test("shows empty table state and keeps sort controls disabled", async ({ page }
   await expect(table.getByRole("rowheader", { name: "Button" })).toBeVisible();
 });
 
+test("keeps all-disabled tabs discoverable through tablist fallback focus", async ({ page }) => {
+  await page.goto("/");
+
+  const disabledTablist = page.getByRole("tablist", {
+    name: "All disabled release workflow tabs"
+  });
+  await expect(disabledTablist).toHaveAttribute("aria-disabled", "true");
+  await expect(disabledTablist).toHaveAttribute("tabindex", "0");
+
+  const disabledTabs = disabledTablist.getByRole("tab");
+  await expect(disabledTabs).toHaveCount(2);
+  await expect(disabledTabs.nth(0)).toBeDisabled();
+  await expect(disabledTabs.nth(1)).toBeDisabled();
+
+  await disabledTablist.focus();
+  await expect(disabledTablist).toBeFocused();
+});
+
+test("supports keyboard panning in non-sortable table scroll region and respects preempted keydown", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  const scrollRegion = page.getByRole("region", { name: "Non-sortable readiness snapshot" });
+  await expect(scrollRegion).toHaveAttribute(
+    "aria-keyshortcuts",
+    "ArrowLeft ArrowRight Home End PageDown PageUp"
+  );
+
+  await scrollRegion.focus();
+  await expect(scrollRegion).toBeFocused();
+  await scrollRegion.press("Home");
+  await expect.poll(() => scrollRegion.evaluate((element) => (element as HTMLElement).scrollLeft)).toBe(
+    0
+  );
+
+  await scrollRegion.press("ArrowRight");
+  await expect
+    .poll(() => scrollRegion.evaluate((element) => (element as HTMLElement).scrollLeft))
+    .toBeGreaterThan(0);
+
+  await scrollRegion.press("Home");
+  await expect.poll(() => scrollRegion.evaluate((element) => (element as HTMLElement).scrollLeft)).toBe(
+    0
+  );
+
+  await scrollRegion.evaluate((element) => {
+    const preemptHandler = (event: KeyboardEvent) => event.preventDefault();
+    element.addEventListener("keydown", preemptHandler, true);
+    (element as HTMLElement & { __preemptScrollHandler?: EventListener }).__preemptScrollHandler =
+      preemptHandler;
+  });
+
+  await scrollRegion.press("ArrowRight");
+  await expect.poll(() => scrollRegion.evaluate((element) => (element as HTMLElement).scrollLeft)).toBe(
+    0
+  );
+
+  await scrollRegion.evaluate((element) => {
+    const hostElement = element as HTMLElement & { __preemptScrollHandler?: EventListener };
+    if (hostElement.__preemptScrollHandler) {
+      hostElement.removeEventListener("keydown", hostElement.__preemptScrollHandler, true);
+      delete hostElement.__preemptScrollHandler;
+    }
+  });
+});
+
 test("keeps manual tabs panel stable until Enter activation", async ({ page }) => {
   await page.goto("/");
 
