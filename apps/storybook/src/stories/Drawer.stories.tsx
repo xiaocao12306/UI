@@ -137,6 +137,36 @@ export const IconTitleAriaLabelFallback: Story = {
   }
 };
 
+function NumericDescriptionDrawerDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <Drawer
+        open={open}
+        onOpenChange={setOpen}
+        title="Numeric description drawer"
+        description={0}
+      >
+        <p style={storyParagraphStyle}>Drawer description supports numeric ReactNode content.</p>
+      </Drawer>
+    </StoryFullscreenFrame>
+  );
+}
+
+export const NumericDescriptionSemantics: Story = {
+  render: () => <NumericDescriptionDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const drawer = await body.findByRole("dialog", { name: "Numeric description drawer" });
+    const descriptions = body.getAllByText("0");
+
+    await expect(descriptions).toHaveLength(1);
+    await expect(descriptions[0].tagName).toBe("P");
+    await expect(drawer).toHaveAttribute("aria-describedby", descriptions[0].id);
+  }
+};
+
 function NonDismissibleDrawerDemo() {
   const [open, setOpen] = React.useState(true);
 

@@ -349,6 +349,20 @@ describe("Drawer", () => {
     expect(dialog).toHaveAttribute("aria-describedby", description.getAttribute("id"));
   });
 
+  it("treats numeric description as renderable drawer semantics", () => {
+    render(
+      <Drawer open onOpenChange={() => {}} title="Numeric description drawer" description={0}>
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    const dialog = screen.getByRole("dialog", { name: "Numeric description drawer" });
+    const descriptions = screen.getAllByText("0");
+    expect(descriptions).toHaveLength(1);
+    expect(descriptions[0].tagName).toBe("P");
+    expect(dialog).toHaveAttribute("aria-describedby", descriptions[0].getAttribute("id"));
+  });
+
   it("prefers ariaLabelledBy over ariaLabel for drawer naming", () => {
     render(
       <div>
