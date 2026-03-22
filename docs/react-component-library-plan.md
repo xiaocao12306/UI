@@ -932,6 +932,7 @@
   - Combobox 外部关闭主键上下文点击回归补齐（2026-03-22 latest+249：Combobox 的 outside-pointer 关闭回归补齐 `Ctrl + primary click` no-op 断言，确保 context-click 不会误触发下拉关闭，普通主键 outside-pointer 仍保持可关闭；同步组件单测与 Storybook `KeyboardDismissPaths` 交互断言，并更新 Component API/Best Practices 口径，复验 `pnpm --filter @aurora-ui/react exec vitest run src/Combobox.test.tsx`、`pnpm storybook:build`、`pnpm storybook:test:grep \"Combobox.stories.tsx\"` 及 docs parity 相关检查通过）
   - DismissableLayer 跨文档 Ctrl 主键外部关闭基座回归补齐（2026-03-22 latest+250：DismissableLayer 在主文档与 iframe ownerDocument 的 outside-pointer 路径补齐 `Ctrl + primary click` no-op 回归，确保基座层不会把 context-click 误判为普通外部关闭；复验 `pnpm --filter @aurora-ui/primitives exec vitest run src/DismissableLayer.test.tsx` 通过）
   - CommandPalette 跨文档外部关闭 Ctrl 主键隔离回归补齐（2026-03-22 latest+251：在 CommandPalette ownerDocument 隔离用例中补齐 iframe `Ctrl + primary click` no-op 断言，确保 secondary document 的 context-click 不会误触发 `outside-pointer` 关闭；复验 `pnpm --filter @aurora-ui/react exec vitest run src/CommandPalette.test.tsx` 通过）
+  - Toast 关闭按钮 pointercancel 按下态收口（2026-03-22 latest+252：Toast close-button 增加 `onPointerCancel` 按下态清理，避免指针交互被浏览器/宿主中断后残留 `translateY(1px)` 的按下视觉；同步 `Toast.test.tsx` 回归断言，复验 `pnpm --filter @aurora-ui/react exec vitest run src/Toast.test.tsx` 通过）
 - 进行中
   - Storybook 视觉回归实链（待仓库配置 `CHROMATIC_PROJECT_TOKEN` 后产出首次快照基线）
   - Release 实发布验证（待仓库配置 `NPM_TOKEN` 后执行真实 npm publish）

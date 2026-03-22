@@ -601,6 +601,9 @@ export function Toast({
             }
             setCloseButtonPressed(false);
           }}
+          onPointerCancel={() => {
+            setCloseButtonPressed(false);
+          }}
           onKeyDown={(event) => {
             closeButtonFocusIntentRef.current = true;
             if (isComposingToastCloseButtonActivationEvent(event)) {
