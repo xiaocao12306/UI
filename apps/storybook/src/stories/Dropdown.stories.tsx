@@ -973,6 +973,37 @@ export const ShiftTabDismissToPreviousControl: Story = {
   }
 };
 
+export const TabDismissSkipsUnfocusableCandidates: Story = {
+  render: () => (
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
+        <Dropdown label="Tab Skip Menu" items={items} />
+        <button type="button" style={{ display: "none" }}>
+          Hidden Menu Candidate
+        </button>
+        <div inert={true}>
+          <button type="button">Inert Menu Candidate</button>
+        </div>
+        <button type="button">Visible Menu Candidate</button>
+      </div>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Tab Skip Menu" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Tab Skip Menu" })).toBeInTheDocument();
+
+    await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+    await userEvent.keyboard("{Tab}");
+    await waitFor(() => {
+      expect(canvas.queryByRole("menu", { name: "Tab Skip Menu" })).not.toBeInTheDocument();
+    });
+    await expect(canvas.getByRole("button", { name: "Visible Menu Candidate" })).toHaveFocus();
+  }
+};
+
 export const NestedDismissOrder: Story = {
   render: () => (
     <StoryShowcaseFrame gap={8}>
