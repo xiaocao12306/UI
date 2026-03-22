@@ -944,6 +944,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `code`     | `string`                           | Source content to progressively reveal.                                                                             |
 | `language` | `string`                           | Header hint for syntax context.                                                                                     |
 | `speed`    | `number`                           | Milliseconds per character; `0` renders immediately.                                                                |
+| `respectReducedMotion` | `boolean`                | Defaults to `true`; reduced-motion users see full code immediately instead of character-by-character animation.     |
 | `label`    | `string`                           | Accessible region name for assistive tech context; blank values are ignored and fallback to `Streaming code block`. |
 | `ariaLabel` / `ariaLabelledBy` | `string` / `string` | Optional region naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without explicit naming overrides, region naming falls back to `label` (`Streaming code block` default). |
 | `live`     | `'polite' \| 'assertive' \| 'off'` | Optional live-region politeness for progressive code narration; defaults to `off`.                                  |

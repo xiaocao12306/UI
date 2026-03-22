@@ -1,4 +1,5 @@
 import * as React from "react";
+import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
 export type StreamingCodeBlockProps = React.ComponentPropsWithoutRef<"div"> & {
   code: string;
@@ -8,6 +9,7 @@ export type StreamingCodeBlockProps = React.ComponentPropsWithoutRef<"div"> & {
   ariaLabel?: string;
   ariaLabelledBy?: string;
   live?: "polite" | "assertive" | "off";
+  respectReducedMotion?: boolean;
 };
 
 export function StreamingCodeBlock({
@@ -18,10 +20,13 @@ export function StreamingCodeBlock({
   ariaLabel,
   ariaLabelledBy,
   live = "off",
+  respectReducedMotion = true,
   style,
   ...props
 }: StreamingCodeBlockProps) {
   const rootRef = React.useRef<HTMLDivElement | null>(null);
+  const prefersReducedMotion = usePrefersReducedMotion(rootRef);
+  const shouldStream = speed > 0 && code.length > 0 && !(respectReducedMotion && prefersReducedMotion);
   const [visible, setVisible] = React.useState("");
   const resolvedLabel =
     typeof label === "string" && label.trim().length > 0 ? label.trim() : "Streaming code block";
@@ -38,7 +43,7 @@ export function StreamingCodeBlock({
     : explicitAriaLabel ?? resolvedLabel;
 
   React.useEffect(() => {
-    if (speed <= 0 || code.length === 0) {
+    if (!shouldStream) {
       setVisible(code);
       return;
     }
@@ -58,7 +63,7 @@ export function StreamingCodeBlock({
     return () => {
       ownerWindow.clearInterval(id);
     };
-  }, [code, speed]);
+  }, [code, shouldStream, speed]);
 
   return (
     <div

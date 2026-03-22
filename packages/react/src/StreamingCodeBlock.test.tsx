@@ -1,6 +1,7 @@
 import { act, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { StreamingCodeBlock } from "./StreamingCodeBlock";
+import { installMatchMediaMock } from "./test-utils/matchMedia";
 
 describe("StreamingCodeBlock", () => {
   afterEach(() => {
@@ -142,5 +143,34 @@ describe("StreamingCodeBlock", () => {
     setIntervalSpy.mockRestore();
     clearIntervalSpy.mockRestore();
     iframe.remove();
+  });
+
+  it("respects reduced-motion and renders full content immediately", () => {
+    const matchMediaMock = installMatchMediaMock({ initialMatches: true });
+    const { container } = render(<StreamingCodeBlock code="const ready = true;" speed={12} />);
+    const root = container.firstElementChild as HTMLElement;
+    const codeNode = container.querySelector("code") as HTMLElement;
+
+    expect(codeNode).toHaveTextContent("const ready = true;");
+    expect(root).toHaveAttribute("aria-busy", "false");
+
+    matchMediaMock.restore();
+  });
+
+  it("allows streaming under reduced-motion when respectReducedMotion is false", () => {
+    vi.useFakeTimers();
+    const matchMediaMock = installMatchMediaMock({ initialMatches: true });
+
+    const { container } = render(<StreamingCodeBlock code="AB" speed={10} respectReducedMotion={false} />);
+    const codeNode = container.querySelector("code") as HTMLElement;
+
+    expect(codeNode).toHaveTextContent("");
+
+    act(() => {
+      vi.advanceTimersByTime(10);
+    });
+    expect(codeNode).toHaveTextContent("A");
+
+    matchMediaMock.restore();
   });
 });

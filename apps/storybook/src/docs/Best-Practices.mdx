@@ -301,6 +301,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep streaming-code narration `live="off"` for high-frequency token output; enable `live="polite"` only when progressive code updates must be announced.
 - Provide explicit `label` for streaming code regions so screen-reader users can distinguish concurrent AI outputs.
 - For streaming code regions, prefer `ariaLabelledBy` when a visible heading already exists; use `ariaLabel` (or `label` fallback) for standalone code stream panels.
+- Keep `respectReducedMotion` enabled for streaming code by default so reduced-motion users receive immediate full content instead of progressive character animation.
 - Keep command-palette close-button keyboard-intent tracking document-scoped so keyboard re-entry (for example `Shift+Tab` from search input) restores focus-visible fallback consistently, including iframe hosts.
 
 <Canvas of={PromptInputStories.WithAiRequestState} />
