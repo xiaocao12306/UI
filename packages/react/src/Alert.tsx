@@ -186,6 +186,15 @@ export function Alert({
               }
               focusVisibleIntentRef.current = false;
               setCloseButtonFocusVisible(false);
+              setCloseButtonPressed(true);
+            }}
+            onPointerUp={(event) => {
+              if (isPrimaryPointerButton(event.button)) {
+                setCloseButtonPressed(false);
+              }
+            }}
+            onPointerCancel={() => {
+              setCloseButtonPressed(false);
             }}
             onKeyDown={(event) => {
               focusVisibleIntentRef.current = true;

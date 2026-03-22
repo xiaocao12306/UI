@@ -208,6 +208,16 @@ describe("Alert", () => {
 
     fireEvent.mouseUp(closeButton, { button: 0 });
     expect(closeButton).not.toHaveAttribute("data-pressed");
+
+    fireEvent.pointerDown(closeButton, { pointerType: "touch", button: 0 });
+    expect(closeButton).toHaveAttribute("data-pressed", "true");
+    fireEvent.pointerCancel(closeButton);
+    expect(closeButton).not.toHaveAttribute("data-pressed");
+
+    fireEvent.pointerDown(closeButton, { pointerType: "touch", button: -1 });
+    expect(closeButton).toHaveAttribute("data-pressed", "true");
+    fireEvent.pointerUp(closeButton, { pointerType: "touch", button: -1 });
+    expect(closeButton).not.toHaveAttribute("data-pressed");
   });
 
   it("supports keyboard pressed-state feedback for unmodified Enter/Space keys", () => {

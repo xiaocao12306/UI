@@ -358,7 +358,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep toast close-button owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - Keep alert close-button keyboard-intent tracking document-scoped so keyboard re-entry after pointer interactions restores focus-visible fallback consistently.
 - Keep alert close-button owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
-- Keep alert close-button local pointer press feedback primary-only and treat `Ctrl + primary click` as context-click intent so close-button pressed/focus visuals are not triggered on host context-click paths.
+- Keep alert close-button local pointer press feedback primary-only and treat `Ctrl + primary click` as context-click intent so close-button pressed/focus visuals are not triggered on host context-click paths; pressed state should clear on `pointerup`/`pointercancel`, including touch/pen interactions.
 - Keep alert close-button keyboard pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); keep `aria-keyshortcuts="Enter Space"` visible for AT/QA discoverability, and ensure `Ctrl/Meta/Alt` chords plus IME composition key paths (`isComposing` / `keyCode=229`) do not trigger pressed visuals.
 - Prefer `ariaLabelledBy` for toast naming when a visible heading already exists; use `ariaLabel` for standalone icon/non-text titles without nearby heading context.
 - For toast titles without readable text, provide either `ariaLabelledBy` or `ariaLabel`; rich title nodes that expose inline `aria-label` are auto-detected, and development builds warn only when both are missing.
@@ -383,6 +383,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={AlertStories.LabelledByPrecedence} />
 <Canvas of={AlertStories.FocusIntentReentry} />
 <Canvas of={AlertStories.CloseButtonKeyboardPressedState} />
+<Canvas of={AlertStories.CloseButtonPrimaryPointerOnly} />
 
 ## Data Presentation Patterns
 

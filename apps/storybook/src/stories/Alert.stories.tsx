@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Alert, Button } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import { StoryShowcaseFrame } from "./storyShowcase";
 
 function AlertShowcase({ children }: { children: React.ReactNode }) {
@@ -183,5 +183,47 @@ export const CloseButtonKeyboardPressedState: Story = {
     await expect(closeButton).not.toHaveAttribute("data-pressed");
     fireEvent.keyDown(closeButton, { key: "Enter", keyCode: 229, which: 229 });
     await expect(closeButton).not.toHaveAttribute("data-pressed");
+  }
+};
+
+export const CloseButtonPrimaryPointerOnly: Story = {
+  render: () => (
+    <AlertShowcase>
+      <Alert
+        tone="warning"
+        title="Pending action"
+        description="Close button should expose pointer pressed feedback only for primary pointer intent."
+        onClose={() => {}}
+        closeLabel="Pointer-pressed dismiss"
+      />
+    </AlertShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const closeButton = canvas.getByRole("button", { name: "Pointer-pressed dismiss" });
+
+    fireEvent.mouseDown(closeButton, { button: 2 });
+    await expect(closeButton).not.toHaveAttribute("data-pressed");
+
+    fireEvent.mouseDown(closeButton, { button: 0, ctrlKey: true });
+    await expect(closeButton).not.toHaveAttribute("data-pressed");
+
+    fireEvent.mouseDown(closeButton, { button: 0 });
+    await waitFor(() => {
+      expect(closeButton).toHaveAttribute("data-pressed", "true");
+    });
+    fireEvent.pointerCancel(closeButton);
+    await waitFor(() => {
+      expect(closeButton).not.toHaveAttribute("data-pressed");
+    });
+
+    fireEvent.mouseDown(closeButton, { button: 0 });
+    await waitFor(() => {
+      expect(closeButton).toHaveAttribute("data-pressed", "true");
+    });
+    fireEvent.mouseUp(closeButton, { button: 0 });
+    await waitFor(() => {
+      expect(closeButton).not.toHaveAttribute("data-pressed");
+    });
   }
 };
