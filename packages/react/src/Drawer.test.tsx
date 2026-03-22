@@ -6,7 +6,7 @@ import { Dialog } from "./Dialog";
 import { Drawer } from "./Drawer";
 import { Dropdown } from "./Dropdown";
 import { resetBodyScrollLockForTests } from "./bodyScrollLock";
-import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
+import { dispatchCtrlPrimaryPointerDown, dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 afterEach(() => {
   document.body.style.overflow = "";
@@ -244,6 +244,11 @@ describe("Drawer", () => {
     );
 
     dispatchNonPrimaryPointerDown(document.body);
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Ignore right click" })).toBeInTheDocument();
+
+    dispatchCtrlPrimaryPointerDown(document.body);
     expect(onCloseReason).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
     expect(screen.getByRole("dialog", { name: "Ignore right click" })).toBeInTheDocument();

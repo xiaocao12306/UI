@@ -483,6 +483,17 @@ export const CloseReasonTelemetry: Story = {
 
     await userEvent.click(canvas.getByRole("button", { name: "Open Telemetry Dialog" }));
     await expect(await body.findByRole("dialog", { name: "Close Reason Telemetry" })).toBeInTheDocument();
+    outsideTarget.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        button: 0,
+        ctrlKey: true,
+        pointerType: "mouse"
+      })
+    );
+    await expect(body.getByRole("dialog", { name: "Close Reason Telemetry" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dialog-close-reason")).toHaveTextContent("escape-key");
     await userEvent.pointer({ target: outsideTarget, keys: "[MouseLeft]" });
     await expect(canvas.getByTestId("dialog-close-reason")).toHaveTextContent("outside-pointer");
     await expect(canvas.getByTestId("dialog-close-trace")).toHaveTextContent("reason:outside-pointer -> open:false");
