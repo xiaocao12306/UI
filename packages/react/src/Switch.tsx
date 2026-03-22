@@ -29,6 +29,8 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     onMouseDown,
     onMouseUp,
     onPointerDown,
+    onPointerUp,
+    onPointerCancel,
     onKeyDown,
     onKeyUp,
     "aria-invalid": ariaInvalid,
@@ -226,7 +228,28 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
           focusVisibleIntentRef.current = false;
           setFocusVisible(false);
         }
+        if (
+          !disabled &&
+          event.pointerType !== "mouse" &&
+          !event.ctrlKey &&
+          (typeof event.button !== "number" || event.button === 0)
+        ) {
+          setPressed(true);
+        }
         onPointerDown?.(event);
+      }}
+      onPointerUp={(event) => {
+        if (
+          event.pointerType !== "mouse" &&
+          (typeof event.button !== "number" || event.button === 0)
+        ) {
+          setPressed(false);
+        }
+        onPointerUp?.(event);
+      }}
+      onPointerCancel={(event) => {
+        setPressed(false);
+        onPointerCancel?.(event);
       }}
       onMouseUp={(event) => {
         if (event.button === 0) {
