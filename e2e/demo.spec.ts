@@ -1532,6 +1532,38 @@ test("preempts tabs Space activation through local onTabKeyDown guard in lab pan
   await expect(handoffTab).toHaveAttribute("aria-selected", "true");
 });
 
+test("preempts tabs key='Space' alias through local onTabKeyDown guard in lab panel", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  const guardSwitch = page.getByRole("switch", {
+    name: "Guard Tabs managed keys via local onTabKeyDown"
+  });
+  const telemetry = page.getByTestId("tabs-local-guard-telemetry");
+  const tablist = page.getByRole("tablist", { name: "Local guard lab tabs" });
+  const auditTab = tablist.getByRole("tab", { name: "Audit" });
+  const handoffTab = tablist.getByRole("tab", { name: "Handoff" });
+
+  await expect(telemetry).toHaveText("idle");
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await handoffTab.focus();
+  await handoffTab.evaluate((element) => {
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Space", bubbles: true, cancelable: true })
+    );
+  });
+  await expect(telemetry).toHaveText("blocked:Space");
+  await expect(auditTab).toHaveAttribute("aria-selected", "true");
+  await expect(handoffTab).toHaveAttribute("aria-selected", "false");
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(telemetry).toHaveText("idle");
+});
+
 test("mirrors horizontal tab arrows in rtl layout", async ({ page }) => {
   await page.goto("/");
 
@@ -1651,6 +1683,38 @@ test("preempts table sort Space activation through local onSortKeyDown guard in 
   await componentSortButton.focus();
   await componentSortButton.press("Space");
   await expect(sortTelemetry).toHaveText("component:desc");
+});
+
+test("preempts table sort key='Space' alias through local onSortKeyDown guard in lab panel", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  const guardSwitch = page.getByRole("switch", {
+    name: "Guard table sort keys via local onSortKeyDown"
+  });
+  const guardTelemetry = page.getByTestId("table-local-guard-telemetry");
+  const sortTelemetry = page.getByTestId("table-local-sort-telemetry");
+  const table = page.getByRole("table", { name: "Local guard lab readiness table" });
+  const componentSortButton = table.getByRole("button", { name: "Component sort descending" });
+
+  await expect(guardTelemetry).toHaveText("idle");
+  await expect(sortTelemetry).toHaveText("component:asc");
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await componentSortButton.focus();
+  await componentSortButton.evaluate((element) => {
+    element.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Space", bubbles: true, cancelable: true })
+    );
+  });
+  await expect(guardTelemetry).toHaveText("blocked:Space");
+  await expect(sortTelemetry).toHaveText("component:asc");
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(guardTelemetry).toHaveText("idle");
 });
 
 test("navigates demo table sortable headers with ArrowLeft/ArrowRight", async ({ page }) => {
