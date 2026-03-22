@@ -705,9 +705,11 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `cursorChar` / `showCursorWhenDone` | `string` / `boolean` | Cursor visual customization and completion behavior.                                                                         |
 | `respectReducedMotion`              | `boolean`            | Defaults to `true`; reduced-motion users see immediate final text and completion callbacks without token-by-token animation. |
 | `label`                             | `string`             | Accessible narration label for streaming status; blank values are ignored and fallback to `Streaming text`.                  |
+| `ariaLabel` / `ariaLabelledBy`      | `string` / `string`  | Optional live-region naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without explicit naming overrides, streaming status naming falls back to `label` (`Streaming text` default). |
 | `onProgress` / `onComplete`         | callbacks            | Lifecycle hooks for telemetry and completion flow.                                                                           |
 
 <Canvas of={StreamingTextStories.MultilineCursor} />
+<Canvas of={StreamingTextStories.LabelledByPrecedence} />
 
 ### Progress
 

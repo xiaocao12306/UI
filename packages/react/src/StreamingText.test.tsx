@@ -51,6 +51,47 @@ describe("StreamingText", () => {
     expect(screen.getByRole("status", { name: "Streaming text" })).toBeInTheDocument();
   });
 
+  it("supports explicit ariaLabel override", () => {
+    render(<StreamingText text="Result" streaming={false} ariaLabel="Release streaming status" />);
+    const status = screen.getByRole("status", { name: "Release streaming status" });
+    expect(status).toHaveAttribute("aria-label", "Release streaming status");
+    expect(status).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("prefers ariaLabelledBy over ariaLabel and label fallback", () => {
+    render(
+      <div>
+        <h3 id="streaming-heading">Release streaming heading</h3>
+        <StreamingText
+          text="Result"
+          streaming={false}
+          label="Streaming text"
+          ariaLabel="Fallback streaming status"
+          ariaLabelledBy="streaming-heading"
+        />
+      </div>
+    );
+
+    const status = screen.getByRole("status", { name: "Release streaming heading" });
+    expect(status).toHaveAttribute("aria-labelledby", "streaming-heading");
+    expect(status).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and preserves ariaLabel naming", () => {
+    render(
+      <StreamingText
+        text="Result"
+        streaming={false}
+        ariaLabel="Release streaming status"
+        ariaLabelledBy="   "
+      />
+    );
+
+    const status = screen.getByRole("status", { name: "Release streaming status" });
+    expect(status).toHaveAttribute("aria-label", "Release streaming status");
+    expect(status).not.toHaveAttribute("aria-labelledby");
+  });
+
   it("uses ownerDocument window timeout timers in iframe-hosted renders", () => {
     const iframe = document.createElement("iframe");
     document.body.append(iframe);

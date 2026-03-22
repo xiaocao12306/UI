@@ -58,3 +58,25 @@ export const MultilineCursor: Story = {
     </StoryShowcaseFrame>
   )
 };
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 380px)">
+      <h3 id="streaming-heading" style={{ margin: 0 }}>
+        Release streaming heading
+      </h3>
+      <StreamingText
+        text={sample}
+        streaming={false}
+        ariaLabel="Fallback streaming status"
+        ariaLabelledBy="streaming-heading"
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const status = await canvas.findByRole("status", { name: "Release streaming heading" });
+    await expect(status).toHaveAttribute("aria-labelledby", "streaming-heading");
+    await expect(status).not.toHaveAttribute("aria-label");
+  }
+};

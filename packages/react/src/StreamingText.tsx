@@ -14,6 +14,8 @@ export type StreamingTextProps = React.ComponentPropsWithoutRef<"span"> & {
   onProgress?: (visibleText: string, count: number, total: number) => void;
   live?: "polite" | "assertive" | "off";
   label?: string;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
   respectReducedMotion?: boolean;
 };
 
@@ -30,6 +32,8 @@ export function StreamingText({
   onProgress,
   live = "polite",
   label = "Streaming text",
+  ariaLabel,
+  ariaLabelledBy,
   respectReducedMotion = true,
   style,
   ...props
@@ -44,6 +48,17 @@ export function StreamingText({
     typeof label === "string" && label.trim().length > 0
       ? label.trim()
       : "Streaming text";
+  const resolvedAriaLabelledBy =
+    typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
+      ? ariaLabelledBy.trim()
+      : undefined;
+  const explicitAriaLabel =
+    resolvedAriaLabelledBy === undefined && typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+      ? ariaLabel.trim()
+      : undefined;
+  const resolvedAriaLabel = resolvedAriaLabelledBy
+    ? undefined
+    : explicitAriaLabel ?? resolvedLabel;
 
   React.useEffect(() => {
     completedRef.current = false;
@@ -106,7 +121,8 @@ export function StreamingText({
     <span
       ref={rootRef}
       role="status"
-      aria-label={resolvedLabel}
+      aria-label={resolvedAriaLabel}
+      aria-labelledby={resolvedAriaLabelledBy}
       aria-live={live}
       aria-busy={shouldStream && !isComplete}
       style={{ whiteSpace: preserveLineBreaks ? "pre-wrap" : "normal", ...style }}
