@@ -79,7 +79,7 @@ export function Drawer({
       closeButtonFocusIntentRef.current = true;
     };
     const markPointerIntent = (event: Event) => {
-      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+      if ("button" in event && !isPrimaryPointerButton(event.button)) {
         return;
       }
       if ("ctrlKey" in event && event.ctrlKey) {
@@ -203,10 +203,10 @@ export function Drawer({
                       setCloseButtonPressed(false);
                     }}
                     onPointerDown={(event) => {
-                      if (event.pointerType === "mouse" || event.ctrlKey) {
+                      if (event.ctrlKey) {
                         return;
                       }
-                      if (typeof event.button === "number" && event.button !== 0) {
+                      if (!isPrimaryPointerButton(event.button)) {
                         return;
                       }
 
@@ -215,10 +215,7 @@ export function Drawer({
                       setCloseButtonPressed(true);
                     }}
                     onPointerUp={(event) => {
-                      if (
-                        event.pointerType !== "mouse" &&
-                        (typeof event.button !== "number" || event.button === 0)
-                      ) {
+                      if (isPrimaryPointerButton(event.button)) {
                         setCloseButtonPressed(false);
                       }
                     }}
@@ -305,6 +302,10 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
   } catch {
     return fallback;
   }
+}
+
+function isPrimaryPointerButton(button: number | undefined) {
+  return typeof button !== "number" || button <= 0;
 }
 
 function isDrawerCloseButtonActivationKey(key: string) {

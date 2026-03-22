@@ -125,7 +125,7 @@ export function Table<T>({
       sortFocusIntentRef.current = true;
     };
     const markPointerIntent = (event: Event) => {
-      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+      if ("button" in event && !isPrimaryPointerButton(event.button)) {
         return;
       }
       if ("ctrlKey" in event && event.ctrlKey) {
@@ -607,10 +607,10 @@ export function Table<T>({
                           return;
                         }
 
-                        if (event.pointerType === "mouse" || event.ctrlKey) {
+                        if (event.ctrlKey) {
                           return;
                         }
-                        if (typeof event.button === "number" && event.button !== 0) {
+                        if (!isPrimaryPointerButton(event.button)) {
                           return;
                         }
 
@@ -621,10 +621,7 @@ export function Table<T>({
                         setPressedSortKey(columnRenderKey);
                       }}
                       onPointerUp={(event) => {
-                        if (
-                          event.pointerType !== "mouse" &&
-                          (typeof event.button !== "number" || event.button === 0)
-                        ) {
+                        if (isPrimaryPointerButton(event.button)) {
                           setPressedSortKey((currentKey) =>
                             currentKey === columnRenderKey ? null : currentKey
                           );
@@ -977,6 +974,10 @@ function isComposingSortActivationEvent(event: React.KeyboardEvent<HTMLButtonEle
   }
 
   return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
+}
+
+function isPrimaryPointerButton(button: number | undefined) {
+  return typeof button !== "number" || button <= 0;
 }
 
 function resolveFocusVisibleState(target: HTMLButtonElement | null, fallback: boolean) {

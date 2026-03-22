@@ -150,6 +150,11 @@ describe("Input", () => {
     fireEvent.pointerUp(input, { pointerType: "touch", button: 0 });
     expect(input).not.toHaveAttribute("data-active");
 
+    fireEvent.pointerDown(input, { pointerType: "touch", button: -1 });
+    expect(input).toHaveAttribute("data-active", "true");
+    fireEvent.pointerUp(input, { pointerType: "touch", button: -1 });
+    expect(input).not.toHaveAttribute("data-active");
+
     fireEvent.mouseLeave(input);
     expect(input).not.toHaveAttribute("data-hovered");
   });

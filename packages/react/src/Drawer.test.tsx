@@ -660,6 +660,11 @@ describe("Drawer", () => {
     fireEvent.pointerUp(closeButton, { pointerType: "touch", button: 0 });
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
 
+    fireEvent.pointerDown(closeButton, { pointerType: "touch", button: -1 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.pointerUp(closeButton, { pointerType: "touch", button: -1 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
     fireEvent.mouseUp(closeButton, { button: 2 });
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
 

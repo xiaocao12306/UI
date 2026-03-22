@@ -225,15 +225,37 @@ export const PrimaryPointerOnly: Story = {
     await expect(count).toHaveTextContent("0");
 
     fireEvent.mouseDown(button);
-    await expect(button.style.transform).toContain("translateY(1px)");
+    await waitFor(() => {
+      expect(button.style.transform).toContain("translateY(1px)");
+    });
     fireEvent.pointerCancel(button);
-    await expect(button.style.transform).toContain("translateY(0");
+    await waitFor(() => {
+      expect(button.style.transform).not.toContain("translateY(1px)");
+    });
     await expect(count).toHaveTextContent("0");
 
-    fireEvent.pointerDown(button, { pointerType: "touch", button: 0 });
-    await expect(button.style.transform).toContain("translateY(1px)");
-    fireEvent.pointerUp(button, { pointerType: "touch", button: 0 });
-    await expect(button.style.transform).toContain("translateY(0");
+    button.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "touch",
+        button: 0
+      })
+    );
+    await waitFor(() => {
+      expect(button.style.transform).toContain("translateY(1px)");
+    });
+    button.dispatchEvent(
+      new PointerEvent("pointerup", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "touch",
+        button: 0
+      })
+    );
+    await waitFor(() => {
+      expect(button.style.transform).not.toContain("translateY(1px)");
+    });
     await expect(count).toHaveTextContent("0");
 
     await userEvent.click(button);

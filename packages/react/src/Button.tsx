@@ -161,7 +161,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       focusVisibleIntentRef.current = true;
     };
     const markPointerIntent = (event: Event) => {
-      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+      if ("button" in event && !isPrimaryPointerButton(event.button)) {
         return;
       }
       if ("ctrlKey" in event && event.ctrlKey) {
@@ -279,19 +279,15 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         }
         if (
           !interactionDisabled &&
-          event.pointerType !== "mouse" &&
           !event.ctrlKey &&
-          (typeof event.button !== "number" || event.button === 0)
+          isPrimaryPointerButton(event.button)
         ) {
           setPressed(true);
         }
         onPointerDown?.(event);
       }}
       onPointerUp={(event) => {
-        if (
-          event.pointerType !== "mouse" &&
-          (typeof event.button !== "number" || event.button === 0)
-        ) {
+        if (isPrimaryPointerButton(event.button)) {
           setPressed(false);
         }
         onPointerUp?.(event);
@@ -362,6 +358,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
 
 function isButtonActivationKey(key: string) {
   return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
+}
+
+function isPrimaryPointerButton(button: number | undefined) {
+  return typeof button !== "number" || button <= 0;
 }
 
 function isModifiedActivationChord(event: React.KeyboardEvent<HTMLButtonElement>) {

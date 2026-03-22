@@ -133,6 +133,12 @@ describe("Switch", () => {
     fireEvent.pointerUp(control, { pointerType: "touch", button: 0 });
     expect(control).not.toHaveAttribute("data-pressed");
 
+    fireEvent.pointerDown(control, { pointerType: "touch", button: -1 });
+    expect(control).toHaveAttribute("data-pressed", "true");
+
+    fireEvent.pointerUp(control, { pointerType: "touch", button: -1 });
+    expect(control).not.toHaveAttribute("data-pressed");
+
     fireEvent.mouseDown(control, { button: 0 });
     expect(control).toHaveAttribute("data-pressed", "true");
 

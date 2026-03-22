@@ -101,7 +101,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       focusVisibleIntentRef.current = true;
     };
     const markPointerIntent = (event: Event) => {
-      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+      if ("button" in event && !isPrimaryPointerButton(event.button)) {
         return;
       }
       if ("ctrlKey" in event && event.ctrlKey) {
@@ -230,19 +230,15 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         }
         if (
           !disabled &&
-          event.pointerType !== "mouse" &&
           !event.ctrlKey &&
-          (typeof event.button !== "number" || event.button === 0)
+          isPrimaryPointerButton(event.button)
         ) {
           setPressed(true);
         }
         onPointerDown?.(event);
       }}
       onPointerUp={(event) => {
-        if (
-          event.pointerType !== "mouse" &&
-          (typeof event.button !== "number" || event.button === 0)
-        ) {
+        if (isPrimaryPointerButton(event.button)) {
           setPressed(false);
         }
         onPointerUp?.(event);
@@ -353,6 +349,10 @@ function resolveNonEmptyLabel(label: string | undefined) {
 
   const normalized = label.trim();
   return normalized.length > 0 ? normalized : undefined;
+}
+
+function isPrimaryPointerButton(button: number | undefined) {
+  return typeof button !== "number" || button <= 0;
 }
 
 function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {

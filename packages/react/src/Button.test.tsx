@@ -244,6 +244,11 @@ describe("Button", () => {
     fireEvent.pointerUp(button, { pointerType: "touch", button: 0 });
     expect(button.getAttribute("style")).not.toContain("translateY(1px)");
 
+    fireEvent.pointerDown(button, { pointerType: "touch", button: -1 });
+    expect(button.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.pointerUp(button, { pointerType: "touch", button: -1 });
+    expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+
     fireEvent.mouseDown(button, { button: 0 });
     expect(button.getAttribute("style")).toContain("translateY(1px)");
 

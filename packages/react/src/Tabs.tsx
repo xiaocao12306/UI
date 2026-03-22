@@ -258,7 +258,7 @@ export function Tabs({
       focusIntentRef.current = true;
     };
     const markPointerIntent = (event: Event) => {
-      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+      if ("button" in event && !isPrimaryPointerButton(event.button)) {
         return;
       }
       if ("ctrlKey" in event && event.ctrlKey) {
@@ -438,10 +438,10 @@ export function Tabs({
                   return;
                 }
 
-                if (event.pointerType === "mouse" || event.ctrlKey) {
+                if (event.ctrlKey) {
                   return;
                 }
-                if (typeof event.button === "number" && event.button !== 0) {
+                if (!isPrimaryPointerButton(event.button)) {
                   return;
                 }
 
@@ -452,10 +452,7 @@ export function Tabs({
                 setPressedTabKey(item.key);
               }}
               onPointerUp={(event) => {
-                if (
-                  event.pointerType !== "mouse" &&
-                  (typeof event.button !== "number" || event.button === 0)
-                ) {
+                if (isPrimaryPointerButton(event.button)) {
                   setPressedTabKey((currentKey) => (currentKey === item.key ? null : currentKey));
                 }
               }}
@@ -659,6 +656,10 @@ export function Tabs({
 
 function isTabActivationKey(key: string) {
   return key === "Enter" || key === " " || key === "Space" || key === "Spacebar";
+}
+
+function isPrimaryPointerButton(button: number | undefined) {
+  return typeof button !== "number" || button <= 0;
 }
 
 function getTabKeyShortcuts(

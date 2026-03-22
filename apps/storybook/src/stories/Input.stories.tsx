@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, FormField, Input } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import {
   StoryShowcaseFrame,
   storyEmphasisTextStyle,
@@ -117,15 +117,44 @@ export const InteractionA11yParity: Story = {
     fireEvent.keyUp(keyboardInput, { key: "Enter" });
     await expect(keyboardInput).not.toHaveAttribute("data-active");
 
-    fireEvent.pointerDown(keyboardInput, { pointerType: "touch", button: 0 });
-    await expect(keyboardInput).toHaveAttribute("data-active", "true");
+    keyboardInput.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "touch",
+        button: 0
+      })
+    );
+    await waitFor(() => {
+      expect(keyboardInput).toHaveAttribute("data-active", "true");
+    });
     fireEvent.pointerCancel(keyboardInput);
-    await expect(keyboardInput).not.toHaveAttribute("data-active");
+    await waitFor(() => {
+      expect(keyboardInput).not.toHaveAttribute("data-active");
+    });
 
-    fireEvent.pointerDown(keyboardInput, { pointerType: "touch", button: 0 });
-    await expect(keyboardInput).toHaveAttribute("data-active", "true");
-    fireEvent.pointerUp(keyboardInput, { pointerType: "touch", button: 0 });
-    await expect(keyboardInput).not.toHaveAttribute("data-active");
+    keyboardInput.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "touch",
+        button: 0
+      })
+    );
+    await waitFor(() => {
+      expect(keyboardInput).toHaveAttribute("data-active", "true");
+    });
+    keyboardInput.dispatchEvent(
+      new PointerEvent("pointerup", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "touch",
+        button: 0
+      })
+    );
+    await waitFor(() => {
+      expect(keyboardInput).not.toHaveAttribute("data-active");
+    });
 
     const readOnlyInput = canvas.getByRole("textbox", { name: "Read-only propagated input" });
     await expect(readOnlyInput).toHaveAttribute("readonly");

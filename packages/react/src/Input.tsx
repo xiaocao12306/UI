@@ -71,7 +71,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
       focusVisibleIntentRef.current = true;
     };
     const markPointerIntent = (event: Event) => {
-      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+      if ("button" in event && !isPrimaryPointerButton(event.button)) {
         return;
       }
       if ("ctrlKey" in event && event.ctrlKey) {
@@ -194,19 +194,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
         if (
           !isInteractionDisabled &&
           !readOnly &&
-          event.pointerType !== "mouse" &&
           !event.ctrlKey &&
-          (typeof event.button !== "number" || event.button === 0)
+          isPrimaryPointerButton(event.button)
         ) {
           setActive(true);
         }
         onPointerDown?.(event);
       }}
       onPointerUp={(event) => {
-        if (
-          event.pointerType !== "mouse" &&
-          (typeof event.button !== "number" || event.button === 0)
-        ) {
+        if (isPrimaryPointerButton(event.button)) {
           setActive(false);
         }
         onPointerUp?.(event);
@@ -261,6 +257,10 @@ function isModifiedActivationChord(event: React.KeyboardEvent<HTMLInputElement>)
 function isComposingKeyboardEvent(event: React.KeyboardEvent<HTMLInputElement>) {
   const nativeEvent = event.nativeEvent as KeyboardEvent & { isComposing?: boolean; keyCode?: number };
   return Boolean(nativeEvent.isComposing) || nativeEvent.keyCode === 229;
+}
+
+function isPrimaryPointerButton(button: number | undefined) {
+  return typeof button !== "number" || button <= 0;
 }
 
 function resolveFocusVisibleState(target: HTMLInputElement, fallback: boolean) {

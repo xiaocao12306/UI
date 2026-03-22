@@ -308,7 +308,7 @@ export function Toast({
       closeButtonFocusIntentRef.current = true;
     };
     const markPointerIntent = (event: Event) => {
-      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+      if ("button" in event && !isPrimaryPointerButton(event.button)) {
         return;
       }
       if ("ctrlKey" in event && event.ctrlKey) {
@@ -588,10 +588,10 @@ export function Toast({
             setCloseButtonPressed(false);
           }}
           onPointerDown={(event) => {
-            if (event.pointerType === "mouse" || event.ctrlKey) {
+            if (event.ctrlKey) {
               return;
             }
-            if (typeof event.button === "number" && event.button !== 0) {
+            if (!isPrimaryPointerButton(event.button)) {
               return;
             }
             closeButtonFocusIntentRef.current = false;
@@ -599,10 +599,7 @@ export function Toast({
             setCloseButtonPressed(true);
           }}
           onPointerUp={(event) => {
-            if (
-              event.pointerType !== "mouse" &&
-              (typeof event.button !== "number" || event.button === 0)
-            ) {
+            if (isPrimaryPointerButton(event.button)) {
               setCloseButtonPressed(false);
             }
           }}
@@ -707,6 +704,10 @@ function isComposingToastCloseButtonActivationEvent(event: React.KeyboardEvent<H
   }
 
   return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
+}
+
+function isPrimaryPointerButton(button: number | undefined) {
+  return typeof button !== "number" || button <= 0;
 }
 
 function hasReadableTextNode(node: React.ReactNode): boolean {

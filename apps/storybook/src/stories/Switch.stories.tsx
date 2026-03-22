@@ -236,14 +236,36 @@ export const PointerPrimaryOnly: Story = {
     const control = canvas.getByRole("switch", { name: "Pointer priority" });
 
     fireEvent.mouseDown(control, { button: 0 });
-    await expect(control).toHaveAttribute("data-pressed", "true");
+    await waitFor(() => {
+      expect(control).toHaveAttribute("data-pressed", "true");
+    });
     fireEvent.pointerCancel(control);
-    await expect(control).not.toHaveAttribute("data-pressed");
+    await waitFor(() => {
+      expect(control).not.toHaveAttribute("data-pressed");
+    });
 
-    fireEvent.pointerDown(control, { pointerType: "touch", button: 0 });
-    await expect(control).toHaveAttribute("data-pressed", "true");
-    fireEvent.pointerUp(control, { pointerType: "touch", button: 0 });
-    await expect(control).not.toHaveAttribute("data-pressed");
+    control.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "touch",
+        button: 0
+      })
+    );
+    await waitFor(() => {
+      expect(control).toHaveAttribute("data-pressed", "true");
+    });
+    control.dispatchEvent(
+      new PointerEvent("pointerup", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "touch",
+        button: 0
+      })
+    );
+    await waitFor(() => {
+      expect(control).not.toHaveAttribute("data-pressed");
+    });
 
     await userEvent.pointer([{ target: control, keys: "[MouseLeft>]" }]);
     await expect(control).toHaveAttribute("data-pressed", "true");

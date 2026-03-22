@@ -1348,6 +1348,12 @@ describe("Table", () => {
 
     fireEvent.pointerUp(sortButton, { pointerType: "touch", button: 0 });
     expect(sortButton.style.transform).toBe("translateY(0)");
+
+    fireEvent.pointerDown(sortButton, { pointerType: "touch", button: -1 });
+    expect(sortButton.style.transform).toBe("translateY(1px)");
+
+    fireEvent.pointerUp(sortButton, { pointerType: "touch", button: -1 });
+    expect(sortButton.style.transform).toBe("translateY(0)");
   });
 
   it("applies pressed offset while keyboard activation key is held on sortable headers", async () => {

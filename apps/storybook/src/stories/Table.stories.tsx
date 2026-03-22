@@ -375,15 +375,37 @@ export const PrimaryPointerOnlySortPress: Story = {
     await expect(sortState).toHaveTextContent("id asc");
 
     fireEvent.mouseDown(sortButton, { button: 0 });
-    await expect(sortButton.style.transform).toContain("translateY(1px)");
+    await waitFor(() => {
+      expect(sortButton.style.transform).toContain("translateY(1px)");
+    });
     fireEvent.pointerCancel(sortButton);
-    await expect(sortButton.style.transform).toContain("translateY(0");
+    await waitFor(() => {
+      expect(sortButton.style.transform).toContain("translateY(0");
+    });
     await expect(sortState).toHaveTextContent("id asc");
 
-    fireEvent.pointerDown(sortButton, { pointerType: "touch", button: 0 });
-    await expect(sortButton.style.transform).toContain("translateY(1px)");
-    fireEvent.pointerUp(sortButton, { pointerType: "touch", button: 0 });
-    await expect(sortButton.style.transform).toContain("translateY(0");
+    sortButton.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "touch",
+        button: 0
+      })
+    );
+    await waitFor(() => {
+      expect(sortButton.style.transform).toContain("translateY(1px)");
+    });
+    sortButton.dispatchEvent(
+      new PointerEvent("pointerup", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "touch",
+        button: 0
+      })
+    );
+    await waitFor(() => {
+      expect(sortButton.style.transform).toContain("translateY(0");
+    });
     await expect(sortState).toHaveTextContent("id asc");
 
     await userEvent.click(sortButton);

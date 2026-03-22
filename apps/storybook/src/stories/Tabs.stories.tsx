@@ -330,16 +330,38 @@ export const PrimaryPointerOnlyPressedState: Story = {
     await expect(changeCount).toHaveTextContent("0");
 
     fireEvent.mouseDown(buildTab, { button: 0 });
-    await expect(buildTab.style.transform).toContain("translateY(1px)");
+    await waitFor(() => {
+      expect(buildTab.style.transform).toContain("translateY(1px)");
+    });
     fireEvent.pointerCancel(buildTab);
-    await expect(buildTab.style.transform).toContain("translateY(0");
+    await waitFor(() => {
+      expect(buildTab.style.transform).toContain("translateY(0");
+    });
     await expect(activeValue).toHaveTextContent("spec");
     await expect(changeCount).toHaveTextContent("0");
 
-    fireEvent.pointerDown(buildTab, { pointerType: "touch", button: 0 });
-    await expect(buildTab.style.transform).toContain("translateY(1px)");
-    fireEvent.pointerUp(buildTab, { pointerType: "touch", button: 0 });
-    await expect(buildTab.style.transform).toContain("translateY(0");
+    buildTab.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "touch",
+        button: 0
+      })
+    );
+    await waitFor(() => {
+      expect(buildTab.style.transform).toContain("translateY(1px)");
+    });
+    buildTab.dispatchEvent(
+      new PointerEvent("pointerup", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "touch",
+        button: 0
+      })
+    );
+    await waitFor(() => {
+      expect(buildTab.style.transform).toContain("translateY(0");
+    });
     await expect(activeValue).toHaveTextContent("spec");
     await expect(changeCount).toHaveTextContent("0");
 
