@@ -277,6 +277,19 @@ describe("Switch", () => {
     expect(control).toHaveAttribute("aria-describedby", helper.getAttribute("id"));
   });
 
+  it("keeps numeric label and description semantics", () => {
+    render(<Switch label={0} description={0} defaultChecked={false} />);
+
+    const control = screen.getByRole("switch", { name: "0" });
+    const labelledById = control.getAttribute("aria-labelledby");
+    const describedById = control.getAttribute("aria-describedby");
+
+    expect(labelledById).toBeTruthy();
+    expect(describedById).toBeTruthy();
+    expect(document.getElementById(labelledById as string)).toHaveTextContent("0");
+    expect(document.getElementById(describedById as string)).toHaveTextContent("0");
+  });
+
   it("accepts invalid semantics from aria-invalid", () => {
     render(<Switch label="Aria invalid switch" aria-invalid="true" />);
     expect(screen.getByRole("switch", { name: "Aria invalid switch" })).toHaveAttribute("aria-invalid", "true");

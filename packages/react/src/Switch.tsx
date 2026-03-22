@@ -57,12 +57,16 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
 
   const isControlled = checked !== undefined;
   const currentChecked = isControlled ? checked : internalChecked;
+  const hasLabelContent = hasRenderableSwitchNode(label);
+  const hasDescriptionContent = hasRenderableSwitchNode(description);
   const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
   const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
   const ariaKeyShortcuts = disabled ? undefined : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "Space";
-  const describedBy = [props["aria-describedby"], description ? descriptionId : undefined].filter(Boolean).join(" ") || undefined;
+  const describedBy = [props["aria-describedby"], hasDescriptionContent ? descriptionId : undefined]
+    .filter(Boolean)
+    .join(" ") || undefined;
   const labelledBy =
-    ariaLabel || ariaLabelledBy || !label ? ariaLabelledBy : labelId;
+    ariaLabel || ariaLabelledBy || !hasLabelContent ? ariaLabelledBy : labelId;
 
   const focusRingColor = isInvalid
     ? "color-mix(in srgb, var(--aurora-color-red-500) 24%, transparent)"
@@ -334,10 +338,10 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
           }}
         />
       </span>
-      {label || description ? (
-        <span style={{ display: "grid", gap: description ? 2 : 0, paddingTop: 1 }}>
-          {label ? <span id={labelId}>{label}</span> : null}
-          {description ? (
+      {hasLabelContent || hasDescriptionContent ? (
+        <span style={{ display: "grid", gap: hasDescriptionContent ? 2 : 0, paddingTop: 1 }}>
+          {hasLabelContent ? <span id={labelId}>{label}</span> : null}
+          {hasDescriptionContent ? (
             <span id={descriptionId} style={{ color: "var(--aurora-text-secondary)", fontSize: "var(--aurora-font-size-xs)" }}>
               {description}
             </span>
@@ -372,6 +376,26 @@ function resolveNonEmptyLabel(label: string | undefined) {
 
   const normalized = label.trim();
   return normalized.length > 0 ? normalized : undefined;
+}
+
+function hasRenderableSwitchNode(node: React.ReactNode): boolean {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return false;
+  }
+
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  if (typeof node === "number") {
+    return true;
+  }
+
+  if (Array.isArray(node)) {
+    return node.some((item) => hasRenderableSwitchNode(item));
+  }
+
+  return React.isValidElement(node);
 }
 
 function isPrimaryPointerButton(button: number | undefined) {

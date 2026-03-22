@@ -38,12 +38,16 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
   const isInteractionDisabled = Boolean(disabled);
+  const hasLabelContent = hasRenderableCheckboxNode(label);
+  const hasDescriptionContent = hasRenderableCheckboxNode(description);
   const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
   const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
   const ariaKeyShortcuts = isInteractionDisabled
     ? undefined
     : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "Space";
-  const describedBy = [restProps["aria-describedby"], description ? descriptionId : undefined].filter(Boolean).join(" ") || undefined;
+  const describedBy = [restProps["aria-describedby"], hasDescriptionContent ? descriptionId : undefined]
+    .filter(Boolean)
+    .join(" ") || undefined;
 
   React.useEffect(() => {
     if (!isInteractionDisabled) {
@@ -192,10 +196,10 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
           onKeyDown?.(event);
         }}
       />
-      {label || description ? (
-        <span style={{ display: "grid", gap: description ? 2 : 0 }}>
-          {label ? <span>{label}</span> : null}
-          {description ? (
+      {hasLabelContent || hasDescriptionContent ? (
+        <span style={{ display: "grid", gap: hasDescriptionContent ? 2 : 0 }}>
+          {hasLabelContent ? <span>{label}</span> : null}
+          {hasDescriptionContent ? (
             <span id={descriptionId} style={{ color: "var(--aurora-text-secondary)", fontSize: "var(--aurora-font-size-xs)" }}>
               {description}
             </span>
@@ -213,6 +217,26 @@ function resolveNonEmptyLabel(label: string | undefined) {
 
   const normalized = label.trim();
   return normalized.length > 0 ? normalized : undefined;
+}
+
+function hasRenderableCheckboxNode(node: React.ReactNode): boolean {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return false;
+  }
+
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  if (typeof node === "number") {
+    return true;
+  }
+
+  if (Array.isArray(node)) {
+    return node.some((item) => hasRenderableCheckboxNode(item));
+  }
+
+  return React.isValidElement(node);
 }
 
 function resolveFocusVisibleState(target: HTMLInputElement, fallback: boolean) {

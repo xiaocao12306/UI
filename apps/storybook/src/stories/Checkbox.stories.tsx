@@ -150,6 +150,21 @@ export const IconLabelledByPrecedence: Story = {
   }
 };
 
+export const NumericContentSemantics: Story = {
+  args: {
+    label: 0,
+    description: 0
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole("checkbox");
+    const describedById = checkbox.getAttribute("aria-describedby");
+
+    await expect(describedById).toBeTruthy();
+    await expect(canvas.getAllByText("0").length).toBeGreaterThanOrEqual(2);
+  }
+};
+
 export const FocusIntentReentry: Story = {
   render: () => (
     <div style={{ width: 320, display: "grid", gap: 10 }}>

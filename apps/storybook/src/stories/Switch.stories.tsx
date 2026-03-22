@@ -217,6 +217,24 @@ export const IconLabelledByPrecedence: Story = {
   }
 };
 
+export const NumericContentSemantics: Story = {
+  args: {
+    defaultChecked: false,
+    label: 0,
+    description: 0
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const control = canvas.getByRole("switch");
+    const labelledById = control.getAttribute("aria-labelledby");
+    const describedById = control.getAttribute("aria-describedby");
+
+    await expect(labelledById).toBeTruthy();
+    await expect(describedById).toBeTruthy();
+    await expect(canvas.getAllByText("0").length).toBeGreaterThanOrEqual(2);
+  }
+};
+
 function GuardedClickSwitch() {
   const [checked, setChecked] = React.useState(false);
 

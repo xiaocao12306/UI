@@ -38,6 +38,16 @@ describe("Checkbox", () => {
     expect(document.getElementById(describedById as string)).toHaveTextContent("Requires 2 approvals");
   });
 
+  it("keeps numeric label and description semantics", () => {
+    render(<Checkbox label={0} description={0} />);
+    const checkbox = screen.getByRole("checkbox");
+    const describedById = checkbox.getAttribute("aria-describedby");
+
+    expect(checkbox).toHaveAccessibleName("0 0");
+    expect(describedById).toBeTruthy();
+    expect(document.getElementById(describedById as string)).toHaveTextContent("0");
+  });
+
   it("exposes default keyboard shortcut hints only when actionable", () => {
     render(
       <div>
