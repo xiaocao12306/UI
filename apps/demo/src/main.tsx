@@ -516,6 +516,14 @@ function App() {
   const [toastCloseTrace, setToastCloseTrace] = React.useState("none");
   const [actionToastHandledCount, setActionToastHandledCount] = React.useState(0);
   const [toastEscapeGuard, setToastEscapeGuard] = React.useState(false);
+  const [dialogCloseButtonGuardEnabled, setDialogCloseButtonGuardEnabled] =
+    React.useState(false);
+  const [dialogCloseButtonGuardTelemetry, setDialogCloseButtonGuardTelemetry] =
+    React.useState("idle");
+  const [drawerCloseButtonGuardEnabled, setDrawerCloseButtonGuardEnabled] =
+    React.useState(false);
+  const [drawerCloseButtonGuardTelemetry, setDrawerCloseButtonGuardTelemetry] =
+    React.useState("idle");
   const [switchChecked, setSwitchChecked] = React.useState(true);
   const [submittedPrompt, setSubmittedPrompt] = React.useState(
     "Build a minimal auth flow with OTP fallback"
@@ -1893,6 +1901,30 @@ function App() {
                     spotting.
                   </p>
                 </div>
+                <div className="demo-control-stack">
+                  <Switch
+                    checked={dialogCloseButtonGuardEnabled}
+                    onCheckedChange={(checked) => {
+                      setDialogCloseButtonGuardEnabled(checked);
+                      if (!checked) {
+                        setDialogCloseButtonGuardTelemetry("idle");
+                      }
+                    }}
+                    label="Guard dialog close Enter/Space via local hook"
+                    description="Uses Dialog onCloseButtonKeyDown + preventDefault() while enabled."
+                  />
+                  <Switch
+                    checked={drawerCloseButtonGuardEnabled}
+                    onCheckedChange={(checked) => {
+                      setDrawerCloseButtonGuardEnabled(checked);
+                      if (!checked) {
+                        setDrawerCloseButtonGuardTelemetry("idle");
+                      }
+                    }}
+                    label="Guard drawer close Enter/Space via local hook"
+                    description="Uses Drawer onCloseButtonKeyDown + preventDefault() while enabled."
+                  />
+                </div>
                 <div className="demo-telemetry-grid">
                   <p style={mutedBodyStyle}>
                     Popover close reason telemetry:{" "}
@@ -1946,6 +1978,24 @@ function App() {
                     Drawer close trace:{" "}
                     <strong data-testid="drawer-close-trace-demo" style={telemetryValueStyle}>
                       {drawerCloseTrace}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Dialog close-button local guard telemetry:{" "}
+                    <strong
+                      data-testid="dialog-close-button-guard-telemetry"
+                      style={telemetryValueStyle}
+                    >
+                      {dialogCloseButtonGuardTelemetry}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Drawer close-button local guard telemetry:{" "}
+                    <strong
+                      data-testid="drawer-close-button-guard-telemetry"
+                      style={telemetryValueStyle}
+                    >
+                      {drawerCloseButtonGuardTelemetry}
                     </strong>
                   </p>
                 </div>
@@ -2112,6 +2162,18 @@ function App() {
             onOpenChange={handleDialogOpenChange}
             onCloseReason={handleDialogCloseReason}
             title="Dialog Example"
+            onCloseButtonKeyDown={(event) => {
+              if (!dialogCloseButtonGuardEnabled) {
+                return;
+              }
+
+              if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+                event.preventDefault();
+                setDialogCloseButtonGuardTelemetry(
+                  `blocked:${event.key === " " ? "Space" : event.key}`
+                );
+              }
+            }}
           >
             <p style={{ margin: 0 }}>Modal built with FocusScope + DismissableLayer.</p>
           </Dialog>
@@ -2122,6 +2184,18 @@ function App() {
             title="Drawer Example"
             description="Contextual panel for filters, details, and quick actions."
             onCloseReason={handleDrawerCloseReason}
+            onCloseButtonKeyDown={(event) => {
+              if (!drawerCloseButtonGuardEnabled) {
+                return;
+              }
+
+              if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+                event.preventDefault();
+                setDrawerCloseButtonGuardTelemetry(
+                  `blocked:${event.key === " " ? "Space" : event.key}`
+                );
+              }
+            }}
           >
             <p style={{ margin: 0 }}>This drawer can host contextual forms, filters, or details.</p>
           </Drawer>
