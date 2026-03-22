@@ -448,6 +448,7 @@ export function Table<T>({
     });
   }, [columns, data, sortState]);
 
+  const ownerDocument = typeof document === "undefined" ? undefined : document;
   const sortStatusText = React.useMemo(() => {
     if (loading || sortedEntries.length <= 1 || !sortState) {
       return "";
@@ -462,9 +463,6 @@ export function Table<T>({
       return "";
     }
 
-    const ownerDocument =
-      scrollContainerRef.current?.ownerDocument ??
-      (typeof document === "undefined" ? undefined : document);
     const columnHeader = resolveColumnSortLabel(
       activeSortColumn,
       resolveFallbackSortColumnLabel(sortState.key, activeSortColumnIndex),
@@ -475,13 +473,10 @@ export function Table<T>({
       columnHeader,
       direction: sortState.direction
     });
-  }, [columns, getSortStatusText, loading, sortState, sortedEntries.length]);
+  }, [columns, getSortStatusText, loading, ownerDocument, sortState, sortedEntries.length]);
   const hasActionableSortControls =
     !loading && sortedEntries.length > 1 && columns.some((column) => column.sortable);
   const tableColSpan = Math.max(columns.length, 1);
-  const ownerDocument =
-    scrollContainerRef.current?.ownerDocument ??
-    (typeof document === "undefined" ? undefined : document);
 
   React.useEffect(() => {
     if (hasActionableSortControls) {

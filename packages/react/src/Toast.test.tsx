@@ -336,7 +336,11 @@ describe("Toast", () => {
       <Toast
         open
         title="Action review"
-        action={<span tabIndex={0}>Review details</span>}
+        action={
+          <div role="button" tabIndex={0}>
+            Review details
+          </div>
+        }
       />
     );
 
