@@ -790,6 +790,7 @@ describe("CommandPalette", () => {
           bubbles: true
         })
       );
+      dispatchCtrlPrimaryPointerDown(secondaryDocument.body);
       fireEvent.pointerDown(secondaryDocument.body);
       expect(onOpenChange).not.toHaveBeenCalled();
       expect(onCloseReason).not.toHaveBeenCalled();
