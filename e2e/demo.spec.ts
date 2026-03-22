@@ -2001,6 +2001,41 @@ test("ignores repeated Enter keydown before combobox selection commit", async ({
   await expect(page.getByText("Current selection: svelte")).toBeVisible();
 });
 
+test("preempts combobox Enter selection via local key guard hook", async ({ page }) => {
+  await page.goto("/");
+
+  const guardToggle = page.getByTestId("combobox-local-key-guard-toggle");
+  const guardState = page.getByTestId("combobox-local-key-guard-state");
+  await guardToggle.click();
+  await expect(guardState).toHaveText("on");
+
+  const combobox = page.getByRole("combobox", { name: "Framework Combobox" });
+  const guardTelemetry = page.getByTestId("combobox-local-key-guard-telemetry");
+
+  await combobox.click();
+  await combobox.fill("sv");
+  await expect(
+    page
+      .getByRole("listbox", { name: "Framework Combobox options" })
+      .getByRole("option", { name: "Svelte" })
+  ).toBeVisible();
+
+  await combobox.press("ArrowDown");
+  await combobox.press("Enter");
+  await expect(guardTelemetry).toHaveText("blocked:Enter");
+  await expect(page.getByText("Current selection: react")).toBeVisible();
+  await expect(page.getByRole("listbox", { name: "Framework Combobox options" })).toBeVisible();
+
+  await page.getByRole("textbox", { name: "Email" }).click();
+  await guardToggle.click();
+  await expect(guardState).toHaveText("off");
+  await combobox.click();
+  await combobox.fill("sv");
+  await combobox.press("ArrowDown");
+  await combobox.press("Enter");
+  await expect(page.getByText("Current selection: svelte")).toBeVisible();
+});
+
 test("ignores combobox managed keys when only legacy IME keyCode is present", async ({ page }) => {
   await page.goto("/");
 

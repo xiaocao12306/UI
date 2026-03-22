@@ -521,6 +521,9 @@ function App() {
     "Build a minimal auth flow with OTP fallback"
   );
   const [framework, setFramework] = React.useState("react");
+  const [comboboxLocalKeyGuardEnabled, setComboboxLocalKeyGuardEnabled] = React.useState(false);
+  const [comboboxLocalKeyGuardTelemetry, setComboboxLocalKeyGuardTelemetry] =
+    React.useState("idle");
   const [releaseDate, setReleaseDate] = React.useState("2026-03-17");
   const [feedPage, setFeedPage] = React.useState(1);
   const [rtlFeedPage, setRtlFeedPage] = React.useState(4);
@@ -1057,7 +1060,55 @@ function App() {
                         options={frameworkOptions}
                         value={framework}
                         onValueChange={setFramework}
+                        onInputKeyDown={(event) => {
+                          if (!comboboxLocalKeyGuardEnabled) {
+                            return;
+                          }
+                          if (event.key === "Enter" || event.key === "Escape") {
+                            event.preventDefault();
+                            setComboboxLocalKeyGuardTelemetry(`blocked:${event.key}`);
+                          }
+                        }}
                       />
+                      <div style={{ display: "grid", gap: 8, marginTop: 8 }}>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          data-testid="combobox-local-key-guard-toggle"
+                          onClick={() => {
+                            setComboboxLocalKeyGuardEnabled((current) => {
+                              const next = !current;
+                              if (!next) {
+                                setComboboxLocalKeyGuardTelemetry("idle");
+                              }
+                              return next;
+                            });
+                          }}
+                        >
+                          {comboboxLocalKeyGuardEnabled
+                            ? "Disable combobox local key guard"
+                            : "Guard combobox Enter/Escape via local hook"}
+                        </Button>
+                        <p style={{ ...mutedBodyStyle, margin: 0, fontSize: 13 }}>
+                          Combobox local guard state:{" "}
+                          <span
+                            data-testid="combobox-local-key-guard-state"
+                            style={telemetryValueStyle}
+                          >
+                            {comboboxLocalKeyGuardEnabled ? "on" : "off"}
+                          </span>
+                        </p>
+                        <p style={{ ...mutedBodyStyle, margin: 0, fontSize: 13 }}>
+                          Combobox local guard telemetry:{" "}
+                          <span
+                            data-testid="combobox-local-key-guard-telemetry"
+                            style={telemetryValueStyle}
+                          >
+                            {comboboxLocalKeyGuardTelemetry}
+                          </span>
+                        </p>
+                      </div>
                     </FormField>
                     <FormField
                       label="Release Date"
