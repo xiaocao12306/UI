@@ -128,6 +128,7 @@ describe("Toast", () => {
       expect(warnSpy).toHaveBeenCalledWith(
         "[Toast] Non-text titles should provide ariaLabel or ariaLabelledBy so notification name remains accessible."
       );
+      expect(screen.getByRole("status", { name: "Toast" })).toHaveAttribute("aria-label", "Toast");
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
@@ -174,6 +175,20 @@ describe("Toast", () => {
       expect(warnSpy).toHaveBeenCalledWith(
         "[Toast] Non-text titles should provide ariaLabel or ariaLabelledBy so notification name remains accessible."
       );
+      expect(screen.getByRole("status", { name: "Toast" })).toHaveAttribute("aria-label", "Toast");
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("provides fallback name for actionable non-text toasts", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(<Toast open title={<span aria-hidden>✅</span>} action={<button type="button">Acknowledge</button>} />);
+      expect(screen.getByRole("dialog", { name: "Toast" })).toHaveAttribute("aria-label", "Toast");
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();

@@ -220,12 +220,16 @@ export function Toast({
     typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
       ? ariaLabelledBy.trim()
       : undefined;
-  const resolvedAriaLabel =
+  const explicitAriaLabel =
     resolvedAriaLabelledBy === undefined &&
     typeof ariaLabel === "string" &&
     ariaLabel.trim().length > 0
       ? ariaLabel.trim()
       : undefined;
+  const hasReadableTitleText = hasReadableTextNode(title);
+  const resolvedAriaLabel = resolvedAriaLabelledBy
+    ? undefined
+    : explicitAriaLabel ?? (hasReadableTitleText ? undefined : "Toast");
   const resolvedCloseLabel =
     typeof closeLabel === "string" && closeLabel.trim().length > 0
       ? closeLabel.trim()
@@ -504,8 +508,8 @@ export function Toast({
       return;
     }
 
-    const hasExplicitName = Boolean(resolvedAriaLabel || resolvedAriaLabelledBy);
-    if (hasExplicitName || hasReadableTextNode(title)) {
+    const hasExplicitName = Boolean(explicitAriaLabel || resolvedAriaLabelledBy);
+    if (hasExplicitName || hasReadableTitleText) {
       warnedMissingAriaLabelRef.current = false;
       return;
     }
@@ -518,7 +522,7 @@ export function Toast({
     console.warn(
       "[Toast] Non-text titles should provide ariaLabel or ariaLabelledBy so notification name remains accessible."
     );
-  }, [resolvedAriaLabel, resolvedAriaLabelledBy, title]);
+  }, [explicitAriaLabel, hasReadableTitleText, resolvedAriaLabelledBy]);
 
   if (!open) {
     return null;
