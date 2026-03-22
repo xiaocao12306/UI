@@ -166,7 +166,12 @@ describe("DismissableLayer", () => {
         { container: iframeContainer, baseElement: iframeDocument.body }
       );
 
-      fireEvent.pointerDown(screen.getByRole("button", { name: "Main outside target" }));
+      const mainOutsideTarget = screen.getByRole("button", { name: "Main outside target" });
+      dispatchCtrlPrimaryPointerDown(mainOutsideTarget);
+      expect(onMainDismiss).not.toHaveBeenCalled();
+      expect(onIframeDismiss).not.toHaveBeenCalled();
+
+      fireEvent.pointerDown(mainOutsideTarget);
       expect(onMainDismiss).toHaveBeenCalledTimes(1);
       expect(onIframeDismiss).not.toHaveBeenCalled();
 
@@ -174,6 +179,8 @@ describe("DismissableLayer", () => {
       if (!iframeOutsideTarget) {
         throw new Error("expected iframe outside target");
       }
+      dispatchCtrlPrimaryPointerDown(iframeOutsideTarget);
+      expect(onIframeDismiss).not.toHaveBeenCalled();
       fireEvent.pointerDown(iframeOutsideTarget);
       expect(onIframeDismiss).toHaveBeenCalledTimes(1);
     } finally {
