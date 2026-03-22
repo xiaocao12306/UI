@@ -449,6 +449,40 @@ describe("Dropdown", () => {
     );
   });
 
+  it("does not preempt menu navigation keys when only one dropdown item is actionable", () => {
+    render(
+      <Dropdown
+        label="Single Actionable Key Guard"
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two", disabled: true }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Single Actionable Key Guard" }));
+    const menu = screen.getByRole("menu", { name: "Single Actionable Key Guard" });
+    expect(screen.getByRole("menuitem", { name: "One" })).toHaveFocus();
+
+    const arrowDownEvent = new KeyboardEvent("keydown", {
+      key: "ArrowDown",
+      bubbles: true,
+      cancelable: true
+    });
+    menu.dispatchEvent(arrowDownEvent);
+    expect(arrowDownEvent.defaultPrevented).toBe(false);
+    expect(screen.getByRole("menuitem", { name: "One" })).toHaveFocus();
+
+    const homeEvent = new KeyboardEvent("keydown", {
+      key: "Home",
+      bubbles: true,
+      cancelable: true
+    });
+    menu.dispatchEvent(homeEvent);
+    expect(homeEvent.defaultPrevented).toBe(false);
+    expect(screen.getByRole("menuitem", { name: "One" })).toHaveFocus();
+  });
+
   it("shows only Tab shortcut hint when single actionable menu disables Escape close", () => {
     render(
       <Dropdown
@@ -668,6 +702,40 @@ describe("Dropdown", () => {
     });
     expect(screen.getByRole("menu", { name: "All disabled" })).toBeInTheDocument();
     expect(onCloseReason).not.toHaveBeenCalled();
+  });
+
+  it("does not preempt menu navigation keys when all dropdown items are disabled", () => {
+    render(
+      <Dropdown
+        label="All disabled key guard"
+        items={[
+          { key: "archive", label: "Archive", disabled: true },
+          { key: "delete", label: "Delete", disabled: true }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "All disabled key guard" }));
+    const menu = screen.getByRole("menu", { name: "All disabled key guard" });
+    expect(menu).toHaveFocus();
+
+    const arrowDownEvent = new KeyboardEvent("keydown", {
+      key: "ArrowDown",
+      bubbles: true,
+      cancelable: true
+    });
+    menu.dispatchEvent(arrowDownEvent);
+    expect(arrowDownEvent.defaultPrevented).toBe(false);
+    expect(menu).toHaveFocus();
+
+    const pageDownEvent = new KeyboardEvent("keydown", {
+      key: "PageDown",
+      bubbles: true,
+      cancelable: true
+    });
+    menu.dispatchEvent(pageDownEvent);
+    expect(pageDownEvent.defaultPrevented).toBe(false);
+    expect(menu).toHaveFocus();
   });
 
   it("keeps keyboard-open focus on menu surface when all dropdown items are disabled", () => {

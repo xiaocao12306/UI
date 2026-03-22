@@ -929,6 +929,13 @@ export const AllItemsDisabledKeyboardNoop: Story = {
     menuItems.forEach((item) => {
       expect(item).toHaveAttribute("tabindex", "-1");
     });
+    const blockedArrowDown = new KeyboardEvent("keydown", {
+      key: "ArrowDown",
+      bubbles: true,
+      cancelable: true
+    });
+    menu.dispatchEvent(blockedArrowDown);
+    await expect(blockedArrowDown.defaultPrevented).toBe(false);
 
     await userEvent.keyboard("{Escape}");
     await expect(canvas.queryByRole("menu", { name: "All Disabled Keyboard" })).not.toBeInTheDocument();
@@ -963,6 +970,13 @@ export const SingleActionableShortcutHints: Story = {
       "Enter Space"
     );
     await expect(canvas.getByRole("menuitem", { name: "Archive" })).not.toHaveAttribute("aria-keyshortcuts");
+    const unhandledHome = new KeyboardEvent("keydown", {
+      key: "Home",
+      bubbles: true,
+      cancelable: true
+    });
+    menu.dispatchEvent(unhandledHome);
+    await expect(unhandledHome.defaultPrevented).toBe(false);
   }
 };
 

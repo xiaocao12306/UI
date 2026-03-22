@@ -201,16 +201,17 @@ export function Dropdown({
     });
   }, [items]);
   const enabledItemCount = items.reduce((count, item) => count + (item.disabled ? 0 : 1), 0);
+  const canNavigateMenuItems = enabledItemCount > 1;
   const menuKeyboardShortcuts = React.useMemo(() => {
     const shortcuts = [dropdownMenuDismissShortcut];
-    if (enabledItemCount > 1) {
+    if (canNavigateMenuItems) {
       shortcuts.unshift(dropdownMenuNavigationShortcuts);
     }
     if (closeOnEscape) {
       shortcuts.push("Escape");
     }
     return shortcuts.join(" ");
-  }, [closeOnEscape, enabledItemCount]);
+  }, [canNavigateMenuItems, closeOnEscape]);
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -542,30 +543,45 @@ export function Dropdown({
               }
 
               if (event.key === "ArrowDown") {
+                if (!canNavigateMenuItems) {
+                  return;
+                }
                 event.preventDefault();
                 setActiveIndex((current) => getNextEnabledIndex(items, current < 0 ? -1 : current, 1));
                 return;
               }
 
               if (event.key === "ArrowUp") {
+                if (!canNavigateMenuItems) {
+                  return;
+                }
                 event.preventDefault();
                 setActiveIndex((current) => getNextEnabledIndex(items, current < 0 ? 0 : current, -1));
                 return;
               }
 
               if (event.key === "Home") {
+                if (!canNavigateMenuItems) {
+                  return;
+                }
                 event.preventDefault();
                 setActiveIndex(getNextEnabledIndex(items, -1, 1));
                 return;
               }
 
               if (event.key === "End") {
+                if (!canNavigateMenuItems) {
+                  return;
+                }
                 event.preventDefault();
                 setActiveIndex(getNextEnabledIndex(items, 0, -1));
                 return;
               }
 
               if (event.key === "PageDown") {
+                if (!canNavigateMenuItems) {
+                  return;
+                }
                 event.preventDefault();
                 setActiveIndex((current) =>
                   getPagedEnabledIndex(items, current < 0 ? -1 : current, 1)
@@ -574,6 +590,9 @@ export function Dropdown({
               }
 
               if (event.key === "PageUp") {
+                if (!canNavigateMenuItems) {
+                  return;
+                }
                 event.preventDefault();
                 setActiveIndex((current) =>
                   getPagedEnabledIndex(items, current < 0 ? -1 : current, -1)
