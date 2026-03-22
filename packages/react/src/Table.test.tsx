@@ -1999,6 +1999,72 @@ describe("Table", () => {
     expect(statuses[0]).toHaveTextContent("Loading release rows...");
   });
 
+  it("falls back loading narration copy when loadingContent is blank", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        loading
+        loadingContent="   "
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("Loading data...");
+  });
+
+  it("falls back empty-state narration copy when emptyContent is blank", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[]}
+        emptyContent="   "
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("No data available.");
+  });
+
+  it("keeps numeric loading and empty-state narration copy", () => {
+    const { rerender } = render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        loading
+        loadingContent={0}
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("0");
+
+    rerender(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[]}
+        emptyContent={0}
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("0");
+  });
+
   it("uses safe colSpan fallback when columns are empty", () => {
     render(<Table columns={[]} data={[]} emptyContent="No rows yet." />);
 

@@ -119,6 +119,10 @@ export function Table<T>({
   onSortChange
 }: TableProps<T>) {
   const hasCaptionContent = hasRenderableNode(caption);
+  const hasLoadingContent = hasRenderableNode(loadingContent);
+  const hasEmptyContent = hasRenderableNode(emptyContent);
+  const resolvedLoadingContent = hasLoadingContent ? loadingContent : "Loading data...";
+  const resolvedEmptyContent = hasEmptyContent ? emptyContent : "No data available.";
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel = resolvedAriaLabelledBy
     ? undefined
@@ -913,7 +917,7 @@ export function Table<T>({
                 }}
               >
                 <span role="status" aria-live="polite">
-                  {loadingContent}
+                  {resolvedLoadingContent}
                 </span>
               </td>
             </tr>
@@ -928,7 +932,7 @@ export function Table<T>({
                 }}
               >
                 <span role="status" aria-live="polite">
-                  {emptyContent}
+                  {resolvedEmptyContent}
                 </span>
               </td>
             </tr>

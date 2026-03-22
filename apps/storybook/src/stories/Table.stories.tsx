@@ -322,6 +322,46 @@ export const LoadingState: Story = {
   }
 };
 
+export const BlankLoadingContentFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
+      <Table columns={columns} data={rows} loading loadingContent="   " defaultSortKey="id" />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("status")).toHaveTextContent("Loading data...");
+  }
+};
+
+export const BlankEmptyContentFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
+      <Table columns={columns} data={[]} emptyContent="   " />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("status")).toHaveTextContent("No data available.");
+  }
+};
+
+export const NumericFeedbackCopySemantics: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)" gap={10}>
+      <Table columns={columns} data={rows} loading loadingContent={0} />
+      <Table columns={columns} data={[]} emptyContent={0} />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const statuses = canvas.getAllByRole("status");
+    await expect(statuses).toHaveLength(2);
+    await expect(statuses[0]).toHaveTextContent("0");
+    await expect(statuses[1]).toHaveTextContent("0");
+  }
+};
+
 export const LoadingDisablesResetsSortVisualState: Story = {
   render: () => <LoadingVisualResetTable />,
   play: async ({ canvasElement }) => {
