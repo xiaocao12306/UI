@@ -1060,6 +1060,30 @@ describe("CommandPalette", () => {
     expect(input).toHaveFocus();
   });
 
+  it("does not prevent primary mouse pointerdown default on options", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "open-theme", label: "Open Theme Pack" }
+        ]}
+      />
+    );
+
+    const option = screen.getByRole("option", { name: "Open Settings" });
+    const mousePointerDown = new Event("pointerdown", {
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(mousePointerDown, "button", { configurable: true, value: 0 });
+    Object.defineProperty(mousePointerDown, "pointerType", { configurable: true, value: "mouse" });
+
+    option.dispatchEvent(mousePointerDown);
+    expect(mousePointerDown.defaultPrevented).toBe(false);
+  });
+
   it("does not prevent ctrl-modified touch pointerdown default on options", () => {
     render(
       <CommandPalette

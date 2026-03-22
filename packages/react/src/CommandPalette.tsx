@@ -621,7 +621,11 @@ export function CommandPalette({
                   aria-setsize={filtered.length}
                   tabIndex={-1}
                   onPointerDown={(event) => {
-                    if (!isPrimaryPointerButton(event.button) || event.ctrlKey) {
+                    if (
+                      event.pointerType === "mouse" ||
+                      !isPrimaryPointerButton(event.button) ||
+                      event.ctrlKey
+                    ) {
                       return;
                     }
                     // Keep combobox input focus while selecting listbox options.
