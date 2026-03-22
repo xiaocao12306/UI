@@ -151,6 +151,25 @@ export const ShortcutHintPrecision: Story = {
   }
 };
 
+export const DuplicateValueSingleCheckedSemantics: Story = {
+  args: {
+    name: "Duplicate value semantics",
+    value: "react",
+    options: [
+      { label: "React legacy", value: "react", disabled: true },
+      { label: "React stable", value: "react" },
+      { label: "Vue", value: "vue" }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const legacy = canvas.getByRole("radio", { name: "React legacy" });
+    const stable = canvas.getByRole("radio", { name: "React stable" });
+    await expect(legacy).not.toBeChecked();
+    await expect(stable).toBeChecked();
+  }
+};
+
 export const LabelledByPrecedence: Story = {
   render: () => (
     <div style={{ width: 340, display: "grid", gap: 12 }}>

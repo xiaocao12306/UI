@@ -46,6 +46,10 @@ export function RadioGroup({
   const warnedDuplicateValuesSignatureRef = React.useRef<string | null>(null);
   const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const currentValue = value ?? internalValue;
+  const selectedOptionIndex = React.useMemo(
+    () => resolveSelectedOptionIndex(options, currentValue),
+    [options, currentValue]
+  );
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
@@ -93,7 +97,9 @@ export function RadioGroup({
     console.warn(
       `[RadioGroup] Duplicate option values detected: ${Array.from(duplicateValues)
         .map((item) => `"${item}"`)
-        .join(", ")}. Values should be unique to keep checked and focus semantics deterministic; duplicate render keys are auto-suffixed by option index for stability.`
+        .join(
+          ", "
+        )}. Values should be unique to keep checked and focus semantics deterministic. Duplicate values fall back to the first enabled matching option for checked-state semantics, and duplicate render keys are auto-suffixed by option index for stability.`
     );
   }, [options]);
 
@@ -229,7 +235,7 @@ export function RadioGroup({
               aria-labelledby={resolvedOptionAriaLabelledBy}
               aria-label={optionAriaLabel}
               aria-describedby={optionDescriptionId}
-              checked={currentValue === option.value}
+              checked={selectedOptionIndex === index}
               disabled={optionDisabled}
               aria-keyshortcuts={optionDisabled ? undefined : "Space"}
               data-focused={isFocused ? "true" : undefined}
@@ -296,6 +302,36 @@ function resolveNonEmptyLabel(label: string | undefined) {
 
   const normalized = label.trim();
   return normalized.length > 0 ? normalized : undefined;
+}
+
+function resolveSelectedOptionIndex(options: RadioOption[], selectedValue: string | undefined): number {
+  if (selectedValue === undefined) {
+    return -1;
+  }
+
+  let firstMatchingIndex = -1;
+  let firstEnabledMatchingIndex = -1;
+  for (let index = 0; index < options.length; index += 1) {
+    const option = options[index];
+    if (option.value !== selectedValue) {
+      continue;
+    }
+
+    if (firstMatchingIndex === -1) {
+      firstMatchingIndex = index;
+    }
+
+    if (!option.disabled) {
+      firstEnabledMatchingIndex = index;
+      break;
+    }
+  }
+
+  if (firstEnabledMatchingIndex !== -1) {
+    return firstEnabledMatchingIndex;
+  }
+
+  return firstMatchingIndex;
 }
 
 function hasRenderableRadioNode(node: React.ReactNode) {

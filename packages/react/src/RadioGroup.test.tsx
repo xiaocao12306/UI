@@ -98,9 +98,52 @@ describe("RadioGroup", () => {
         expect.stringContaining('Duplicate option values detected: "react"')
       );
       expect(warnSpy).toHaveBeenLastCalledWith(expect.stringContaining("auto-suffixed by option index"));
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining("first enabled matching option for checked-state semantics")
+      );
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
+    }
+  });
+
+  it("anchors duplicate-value checked semantics to a single deterministic option", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      const { rerender } = render(
+        <RadioGroup
+          name="Duplicate checked semantics"
+          value="react"
+          options={[
+            { label: "React legacy", value: "react", disabled: true },
+            { label: "React stable", value: "react" },
+            { label: "Vue", value: "vue" }
+          ]}
+        />
+      );
+
+      const legacy = screen.getByRole("radio", { name: "React legacy" });
+      const stable = screen.getByRole("radio", { name: "React stable" });
+      expect(legacy).not.toBeChecked();
+      expect(stable).toBeChecked();
+
+      rerender(
+        <RadioGroup
+          name="Duplicate checked semantics"
+          value="react"
+          options={[
+            { label: "React legacy", value: "react", disabled: true },
+            { label: "React stable", value: "react", disabled: true },
+            { label: "Vue", value: "vue" }
+          ]}
+        />
+      );
+
+      expect(screen.getByRole("radio", { name: "React legacy" })).toBeChecked();
+      expect(screen.getByRole("radio", { name: "React stable" })).not.toBeChecked();
+    } finally {
+      warnSpy.mockRestore();
     }
   });
 

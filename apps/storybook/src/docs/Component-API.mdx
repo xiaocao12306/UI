@@ -160,7 +160,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 
 | Prop                                  | Type                                         | Notes                                                                                                                                                                                           |
 | ------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `options`                             | `RadioOption[]`                              | Defines each choice label/value pair. Development builds warn when option values are duplicated; runtime render keys are auto-suffixed to avoid React key collisions, but values should stay unique. |
+| `options`                             | `RadioOption[]`                              | Defines each choice label/value pair. Development builds warn when option values are duplicated; runtime render keys are auto-suffixed to avoid React key collisions, and duplicate checked semantics are anchored to one deterministic option (first enabled match), but values should stay unique. |
 | `value` / `defaultValue`              | `string`                                     | Controlled and uncontrolled single-choice flows.                                                                                                                                                |
 | `ariaLabel` / `ariaLabelledBy`        | `string` / `string`                          | Optional radiogroup naming override; blank values are ignored, and `ariaLabelledBy` takes precedence when both are provided (`ariaLabel` otherwise falls back to `name`).                       |
 | `options[].ariaLabel` / `options[].ariaLabelledBy` | `string` / `string`                          | Accessible naming controls for icon/non-text options. Rich labels with inline `aria-label` are auto-detected, blank values are ignored, and when both are provided `ariaLabelledBy` takes precedence over `ariaLabel`. |
@@ -176,6 +176,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={RadioGroupStories.InvalidState} />
 <Canvas of={RadioGroupStories.GroupDisabledSemantics} />
 <Canvas of={RadioGroupStories.ShortcutHintPrecision} />
+<Canvas of={RadioGroupStories.DuplicateValueSingleCheckedSemantics} />
 <Canvas of={RadioGroupStories.LabelledByPrecedence} />
 <Canvas of={RadioGroupStories.OptionLabelledByPrecedence} />
 <Canvas of={RadioGroupStories.FocusIntentReentry} />
