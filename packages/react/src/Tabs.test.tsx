@@ -533,7 +533,10 @@ describe("Tabs", () => {
       );
 
       const duplicateTabBefore = screen.getByRole("tab", { name: "One copy" });
-      const duplicatePanelBefore = screen.getByRole("tabpanel", { name: "One copy" });
+      const duplicatePanelBefore = document.getElementById(
+        duplicateTabBefore.getAttribute("aria-controls") ?? ""
+      );
+      expect(duplicatePanelBefore).toBeTruthy();
 
       rerender(
         <Tabs
@@ -547,9 +550,46 @@ describe("Tabs", () => {
       );
 
       const duplicateTabAfter = screen.getByRole("tab", { name: "One copy" });
-      const duplicatePanelAfter = screen.getByRole("tabpanel", { name: "One copy" });
+      const duplicatePanelAfter = document.getElementById(
+        duplicateTabAfter.getAttribute("aria-controls") ?? ""
+      );
+      expect(duplicatePanelAfter).toBeTruthy();
       expect(duplicateTabAfter).toBe(duplicateTabBefore);
       expect(duplicatePanelAfter).toBe(duplicatePanelBefore);
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("keeps duplicate-key selection semantics anchored to the first matching tab", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Tabs
+          defaultValue="one"
+          items={[
+            { key: "one", label: "One", content: <div>Panel one</div> },
+            { key: "one", label: "One copy", content: <div>Panel one copy</div> },
+            { key: "two", label: "Two", content: <div>Panel two</div> }
+          ]}
+        />
+      );
+
+      const selectedTabs = screen
+        .getAllByRole("tab")
+        .filter((tab) => tab.getAttribute("aria-selected") === "true");
+      expect(selectedTabs).toHaveLength(1);
+      expect(selectedTabs[0]).toHaveTextContent("One");
+
+      const tabbableTabs = screen
+        .getAllByRole("tab")
+        .filter((tab) => tab.getAttribute("tabindex") === "0");
+      expect(tabbableTabs).toHaveLength(1);
+      expect(tabbableTabs[0]).toHaveTextContent("One");
+
+      expect(screen.getAllByRole("tabpanel")).toHaveLength(1);
+      expect(screen.getByRole("tabpanel", { name: "One" })).toBeInTheDocument();
     } finally {
       warnSpy.mockRestore();
     }

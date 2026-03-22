@@ -145,6 +145,7 @@ export function Tabs({
   );
   const firstItemKey = items[0]?.key;
   const firstEnabledKey = items.find((item) => !item.disabled)?.key;
+  const firstEnabledIndex = React.useMemo(() => getFirstEnabledIndex(items), [items]);
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
   const [hoveredTabKey, setHoveredTabKey] = React.useState<string | null>(null);
   const [pressedTabKey, setPressedTabKey] = React.useState<string | null>(null);
@@ -306,10 +307,41 @@ export function Tabs({
 
     return firstEnabledKey;
   })();
+  const activeTabIndex = React.useMemo(() => {
+    if (!currentValue) {
+      if (firstEnabledIndex >= 0) {
+        return firstEnabledIndex;
+      }
+      return items.length > 0 ? 0 : -1;
+    }
+
+    const matchedIndex = items.findIndex((item) => item.key === currentValue);
+    if (matchedIndex >= 0) {
+      return matchedIndex;
+    }
+
+    if (firstEnabledIndex >= 0) {
+      return firstEnabledIndex;
+    }
+
+    return items.length > 0 ? 0 : -1;
+  }, [currentValue, firstEnabledIndex, items]);
   const [focusedValue, setFocusedValue] = React.useState<string | undefined>(currentValue);
-  const focusTargetValue = items.some((item) => item.key === focusedValue && !item.disabled)
-    ? focusedValue
-    : currentValue;
+  const focusTargetIndex = React.useMemo(() => {
+    const focusedIndex =
+      focusedValue === undefined
+        ? -1
+        : items.findIndex((item) => item.key === focusedValue && !item.disabled);
+    if (focusedIndex >= 0) {
+      return focusedIndex;
+    }
+
+    if (activeTabIndex >= 0 && !items[activeTabIndex]?.disabled) {
+      return activeTabIndex;
+    }
+
+    return firstEnabledIndex;
+  }, [activeTabIndex, firstEnabledIndex, focusedValue, items]);
 
   React.useEffect(() => {
     if (value === undefined && currentValue !== internalValue) {
@@ -395,7 +427,7 @@ export function Tabs({
       >
         {items.map((item, index) => {
           const domIds = tabDomIds[index];
-          const selected = item.key === currentValue;
+          const selected = index === activeTabIndex;
           const disabled = Boolean(item.disabled);
           const hovered = !disabled && hoveredTabKey === item.key;
           const pressed = !disabled && pressedTabKey === item.key;
@@ -429,7 +461,7 @@ export function Tabs({
                   ? undefined
                   : getTabKeyShortcuts(activationMode, orientation)
               }
-              tabIndex={disabled ? -1 : focusTargetValue === item.key ? 0 : -1}
+              tabIndex={disabled ? -1 : focusTargetIndex === index ? 0 : -1}
               disabled={disabled}
               onClick={(event) => {
                 setFocusedValue(item.key);
@@ -653,7 +685,7 @@ export function Tabs({
 
       {items.map((item, index) => {
         const domIds = tabDomIds[index];
-        const selected = item.key === currentValue;
+        const selected = index === activeTabIndex;
 
         return (
           <div

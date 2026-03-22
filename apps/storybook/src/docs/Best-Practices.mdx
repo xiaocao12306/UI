@@ -517,7 +517,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - In controlled mode, ensure `value` always maps to an enabled tab key; development builds now warn when `value` is missing/disabled and fallback selection is applied.
 - When all tabs are disabled, keep the current (or first) panel visible as read-only context instead of collapsing all panel content.
 - Keep tab panels mounted and toggle `hidden` so tab `aria-controls` always points to a real panel.
-- Keep `items[].key` unique and stable across rerenders/reordering; tab and panel id refs are key-derived, so changing keys at runtime forces new accessibility relationships, and runtime auto-suffixes duplicate render keys by duplicate occurrence order to avoid React remount churn.
+- Keep `items[].key` unique and stable across rerenders/reordering; tab and panel id refs are key-derived, so changing keys at runtime forces new accessibility relationships, and runtime auto-suffixes duplicate render keys by duplicate occurrence order to avoid React remount churn. If duplicate keys slip through, runtime selected/focus semantics now anchor to the first matching tab as deterministic fallback.
 - Avoid duplicate telemetry from tabs by emitting `onValueChange` only on actual key transitions.
 - Keep tab focus-visible fallback resilient for both `Tab` and `Shift+Tab` keyboard re-entry after pointer interactions so reverse keyboard traversal preserves active-tab focus affordance.
 
