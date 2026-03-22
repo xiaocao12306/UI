@@ -1411,16 +1411,18 @@ test("preempts tabs managed keys through local onTabKeyDown guard in lab panel",
   await expect(auditTab).toHaveAttribute("aria-selected", "true");
   await expect(telemetry).toHaveText("blocked:ArrowRight");
 
-  await auditTab.press("Enter");
+  await handoffTab.focus();
+  await handoffTab.press("Enter");
   await expect(telemetry).toHaveText("blocked:Enter");
+  await expect(auditTab).toHaveAttribute("aria-selected", "true");
+  await expect(handoffTab).toHaveAttribute("aria-selected", "false");
 
   await guardSwitch.click();
   await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
   await expect(telemetry).toHaveText("idle");
 
-  await auditTab.focus();
-  await auditTab.press("ArrowRight");
-  await expect(handoffTab).toBeFocused();
+  await handoffTab.focus();
+  await handoffTab.press("Enter");
   await expect(handoffTab).toHaveAttribute("aria-selected", "true");
 });
 
@@ -1441,19 +1443,18 @@ test("preempts tabs Space activation through local onTabKeyDown guard in lab pan
   await guardSwitch.click();
   await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
 
-  await auditTab.focus();
-  await auditTab.press("Space");
+  await handoffTab.focus();
+  await handoffTab.press("Space");
   await expect(telemetry).toHaveText("blocked:Space");
-  await expect(auditTab).toBeFocused();
   await expect(auditTab).toHaveAttribute("aria-selected", "true");
+  await expect(handoffTab).toHaveAttribute("aria-selected", "false");
 
   await guardSwitch.click();
   await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
   await expect(telemetry).toHaveText("idle");
 
-  await auditTab.focus();
-  await auditTab.press("ArrowRight");
-  await expect(handoffTab).toBeFocused();
+  await handoffTab.focus();
+  await handoffTab.press("Space");
   await expect(handoffTab).toHaveAttribute("aria-selected", "true");
 });
 
