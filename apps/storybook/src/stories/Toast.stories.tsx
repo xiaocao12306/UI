@@ -265,6 +265,52 @@ export const CloseButtonKeyboardPressedState: Story = {
   }
 };
 
+function CloseButtonManagedKeysPreemptedByLocalHandlerDemo() {
+  return (
+    <ToastShowcase align="start">
+      <Toast
+        open
+        onOpenChange={() => {}}
+        duration={0}
+        title="Locally preempted keyboard close"
+        description="Local close-button key guards should suppress pressed feedback."
+        tone="info"
+        onCloseButtonKeyDown={(event) => {
+          if (
+            event.key === "Enter" ||
+            event.key === " " ||
+            event.key === "Space" ||
+            event.key === "Spacebar"
+          ) {
+            event.preventDefault();
+          }
+        }}
+      />
+    </ToastShowcase>
+  );
+}
+
+export const CloseButtonManagedKeysPreemptedByLocalHandler: Story = {
+  render: () => <CloseButtonManagedKeysPreemptedByLocalHandlerDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const closeButton = canvas.getByRole("button", { name: "Close toast" });
+
+    closeButton.focus();
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+    fireEvent.keyUp(closeButton, { key: "Enter" });
+
+    fireEvent.keyDown(closeButton, { key: "Space" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+    fireEvent.keyUp(closeButton, { key: "Space" });
+  }
+};
+
 function FocusIntentReentryDemo() {
   return (
     <ToastShowcase align="start">

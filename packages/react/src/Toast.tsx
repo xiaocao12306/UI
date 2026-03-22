@@ -16,6 +16,7 @@ export type ToastProps = {
   pauseOnHover?: boolean;
   closeOnEscape?: boolean;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
+  onCloseButtonKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
   closeLabel?: string;
   ariaLabel?: string;
   ariaLabelledBy?: string;
@@ -202,6 +203,7 @@ export function Toast({
   pauseOnHover = true,
   closeOnEscape = true,
   onEscapeKeyDown,
+  onCloseButtonKeyDown,
   closeLabel = "Close toast",
   ariaLabel,
   ariaLabelledBy,
@@ -662,6 +664,7 @@ export function Toast({
           }}
           onKeyDown={(event) => {
             closeButtonFocusIntentRef.current = true;
+            onCloseButtonKeyDown?.(event);
             if (event.defaultPrevented) {
               return;
             }
@@ -671,7 +674,7 @@ export function Toast({
             if (
               isToastCloseButtonActivationKey(event.key) &&
               !isModifiedToastCloseButtonActivationChord(event) &&
-              !event.repeat
+                !event.repeat
             ) {
               setCloseButtonPressed(true);
             }

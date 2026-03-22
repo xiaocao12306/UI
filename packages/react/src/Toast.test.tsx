@@ -1509,6 +1509,34 @@ describe("Toast", () => {
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });
 
+  it("keeps keyboard pressed feedback idle when activation keydown is preempted locally", () => {
+    render(
+      <Toast
+        open
+        title="Locally preempted keyboard pressable"
+        duration={0}
+        onCloseButtonKeyDown={(event) => {
+          if (
+            event.key === "Enter" ||
+            event.key === " " ||
+            event.key === "Space" ||
+            event.key === "Spacebar"
+          ) {
+            event.preventDefault();
+          }
+        }}
+      />
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Close toast" });
+
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.keyDown(closeButton, { key: "Space" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+  });
+
   it("exposes close-button keyboard shortcut hints for Enter/Space activation", () => {
     render(<Toast open title="Shortcut hints" duration={0} />);
     expect(screen.getByRole("button", { name: "Close toast" })).toHaveAttribute(
