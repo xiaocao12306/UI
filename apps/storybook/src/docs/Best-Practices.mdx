@@ -118,6 +118,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep combobox `aria-controls` conditional on listbox visibility (not just focus/open shell) to avoid dangling listbox references in empty-result states.
 - Keep combobox keyboard handling scoped to unmodified keys; `Ctrl/Meta/Alt + Arrow/Home/End/Enter/Escape` should stay on host/browser shortcut behavior.
 - Treat combobox `Enter` selection repeat (`event.repeat`) as no-op so long-press does not trigger duplicate `onValueChange` callbacks or premature popup close.
+- For workflow-level approvals and global shortcut arbitration, use `onInputKeyDown` and `event.preventDefault()` to preempt combobox managed keys without wrapping internal state logic.
 - Ignore combobox managed keys (`Arrow/Home/End/Enter/Escape`) during IME composition, including legacy browsers that only expose `keyCode=229`, so CJK confirmation does not trigger accidental navigation, selection, or dismiss.
 - Normalize combobox search text (accent-insensitive + whitespace collapse) so plain input like `cafe` can match localized labels/keywords such as `Café` and `déploiement`.
 - Keep combobox `aria-keyshortcuts` state-aware: preserve closed-state baseline `Enter` hint from text-input semantics, add navigation hints only when multiple enabled options are present, and expose `Escape` only while popup dismiss is available.

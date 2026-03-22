@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Badge, Combobox, type ComboboxOption } from "@aurora-ui/react";
+import { Badge, Button, Combobox, type ComboboxOption } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const frameworkOptions: ComboboxOption[] = [
@@ -216,6 +216,71 @@ export const ModifierKeyGuard: Story = {
     await userEvent.keyboard("{Escape}");
     await expect(canvas.queryByRole("listbox", { name: "Framework modifier guard options" })).not.toBeInTheDocument();
     await expect(canvas.getByTestId("combobox-modifier-selected-value")).toHaveTextContent("react");
+  }
+};
+
+function ManagedKeysPreemptedComboboxDemo() {
+  const [value, setValue] = React.useState("react");
+  const [guardEnabled, setGuardEnabled] = React.useState(true);
+  const [telemetry, setTelemetry] = React.useState("idle");
+
+  return (
+    <div style={{ width: 420, display: "grid", gap: 10 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
+        <Button type="button" variant="outline" size="sm" onClick={() => setGuardEnabled((current) => !current)}>
+          {guardEnabled ? "Disable local key guard" : "Enable local key guard"}
+        </Button>
+        <Badge tone="default" data-testid="combobox-local-guard-telemetry">
+          {telemetry}
+        </Badge>
+        <Badge tone="success" data-testid="combobox-local-guard-selected-value">
+          {value}
+        </Badge>
+      </div>
+      <Combobox
+        options={frameworkOptions}
+        value={value}
+        onValueChange={setValue}
+        ariaLabel="Framework local key guard"
+        onInputKeyDown={(event) => {
+          if (!guardEnabled) {
+            return;
+          }
+          if (event.key === "ArrowDown" || event.key === "Enter" || event.key === "Escape") {
+            event.preventDefault();
+            setTelemetry(`blocked:${event.key}`);
+          }
+        }}
+      />
+    </div>
+  );
+}
+
+export const ManagedKeysPreemptedByLocalHandler: Story = {
+  render: () => <ManagedKeysPreemptedComboboxDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Framework local key guard" });
+    const telemetry = canvas.getByTestId("combobox-local-guard-telemetry");
+    const selected = canvas.getByTestId("combobox-local-guard-selected-value");
+
+    await userEvent.click(input);
+    await userEvent.clear(input);
+    await expect(canvas.getByRole("listbox", { name: "Framework local key guard options" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{ArrowDown}");
+    await userEvent.keyboard("{Enter}");
+    await expect(telemetry).toHaveTextContent("blocked:Enter");
+    await expect(selected).toHaveTextContent("react");
+    await expect(canvas.getByRole("listbox", { name: "Framework local key guard options" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Disable local key guard" }));
+    await userEvent.click(input);
+    await userEvent.clear(input);
+    await userEvent.keyboard("{ArrowDown}");
+    await userEvent.keyboard("{Enter}");
+    await expect(selected).toHaveTextContent("vue");
+    await expect(canvas.queryByRole("listbox", { name: "Framework local key guard options" })).not.toBeInTheDocument();
   }
 };
 

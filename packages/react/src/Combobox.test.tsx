@@ -504,6 +504,35 @@ describe("Combobox", () => {
     expect(onValueChange).toHaveBeenCalledWith("vue");
   });
 
+  it("preempts managed combobox keys via local onInputKeyDown guard", () => {
+    const onValueChange = vi.fn();
+    const onInputKeyDown = vi.fn((event) => {
+      if (event.key === "ArrowDown" || event.key === "Enter" || event.key === "Escape") {
+        event.preventDefault();
+      }
+    });
+    render(
+      <Combobox options={options} onValueChange={onValueChange} onInputKeyDown={onInputKeyDown} />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+
+    expect(onInputKeyDown).toHaveBeenCalled();
+  });
+
   it("ignores managed key handling during IME composition including legacy keyCode fallback", () => {
     const onValueChange = vi.fn();
     render(<Combobox options={options} onValueChange={onValueChange} />);

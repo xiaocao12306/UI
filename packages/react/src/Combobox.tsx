@@ -16,6 +16,7 @@ export type ComboboxProps = {
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
+  onInputKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
   emptyMessage?: React.ReactNode;
   disabled?: boolean;
@@ -112,6 +113,7 @@ export function Combobox({
   value,
   defaultValue,
   onValueChange,
+  onInputKeyDown,
   placeholder = "Search option...",
   emptyMessage = "No option found.",
   disabled = false,
@@ -396,6 +398,10 @@ export function Combobox({
         }}
         onKeyDown={(event) => {
           if (disabled) {
+            return;
+          }
+          onInputKeyDown?.(event);
+          if (event.defaultPrevented) {
             return;
           }
 
