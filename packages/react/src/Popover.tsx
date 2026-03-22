@@ -168,6 +168,9 @@ export function Popover({
           }
 
           if (event.key === "Tab" && isOpen) {
+            if (event.altKey || event.ctrlKey || event.metaKey) {
+              return;
+            }
             dismissWithTabNavigation(event);
             return;
           }

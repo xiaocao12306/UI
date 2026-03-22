@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, Input, Popover } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 import { StoryShowcaseFrame, storyEmphasisTextStyle, storyMutedTextStyle } from "./storyShowcase";
 
 const popoverTelemetryTextStyle: React.CSSProperties = {
@@ -124,6 +124,63 @@ export const TriggerArrowDownModifierGuard: Story = {
     await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
     await expect(trigger).not.toHaveAttribute("aria-keyshortcuts");
     await expect(canvas.getByTestId("popover-arrowdown-open-calls")).toHaveTextContent("1");
+  }
+};
+
+function TriggerTabModifierGuardPopoverDemo() {
+  const [tabDismissCount, setTabDismissCount] = React.useState(0);
+
+  return (
+    <PopoverShowcase>
+      <p style={popoverTelemetryTextStyle}>
+        Tab dismiss calls:{" "}
+        <strong data-testid="popover-trigger-tab-dismiss-calls" style={popoverTelemetryValueStyle}>
+          {tabDismissCount}
+        </strong>
+      </p>
+      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <Popover
+          triggerLabel="Trigger Tab Guard Popover"
+          onCloseReason={(reason) => {
+            if (reason === "tab-key") {
+              setTabDismissCount((count) => count + 1);
+            }
+          }}
+        >
+          <button type="button">Popover primary action</button>
+        </Popover>
+        <button type="button">Next page action</button>
+      </div>
+    </PopoverShowcase>
+  );
+}
+
+export const TriggerTabModifierGuard: Story = {
+  render: () => <TriggerTabModifierGuardPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Trigger Tab Guard Popover" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    trigger.focus();
+    fireEvent.keyDown(trigger, { key: "Tab", ctrlKey: true });
+    fireEvent.keyDown(trigger, { key: "Tab", altKey: true });
+    fireEvent.keyDown(trigger, { key: "Tab", metaKey: true });
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-trigger-tab-dismiss-calls")).toHaveTextContent("0");
+
+    fireEvent.keyDown(trigger, { key: "Tab" });
+    await waitFor(() => {
+      expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    });
+    await waitFor(() => {
+      expect(canvas.getByRole("button", { name: "Next page action" })).toHaveFocus();
+    });
+    await waitFor(() => {
+      expect(canvas.getByTestId("popover-trigger-tab-dismiss-calls")).toHaveTextContent("1");
+    });
   }
 };
 

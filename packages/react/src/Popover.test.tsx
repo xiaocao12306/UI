@@ -219,6 +219,38 @@ describe("Popover", () => {
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   });
 
+  it("ignores modified Tab combinations on trigger tab-dismiss path", () => {
+    const onCloseReason = vi.fn();
+
+    render(
+      <div>
+        <Popover triggerLabel="Trigger tab guard popover" onCloseReason={onCloseReason}>
+          <button type="button">Popover primary action</button>
+        </Popover>
+        <button type="button">Next page action</button>
+      </div>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Trigger tab guard popover" });
+    const nextAction = screen.getByRole("button", { name: "Next page action" });
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Popover primary action" })).toHaveFocus();
+
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "Tab", ctrlKey: true });
+    fireEvent.keyDown(trigger, { key: "Tab", altKey: true });
+    fireEvent.keyDown(trigger, { key: "Tab", metaKey: true });
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    expect(onCloseReason).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(trigger, { key: "Tab" });
+    expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+    expect(nextAction).toHaveFocus();
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "tab-key");
+  });
+
   it("skips trigger and content keyboard handling when keydown is preempted upstream", () => {
     const onCloseReason = vi.fn();
     const preemptManagedKeys = (event: KeyboardEvent) => {
