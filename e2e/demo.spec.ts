@@ -334,6 +334,41 @@ test("preempts dialog close button Enter via local key guard hook", async ({ pag
   await expect(dialog).toBeHidden();
 });
 
+test("preempts dialog close button Space via local key guard hook", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Open Dialog" });
+  const guardSwitch = page.getByRole("switch", {
+    name: "Guard dialog close Enter/Space via local hook"
+  });
+  const guardTelemetry = page.getByTestId("dialog-close-button-guard-telemetry");
+  const dialog = page.getByRole("dialog").filter({ hasText: "Dialog Example" });
+  const closeButton = page.getByRole("button", { name: "Close dialog" });
+
+  await expect(guardTelemetry).toHaveText("idle");
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await trigger.click();
+  await expect(dialog).toBeVisible();
+  await closeButton.focus();
+  await closeButton.press("Space");
+  await expect(guardTelemetry).toHaveText("blocked:Space");
+  await expect(dialog).toBeVisible();
+  await closeButton.click();
+  await expect(dialog).toBeHidden();
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(guardTelemetry).toHaveText("idle");
+
+  await trigger.click();
+  await expect(dialog).toBeVisible();
+  await closeButton.focus();
+  await closeButton.press("Space");
+  await expect(dialog).toBeHidden();
+});
+
 test("opens and dismisses drawer with keyboard", async ({ page }) => {
   await page.goto("/");
 
@@ -519,6 +554,41 @@ test("preempts drawer close button Enter via local key guard hook", async ({ pag
   await expect(drawer).toBeVisible();
   await closeButton.focus();
   await closeButton.press("Enter");
+  await expect(drawer).toBeHidden();
+});
+
+test("preempts drawer close button Space via local key guard hook", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Open Drawer" });
+  const guardSwitch = page.getByRole("switch", {
+    name: "Guard drawer close Enter/Space via local hook"
+  });
+  const guardTelemetry = page.getByTestId("drawer-close-button-guard-telemetry");
+  const drawer = page.getByRole("dialog", { name: "Drawer Example" });
+  const closeButton = page.getByRole("button", { name: "Close drawer" });
+
+  await expect(guardTelemetry).toHaveText("idle");
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await trigger.click();
+  await expect(drawer).toBeVisible();
+  await closeButton.focus();
+  await closeButton.press("Space");
+  await expect(guardTelemetry).toHaveText("blocked:Space");
+  await expect(drawer).toBeVisible();
+  await closeButton.click();
+  await expect(drawer).toBeHidden();
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(guardTelemetry).toHaveText("idle");
+
+  await trigger.click();
+  await expect(drawer).toBeVisible();
+  await closeButton.focus();
+  await closeButton.press("Space");
   await expect(drawer).toBeHidden();
 });
 
