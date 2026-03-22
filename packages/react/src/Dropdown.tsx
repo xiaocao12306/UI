@@ -750,7 +750,9 @@ function focusAdjacentTabbable(
     const candidate = tabbableElements[nextIndex];
     if (candidate !== currentElement && isElementTabbable(candidate)) {
       candidate.focus();
-      return;
+      if (ownerDocument.activeElement === candidate) {
+        return;
+      }
     }
     nextIndex += direction;
   }
@@ -761,8 +763,25 @@ function isElementTabbable(element: HTMLElement) {
     return false;
   }
 
+  if ("disabled" in element && (element as HTMLButtonElement | HTMLInputElement).disabled) {
+    return false;
+  }
+
   if (element.hidden || element.getAttribute("aria-hidden") === "true") {
     return false;
+  }
+
+  if (element.closest("[inert]")) {
+    return false;
+  }
+
+  const ownerWindow =
+    element.ownerDocument.defaultView ?? (typeof window !== "undefined" ? window : null);
+  if (ownerWindow) {
+    const computedStyle = ownerWindow.getComputedStyle(element);
+    if (computedStyle.display === "none" || computedStyle.visibility === "hidden") {
+      return false;
+    }
   }
 
   return true;

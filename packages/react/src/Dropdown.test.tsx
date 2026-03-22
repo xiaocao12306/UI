@@ -1552,6 +1552,39 @@ describe("Dropdown", () => {
     expect(previousControl).toHaveFocus();
   });
 
+  it("skips non-focusable adjacent controls when handling Tab dismiss", () => {
+    render(
+      <div>
+        <Dropdown
+          label="Tab focus skip"
+          items={[
+            { key: "one", label: "One" },
+            { key: "two", label: "Two" }
+          ]}
+        />
+        <button type="button" style={{ display: "none" }}>
+          Hidden next control
+        </button>
+        <div inert={true}>
+          <button type="button">Inert next control</button>
+        </div>
+        <button type="button">Visible next control</button>
+      </div>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Tab focus skip" });
+    const visibleNextControl = screen.getByRole("button", { name: "Visible next control" });
+
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    const firstItem = screen.getByRole("menuitem", { name: "One" });
+    expect(firstItem).toHaveFocus();
+
+    fireEvent.keyDown(firstItem, { key: "Tab" });
+    expect(screen.queryByRole("menu", { name: "Tab focus skip" })).toBeNull();
+    expect(visibleNextControl).toHaveFocus();
+  });
+
   it("moves focus to adjacent controls on Tab and Shift+Tab dismiss for iframe-hosted renders", () => {
     const iframe = document.createElement("iframe");
     document.body.appendChild(iframe);
