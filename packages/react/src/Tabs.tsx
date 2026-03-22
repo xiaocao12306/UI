@@ -392,6 +392,11 @@ export function Tabs({
           const interactive = hovered || focusVisible;
           const itemAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
           const itemAriaLabel = itemAriaLabelledBy ? undefined : resolveNonEmptyLabel(item.ariaLabel);
+          const hasReadableLabel = hasReadableTextNode(item.label);
+          const fallbackItemAriaLabel =
+            itemAriaLabelledBy || itemAriaLabel || hasReadableLabel
+              ? undefined
+              : resolveFallbackTabAriaLabel(item.key, index);
 
           return (
             <button
@@ -404,7 +409,7 @@ export function Tabs({
               type="button"
               role="tab"
               aria-labelledby={itemAriaLabelledBy}
-              aria-label={itemAriaLabel}
+              aria-label={itemAriaLabel ?? fallbackItemAriaLabel}
               aria-selected={selected}
               aria-controls={domIds?.panelId ?? `${baseId}-panel-${index}`}
               aria-disabled={disabled || undefined}
@@ -789,6 +794,15 @@ function resolveNonEmptyLabel(label: string | undefined, fallback?: string): str
   }
 
   return fallback;
+}
+
+function resolveFallbackTabAriaLabel(key: string, index: number) {
+  const normalizedKey = key.trim();
+  if (normalizedKey.length > 0) {
+    return normalizedKey;
+  }
+
+  return `Tab ${index + 1}`;
 }
 
 function createTabDomIds(baseId: string, items: TabItem[]) {

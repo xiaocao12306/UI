@@ -541,6 +541,30 @@ describe("Tabs", () => {
           'Non-text labels should provide ariaLabel or ariaLabelledBy: "icon-only"'
         )
       );
+      const fallbackNamedTab = screen.getByRole("tab", { name: "icon-only" });
+      expect(fallbackNamedTab).toHaveAttribute("aria-label", "icon-only");
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("falls back to indexed tab name when key is blank for non-text labels", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Tabs
+          items={[
+            { key: "   ", label: <span aria-hidden="true">⚙</span>, content: <div>Panel One</div> },
+            { key: "release", label: "Release", content: <div>Panel Two</div> }
+          ]}
+        />
+      );
+
+      const fallbackNamedTab = screen.getByRole("tab", { name: "Tab 1" });
+      expect(fallbackNamedTab).toHaveAttribute("aria-label", "Tab 1");
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();

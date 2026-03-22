@@ -609,6 +609,33 @@ function IconOnlyLabelTabsDemo() {
   );
 }
 
+function NonTextFallbackNamingTabsDemo() {
+  return (
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
+        Non-text tabs without explicit naming still get fallback accessible names derived from
+        <code> items[].key </code> to avoid unnamed tab controls in production.
+      </p>
+      <Tabs
+        ariaLabel="Fallback naming tabs"
+        defaultValue="overview-stage"
+        items={[
+          {
+            key: "overview-stage",
+            label: <span aria-hidden="true">🧭</span>,
+            content: "Overview panel keeps fallback naming deterministic."
+          },
+          {
+            key: "release",
+            label: "Release",
+            content: "Release panel remains text-labeled."
+          }
+        ]}
+      />
+    </TabsShowcase>
+  );
+}
+
 function IconOnlyLabelledByTabsDemo() {
   return (
     <TabsShowcase gap={10}>
@@ -658,6 +685,18 @@ export const IconOnlyLabelNaming: Story = {
     await expect(iconTab).toHaveAttribute("aria-controls");
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
       "Overview panel keeps icon-only tab naming explicit."
+    );
+  }
+};
+
+export const NonTextFallbackNaming: Story = {
+  render: () => <NonTextFallbackNamingTabsDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const iconTab = canvas.getByRole("tab", { name: "overview-stage" });
+    await expect(iconTab).toHaveAttribute("aria-label", "overview-stage");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+      "Overview panel keeps fallback naming deterministic."
     );
   }
 };
