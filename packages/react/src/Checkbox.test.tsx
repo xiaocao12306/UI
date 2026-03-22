@@ -224,4 +224,30 @@ describe("Checkbox", () => {
     expect(checkbox).toHaveAttribute("aria-labelledby", "checkbox-heading");
     expect(checkbox).not.toHaveAttribute("aria-label");
   });
+
+  it("warns when non-text checkbox labels omit aria-label and aria-labelledby", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(<Checkbox label={<span aria-hidden="true">🧪</span>} />);
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Checkbox] Non-text label content should provide aria-label or aria-labelledby."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn when non-text checkbox labels expose inline aria-label", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(<Checkbox label={<span aria-label="Deploy gate icon">🧪</span>} />);
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        "[Checkbox] Non-text label content should provide aria-label or aria-labelledby."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
 });

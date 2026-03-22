@@ -346,4 +346,30 @@ describe("Switch", () => {
     expect(control).toHaveAttribute("aria-labelledby", "switch-name-source");
     expect(control).not.toHaveAttribute("aria-label");
   });
+
+  it("warns when non-text switch labels omit aria-label and aria-labelledby", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(<Switch label={<span aria-hidden="true">🧠</span>} />);
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Switch] Non-text label content should provide aria-label or aria-labelledby."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn when non-text switch labels expose inline aria-label", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(<Switch label={<span aria-label="Automation mode icon">🧠</span>} />);
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        "[Switch] Non-text label content should provide aria-label or aria-labelledby."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
 });

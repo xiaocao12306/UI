@@ -128,6 +128,28 @@ export const LabelledByPrecedence: Story = {
   }
 };
 
+export const IconLabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ width: 320, display: "grid", gap: 10 }}>
+      <p id="checkbox-icon-heading" style={{ margin: 0, color: "var(--aurora-text-primary)" }}>
+        Notification opt-in
+      </p>
+      <Checkbox
+        aria-label="Fallback notification checkbox"
+        aria-labelledby="checkbox-icon-heading"
+        label={<span aria-hidden="true">🔔</span>}
+        description="Icon-only label should still keep canonical external naming."
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole("checkbox", { name: "Notification opt-in" });
+    await expect(checkbox).toHaveAttribute("aria-labelledby", "checkbox-icon-heading");
+    await expect(checkbox).not.toHaveAttribute("aria-label");
+  }
+};
+
 export const FocusIntentReentry: Story = {
   render: () => (
     <div style={{ width: 320, display: "grid", gap: 10 }}>

@@ -58,6 +58,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat blank input `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank checkbox `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Keep checkbox shortcut hints precise: expose `aria-keyshortcuts="Space"` only while actionable, and remove shortcut metadata when checkbox is disabled.
+- For icon/non-text checkbox label or description content, provide `aria-labelledby` when a visible heading exists, otherwise provide `aria-label`; rich content with inline `aria-label` is auto-detected, and development builds warn when naming is still missing.
 - Keep select shortcut hints precise: expose `aria-keyshortcuts="ArrowDown ArrowUp"` only while actionable, and remove shortcut metadata when select is disabled.
 - Keep native select `<option value>` entries unique and stable; development builds warn on duplicate values so selected-option semantics stay deterministic.
 - Treat blank select `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
@@ -66,6 +67,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat blank date-picker `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Keep switch keyboard toggle and pressed-state feedback scoped to unmodified `Space` keys (` ` / `Space` / `Spacebar`); `Ctrl/Meta/Alt + Space` should remain host shortcut behavior, and IME composition key paths (`isComposing` / `keyCode=229`) should stay no-op.
 - Keep switch shortcut hints precise: expose `aria-keyshortcuts="Space"` only while actionable, and remove shortcut metadata when switch is disabled.
+- For icon/non-text switch label or description content, provide `aria-labelledby` when a visible heading exists, otherwise provide `aria-label`; rich content with inline `aria-label` is auto-detected, and development builds warn when naming is still missing.
 - Prefer `ariaLabelledBy` for radio groups when a visible heading already exists; use `ariaLabel` for standalone groups without nearby title context.
 - Keep radio option shortcut hints precise: expose `aria-keyshortcuts="Space"` only on actionable options, and remove shortcut metadata from disabled options.
 - Keep `RadioGroup.options[].value` unique and stable; development builds warn on duplicate values and runtime render keys auto-suffix duplicates for React stability, but unique values are still required for deterministic checked/focus semantics.

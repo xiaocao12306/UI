@@ -33,6 +33,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
   const [focusVisible, setFocusVisible] = React.useState(false);
   const localRef = React.useRef<HTMLInputElement | null>(null);
   const focusVisibleIntentRef = React.useRef(false);
+  const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const descriptionId = React.useId();
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
@@ -83,6 +84,28 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
       ownerDocument.removeEventListener("touchstart", markPointerIntent, true);
     };
   }, []);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const hasReadableLabelText =
+      getReadableCheckboxTextNode(label).length > 0 || getReadableCheckboxTextNode(description).length > 0;
+    const hasExplicitAriaLabel = ariaLabel !== undefined || ariaLabelledBy !== undefined;
+    if (hasReadableLabelText || hasExplicitAriaLabel) {
+      warnedMissingAriaLabelSignatureRef.current = null;
+      return;
+    }
+
+    const signature = "missing-aria-name";
+    if (warnedMissingAriaLabelSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingAriaLabelSignatureRef.current = signature;
+
+    console.warn("[Checkbox] Non-text label content should provide aria-label or aria-labelledby.");
+  }, [ariaLabel, ariaLabelledBy, description, label]);
 
   React.useEffect(() => {
     if (localRef.current) {
@@ -202,4 +225,50 @@ function resolveFocusVisibleState(target: HTMLInputElement, fallback: boolean) {
 
 function isPrimaryPointerButton(button: number | undefined) {
   return typeof button !== "number" || button <= 0;
+}
+
+function getReadableCheckboxTextNode(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return normalizeReadableCheckboxText(node);
+  }
+
+  if (typeof node === "number") {
+    return normalizeReadableCheckboxText(String(node));
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeReadableCheckboxText(
+      node
+        .map((item) => getReadableCheckboxTextNode(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  if (
+    typeof elementProps["aria-label"] === "string" &&
+    elementProps["aria-label"].trim().length > 0
+  ) {
+    return normalizeReadableCheckboxText(elementProps["aria-label"]);
+  }
+
+  return getReadableCheckboxTextNode(elementProps.children);
+}
+
+function normalizeReadableCheckboxText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }

@@ -48,6 +48,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
   const [pressed, setPressed] = React.useState(false);
   const focusVisibleIntentRef = React.useRef(true);
   const buttonRef = React.useRef<HTMLButtonElement | null>(null);
+  const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
 
@@ -91,6 +92,28 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     setHovered(false);
     setPressed(false);
   }, [disabled]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const hasReadableLabelText =
+      getReadableSwitchTextNode(label).length > 0 || getReadableSwitchTextNode(description).length > 0;
+    const hasExplicitAriaLabel = ariaLabel !== undefined || ariaLabelledBy !== undefined;
+    if (hasReadableLabelText || hasExplicitAriaLabel) {
+      warnedMissingAriaLabelSignatureRef.current = null;
+      return;
+    }
+
+    const signature = "missing-aria-name";
+    if (warnedMissingAriaLabelSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingAriaLabelSignatureRef.current = signature;
+
+    console.warn("[Switch] Non-text label content should provide aria-label or aria-labelledby.");
+  }, [ariaLabel, ariaLabelledBy, description, label]);
 
   React.useEffect(() => {
     const ownerDocument = buttonRef.current?.ownerDocument ?? document;
@@ -353,6 +376,51 @@ function resolveNonEmptyLabel(label: string | undefined) {
 
 function isPrimaryPointerButton(button: number | undefined) {
   return typeof button !== "number" || button <= 0;
+}
+
+function getReadableSwitchTextNode(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return normalizeReadableSwitchText(node);
+  }
+
+  if (typeof node === "number") {
+    return normalizeReadableSwitchText(String(node));
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeReadableSwitchText(
+      node
+        .map((item) => getReadableSwitchTextNode(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  if (
+    typeof elementProps["aria-label"] === "string" &&
+    elementProps["aria-label"].trim().length > 0
+  ) {
+    return normalizeReadableSwitchText(elementProps["aria-label"]);
+  }
+
+  return getReadableSwitchTextNode(elementProps.children);
+}
+
+function normalizeReadableSwitchText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }
 
 function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {

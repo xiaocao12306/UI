@@ -194,6 +194,29 @@ export const LabelledByPrecedence: Story = {
   }
 };
 
+export const IconLabelledByPrecedence: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 380px)" gap={12}>
+      <p id="switch-icon-heading" style={{ margin: 0, color: "var(--aurora-text-primary)" }}>
+        Automation mode
+      </p>
+      <Switch
+        label={<span aria-hidden="true">⚙️</span>}
+        description="Icon-only label should keep canonical external naming."
+        aria-label="Fallback automation switch"
+        aria-labelledby="switch-icon-heading"
+        defaultChecked={false}
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const control = canvas.getByRole("switch", { name: "Automation mode" });
+    await expect(control).toHaveAttribute("aria-labelledby", "switch-icon-heading");
+    await expect(control).not.toHaveAttribute("aria-label");
+  }
+};
+
 function GuardedClickSwitch() {
   const [checked, setChecked] = React.useState(false);
 

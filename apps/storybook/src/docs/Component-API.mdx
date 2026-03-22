@@ -133,7 +133,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `indeterminate`                       | `boolean`                                    | Sets mixed state semantics (`aria-checked="mixed"`).                                                                                                                                               |
 | keyboard shortcut hints               | default `aria-keyshortcuts="Space"`          | Actionable checkboxes expose `Space` shortcut metadata for QA/AT discoverability; disabled checkboxes omit hints so metadata never advertises unavailable keyboard actions.                         |
 | `description`                         | `ReactNode`                                  | Automatically wires helper text into `aria-describedby`.                                                                                                                                           |
-| `aria-label` / `aria-labelledby`      | `string`                                     | Optional explicit naming; blank values are ignored, and `aria-labelledby` takes precedence when both are provided.                                                                                 |
+| `aria-label` / `aria-labelledby`      | `string`                                     | Optional explicit naming; blank values are ignored, and `aria-labelledby` takes precedence when both are provided. Rich label/description nodes with inline `aria-label` are auto-detected before development warnings for non-text naming gaps. |
 | focus intent policy                   | primary pointer clears focus-visible         | Non-primary pointer interactions and `Ctrl + primary click` context-click paths keep checkbox focus-visible state; plain primary pointer clears keyboard-intent focus-visible feedback before toggle intent. |
 | document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores checkbox focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and `Ctrl + primary click` do not clear fallback keyboard intent. |
 | `invalid`                             | `boolean`                                    | Applies invalid state with `aria-invalid`.                                                                                                                                                         |
@@ -141,6 +141,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={CheckboxStories.InvalidAndDisabled} />
 <Canvas of={CheckboxStories.ShortcutHintPrecision} />
 <Canvas of={CheckboxStories.LabelledByPrecedence} />
+<Canvas of={CheckboxStories.IconLabelledByPrecedence} />
 <Canvas of={CheckboxStories.FocusIntentReentry} />
 
 ### RadioGroup
@@ -180,7 +181,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | keyboard pressed feedback policy      | unmodified `Space` (` ` / `Space` / `Spacebar`) | Switch exposes `data-pressed` only while an unmodified activation key is held; `Ctrl/Meta/Alt` chords and IME composition paths (`isComposing` / `keyCode=229`) stay passive to avoid false feedback. |
 | click guard                           | `onClick(event.preventDefault())`               | Pointer toggle respects consumer click guards; blocked clicks do not emit `onCheckedChange`.                                                                                                     |
 | `description`                         | `ReactNode`                                     | Auto-wires helper copy to `aria-describedby`.                                                                                                                                                    |
-| `aria-label` / `aria-labelledby`      | `string`                                        | Optional explicit naming; blank string values are ignored, and `aria-labelledby` takes precedence when both are provided.                                                                        |
+| `aria-label` / `aria-labelledby`      | `string`                                        | Optional explicit naming; blank string values are ignored, and `aria-labelledby` takes precedence when both are provided. Rich label/description nodes with inline `aria-label` are auto-detected before development warnings for non-text naming gaps. |
 | focus intent + pressed policy         | plain primary pointer only                      | Non-primary pointer interactions and `Ctrl + primary click` context-click paths keep switch focus-visible state and do not trigger `data-pressed`; plain primary pointer clears focus-visible and can set pressed feedback. |
 | keyboard modifier guard               | ignores `Ctrl/Meta/Alt + Space` switch handling | Preserves host/browser shortcut chords and avoids accidental toggle from modified key combinations.                                                                                              |
 | document-scoped focus intent fallback | owner-document `keydown` / pointer listeners    | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores switch focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and `Ctrl + primary click` do not clear fallback keyboard intent. |
@@ -191,6 +192,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={SwitchStories.KeyboardModifierGuard} />
 <Canvas of={SwitchStories.ImeCompositionGuard} />
 <Canvas of={SwitchStories.LabelledByPrecedence} />
+<Canvas of={SwitchStories.IconLabelledByPrecedence} />
 <Canvas of={SwitchStories.ClickPreventDefaultGuard} />
 <Canvas of={SwitchStories.FocusIntentReentry} />
 
