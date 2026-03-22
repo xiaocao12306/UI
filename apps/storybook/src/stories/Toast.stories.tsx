@@ -966,6 +966,22 @@ export const AriaLabelOverride: Story = {
   }
 };
 
+export const NumericDescriptionSemantics: Story = {
+  render: () => (
+    <ToastShowcase align="start">
+      <Toast open duration={0} title="Release notice" description={0} />
+    </ToastShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const toast = canvas.getByRole("status", { name: "Release notice" });
+    const descriptions = canvas.getAllByText("0");
+
+    await expect(descriptions).toHaveLength(1);
+    await expect(toast).toHaveAttribute("aria-describedby", descriptions[0].id);
+  }
+};
+
 export const LabelledByPrecedence: Story = {
   render: () => (
     <ToastShowcase align="start">

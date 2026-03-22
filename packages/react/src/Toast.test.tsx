@@ -204,6 +204,15 @@ describe("Toast", () => {
     expect(screen.getByRole("button", { name: "Close toast" })).toBeInTheDocument();
   });
 
+  it("treats numeric description as renderable toast semantics", () => {
+    render(<Toast open title="Release notice" description={0} duration={0} />);
+
+    const toast = screen.getByRole("status", { name: "Release notice" });
+    const descriptions = screen.getAllByText("0");
+    expect(descriptions).toHaveLength(1);
+    expect(toast).toHaveAttribute("aria-describedby", descriptions[0].getAttribute("id"));
+  });
+
   it("uses alert role for danger tone", () => {
     render(<Toast open tone="danger" title="Failed" />);
     expect(screen.getByRole("alert")).toHaveAttribute("aria-live", "assertive");

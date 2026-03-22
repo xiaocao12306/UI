@@ -70,6 +70,9 @@ export function Alert({
     ariaLabel.trim().length > 0
       ? ariaLabel.trim()
       : undefined;
+  const hasTitleContent = hasRenderableAlertNode(title);
+  const hasDescriptionContent = hasRenderableAlertNode(description);
+  const hasChildrenContent = hasRenderableAlertNode(children);
 
   React.useEffect(() => {
     if (onClose) {
@@ -135,10 +138,10 @@ export function Alert({
       {...props}
     >
       <div style={{ display: "flex", gap: 8, alignItems: "start", justifyContent: "space-between" }}>
-        <div style={{ display: "grid", gap: description || children ? 4 : 0 }}>
-          {title ? <strong>{title}</strong> : null}
-          {description ? <div>{description}</div> : null}
-          {children ? <div>{children}</div> : null}
+        <div style={{ display: "grid", gap: hasDescriptionContent || hasChildrenContent ? 4 : 0 }}>
+          {hasTitleContent ? <strong>{title}</strong> : null}
+          {hasDescriptionContent ? <div>{description}</div> : null}
+          {hasChildrenContent ? <div>{children}</div> : null}
         </div>
         {onClose ? (
           <button
@@ -266,4 +269,24 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
 
 function isPrimaryPointerButton(button: number | undefined) {
   return typeof button !== "number" || button <= 0;
+}
+
+function hasRenderableAlertNode(node: React.ReactNode): boolean {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return false;
+  }
+
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  if (typeof node === "number") {
+    return true;
+  }
+
+  if (Array.isArray(node)) {
+    return node.some((item) => hasRenderableAlertNode(item));
+  }
+
+  return React.isValidElement(node);
 }

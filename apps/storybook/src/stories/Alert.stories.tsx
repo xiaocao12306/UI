@@ -126,6 +126,24 @@ export const LabelledByPrecedence: Story = {
   }
 };
 
+export const NumericContentSemantics: Story = {
+  render: () => (
+    <AlertShowcase>
+      <Alert title={0} description={0}>
+        {0}
+      </Alert>
+    </AlertShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole("status");
+    const contentNodes = canvas.getAllByText("0");
+
+    await expect(contentNodes).toHaveLength(3);
+    await expect(alert).toHaveTextContent("000");
+  }
+};
+
 export const FocusIntentReentry: Story = {
   render: () => (
     <AlertShowcase>

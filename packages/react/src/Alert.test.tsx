@@ -12,6 +12,15 @@ describe("Alert", () => {
     expect(alert).toHaveTextContent("Deploy is still rolling out.");
   });
 
+  it("treats numeric title/description/children as renderable alert content", () => {
+    render(<Alert title={0} description={0}>{0}</Alert>);
+
+    const alert = screen.getByRole("status");
+    const contents = screen.getAllByText("0");
+    expect(contents).toHaveLength(3);
+    expect(alert).toHaveTextContent("000");
+  });
+
   it("uses assertive alert semantics for danger tone", () => {
     render(<Alert tone="danger" title="Deploy failed" description="Rollback required." />);
 
