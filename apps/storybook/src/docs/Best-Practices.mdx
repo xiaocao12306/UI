@@ -139,7 +139,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep tooltip Escape close behavior scoped to unmodified, non-repeat, non-IME keydown so host shortcut chords and CJK composition confirmation cannot collapse hint overlays unexpectedly.
 - For persistent hint workflows, set tooltip `closeOnEscape={false}` and rely on blur/pointer-leave close paths; ensure shortcut hints do not expose `aria-keyshortcuts="Escape"` when Escape dismiss is disabled.
 - For dialog/drawer in iframe or multi-root hosts, rely on owner-document portal mounting (`ownerDocument.body`) so overlay content and scroll-lock scope stay inside the invoking document.
-- For popover/dropdown in iframe or multi-root hosts, validate Escape/outside-pointer dismissal against the overlay `ownerDocument`; cross-document events should not close the active surface.
+- For popover/dropdown in iframe or multi-root hosts, validate Escape/outside-pointer dismissal against the overlay `ownerDocument`; cross-document events and `Ctrl + primary` context-click pointer paths should not close the active surface.
 - For dialog/drawer flows under app-level shortcuts, rely on built-in Escape preemption behavior so `onEscapeKeyDown` hooks stay side-effect free when Escape is already prevented.
 - Keep trigger `aria-controls` conditional on open state for popover/menu patterns to avoid stale ID references.
 - Use dialog `onCloseReason` for deterministic telemetry (`close-button` / `escape-key` / `outside-pointer`) instead of inferring dismiss origin from external state transitions.
