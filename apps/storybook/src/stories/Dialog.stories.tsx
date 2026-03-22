@@ -82,6 +82,37 @@ export const Interactive: Story = {
   }
 };
 
+function LabelledByPrecedenceDialog() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryShowcaseFrame align="start">
+      <h3 id="dialog-heading" style={{ margin: 0 }}>
+        Release checklist dialog heading
+      </h3>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        title={<span aria-hidden>✅</span>}
+        ariaLabel="Fallback release checklist dialog"
+        ariaLabelledBy="dialog-heading"
+      >
+        <p style={storyParagraphStyle}>Dialog name should follow visible heading binding.</p>
+      </Dialog>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const LabelledByPrecedence: Story = {
+  render: () => <LabelledByPrecedenceDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const dialog = await body.findByRole("dialog", { name: "Release checklist dialog heading" });
+    await expect(dialog).toHaveAttribute("aria-labelledby", "dialog-heading");
+    await expect(dialog).not.toHaveAttribute("aria-label");
+  }
+};
+
 function FocusReturnDialog() {
   const [open, setOpen] = React.useState(false);
 

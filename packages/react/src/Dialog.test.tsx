@@ -125,6 +125,39 @@ describe("Dialog", () => {
     expect(dialog).toHaveAttribute("aria-labelledby", heading.getAttribute("id"));
   });
 
+  it("prefers ariaLabelledBy over ariaLabel for dialog naming", () => {
+    render(
+      <div>
+        <h2 id="dialog-heading">Release checklist dialog</h2>
+        <Dialog
+          open
+          onOpenChange={() => {}}
+          title="Fallback dialog title"
+          ariaLabel="Fallback dialog label"
+          ariaLabelledBy="dialog-heading"
+        >
+          <p>Body</p>
+        </Dialog>
+      </div>
+    );
+
+    const dialog = screen.getByRole("dialog", { name: "Release checklist dialog" });
+    expect(dialog).toHaveAttribute("aria-labelledby", "dialog-heading");
+    expect(dialog).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and keeps ariaLabel naming fallback", () => {
+    render(
+      <Dialog open onOpenChange={() => {}} title={<span aria-hidden>✅</span>} ariaLabel="Release checklist dialog" ariaLabelledBy="   ">
+        <p>Body</p>
+      </Dialog>
+    );
+
+    const dialog = screen.getByRole("dialog", { name: "Release checklist dialog" });
+    expect(dialog).toHaveAttribute("aria-label", "Release checklist dialog");
+    expect(dialog).not.toHaveAttribute("aria-labelledby");
+  });
+
   it("connects dialog description via aria-describedby", () => {
     render(
       <Dialog

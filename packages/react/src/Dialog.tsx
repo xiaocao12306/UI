@@ -16,6 +16,8 @@ export type DialogProps = {
   closeOnOutsidePointer?: boolean;
   showCloseButton?: boolean;
   closeLabel?: string;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
   onPointerDownOutside?: (event: PointerEvent) => void;
   onCloseReason?: (reason: DialogCloseReason) => void;
@@ -39,6 +41,8 @@ export function Dialog({
   closeOnOutsidePointer = true,
   showCloseButton = true,
   closeLabel = "Close dialog",
+  ariaLabel,
+  ariaLabelledBy,
   onEscapeKeyDown,
   onPointerDownOutside,
   onCloseReason,
@@ -56,6 +60,16 @@ export function Dialog({
     typeof closeLabel === "string" && closeLabel.trim().length > 0
       ? closeLabel.trim()
       : "Close dialog";
+  const resolvedAriaLabelledBy =
+    typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
+      ? ariaLabelledBy.trim()
+      : undefined;
+  const resolvedAriaLabel =
+    resolvedAriaLabelledBy === undefined &&
+    typeof ariaLabel === "string" &&
+    ariaLabel.trim().length > 0
+      ? ariaLabel.trim()
+      : undefined;
 
   const closeWithReason = React.useCallback(
     (reason: DialogCloseReason) => {
@@ -162,7 +176,8 @@ export function Dialog({
               }}
               role="dialog"
               aria-modal="true"
-              aria-labelledby={titleId}
+              aria-label={resolvedAriaLabel}
+              aria-labelledby={resolvedAriaLabelledBy ?? (resolvedAriaLabel ? undefined : titleId)}
               aria-describedby={description ? descriptionId : undefined}
               aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
               data-state="open"
