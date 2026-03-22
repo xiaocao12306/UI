@@ -99,6 +99,18 @@ export const DisabledOption: Story = {
   }
 };
 
+export const NumericDescriptionSemantics: Story = {
+  args: {
+    name: "Numeric descriptions",
+    options: [{ label: "Priority tier", value: "p0", description: 0 }]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("0")).toBeInTheDocument();
+    await expect(canvas.getByRole("radio", { name: "Priority tier 0" })).toBeInTheDocument();
+  }
+};
+
 export const ShortcutHintPrecision: Story = {
   args: {
     name: "Shortcut hints",

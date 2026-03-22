@@ -196,6 +196,7 @@ export function RadioGroup({
     >
       {options.map((option, index) => {
         const optionDisabled = Boolean(disabled || option.disabled);
+        const hasDescriptionContent = hasRenderableRadioNode(option.description);
         const isFocused = focusedIndex === index;
         const isFocusVisible = focusVisibleIndex === index;
         const optionAriaLabelledBy = resolveNonEmptyLabel(option.ariaLabelledBy);
@@ -262,9 +263,9 @@ export function RadioGroup({
                 boxShadow: isFocused && isFocusVisible && !optionDisabled ? `0 0 0 3px ${focusRingColor}` : "none"
               }}
             />
-            <span style={{ display: "grid", gap: option.description ? 2 : 0 }}>
+            <span style={{ display: "grid", gap: hasDescriptionContent ? 2 : 0 }}>
               <span>{option.label}</span>
-              {option.description ? (
+              {hasDescriptionContent ? (
                 <span style={{ color: "var(--aurora-text-secondary)", fontSize: "var(--aurora-font-size-xs)" }}>{option.description}</span>
               ) : null}
             </span>
@@ -282,6 +283,18 @@ function resolveNonEmptyLabel(label: string | undefined) {
 
   const normalized = label.trim();
   return normalized.length > 0 ? normalized : undefined;
+}
+
+function hasRenderableRadioNode(node: React.ReactNode) {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return false;
+  }
+
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  return true;
 }
 
 function getReadableRadioOptionText(option: RadioOption) {

@@ -50,6 +50,18 @@ describe("RadioGroup", () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it("renders numeric option descriptions instead of treating them as empty", () => {
+    render(
+      <RadioGroup
+        name="Numeric descriptions"
+        options={[{ label: "Priority tier", value: "p0", description: 0 }]}
+      />
+    );
+
+    expect(screen.getByText("0")).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: "Priority tier 0" })).toBeInTheDocument();
+  });
+
   it("warns when duplicate radio option values are provided", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
