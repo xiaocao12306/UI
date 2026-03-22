@@ -85,15 +85,31 @@ describe("PromptInput", () => {
   });
 
   it("restores shortcut metadata after submitting state exits", () => {
-    const { rerender } = render(<PromptInput submitting />);
+    const onSubmit = vi.fn();
+    const { rerender } = render(<PromptInput onSubmit={onSubmit} submitting />);
     const textbox = screen.getByRole("textbox", { name: "Prompt input" });
     expect(textbox).not.toHaveAttribute("aria-keyshortcuts");
 
-    rerender(<PromptInput submitting={false} />);
+    rerender(<PromptInput onSubmit={onSubmit} submitting={false} />);
     expect(screen.getByRole("textbox", { name: "Prompt input" })).toHaveAttribute(
       "aria-keyshortcuts",
       "Control+Enter Meta+Enter"
     );
+  });
+
+  it("keeps send action disabled when onSubmit is missing", () => {
+    render(<PromptInput ariaLabel="No submit handler prompt" />);
+    const textbox = screen.getByRole("textbox", { name: "No submit handler prompt" });
+    const sendButton = screen.getByRole("button", { name: "Send" });
+
+    fireEvent.change(textbox, { target: { value: "Draft that should remain in place" } });
+
+    expect(sendButton).toBeDisabled();
+    expect(textbox).not.toHaveAttribute("aria-keyshortcuts");
+
+    const shortcutAccepted = fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
+    expect(shortcutAccepted).toBe(true);
+    expect((textbox as HTMLTextAreaElement).value).toBe("Draft that should remain in place");
   });
 
   it("does not submit while IME composition is active", () => {
@@ -134,8 +150,10 @@ describe("PromptInput", () => {
   });
 
   it("supports localized aria label and hint copy", () => {
+    const onSubmit = vi.fn();
     render(
       <PromptInput
+        onSubmit={onSubmit}
         ariaLabel="智能提示输入"
         shortcutHint="按 Ctrl/Cmd + Enter 提交"
         submittingHint="正在生成建议..."
@@ -156,13 +174,17 @@ describe("PromptInput", () => {
   });
 
   it("omits described-by semantics when active hint content is blank", () => {
-    const { rerender } = render(<PromptInput ariaLabel="Hint semantics prompt" shortcutHint="   " />);
+    const onSubmit = vi.fn();
+    const { rerender } = render(
+      <PromptInput onSubmit={onSubmit} ariaLabel="Hint semantics prompt" shortcutHint="   " />
+    );
 
     const textbox = screen.getByRole("textbox", { name: "Hint semantics prompt" });
     expect(textbox).not.toHaveAttribute("aria-describedby");
 
     rerender(
       <PromptInput
+        onSubmit={onSubmit}
         ariaLabel="Hint semantics prompt"
         submitting
         shortcutHint="Ctrl/Cmd + Enter to send"
@@ -176,13 +198,14 @@ describe("PromptInput", () => {
   });
 
   it("keeps numeric hint semantics wired through aria-describedby", () => {
-    const { rerender } = render(<PromptInput ariaLabel="Numeric hint prompt" shortcutHint={0} />);
+    const onSubmit = vi.fn();
+    const { rerender } = render(<PromptInput onSubmit={onSubmit} ariaLabel="Numeric hint prompt" shortcutHint={0} />);
 
     const shortcutTextbox = screen.getByRole("textbox", { name: "Numeric hint prompt" });
     const shortcutHint = screen.getByText("0");
     expect(shortcutTextbox).toHaveAttribute("aria-describedby", shortcutHint.getAttribute("id"));
 
-    rerender(<PromptInput ariaLabel="Numeric hint prompt" submitting submittingHint={0} />);
+    rerender(<PromptInput onSubmit={onSubmit} ariaLabel="Numeric hint prompt" submitting submittingHint={0} />);
 
     const submittingTextbox = screen.getByRole("textbox", { name: "Numeric hint prompt" });
     const submittingHint = screen.getByText("0");

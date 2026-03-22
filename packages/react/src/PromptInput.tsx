@@ -25,19 +25,22 @@ export function PromptInput({
   const composingRef = React.useRef(false);
   const hintId = React.useId();
   const trimmedValue = value.trim();
-  const activeHint = submitting ? submittingHint : shortcutHint;
+  const hasSubmitHandler = typeof onSubmit === "function";
+  const canSubmit = hasSubmitHandler && !submitting && trimmedValue.length > 0;
+  const activeHint = submitting ? submittingHint : hasSubmitHandler ? shortcutHint : undefined;
   const hasHintContent = hasRenderablePromptNode(activeHint);
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel =
     resolvedAriaLabelledBy === undefined ? resolveNonEmptyLabel(ariaLabel) ?? "Prompt input" : undefined;
 
   const submit = () => {
-    if (!trimmedValue || submitting) {
-      return;
+    if (!canSubmit || !onSubmit) {
+      return false;
     }
 
-    onSubmit?.(trimmedValue);
+    onSubmit(trimmedValue);
     setValue("");
+    return true;
   };
 
   return (
@@ -59,7 +62,7 @@ export function PromptInput({
         aria-label={resolvedAriaLabel}
         aria-labelledby={resolvedAriaLabelledBy}
         aria-describedby={hasHintContent ? hintId : undefined}
-        aria-keyshortcuts={submitting ? undefined : "Control+Enter Meta+Enter"}
+        aria-keyshortcuts={!submitting && hasSubmitHandler ? "Control+Enter Meta+Enter" : undefined}
         disabled={submitting}
         rows={4}
         onCompositionStart={() => {
@@ -87,6 +90,10 @@ export function PromptInput({
               return;
             }
 
+            if (!canSubmit) {
+              return;
+            }
+
             event.preventDefault();
             submit();
           }
@@ -104,7 +111,7 @@ export function PromptInput({
             {activeHint}
           </small>
         ) : null}
-        <Button onClick={submit} disabled={submitting || !trimmedValue}>
+        <Button onClick={submit} disabled={!canSubmit}>
           {submitting ? "Sending..." : "Send"}
         </Button>
       </div>

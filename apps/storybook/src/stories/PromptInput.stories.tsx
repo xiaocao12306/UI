@@ -40,6 +40,7 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+const noopPromptSubmit = () => {};
 
 function dispatchLegacyImeCtrlEnter(element: HTMLElement) {
   const event = new KeyboardEvent("keydown", {
@@ -52,7 +53,11 @@ function dispatchLegacyImeCtrlEnter(element: HTMLElement) {
   element.dispatchEvent(event);
 }
 
-export const Default: Story = {};
+export const Default: Story = {
+  args: {
+    onSubmit: noopPromptSubmit
+  }
+};
 
 function InteractivePromptInput() {
   const [submitting, setSubmitting] = React.useState(false);
@@ -125,6 +130,7 @@ export const WithAiRequestState: Story = {
 
 export const LocalizedCopy: Story = {
   args: {
+    onSubmit: noopPromptSubmit,
     ariaLabel: "智能提示输入",
     shortcutHint: "按 Ctrl/Cmd + Enter 提交",
     submittingHint: "正在生成建议..."
@@ -141,6 +147,7 @@ export const LocalizedCopy: Story = {
 
 export const BlankHintSemantics: Story = {
   args: {
+    onSubmit: noopPromptSubmit,
     ariaLabel: "Blank hint prompt",
     shortcutHint: "   "
   },
@@ -153,6 +160,7 @@ export const BlankHintSemantics: Story = {
 
 export const NumericHintSemantics: Story = {
   args: {
+    onSubmit: noopPromptSubmit,
     ariaLabel: "Numeric hint prompt",
     shortcutHint: 0
   },
@@ -253,5 +261,24 @@ export const FocusIntentReentry: Story = {
 
     fireEvent.mouseDown(textbox, { button: 0, ctrlKey: true });
     await expect(textbox).toHaveAttribute("data-focus-visible", "true");
+  }
+};
+
+export const WithoutSubmitHandler: Story = {
+  args: {
+    ariaLabel: "No submit handler prompt"
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textbox = await canvas.findByRole("textbox", { name: "No submit handler prompt" });
+    const sendButton = canvas.getByRole("button", { name: "Send" });
+
+    await userEvent.type(textbox, "This draft should stay in place");
+    await expect(sendButton).toBeDisabled();
+    await expect(textbox).not.toHaveAttribute("aria-keyshortcuts");
+
+    const shortcutAccepted = fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
+    await expect(shortcutAccepted).toBe(true);
+    await expect(textbox).toHaveValue("This draft should stay in place");
   }
 };
