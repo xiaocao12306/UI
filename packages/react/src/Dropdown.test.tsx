@@ -1,3 +1,4 @@
+import * as React from "react";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Dropdown } from "./Dropdown";
@@ -192,7 +193,7 @@ describe("Dropdown", () => {
       expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenLastCalledWith(
         expect.stringContaining(
-          'Duplicate item keys detected: "deploy". Keys should be unique to keep focus and close telemetry deterministic. Duplicate render keys are auto-suffixed by item index for stability.'
+          'Duplicate item keys detected: "deploy". Keys should be unique to keep focus and close telemetry deterministic. Duplicate render keys are auto-suffixed by duplicate occurrence order for stability.'
         )
       );
       expect(errorSpy).not.toHaveBeenCalled();
@@ -225,6 +226,51 @@ describe("Dropdown", () => {
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
+    }
+  });
+
+  it("keeps duplicate-key active option stable when items rerender with prepended entries", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    function DuplicateKeyRerenderHarness() {
+      const [prependNewAction, setPrependNewAction] = React.useState(false);
+      const baseItems = React.useMemo(
+        () => [
+          { key: "deploy", label: "Deploy now" },
+          { key: "deploy", label: "Deploy later" },
+          { key: "archive", label: "Archive" }
+        ],
+        []
+      );
+
+      const nextItems = prependNewAction ? [{ key: "share", label: "Share release" }, ...baseItems] : baseItems;
+
+      return (
+        <div>
+          <button type="button" onClick={() => setPrependNewAction((current) => !current)}>
+            Toggle prepend
+          </button>
+          <Dropdown label="Duplicate stability" items={nextItems} />
+        </div>
+      );
+    }
+
+    try {
+      render(<DuplicateKeyRerenderHarness />);
+
+      fireEvent.click(screen.getByRole("button", { name: "Duplicate stability" }));
+      const menu = screen.getByRole("menu", { name: "Duplicate stability" });
+
+      fireEvent.keyDown(menu, { key: "ArrowDown" });
+      expect(screen.getByRole("menuitem", { name: "Deploy later" })).toHaveFocus();
+
+      fireEvent.click(screen.getByRole("button", { name: "Toggle prepend" }));
+
+      await waitFor(() => {
+        expect(screen.getByRole("menuitem", { name: "Deploy later" })).toHaveFocus();
+      });
+    } finally {
+      warnSpy.mockRestore();
     }
   });
 

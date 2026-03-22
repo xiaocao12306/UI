@@ -601,6 +601,61 @@ export const SelectionTelemetry: Story = {
   }
 };
 
+function DuplicateKeyRerenderStabilityDropdown() {
+  const [prependAction, setPrependAction] = React.useState(false);
+
+  const duplicateItems = React.useMemo<DropdownItem[]>(
+    () => [
+      { key: "deploy", label: "Deploy now" },
+      { key: "deploy", label: "Deploy later" },
+      { key: "archive", label: "Archive" }
+    ],
+    []
+  );
+
+  const itemsWithOptionalPrependedAction = prependAction
+    ? [{ key: "share", label: "Share release" }, ...duplicateItems]
+    : duplicateItems;
+
+  return (
+    <StoryShowcaseFrame gap={8}>
+      <p style={storyMutedTextStyle}>
+        Prepend action:{" "}
+        <strong data-testid="dropdown-duplicate-rerender-prepend-state" style={storyEmphasisTextStyle}>
+          {prependAction ? "on" : "off"}
+        </strong>
+      </p>
+      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <Dropdown label="Duplicate Stability Menu" items={itemsWithOptionalPrependedAction} />
+        <button type="button" onClick={() => setPrependAction((current) => !current)}>
+          Toggle prepend action
+        </button>
+      </div>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const DuplicateKeyRerenderStability: Story = {
+  render: () => <DuplicateKeyRerenderStabilityDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Duplicate Stability Menu" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menuitem", { name: "Deploy now" })).toHaveFocus();
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(canvas.getByRole("menuitem", { name: "Deploy later" })).toHaveFocus();
+
+    fireEvent.click(canvas.getByRole("button", { name: "Toggle prepend action" }));
+    await waitFor(() => {
+      expect(canvas.getByTestId("dropdown-duplicate-rerender-prepend-state")).toHaveTextContent("on");
+    });
+    await waitFor(() => {
+      expect(canvas.getByRole("menuitem", { name: "Deploy later" })).toHaveFocus();
+    });
+  }
+};
+
 export const ModifierArrowNavigationGuard: Story = {
   args: {
     label: "Modifier Arrow Guard",

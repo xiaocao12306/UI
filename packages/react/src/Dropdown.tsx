@@ -153,6 +153,19 @@ function isDropdownNavigationKey(key: string) {
   );
 }
 
+function getDropdownItemRenderKeys(items: DropdownItem[]) {
+  const seenCounts = new Map<string, number>();
+  return items.map((item) => {
+    const seenCount = seenCounts.get(item.key) ?? 0;
+    seenCounts.set(item.key, seenCount + 1);
+    if (seenCount === 0) {
+      return item.key;
+    }
+
+    return `${item.key}__dup-${seenCount}`;
+  });
+}
+
 export function Dropdown({
   label,
   triggerAriaLabel,
@@ -182,6 +195,11 @@ export function Dropdown({
   const warnedMissingTriggerNameRef = React.useRef(false);
   const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const warnedMissingTextValueSignatureRef = React.useRef<string | null>(null);
+  const wasOpenRef = React.useRef(false);
+  const previousActiveSnapshotRef = React.useRef<{ activeIndex: number; itemRenderKeys: string[] }>({
+    activeIndex: -1,
+    itemRenderKeys: []
+  });
   const triggerId = React.useId();
   const menuId = React.useId();
 
@@ -196,18 +214,7 @@ export function Dropdown({
   const resolvedTriggerAriaLabel = resolvedTriggerAriaLabelledBy
     ? undefined
     : explicitTriggerAriaLabel ?? (hasReadableTriggerLabelText ? undefined : "Open dropdown menu");
-  const itemRenderKeys = React.useMemo(() => {
-    const seenCounts = new Map<string, number>();
-    return items.map((item, index) => {
-      const seenCount = seenCounts.get(item.key) ?? 0;
-      seenCounts.set(item.key, seenCount + 1);
-      if (seenCount === 0) {
-        return item.key;
-      }
-
-      return `${item.key}__dup-${index}`;
-    });
-  }, [items]);
+  const itemRenderKeys = React.useMemo(() => getDropdownItemRenderKeys(items), [items]);
   const enabledItemCount = items.reduce((count, item) => count + (item.disabled ? 0 : 1), 0);
   const canNavigateMenuItems = enabledItemCount > 1;
   const menuKeyboardShortcuts = React.useMemo(() => {
@@ -307,7 +314,7 @@ export function Dropdown({
         .map((key) => `"${key}"`)
         .join(
           ", "
-        )}. Keys should be unique to keep focus and close telemetry deterministic. Duplicate render keys are auto-suffixed by item index for stability.`
+        )}. Keys should be unique to keep focus and close telemetry deterministic. Duplicate render keys are auto-suffixed by duplicate occurrence order for stability.`
     );
   }, [items]);
 
@@ -406,11 +413,29 @@ export function Dropdown({
 
   React.useEffect(() => {
     if (!isOpen) {
+      wasOpenRef.current = false;
       setActiveIndex(-1);
       typeaheadStateRef.current = { query: "", timestamp: 0 };
       pendingOpenActiveIndexRef.current = null;
       clearKeyboardActivationLatch();
       return;
+    }
+
+    const previousSnapshot = previousActiveSnapshotRef.current;
+    const previousActiveRenderKey =
+      previousSnapshot.activeIndex >= 0 &&
+      previousSnapshot.activeIndex < previousSnapshot.itemRenderKeys.length
+        ? previousSnapshot.itemRenderKeys[previousSnapshot.activeIndex] ?? null
+        : null;
+
+    if (wasOpenRef.current && previousActiveRenderKey !== null) {
+      const preservedActiveIndex = itemRenderKeys.findIndex(
+        (renderKey, index) => renderKey === previousActiveRenderKey && !items[index]?.disabled
+      );
+      if (preservedActiveIndex >= 0) {
+        setActiveIndex((current) => (current === preservedActiveIndex ? current : preservedActiveIndex));
+        return;
+      }
     }
 
     const pendingIndex = pendingOpenActiveIndexRef.current;
@@ -421,13 +446,20 @@ export function Dropdown({
       pendingIndex < items.length &&
       !items[pendingIndex]?.disabled
     ) {
-      setActiveIndex(pendingIndex);
+      wasOpenRef.current = true;
+      setActiveIndex((current) => (current === pendingIndex ? current : pendingIndex));
       return;
     }
 
     const firstEnabledIndex = items.findIndex((item) => !item.disabled);
-    setActiveIndex(firstEnabledIndex);
-  }, [clearKeyboardActivationLatch, isOpen, items]);
+    wasOpenRef.current = true;
+    setActiveIndex((current) => {
+      if (current >= 0 && current < items.length && !items[current]?.disabled) {
+        return current;
+      }
+      return firstEnabledIndex;
+    });
+  }, [clearKeyboardActivationLatch, isOpen, itemRenderKeys, items]);
 
   React.useEffect(() => {
     if (!isOpen) {
@@ -443,6 +475,13 @@ export function Dropdown({
       menuRef.current?.focus();
     }
   }, [activeIndex, enabledItemCount, isOpen]);
+
+  React.useEffect(() => {
+    previousActiveSnapshotRef.current = {
+      activeIndex,
+      itemRenderKeys
+    };
+  }, [activeIndex, itemRenderKeys]);
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
@@ -672,7 +711,7 @@ export function Dropdown({
                     )
                   : undefined;
               return (
-                <li key={itemRenderKeys[index] ?? `${item.key}__dup-${index}`} role="none">
+                <li key={itemRenderKeys[index] ?? item.key} role="none">
                   <button
                     ref={(node) => {
                       itemRefs.current[index] = node;

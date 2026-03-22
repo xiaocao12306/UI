@@ -160,7 +160,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For blocking confirmation/action menus, set `closeOnEscape={false}` + `closeOnOutsidePointer={false}` and provide an explicit close/confirm path.
 - For conditional runtime approval guards, keep `closeOnEscape/closeOnOutsidePointer` enabled and intercept `onEscapeKeyDown/onPointerDownOutside` with `event.preventDefault()` only while guard conditions are active.
 - Dropdown menus should expose an accessible name via trigger-linked `aria-labelledby`.
-- Keep `Dropdown.items[].key` unique and stable; development builds warn on duplicate keys to prevent focus and close-telemetry ambiguity, and runtime auto-suffixes duplicate render keys by item index to avoid React remount churn.
+- Keep `Dropdown.items[].key` unique and stable; development builds warn on duplicate keys to prevent focus and close-telemetry ambiguity, and runtime auto-suffixes duplicate render keys by duplicate occurrence order to avoid React remount churn while preserving active-option identity across rerenders.
 - For nested overlays, dismiss policy should resolve top-layer first so one Escape/outside click does not collapse the full stack.
 - For nested popovers, keep top-layer-first dismiss semantics explicit: first Escape/outside interaction closes inner popover and preserves the outer layer until a second dismiss action.
 - For overlays built on `DismissableLayer`, ignore Escape while IME composition is active, including legacy browsers that only expose `keyCode=229`, so CJK text confirmation does not close parent surfaces unexpectedly.
@@ -229,6 +229,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={DropdownStories.ModifierArrowNavigationGuard} />
 <Canvas of={DropdownStories.TabModifierDismissGuard} />
 <Canvas of={DropdownStories.KeyboardActivationDedupe} />
+<Canvas of={DropdownStories.DuplicateKeyRerenderStability} />
 <Canvas of={DropdownStories.ControlledOpenContract} />
 <Canvas of={DropdownStories.AllItemsDisabledKeyboardNoop} />
 <Canvas of={DropdownStories.TypeaheadNavigation} />
