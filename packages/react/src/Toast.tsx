@@ -635,6 +635,9 @@ export function Toast({
           }}
           onKeyDown={(event) => {
             closeButtonFocusIntentRef.current = true;
+            if (event.defaultPrevented) {
+              return;
+            }
             if (isComposingToastCloseButtonActivationEvent(event)) {
               return;
             }

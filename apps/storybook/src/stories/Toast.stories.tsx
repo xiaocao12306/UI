@@ -251,6 +251,17 @@ export const CloseButtonKeyboardPressedState: Story = {
     await waitFor(() => {
       expect(closeButton.style.transform).toContain("translateY(0");
     });
+
+    const preemptedEnterEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      bubbles: true,
+      cancelable: true
+    });
+    preemptedEnterEvent.preventDefault();
+    closeButton.dispatchEvent(preemptedEnterEvent);
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
   }
 };
 
