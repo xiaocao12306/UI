@@ -428,12 +428,15 @@ export const AllTabsDisabled: Story = {
     const allTabs = canvas.getAllByRole("tab");
     await expect(allTabs).toHaveLength(2);
 
-    allTabs.forEach((tab) => {
+    allTabs.forEach((tab, index) => {
       expect(tab).toBeDisabled();
       expect(tab).not.toHaveAttribute("aria-keyshortcuts");
-      expect(tab).toHaveAttribute("aria-selected", "false");
+      expect(tab).toHaveAttribute("aria-selected", index === 0 ? "true" : "false");
       expect(tab).toHaveAttribute("tabindex", "-1");
     });
+
+    await expect(canvas.getByRole("tabpanel", { name: "Spec" })).toBeVisible();
+    await expect(canvas.getByText("Specification stage is disabled.")).toBeInTheDocument();
 
     await userEvent.tab();
     await expect(tabList).toHaveFocus();

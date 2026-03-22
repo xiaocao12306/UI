@@ -788,12 +788,46 @@ describe("Tabs", () => {
 
     const allTabs = screen.getAllByRole("tab");
     expect(allTabs).toHaveLength(2);
-    allTabs.forEach((tab) => {
+    allTabs.forEach((tab, index) => {
       expect(tab).toBeDisabled();
       expect(tab).not.toHaveAttribute("aria-keyshortcuts");
       expect(tab).toHaveAttribute("tabindex", "-1");
-      expect(tab).toHaveAttribute("aria-selected", "false");
+      expect(tab).toHaveAttribute("aria-selected", index === 0 ? "true" : "false");
     });
+
+    expect(screen.getByRole("tabpanel", { name: "One" })).toBeVisible();
+    expect(screen.getByText("Panel One")).toBeInTheDocument();
+    expect(screen.queryByRole("tabpanel", { name: "Two" })).toBeNull();
+  });
+
+  it("keeps current panel visible when every tab becomes disabled after rerender", () => {
+    const { rerender } = render(
+      <Tabs
+        defaultValue="two"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tabpanel", { name: "Two" })).toBeVisible();
+
+    rerender(
+      <Tabs
+        defaultValue="two"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div>, disabled: true },
+          { key: "two", label: "Two", content: <div>Panel Two</div>, disabled: true }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tabpanel", { name: "Two" })).toBeVisible();
+    expect(screen.getByText("Panel Two")).toBeInTheDocument();
+    expect(screen.getByRole("tablist", { name: "Tabs" })).toHaveAttribute("aria-disabled", "true");
   });
 
   it("keeps all-disabled tablists keyboard reachable as a fallback tab stop", async () => {
@@ -822,6 +856,9 @@ describe("Tabs", () => {
 
     await user.tab();
     expect(tabList).toHaveFocus();
+
+    await user.tab();
+    expect(screen.getByRole("tabpanel", { name: "One" })).toHaveFocus();
 
     await user.tab();
     expect(screen.getByRole("button", { name: "After tabs" })).toHaveFocus();

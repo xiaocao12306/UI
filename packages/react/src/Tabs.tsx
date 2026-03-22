@@ -141,6 +141,7 @@ export function Tabs({
   const [recentKeyIndexMap, setRecentKeyIndexMap] = React.useState<Record<string, number>>(() =>
     buildKeyIndexMap(items)
   );
+  const firstItemKey = items[0]?.key;
   const firstEnabledKey = items.find((item) => !item.disabled)?.key;
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
   const [hoveredTabKey, setHoveredTabKey] = React.useState<string | null>(null);
@@ -247,10 +248,11 @@ export function Tabs({
     }
     warnedInvalidControlledValueRef.current = signature;
 
+    const fallbackTarget = firstEnabledKey ? "first enabled tab" : "first available tab";
     console.warn(
-      `[Tabs] Controlled value "${value}" does not reference an enabled tab (${reason}); falling back to the first enabled tab.`
+      `[Tabs] Controlled value "${value}" does not reference an enabled tab (${reason}); falling back to the ${fallbackTarget}.`
     );
-  }, [items, value]);
+  }, [firstEnabledKey, items, value]);
 
   React.useEffect(() => {
     const ownerDocument = tabListRef.current?.ownerDocument ?? document;
@@ -288,6 +290,10 @@ export function Tabs({
   const currentValue = (() => {
     if (currentItem && !currentItem.disabled) {
       return currentRawValue;
+    }
+
+    if (!firstEnabledKey) {
+      return currentItem?.key ?? firstItemKey;
     }
 
     if (value === undefined && currentRawValue && !currentItem) {
@@ -419,7 +425,7 @@ export function Tabs({
                   ? undefined
                   : getTabKeyShortcuts(activationMode, orientation)
               }
-              tabIndex={focusTargetValue === item.key ? 0 : -1}
+              tabIndex={disabled ? -1 : focusTargetValue === item.key ? 0 : -1}
               disabled={disabled}
               onClick={(event) => {
                 setFocusedValue(item.key);

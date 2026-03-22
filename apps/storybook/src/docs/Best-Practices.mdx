@@ -480,6 +480,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat manual-tab activation key repeat (`Enter`/`Space`, `event.repeat`) as no-op after first activation to prevent duplicate change telemetry.
 - Keep manual-tab pressed-state feedback active during `Enter`/`Space` hold (and clear on keyup) so keyboard activation has the same tactile affordance as pointer activation.
 - In controlled mode, ensure `value` always maps to an enabled tab key; development builds now warn when `value` is missing/disabled and fallback selection is applied.
+- When all tabs are disabled, keep the current (or first) panel visible as read-only context instead of collapsing all panel content.
 - Keep tab panels mounted and toggle `hidden` so tab `aria-controls` always points to a real panel.
 - Keep `items[].key` unique and stable across rerenders/reordering; tab and panel id refs are key-derived, so changing keys at runtime forces new accessibility relationships, and runtime auto-suffixes duplicate render keys by item index to avoid React remount churn.
 - Avoid duplicate telemetry from tabs by emitting `onValueChange` only on actual key transitions.
