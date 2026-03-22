@@ -135,6 +135,58 @@ export const ModifierKeyGuard: Story = {
   }
 };
 
+function ManagedKeysPreemptedPaginationDemo() {
+  const [page, setPage] = React.useState(4);
+
+  return (
+    <div
+      onKeyDownCapture={(event) => {
+        if (
+          event.key === "Home" ||
+          event.key === "End" ||
+          event.key === "PageUp" ||
+          event.key === "PageDown" ||
+          event.key === "ArrowLeft" ||
+          event.key === "ArrowRight"
+        ) {
+          event.preventDefault();
+        }
+      }}
+      style={{ width: 640, display: "grid", gap: 12 }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ color: "var(--aurora-text-secondary)" }}>Preempted page</span>
+        <Badge tone="default" data-testid="pagination-preempted-page">
+          {page}
+        </Badge>
+      </div>
+      <Pagination page={page} pageCount={12} onPageChange={setPage} />
+    </div>
+  );
+}
+
+export const ManagedKeysPreemptedByGlobalHandler: Story = {
+  render: () => <ManagedKeysPreemptedPaginationDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const current = await canvas.findByRole("button", { name: "Current page, 4" });
+
+    current.focus();
+    await expect(current).toHaveFocus();
+    await expect(canvas.getByTestId("pagination-preempted-page")).toHaveTextContent("4");
+
+    fireEvent.keyDown(current, { key: "Home" });
+    fireEvent.keyDown(current, { key: "End" });
+    fireEvent.keyDown(current, { key: "PageUp" });
+    fireEvent.keyDown(current, { key: "PageDown" });
+    fireEvent.keyDown(current, { key: "ArrowLeft" });
+    fireEvent.keyDown(current, { key: "ArrowRight" });
+
+    await expect(canvas.getByTestId("pagination-preempted-page")).toHaveTextContent("4");
+    await expect(canvas.getByRole("button", { name: "Current page, 4" })).toHaveFocus();
+  }
+};
+
 function RtlKeyboardShortcutsDemo() {
   const [page, setPage] = React.useState(4);
 

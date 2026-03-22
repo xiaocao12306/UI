@@ -641,11 +641,13 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `getItemAriaLabel`                    | `(type, page) => string`                                                | Customize pagination control narration for i18n; boundary `previous/next` pages are clamped to valid range, and blank return values fallback to default narration.                                             |
 | RTL keyboard parity                   | ArrowLeft/ArrowRight auto-flip                                          | In `dir="rtl"` containers, horizontal arrow shortcuts mirror navigation intent to match visual flow.                                                                                                           |
 | modifier-key guard                    | ignores `Ctrl/Meta/Alt + Home/End/PageUp/PageDown/ArrowLeft/ArrowRight` | Preserves host app/browser modified-key shortcuts and avoids accidental page jumps under combined shortcut chords; `Shift`-modified shortcuts remain valid pagination navigation.                              |
+| managed-key priority                  | preempted keydown skips pagination keyboard handlers                     | If higher-level handlers already `preventDefault()` keydown, pagination ignores Home/End/PageUp/PageDown/Arrow keyboard navigation so host shortcut guards remain authoritative.                              |
 | keyboard shortcut hints               | `aria-keyshortcuts="[Home PageUp] [End PageDown] ArrowLeft ArrowRight"` on enabled controls | Announces pagination keyboard navigation affordances to assistive tech and QA audits; controls omit unavailable boundary keys (`Home/PageUp` on first page, `End/PageDown` on last page), and disabled controls omit shortcut hints.                                   |
 | document-scoped focus intent fallback | owner-document `keydown` / pointer listeners                            | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores pagination button focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and `Ctrl + primary click` do not clear fallback keyboard intent. |
 
 <Canvas of={PaginationStories.KeyboardShortcuts} />
 <Canvas of={PaginationStories.ModifierKeyGuard} />
+<Canvas of={PaginationStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={PaginationStories.RtlKeyboardShortcuts} />
 <Canvas of={PaginationStories.BoundaryAriaLabels} />
 <Canvas of={PaginationStories.BoundaryShortcutHints} />

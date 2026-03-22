@@ -194,6 +194,40 @@ describe("Pagination", () => {
     expect(onPageChange).toHaveBeenCalledWith(10);
   });
 
+  it("skips managed keyboard navigation when keydown is preempted upstream", () => {
+    const onPageChange = vi.fn();
+    const preemptManagedKeys = (event: KeyboardEvent) => {
+      if (
+        event.key === "Home" ||
+        event.key === "End" ||
+        event.key === "PageUp" ||
+        event.key === "PageDown" ||
+        event.key === "ArrowLeft" ||
+        event.key === "ArrowRight"
+      ) {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptManagedKeys, true);
+
+    try {
+      render(<Pagination page={4} pageCount={10} onPageChange={onPageChange} />);
+      const activeButton = screen.getByRole("button", { name: "Current page, 4" });
+
+      fireEvent.keyDown(activeButton, { key: "Home" });
+      fireEvent.keyDown(activeButton, { key: "End" });
+      fireEvent.keyDown(activeButton, { key: "PageUp" });
+      fireEvent.keyDown(activeButton, { key: "PageDown" });
+      fireEvent.keyDown(activeButton, { key: "ArrowLeft" });
+      fireEvent.keyDown(activeButton, { key: "ArrowRight" });
+
+      expect(onPageChange).not.toHaveBeenCalled();
+    } finally {
+      document.removeEventListener("keydown", preemptManagedKeys, true);
+    }
+  });
+
   it("keeps boundary Home/End/PageUp/PageDown keys passive when already at first/last page", async () => {
     const onPageChange = vi.fn();
     const { rerender } = render(<Pagination page={1} pageCount={10} onPageChange={onPageChange} />);

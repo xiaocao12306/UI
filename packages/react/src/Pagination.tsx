@@ -209,6 +209,9 @@ export function Pagination({
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     focusVisibleIntentRef.current = true;
+    if (event.defaultPrevented) {
+      return;
+    }
     if (disabled) {
       return;
     }
