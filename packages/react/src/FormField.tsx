@@ -22,7 +22,6 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const childProps = canCloneControl ? (children.props as Record<string, unknown>) : undefined;
   const childControlId = canCloneControl ? (childProps?.id as string | undefined) : undefined;
   const controlId = htmlFor ?? childControlId ?? (canCloneControl ? generatedInputId : undefined);
-  const isInvalid = hasErrorContent;
   const childDisabled = typeof childProps?.disabled === "boolean" ? childProps.disabled : undefined;
   const mergedDisabled = Boolean(disabled || childDisabled);
   const childDescribedBy = childProps?.["aria-describedby"] as string | undefined;
@@ -46,13 +45,17 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   );
   const mergedRequired = Boolean(required || childRequired);
   const childInvalidAria = resolveInvalidAria(undefined, childInvalid);
-  const mergedInvalidAria = isInvalid ? true : childInvalidAria;
+  const isInvalid = hasErrorContent || childInvalidAria !== undefined;
+  const mergedInvalidAria = hasErrorContent ? true : childInvalidAria;
   const mergedDescribedBy = mergeAriaReferenceIds(
     childDescribedBy,
     hasDescriptionContent ? describedById : undefined,
     hasErrorContent ? errorId : undefined
   );
-  const mergedErrorMessage = mergeAriaReferenceIds(childErrorMessage, hasErrorContent ? errorId : undefined);
+  const mergedErrorMessage =
+    mergedInvalidAria === undefined
+      ? undefined
+      : mergeAriaReferenceIds(childErrorMessage, hasErrorContent ? errorId : undefined);
   const mergedLabelledBy = resolvedChildAriaLabel
     ? resolvedChildLabelledBy
     : mergeAriaReferenceIds(resolvedChildLabelledBy, labelId);

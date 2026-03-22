@@ -183,3 +183,26 @@ export const NumericMessageSemantics: Story = {
     await expect(errorMessage).toBe(alert.id);
   }
 };
+
+export const ErrorMessageInvalidContract: Story = {
+  render: () => (
+    <div style={{ width: 520, display: "grid", gap: 14 }}>
+      <FormField label="Optional email">
+        <Input aria-errormessage="optional-error-id" />
+      </FormField>
+
+      <FormField label="Invalid email">
+        <Input aria-invalid="grammar" aria-errormessage="invalid-error-id" />
+      </FormField>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const optionalInput = canvas.getByRole("textbox", { name: "Optional email" });
+    const invalidInput = canvas.getByRole("textbox", { name: "Invalid email" });
+
+    await expect(optionalInput).not.toHaveAttribute("aria-errormessage");
+    await expect(invalidInput).toHaveAttribute("aria-invalid", "grammar");
+    await expect(invalidInput).toHaveAttribute("aria-errormessage", "invalid-error-id");
+  }
+};

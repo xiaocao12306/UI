@@ -85,7 +85,9 @@ describe("FormField", () => {
       </FormField>
     );
 
-    expect(screen.getByRole("textbox", { name: "Existing invalid" })).toHaveAttribute("aria-invalid", "true");
+    const input = screen.getByRole("textbox", { name: "Existing invalid" });
+    expect(input).toHaveAttribute("aria-invalid", "true");
+    expect(input.closest("[data-invalid]")).toHaveAttribute("data-invalid", "true");
   });
 
   it("preserves child grammar/spelling invalid token when no field error exists", () => {
@@ -95,7 +97,33 @@ describe("FormField", () => {
       </FormField>
     );
 
-    expect(screen.getByRole("textbox", { name: "Grammar invalid" })).toHaveAttribute("aria-invalid", "grammar");
+    const input = screen.getByRole("textbox", { name: "Grammar invalid" });
+    expect(input).toHaveAttribute("aria-invalid", "grammar");
+    expect(input.closest("[data-invalid]")).toHaveAttribute("data-invalid", "true");
+  });
+
+  it("does not expose aria-errormessage when neither field nor child is invalid", () => {
+    render(
+      <FormField label="Optional email">
+        <Input aria-errormessage="custom-error" />
+      </FormField>
+    );
+
+    expect(screen.getByRole("textbox", { name: "Optional email" })).not.toHaveAttribute(
+      "aria-errormessage"
+    );
+  });
+
+  it("preserves child aria-errormessage when child invalid semantics exist", () => {
+    render(
+      <FormField label="Invalid email without field error">
+        <Input aria-invalid="grammar" aria-errormessage="custom-error" />
+      </FormField>
+    );
+
+    const input = screen.getByRole("textbox", { name: "Invalid email without field error" });
+    expect(input).toHaveAttribute("aria-invalid", "grammar");
+    expect(input).toHaveAttribute("aria-errormessage", "custom-error");
   });
 
   it("prioritizes field-level error semantics over child grammar token", () => {

@@ -57,6 +57,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For streaming status narration, prefer `ariaLabelledBy` when a visible heading already exists; use `ariaLabel` (or `label` fallback) for standalone streaming regions.
 - For narrated skeleton states, prefer `ariaLabelledBy` when a visible loading heading already exists; use `ariaLabel` for standalone placeholders without nearby heading context.
 - Prefer `FormField` wrappers for helper/error copy so `aria-describedby` and `aria-errormessage` stay in sync.
+- Keep `aria-errormessage` tied to active invalid semantics: do not expose it on optional/valid controls without `error` or existing child invalid state.
 - For composite/non-clonable field controls, provide `htmlFor` on `FormField` and a matching control `id`; otherwise label association cannot be inferred.
 - If a wrapped control already provides `aria-labelledby`, avoid passing `aria-label` together; keep `aria-labelledby` as the canonical name source.
 - For icon/non-text FormField labels, provide control-level `aria-labelledby` when a visible heading exists, otherwise provide `aria-label`; rich label nodes with inline `aria-label` are auto-detected, and development builds warn when control naming is still missing.
