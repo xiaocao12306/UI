@@ -868,10 +868,11 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `speaker`         | `'user' \| 'assistant' \| 'system'` | Applies alignment and semantic labeling (`aria-label`).                                                                              |
 | `children`        | `ReactNode`                         | Message content body.                                                                                                                |
 | `speakerLabel`    | `string`                            | Optional localized speaker text used to compose fallback accessible label (`\`${speakerLabel} message\``); blank values are ignored. |
-| `ariaLabel`       | `string`                            | Explicit accessible label override; blank values are ignored and fallback to speaker-derived naming.                                 |
+| `ariaLabel` / `ariaLabelledBy` | `string` / `string`              | Explicit naming controls for message bubbles. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without `ariaLabelledBy`, `ariaLabel` falls back to speaker-derived naming. |
 | `roleDescription` | `string`                            | Optional localized `aria-roledescription` for message semantics; blank values fallback to `message`.                                 |
 
 <Canvas of={MessageBubbleStories.LocalizedNaming} />
+<Canvas of={MessageBubbleStories.LabelledByPrecedence} />
 
 ### ReasoningPanel
 

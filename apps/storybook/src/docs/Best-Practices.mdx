@@ -273,6 +273,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep prompt textarea keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep prompt textarea focus intent primary-only: non-primary pointer interactions and `Ctrl + primary click` context-click paths should not clear keyboard-origin focus-visible state.
 - Localize message-bubble narration with `speakerLabel` or explicit `ariaLabel`; blank values should be omitted so speaker-based fallback naming remains valid.
+- Prefer `ariaLabelledBy` for message bubbles when a visible heading/title already exists; use `ariaLabel` for standalone bubbles without nearby naming context.
 - Localize message semantics with `roleDescription` when product vocabulary differs from plain `message`; blank values should fallback to default role description.
 - Localize reasoning disclosure semantics with `expandLabel`/`collapseLabel` and `listAriaLabel` so assistive-tech narration matches product language.
 - Keep reasoning disclosure shortcuts discoverable with `aria-keyshortcuts="Enter Space"` so QA/AT audits can verify keyboard toggle support.
@@ -288,6 +289,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={PromptInputStories.FocusIntentReentry} />
 <Canvas of={MessageBubbleStories.Conversation} />
 <Canvas of={MessageBubbleStories.LocalizedNaming} />
+<Canvas of={MessageBubbleStories.LabelledByPrecedence} />
 <Canvas of={ReasoningPanelStories.Default} />
 <Canvas of={ReasoningPanelStories.LocalizedLabels} />
 <Canvas of={StreamingCodeBlockStories.Default} />

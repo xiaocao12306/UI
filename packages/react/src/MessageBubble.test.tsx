@@ -46,6 +46,38 @@ describe("MessageBubble", () => {
     expect(screen.getByRole("article", { name: "User message" })).toHaveTextContent("Fallback label.");
   });
 
+  it("prefers ariaLabelledBy over ariaLabel and ignores blank ariaLabelledBy", () => {
+    const { rerender } = render(
+      <div>
+        <h3 id="message-heading">Release assistant message</h3>
+        <MessageBubble
+          speaker="assistant"
+          ariaLabel="Fallback assistant label"
+          ariaLabelledBy="message-heading"
+        >
+          Linked heading content.
+        </MessageBubble>
+      </div>
+    );
+
+    const labelledByMessage = screen.getByRole("article", { name: "Release assistant message" });
+    expect(labelledByMessage).toHaveAttribute("aria-labelledby", "message-heading");
+    expect(labelledByMessage).not.toHaveAttribute("aria-label");
+
+    rerender(
+      <MessageBubble speaker="assistant" ariaLabel="Fallback assistant label" ariaLabelledBy="   ">
+        Blank labelledby fallback.
+      </MessageBubble>
+    );
+    expect(screen.getByRole("article", { name: "Fallback assistant label" })).toHaveAttribute(
+      "aria-label",
+      "Fallback assistant label"
+    );
+    expect(screen.getByRole("article", { name: "Fallback assistant label" })).not.toHaveAttribute(
+      "aria-labelledby"
+    );
+  });
+
   it("supports localized role description and falls back when blank", () => {
     const { rerender } = render(
       <MessageBubble speaker="assistant" roleDescription="聊天消息">

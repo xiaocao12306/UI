@@ -70,3 +70,26 @@ export const LocalizedNaming: Story = {
     await expect(assistantMessage).toHaveAttribute("aria-roledescription", "聊天消息");
   }
 };
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <StoryFullscreenFrame minHeight={220}>
+      <h3 id="message-heading" style={{ margin: 0 }}>
+        Release assistant message
+      </h3>
+      <MessageBubble
+        speaker="assistant"
+        ariaLabel="Fallback assistant label"
+        ariaLabelledBy="message-heading"
+      >
+        Linked heading naming remains canonical.
+      </MessageBubble>
+    </StoryFullscreenFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const message = canvas.getByRole("article", { name: "Release assistant message" });
+    await expect(message).toHaveAttribute("aria-labelledby", "message-heading");
+    await expect(message).not.toHaveAttribute("aria-label");
+  }
+};
