@@ -337,6 +337,22 @@ describe("Combobox", () => {
     expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
   });
 
+  it("keeps native Home/End caret behavior when cursor is inside query text", () => {
+    render(<Combobox options={options} onValueChange={() => {}} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" }) as HTMLInputElement;
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "ve" } });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    input.setSelectionRange(1, 1);
+    fireEvent.keyDown(input, { key: "Home" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "End" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+  });
+
   it("exposes state-aware keyboard shortcut hints", () => {
     render(<Combobox options={options} onValueChange={() => {}} />);
 

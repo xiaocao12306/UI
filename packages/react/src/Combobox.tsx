@@ -61,6 +61,29 @@ function isComposingComboboxKeyEvent(event: React.KeyboardEvent<HTMLInputElement
   return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }
 
+function shouldHandleComboboxHomeEndKey(event: React.KeyboardEvent<HTMLInputElement>) {
+  if (event.key !== "Home" && event.key !== "End") {
+    return true;
+  }
+
+  const input = event.currentTarget;
+  const selectionStart = input.selectionStart;
+  const selectionEnd = input.selectionEnd;
+  if (selectionStart === null || selectionEnd === null) {
+    return true;
+  }
+
+  if (selectionStart !== selectionEnd) {
+    return false;
+  }
+
+  if (event.key === "Home") {
+    return selectionStart === 0;
+  }
+
+  return selectionEnd === input.value.length;
+}
+
 function isPrimaryPointerButton(button: number | undefined) {
   return typeof button !== "number" || button <= 0;
 }
@@ -402,6 +425,9 @@ export function Combobox({
           }
 
           if (event.key === "Home") {
+            if (!shouldHandleComboboxHomeEndKey(event)) {
+              return;
+            }
             event.preventDefault();
             setOpen(true);
             setActiveIndex(filtered.findIndex((item) => !item.disabled));
@@ -409,6 +435,9 @@ export function Combobox({
           }
 
           if (event.key === "End") {
+            if (!shouldHandleComboboxHomeEndKey(event)) {
+              return;
+            }
             event.preventDefault();
             setOpen(true);
             for (let index = filtered.length - 1; index >= 0; index -= 1) {

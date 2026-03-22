@@ -191,6 +191,25 @@ function ImeGuardComboboxDemo() {
   );
 }
 
+function HomeEndCaretPriorityComboboxDemo() {
+  const [value, setValue] = React.useState("react");
+
+  return (
+    <div style={{ width: 400, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        When caret is inside query text, Home/End should keep native editing behavior instead of
+        hijacking option focus.
+      </p>
+      <Combobox
+        options={frameworkOptions}
+        value={value}
+        onValueChange={setValue}
+        ariaLabel="Framework caret priority"
+      />
+    </div>
+  );
+}
+
 export const ImeCompositionGuard: Story = {
   render: () => <ImeGuardComboboxDemo />,
   play: async ({ canvasElement }) => {
@@ -226,6 +245,26 @@ export const ImeCompositionGuard: Story = {
     await expect(vueOption).toBeInTheDocument();
     await userEvent.click(vueOption);
     await expect(canvas.getByTestId("combobox-ime-selected-value")).toHaveTextContent("vue");
+  }
+};
+
+export const HomeEndCaretPriority: Story = {
+  render: () => <HomeEndCaretPriorityComboboxDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Framework caret priority" }) as HTMLInputElement;
+
+    await userEvent.click(input);
+    await userEvent.clear(input);
+    await userEvent.type(input, "ve");
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    input.setSelectionRange(1, 1);
+    fireEvent.keyDown(input, { key: "Home" });
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    fireEvent.keyDown(input, { key: "End" });
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
   }
 };
 

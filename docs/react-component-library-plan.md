@@ -240,6 +240,7 @@
   - Alert 生产级返工（status/alert live region 语义、dismiss 分支、单测 + Storybook `Feedback/Alert`）
   - Demo 导航可访问性收口（Skip Link 激活后聚焦目标 section 标题、Section Nav 支持 Arrow/Home/End 键盘快速导航）
   - CommandPalette 输入体验收口（Home/End 仅在光标位于首尾时切换选项，中段光标保持原生编辑行为）
+  - Combobox 输入体验收口（Home/End 仅在光标位于首尾时切换候选，中段光标保持原生编辑行为）
   - CommandPalette 搜索语义收口（`textValue` 非文本标签别名 + 重音归一匹配，`cafe` 可命中 `Café`）
   - CommandPalette 结果播报补齐（查询命中启用+禁用混合结果时，live region 明确播报可执行子集）
   - CommandPalette 全禁用键盘收口（结果全禁用时 `Arrow/Home/End/PageUp/PageDown/Enter` 保持 no-op，不触发误关闭）
