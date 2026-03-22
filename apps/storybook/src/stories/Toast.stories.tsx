@@ -251,6 +251,8 @@ export const FocusIntentReentry: Story = {
     await userEvent.tab();
     await expect(closeButton).toHaveFocus();
     await expect(closeButton.style.boxShadow).toContain("0 0 0 3px");
+    fireEvent.mouseDown(closeButton, { button: 0, ctrlKey: true });
+    await expect(closeButton.style.boxShadow).toContain("0 0 0 3px");
   }
 };
 

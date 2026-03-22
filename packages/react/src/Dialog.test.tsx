@@ -399,6 +399,13 @@ describe("Dialog", () => {
 
       fireEvent.blur(closeButton);
       iframeDocument.dispatchEvent(
+        new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0, ctrlKey: true })
+      );
+      fireEvent.focus(closeButton);
+      expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+      fireEvent.blur(closeButton);
+      iframeDocument.dispatchEvent(
         new iframeWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
       );
       fireEvent.focus(closeButton);
