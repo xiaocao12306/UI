@@ -897,6 +897,17 @@ export const CloseReasonTelemetry: Story = {
 
     await userEvent.click(canvas.getByRole("button", { name: "Reopen Palette" }));
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    doc.body.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        button: 0,
+        ctrlKey: true,
+        pointerType: "mouse"
+      })
+    );
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("escape-key");
     await userEvent.click(doc.body);
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("outside-pointer");
     await expect(canvas.getByTestId("command-close-trace")).toHaveTextContent(

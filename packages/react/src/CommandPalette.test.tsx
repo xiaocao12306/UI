@@ -3,7 +3,7 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest";
 import { CommandPalette } from "./CommandPalette";
 import { Popover } from "./Popover";
-import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
+import { dispatchCtrlPrimaryPointerDown, dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 describe("CommandPalette", () => {
   it("filters commands and handles selection", () => {
@@ -980,6 +980,11 @@ describe("CommandPalette", () => {
     );
 
     dispatchNonPrimaryPointerDown(document.body);
+    expect(onCloseReason).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+    dispatchCtrlPrimaryPointerDown(document.body);
     expect(onCloseReason).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
