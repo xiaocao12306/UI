@@ -1121,6 +1121,35 @@ export const ShiftTabDismissToPreviousControl: Story = {
   }
 };
 
+export const TabDismissFallbackToTrigger: Story = {
+  render: () => (
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
+        <Dropdown label="Tab Fallback Menu" items={items} />
+      </div>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Tab Fallback Menu" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Tab Fallback Menu" })).toBeInTheDocument();
+    await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+
+    await userEvent.keyboard("{Tab}");
+    await expect(canvas.queryByRole("menu", { name: "Tab Fallback Menu" })).not.toBeInTheDocument();
+    await expect(trigger).toHaveFocus();
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menuitem", { name: "Duplicate" })).toHaveFocus();
+
+    await userEvent.keyboard("{Shift>}{Tab}{/Shift}");
+    await expect(canvas.queryByRole("menu", { name: "Tab Fallback Menu" })).not.toBeInTheDocument();
+    await expect(trigger).toHaveFocus();
+  }
+};
+
 export const TabDismissSkipsUnfocusableCandidates: Story = {
   render: () => (
     <StoryShowcaseFrame gap={12}>

@@ -552,6 +552,35 @@ export const ShiftTabDismissToPreviousControl: Story = {
   }
 };
 
+export const TabDismissFallbackToTrigger: Story = {
+  render: () => (
+    <PopoverShowcase>
+      <Popover triggerLabel="Popover Tab Fallback">
+        <button type="button">Popover Tab Fallback Action</button>
+      </Popover>
+    </PopoverShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Popover Tab Fallback" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Popover Tab Fallback Action" })).toHaveFocus();
+
+    await userEvent.keyboard("{Tab}");
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(trigger).toHaveFocus();
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("button", { name: "Popover Tab Fallback Action" })).toHaveFocus();
+
+    await userEvent.keyboard("{Shift>}{Tab}{/Shift}");
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(trigger).toHaveFocus();
+  }
+};
+
 export const TabDismissSkipsUnfocusableCandidates: Story = {
   render: () => (
     <PopoverShowcase>
