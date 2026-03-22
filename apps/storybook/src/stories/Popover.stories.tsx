@@ -156,6 +156,10 @@ function TriggerTabModifierGuardPopoverDemo() {
 }
 
 export const TriggerTabModifierGuard: Story = {
+  args: {
+    triggerLabel: "Trigger Tab Guard Popover",
+    children: <button type="button">Popover primary action</button>
+  },
   render: () => <TriggerTabModifierGuardPopoverDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
