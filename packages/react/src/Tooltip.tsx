@@ -176,7 +176,8 @@ export function Tooltip({
     resolvedTriggerAriaLabelledBy === undefined && resolvedTriggerAriaLabel === undefined
       ? resolveNonEmptyTooltipLabel(childProps.title as string | undefined)
       : undefined;
-  const hasReadableTriggerText = getReadableTooltipTextNode(childProps.children).length > 0;
+  const hasReadableTriggerText =
+    getReadableTooltipTextNode(childProps.children as React.ReactNode).length > 0;
   const mergedDescribedBy =
     [childProps["aria-describedby"], visible ? tooltipId : undefined].filter(Boolean).join(" ") ||
     undefined;
