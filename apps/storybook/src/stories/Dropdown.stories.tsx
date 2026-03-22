@@ -130,6 +130,42 @@ export const IconItemNaming: Story = {
   }
 };
 
+export const IconItemLabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 12 }}>
+      <h3 id="dropdown-item-heading" style={{ margin: 0 }}>
+        Settings action
+      </h3>
+      <Dropdown
+        label="Icon items"
+        items={[
+          {
+            key: "settings",
+            label: <span aria-hidden="true">⚙</span>,
+            ariaLabel: "Fallback settings label",
+            ariaLabelledBy: "dropdown-item-heading",
+            textValue: "Settings"
+          },
+          {
+            key: "archive",
+            label: <span aria-hidden="true">🗄</span>,
+            ariaLabel: "Archive",
+            textValue: "Archive"
+          }
+        ]}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await userEvent.click(await canvas.findByRole("button", { name: "Icon items" }));
+
+    const settingsItem = canvas.getByRole("menuitem", { name: "Settings action" });
+    await expect(settingsItem).toHaveAttribute("aria-labelledby", "dropdown-item-heading");
+    await expect(settingsItem).not.toHaveAttribute("aria-label");
+  }
+};
+
 export const NonDismissible: Story = {
   args: {
     label: "Blocking actions",

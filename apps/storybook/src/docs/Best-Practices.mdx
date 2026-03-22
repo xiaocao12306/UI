@@ -163,7 +163,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep dropdown `Tab` behavior aligned with document order: close menu and continue focus to next control.
 - Keep dropdown `Shift+Tab` behavior aligned with document order: close menu and continue focus to the previous control.
 - For controlled dropdowns, treat Escape/outside/trigger dismiss as close intent only; apply final visual close in parent rerender to avoid state race conditions.
-- For icon-only/non-text dropdown items, provide `items[].ariaLabel` unless the rich label already exposes inline `aria-label`; development builds warn when both are missing.
+- For icon-only/non-text dropdown items, prefer `items[].ariaLabelledBy` when a visible heading already exists; otherwise provide `items[].ariaLabel`. Rich labels that expose inline `aria-label` are auto-detected, and development builds warn when both are missing.
 - For icon-only/non-text dropdown items, provide `items[].textValue` unless the rich label already exposes readable text or inline `aria-label`; buffered typeahead relies on one of these metadata paths.
 - Keep dropdown menu-item keyboard activation explicit and cross-browser (`Enter` / `Space` / legacy `Spacebar`) so non-pointer flows can execute actions without click simulation.
 - Keep dropdown navigation/activation/dismiss scoped to unmodified keys; `Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space/Escape` should stay on host/browser shortcut behavior.
@@ -196,6 +196,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={DropdownStories.ControlledOpenContract} />
 <Canvas of={DropdownStories.TypeaheadNavigation} />
 <Canvas of={DropdownStories.IconItemNaming} />
+<Canvas of={DropdownStories.IconItemLabelledByPrecedence} />
 <Canvas of={DropdownStories.TriggerLabelledByPrecedence} />
 <Canvas of={DropdownStories.TypeaheadIgnoresImeComposition} />
 <Canvas of={DropdownStories.DismissGuardHooks} />

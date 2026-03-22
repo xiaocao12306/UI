@@ -132,7 +132,7 @@ describe("Dropdown", () => {
     }
   });
 
-  it("warns when non-text dropdown item labels omit ariaLabel and textValue", () => {
+  it("warns when non-text dropdown item labels omit ariaLabel/ariaLabelledBy and textValue", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     try {
@@ -147,7 +147,9 @@ describe("Dropdown", () => {
       );
 
       expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Non-text item labels should provide ariaLabel: "icon-only"')
+        expect.stringContaining(
+          'Non-text item labels should provide ariaLabel or ariaLabelledBy: "icon-only"'
+        )
       );
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining('Non-text item labels should provide textValue for typeahead matching: "icon-only"')
@@ -174,6 +176,34 @@ describe("Dropdown", () => {
             { key: "delete", label: "Delete" }
           ]}
         />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text dropdown item labels when ariaLabelledBy and textValue are provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <div>
+          <h3 id="dropdown-settings-heading">Settings</h3>
+          <Dropdown
+            label="Named icons"
+            items={[
+              {
+                key: "settings",
+                label: <span aria-hidden="true">⚙</span>,
+                ariaLabelledBy: "dropdown-settings-heading",
+                textValue: "Settings"
+              },
+              { key: "delete", label: "Delete" }
+            ]}
+          />
+        </div>
       );
 
       expect(warnSpy).not.toHaveBeenCalled();
@@ -231,7 +261,9 @@ describe("Dropdown", () => {
       const settingsItem = screen.getByRole("menuitem");
       expect(settingsItem).not.toHaveAttribute("aria-label");
       expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Non-text item labels should provide ariaLabel: "settings"')
+        expect.stringContaining(
+          'Non-text item labels should provide ariaLabel or ariaLabelledBy: "settings"'
+        )
       );
     } finally {
       warnSpy.mockRestore();
@@ -996,6 +1028,31 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menuitem", { name: "Settings" })).toBeInTheDocument();
   });
 
+  it("prioritizes item ariaLabelledBy over ariaLabel for icon menuitem naming", () => {
+    render(
+      <div>
+        <h3 id="dropdown-item-heading">Settings</h3>
+        <Dropdown
+          label="Icon menuitems"
+          items={[
+            {
+              key: "settings",
+              label: <span aria-hidden="true">⚙</span>,
+              ariaLabel: "Fallback settings",
+              ariaLabelledBy: "dropdown-item-heading",
+              textValue: "Settings"
+            }
+          ]}
+        />
+      </div>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Icon menuitems" }));
+    const settingsItem = screen.getByRole("menuitem", { name: "Settings" });
+    expect(settingsItem).toHaveAttribute("aria-labelledby", "dropdown-item-heading");
+    expect(settingsItem).not.toHaveAttribute("aria-label");
+  });
+
   it("ignores blank item ariaLabel and keeps visible label as accessible name", () => {
     render(
       <Dropdown
@@ -1030,6 +1087,28 @@ describe("Dropdown", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Icon menuitems" }));
     const settingsItem = screen.getByRole("menuitem", { name: "Settings" });
+    expect(settingsItem).toHaveAttribute("aria-label", "Settings");
+  });
+
+  it("ignores blank item ariaLabelledBy and falls back to ariaLabel", () => {
+    render(
+      <Dropdown
+        label="Icon menuitems"
+        items={[
+          {
+            key: "settings",
+            label: <span aria-hidden="true">⚙</span>,
+            ariaLabelledBy: "   ",
+            ariaLabel: "Settings",
+            textValue: "Settings"
+          }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Icon menuitems" }));
+    const settingsItem = screen.getByRole("menuitem", { name: "Settings" });
+    expect(settingsItem).not.toHaveAttribute("aria-labelledby");
     expect(settingsItem).toHaveAttribute("aria-label", "Settings");
   });
 

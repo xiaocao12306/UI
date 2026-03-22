@@ -6,6 +6,7 @@ export type DropdownItem = {
   key: string;
   label: React.ReactNode;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
   textValue?: string;
   disabled?: boolean;
   onSelect?: () => void;
@@ -297,7 +298,9 @@ export function Dropdown({
       const hasReadableLabelText = getReadableTextNode(item.label).trim().length > 0;
       const hasExplicitAriaLabel =
         typeof item.ariaLabel === "string" && item.ariaLabel.trim().length > 0;
-      if (hasReadableLabelText || hasExplicitAriaLabel) {
+      const hasExplicitAriaLabelledBy =
+        typeof item.ariaLabelledBy === "string" && item.ariaLabelledBy.trim().length > 0;
+      if (hasReadableLabelText || hasExplicitAriaLabel || hasExplicitAriaLabelledBy) {
         return keys;
       }
 
@@ -317,7 +320,7 @@ export function Dropdown({
     warnedMissingAriaLabelSignatureRef.current = signature;
 
     console.warn(
-      `[Dropdown] Non-text item labels should provide ariaLabel: ${missingAriaLabelKeys
+      `[Dropdown] Non-text item labels should provide ariaLabel or ariaLabelledBy: ${missingAriaLabelKeys
         .map((key) => `"${key}"`)
         .join(", ")}.`
     );
@@ -575,7 +578,11 @@ export function Dropdown({
           >
             {items.map((item, index) => {
               const isActive = index === activeIndex;
-              const resolvedItemAriaLabel = resolveNonEmptyLabel(item.ariaLabel);
+              const resolvedItemAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
+              const resolvedItemAriaLabel =
+                resolvedItemAriaLabelledBy === undefined
+                  ? resolveNonEmptyLabel(item.ariaLabel)
+                  : undefined;
               return (
                 <li key={itemRenderKeys[index] ?? `${item.key}__dup-${index}`} role="none">
                   <button
@@ -586,6 +593,7 @@ export function Dropdown({
                     type="button"
                     disabled={item.disabled}
                     tabIndex={isActive ? 0 : -1}
+                    aria-labelledby={resolvedItemAriaLabelledBy}
                     aria-label={resolvedItemAriaLabel}
                     aria-disabled={item.disabled || undefined}
                     aria-keyshortcuts={item.disabled ? undefined : "Enter Space"}
