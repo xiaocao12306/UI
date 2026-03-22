@@ -47,6 +47,37 @@ describe("Alert", () => {
     expect(screen.getByRole("status")).not.toHaveAttribute("aria-label");
   });
 
+  it("prefers ariaLabelledBy over ariaLabel when both are provided", () => {
+    render(
+      <div>
+        <h2 id="alert-heading">Release readiness heading</h2>
+        <Alert
+          title="Named alert"
+          ariaLabel="Fallback alert label"
+          ariaLabelledBy="alert-heading"
+        />
+      </div>
+    );
+
+    const alert = screen.getByRole("status", { name: "Release readiness heading" });
+    expect(alert).toHaveAttribute("aria-labelledby", "alert-heading");
+    expect(alert).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and preserves ariaLabel naming", () => {
+    render(
+      <Alert
+        title="Named alert"
+        ariaLabel="Release readiness status"
+        ariaLabelledBy="   "
+      />
+    );
+
+    const alert = screen.getByRole("status", { name: "Release readiness status" });
+    expect(alert).toHaveAttribute("aria-label", "Release readiness status");
+    expect(alert).not.toHaveAttribute("aria-labelledby");
+  });
+
   it("tracks keyboard focus-visible intent and clears it only on plain primary pointer interaction", () => {
     render(<Alert title="Notice" onClose={() => {}} closeLabel="Focus-visible dismiss" />);
 

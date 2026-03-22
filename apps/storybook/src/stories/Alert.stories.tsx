@@ -104,6 +104,28 @@ export const AccessibilityMetadata: Story = {
   }
 };
 
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <AlertShowcase>
+      <h3 id="alert-heading" style={{ margin: 0 }}>
+        Release readiness heading
+      </h3>
+      <Alert
+        title="Release readiness"
+        description="Status copy inherits visible heading naming."
+        ariaLabel="Fallback release readiness alert"
+        ariaLabelledBy="alert-heading"
+      />
+    </AlertShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const alert = canvas.getByRole("status", { name: "Release readiness heading" });
+    await expect(alert).toHaveAttribute("aria-labelledby", "alert-heading");
+    await expect(alert).not.toHaveAttribute("aria-label");
+  }
+};
+
 export const FocusIntentReentry: Story = {
   render: () => (
     <AlertShowcase>

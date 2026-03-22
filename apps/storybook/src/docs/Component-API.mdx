@@ -709,10 +709,11 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | close-button pressed feedback         | primary pointer + unmodified `Enter`/`Space` (+ `Space` / legacy `Spacebar` key values) | Dismiss button exposes pressed-state offset/background for pointer and keyboard activation keys while ignoring `Ctrl/Meta/Alt` chords and IME composition key paths (`isComposing` / `keyCode=229`) to preserve host shortcuts and prevent false pressed feedback during CJK confirmation. |
 | close-button focus intent             | primary pointer clears focus-visible                                                    | Non-primary dismiss-button pointer interactions plus `Ctrl + primary click` context-click paths keep keyboard-intent ring state to avoid accidental focus-ring loss.                                           |
 | document-scoped focus intent fallback | owner-document `keydown` / pointer listeners                                            | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores alert close-button focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and `Ctrl + primary click` do not clear fallback keyboard intent. |
-| `ariaLabel`                           | `string`                                                                                | Optional status-region accessible name override; blank values are ignored.                                                                                                                                   |
+| `ariaLabel` / `ariaLabelledBy`        | `string` / `string`                                                                     | Optional status-region naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback.                                                                                                           |
 | `live`                                | `'polite' \| 'assertive' \| 'off'`                                                      | Overrides default aria-live behavior.                                                                                                                                                                        |
 
 <Canvas of={AlertStories.AccessibilityMetadata} />
+<Canvas of={AlertStories.LabelledByPrecedence} />
 <Canvas of={AlertStories.FocusIntentReentry} />
 <Canvas of={AlertStories.CloseButtonKeyboardPressedState} />
 
