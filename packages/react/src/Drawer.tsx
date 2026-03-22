@@ -202,6 +202,26 @@ export function Drawer({
                       setCloseButtonHovered(false);
                       setCloseButtonPressed(false);
                     }}
+                    onPointerDown={(event) => {
+                      if (event.pointerType === "mouse" || event.ctrlKey) {
+                        return;
+                      }
+                      if (typeof event.button === "number" && event.button !== 0) {
+                        return;
+                      }
+
+                      closeButtonFocusIntentRef.current = false;
+                      setCloseButtonFocusVisible(false);
+                      setCloseButtonPressed(true);
+                    }}
+                    onPointerUp={(event) => {
+                      if (
+                        event.pointerType !== "mouse" &&
+                        (typeof event.button !== "number" || event.button === 0)
+                      ) {
+                        setCloseButtonPressed(false);
+                      }
+                    }}
                     onMouseDown={(event) => {
                       if (event.button === 0 && !event.ctrlKey) {
                         closeButtonFocusIntentRef.current = false;
@@ -215,6 +235,9 @@ export function Drawer({
                       if (event.button === 0) {
                         setCloseButtonPressed(false);
                       }
+                    }}
+                    onPointerCancel={() => {
+                      setCloseButtonPressed(false);
                     }}
                     onKeyDown={(event) => {
                       closeButtonFocusIntentRef.current = true;

@@ -206,6 +206,14 @@ describe("Dialog", () => {
     fireEvent.mouseDown(closeButton, { button: 0 });
     expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
 
+    fireEvent.pointerCancel(closeButton);
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.pointerDown(closeButton, { pointerType: "touch", button: 0 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(1px)");
+    fireEvent.pointerUp(closeButton, { pointerType: "touch", button: 0 });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
     fireEvent.blur(closeButton);
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
   });

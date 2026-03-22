@@ -256,6 +256,24 @@ export const CloseButtonKeyboardPressedState: Story = {
     const closeButton = await body.findByRole("button", { name: "Close dialog" });
     await expect(closeButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 
+    fireEvent.mouseDown(closeButton, { button: 0 });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(1px)");
+    });
+    fireEvent.pointerCancel(closeButton);
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+
+    fireEvent.pointerDown(closeButton, { pointerType: "touch", button: 0 });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(1px)");
+    });
+    fireEvent.pointerUp(closeButton, { pointerType: "touch", button: 0 });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+
     closeButton.focus();
     fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });
     await waitFor(() => {
