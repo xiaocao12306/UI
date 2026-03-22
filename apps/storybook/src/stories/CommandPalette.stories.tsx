@@ -943,6 +943,48 @@ function ManagedKeysPreemptedPalette() {
   );
 }
 
+function ManagedKeysPreemptedLocallyPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [selectedCount, setSelectedCount] = React.useState(0);
+  const [queryValue, setQueryValue] = React.useState("");
+
+  return (
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
+        Executed commands:{" "}
+        <strong data-testid="command-local-preempt-selection-count" style={storyEmphasisTextStyle}>
+          {selectedCount}
+        </strong>
+      </p>
+      <p style={storyMutedTextStyle}>
+        Query value:{" "}
+        <strong data-testid="command-local-preempt-query-value" style={storyEmphasisTextStyle}>
+          {queryValue || "N/A"}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        onQueryChange={setQueryValue}
+        onSearchKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === "Escape") {
+            event.preventDefault();
+          }
+        }}
+        commands={[
+          {
+            key: "open-settings",
+            label: "Open Settings",
+            keywords: ["open"],
+            onSelect: () => setSelectedCount((count) => count + 1)
+          },
+          { key: "run-e2e", label: "Run E2E Smoke", keywords: ["run"] }
+        ]}
+      />
+    </StoryFullscreenFrame>
+  );
+}
+
 function NestedDismissOrderPalette() {
   const [paletteOpen, setPaletteOpen] = React.useState(false);
 
@@ -1830,6 +1872,25 @@ export const ManagedKeysPreemptedByGlobalHandler: Story = {
 
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByTestId("command-preempt-query-value")).toHaveTextContent("open");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  }
+};
+
+export const ManagedKeysPreemptedByLocalHandler: Story = {
+  render: () => <ManagedKeysPreemptedLocallyPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await userEvent.type(input, "open");
+    await expect(canvas.getByTestId("command-local-preempt-query-value")).toHaveTextContent("open");
+
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByTestId("command-local-preempt-selection-count")).toHaveTextContent("0");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByTestId("command-local-preempt-query-value")).toHaveTextContent("open");
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   }
 };

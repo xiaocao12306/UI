@@ -1455,6 +1455,41 @@ describe("CommandPalette", () => {
     }
   });
 
+  it("skips input managed keys when keydown is preempted by local onSearchKeyDown", () => {
+    const onOpenChange = vi.fn();
+    const onSelect = vi.fn();
+    const onSearchKeyDown = vi.fn((event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter" || event.key === "Escape") {
+        event.preventDefault();
+      }
+    });
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onSearchKeyDown={onSearchKeyDown}
+        commands={[
+          { key: "open-settings", label: "Open Settings", onSelect },
+          { key: "run-e2e", label: "Run E2E Smoke" }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.change(input, { target: { value: "open" } });
+    expect(input).toHaveValue("open");
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onSearchKeyDown).toHaveBeenCalled();
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(input).toHaveValue("open");
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  });
+
   it("emits close-button close reason when dismiss button is clicked", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();

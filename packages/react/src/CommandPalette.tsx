@@ -28,6 +28,7 @@ export type CommandPaletteProps = {
   closeOnEscape?: boolean;
   closeOnOutsidePointer?: boolean;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
+  onSearchKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   onPointerDownOutside?: (event: PointerEvent) => void;
   closeLabel?: string;
   placeholder?: string;
@@ -66,6 +67,7 @@ export function CommandPalette({
   closeOnEscape = true,
   closeOnOutsidePointer = true,
   onEscapeKeyDown,
+  onSearchKeyDown,
   onPointerDownOutside,
   closeLabel,
   placeholder = "Search commands...",
@@ -532,6 +534,7 @@ export function CommandPalette({
             onQueryChange?.(event.target.value);
           }}
           onKeyDown={(event) => {
+            onSearchKeyDown?.(event);
             if (isComposingCommandKeyEvent(event)) {
               return;
             }
