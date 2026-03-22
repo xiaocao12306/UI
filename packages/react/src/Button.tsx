@@ -315,6 +315,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       }}
       onKeyDown={(event) => {
         focusVisibleIntentRef.current = true;
+        onKeyDown?.(event);
         if (
           !event.defaultPrevented &&
           !interactionDisabled &&
@@ -324,7 +325,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         ) {
           setPressed(true);
         }
-        onKeyDown?.(event);
       }}
       onKeyUp={(event) => {
         if (isButtonActivationKey(event.key)) {
