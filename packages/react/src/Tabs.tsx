@@ -4,6 +4,7 @@ export type TabItem = {
   key: string;
   label: React.ReactNode;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
   content: React.ReactNode;
   disabled?: boolean;
 };
@@ -196,7 +197,9 @@ export function Tabs({
     const missingLabelKeys = items.reduce<string[]>((keys, item) => {
       const hasExplicitAriaLabel =
         typeof item.ariaLabel === "string" && item.ariaLabel.trim().length > 0;
-      if (hasExplicitAriaLabel || hasReadableTextNode(item.label)) {
+      const hasExplicitAriaLabelledBy =
+        typeof item.ariaLabelledBy === "string" && item.ariaLabelledBy.trim().length > 0;
+      if (hasExplicitAriaLabel || hasExplicitAriaLabelledBy || hasReadableTextNode(item.label)) {
         return keys;
       }
 
@@ -216,7 +219,7 @@ export function Tabs({
     warnedMissingLabelSignatureRef.current = signature;
 
     console.warn(
-      `[Tabs] Non-text labels should provide ariaLabel: ${missingLabelKeys
+      `[Tabs] Non-text labels should provide ariaLabel or ariaLabelledBy: ${missingLabelKeys
         .map((key) => `"${key}"`)
         .join(", ")}.`
     );
@@ -387,7 +390,8 @@ export function Tabs({
           const pressed = !disabled && pressedTabKey === item.key;
           const focusVisible = !disabled && focusVisibleTabKey === item.key;
           const interactive = hovered || focusVisible;
-          const itemAriaLabel = resolveNonEmptyLabel(item.ariaLabel);
+          const itemAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
+          const itemAriaLabel = itemAriaLabelledBy ? undefined : resolveNonEmptyLabel(item.ariaLabel);
 
           return (
             <button
@@ -399,6 +403,7 @@ export function Tabs({
               id={domIds?.tabId ?? `${baseId}-tab-${index}`}
               type="button"
               role="tab"
+              aria-labelledby={itemAriaLabelledBy}
               aria-label={itemAriaLabel}
               aria-selected={selected}
               aria-controls={domIds?.panelId ?? `${baseId}-panel-${index}`}

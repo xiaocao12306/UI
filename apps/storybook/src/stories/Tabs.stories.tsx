@@ -609,6 +609,38 @@ function IconOnlyLabelTabsDemo() {
   );
 }
 
+function IconOnlyLabelledByTabsDemo() {
+  return (
+    <TabsShowcase gap={10}>
+      <p style={storyMutedTextStyle}>
+        Icon tabs can bind to external visible headings with <code>items[].ariaLabelledBy</code>;
+        when both naming props are present, <code>ariaLabelledBy</code> takes precedence.
+      </p>
+      <h3 id="tabs-icon-overview-heading" style={{ margin: 0, fontSize: "var(--aurora-font-size-sm)" }}>
+        Navigation overview
+      </h3>
+      <Tabs
+        ariaLabel="Icon labelledby tabs"
+        defaultValue="overview"
+        items={[
+          {
+            key: "overview",
+            label: <span aria-hidden="true">🧭</span>,
+            ariaLabel: "Fallback overview label",
+            ariaLabelledBy: "tabs-icon-overview-heading",
+            content: "Overview panel binds icon tab naming to visible heading."
+          },
+          {
+            key: "release",
+            label: "Release",
+            content: "Release panel remains text-labeled."
+          }
+        ]}
+      />
+    </TabsShowcase>
+  );
+}
+
 export const LabelledByHeading: Story = {
   render: () => <LabelledByHeadingDemo />,
   play: async ({ canvasElement }) => {
@@ -626,6 +658,19 @@ export const IconOnlyLabelNaming: Story = {
     await expect(iconTab).toHaveAttribute("aria-controls");
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
       "Overview panel keeps icon-only tab naming explicit."
+    );
+  }
+};
+
+export const IconOnlyLabelledByPrecedence: Story = {
+  render: () => <IconOnlyLabelledByTabsDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const iconTab = canvas.getByRole("tab", { name: "Navigation overview" });
+    await expect(iconTab).toHaveAttribute("aria-labelledby", "tabs-icon-overview-heading");
+    await expect(iconTab).not.toHaveAttribute("aria-label");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+      "Overview panel binds icon tab naming to visible heading."
     );
   }
 };

@@ -518,7 +518,7 @@ describe("Tabs", () => {
     }
   });
 
-  it("warns when non-text tab labels omit ariaLabel", () => {
+  it("warns when non-text tab labels omit ariaLabel and ariaLabelledBy", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -537,7 +537,9 @@ describe("Tabs", () => {
       );
 
       expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Non-text labels should provide ariaLabel: "icon-only"')
+        expect.stringContaining(
+          'Non-text labels should provide ariaLabel or ariaLabelledBy: "icon-only"'
+        )
       );
     } finally {
       warnSpy.mockRestore();
@@ -572,6 +574,62 @@ describe("Tabs", () => {
     }
   });
 
+  it("does not warn when non-text tab labels provide ariaLabelledBy and exposes accessible name", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <div>
+          <h2 id="overview-tab-heading">Overview stage</h2>
+          <Tabs
+            items={[
+              {
+                key: "icon-only",
+                label: <span aria-hidden="true">⚙</span>,
+                ariaLabelledBy: "overview-tab-heading",
+                content: <div>Panel One</div>
+              },
+              { key: "two", label: "Two", content: <div>Panel Two</div> }
+            ]}
+          />
+        </div>
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+      const tab = screen.getByRole("tab", { name: "Overview stage" });
+      expect(tab).toHaveAttribute("aria-labelledby", "overview-tab-heading");
+      expect(tab).not.toHaveAttribute("aria-label");
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("prioritizes item ariaLabelledBy over ariaLabel", () => {
+    render(
+      <div>
+        <h2 id="icon-tab-heading">Icon tab heading</h2>
+        <Tabs
+          items={[
+            {
+              key: "icon-only",
+              label: <span aria-hidden="true">⚙</span>,
+              ariaLabel: "Fallback icon tab",
+              ariaLabelledBy: "icon-tab-heading",
+              content: <div>Panel One</div>
+            },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />
+      </div>
+    );
+
+    const tab = screen.getByRole("tab", { name: "Icon tab heading" });
+    expect(tab).toHaveAttribute("aria-labelledby", "icon-tab-heading");
+    expect(tab).not.toHaveAttribute("aria-label");
+  });
+
   it("ignores blank item ariaLabel and keeps visible tab text as accessible name", () => {
     render(
       <Tabs
@@ -584,6 +642,27 @@ describe("Tabs", () => {
 
     const overviewTab = screen.getByRole("tab", { name: "Overview" });
     expect(overviewTab).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank item ariaLabelledBy and falls back to item ariaLabel", () => {
+    render(
+      <Tabs
+        items={[
+          {
+            key: "overview",
+            label: <span aria-hidden="true">🧭</span>,
+            ariaLabel: "Overview navigation",
+            ariaLabelledBy: "   ",
+            content: <div>Panel One</div>
+          },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const overviewTab = screen.getByRole("tab", { name: "Overview navigation" });
+    expect(overviewTab).not.toHaveAttribute("aria-labelledby");
+    expect(overviewTab).toHaveAttribute("aria-label", "Overview navigation");
   });
 
   it("does not warn when rich tab labels expose aria-label on inner node", () => {
