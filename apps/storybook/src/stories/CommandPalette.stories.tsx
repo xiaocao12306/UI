@@ -531,11 +531,19 @@ function DuplicateKeyRerenderStabilityPalette() {
   const [open, setOpen] = React.useState(true);
   const [version, setVersion] = React.useState(0);
   const duplicateCommands = React.useMemo<CommandItem[]>(
-    () => [
-      { key: "deploy", label: "Deploy API" },
-      { key: "deploy", label: "Deploy Web" },
-      { key: "preview", label: "Preview Environment" }
-    ],
+    () =>
+      version % 2 === 0
+        ? [
+            { key: "deploy", label: "Deploy API" },
+            { key: "deploy", label: "Deploy Web" },
+            { key: "preview", label: "Preview Environment" }
+          ]
+        : [
+            { key: "lint", label: "Run lint checks" },
+            { key: "deploy", label: "Deploy API" },
+            { key: "deploy", label: "Deploy Web" },
+            { key: "preview", label: "Preview Environment" }
+          ],
     [version]
   );
 
@@ -1650,7 +1658,7 @@ export const DuplicateKeyRerenderStability: Story = {
     });
     await expect(input).toHaveAttribute(
       "aria-activedescendant",
-      expect.stringContaining("option-1")
+      expect.stringContaining("option-2")
     );
     await expect(canvas.getByRole("option", { name: "Deploy Web" })).toHaveAttribute(
       "aria-selected",

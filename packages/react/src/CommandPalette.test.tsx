@@ -248,7 +248,7 @@ describe("CommandPalette", () => {
       expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenLastCalledWith(
         expect.stringContaining(
-          'Duplicate command keys detected: "deploy". Keys should be unique to keep aria-activedescendant and selection behavior deterministic. Duplicate option keys are auto-suffixed by source index for render stability.'
+          'Duplicate command keys detected: "deploy". Keys should be unique to keep aria-activedescendant and selection behavior deterministic. Duplicate option keys are auto-suffixed by duplicate occurrence order for render stability.'
         )
       );
       expect(errorSpy).not.toHaveBeenCalled();
@@ -258,7 +258,7 @@ describe("CommandPalette", () => {
     }
   });
 
-  it("keeps active duplicate option stable across rerenders by source-index render key", () => {
+  it("keeps active duplicate option stable across rerenders by duplicate-occurrence render key", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const commands = [
       { key: "deploy", label: "Deploy now" },
@@ -284,6 +284,7 @@ describe("CommandPalette", () => {
           open
           onOpenChange={() => {}}
           commands={[
+            { key: "lint", label: "Run lint checks" },
             { key: "deploy", label: "Deploy now" },
             { key: "deploy", label: "Deploy later" },
             { key: "preview", label: "Preview environment" }
@@ -294,7 +295,7 @@ describe("CommandPalette", () => {
       const rerenderedInput = screen.getByRole("combobox", { name: "Search commands" });
       expect(rerenderedInput).toHaveAttribute(
         "aria-activedescendant",
-        expect.stringContaining("option-1")
+        expect.stringContaining("option-2")
       );
       expect(screen.getByRole("option", { name: "Deploy later" })).toHaveAttribute(
         "aria-selected",

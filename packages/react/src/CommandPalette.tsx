@@ -189,7 +189,7 @@ export function CommandPalette({
         .map((key) => `"${key}"`)
         .join(
           ", "
-        )}. Keys should be unique to keep aria-activedescendant and selection behavior deterministic. Duplicate option keys are auto-suffixed by source index for render stability.`
+        )}. Keys should be unique to keep aria-activedescendant and selection behavior deterministic. Duplicate option keys are auto-suffixed by duplicate occurrence order for render stability.`
     );
   }, [commands]);
 
@@ -294,12 +294,21 @@ export function CommandPalette({
     commands.forEach((item) => {
       keyCounts.set(item.key, (keyCounts.get(item.key) ?? 0) + 1);
     });
+    const duplicateOccurrenceCounts = new Map<string, number>();
 
-    return commands.map((item, sourceIndex) => ({
+    return commands.map((item) => {
+      const duplicateCount = keyCounts.get(item.key) ?? 0;
+      const duplicateOccurrence = duplicateOccurrenceCounts.get(item.key) ?? 0;
+      duplicateOccurrenceCounts.set(item.key, duplicateOccurrence + 1);
+
+      return {
       item,
       renderKey:
-        (keyCounts.get(item.key) ?? 0) > 1 ? `${item.key}__source-${sourceIndex}` : item.key
-    }));
+        duplicateCount > 1
+          ? `${item.key}__duplicate-${duplicateOccurrence}`
+          : item.key
+    };
+    });
   }, [commands]);
 
   const filteredEntries = React.useMemo(() => {
