@@ -197,6 +197,13 @@ describe("RadioGroup", () => {
     fireEvent.mouseDown(medium, { button: 0, ctrlKey: true });
     expect(medium).toHaveAttribute("data-focus-visible", "true");
 
+    fireEvent.pointerDown(medium, { pointerType: "touch", button: -1 });
+    expect(medium).not.toHaveAttribute("data-focus-visible");
+
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(medium);
+    expect(medium).toHaveAttribute("data-focus-visible", "true");
+
     fireEvent.mouseDown(medium, { button: 0 });
     expect(medium).not.toHaveAttribute("data-focus-visible");
   });

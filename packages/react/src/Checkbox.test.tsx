@@ -101,6 +101,13 @@ describe("Checkbox", () => {
     fireEvent.mouseDown(checkbox, { button: 0, ctrlKey: true });
     expect(checkbox).toHaveAttribute("data-focus-visible", "true");
 
+    fireEvent.pointerDown(checkbox, { pointerType: "touch", button: -1 });
+    expect(checkbox).not.toHaveAttribute("data-focus-visible");
+
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(checkbox);
+    expect(checkbox).toHaveAttribute("data-focus-visible", "true");
+
     fireEvent.mouseDown(checkbox, { button: 0 });
     expect(checkbox).not.toHaveAttribute("data-focus-visible");
   });

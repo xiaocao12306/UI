@@ -1052,12 +1052,37 @@ describe("CommandPalette", () => {
       bubbles: true,
       cancelable: true
     });
-    Object.defineProperty(touchPointerDown, "button", { configurable: true, value: 0 });
+    Object.defineProperty(touchPointerDown, "button", { configurable: true, value: -1 });
     Object.defineProperty(touchPointerDown, "pointerType", { configurable: true, value: "touch" });
 
     option.dispatchEvent(touchPointerDown);
     expect(touchPointerDown.defaultPrevented).toBe(true);
     expect(input).toHaveFocus();
+  });
+
+  it("does not prevent ctrl-modified touch pointerdown default on options", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "open-theme", label: "Open Theme Pack" }
+        ]}
+      />
+    );
+
+    const option = screen.getByRole("option", { name: "Open Settings" });
+    const touchPointerDown = new Event("pointerdown", {
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(touchPointerDown, "button", { configurable: true, value: -1 });
+    Object.defineProperty(touchPointerDown, "pointerType", { configurable: true, value: "touch" });
+    Object.defineProperty(touchPointerDown, "ctrlKey", { configurable: true, value: true });
+
+    option.dispatchEvent(touchPointerDown);
+    expect(touchPointerDown.defaultPrevented).toBe(false);
   });
 
   it("forwards escape and outside-pointer dismiss events", () => {

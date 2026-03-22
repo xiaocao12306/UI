@@ -143,7 +143,7 @@ export function Pagination({
       focusVisibleIntentRef.current = true;
     };
     const markPointerIntent = (event: Event) => {
-      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+      if ("button" in event && !isPrimaryPointerButton(event.button)) {
         return;
       }
       if ("ctrlKey" in event && event.ctrlKey) {
@@ -280,7 +280,7 @@ export function Pagination({
         setFocusVisibleButtonId((current) => (current === buttonId ? null : current));
       },
       onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => {
-        if (event.button !== 0 || event.ctrlKey) {
+        if (!isPrimaryPointerButton(event.button) || event.ctrlKey) {
           return;
         }
         focusVisibleIntentRef.current = false;
@@ -525,4 +525,8 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
   } catch {
     return fallback;
   }
+}
+
+function isPrimaryPointerButton(button: number | undefined) {
+  return typeof button !== "number" || button <= 0;
 }

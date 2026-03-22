@@ -55,7 +55,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
       focusVisibleIntentRef.current = true;
     };
     const markPointerIntent = (event: Event) => {
-      if ("button" in event && typeof event.button === "number" && event.button !== 0) {
+      if ("button" in event && !isPrimaryPointerButton(event.button)) {
         return;
       }
       if ("ctrlKey" in event && event.ctrlKey) {
@@ -155,7 +155,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
         onMouseDown?.(event);
       }}
       onPointerDown={(event) => {
-        if (event.button === 0 && !event.ctrlKey) {
+        if (isPrimaryPointerButton(event.button) && !event.ctrlKey) {
           focusVisibleIntentRef.current = false;
           setFocusVisible(false);
         }
@@ -190,4 +190,8 @@ function resolveFocusVisibleState(target: HTMLTextAreaElement, fallback: boolean
   } catch {
     return fallback;
   }
+}
+
+function isPrimaryPointerButton(button: number | undefined) {
+  return typeof button !== "number" || button <= 0;
 }

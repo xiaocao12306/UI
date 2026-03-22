@@ -621,7 +621,7 @@ export function CommandPalette({
                   aria-setsize={filtered.length}
                   tabIndex={-1}
                   onPointerDown={(event) => {
-                    if (event.pointerType === "mouse" || event.button !== 0) {
+                    if (!isPrimaryPointerButton(event.button) || event.ctrlKey) {
                       return;
                     }
                     // Keep combobox input focus while selecting listbox options.
@@ -813,6 +813,10 @@ function resolveNonEmptyLabel(label: string | undefined, fallback?: string): str
   }
 
   return fallback;
+}
+
+function isPrimaryPointerButton(button: number | undefined) {
+  return typeof button !== "number" || button <= 0;
 }
 
 function normalizeReadableCommandText(value: string) {
