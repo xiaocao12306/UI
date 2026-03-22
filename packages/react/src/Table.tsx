@@ -92,8 +92,13 @@ function resolveColumnSortLabel<T>(
 }
 
 function resolveFallbackSortColumnLabel(key: string, columnIndex: number) {
-  const normalizedKey = key.trim();
-  if (normalizedKey.length > 0) {
+  const normalizedKey = normalizeReadableText(
+    key
+      .trim()
+      .replace(/[_-]+/g, " ")
+      .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+  );
+  if (normalizedKey.length > 0 && /[0-9A-Za-z]/.test(normalizedKey)) {
     return normalizedKey;
   }
 

@@ -355,6 +355,44 @@ describe("Table", () => {
     }
   });
 
+  it("normalizes separator-heavy sortable keys for fallback sort labels", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            {
+              key: "release_stage-ready",
+              header: <span aria-hidden="true">🚦</span>,
+              sortable: true
+            },
+            { key: "name", header: "Name" }
+          ]}
+          data={[
+            { "release_stage-ready": "Review", name: "Dialog" },
+            { "release_stage-ready": "Ready", name: "Button" }
+          ]}
+          defaultSortKey="release_stage-ready"
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('provide sortLabel: "release stage ready"')
+      );
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "Sorted by release stage ready ascending."
+      );
+      expect(
+        screen.getByRole("button", { name: "release stage ready sort descending" })
+      ).toBeInTheDocument();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("falls back to a default accessible table name when caption and ariaLabel are absent", () => {
     render(
       <Table

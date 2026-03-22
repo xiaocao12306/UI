@@ -972,6 +972,41 @@ export const BlankKeySortLabelFallback: Story = {
   }
 };
 
+export const NormalizedKeySortLabelFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
+      <Table
+        columns={[
+          {
+            key: "release_stage-ready",
+            header: <span aria-hidden="true">🚦</span>,
+            sortable: true
+          },
+          { key: "component", header: "Component", sortable: true }
+        ]}
+        data={[
+          { "release_stage-ready": "Review", component: "Dialog" },
+          { "release_stage-ready": "Ready", component: "Button" }
+        ]}
+        defaultSortKey="release_stage-ready"
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("status")).toHaveTextContent(
+      "Sorted by release stage ready ascending."
+    );
+    const descendingButton = canvas.getByRole("button", {
+      name: "release stage ready sort descending"
+    });
+    await userEvent.click(descendingButton);
+    await expect(
+      canvas.getByRole("button", { name: "release stage ready sort ascending" })
+    ).toBeInTheDocument();
+  }
+};
+
 export const SortLabelledByPrecedence: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 780px)" gap={10}>

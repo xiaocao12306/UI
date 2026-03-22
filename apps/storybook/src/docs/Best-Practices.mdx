@@ -420,6 +420,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 
 - Use typed columns and stable row keys in data tables; fallback source-index keys exist for safety but explicit `rowKey` is preferred.
 - Keep `columns[].key` values unique; development builds warn on duplicate column keys, and runtime render keys auto-suffix duplicates by column index to avoid header/cell key-collision remount churn.
+- When sortable columns rely on fallback narration (no `sortLabel/sortLabelledBy`), keep `columns[].key` human-readable because fallback sort labels are normalized from key text; opaque/symbol-only keys will degrade to generic `Column N`.
 - Keep `rowKey` outputs unique per source row; development builds warn on duplicate keys to catch unstable identity wiring early, and runtime auto-suffixes duplicate outputs by source index to prevent key-collision remount churn.
 - If `rowKey` uses `rowIndex`, treat it as source-data index; avoid deriving keys from sorted visual position.
 - Keep `rowKey` pure and deterministic: table caches source-row keys and reuses them on sort-only rerenders to avoid key churn and unnecessary key-function re-execution.
@@ -511,6 +512,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={TableStories.SortLabelForCustomHeader} />
 <Canvas of={TableStories.RichTextHeaderAutoSortLabel} />
 <Canvas of={TableStories.AriaLabelHeaderAutoSortLabel} />
+<Canvas of={TableStories.NormalizedKeySortLabelFallback} />
 <Canvas of={TableStories.SortLabelledByPrecedence} />
 <Canvas of={TableStories.SingleRowSortDisabled} />
 <Canvas of={TableStories.SingleSortableColumnShortcutHints} />
