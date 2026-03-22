@@ -208,6 +208,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep dropdown Arrow/Home/End/Page handlers aligned with actionable count: when at most one item is actionable, do not consume navigation keys so host/container keyboard behavior is not preempted by no-op menu movement.
 - For long dropdown menus, rely on `PageUp` / `PageDown` jumps to move across actionable items in larger steps while still skipping disabled entries.
 - Treat dropdown menu-item activation repeat (`event.repeat`) as no-op after first keydown to prevent duplicate command execution and telemetry jitter during long-press.
+- Ignore dropdown menu-item activation keys during IME composition (`isComposing` / `keyCode=229`) so CJK confirmation keystrokes do not execute actions unexpectedly.
 - Deduplicate synthesized keyboard-origin click (`detail=0`) after handled dropdown item activation keydown so one keyboard action maps to one item side effect and one close telemetry event.
 - Expose dropdown menu-item `aria-keyshortcuts="Enter Space"` only on actionable items; disabled items should omit shortcut hints to avoid false affordance.
 - For icon-only/non-text popover/dropdown triggers, prefer `triggerAriaLabelledBy` when a visible heading/label already exists; otherwise provide non-empty `triggerAriaLabel` for standalone controls. Rich trigger labels with inline `aria-label` are auto-detected, and development builds warn when both naming paths are missing.
@@ -304,7 +305,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For batched command execution, set `closeOnSelect={false}` so users can run multiple actions without reopening the palette.
 - Treat repeated `Enter` keydown (`event.repeat`) as no-op for command execution so long-press does not trigger duplicate actions or telemetry noise.
 - Treat repeated `Escape` keydown (`event.repeat`) as no-op for both query-clear and dismiss paths so long-press does not clear/close the palette unexpectedly.
-- Keep option-level activation (`Enter`/`Space`) scoped to unmodified, non-repeat keydown so focused listbox options cannot execute on `Ctrl/Meta/Alt` shortcuts or long-press repeats.
+- Keep option-level activation (`Enter`/`Space`) scoped to unmodified, non-repeat, non-IME keydown so focused listbox options cannot execute on `Ctrl/Meta/Alt` shortcuts, CJK composition confirmation, or long-press repeats.
 - Keep command-palette option `mousedown` focus guards primary-only but exclude `Ctrl + primary click` context-click paths so pointer guard logic does not swallow host context interactions.
 - Expose command-palette option `aria-keyshortcuts="Enter Space"` only on actionable options; disabled options should omit shortcut hints to avoid false affordance metadata.
 - Use `PageUp` / `PageDown` for long command sets so keyboard users can jump actionable options in larger steps.

@@ -2818,7 +2818,7 @@ describe("CommandPalette", () => {
     expect(input).toHaveFocus();
   });
 
-  it("ignores modified activation keys and repeated keydown on focused options", () => {
+  it("ignores modified/IME activation keys and repeated keydown on focused options", () => {
     const onSelect = vi.fn();
     render(
       <CommandPalette
@@ -2836,6 +2836,14 @@ describe("CommandPalette", () => {
 
     fireEvent.keyDown(option, { key: "Enter", ctrlKey: true });
     fireEvent.keyDown(option, { key: "Space", metaKey: true });
+    fireEvent.keyDown(option, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    const legacyEnterEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(legacyEnterEvent, "keyCode", { value: 229 });
+    option.dispatchEvent(legacyEnterEvent);
     fireEvent.keyDown(option, { key: "Enter", repeat: true });
     expect(onSelect).not.toHaveBeenCalled();
 

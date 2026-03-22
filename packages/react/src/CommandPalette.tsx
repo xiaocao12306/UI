@@ -743,6 +743,10 @@ export function CommandPalette({
                         return;
                       }
 
+                      if (isComposingCommandKeyEvent(event)) {
+                        return;
+                      }
+
                       if (event.altKey || event.ctrlKey || event.metaKey) {
                         return;
                       }
@@ -825,7 +829,7 @@ function normalizeSearchText(text: string) {
     .toLowerCase();
 }
 
-function isComposingCommandKeyEvent(event: React.KeyboardEvent<HTMLInputElement>) {
+function isComposingCommandKeyEvent(event: React.KeyboardEvent<HTMLElement>) {
   const nativeEvent = event.nativeEvent;
   if (nativeEvent.isComposing) {
     return true;

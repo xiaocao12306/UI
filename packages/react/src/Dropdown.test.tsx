@@ -934,7 +934,7 @@ describe("Dropdown", () => {
     }
   });
 
-  it("ignores modified menu navigation and activation keys", () => {
+  it("ignores modified/IME menu navigation and activation keys", () => {
     const onSelect = vi.fn();
 
     render(
@@ -961,6 +961,14 @@ describe("Dropdown", () => {
 
     fireEvent.keyDown(runItem, { key: "Enter", ctrlKey: true });
     fireEvent.keyDown(runItem, { key: "Spacebar", metaKey: true });
+    fireEvent.keyDown(runItem, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    const legacyItemEnterImeEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(legacyItemEnterImeEvent, "keyCode", { value: 229 });
+    runItem.dispatchEvent(legacyItemEnterImeEvent);
     expect(onSelect).not.toHaveBeenCalled();
     expect(screen.getByRole("menu", { name: "Modifier Guard" })).toBeInTheDocument();
 

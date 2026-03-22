@@ -1678,6 +1678,8 @@ export const OptionActivationKeyGuard: Story = {
     await expect(canvas.getByTestId("option-activation-count")).toHaveTextContent("0");
     await userEvent.keyboard("{Control>}{Enter}{/Control}");
     await userEvent.keyboard("{Meta>}{Space}{/Meta}");
+    fireEvent.keyDown(option, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    dispatchLegacyImeKeyDown(option, "Enter");
     fireEvent.keyDown(option, { key: "Enter", repeat: true });
     fireEvent.keyDown(option, { key: "Spacebar", altKey: true });
     await expect(canvas.getByTestId("option-activation-count")).toHaveTextContent("0");

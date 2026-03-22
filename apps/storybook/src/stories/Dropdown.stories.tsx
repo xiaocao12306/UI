@@ -579,6 +579,10 @@ export const SelectionTelemetry: Story = {
     fireEvent.keyDown(deleteItem, { key: "Enter", ctrlKey: true });
     await expect(canvas.getByRole("menu")).toBeInTheDocument();
     await expect(canvas.getByTestId("dropdown-selected-action")).toHaveTextContent("none");
+    fireEvent.keyDown(deleteItem, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
+    dispatchLegacyImeKeyDown(deleteItem, "Enter");
+    await expect(canvas.getByRole("menu")).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-selected-action")).toHaveTextContent("none");
     fireEvent.keyDown(deleteItem, { key: "Enter", repeat: true });
     await expect(canvas.getByRole("menu")).toBeInTheDocument();
     await expect(canvas.getByTestId("dropdown-selected-action")).toHaveTextContent("none");

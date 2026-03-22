@@ -734,6 +734,10 @@ export function Dropdown({
                         return;
                       }
 
+                      if (isComposingDropdownKeyEvent(event)) {
+                        return;
+                      }
+
                       if (!isDropdownItemActivationKey(event.key)) {
                         return;
                       }
