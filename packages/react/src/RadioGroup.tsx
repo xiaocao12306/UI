@@ -37,6 +37,7 @@ export function RadioGroup({
   disabled = false,
   direction = "vertical"
 }: RadioGroupProps) {
+  const groupId = React.useId();
   const [internalValue, setInternalValue] = React.useState(defaultValue);
   const [focusedIndex, setFocusedIndex] = React.useState<number | null>(null);
   const [focusVisibleIndex, setFocusVisibleIndex] = React.useState<number | null>(null);
@@ -102,7 +103,7 @@ export function RadioGroup({
     }
 
     const missingAriaLabelValues = options.reduce<string[]>((values, option) => {
-      const hasReadableLabelText = getReadableRadioOptionText(option).length > 0;
+      const hasReadableLabelText = getReadableRadioTextNode(option.label).length > 0;
       const hasExplicitAriaLabel = resolveNonEmptyLabel(option.ariaLabel) !== undefined;
       const hasExplicitAriaLabelledBy = resolveNonEmptyLabel(option.ariaLabelledBy) !== undefined;
 
@@ -197,11 +198,16 @@ export function RadioGroup({
     >
       {options.map((option, index) => {
         const optionDisabled = Boolean(disabled || option.disabled);
+        const hasLabelContent = hasRenderableRadioNode(option.label);
         const hasDescriptionContent = hasRenderableRadioNode(option.description);
         const isFocused = focusedIndex === index;
         const isFocusVisible = focusVisibleIndex === index;
         const optionAriaLabelledBy = resolveNonEmptyLabel(option.ariaLabelledBy);
         const optionAriaLabel = optionAriaLabelledBy ? undefined : resolveNonEmptyLabel(option.ariaLabel);
+        const optionLabelId = hasLabelContent ? `${groupId}-option-label-${index}` : undefined;
+        const optionDescriptionId = hasDescriptionContent ? `${groupId}-option-description-${index}` : undefined;
+        const resolvedOptionAriaLabelledBy =
+          optionAriaLabelledBy ?? (optionAriaLabel ? undefined : optionLabelId);
 
         return (
           <label
@@ -220,8 +226,9 @@ export function RadioGroup({
               type="radio"
               name={name}
               value={option.value}
-              aria-labelledby={optionAriaLabelledBy}
+              aria-labelledby={resolvedOptionAriaLabelledBy}
               aria-label={optionAriaLabel}
+              aria-describedby={optionDescriptionId}
               checked={currentValue === option.value}
               disabled={optionDisabled}
               aria-keyshortcuts={optionDisabled ? undefined : "Space"}
@@ -265,9 +272,14 @@ export function RadioGroup({
               }}
             />
             <span style={{ display: "grid", gap: hasDescriptionContent ? 2 : 0 }}>
-              <span>{option.label}</span>
+              {hasLabelContent ? <span id={optionLabelId}>{option.label}</span> : null}
               {hasDescriptionContent ? (
-                <span style={{ color: "var(--aurora-text-secondary)", fontSize: "var(--aurora-font-size-xs)" }}>{option.description}</span>
+                <span
+                  id={optionDescriptionId}
+                  style={{ color: "var(--aurora-text-secondary)", fontSize: "var(--aurora-font-size-xs)" }}
+                >
+                  {option.description}
+                </span>
               ) : null}
             </span>
           </label>
@@ -296,12 +308,6 @@ function hasRenderableRadioNode(node: React.ReactNode) {
   }
 
   return true;
-}
-
-function getReadableRadioOptionText(option: RadioOption) {
-  const labelText = getReadableRadioTextNode(option.label);
-  const descriptionText = getReadableRadioTextNode(option.description);
-  return normalizeReadableRadioText([labelText, descriptionText].filter((item) => item.length > 0).join(" "));
 }
 
 function getReadableRadioTextNode(node: React.ReactNode): string {

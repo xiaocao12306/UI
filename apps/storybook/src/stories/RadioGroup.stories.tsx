@@ -124,8 +124,10 @@ export const NumericDescriptionSemantics: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const description = canvas.getByText("0");
+    const radio = canvas.getByRole("radio", { name: "Priority tier" });
     await expect(canvas.getByText("0")).toBeInTheDocument();
-    await expect(canvas.getByRole("radio", { name: "Priority tier 0" })).toBeInTheDocument();
+    await expect(radio).toHaveAttribute("aria-describedby", description.getAttribute("id"));
   }
 };
 

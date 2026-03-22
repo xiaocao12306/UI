@@ -63,7 +63,7 @@ describe("RadioGroup", () => {
     expect(screen.getByRole("radiogroup", { name: "Actionable group" })).not.toHaveAttribute("aria-disabled");
   });
 
-  it("renders numeric option descriptions instead of treating them as empty", () => {
+  it("renders numeric option descriptions via aria-describedby without polluting option names", () => {
     render(
       <RadioGroup
         name="Numeric descriptions"
@@ -71,8 +71,11 @@ describe("RadioGroup", () => {
       />
     );
 
-    expect(screen.getByText("0")).toBeInTheDocument();
-    expect(screen.getByRole("radio", { name: "Priority tier 0" })).toBeInTheDocument();
+    const description = screen.getByText("0");
+    const radio = screen.getByRole("radio", { name: "Priority tier" });
+
+    expect(description).toBeInTheDocument();
+    expect(radio).toHaveAttribute("aria-describedby", description.getAttribute("id"));
   });
 
   it("warns when duplicate radio option values are provided", () => {
@@ -265,6 +268,33 @@ describe("RadioGroup", () => {
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
           '[RadioGroup] Non-text option labels should provide ariaLabel or ariaLabelledBy: "icon-only".'
+        )
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("warns when non-text radio options rely on description text without explicit naming", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <RadioGroup
+          name="Description-only naming gap"
+          options={[
+            {
+              value: "icon-with-description",
+              label: <span aria-hidden="true">🛰️</span>,
+              description: "Broadcast from orbital relay"
+            }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          '[RadioGroup] Non-text option labels should provide ariaLabel or ariaLabelledBy: "icon-with-description".'
         )
       );
     } finally {
