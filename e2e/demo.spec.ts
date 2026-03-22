@@ -1711,17 +1711,11 @@ test("paginates release activity feed", async ({ page }) => {
   await page.goto("/");
 
   const paginationNav = page.getByRole("navigation", { name: "Release feed pagination" });
-  await expect(
-    page.getByText("v0.1.0: Button interaction states promoted to production grade.")
-  ).toBeVisible();
+  await expect(page.getByText("Button interaction states promoted to production grade.")).toBeVisible();
 
   await paginationNav.getByRole("button", { name: "Go to page 2" }).click();
-  await expect(
-    page.getByText("v0.1.0: Toast timer path stabilized for hover pause lifecycle.")
-  ).toBeVisible();
-  await expect(
-    page.getByText("v0.1.0: Button interaction states promoted to production grade.")
-  ).toBeHidden();
+  await expect(page.getByText("Toast timer path stabilized for hover pause lifecycle.")).toBeVisible();
+  await expect(page.getByText("Button interaction states promoted to production grade.")).toBeHidden();
 });
 
 test("navigates release pagination with Home/End shortcuts", async ({ page }) => {
@@ -1732,17 +1726,11 @@ test("navigates release pagination with Home/End shortcuts", async ({ page }) =>
   await firstPageButton.focus();
   await firstPageButton.press("End");
 
-  await expect(
-    page.getByText("v0.1.0: Release dry-run evidence recorded for all npm packages.")
-  ).toBeVisible();
-  await expect(
-    page.getByText("v0.1.0: Button interaction states promoted to production grade.")
-  ).toBeHidden();
+  await expect(page.getByText("Release dry-run evidence recorded for all npm packages.")).toBeVisible();
+  await expect(page.getByText("Button interaction states promoted to production grade.")).toBeHidden();
 
   await paginationNav.getByRole("button", { name: "Current page, 3" }).press("Home");
-  await expect(
-    page.getByText("v0.1.0: Button interaction states promoted to production grade.")
-  ).toBeVisible();
+  await expect(page.getByText("Button interaction states promoted to production grade.")).toBeVisible();
 });
 
 test("mirrors pagination arrow shortcuts in rtl layout", async ({ page }) => {
