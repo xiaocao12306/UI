@@ -219,6 +219,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
       }}
       onKeyDown={(event) => {
         focusVisibleIntentRef.current = true;
+        onKeyDown?.(event);
         if (
           !event.defaultPrevented &&
           !isInteractionDisabled &&
@@ -230,7 +231,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
         ) {
           setActive(true);
         }
-        onKeyDown?.(event);
       }}
       onKeyUp={(event) => {
         if (

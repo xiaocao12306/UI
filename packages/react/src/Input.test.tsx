@@ -230,6 +230,23 @@ describe("Input", () => {
     }
   });
 
+  it("skips enter active feedback when local onKeyDown preempts the event", () => {
+    render(
+      <Input
+        aria-label="Locally preempted input"
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+          }
+        }}
+      />
+    );
+
+    const input = screen.getByRole("textbox", { name: "Locally preempted input" });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(input).not.toHaveAttribute("data-active");
+  });
+
   it("retains focus-visible state on non-primary pointer interaction", () => {
     render(<Input aria-label="Pointer focus input" />);
     const input = screen.getByRole("textbox", { name: "Pointer focus input" });

@@ -217,6 +217,46 @@ export const ManagedKeysPreemptedByGlobalHandler: Story = {
   }
 };
 
+function ManagedKeysPreemptedLocallyInputDemo() {
+  const [enterCalls, setEnterCalls] = React.useState(0);
+
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={12}>
+      <FormField
+        label="Locally preempted enter input"
+        description="Input-level key guards can preempt Enter before local active-feedback handlers."
+      >
+        <Input
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              setEnterCalls((value) => value + 1);
+            }
+          }}
+        />
+      </FormField>
+      <p style={storyMutedTextStyle}>
+        Enter handler calls:{" "}
+        <strong data-testid="input-local-preempted-enter-calls" style={storyEmphasisTextStyle}>
+          {enterCalls}
+        </strong>
+      </p>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const ManagedKeysPreemptedByLocalHandler: Story = {
+  render: () => <ManagedKeysPreemptedLocallyInputDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByRole("textbox", { name: /^Locally preempted enter input/ });
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    await expect(input).not.toHaveAttribute("data-active");
+    await expect(canvas.getByTestId("input-local-preempted-enter-calls")).toHaveTextContent("1");
+  }
+};
+
 export const ShortcutHintPrecision: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={12}>
