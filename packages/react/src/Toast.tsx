@@ -47,6 +47,20 @@ const toneStyleMap: Record<ToastTone, React.CSSProperties> = {
     color: "var(--aurora-text-primary)"
   }
 };
+const interactiveAriaRoles = new Set([
+  "button",
+  "link",
+  "menuitem",
+  "option",
+  "tab",
+  "checkbox",
+  "switch",
+  "radio",
+  "textbox",
+  "combobox",
+  "spinbutton",
+  "treeitem"
+]);
 
 const positionStyleMap: Record<ToastPosition, React.CSSProperties> = {
   "bottom-right": { right: 16, bottom: 16 },
@@ -802,10 +816,147 @@ function hasInteractiveToastActionNode(node: React.ReactNode): boolean {
     return false;
   }
 
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    disabled?: boolean;
+    "aria-disabled"?: boolean | "true" | "false";
+    role?: string;
+    href?: string;
+    to?: string;
+    target?: string;
+    tabIndex?: number;
+    contentEditable?: boolean;
+    onClick?: ((event: unknown) => void) | undefined;
+    onKeyDown?: ((event: unknown) => void) | undefined;
+    onKeyUp?: ((event: unknown) => void) | undefined;
+    onKeyPress?: ((event: unknown) => void) | undefined;
+    onMouseDown?: ((event: unknown) => void) | undefined;
+    onPointerDown?: ((event: unknown) => void) | undefined;
+    onTouchStart?: ((event: unknown) => void) | undefined;
+  };
+
   if (node.type === React.Fragment) {
-    const fragmentProps = node.props as { children?: React.ReactNode };
-    return hasInteractiveToastActionNode(fragmentProps.children);
+    return hasInteractiveToastActionNode(elementProps.children);
   }
 
-  return true;
+  if (typeof node.type === "string") {
+    if (isInteractiveNativeActionElement(node.type, elementProps)) {
+      return true;
+    }
+
+    if (hasInteractiveActionProps(elementProps)) {
+      return true;
+    }
+
+    return hasInteractiveToastActionNode(elementProps.children);
+  }
+
+  if (hasInteractiveActionProps(elementProps)) {
+    return true;
+  }
+
+  return hasInteractiveToastActionNode(elementProps.children);
+}
+
+function isInteractiveNativeActionElement(
+  elementType: string,
+  props: {
+    disabled?: boolean;
+    "aria-disabled"?: boolean | "true" | "false";
+    href?: string;
+    target?: string;
+    tabIndex?: number;
+  }
+) {
+  if (isActionElementDisabled(props)) {
+    return false;
+  }
+
+  const normalizedElementType = elementType.toLowerCase();
+  if (normalizedElementType === "button") {
+    return true;
+  }
+
+  if (
+    normalizedElementType === "input" ||
+    normalizedElementType === "select" ||
+    normalizedElementType === "textarea"
+  ) {
+    return true;
+  }
+
+  if (normalizedElementType === "a") {
+    return (
+      (typeof props.href === "string" && props.href.trim().length > 0) ||
+      typeof props.target === "string"
+    );
+  }
+
+  return false;
+}
+
+function hasInteractiveActionProps(props: {
+  disabled?: boolean;
+  "aria-disabled"?: boolean | "true" | "false";
+  role?: string;
+  href?: string;
+  to?: string;
+  tabIndex?: number;
+  contentEditable?: boolean;
+  onClick?: ((event: unknown) => void) | undefined;
+  onKeyDown?: ((event: unknown) => void) | undefined;
+  onKeyUp?: ((event: unknown) => void) | undefined;
+  onKeyPress?: ((event: unknown) => void) | undefined;
+  onMouseDown?: ((event: unknown) => void) | undefined;
+  onPointerDown?: ((event: unknown) => void) | undefined;
+  onTouchStart?: ((event: unknown) => void) | undefined;
+}) {
+  if (isActionElementDisabled(props)) {
+    return false;
+  }
+
+  const hasInteractiveRole = isInteractiveRole(props.role);
+  const hasInteractiveEventHandler =
+    typeof props.onClick === "function" ||
+    typeof props.onKeyDown === "function" ||
+    typeof props.onKeyUp === "function" ||
+    typeof props.onKeyPress === "function" ||
+    typeof props.onMouseDown === "function" ||
+    typeof props.onPointerDown === "function" ||
+    typeof props.onTouchStart === "function";
+  const hasNavigationTarget =
+    (typeof props.href === "string" && props.href.trim().length > 0) ||
+    (typeof props.to === "string" && props.to.trim().length > 0);
+  const hasFocusableTabIndex = typeof props.tabIndex === "number" && props.tabIndex >= 0;
+
+  if (hasInteractiveRole || hasNavigationTarget || props.contentEditable === true) {
+    return true;
+  }
+
+  if (hasInteractiveEventHandler) {
+    return true;
+  }
+
+  return hasFocusableTabIndex && (hasInteractiveRole || hasInteractiveEventHandler);
+}
+
+function isActionElementDisabled(props: {
+  disabled?: boolean;
+  "aria-disabled"?: boolean | "true" | "false";
+}) {
+  return (
+    props.disabled === true ||
+    props["aria-disabled"] === true ||
+    props["aria-disabled"] === "true"
+  );
+}
+
+function isInteractiveRole(role: string | undefined) {
+  if (typeof role !== "string") {
+    return false;
+  }
+
+  return role
+    .split(/\s+/)
+    .some((token) => interactiveAriaRoles.has(token.trim().toLowerCase()));
 }

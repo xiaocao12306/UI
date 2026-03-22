@@ -410,9 +410,27 @@ function TextActionSemanticsDemo() {
       <Toast
         open
         onOpenChange={() => {}}
-        title="Passive update"
+        title="Passive update text"
         description="Text action content should not upgrade toast role semantics."
         action="Undo later"
+      />
+      <Toast
+        open
+        onOpenChange={() => {}}
+        title="Passive update element"
+        description="Non-interactive action elements should keep passive toast semantics."
+        action={<span>Undo later</span>}
+      />
+      <Toast
+        open
+        onOpenChange={() => {}}
+        title="Action required nested"
+        description="Interactive descendants still upgrade toast role semantics."
+        action={
+          <span>
+            <button type="button">Undo now</button>
+          </span>
+        }
       />
     </ToastShowcase>
   );
@@ -422,9 +440,13 @@ export const TextActionSemantics: Story = {
   render: () => <TextActionSemanticsDemo />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
-    await expect(canvas.getByRole("status", { name: "Passive update" })).toBeInTheDocument();
-    await expect(canvas.getByText("Undo later")).toBeInTheDocument();
-    await expect(canvas.queryByRole("dialog", { name: "Passive update" })).toBeNull();
+    await expect(canvas.getByRole("status", { name: "Passive update text" })).toBeInTheDocument();
+    await expect(canvas.getByRole("status", { name: "Passive update element" })).toBeInTheDocument();
+    await expect(canvas.getAllByText("Undo later")).toHaveLength(2);
+    await expect(canvas.queryByRole("dialog", { name: "Passive update text" })).toBeNull();
+    await expect(canvas.queryByRole("dialog", { name: "Passive update element" })).toBeNull();
+    await expect(canvas.getByRole("dialog", { name: "Action required nested" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Undo now" })).toBeInTheDocument();
   }
 };
 

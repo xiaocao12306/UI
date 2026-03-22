@@ -287,6 +287,34 @@ describe("Toast", () => {
     expect(screen.queryByRole("dialog", { name: "Passive update" })).toBeNull();
   });
 
+  it("treats non-interactive element action as non-actionable live region", () => {
+    render(<Toast open title="Passive update" action={<span>Undo later</span>} />);
+
+    const toast = screen.getByRole("status", { name: "Passive update" });
+    expect(toast).toHaveAttribute("aria-live", "polite");
+    expect(toast).not.toHaveAttribute("aria-modal");
+    expect(screen.getByText("Undo later")).toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Passive update" })).toBeNull();
+  });
+
+  it("treats nested interactive action element as actionable surface", () => {
+    render(
+      <Toast
+        open
+        title="Action required"
+        action={
+          <span>
+            <button type="button">Undo now</button>
+          </span>
+        }
+      />
+    );
+
+    const toast = screen.getByRole("dialog", { name: "Action required" });
+    expect(toast).toHaveAttribute("aria-modal", "false");
+    expect(screen.getByRole("button", { name: "Undo now" })).toBeInTheDocument();
+  });
+
   it("supports overriding live-region politeness", () => {
     render(<Toast open title="Background sync" live="off" duration={0} />);
     expect(screen.getByRole("status", { name: "Background sync" })).toHaveAttribute("aria-live", "off");
@@ -491,6 +519,38 @@ describe("Toast", () => {
           open
           title="Passive update"
           action="Undo later"
+          onOpenChange={onOpenChange}
+          onCloseReason={onCloseReason}
+        />
+      );
+
+      act(() => {
+        vi.advanceTimersByTime(3999);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+      expect(onCloseReason).not.toHaveBeenCalled();
+
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onCloseReason).toHaveBeenCalledWith("timeout");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("auto dismisses non-interactive element action toast after default 4000ms", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    try {
+      render(
+        <Toast
+          open
+          title="Passive update"
+          action={<span>Undo later</span>}
           onOpenChange={onOpenChange}
           onCloseReason={onCloseReason}
         />
