@@ -72,7 +72,7 @@ function resolveInitialSortState<T>(
 
 function resolveColumnSortLabel<T>(
   column: TableColumn<T>,
-  fallbackKey: string,
+  fallbackLabel: string,
   ownerDocument: Document | undefined
 ) {
   void ownerDocument;
@@ -86,7 +86,20 @@ function resolveColumnSortLabel<T>(
     return normalizedHeader;
   }
 
-  return fallbackKey;
+  return fallbackLabel;
+}
+
+function resolveFallbackSortColumnLabel(key: string, columnIndex: number) {
+  const normalizedKey = key.trim();
+  if (normalizedKey.length > 0) {
+    return normalizedKey;
+  }
+
+  if (columnIndex >= 0) {
+    return `Column ${columnIndex + 1}`;
+  }
+
+  return "Column";
 }
 
 export function Table<T>({
@@ -328,7 +341,7 @@ export function Table<T>({
       return;
     }
 
-    const missingSortLabelKeys = columns.reduce<string[]>((keys, column) => {
+    const missingSortLabelKeys = columns.reduce<string[]>((keys, column, columnIndex) => {
       if (!column.sortable) {
         return keys;
       }
@@ -345,7 +358,7 @@ export function Table<T>({
         return keys;
       }
 
-      keys.push(String(column.key));
+      keys.push(resolveFallbackSortColumnLabel(String(column.key), columnIndex));
       return keys;
     }, []);
 
@@ -426,7 +439,11 @@ export function Table<T>({
       return "";
     }
 
-    const activeSortColumn = columns.find((column) => String(column.key) === sortState.key);
+    const activeSortColumnIndex = columns.findIndex(
+      (column) => String(column.key) === sortState.key
+    );
+    const activeSortColumn =
+      activeSortColumnIndex >= 0 ? columns[activeSortColumnIndex] : undefined;
     if (!activeSortColumn?.sortable) {
       return "";
     }
@@ -436,7 +453,7 @@ export function Table<T>({
       (typeof document === "undefined" ? undefined : document);
     const columnHeader = resolveColumnSortLabel(
       activeSortColumn,
-      String(activeSortColumn.key),
+      resolveFallbackSortColumnLabel(sortState.key, activeSortColumnIndex),
       ownerDocument
     );
     return getSortStatusText({
@@ -533,7 +550,11 @@ export function Table<T>({
               const sorted = !loading && hasMultiRowData ? activeSortDirection : undefined;
               const ariaSort = sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined;
               const textAlign = column.align ?? "left";
-              const headerLabel = resolveColumnSortLabel(column, key, ownerDocument);
+              const headerLabel = resolveColumnSortLabel(
+                column,
+                resolveFallbackSortColumnLabel(key, columnIndex),
+                ownerDocument
+              );
               const nextDirection: TableSortDirection =
                 activeSortDirection === "asc" ? "desc" : "asc";
               const sortAriaLabel = getSortAriaLabel({

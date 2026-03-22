@@ -838,6 +838,39 @@ export const AriaLabelHeaderAutoSortLabel: Story = {
   }
 };
 
+export const BlankKeySortLabelFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
+      <Table
+        columns={[
+          {
+            key: "   ",
+            header: <span aria-hidden="true">🚦</span>,
+            sortable: true
+          },
+          { key: "component", header: "Component", sortable: true }
+        ]}
+        data={[
+          { "   ": "Review", component: "Dialog" },
+          { "   ": "Ready", component: "Button" }
+        ]}
+        defaultSortKey="   "
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Column 1 ascending.");
+    const descendingButton = canvas.getByRole("button", {
+      name: "Column 1 sort descending"
+    });
+    await userEvent.click(descendingButton);
+    await expect(
+      canvas.getByRole("button", { name: "Column 1 sort ascending" })
+    ).toBeInTheDocument();
+  }
+};
+
 export const SortLabelledByPrecedence: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 780px)" gap={10}>

@@ -321,6 +321,40 @@ describe("Table", () => {
     }
   });
 
+  it("falls back to indexed sort label when sortable column key is blank", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            {
+              key: "   ",
+              header: <span aria-hidden="true">🚦</span>,
+              sortable: true
+            },
+            { key: "name", header: "Name" }
+          ]}
+          data={[
+            { "   ": "Review", name: "Dialog" },
+            { "   ": "Ready", name: "Button" }
+          ]}
+          defaultSortKey="   "
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('provide sortLabel: "Column 1"')
+      );
+      expect(screen.getByRole("status")).toHaveTextContent("Sorted by Column 1 ascending.");
+      expect(screen.getByRole("button", { name: "Column 1 sort descending" })).toBeInTheDocument();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("falls back to a default accessible table name when caption and ariaLabel are absent", () => {
     render(
       <Table
