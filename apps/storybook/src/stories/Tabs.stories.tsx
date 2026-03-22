@@ -915,6 +915,42 @@ function ManualActivationRepeatGuardDemo() {
   );
 }
 
+function ManagedKeysPreemptedDemo() {
+  const [value, setValue] = React.useState("spec");
+  const [changes, setChanges] = React.useState(0);
+
+  return (
+    <TabsShowcase gap={10}>
+      <p style={storyMutedTextStyle}>
+        Global shortcut guards that preempt keydown should keep tablist selection and roving focus
+        stable.
+      </p>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={storyTelemetryLabelStyle}>Tab value changes</span>
+        <Badge tone="default" data-testid="managed-key-preempt-change-count">
+          {changes}
+        </Badge>
+      </div>
+      <div onKeyDownCapture={(event) => event.preventDefault()}>
+        <Tabs
+          ariaLabel="Managed key preempt tabs"
+          activationMode="manual"
+          value={value}
+          onValueChange={(nextValue) => {
+            setValue(nextValue);
+            setChanges((count) => count + 1);
+          }}
+          items={[
+            { key: "spec", label: "Spec", content: "Specification stage." },
+            { key: "build", label: "Build", content: "Build stage." },
+            { key: "release", label: "Release", content: "Release stage." }
+          ]}
+        />
+      </div>
+    </TabsShowcase>
+  );
+}
+
 export const ManualActivationRepeatGuard: Story = {
   render: () => <ManualActivationRepeatGuardDemo />,
   play: async ({ canvasElement }) => {
@@ -951,6 +987,29 @@ export const ManualActivationRepeatGuard: Story = {
     await userEvent.keyboard("{Space}");
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Release stage.");
     await expect(changeCount).toHaveTextContent("2");
+  }
+};
+
+export const ManagedKeysPreemptedByGlobalHandler: Story = {
+  render: () => <ManagedKeysPreemptedDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+    const changeCount = canvas.getByTestId("managed-key-preempt-change-count");
+
+    await userEvent.click(specTab);
+    await expect(changeCount).toHaveTextContent("0");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+
+    fireEvent.keyDown(specTab, { key: "ArrowRight" });
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+    await expect(changeCount).toHaveTextContent("0");
+
+    fireEvent.focus(buildTab);
+    fireEvent.keyDown(buildTab, { key: "Enter" });
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+    await expect(changeCount).toHaveTextContent("0");
   }
 };
 

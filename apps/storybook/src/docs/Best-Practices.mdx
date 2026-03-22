@@ -449,6 +449,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Use `loop={false}` when boundary tabs should trap Arrow navigation (for linear workflows where wrap-around can feel like a jump).
 - Keep modified shortcuts (`Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space`) on host/browser behavior; tabs should only react to unmodified navigation/activation keys.
 - Keep vertical tablists stable under modified `ArrowUp/ArrowDown`; `Ctrl/Meta/Alt` arrow chords should not move roving focus or selected panel.
+- When app-level shortcuts preempt tab keydown with `preventDefault()`, keep tablist navigation/activation handlers side-effect free so host shortcut guards remain authoritative.
 - Keep automatic-tab shortcut hints orientation-aware: horizontal tabs expose `aria-keyshortcuts="Home End PageDown PageUp ArrowLeft ArrowRight"` and vertical tabs expose `aria-keyshortcuts="Home End PageDown PageUp ArrowUp ArrowDown"`; disabled tabs should omit the hint.
 - When only one tab remains actionable, omit tab `aria-keyshortcuts` hints so QA/AT metadata does not advertise unavailable navigation/activation paths.
 - Keep `Shift + Enter/Space` available for manual tab activation; only `Ctrl/Meta/Alt` combinations should be filtered from activation paths.
@@ -474,6 +475,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={TabsStories.ManualActivationPressedFeedback} />
 <Canvas of={TabsStories.ManualVerticalActivation} />
 <Canvas of={TabsStories.ImeCompositionGuard} />
+<Canvas of={TabsStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={TabsStories.PrimaryPointerOnlyPressedState} />
 <Canvas of={TabsStories.KeyboardFocusRingShiftTabReentry} />
 <Canvas of={TableStories.ReleaseChecklist} />

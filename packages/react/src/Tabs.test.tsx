@@ -834,6 +834,37 @@ describe("Tabs", () => {
     expect(onValueChange).toHaveBeenCalledWith("two");
   });
 
+  it("skips tab keyboard handling when keydown is preempted upstream", () => {
+    const onValueChange = vi.fn();
+    render(
+      <div onKeyDownCapture={(event) => event.preventDefault()}>
+        <Tabs
+          value="one"
+          activationMode="manual"
+          onValueChange={onValueChange}
+          items={[
+            { key: "one", label: "One", content: <div>Panel One</div> },
+            { key: "two", label: "Two", content: <div>Panel Two</div> }
+          ]}
+        />
+      </div>
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    const twoTab = screen.getByRole("tab", { name: "Two" });
+    fireEvent.focus(twoTab);
+
+    fireEvent.keyDown(twoTab, { key: "Enter" });
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(oneTab).toHaveAttribute("aria-selected", "true");
+    expect(twoTab).toHaveAttribute("aria-selected", "false");
+
+    fireEvent.focus(oneTab);
+    fireEvent.keyDown(oneTab, { key: "ArrowRight" });
+    expect(oneTab).toHaveAttribute("aria-selected", "true");
+    expect(twoTab).toHaveAttribute("aria-selected", "false");
+  });
+
   it("ignores repeated Enter keydown in manual mode activation", () => {
     const onValueChange = vi.fn();
     render(

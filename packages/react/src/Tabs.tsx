@@ -514,6 +514,9 @@ export function Tabs({
               }}
               onKeyDown={(event) => {
                 focusIntentRef.current = true;
+                if (event.defaultPrevented) {
+                  return;
+                }
                 if (event.altKey || event.ctrlKey || event.metaKey) {
                   return;
                 }
