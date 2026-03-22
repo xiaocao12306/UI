@@ -311,11 +311,13 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `disabled`                     | `boolean`                                                                                      | Prevents open behavior and closes active tooltip state.                                                                             |
 | `closeOnEscape`                | `boolean`                                                                                      | Controls whether Escape dismiss is enabled; disabling it keeps tooltip open on Escape and removes dismiss shortcut metadata.        |
 | `side` / `sideOffset`          | `'top' \| 'right' \| 'bottom' \| 'left'` / `number`                                            | Controls overlay placement around trigger.                                                                                          |
+| trigger naming                 | non-empty `aria-label` / `aria-labelledby` on trigger element                                  | For icon-only/non-text triggers, provide explicit naming on the trigger element itself. Rich trigger content with inline `aria-label` is auto-detected, and development builds warn when both naming paths are missing. |
 | dismiss key hints              | `aria-keyshortcuts="Escape"` (while visible and `closeOnEscape` enabled)                       | Tooltip surface exposes Escape shortcut metadata for QA/AT discoverability only when Escape dismiss is actionable.                  |
 | modifier/repeat guard          | ignores `Ctrl/Meta/Alt + Escape`, repeated keydown, and IME composition Escape (`keyCode=229`) | Preserves host/browser shortcuts and avoids accidental tooltip dismissal while handling long-press or CJK composition confirmation. |
 
 <Canvas of={TooltipStories.Controlled} />
 <Canvas of={TooltipStories.DescribedByLifecycle} />
+<Canvas of={TooltipStories.NonTextTriggerNameFallback} />
 <Canvas of={TooltipStories.EscapeModifierGuard} />
 <Canvas of={TooltipStories.EscapeDisabled} />
 

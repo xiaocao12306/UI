@@ -54,6 +54,7 @@ export function Tooltip({
   const closeTimerWindowRef = React.useRef<Window | null>(null);
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
+  const warnedMissingTriggerNameRef = React.useRef(false);
 
   const getOwnerWindow = React.useCallback(
     () => rootRef.current?.ownerDocument.defaultView ?? window,
@@ -164,9 +165,46 @@ export function Tooltip({
   const visible = isOpen && !disabled;
   const child = React.Children.only(children) as React.ReactElement<Record<string, unknown>>;
   const childProps = child.props;
+  const resolvedTriggerAriaLabelledBy = resolveNonEmptyTooltipLabel(
+    childProps["aria-labelledby"] as string | undefined
+  );
+  const resolvedTriggerAriaLabel =
+    resolvedTriggerAriaLabelledBy === undefined
+      ? resolveNonEmptyTooltipLabel(childProps["aria-label"] as string | undefined)
+      : undefined;
+  const resolvedTriggerTitle =
+    resolvedTriggerAriaLabelledBy === undefined && resolvedTriggerAriaLabel === undefined
+      ? resolveNonEmptyTooltipLabel(childProps.title as string | undefined)
+      : undefined;
+  const hasReadableTriggerText = getReadableTooltipTextNode(childProps.children).length > 0;
   const mergedDescribedBy =
     [childProps["aria-describedby"], visible ? tooltipId : undefined].filter(Boolean).join(" ") ||
     undefined;
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+    if (warnedMissingTriggerNameRef.current) {
+      return;
+    }
+    if (
+      hasReadableTriggerText ||
+      resolvedTriggerAriaLabel !== undefined ||
+      resolvedTriggerAriaLabelledBy !== undefined ||
+      resolvedTriggerTitle !== undefined
+    ) {
+      return;
+    }
+
+    warnedMissingTriggerNameRef.current = true;
+    console.warn("[Tooltip] Non-text trigger should provide aria-label or aria-labelledby.");
+  }, [
+    hasReadableTriggerText,
+    resolvedTriggerAriaLabel,
+    resolvedTriggerAriaLabelledBy,
+    resolvedTriggerTitle
+  ]);
   // eslint-disable-next-line react-hooks/refs -- timer refs are read only inside DOM event callbacks.
   const trigger = React.cloneElement(child, {
     "aria-describedby": mergedDescribedBy,
@@ -254,4 +292,55 @@ function isComposingTooltipKeyEvent(event: React.KeyboardEvent<HTMLElement>) {
   }
 
   return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
+}
+
+function getReadableTooltipTextNode(node: React.ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") {
+    return normalizeReadableTooltipText(String(node));
+  }
+
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return "";
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeReadableTooltipText(
+      node
+        .map((item) => getReadableTooltipTextNode(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  const inlineAriaLabel = resolveNonEmptyTooltipLabel(elementProps["aria-label"]);
+  if (inlineAriaLabel) {
+    return inlineAriaLabel;
+  }
+
+  return getReadableTooltipTextNode(elementProps.children);
+}
+
+function resolveNonEmptyTooltipLabel(value: string | undefined): string | undefined {
+  if (typeof value === "string" && value.trim().length > 0) {
+    return value.trim();
+  }
+
+  return undefined;
+}
+
+function normalizeReadableTooltipText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }

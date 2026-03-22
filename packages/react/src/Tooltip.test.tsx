@@ -161,6 +161,74 @@ describe("Tooltip", () => {
     expect(screen.queryByRole("tooltip")).toBeNull();
   });
 
+  it("warns when non-text trigger omits aria-label and aria-labelledby", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    render(
+      <Tooltip content="Tooltip content">
+        <button type="button">
+          <span aria-hidden="true">ⓘ</span>
+        </button>
+      </Tooltip>
+    );
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      "[Tooltip] Non-text trigger should provide aria-label or aria-labelledby."
+    );
+    warnSpy.mockRestore();
+  });
+
+  it("does not warn when non-text trigger provides aria-label", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    render(
+      <Tooltip content="Tooltip content">
+        <button type="button" aria-label="More info">
+          <span aria-hidden="true">ⓘ</span>
+        </button>
+      </Tooltip>
+    );
+
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  it("does not warn when non-text trigger provides aria-labelledby", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    render(
+      <>
+        <span id="tooltip-trigger-name">More info</span>
+        <Tooltip content="Tooltip content">
+          <button type="button" aria-labelledby="tooltip-trigger-name">
+            <span aria-hidden="true">ⓘ</span>
+          </button>
+        </Tooltip>
+      </>
+    );
+
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  it("does not warn when rich non-text trigger exposes inline aria-label", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    render(
+      <Tooltip content="Tooltip content">
+        <button type="button">
+          <span aria-label="More info">
+            <span aria-hidden="true">ⓘ</span>
+          </span>
+        </button>
+      </Tooltip>
+    );
+
+    expect(screen.getByRole("button", { name: "More info" })).toBeInTheDocument();
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
   it("cleans tooltip id from aria-describedby after close", () => {
     render(
       <Tooltip content="Tooltip content" closeDelay={0}>

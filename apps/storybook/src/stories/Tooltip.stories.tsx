@@ -233,3 +233,33 @@ export const DescribedByLifecycle: Story = {
     await expect(trigger).toHaveAttribute("aria-describedby", "helper-id");
   }
 };
+
+export const NonTextTriggerNameFallback: Story = {
+  render: () => (
+    <TooltipShowcase>
+      <h3 id="tooltip-trigger-name-heading" style={{ margin: 0 }}>
+        Tooltip help
+      </h3>
+      <div style={{ display: "flex", gap: 8 }}>
+        <Tooltip content="Labelled-by tooltip trigger">
+          <button type="button" aria-labelledby="tooltip-trigger-name-heading">
+            <span aria-hidden="true">ⓘ</span>
+          </button>
+        </Tooltip>
+        <Tooltip content="Aria-label tooltip trigger">
+          <button type="button" aria-label="Quick help">
+            <span aria-hidden="true">ⓘ</span>
+          </button>
+        </Tooltip>
+      </div>
+    </TooltipShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const labelledByTrigger = await canvas.findByRole("button", { name: "Tooltip help" });
+    const ariaLabelTrigger = canvas.getByRole("button", { name: "Quick help" });
+
+    await expect(labelledByTrigger).toHaveAttribute("aria-labelledby", "tooltip-trigger-name-heading");
+    await expect(ariaLabelTrigger).toHaveAttribute("aria-label", "Quick help");
+  }
+};
