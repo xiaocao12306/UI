@@ -121,3 +121,41 @@ export const LabelledByPrecedence: Story = {
     await expect(labelledBy.split(" ")).toContain(labelId);
   }
 };
+
+export const NonTextLabelNameFallback: Story = {
+  render: () => (
+    <div style={{ width: 520, display: "grid", gap: 12 }}>
+      <p id="release-scope-heading" style={{ margin: 0, fontWeight: 600 }}>
+        Release scope
+      </p>
+      <FormField
+        label={
+          <span aria-hidden="true" style={{ display: "inline-flex", alignItems: "center" }}>
+            ⚙️
+          </span>
+        }
+      >
+        <Input aria-labelledby="release-scope-heading" defaultValue="production" />
+      </FormField>
+
+      <FormField
+        label={
+          <span aria-hidden="true" style={{ display: "inline-flex", alignItems: "center" }}>
+            🧪
+          </span>
+        }
+      >
+        <Input aria-label="Experiment channel" defaultValue="beta-canary" />
+      </FormField>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const labelledByInput = canvas.getByRole("textbox", { name: "Release scope" });
+    const ariaLabelInput = canvas.getByRole("textbox", { name: "Experiment channel" });
+    const labelledBy = labelledByInput.getAttribute("aria-labelledby") ?? "";
+
+    await expect(labelledBy.split(" ")).toContain("release-scope-heading");
+    await expect(ariaLabelInput).toHaveAttribute("aria-label", "Experiment channel");
+  }
+};

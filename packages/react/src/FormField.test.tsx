@@ -179,6 +179,82 @@ describe("FormField", () => {
     expect(input).toHaveAttribute("aria-labelledby");
   });
 
+  it("warns when non-text label content has no control naming fallback", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(
+      <FormField
+        label={
+          <span aria-hidden="true" data-testid="icon-only-label">
+            ⚙️
+          </span>
+        }
+      >
+        <Input />
+      </FormField>
+    );
+
+    expect(warnSpy).toHaveBeenCalledWith("[FormField] Non-text label should provide aria-label or aria-labelledby on the control.");
+    warnSpy.mockRestore();
+  });
+
+  it("does not warn for non-text labels when control aria-label is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(
+      <FormField
+        label={
+          <span aria-hidden="true" data-testid="icon-only-label">
+            ⚙️
+          </span>
+        }
+      >
+        <Input aria-label="Release environment input" />
+      </FormField>
+    );
+
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  it("does not warn for non-text labels when control aria-labelledby is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(
+      <>
+        <span id="formfield-name">Release environment</span>
+        <FormField
+          label={
+            <span aria-hidden="true" data-testid="icon-only-label">
+              ⚙️
+            </span>
+          }
+        >
+          <Input aria-labelledby="formfield-name" />
+        </FormField>
+      </>
+    );
+
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  it("does not warn when non-text labels expose inline aria-label text", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    render(
+      <FormField
+        label={
+          <span aria-label="Environment scope">
+            <span aria-hidden="true">⚙️</span>
+          </span>
+        }
+      >
+        <Input />
+      </FormField>
+    );
+
+    expect(screen.getByRole("textbox", { name: "Environment scope" })).toBeInTheDocument();
+    expect(warnSpy).not.toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
   it("reflects child disabled semantics on the field wrapper", () => {
     render(
       <FormField label="Inherited disabled state">

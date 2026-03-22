@@ -50,7 +50,9 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const mergedLabelledBy = resolvedChildAriaLabel
     ? resolvedChildLabelledBy
     : mergeAriaReferenceIds(resolvedChildLabelledBy, labelId);
+  const labelReadableText = extractReadableText(label).trim();
   const warnedMissingAssociationRef = React.useRef(false);
+  const warnedMissingNameRef = React.useRef(false);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {
@@ -68,6 +70,21 @@ export function FormField({ label, htmlFor, description, error, required, disabl
       "[FormField] Could not associate label with a form control because children is not a single clonable element and htmlFor was not provided. Provide htmlFor and a matching control id."
     );
   }, [canCloneControl, controlId]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+    if (warnedMissingNameRef.current) {
+      return;
+    }
+    if (!canCloneControl || labelReadableText.length > 0 || resolvedChildAriaLabel || resolvedChildLabelledBy) {
+      return;
+    }
+
+    warnedMissingNameRef.current = true;
+    console.warn("[FormField] Non-text label should provide aria-label or aria-labelledby on the control.");
+  }, [canCloneControl, labelReadableText, resolvedChildAriaLabel, resolvedChildLabelledBy]);
 
   const control =
     canCloneControl
@@ -139,4 +156,42 @@ export function FormField({ label, htmlFor, description, error, required, disabl
       ) : null}
     </div>
   );
+}
+
+function extractReadableText(node: React.ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return "";
+  }
+  if (Array.isArray(node)) {
+    return node.map((child) => extractReadableText(child)).join(" ");
+  }
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  const inlineAriaLabel = resolveNonEmptyString(elementProps["aria-label"]);
+  if (inlineAriaLabel) {
+    return inlineAriaLabel;
+  }
+
+  return extractReadableText(elementProps.children);
+}
+
+function resolveNonEmptyString(value: string | undefined): string | undefined {
+  if (typeof value === "string" && value.trim().length > 0) {
+    return value.trim();
+  }
+  return undefined;
 }

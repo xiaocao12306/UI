@@ -55,6 +55,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Prefer `FormField` wrappers for helper/error copy so `aria-describedby` and `aria-errormessage` stay in sync.
 - For composite/non-clonable field controls, provide `htmlFor` on `FormField` and a matching control `id`; otherwise label association cannot be inferred.
 - If a wrapped control already provides `aria-labelledby`, avoid passing `aria-label` together; keep `aria-labelledby` as the canonical name source.
+- For icon/non-text FormField labels, provide control-level `aria-labelledby` when a visible heading exists, otherwise provide `aria-label`; rich label nodes with inline `aria-label` are auto-detected, and development builds warn when control naming is still missing.
 - Treat blank input `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank checkbox `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Keep checkbox shortcut hints precise: expose `aria-keyshortcuts="Space"` only while actionable, and remove shortcut metadata when checkbox is disabled.
@@ -116,6 +117,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={FormFieldStories.WithInputControl} />
 <Canvas of={FormFieldStories.ExternalControlAssociation} />
 <Canvas of={FormFieldStories.LabelledByPrecedence} />
+<Canvas of={FormFieldStories.NonTextLabelNameFallback} />
 <Canvas of={InputStories.BlankAriaLabelFallback} />
 <Canvas of={DatePickerStories.BlankAriaLabelFallback} />
 <Canvas of={DatePickerStories.LabelledByPrecedence} />

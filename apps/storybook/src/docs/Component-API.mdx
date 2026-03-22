@@ -115,12 +115,13 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `label`                          | `ReactNode` | Primary accessible name for the wrapped control via generated `htmlFor`.                                                                                                                                                           |
 | `description` / `error`          | `ReactNode` | Auto-merges helper and error IDs into child `aria-describedby` contracts.                                                                                                                                                          |
 | `required` / `disabled`          | `boolean`   | Field-level semantics merged with child state without dropping existing control props.                                                                                                                                             |
-| `children`                       | `ReactNode` | Works with Aurora controls (Input/Select/etc.) and preserves child `aria-*` attributes. Blank child `aria-label` is ignored; when both child `aria-label` and `aria-labelledby` are provided, `aria-labelledby` remains canonical. |
+| `children`                       | `ReactNode` | Works with Aurora controls (Input/Select/etc.) and preserves child `aria-*` attributes. Blank child `aria-label` is ignored; when both child `aria-label` and `aria-labelledby` are provided, `aria-labelledby` remains canonical. Development builds warn when non-text `label` content omits both control naming paths. |
 | `htmlFor` for composite controls | `string`    | Required when `children` is not a single clonable control element; development builds warn if label/control association cannot be created.                                                                                         |
 
 <Canvas of={FormFieldStories.InheritedControlSemantics} />
 <Canvas of={FormFieldStories.ExternalControlAssociation} />
 <Canvas of={FormFieldStories.LabelledByPrecedence} />
+<Canvas of={FormFieldStories.NonTextLabelNameFallback} />
 
 ### Checkbox
 
