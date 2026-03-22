@@ -91,7 +91,15 @@ export function Popover({
       const ownerDocument = event.currentTarget.ownerDocument;
       const fallbackAnchor = event.target instanceof HTMLElement ? event.target : event.currentTarget;
       const focusAnchor = triggerRef.current ?? fallbackAnchor;
-      focusAdjacentTabbable(ownerDocument, focusAnchor, event.shiftKey ? -1 : 1, contentRef.current);
+      const moved = focusAdjacentTabbable(
+        ownerDocument,
+        focusAnchor,
+        event.shiftKey ? -1 : 1,
+        contentRef.current
+      );
+      if (!moved) {
+        focusAnchor.focus();
+      }
       closeWithReason("tab-key");
     },
     [closeWithReason]
@@ -297,7 +305,7 @@ function focusAdjacentTabbable(
   });
 
   if (tabbableElements.length === 0) {
-    return;
+    return false;
   }
 
   const fallbackActiveElement =
@@ -309,14 +317,16 @@ function focusAdjacentTabbable(
 
   while (nextIndex >= 0 && nextIndex < tabbableElements.length) {
     const candidate = tabbableElements[nextIndex];
-    if (candidate && isElementTabbable(candidate)) {
+    if (candidate && candidate !== currentElement && isElementTabbable(candidate)) {
       candidate.focus();
       if (ownerDocument.activeElement === candidate) {
-        return;
+        return true;
       }
     }
     nextIndex += direction;
   }
+
+  return false;
 }
 
 function getTabbableElements(container: HTMLElement) {

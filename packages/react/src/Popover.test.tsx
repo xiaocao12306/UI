@@ -172,6 +172,34 @@ describe("Popover", () => {
     expect(visibleNextCandidate).toHaveFocus();
   });
 
+  it("falls back to trigger focus when Tab boundary dismiss has no adjacent controls", () => {
+    render(
+      <Popover triggerLabel="Popover tab fallback">
+        <button type="button">Popover boundary action</button>
+      </Popover>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Popover tab fallback" });
+
+    fireEvent.click(trigger);
+    const boundaryAction = screen.getByRole("button", { name: "Popover boundary action" });
+    expect(boundaryAction).toHaveFocus();
+
+    fireEvent.keyDown(boundaryAction, { key: "Tab" });
+    expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+    expect(trigger).toHaveFocus();
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole("button", { name: "Popover boundary action" })).toHaveFocus();
+
+    fireEvent.keyDown(screen.getByRole("button", { name: "Popover boundary action" }), {
+      key: "Tab",
+      shiftKey: true
+    });
+    expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+    expect(trigger).toHaveFocus();
+  });
+
   it("ignores modified ArrowDown combinations for trigger keyboard open", () => {
     render(
       <Popover triggerLabel="Arrow guard popover">

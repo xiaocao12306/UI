@@ -255,7 +255,15 @@ export function Dropdown({
       const ownerDocument = event.currentTarget.ownerDocument;
       const fallbackAnchor = event.target instanceof HTMLElement ? event.target : event.currentTarget;
       const focusAnchor = triggerRef.current ?? fallbackAnchor;
-      focusAdjacentTabbable(ownerDocument, focusAnchor, event.shiftKey ? -1 : 1, menuRef.current);
+      const moved = focusAdjacentTabbable(
+        ownerDocument,
+        focusAnchor,
+        event.shiftKey ? -1 : 1,
+        menuRef.current
+      );
+      if (!moved) {
+        focusAnchor.focus();
+      }
       closeWithReason("tab-key");
     },
     [closeWithReason]
@@ -792,7 +800,7 @@ function focusAdjacentTabbable(
   });
 
   if (tabbableElements.length === 0) {
-    return;
+    return false;
   }
 
   const fallbackActiveElement =
@@ -807,11 +815,13 @@ function focusAdjacentTabbable(
     if (candidate !== currentElement && isElementTabbable(candidate)) {
       candidate.focus();
       if (ownerDocument.activeElement === candidate) {
-        return;
+        return true;
       }
     }
     nextIndex += direction;
   }
+
+  return false;
 }
 
 function isElementTabbable(element: HTMLElement) {

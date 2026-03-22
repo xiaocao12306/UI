@@ -176,10 +176,10 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep popover trigger keyboard-open behavior scoped to unmodified `ArrowDown`; `Ctrl/Meta/Alt + ArrowDown` should remain available for host/browser shortcut handling.
 - When app-level shortcuts preempt popover `ArrowDown`/`Tab` keydown with `preventDefault()`, keep trigger open and boundary Tab-dismiss handlers side-effect free.
 - Keep popover trigger shortcut hints explicit (`aria-keyshortcuts="ArrowDown"`) only while closed so keyboard-open affordance stays discoverable without advertising unavailable shortcuts once open.
-- Keep popover boundary Tab behavior aligned with document order: keep popover open while focus stays inside, then close on first/last boundary Tab and continue focus to adjacent controls.
+- Keep popover boundary Tab behavior aligned with document order: keep popover open while focus stays inside, then close on first/last boundary Tab and continue focus to adjacent controls; when no adjacent control exists, fall back to trigger focus.
 - Keep popover dialog shortcut hints explicit (`aria-keyshortcuts="Tab [Escape]"`): always advertise boundary Tab dismiss, and include `Escape` only when `closeOnEscape` is enabled.
-- Keep dropdown `Tab` behavior aligned with document order: close menu and continue focus to next control.
-- Keep dropdown `Shift+Tab` behavior aligned with document order: close menu and continue focus to the previous control.
+- Keep dropdown `Tab` behavior aligned with document order: close menu and continue focus to next control; if no next control exists, fall back to trigger focus.
+- Keep dropdown `Shift+Tab` behavior aligned with document order: close menu and continue focus to the previous control; if no previous control exists, fall back to trigger focus.
 - For controlled dropdowns, treat Escape/outside/trigger dismiss as close intent only; apply final visual close in parent rerender to avoid state race conditions.
 - For icon-only/non-text dropdown items, prefer `items[].ariaLabelledBy` when a visible heading already exists; otherwise provide `items[].ariaLabel`. If explicit naming metadata is omitted, `items[].textValue` is used as accessible-name fallback; development builds warn only when `ariaLabel`/`ariaLabelledBy`/`textValue` are all missing.
 - For icon-only/non-text dropdown items, provide `items[].textValue` unless readable label text or `ariaLabel` is already available; buffered typeahead can use readable label text, `ariaLabel`, or `textValue`.

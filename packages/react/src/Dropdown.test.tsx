@@ -1766,6 +1766,37 @@ describe("Dropdown", () => {
     expect(visibleNextControl).toHaveFocus();
   });
 
+  it("falls back to trigger focus when Tab dismiss has no adjacent controls", () => {
+    render(
+      <Dropdown
+        label="Tab focus fallback"
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "Tab focus fallback" });
+
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    const firstItem = screen.getByRole("menuitem", { name: "One" });
+    expect(firstItem).toHaveFocus();
+
+    fireEvent.keyDown(firstItem, { key: "Tab" });
+    expect(screen.queryByRole("menu", { name: "Tab focus fallback" })).toBeNull();
+    expect(trigger).toHaveFocus();
+
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    expect(screen.getByRole("menuitem", { name: "One" })).toHaveFocus();
+
+    fireEvent.keyDown(screen.getByRole("menuitem", { name: "One" }), { key: "Tab", shiftKey: true });
+    expect(screen.queryByRole("menu", { name: "Tab focus fallback" })).toBeNull();
+    expect(trigger).toHaveFocus();
+  });
+
   it("moves focus to adjacent controls on Tab and Shift+Tab dismiss for iframe-hosted renders", () => {
     const iframe = document.createElement("iframe");
     document.body.appendChild(iframe);
