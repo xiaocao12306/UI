@@ -221,11 +221,12 @@ export function Combobox({
     const missingSearchMetadataValues = options.reduce<string[]>((values, option) => {
       const hasReadableLabelText = getReadableComboboxLabelText(option.label).length > 0;
       const hasTextValue = resolveNonEmptyLabel(option.textValue) !== undefined;
+      const hasAriaLabel = resolveNonEmptyLabel(option.ariaLabel) !== undefined;
       const hasSearchKeywords =
         Array.isArray(option.keywords) &&
         option.keywords.some((keyword) => typeof keyword === "string" && keyword.trim().length > 0);
 
-      if (hasReadableLabelText || hasTextValue || hasSearchKeywords) {
+      if (hasReadableLabelText || hasTextValue || hasAriaLabel || hasSearchKeywords) {
         return values;
       }
 
@@ -245,7 +246,7 @@ export function Combobox({
     warnedMissingSearchMetadataSignatureRef.current = signature;
 
     console.warn(
-      `[Combobox] Non-text option labels should provide textValue or keywords for searchable metadata: ${missingSearchMetadataValues.join(", ")}.`
+      `[Combobox] Non-text option labels should provide textValue, ariaLabel, or keywords for searchable metadata: ${missingSearchMetadataValues.join(", ")}.`
     );
   }, [options]);
 
@@ -562,6 +563,11 @@ function getComboboxOptionText(option: ComboboxOption) {
   const resolvedTextValue = resolveNonEmptyLabel(option.textValue);
   if (resolvedTextValue !== undefined) {
     return normalizeReadableComboboxText(resolvedTextValue);
+  }
+
+  const resolvedAriaLabel = resolveNonEmptyLabel(option.ariaLabel);
+  if (resolvedAriaLabel !== undefined) {
+    return normalizeReadableComboboxText(resolvedAriaLabel);
   }
 
   const readableLabelText = getReadableComboboxLabelText(option.label);

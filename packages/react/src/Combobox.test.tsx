@@ -168,6 +168,33 @@ describe("Combobox", () => {
     expect(input.value).toBe("Design system");
   });
 
+  it("filters non-text options via ariaLabel metadata when textValue is omitted", () => {
+    const onValueChange = vi.fn();
+    render(
+      <Combobox
+        options={[
+          {
+            value: "design-system",
+            label: <span aria-hidden="true">🎨</span>,
+            ariaLabel: "Design system"
+          },
+          { value: "release-notes", label: "Release Notes" }
+        ]}
+        onValueChange={onValueChange}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Combobox" }) as HTMLInputElement;
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "design" } });
+
+    const designOption = screen.getByRole("option", { name: "Design system" });
+    fireEvent.click(designOption);
+
+    expect(onValueChange).toHaveBeenCalledWith("design-system");
+    expect(input.value).toBe("Design system");
+  });
+
   it("matches accented labels and keywords with plain query text", () => {
     render(
       <Combobox
@@ -243,7 +270,7 @@ describe("Combobox", () => {
     }
   });
 
-  it("warns when non-text option labels omit textValue and keywords search metadata", () => {
+  it("warns when non-text option labels omit textValue/ariaLabel/keywords search metadata", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     try {
@@ -252,8 +279,7 @@ describe("Combobox", () => {
           options={[
             {
               value: "icon-search-missing",
-              label: <span aria-hidden="true">🧭</span>,
-              ariaLabel: "Icon search missing"
+              label: <span aria-hidden="true">🧭</span>
             }
           ]}
           onValueChange={() => {}}
@@ -262,7 +288,34 @@ describe("Combobox", () => {
 
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
-          '[Combobox] Non-text option labels should provide textValue or keywords for searchable metadata: "icon-search-missing".'
+          '[Combobox] Non-text option labels should provide textValue, ariaLabel, or keywords for searchable metadata: "icon-search-missing".'
+        )
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text option searchable metadata when ariaLabel is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Combobox
+          options={[
+            {
+              value: "icon-search-ok",
+              label: <span aria-hidden="true">🧭</span>,
+              ariaLabel: "Icon search ok"
+            }
+          ]}
+          onValueChange={() => {}}
+        />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining(
+          "Non-text option labels should provide textValue, ariaLabel, or keywords for searchable metadata"
         )
       );
     } finally {

@@ -106,7 +106,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Prefer `ariaLabelledBy` for combobox/listbox naming when a visible heading already exists; use `ariaLabel` for standalone combobox inputs without nearby title context.
 - Treat blank combobox `ariaLabel` as missing so both combobox and listbox names fall back to readable defaults (`Combobox` / `Combobox options`) instead of empty labels.
 - For icon/non-text combobox options, prefer `options[].ariaLabelledBy` when a visible heading already exists; otherwise provide `options[].ariaLabel`. Rich labels that expose inline `aria-label` are auto-detected, and development builds warn when both naming paths are missing.
-- For icon/non-text combobox options, provide `options[].textValue` (or at least searchable `keywords`) so filtering and selected-input echo stay deterministic even when visual labels are glyph-only.
+- For icon/non-text combobox options, provide at least one searchable metadata path (`options[].textValue`, `options[].ariaLabel`, or `keywords`) so filtering and selected-input echo stay deterministic even when visual labels are glyph-only.
 - For command-palette `aria-activedescendant` flows, keep `aria-selected` on the active option so screen readers announce current keyboard focus target.
 - For `aria-activedescendant` combobox flows, keep listbox options out of tab order and preserve input focus during pointer selection.
 - For combobox option `mousedown` focus-guards, treat `Ctrl + primary click` as context-click intent and avoid calling `preventDefault()` so context menus and host shortcut flows remain intact.

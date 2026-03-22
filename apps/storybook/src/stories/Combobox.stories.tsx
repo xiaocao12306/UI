@@ -34,6 +34,26 @@ const iconOptionMetadataOptions: ComboboxOption[] = [
     keywords: ["undo", "revert"]
   }
 ];
+const iconOptionAriaLabelSearchOptions: ComboboxOption[] = [
+  {
+    value: "deploy",
+    label: (
+      <span aria-hidden="true" style={{ fontSize: 16 }}>
+        🚀
+      </span>
+    ),
+    ariaLabel: "Deploy release"
+  },
+  {
+    value: "rollback",
+    label: (
+      <span aria-hidden="true" style={{ fontSize: 16 }}>
+        ↩️
+      </span>
+    ),
+    ariaLabel: "Rollback release"
+  }
+];
 
 function dispatchLegacyImeKeyDown(element: HTMLElement, key: string) {
   const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
@@ -332,6 +352,27 @@ export const IconOptionLabelledByPrecedence: Story = {
     const deployOption = canvas.getByRole("option", { name: "Deploy release" });
     await expect(deployOption).toHaveAttribute("aria-labelledby", "combobox-option-heading");
     await expect(deployOption).not.toHaveAttribute("aria-label");
+  }
+};
+
+export const IconOptionAriaLabelSearchFallback: Story = {
+  render: () => (
+    <Combobox
+      options={iconOptionAriaLabelSearchOptions}
+      onValueChange={() => {}}
+      ariaLabel="Release search fallback"
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Release search fallback" });
+
+    await userEvent.click(input);
+    await userEvent.clear(input);
+    await userEvent.type(input, "rollback");
+
+    await expect(canvas.getByRole("option", { name: "Rollback release" })).toBeInTheDocument();
+    await expect(canvas.queryByRole("option", { name: "Deploy release" })).not.toBeInTheDocument();
   }
 };
 
