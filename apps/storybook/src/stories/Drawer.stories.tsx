@@ -79,6 +79,37 @@ export const Interactive: Story = {
   }
 };
 
+function LabelledByPrecedenceDrawerDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <h3 id="drawer-heading" style={{ margin: 0 }}>
+        Release checklist drawer heading
+      </h3>
+      <Drawer
+        open={open}
+        onOpenChange={setOpen}
+        title={<span aria-hidden>✅</span>}
+        ariaLabel="Fallback release checklist drawer"
+        ariaLabelledBy="drawer-heading"
+      >
+        <p style={storyParagraphStyle}>Drawer name should follow visible heading binding.</p>
+      </Drawer>
+    </StoryFullscreenFrame>
+  );
+}
+
+export const LabelledByPrecedence: Story = {
+  render: () => <LabelledByPrecedenceDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const drawer = await body.findByRole("dialog", { name: "Release checklist drawer heading" });
+    await expect(drawer).toHaveAttribute("aria-labelledby", "drawer-heading");
+    await expect(drawer).not.toHaveAttribute("aria-label");
+  }
+};
+
 function NonDismissibleDrawerDemo() {
   const [open, setOpen] = React.useState(true);
 

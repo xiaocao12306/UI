@@ -349,6 +349,39 @@ describe("Drawer", () => {
     expect(dialog).toHaveAttribute("aria-describedby", description.getAttribute("id"));
   });
 
+  it("prefers ariaLabelledBy over ariaLabel for drawer naming", () => {
+    render(
+      <div>
+        <h2 id="drawer-heading">Release checklist drawer</h2>
+        <Drawer
+          open
+          onOpenChange={() => {}}
+          title="Fallback drawer title"
+          ariaLabel="Fallback drawer label"
+          ariaLabelledBy="drawer-heading"
+        >
+          <p>Drawer content</p>
+        </Drawer>
+      </div>
+    );
+
+    const dialog = screen.getByRole("dialog", { name: "Release checklist drawer" });
+    expect(dialog).toHaveAttribute("aria-labelledby", "drawer-heading");
+    expect(dialog).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and keeps ariaLabel naming fallback", () => {
+    render(
+      <Drawer open onOpenChange={() => {}} title={<span aria-hidden>✅</span>} ariaLabel="Release checklist drawer" ariaLabelledBy="   ">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    const dialog = screen.getByRole("dialog", { name: "Release checklist drawer" });
+    expect(dialog).toHaveAttribute("aria-label", "Release checklist drawer");
+    expect(dialog).not.toHaveAttribute("aria-labelledby");
+  });
+
   it("dismisses nested overlays from top layer first on Escape", () => {
     function NestedOverlayFixture() {
       const [open, setOpen] = React.useState(true);

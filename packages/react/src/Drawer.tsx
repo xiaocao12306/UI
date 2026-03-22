@@ -15,6 +15,8 @@ export type DrawerProps = {
   closeOnOutsidePointer?: boolean;
   showCloseButton?: boolean;
   closeLabel?: string;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
   onPointerDownOutside?: (event: PointerEvent) => void;
   onCloseReason?: (reason: DrawerCloseReason) => void;
@@ -32,6 +34,8 @@ export function Drawer({
   closeOnOutsidePointer = true,
   showCloseButton = true,
   closeLabel = "Close drawer",
+  ariaLabel,
+  ariaLabelledBy,
   onEscapeKeyDown,
   onPointerDownOutside,
   onCloseReason,
@@ -49,6 +53,16 @@ export function Drawer({
     typeof closeLabel === "string" && closeLabel.trim().length > 0
       ? closeLabel.trim()
       : "Close drawer";
+  const resolvedAriaLabelledBy =
+    typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
+      ? ariaLabelledBy.trim()
+      : undefined;
+  const resolvedAriaLabel =
+    resolvedAriaLabelledBy === undefined &&
+    typeof ariaLabel === "string" &&
+    ariaLabel.trim().length > 0
+      ? ariaLabel.trim()
+      : undefined;
 
   const closeWithReason = React.useCallback(
     (reason: DrawerCloseReason) => {
@@ -153,7 +167,8 @@ export function Drawer({
               }}
               role="dialog"
               aria-modal="true"
-              aria-labelledby={titleId}
+              aria-label={resolvedAriaLabel}
+              aria-labelledby={resolvedAriaLabelledBy ?? (resolvedAriaLabel ? undefined : titleId)}
               aria-describedby={description ? descriptionId : undefined}
               aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
               data-side={side}
