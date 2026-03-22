@@ -852,6 +852,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | search matching                            | accent-insensitive + lowercase normalization                                                                          | Plain query text like `cafe` can match `Café` labels/aliases.                                                                                                                                                                                                                                                                                                                                      |
 | IME safety                                 | composition key guard                                                                                                 | Arrow/Enter command handling and query-clearing Escape behavior are ignored while `isComposing` and legacy fallback paths that only expose `keyCode=229`, so CJK composition confirmation does not execute commands or clear active query.                                                                                                                                                         |
 | Escape priority                            | preempted events skip palette hook/dismiss                                                                            | If higher-level handlers already `preventDefault()` Escape, palette keeps dialog open and does not fire `onEscapeKeyDown`.                                                                                                                                                                                                                                                                         |
+| managed-key priority                       | preempted events skip input-level Enter/Escape handling                                                               | If higher-level handlers preempt `Enter`/`Escape`, combobox command execution and query-clear handling stay no-op so host shortcut guards remain authoritative.                                                                                                                                                                                                                                      |
 
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
 <Canvas of={CommandPaletteStories.LoadingState} />
@@ -873,6 +874,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={CommandPaletteStories.PagedKeyboardNavigation} />
 <Canvas of={CommandPaletteStories.ImeCompositionGuard} />
 <Canvas of={CommandPaletteStories.EscapePreemptedByGlobalHandler} />
+<Canvas of={CommandPaletteStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={CommandPaletteStories.NonDismissible} />
 <Canvas of={CommandPaletteStories.GuardedDismissEvents} />
 <Canvas of={CommandPaletteStories.EscapeClearsQueryFirst} />

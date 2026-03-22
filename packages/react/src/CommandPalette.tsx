@@ -512,6 +512,10 @@ export function CommandPalette({
               return;
             }
 
+            if (event.defaultPrevented) {
+              return;
+            }
+
             if (event.altKey || event.ctrlKey || event.metaKey) {
               return;
             }
@@ -676,6 +680,10 @@ export function CommandPalette({
                   }}
                   onKeyDown={(event) => {
                     if (item.disabled) {
+                      return;
+                    }
+
+                    if (event.defaultPrevented) {
                       return;
                     }
 

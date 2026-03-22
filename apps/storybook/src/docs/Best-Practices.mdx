@@ -277,6 +277,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For blocking approvals, set `closeOnEscape={false}` and `closeOnOutsidePointer={false}` so command confirmation cannot be dismissed accidentally.
 - For conditional approval guards, prefer `onEscapeKeyDown/onPointerDownOutside` + `event.preventDefault()` so dismiss policy can be unlocked at runtime.
 - When app-level shortcuts preempt Escape with `preventDefault()`, rely on built-in callback-skip behavior so command-level escape hooks stay side-effect free.
+- When app-level shortcuts preempt `Enter` / `Escape` with `preventDefault()`, keep combobox-level command execution and query-clear handlers side-effect free so host shortcut guards stay authoritative.
 - For iframe/multi-document hosts, validate command-palette dismiss behavior against the palette `ownerDocument`; Escape/outside events from other documents should not close the active palette.
 - When command palette is nested inside another overlay, keep top-layer-first dismiss semantics explicit: first Escape/outside interaction closes the palette layer and leaves parent overlay state unchanged.
 - Ignore command list navigation/selection keys while IME composition is active, including legacy browsers that only expose `keyCode=229`, so Enter confirms text composition instead of executing commands.
@@ -335,6 +336,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={CommandPaletteStories.LocalizedDialogCopy} />
 <Canvas of={CommandPaletteStories.ImeCompositionGuard} />
 <Canvas of={CommandPaletteStories.EscapePreemptedByGlobalHandler} />
+<Canvas of={CommandPaletteStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={CommandPaletteStories.GuardedDismissEvents} />
 <Canvas of={CommandPaletteStories.EscapeClearsQueryFirst} />
 <Canvas of={CommandPaletteStories.EscapeRepeatGuard} />

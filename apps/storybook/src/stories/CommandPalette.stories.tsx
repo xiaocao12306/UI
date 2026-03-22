@@ -807,6 +807,56 @@ function EscapePreemptedPalette() {
   );
 }
 
+function ManagedKeysPreemptedPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [selectedCount, setSelectedCount] = React.useState(0);
+  const [queryValue, setQueryValue] = React.useState("");
+
+  React.useEffect(() => {
+    const preemptManagedKeys = (event: KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === "Escape") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptManagedKeys, true);
+    return () => {
+      document.removeEventListener("keydown", preemptManagedKeys, true);
+    };
+  }, []);
+
+  return (
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
+        Executed commands:{" "}
+        <strong data-testid="command-preempt-selection-count" style={storyEmphasisTextStyle}>
+          {selectedCount}
+        </strong>
+      </p>
+      <p style={storyMutedTextStyle}>
+        Query value:{" "}
+        <strong data-testid="command-preempt-query-value" style={storyEmphasisTextStyle}>
+          {queryValue || "N/A"}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        onQueryChange={setQueryValue}
+        commands={[
+          {
+            key: "open-settings",
+            label: "Open Settings",
+            keywords: ["open"],
+            onSelect: () => setSelectedCount((count) => count + 1)
+          },
+          { key: "run-e2e", label: "Run E2E Smoke", keywords: ["run"] }
+        ]}
+      />
+    </StoryFullscreenFrame>
+  );
+}
+
 function NestedDismissOrderPalette() {
   const [paletteOpen, setPaletteOpen] = React.useState(false);
 
@@ -1630,6 +1680,25 @@ export const EscapePreemptedByGlobalHandler: Story = {
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
     await expect(canvas.getByTestId("command-escape-calls")).toHaveTextContent("0");
+  }
+};
+
+export const ManagedKeysPreemptedByGlobalHandler: Story = {
+  render: () => <ManagedKeysPreemptedPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await userEvent.type(input, "open");
+    await expect(canvas.getByTestId("command-preempt-query-value")).toHaveTextContent("open");
+
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByTestId("command-preempt-selection-count")).toHaveTextContent("0");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByTestId("command-preempt-query-value")).toHaveTextContent("open");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   }
 };
 
