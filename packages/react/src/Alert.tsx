@@ -226,6 +226,9 @@ export function Alert({
             }}
             onKeyDown={(event) => {
               focusVisibleIntentRef.current = true;
+              if (event.defaultPrevented) {
+                return;
+              }
               if (isComposingAlertActivationEvent(event)) {
                 return;
               }

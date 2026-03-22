@@ -295,8 +295,24 @@ describe("Alert", () => {
   it("supports keyboard pressed-state feedback for unmodified Enter/Space keys", () => {
     render(<Alert title="Notice" onClose={() => {}} closeLabel="Keyboard dismiss" />);
     const closeButton = screen.getByRole("button", { name: "Keyboard dismiss" });
+    const preemptActivationKeys = (event: KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === " " || event.key === "Space" || event.key === "Spacebar") {
+        event.preventDefault();
+      }
+    };
 
     fireEvent.focus(closeButton);
+
+    try {
+      document.addEventListener("keydown", preemptActivationKeys, true);
+      fireEvent.keyDown(closeButton, { key: "Enter" });
+      expect(closeButton).not.toHaveAttribute("data-pressed");
+      fireEvent.keyDown(closeButton, { key: "Space" });
+      expect(closeButton).not.toHaveAttribute("data-pressed");
+    } finally {
+      document.removeEventListener("keydown", preemptActivationKeys, true);
+    }
+
     fireEvent.keyDown(closeButton, { key: "Enter" });
     expect(closeButton).toHaveAttribute("data-pressed", "true");
     fireEvent.keyUp(closeButton, { key: "Enter" });

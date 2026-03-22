@@ -204,6 +204,7 @@ export const CloseButtonKeyboardPressedState: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const ownerDocument = canvasElement.ownerDocument;
     const closeButton = canvas.getByRole("button", { name: "Pressed-state dismiss" });
 
     closeButton.focus();
@@ -211,6 +212,22 @@ export const CloseButtonKeyboardPressedState: Story = {
     await expect(closeButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     fireEvent.keyDown(closeButton, { key: "Enter", ctrlKey: true });
     await expect(closeButton).not.toHaveAttribute("data-pressed");
+
+    const preemptActivationKeys = (event: KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === " " || event.key === "Space" || event.key === "Spacebar") {
+        event.preventDefault();
+      }
+    };
+    try {
+      ownerDocument.addEventListener("keydown", preemptActivationKeys, true);
+      fireEvent.keyDown(closeButton, { key: "Enter" });
+      await expect(closeButton).not.toHaveAttribute("data-pressed");
+      fireEvent.keyDown(closeButton, { key: "Space" });
+      await expect(closeButton).not.toHaveAttribute("data-pressed");
+    } finally {
+      ownerDocument.removeEventListener("keydown", preemptActivationKeys, true);
+    }
+
     fireEvent.keyDown(closeButton, { key: "Enter", isComposing: true, keyCode: 229, which: 229 });
     await expect(closeButton).not.toHaveAttribute("data-pressed");
     fireEvent.keyDown(closeButton, { key: "Enter", keyCode: 229, which: 229 });
