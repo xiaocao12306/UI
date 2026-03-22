@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as w}from"./index-CHKtz2QT.js";import{M as C,T as E,S as L,D as P,C as o,a as s}from"./index-JDdcoBaP.js";import{Primary as r,IconOnlyAccessibleName as A,IconOnlyLabelledByPrecedence as D,FocusIntentReentry as S,ManagedKeysPreemptedByGlobalHandler as T}from"./Button.stories-CIRszl-G.js";import{Default as a}from"./Tag.stories-C0q8Y_rv.js";import{Default as t}from"./Badge.stories-pDjpxk1g.js";import{Default as d,InvalidTokenSemantics as B,BlankAriaLabelFallback as I,ShortcutHintPrecision as R,FocusIntentReentry as N}from"./Input.stories-CbPwFnWi.js";import{WithInputControl as c,InheritedControlSemantics as O,ExternalControlAssociation as $,LabelledByPrecedence as M,NonTextLabelNameFallback as H}from"./FormField.stories-B-kt9Nny.js";import{Controlled as F,Indeterminate as K,InvalidAndDisabled as G,ShortcutHintPrecision as W,LabelledByPrecedence as z,IconLabelledByPrecedence as U,FocusIntentReentry as Q}from"./Checkbox.stories-DXf6puCD.js";import{Controlled as q,DisabledOption as V,InvalidState as J,ShortcutHintPrecision as Y,LabelledByPrecedence as X,OptionLabelledByPrecedence as _,FocusIntentReentry as Z}from"./RadioGroup.stories-D0_utvhj.js";import{Controlled as ee,KeyboardToggle as ne,InvalidAndDisabled as oe,ShortcutHintPrecision as se,KeyboardModifierGuard as ie,ImeCompositionGuard as re,LabelledByPrecedence as ae,IconLabelledByPrecedence as te,ClickPreventDefaultGuard as de,FocusIntentReentry as ce}from"./Switch.stories-D9QJuIFl.js";import{Controlled as le,DisabledState as he,InvalidState as pe,BlankAriaLabelFallback as xe,LabelledByPrecedence as ue,ShortcutHintPrecision as be,FocusIntentReentry as me}from"./Select.stories-YOkNRYe0.js";import{Controlled as je,WithCustomEmptyMessage as fe,KeyboardDismissPaths as ye,ModifierKeyGuard as ge,ImeCompositionGuard as ve,BlankAriaLabelFallback as ke,LabelledByNameFallback as we,IconOptionLabelledByPrecedence as Ce,ActivedescendantFocusModel as Ee,FocusIntentReentry as Le,SearchNormalizationAndShortcutHints as Pe}from"./Combobox.stories-DuQVyFHS.js";import{Controlled as Ae,StateMatrix as l,InvalidWithHelper as De,ShortcutHintPrecision as Se,BlankAriaLabelFallback as Te,LabelledByPrecedence as Be,FocusIntentReentry as Ie}from"./DatePicker.stories-gpZBmvhH.js";import{Default as h,InvalidWithHelper as Re,BlankAriaLabelFallback as Ne,LabelledByPrecedence as Oe,FocusIntentReentry as $e}from"./Textarea.stories-BEHgTu4W.js";import{Interactive as p,NestedDismissOrder as Me,DismissGuardHooks as He,CloseReasonTelemetry as Fe,LabelledByPrecedence as Ke,IconTitleAriaLabelFallback as Ge,FocusTrapKeyboardCycle as We,FocusIntentReentry as ze,CloseButtonKeyboardPressedState as Ue,EscapeIgnoresImeComposition as Qe,EscapePreemptedByGlobalHandler as qe,EscapeRepeatGuard as Ve}from"./Dialog.stories-BL7LZeWL.js";import{Interactive as Je,NonDismissible as Ye,FocusReturn as Xe,NoFocusReturn as _e,NestedDismissOrder as Ze,DismissGuardHooks as en,CloseReasonTelemetry as nn,LabelledByPrecedence as on,IconTitleAriaLabelFallback as sn,FocusTrapKeyboardCycle as rn,FocusIntentReentry as an,CloseButtonKeyboardPressedState as tn,EscapeIgnoresImeComposition as dn,EscapePreemptedByGlobalHandler as cn,EscapeRepeatGuard as ln}from"./Drawer.stories-DUqVsh4G.js";import{Default as x,Controlled as hn,DescribedByLifecycle as pn,NonTextTriggerNameFallback as xn,EscapeModifierGuard as un,EscapeDisabled as bn}from"./Tooltip.stories-50XnjEGy.js";import{WithInteractiveContent as mn,Default as jn,NonDismissible as fn,DismissGuardHooks as yn,NestedDismissOrder as gn,NestedOutsideDismissOrder as vn,OutsideDismissFocusTransfer as kn,TabDismissToNextControl as wn,ShiftTabDismissToPreviousControl as Cn,CloseReasonTelemetry as En,TriggerLabelledByPrecedence as Ln,NonTextTriggerNameFallback as Pn,TriggerArrowDownModifierGuard as An,EscapePreemptedByGlobalHandler as Dn,ManagedKeysPreemptedByGlobalHandler as Sn,EscapeRepeatGuard as Tn,EscapeIgnoresImeComposition as Bn}from"./Popover.stories-4nqBUoVc.js";import{Default as u,NonDismissible as In,DismissGuardHooks as Rn,TypeaheadNavigation as Nn,IconItemNaming as On,IconItemLabelledByPrecedence as $n,TriggerLabelledByPrecedence as Mn,NonTextTriggerNameFallback as Hn,TypeaheadIgnoresImeComposition as Fn,OutsideDismissFocusTransfer as Kn,EscapeDismissFocusReturn as Gn,EscapePreemptedByGlobalHandler as Wn,ManagedKeysPreemptedByGlobalHandler as zn,EscapeRepeatGuard as Un,TabDismissToNextControl as Qn,ShiftTabDismissToPreviousControl as qn,CloseReasonTelemetry as Vn,ModifierArrowNavigationGuard as Jn,KeyboardActivationDedupe as Yn,ControlledOpenContract as Xn,NestedDismissOrder as _n,NestedOutsideDismissOrder as Zn,SingleActionableShortcutHints as eo}from"./Dropdown.stories-qkxQqbAT.js";import{SearchCommands as b,QueryTelemetry as no,LoadingState as oo,CloseReasonTelemetry as so,CloseButtonFocusIntentReentry as io,NestedDismissOrder as ro,EmptyStateAriaControlsLifecycle as ao,LocalizedResultsLabel as to,LocalizedDialogCopy as co,LabelledByPrecedence as lo,DisabledCommandGuard as ho,SingleActionableShortcutHints as po,TextValueAndAccentSearch as xo,IconOnlyCommandNaming as uo,IconOnlyCommandLabelledByPrecedence as bo,PersistentSelection as mo,OptionActivationKeyGuard as jo,RefinedSearchKeepsActiveCommand as fo,PagedKeyboardNavigation as yo,ImeCompositionGuard as go,EscapePreemptedByGlobalHandler as vo,ManagedKeysPreemptedByGlobalHandler as ko,NonDismissible as wo,GuardedDismissEvents as Co,EscapeClearsQueryFirst as Eo,EscapeRepeatGuard as Lo}from"./CommandPalette.stories-CTstPKSE.js";import{Default as Po,WithAction as Ao,ToneMatrix as Do,AccessibilityMetadata as So,LabelledByPrecedence as To,NonTextTitleAutoNameFallback as Bo}from"./Empty.stories-B_AVijy9.js";import{Default as Io,NarratedStatus as Ro,ProfileCard as No,LabelledByPrecedence as Oo}from"./Skeleton.stories-D0IVMP91.js";import{Default as $o,SlowPulse as Mo,Paused as Ho,LabelledByPrecedence as Fo}from"./LoadingDots.stories-BhajZovi.js";import{Default as Ko,InstantDone as Go,MultilineCursor as Wo,LabelledByPrecedence as zo}from"./StreamingText.stories-DBHR_Z03.js";import{Default as m,Indeterminate as Uo,LabelledByPrecedence as Qo}from"./Progress.stories-BszU0h7O.js";import{Default as qo,Dismissible as Vo,AccessibilityMetadata as Jo,LabelledByPrecedence as Yo,FocusIntentReentry as Xo,CloseButtonKeyboardPressedState as _o,CloseButtonPrimaryPointerOnly as Zo}from"./Alert.stories-C2AU2UcD.js";import{Default as j,ActionRequired as es,ActionRequiredDanger as ns,CloseReasonTelemetry as os,EscapeStackOrder as ss,EscapeShortcutSync as is,StackedViewportOffset as rs,FocusedToastEscapesFirst as as,CloseButtonPrimaryPointerOnly as ts,CloseButtonKeyboardPressedState as ds,FocusIntentReentry as cs,EscapePreemptedByGlobalHandler as ls,EscapePreemptedByOverlayLayer as hs,EscapePreemptedSkipsToastHook as ps,EscapeGuardedByToastHandler as xs,EscapeIgnoresImeComposition as us,LabelledByPrecedence as bs,LiveRegionOff as ms}from"./Toast.stories-DJ9fk5U7.js";import{Default as f,KeyboardNavigationGuide as js,NoLoopNavigation as fs,SingleActionableTab as ys,Vertical as gs,RtlKeyboardNavigation as vs,LabelledByHeading as ks,IconOnlyLabelledByPrecedence as ws,ManualActivation as Cs,ManualActivationPressedFeedback as Es,ManualFocusResetOnBlur as Ls,ManualVerticalActivation as Ps,ImeCompositionGuard as As,ManagedKeysPreemptedByGlobalHandler as Ds,PrimaryPointerOnlyPressedState as Ss,KeyboardFocusRingShiftTabReentry as Ts,ChangeTelemetry as Bs,ControlsReferenceMountedPanels as Is}from"./Tabs.stories-CMriCBc1.js";import{ReleaseChecklist as Rs,SortTelemetry as Ns,RtlArrowNavigation as Os,LocalizedSortLabels as $s,SortLabelForCustomHeader as Ms,RichTextHeaderAutoSortLabel as Hs,AriaLabelHeaderAutoSortLabel as Fs,SortLabelledByPrecedence as Ks,LoadingState as Gs,EmptyState as Ws,SingleRowSortDisabled as zs,SingleSortableColumnShortcutHints as Us,PrimaryPointerOnlySortPress as Qs,KeyboardFocusRingShiftTabReentry as qs,KeyboardReachableScrollContainer as Vs,WithRowAction as Js,InvalidDefaultSortKeyFallback as Ys,SourceIndexRowKeyStability as Xs,RenderIndexSemantics as _s,AccessibleNameWithoutCaption as Zs,AccessibleNameFallback as ei,AccessibleNameLabelledByHeading as ni,RowHeaderSemantics as oi}from"./Table.stories-BXfyrdZT.js";import{Controlled as si,KeyboardShortcuts as y,ModifierKeyGuard as ii,RtlKeyboardShortcuts as ri,BoundaryAriaLabels as ai,BoundaryShortcutHints as ti,LabelledByHeading as di,FocusIntentReentry as ci}from"./Pagination.stories-C2vh3EBY.js";import{WithAiRequestState as li,Default as hi,LocalizedCopy as pi,LabelledByPrecedence as xi,FocusIntentReentry as ui}from"./PromptInput.stories-PAz2Bw-Z.js";import{Conversation as bi,Default as mi,LocalizedNaming as ji,LabelledByPrecedence as fi}from"./MessageBubble.stories-B3iZ5PJn.js";import{Default as g,LocalizedLabels as yi,LabelledByPrecedence as gi,BlankStepFallback as vi}from"./ReasoningPanel.stories-CVRZHLL_.js";import{Default as v,LabelledByPrecedence as ki}from"./StreamingCodeBlock.stories-B-rVxO7_.js";import"./index-BWu4c2F4.js";import"./iframe-CMrVB5yC.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-rBVi27TD.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-ZJmMstsz.js";import"./index-DgAF9SIF.js";import"./storyShowcase-Bw5VyCj0.js";import"./Input-CMwa0OIu.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-CU5SQrEA.js";import"./FormField-Xof8ejB2.js";import"./Textarea-BnJNX4pg.js";import"./Dialog-oHKJ7fpA.js";import"./bodyScrollLock-D0vp0S5S.js";import"./DismissableLayer-0MVldSzJ.js";import"./Dropdown-CwM2dI-W.js";import"./Popover-BXRvYEtZ.js";import"./usePrefersReducedMotion-BRO3uCOn.js";function k(i){const n={code:"code",h2:"h2",h3:"h3",p:"p",...w(),...i.components};return e.jsxs(e.Fragment,{children:[e.jsx(C,{title:"Docs/Component API"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as w}from"./index-CHKtz2QT.js";import{M as C,T as E,S as L,D as P,C as o,a as s}from"./index-BW-kFvl5.js";import{Primary as r,IconOnlyAccessibleName as A,IconOnlyLabelledByPrecedence as D,FocusIntentReentry as S,ManagedKeysPreemptedByGlobalHandler as T}from"./Button.stories-CIRszl-G.js";import{Default as a}from"./Tag.stories-C0q8Y_rv.js";import{Default as t}from"./Badge.stories-pDjpxk1g.js";import{Default as d,InvalidTokenSemantics as B,BlankAriaLabelFallback as I,ManagedKeysPreemptedByGlobalHandler as R,ShortcutHintPrecision as N,FocusIntentReentry as O}from"./Input.stories-CWLqfYqx.js";import{WithInputControl as c,InheritedControlSemantics as $,ExternalControlAssociation as M,LabelledByPrecedence as H,NonTextLabelNameFallback as F}from"./FormField.stories-DCmVW2ys.js";import{Controlled as K,Indeterminate as G,InvalidAndDisabled as W,ShortcutHintPrecision as z,LabelledByPrecedence as U,IconLabelledByPrecedence as Q,FocusIntentReentry as q}from"./Checkbox.stories-DXf6puCD.js";import{Controlled as V,DisabledOption as J,InvalidState as Y,ShortcutHintPrecision as X,LabelledByPrecedence as _,OptionLabelledByPrecedence as Z,FocusIntentReentry as ee}from"./RadioGroup.stories-D0_utvhj.js";import{Controlled as ne,KeyboardToggle as oe,InvalidAndDisabled as se,ShortcutHintPrecision as ie,KeyboardModifierGuard as re,ImeCompositionGuard as ae,LabelledByPrecedence as te,IconLabelledByPrecedence as de,ClickPreventDefaultGuard as ce,FocusIntentReentry as le}from"./Switch.stories-D9QJuIFl.js";import{Controlled as he,DisabledState as pe,InvalidState as xe,BlankAriaLabelFallback as ue,LabelledByPrecedence as be,ShortcutHintPrecision as me,FocusIntentReentry as je}from"./Select.stories-YOkNRYe0.js";import{Controlled as fe,WithCustomEmptyMessage as ye,KeyboardDismissPaths as ge,ModifierKeyGuard as ve,ImeCompositionGuard as ke,BlankAriaLabelFallback as we,LabelledByNameFallback as Ce,IconOptionLabelledByPrecedence as Ee,ActivedescendantFocusModel as Le,FocusIntentReentry as Pe,SearchNormalizationAndShortcutHints as Ae}from"./Combobox.stories-rUMxBqJY.js";import{Controlled as De,StateMatrix as l,InvalidWithHelper as Se,ShortcutHintPrecision as Te,BlankAriaLabelFallback as Be,LabelledByPrecedence as Ie,FocusIntentReentry as Re}from"./DatePicker.stories-DzBVxNq-.js";import{Default as h,InvalidWithHelper as Ne,BlankAriaLabelFallback as Oe,LabelledByPrecedence as $e,FocusIntentReentry as Me}from"./Textarea.stories-BEHgTu4W.js";import{Interactive as p,NestedDismissOrder as He,DismissGuardHooks as Fe,CloseReasonTelemetry as Ke,LabelledByPrecedence as Ge,IconTitleAriaLabelFallback as We,FocusTrapKeyboardCycle as ze,FocusIntentReentry as Ue,CloseButtonKeyboardPressedState as Qe,EscapeIgnoresImeComposition as qe,EscapePreemptedByGlobalHandler as Ve,EscapeRepeatGuard as Je}from"./Dialog.stories-BLbQ49FS.js";import{Interactive as Ye,NonDismissible as Xe,FocusReturn as _e,NoFocusReturn as Ze,NestedDismissOrder as en,DismissGuardHooks as nn,CloseReasonTelemetry as on,LabelledByPrecedence as sn,IconTitleAriaLabelFallback as rn,FocusTrapKeyboardCycle as an,FocusIntentReentry as tn,CloseButtonKeyboardPressedState as dn,EscapeIgnoresImeComposition as cn,EscapePreemptedByGlobalHandler as ln,EscapeRepeatGuard as hn}from"./Drawer.stories-DUqVsh4G.js";import{Default as x,Controlled as pn,DescribedByLifecycle as xn,NonTextTriggerNameFallback as un,EscapeModifierGuard as bn,EscapeDisabled as mn}from"./Tooltip.stories-50XnjEGy.js";import{WithInteractiveContent as jn,Default as fn,NonDismissible as yn,DismissGuardHooks as gn,NestedDismissOrder as vn,NestedOutsideDismissOrder as kn,OutsideDismissFocusTransfer as wn,TabDismissToNextControl as Cn,ShiftTabDismissToPreviousControl as En,CloseReasonTelemetry as Ln,TriggerLabelledByPrecedence as Pn,NonTextTriggerNameFallback as An,TriggerArrowDownModifierGuard as Dn,EscapePreemptedByGlobalHandler as Sn,ManagedKeysPreemptedByGlobalHandler as Tn,EscapeRepeatGuard as Bn,EscapeIgnoresImeComposition as In}from"./Popover.stories-Dw5tAhi1.js";import{Default as u,NonDismissible as Rn,DismissGuardHooks as Nn,TypeaheadNavigation as On,IconItemNaming as $n,IconItemLabelledByPrecedence as Mn,TriggerLabelledByPrecedence as Hn,NonTextTriggerNameFallback as Fn,TypeaheadIgnoresImeComposition as Kn,OutsideDismissFocusTransfer as Gn,EscapeDismissFocusReturn as Wn,EscapePreemptedByGlobalHandler as zn,ManagedKeysPreemptedByGlobalHandler as Un,EscapeRepeatGuard as Qn,TabDismissToNextControl as qn,ShiftTabDismissToPreviousControl as Vn,CloseReasonTelemetry as Jn,ModifierArrowNavigationGuard as Yn,KeyboardActivationDedupe as Xn,ControlledOpenContract as _n,NestedDismissOrder as Zn,NestedOutsideDismissOrder as eo,SingleActionableShortcutHints as no}from"./Dropdown.stories-qkxQqbAT.js";import{SearchCommands as b,QueryTelemetry as oo,LoadingState as so,CloseReasonTelemetry as io,CloseButtonFocusIntentReentry as ro,NestedDismissOrder as ao,EmptyStateAriaControlsLifecycle as to,LocalizedResultsLabel as co,LocalizedDialogCopy as lo,LabelledByPrecedence as ho,DisabledCommandGuard as po,SingleActionableShortcutHints as xo,TextValueAndAccentSearch as uo,IconOnlyCommandNaming as bo,IconOnlyCommandLabelledByPrecedence as mo,PersistentSelection as jo,OptionActivationKeyGuard as fo,RefinedSearchKeepsActiveCommand as yo,PagedKeyboardNavigation as go,ImeCompositionGuard as vo,EscapePreemptedByGlobalHandler as ko,ManagedKeysPreemptedByGlobalHandler as wo,NonDismissible as Co,GuardedDismissEvents as Eo,EscapeClearsQueryFirst as Lo,EscapeRepeatGuard as Po}from"./CommandPalette.stories-LyNGFvJP.js";import{Default as Ao,WithAction as Do,ToneMatrix as So,AccessibilityMetadata as To,LabelledByPrecedence as Bo,NonTextTitleAutoNameFallback as Io}from"./Empty.stories-B_AVijy9.js";import{Default as Ro,NarratedStatus as No,ProfileCard as Oo,LabelledByPrecedence as $o}from"./Skeleton.stories-D0IVMP91.js";import{Default as Mo,SlowPulse as Ho,Paused as Fo,LabelledByPrecedence as Ko}from"./LoadingDots.stories-BhajZovi.js";import{Default as Go,InstantDone as Wo,MultilineCursor as zo,LabelledByPrecedence as Uo}from"./StreamingText.stories-DBHR_Z03.js";import{Default as m,Indeterminate as Qo,LabelledByPrecedence as qo}from"./Progress.stories-BszU0h7O.js";import{Default as Vo,Dismissible as Jo,AccessibilityMetadata as Yo,LabelledByPrecedence as Xo,FocusIntentReentry as _o,CloseButtonKeyboardPressedState as Zo,CloseButtonPrimaryPointerOnly as es}from"./Alert.stories-C2AU2UcD.js";import{Default as j,ActionRequired as ns,ActionRequiredDanger as os,CloseReasonTelemetry as ss,EscapeStackOrder as is,EscapeShortcutSync as rs,StackedViewportOffset as as,FocusedToastEscapesFirst as ts,CloseButtonPrimaryPointerOnly as ds,CloseButtonKeyboardPressedState as cs,FocusIntentReentry as ls,EscapePreemptedByGlobalHandler as hs,EscapePreemptedByOverlayLayer as ps,EscapePreemptedSkipsToastHook as xs,EscapeGuardedByToastHandler as us,EscapeIgnoresImeComposition as bs,LabelledByPrecedence as ms,LiveRegionOff as js}from"./Toast.stories-DJ9fk5U7.js";import{Default as f,KeyboardNavigationGuide as fs,NoLoopNavigation as ys,SingleActionableTab as gs,Vertical as vs,RtlKeyboardNavigation as ks,LabelledByHeading as ws,IconOnlyLabelledByPrecedence as Cs,ManualActivation as Es,ManualActivationPressedFeedback as Ls,ManualFocusResetOnBlur as Ps,ManualVerticalActivation as As,ImeCompositionGuard as Ds,ManagedKeysPreemptedByGlobalHandler as Ss,PrimaryPointerOnlyPressedState as Ts,KeyboardFocusRingShiftTabReentry as Bs,ChangeTelemetry as Is,ControlsReferenceMountedPanels as Rs}from"./Tabs.stories-CMriCBc1.js";import{ReleaseChecklist as Ns,SortTelemetry as Os,RtlArrowNavigation as $s,LocalizedSortLabels as Ms,SortLabelForCustomHeader as Hs,RichTextHeaderAutoSortLabel as Fs,AriaLabelHeaderAutoSortLabel as Ks,SortLabelledByPrecedence as Gs,LoadingState as Ws,EmptyState as zs,SingleRowSortDisabled as Us,SingleSortableColumnShortcutHints as Qs,PrimaryPointerOnlySortPress as qs,KeyboardFocusRingShiftTabReentry as Vs,KeyboardReachableScrollContainer as Js,WithRowAction as Ys,InvalidDefaultSortKeyFallback as Xs,SourceIndexRowKeyStability as _s,RenderIndexSemantics as Zs,AccessibleNameWithoutCaption as ei,AccessibleNameFallback as ni,AccessibleNameLabelledByHeading as oi,RowHeaderSemantics as si}from"./Table.stories-BXfyrdZT.js";import{Controlled as ii,KeyboardShortcuts as y,ModifierKeyGuard as ri,RtlKeyboardShortcuts as ai,BoundaryAriaLabels as ti,BoundaryShortcutHints as di,LabelledByHeading as ci,FocusIntentReentry as li}from"./Pagination.stories-C2vh3EBY.js";import{WithAiRequestState as hi,Default as pi,LocalizedCopy as xi,LabelledByPrecedence as ui,FocusIntentReentry as bi}from"./PromptInput.stories-PAz2Bw-Z.js";import{Conversation as mi,Default as ji,LocalizedNaming as fi,LabelledByPrecedence as yi}from"./MessageBubble.stories-B3iZ5PJn.js";import{Default as g,LocalizedLabels as gi,LabelledByPrecedence as vi,BlankStepFallback as ki}from"./ReasoningPanel.stories-CVRZHLL_.js";import{Default as v,LabelledByPrecedence as wi}from"./StreamingCodeBlock.stories-B-rVxO7_.js";import"./index-BWu4c2F4.js";import"./iframe-DZlj4AMM.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-rBVi27TD.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-ZJmMstsz.js";import"./index-DgAF9SIF.js";import"./storyShowcase-Bw5VyCj0.js";import"./Input-ueoPJ8SP.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-CU5SQrEA.js";import"./FormField-Xof8ejB2.js";import"./Textarea-BnJNX4pg.js";import"./Dialog-oHKJ7fpA.js";import"./bodyScrollLock-D0vp0S5S.js";import"./DismissableLayer-0MVldSzJ.js";import"./Dropdown-CwM2dI-W.js";import"./Popover-BXRvYEtZ.js";import"./usePrefersReducedMotion-BRO3uCOn.js";function k(i){const n={code:"code",h2:"h2",h3:"h3",p:"p",...w(),...i.components};return e.jsxs(e.Fragment,{children:[e.jsx(C,{title:"Docs/Component API"}),`
 `,e.jsx(E,{}),`
 `,e.jsx(L,{children:"Primary API Reference"}),`
 `,e.jsx(P,{children:e.jsx(n.p,{children:`This page links the most-used Aurora UI components to executable stories and prop controls. When
@@ -48,6 +48,7 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | `,e.jsx(n.code,{children:"aria-describedby"}),"                    | ",e.jsx(n.code,{children:"string"}),`                                     | Recommended for helper/error narration in forms.                                                                                                                                                |
 | keyboard shortcut hints               | text-like inputs default `,e.jsx(n.code,{children:'aria-keyshortcuts="Enter"'})," | Text-like actionable inputs (",e.jsx(n.code,{children:"text/search/email/url/tel/password"}),`) expose Enter shortcut metadata for QA/AT discoverability; non-text types plus read-only/disabled inputs omit default hints (explicit overrides remain supported). |
 | Enter active feedback policy          | unmodified `,e.jsx(n.code,{children:"Enter"}),"/",e.jsx(n.code,{children:"Shift+Enter"})," only        | Ignores ",e.jsx(n.code,{children:"Ctrl/Meta/Alt + Enter"}),` so host shortcut chords do not trigger input active-press visuals.                                                                                              |
+| managed-key priority                  | preempted `,e.jsx(n.code,{children:"Enter"})," keydown skips active feedback | Input enter-active visuals and handler-side effects stay no-op when upstream guards already ",e.jsx(n.code,{children:"preventDefault()"}),` the keydown event.                                                                |
 | focus intent policy                   | primary pointer clears focus-visible         | Non-primary `,e.jsx(n.code,{children:"mousedown/pointerdown"})," plus ",e.jsx(n.code,{children:"Ctrl + primary click"}),` context-click paths keep keyboard-intent focus ring state, while plain primary pointer keeps prior active/pressed behavior.                       |
 | document-scoped focus intent fallback | owner-document `,e.jsx(n.code,{children:"keydown"})," / pointer listeners | When ",e.jsx(n.code,{children:":focus-visible"})," matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores input focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and ",e.jsx(n.code,{children:"Ctrl + primary click"}),` do not clear fallback keyboard intent. |
 | native input props                    | `,e.jsx(n.code,{children:"InputHTMLAttributes"}),"                        | Includes ",e.jsx(n.code,{children:"value"}),", ",e.jsx(n.code,{children:"defaultValue"}),", ",e.jsx(n.code,{children:"onChange"}),", ",e.jsx(n.code,{children:"type"}),", and autocomplete controls.                                                                                                                |"]}),`
@@ -55,6 +56,7 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 `,e.jsx(o,{of:I}),`
 `,e.jsx(o,{of:R}),`
 `,e.jsx(o,{of:N}),`
+`,e.jsx(o,{of:O}),`
 `,e.jsx(n.h3,{id:"formfield",children:"FormField"}),`
 `,e.jsx(o,{of:c}),`
 `,e.jsx(s,{of:c}),`
@@ -65,13 +67,13 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | `,e.jsx(n.code,{children:"required"})," / ",e.jsx(n.code,{children:"disabled"}),"          | ",e.jsx(n.code,{children:"boolean"}),`   | Field-level semantics merged with child state without dropping existing control props.                                                                                                                                             |
 | `,e.jsx(n.code,{children:"children"}),"                       | ",e.jsx(n.code,{children:"ReactNode"})," | Works with Aurora controls (Input/Select/etc.) and preserves child ",e.jsx(n.code,{children:"aria-*"})," attributes. Blank child ",e.jsx(n.code,{children:"aria-label"})," is ignored; when both child ",e.jsx(n.code,{children:"aria-label"})," and ",e.jsx(n.code,{children:"aria-labelledby"})," are provided, ",e.jsx(n.code,{children:"aria-labelledby"})," remains canonical. Development builds warn when non-text ",e.jsx(n.code,{children:"label"}),` content omits both control naming paths. |
 | `,e.jsx(n.code,{children:"htmlFor"})," for composite controls | ",e.jsx(n.code,{children:"string"}),"    | Required when ",e.jsx(n.code,{children:"children"})," is not a single clonable control element; development builds warn if label/control association cannot be created.                                                                                         |"]}),`
-`,e.jsx(o,{of:O}),`
 `,e.jsx(o,{of:$}),`
 `,e.jsx(o,{of:M}),`
 `,e.jsx(o,{of:H}),`
-`,e.jsx(n.h3,{id:"checkbox",children:"Checkbox"}),`
 `,e.jsx(o,{of:F}),`
-`,e.jsx(s,{of:K}),`
+`,e.jsx(n.h3,{id:"checkbox",children:"Checkbox"}),`
+`,e.jsx(o,{of:K}),`
+`,e.jsx(s,{of:G}),`
 `,e.jsxs(n.p,{children:[`| Prop                                  | Type                                         | Notes                                                                                                                                                                                              |
 | ------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `,e.jsx(n.code,{children:"checked"})," / ",e.jsx(n.code,{children:"defaultChecked"}),"          | ",e.jsx(n.code,{children:"boolean"}),`                                    | Native checkbox controlled/uncontrolled behavior.                                                                                                                                                  |
@@ -82,14 +84,14 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | focus intent policy                   | primary pointer clears focus-visible         | Non-primary pointer interactions and `,e.jsx(n.code,{children:"Ctrl + primary click"}),` context-click paths keep checkbox focus-visible state; plain primary pointer clears keyboard-intent focus-visible feedback before toggle intent. |
 | document-scoped focus intent fallback | owner-document `,e.jsx(n.code,{children:"keydown"})," / pointer listeners | When ",e.jsx(n.code,{children:":focus-visible"})," matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores checkbox focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and ",e.jsx(n.code,{children:"Ctrl + primary click"}),` do not clear fallback keyboard intent. |
 | `,e.jsx(n.code,{children:"invalid"}),"                             | ",e.jsx(n.code,{children:"boolean"}),"                                    | Applies invalid state with ",e.jsx(n.code,{children:"aria-invalid"}),".                                                                                                                                                         |"]}),`
-`,e.jsx(o,{of:G}),`
 `,e.jsx(o,{of:W}),`
 `,e.jsx(o,{of:z}),`
 `,e.jsx(o,{of:U}),`
 `,e.jsx(o,{of:Q}),`
-`,e.jsx(n.h3,{id:"radiogroup",children:"RadioGroup"}),`
 `,e.jsx(o,{of:q}),`
-`,e.jsx(s,{of:V}),`
+`,e.jsx(n.h3,{id:"radiogroup",children:"RadioGroup"}),`
+`,e.jsx(o,{of:V}),`
+`,e.jsx(s,{of:J}),`
 `,e.jsxs(n.p,{children:[`| Prop                                  | Type                                         | Notes                                                                                                                                                                                           |
 | ------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `,e.jsx(n.code,{children:"options"}),"                             | ",e.jsx(n.code,{children:"RadioOption[]"}),`                              | Defines each choice label/value pair. Development builds warn when option values are duplicated; runtime render keys are auto-suffixed to avoid React key collisions, but values should stay unique. |
@@ -102,14 +104,14 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | document-scoped focus intent fallback | owner-document `,e.jsx(n.code,{children:"keydown"})," / pointer listeners | When ",e.jsx(n.code,{children:":focus-visible"})," matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores radio focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and ",e.jsx(n.code,{children:"Ctrl + primary click"}),` do not clear fallback keyboard intent. |
 | `,e.jsx(n.code,{children:"invalid"}),"                             | ",e.jsx(n.code,{children:"boolean"}),"                                    | Applies ",e.jsx(n.code,{children:"aria-invalid"})," to the ",e.jsx(n.code,{children:"radiogroup"}),` container for screen-reader narration.                                                                                                               |
 | `,e.jsx(n.code,{children:"direction"}),"                           | ",e.jsx(n.code,{children:"'vertical' \\| 'horizontal'"}),"                 | Layout direction for stacked vs inline groups; also maps to ",e.jsx(n.code,{children:"aria-orientation"})," on the ",e.jsx(n.code,{children:"radiogroup"})," container.                                                                                 |"]}),`
-`,e.jsx(o,{of:J}),`
 `,e.jsx(o,{of:Y}),`
 `,e.jsx(o,{of:X}),`
 `,e.jsx(o,{of:_}),`
 `,e.jsx(o,{of:Z}),`
-`,e.jsx(n.h3,{id:"switch",children:"Switch"}),`
 `,e.jsx(o,{of:ee}),`
-`,e.jsx(s,{of:ne}),`
+`,e.jsx(n.h3,{id:"switch",children:"Switch"}),`
+`,e.jsx(o,{of:ne}),`
+`,e.jsx(s,{of:oe}),`
 `,e.jsxs(n.p,{children:[`| Prop                                  | Type                                            | Notes                                                                                                                                                                                            |
 | ------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `,e.jsx(n.code,{children:"checked"})," / ",e.jsx(n.code,{children:"defaultChecked"}),"          | ",e.jsx(n.code,{children:"boolean"}),`                                       | Controlled and uncontrolled switch flows.                                                                                                                                                        |
@@ -123,7 +125,6 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | keyboard modifier guard               | ignores `,e.jsx(n.code,{children:"Ctrl/Meta/Alt + Space"}),` switch handling | Preserves host/browser shortcut chords and avoids accidental toggle from modified key combinations.                                                                                              |
 | document-scoped focus intent fallback | owner-document `,e.jsx(n.code,{children:"keydown"})," / pointer listeners    | When ",e.jsx(n.code,{children:":focus-visible"})," matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores switch focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and ",e.jsx(n.code,{children:"Ctrl + primary click"}),` do not clear fallback keyboard intent. |
 | `,e.jsx(n.code,{children:"invalid"}),"                             | ",e.jsx(n.code,{children:"boolean"}),"                                       | Applies invalid semantics and error-token visual states.                                                                                                                                         |"]}),`
-`,e.jsx(o,{of:oe}),`
 `,e.jsx(o,{of:se}),`
 `,e.jsx(o,{of:ie}),`
 `,e.jsx(o,{of:re}),`
@@ -131,9 +132,10 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 `,e.jsx(o,{of:te}),`
 `,e.jsx(o,{of:de}),`
 `,e.jsx(o,{of:ce}),`
-`,e.jsx(n.h3,{id:"select",children:"Select"}),`
 `,e.jsx(o,{of:le}),`
-`,e.jsx(s,{of:he}),`
+`,e.jsx(n.h3,{id:"select",children:"Select"}),`
+`,e.jsx(o,{of:he}),`
+`,e.jsx(s,{of:pe}),`
 `,e.jsxs(n.p,{children:[`| Prop                                  | Type                                         | Notes                                                                                                                                                                                            |
 | ------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `,e.jsx(n.code,{children:"value"})," / ",e.jsx(n.code,{children:"defaultValue"}),"              | ",e.jsx(n.code,{children:"string"}),`                                     | Supports controlled and uncontrolled native select flows.                                                                                                                                        |
@@ -143,14 +145,14 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | keyboard shortcut hints               | default `,e.jsx(n.code,{children:'aria-keyshortcuts="ArrowDown ArrowUp"'}),` | Actionable selects expose ArrowDown/ArrowUp shortcut metadata for QA/AT discoverability; disabled selects omit hints so metadata does not advertise unavailable interaction paths.               |
 | `,e.jsx(n.code,{children:"aria-label"})," / ",e.jsx(n.code,{children:"aria-labelledby"}),"      | ",e.jsx(n.code,{children:"string"}),"                                     | Blank values are ignored; when both are provided, ",e.jsx(n.code,{children:"aria-labelledby"}),` takes precedence so visible external headings remain canonical.                                                              |
 | document-scoped focus intent fallback | owner-document `,e.jsx(n.code,{children:"keydown"})," / pointer listeners | When ",e.jsx(n.code,{children:":focus-visible"})," matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores select focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and ",e.jsx(n.code,{children:"Ctrl + primary click"})," do not clear fallback keyboard intent. |"]}),`
-`,e.jsx(o,{of:pe}),`
 `,e.jsx(o,{of:xe}),`
 `,e.jsx(o,{of:ue}),`
 `,e.jsx(o,{of:be}),`
 `,e.jsx(o,{of:me}),`
-`,e.jsx(n.h3,{id:"combobox",children:"Combobox"}),`
 `,e.jsx(o,{of:je}),`
-`,e.jsx(s,{of:fe}),`
+`,e.jsx(n.h3,{id:"combobox",children:"Combobox"}),`
+`,e.jsx(o,{of:fe}),`
+`,e.jsx(s,{of:ye}),`
 `,e.jsxs(n.p,{children:[`| Prop                                  | Type                                                                    | Notes                                                                                                                                                                                                              |
 | ------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `,e.jsx(n.code,{children:"options"}),"                             | ",e.jsx(n.code,{children:"ComboboxOption[]"}),"                                                      | Supports string or rich ",e.jsx(n.code,{children:"label"}),` nodes, disabled entries, and keyword filtering. Development builds warn when option values are duplicated; runtime render keys are auto-suffixed to avoid React key collisions, but values should still stay unique. |
@@ -159,7 +161,6 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | `,e.jsx(n.code,{children:"value"})," / ",e.jsx(n.code,{children:"defaultValue"}),"              | ",e.jsx(n.code,{children:"string"}),`                                                                | Controlled and uncontrolled modes are both available.                                                                                                                                                              |
 | `,e.jsx(n.code,{children:"onValueChange"}),"                       | ",e.jsx(n.code,{children:"(value: string) => void"}),`                                               | Fires when user confirms option by click or Enter.                                                                                                                                                                 |
 | `,e.jsx(n.code,{children:"ariaLabel"})," / ",e.jsx(n.code,{children:"ariaLabelledBy"}),"       | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"string"}),"                                                     | Optional combobox/listbox naming controls. Blank values are ignored; when both are provided, ",e.jsx(n.code,{children:"ariaLabelledBy"})," takes precedence and suppresses ",e.jsx(n.code,{children:"ariaLabel"})," fallback. Without ",e.jsx(n.code,{children:"ariaLabelledBy"}),", ",e.jsx(n.code,{children:"ariaLabel"})," falls back to ",e.jsx(n.code,{children:"Combobox"})," and listbox naming follows ",e.jsx(n.code,{children:"\\"}),"$",ariaLabel," options`",e.jsx(n.code,{children:". | | "}),"emptyMessage",e.jsx(n.code,{children:"                       |"}),"ReactNode",e.jsx(n.code,{children:"                                                            | Custom no-result content for search miss scenarios.                                                                                                                                                                | | trigger relation                      | conditional"}),"aria-controls",e.jsx(n.code,{children:"                                            | Input references listbox ID only while results listbox is mounted.                                                                                                                                                 | | option focus model                    |"}),"aria-activedescendant",e.jsx(n.code,{children:"+"}),"tabIndex=-1",e.jsx(n.code,{children:"options                         | Keyboard focus stays on combobox input; pointer selection uses primary-pointer"}),"mousedown",e.jsx(n.code,{children:"guard to avoid focus theft while ignoring"}),"Ctrl + primary click",e.jsx(n.code,{children:"context-click paths.                                   | | document-scoped focus intent fallback | owner-document"}),"keydown",e.jsx(n.code,{children:"/ pointer listeners                            | When"}),":focus-visible",e.jsx(n.code,{children:"matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores combobox focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and"}),"Ctrl + primary click",e.jsx(n.code,{children:"do not clear fallback keyboard intent. | | modifier-key guard                    | ignores"}),"Ctrl/Meta/Alt + Arrow/Home/End/Enter/Escape",e.jsx(n.code,{children:"combobox handling | Preserves host/browser modified-key shortcuts and avoids accidental combobox navigation, selection, or dismiss from combined key chords.                                                                           | | IME safety                            | composition key guard                                                   | Arrow/Home/End/Enter/Escape handling is ignored while"}),"isComposing",e.jsx(n.code,{children:"and legacy fallback paths that only expose"}),"keyCode=229",e.jsx(n.code,{children:", so CJK confirmation does not trigger navigation, selection, or dismiss unexpectedly. | | accent-insensitive search             | NFD + diacritic strip + whitespace normalization                         | Query matching ignores accent marks and repeated whitespace so plain-text input (for example "}),"cafe",e.jsx(n.code,{children:") still matches localized options/keywords such as "}),"Café",e.jsx(n.code,{children:"/"}),"déploiement",e.jsx(n.code,{children:".                                      | | keyboard shortcut hints               | "}),"aria-keyshortcuts",e.jsx(n.code,{children:"state-aware metadata                                | Closed-state combobox keeps baseline"}),"Enter",e.jsx(n.code,{children:"hint inherited from text-input behavior; expanded-state metadata adds navigation hints only when multiple enabled options exist and shows"}),"Escape",e.jsx(n.code,{children:"only while popup is open. | | dismiss policy                        |"}),"Escape",e.jsx(n.code,{children:"/ blur outside                                                 | Keeps list open when focus moves into option elements; closes on blur outside root.                                                                                                                                | | outside pointer policy                | primary pointer only + preemption guard                                 | Outside"}),"pointerdown",e.jsx(n.code,{children:"close ignores non-primary mouse buttons and"}),"Ctrl + primary",e.jsx(n.code,{children:"context-click paths, and skips close when upstream handlers call"}),"preventDefault()`.                                             |"]}),`
-`,e.jsx(o,{of:ye}),`
 `,e.jsx(o,{of:ge}),`
 `,e.jsx(o,{of:ve}),`
 `,e.jsx(o,{of:ke}),`
@@ -168,8 +169,9 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 `,e.jsx(o,{of:Ee}),`
 `,e.jsx(o,{of:Le}),`
 `,e.jsx(o,{of:Pe}),`
-`,e.jsx(n.h3,{id:"datepicker",children:"DatePicker"}),`
 `,e.jsx(o,{of:Ae}),`
+`,e.jsx(n.h3,{id:"datepicker",children:"DatePicker"}),`
+`,e.jsx(o,{of:De}),`
 `,e.jsx(s,{of:l}),`
 `,e.jsxs(n.p,{children:[`| Prop                                  | Type                                         | Notes                                                                                                                                                                                                |
 | ------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -183,12 +185,12 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | `,e.jsx(n.code,{children:"errorMessageId"}),"                      | ",e.jsx(n.code,{children:"string"}),"                                     | Appends error helper ID into ",e.jsx(n.code,{children:"aria-describedby"})," and ",e.jsx(n.code,{children:"aria-errormessage"})," when ",e.jsx(n.code,{children:"invalid"}),` is true (deduped if ID already exists).                                                                       |
 | focus intent policy                   | primary pointer clears focus-visible         | Non-primary pointer interactions and `,e.jsx(n.code,{children:"Ctrl + primary click"}),` context-click paths keep date input focus-visible state; plain primary pointer clears keyboard-intent focus-visible feedback before selection intent. |
 | document-scoped focus intent fallback | owner-document `,e.jsx(n.code,{children:"keydown"})," / pointer listeners | When ",e.jsx(n.code,{children:":focus-visible"})," matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores date input focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and ",e.jsx(n.code,{children:"Ctrl + primary click"})," do not clear fallback keyboard intent. |"]}),`
-`,e.jsx(o,{of:De}),`
-`,e.jsx(o,{of:l}),`
 `,e.jsx(o,{of:Se}),`
+`,e.jsx(o,{of:l}),`
 `,e.jsx(o,{of:Te}),`
 `,e.jsx(o,{of:Be}),`
 `,e.jsx(o,{of:Ie}),`
+`,e.jsx(o,{of:Re}),`
 `,e.jsx(n.h3,{id:"textarea",children:"Textarea"}),`
 `,e.jsx(o,{of:h}),`
 `,e.jsx(s,{of:h}),`
@@ -199,10 +201,10 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | `,e.jsx(n.code,{children:"aria-label"})," / ",e.jsx(n.code,{children:"aria-labelledby"}),"      | ",e.jsx(n.code,{children:"string"}),"                                     | Blank values are ignored; when both are provided, ",e.jsx(n.code,{children:"aria-labelledby"}),` takes precedence so visible context headings remain canonical.                                                                 |
 | `,e.jsx(n.code,{children:"aria-describedby"}),"                    | ",e.jsx(n.code,{children:"string"}),`                                     | Supports helper/error hint linkage for form narration.                                                                                                                                             |
 | document-scoped focus intent fallback | owner-document `,e.jsx(n.code,{children:"keydown"})," / pointer listeners | When ",e.jsx(n.code,{children:":focus-visible"})," matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores textarea focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and ",e.jsx(n.code,{children:"Ctrl + primary click"})," do not clear fallback keyboard intent. |"]}),`
-`,e.jsx(o,{of:Re}),`
 `,e.jsx(o,{of:Ne}),`
 `,e.jsx(o,{of:Oe}),`
 `,e.jsx(o,{of:$e}),`
+`,e.jsx(o,{of:Me}),`
 `,e.jsx(n.h2,{id:"overlay",children:"Overlay"}),`
 `,e.jsx(n.h3,{id:"tooltip",children:"Tooltip"}),`
 `,e.jsx(o,{of:x}),`
@@ -218,11 +220,11 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | trigger naming                 | non-empty `,e.jsx(n.code,{children:"aria-label"})," / ",e.jsx(n.code,{children:"aria-labelledby"})," on trigger element                                  | For icon-only/non-text triggers, provide explicit naming on the trigger element itself. Rich trigger content with inline ",e.jsx(n.code,{children:"aria-label"}),` is auto-detected, and development builds warn when both naming paths are missing. |
 | dismiss key hints              | `,e.jsx(n.code,{children:'aria-keyshortcuts="Escape"'})," (while visible and ",e.jsx(n.code,{children:"closeOnEscape"}),` enabled)                       | Tooltip surface exposes Escape shortcut metadata for QA/AT discoverability only when Escape dismiss is actionable.                  |
 | modifier/repeat guard          | ignores `,e.jsx(n.code,{children:"Ctrl/Meta/Alt + Escape"}),", repeated keydown, and IME composition Escape (",e.jsx(n.code,{children:"keyCode=229"}),") | Preserves host/browser shortcuts and avoids accidental tooltip dismissal while handling long-press or CJK composition confirmation. |"]}),`
-`,e.jsx(o,{of:hn}),`
 `,e.jsx(o,{of:pn}),`
 `,e.jsx(o,{of:xn}),`
 `,e.jsx(o,{of:un}),`
 `,e.jsx(o,{of:bn}),`
+`,e.jsx(o,{of:mn}),`
 `,e.jsx(n.h3,{id:"dialog",children:"Dialog"}),`
 `,e.jsx(o,{of:p}),`
 `,e.jsx(s,{of:p}),`
@@ -251,7 +253,6 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | Escape priority                            | preempted events skip dialog hook/dismiss                                                                                   | If higher-level handlers already `,e.jsx(n.code,{children:"preventDefault()"})," Escape, dialog stays open and does not fire ",e.jsx(n.code,{children:"onEscapeKeyDown"}),`.                                                                                                       |
 | nested dismiss order                       | top layer first                                                                                                             | Nested overlay stacks (for example dropdown inside dialog) dismiss one layer per Escape/outside interaction.                                                                                                             |
 | portal host scope                          | `,e.jsx(n.code,{children:"ownerDocument.body"})," auto-target                                                                                            | Dialog portal mounts to the invoking document root (including iframe/multi-root hosts) instead of always using top-level ",e.jsx(n.code,{children:"document.body"}),".                                                                                |"]}),`
-`,e.jsx(o,{of:Me}),`
 `,e.jsx(o,{of:He}),`
 `,e.jsx(o,{of:Fe}),`
 `,e.jsx(o,{of:Ke}),`
@@ -262,9 +263,10 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 `,e.jsx(o,{of:Qe}),`
 `,e.jsx(o,{of:qe}),`
 `,e.jsx(o,{of:Ve}),`
-`,e.jsx(n.h3,{id:"drawer",children:"Drawer"}),`
 `,e.jsx(o,{of:Je}),`
-`,e.jsx(s,{of:Ye}),`
+`,e.jsx(n.h3,{id:"drawer",children:"Drawer"}),`
+`,e.jsx(o,{of:Ye}),`
+`,e.jsx(s,{of:Xe}),`
 `,e.jsxs(n.p,{children:[`| Prop                                      | Type                                                                                                                        | Notes                                                                                                                                                                                                                    |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `,e.jsx(n.code,{children:"side"}),"                                    | ",e.jsx(n.code,{children:"'left' \\| 'right'"}),`                                                                                                         | Controls panel placement and border direction.                                                                                                                                                                           |
@@ -288,7 +290,6 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | Escape priority                           | preempted events skip drawer hook/dismiss                                                                                   | If higher-level handlers already `,e.jsx(n.code,{children:"preventDefault()"})," Escape, drawer stays open and does not fire ",e.jsx(n.code,{children:"onEscapeKeyDown"}),`.                                                                                                       |
 | nested dismiss order                      | top layer first                                                                                                             | Nested overlays inside drawer dismiss one layer per Escape/outside interaction.                                                                                                                                          |
 | portal host scope                         | `,e.jsx(n.code,{children:"ownerDocument.body"})," auto-target                                                                                            | Drawer portal mounts to the invoking document root (including iframe/multi-root hosts) instead of always using top-level ",e.jsx(n.code,{children:"document.body"}),".                                                                                |"]}),`
-`,e.jsx(o,{of:Xe}),`
 `,e.jsx(o,{of:_e}),`
 `,e.jsx(o,{of:Ze}),`
 `,e.jsx(o,{of:en}),`
@@ -301,9 +302,10 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 `,e.jsx(o,{of:dn}),`
 `,e.jsx(o,{of:cn}),`
 `,e.jsx(o,{of:ln}),`
+`,e.jsx(o,{of:hn}),`
 `,e.jsx(n.h3,{id:"popover",children:"Popover"}),`
-`,e.jsx(o,{of:mn}),`
-`,e.jsx(s,{of:jn}),`
+`,e.jsx(o,{of:jn}),`
+`,e.jsx(s,{of:fn}),`
 `,e.jsxs(n.p,{children:[`| Prop                                       | Type                                                                                  | Notes                                                                                                                                                                                             |
 | ------------------------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `,e.jsx(n.code,{children:"triggerLabel"}),"                             | ",e.jsx(n.code,{children:"ReactNode"}),`                                                                           | Trigger button content.                                                                                                                                                                           |
@@ -328,7 +330,6 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | Escape repeat guard                        | ignores repeated keydown                                                              | Long-press Escape (`,e.jsx(n.code,{children:"event.repeat=true"}),`) is ignored so one key press closes at most one popover and avoids duplicate dismiss telemetry.                                                            |
 | Escape priority                            | preempted events skip popover hook/dismiss                                            | If higher-level handlers already `,e.jsx(n.code,{children:"preventDefault()"})," Escape, popover stays open and does not fire ",e.jsx(n.code,{children:"onEscapeKeyDown"}),`.                                                                               |
 | dismiss event scope                        | `,e.jsx(n.code,{children:"ownerDocument"}),"-scoped layer listeners                                                | Escape/outside-pointer dismiss responds only to events from the popover document root; cross-document events are ignored, and ",e.jsx(n.code,{children:"Ctrl + primary"})," context-click pointer paths do not dismiss.       |"]}),`
-`,e.jsx(o,{of:fn}),`
 `,e.jsx(o,{of:yn}),`
 `,e.jsx(o,{of:gn}),`
 `,e.jsx(o,{of:vn}),`
@@ -343,6 +344,7 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 `,e.jsx(o,{of:Sn}),`
 `,e.jsx(o,{of:Tn}),`
 `,e.jsx(o,{of:Bn}),`
+`,e.jsx(o,{of:In}),`
 `,e.jsx(n.h3,{id:"dropdown",children:"Dropdown"}),`
 `,e.jsx(o,{of:u}),`
 `,e.jsx(s,{of:u}),`
@@ -377,7 +379,6 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | pointer dismiss focus                      | outside pointer keeps target focus                                                                                           | Outside pointer dismissal closes menu without forcing focus back to trigger.                                                                                                                                                                             |
 | nested overlay dismiss                     | top layer first                                                                                                              | Escape/outside dismiss resolves from topmost dismissable layer to avoid collapsing parent overlay stacks in one event.                                                                                                                                   |
 | dismiss event scope                        | `,e.jsx(n.code,{children:"ownerDocument"}),"-scoped layer listeners                                                                                       | Escape/outside-pointer dismiss responds only to events from the dropdown document root; cross-document events are ignored, and ",e.jsx(n.code,{children:"Ctrl + primary"})," context-click pointer paths do not dismiss.                                               |"]}),`
-`,e.jsx(o,{of:In}),`
 `,e.jsx(o,{of:Rn}),`
 `,e.jsx(o,{of:Nn}),`
 `,e.jsx(o,{of:On}),`
@@ -399,6 +400,7 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 `,e.jsx(o,{of:_n}),`
 `,e.jsx(o,{of:Zn}),`
 `,e.jsx(o,{of:eo}),`
+`,e.jsx(o,{of:no}),`
 `,e.jsx(n.h2,{id:"data",children:"Data"}),`
 `,e.jsx(n.h3,{id:"tabs",children:"Tabs"}),`
 `,e.jsx(o,{of:f}),`
@@ -426,7 +428,6 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | controlled-value diagnostics          | dev warning on missing/disabled `,e.jsx(n.code,{children:"value"}),"                                                                                                                                             | Controlled mode falls back to first enabled tab when incoming ",e.jsx(n.code,{children:"value"}),` is missing/disabled, and emits a development warning to surface upstream state drift early.                                                                                                       |
 | tab relation                          | mounted `,e.jsx(n.code,{children:"tabpanel"})," set + ",e.jsx(n.code,{children:"hidden"})," toggle                                                                                                                                            | Keeps every ",e.jsx(n.code,{children:"aria-controls"}),` target valid while showing only active content panel.                                                                                                                                                                                       |
 | tab/panel id strategy                 | key-derived + URL-encoded segment                                                                                                                                                    | `,e.jsx(n.code,{children:"id"}),"/",e.jsx(n.code,{children:"aria-controls"}),"/",e.jsx(n.code,{children:"aria-labelledby"})," wiring derives from ",e.jsx(n.code,{children:"items[].key"})," (with safe URL-style encoding), so special-character keys stay valid and id refs remain stable when item order changes.                                                                       |"]}),`
-`,e.jsx(o,{of:js}),`
 `,e.jsx(o,{of:fs}),`
 `,e.jsx(o,{of:ys}),`
 `,e.jsx(o,{of:gs}),`
@@ -443,8 +444,9 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 `,e.jsx(o,{of:Ts}),`
 `,e.jsx(o,{of:Bs}),`
 `,e.jsx(o,{of:Is}),`
-`,e.jsx(n.h3,{id:"table",children:"Table"}),`
 `,e.jsx(o,{of:Rs}),`
+`,e.jsx(n.h3,{id:"table",children:"Table"}),`
+`,e.jsx(o,{of:Ns}),`
 `,e.jsxs(n.p,{children:[`| Prop                                       | Type                                                                                      | Notes                                                                                                                                                                                                                                                                                         |
 | ------------------------------------------ | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `,e.jsx(n.code,{children:"columns"}),"                                  | ",e.jsx(n.code,{children:"TableColumn<T>[]"}),"                                                                        | ",e.jsx(n.code,{children:"sortable"})," + optional ",e.jsx(n.code,{children:"sortAccessor"}),` for stable sorting behavior.                                                                                                                                                                                                                             |
@@ -476,7 +478,6 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | keyboard-click dedupe                      | ignores synthesized keyboard-origin click (`,e.jsx(n.code,{children:"detail=0"}),`) after handled activation keydown   | Prevents duplicate sort toggles/telemetry when environments emit both keydown and follow-up click for the same keyboard action.                                                                                                                                                               |
 | `,e.jsx(n.code,{children:"aria-sort"})," exposure                       | active sorted header only                                                                 | Unsorted headers (including sortable ones) omit ",e.jsx(n.code,{children:"aria-sort"}),`, reducing screen-reader noise and matching ARIA table guidance.                                                                                                                                                                   |
 | loading sort semantics                     | clears `,e.jsx(n.code,{children:"aria-sort"})," during ",e.jsx(n.code,{children:"loading"}),"                                                       | Loading mode suppresses stale sort semantics and leaves ",e.jsx(n.code,{children:"aria-sort"})," unset until data rows are interactive again.                                                                                                                                                                              |"]}),`
-`,e.jsx(o,{of:Ns}),`
 `,e.jsx(o,{of:Os}),`
 `,e.jsx(o,{of:$s}),`
 `,e.jsx(o,{of:Ms}),`
@@ -498,8 +499,9 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 `,e.jsx(o,{of:ei}),`
 `,e.jsx(o,{of:ni}),`
 `,e.jsx(o,{of:oi}),`
-`,e.jsx(n.h3,{id:"pagination",children:"Pagination"}),`
 `,e.jsx(o,{of:si}),`
+`,e.jsx(n.h3,{id:"pagination",children:"Pagination"}),`
+`,e.jsx(o,{of:ii}),`
 `,e.jsx(s,{of:y}),`
 `,e.jsxs(n.p,{children:[`| Prop                                  | Type                                                                    | Notes                                                                                                                                                                                                          |
 | ------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -515,16 +517,16 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | keyboard shortcut hints               | `,e.jsx(n.code,{children:'aria-keyshortcuts="[Home PageUp] [End PageDown] ArrowLeft ArrowRight"'})," on enabled controls | Announces pagination keyboard navigation affordances to assistive tech and QA audits; controls omit unavailable boundary keys (",e.jsx(n.code,{children:"Home/PageUp"})," on first page, ",e.jsx(n.code,{children:"End/PageDown"}),` on last page), and disabled controls omit shortcut hints.                                   |
 | document-scoped focus intent fallback | owner-document `,e.jsx(n.code,{children:"keydown"})," / pointer listeners                            | When ",e.jsx(n.code,{children:":focus-visible"})," matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores pagination button focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and ",e.jsx(n.code,{children:"Ctrl + primary click"})," do not clear fallback keyboard intent. |"]}),`
 `,e.jsx(o,{of:y}),`
-`,e.jsx(o,{of:ii}),`
 `,e.jsx(o,{of:ri}),`
 `,e.jsx(o,{of:ai}),`
 `,e.jsx(o,{of:ti}),`
 `,e.jsx(o,{of:di}),`
 `,e.jsx(o,{of:ci}),`
+`,e.jsx(o,{of:li}),`
 `,e.jsx(n.h2,{id:"feedback",children:"Feedback"}),`
 `,e.jsx(n.h3,{id:"empty",children:"Empty"}),`
-`,e.jsx(o,{of:Po}),`
-`,e.jsx(s,{of:Ao}),`
+`,e.jsx(o,{of:Ao}),`
+`,e.jsx(s,{of:Do}),`
 `,e.jsxs(n.p,{children:[`| Prop                    | Type                                           | Notes                                                |
 | ----------------------- | ---------------------------------------------- | ---------------------------------------------------- |
 | `,e.jsx(n.code,{children:"title"})," / ",e.jsx(n.code,{children:"description"})," | ",e.jsx(n.code,{children:"ReactNode"}),`                                    | Empty-state headline and helper explanation text.    |
@@ -532,13 +534,13 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | `,e.jsx(n.code,{children:"tone"}),"                  | ",e.jsx(n.code,{children:"'default' \\| 'info' \\| 'warning' \\| 'danger'"}),` | Semantic emphasis for empty-state severity context.  |
 | `,e.jsx(n.code,{children:"align"})," / ",e.jsx(n.code,{children:"titleAs"}),"     | ",e.jsx(n.code,{children:"'center' \\| 'left'"}),` / heading element         | Control content layout and heading semantics.        |
 | `,e.jsx(n.code,{children:"ariaLabel"})," / ",e.jsx(n.code,{children:"ariaLabelledBy"})," | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"string"}),"                      | Optional status-region naming controls. Blank values are ignored; when both are provided, ",e.jsx(n.code,{children:"ariaLabelledBy"})," takes precedence and suppresses ",e.jsx(n.code,{children:"ariaLabel"})," fallback. Without explicit naming, empty state naming falls back to rendered ",e.jsx(n.code,{children:"title"}),", and non-text titles auto-fallback to ",e.jsx(n.code,{children:"Empty state"})," with development warning guidance. |"]}),`
-`,e.jsx(o,{of:Do}),`
 `,e.jsx(o,{of:So}),`
 `,e.jsx(o,{of:To}),`
 `,e.jsx(o,{of:Bo}),`
-`,e.jsx(n.h3,{id:"skeleton",children:"Skeleton"}),`
 `,e.jsx(o,{of:Io}),`
-`,e.jsx(s,{of:Ro}),`
+`,e.jsx(n.h3,{id:"skeleton",children:"Skeleton"}),`
+`,e.jsx(o,{of:Ro}),`
+`,e.jsx(s,{of:No}),`
 `,e.jsxs(n.p,{children:[`| Prop                          | Type                                                       | Notes                                                                                                                    |
 | ----------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `,e.jsx(n.code,{children:"variant"}),"                     | ",e.jsx(n.code,{children:"'rect' \\| 'text' \\| 'circle'"}),`                             | Shape selection for block/text/avatar placeholders.                                                                      |
@@ -546,11 +548,11 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | reduced-motion fallback       | shimmer tagged with `,e.jsx(n.code,{children:'data-aurora-reduced-motion="animate"'})," | With ",e.jsx(n.code,{children:"GlobalStyles"}),", shimmer auto-disables under ",e.jsx(n.code,{children:"prefers-reduced-motion"}),` while placeholder geometry stays stable.       |
 | `,e.jsx(n.code,{children:"ariaLabel"})," / ",e.jsx(n.code,{children:"ariaLabelledBy"})," | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"string"}),"                                      | Enables narrated loading status semantics when needed. Blank values are ignored; when both are provided, ",e.jsx(n.code,{children:"ariaLabelledBy"})," takes precedence and suppresses ",e.jsx(n.code,{children:"ariaLabel"}),` fallback. |
 | `,e.jsx(n.code,{children:"width"})," / ",e.jsx(n.code,{children:"height"})," / ",e.jsx(n.code,{children:"radius"})," | ",e.jsx(n.code,{children:"number \\| string"}),"                                         | Explicit geometry control for layout matching.                                                                           |"]}),`
-`,e.jsx(o,{of:No}),`
 `,e.jsx(o,{of:Oo}),`
-`,e.jsx(n.h3,{id:"loadingdots",children:"LoadingDots"}),`
 `,e.jsx(o,{of:$o}),`
-`,e.jsx(s,{of:Mo}),`
+`,e.jsx(n.h3,{id:"loadingdots",children:"LoadingDots"}),`
+`,e.jsx(o,{of:Mo}),`
+`,e.jsx(s,{of:Ho}),`
 `,e.jsxs(n.p,{children:[`| Prop                    | Type                                          | Notes                                                                                                          |
 | ----------------------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `,e.jsx(n.code,{children:"running"}),"               | ",e.jsx(n.code,{children:"boolean"}),`                                     | Pause/resume the animated dots.                                                                                |
@@ -558,11 +560,11 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | `,e.jsx(n.code,{children:"respectReducedMotion"}),"  | ",e.jsx(n.code,{children:"boolean"}),"                                     | Defaults to ",e.jsx(n.code,{children:"true"}),`; when OS reduced-motion is enabled, dots stay static while loading semantics remain intact. |
 | `,e.jsx(n.code,{children:"label"})," / ",e.jsx(n.code,{children:"live"}),"        | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"'polite' \\| 'assertive' \\| 'off'"})," | Screen-reader narration and live-region urgency; blank ",e.jsx(n.code,{children:"label"})," values are ignored and fallback to ",e.jsx(n.code,{children:"Loading"}),`.   |
 | `,e.jsx(n.code,{children:"ariaLabel"})," / ",e.jsx(n.code,{children:"ariaLabelledBy"})," | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"string"}),"                     | Optional status naming controls. Blank values are ignored; when both are provided, ",e.jsx(n.code,{children:"ariaLabelledBy"})," takes precedence and suppresses ",e.jsx(n.code,{children:"ariaLabel"})," fallback. Without explicit naming overrides, loading status naming falls back to ",e.jsx(n.code,{children:"label"})," (",e.jsx(n.code,{children:"Loading"})," default). |"]}),`
-`,e.jsx(o,{of:Ho}),`
 `,e.jsx(o,{of:Fo}),`
-`,e.jsx(n.h3,{id:"streamingtext",children:"StreamingText"}),`
 `,e.jsx(o,{of:Ko}),`
-`,e.jsx(s,{of:Go}),`
+`,e.jsx(n.h3,{id:"streamingtext",children:"StreamingText"}),`
+`,e.jsx(o,{of:Go}),`
+`,e.jsx(s,{of:Wo}),`
 `,e.jsxs(n.p,{children:[`| Prop                                | Type                 | Notes                                                                                                                        |
 | ----------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | `,e.jsx(n.code,{children:"streaming"}),"                         | ",e.jsx(n.code,{children:"boolean"}),`            | Toggle realtime token streaming vs instant completion mode.                                                                  |
@@ -572,8 +574,8 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | `,e.jsx(n.code,{children:"label"}),"                             | ",e.jsx(n.code,{children:"string"}),"             | Accessible narration label for streaming status; blank values are ignored and fallback to ",e.jsx(n.code,{children:"Streaming text"}),`.                  |
 | `,e.jsx(n.code,{children:"ariaLabel"})," / ",e.jsx(n.code,{children:"ariaLabelledBy"}),"      | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"string"}),"  | Optional live-region naming controls. Blank values are ignored; when both are provided, ",e.jsx(n.code,{children:"ariaLabelledBy"})," takes precedence and suppresses ",e.jsx(n.code,{children:"ariaLabel"})," fallback. Without explicit naming overrides, streaming status naming falls back to ",e.jsx(n.code,{children:"label"})," (",e.jsx(n.code,{children:"Streaming text"}),` default). |
 | `,e.jsx(n.code,{children:"onProgress"})," / ",e.jsx(n.code,{children:"onComplete"}),"         | callbacks            | Lifecycle hooks for telemetry and completion flow.                                                                           |"]}),`
-`,e.jsx(o,{of:Wo}),`
 `,e.jsx(o,{of:zo}),`
+`,e.jsx(o,{of:Uo}),`
 `,e.jsx(n.h3,{id:"progress",children:"Progress"}),`
 `,e.jsx(o,{of:m}),`
 `,e.jsx(s,{of:m}),`
@@ -586,11 +588,11 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | `,e.jsx(n.code,{children:"ariaLabel"})," / ",e.jsx(n.code,{children:"ariaLabelledBy"})," | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"string"}),"                                         | Optional progressbar naming controls. Blank values are ignored; when both are provided, ",e.jsx(n.code,{children:"ariaLabelledBy"})," takes precedence and suppresses ",e.jsx(n.code,{children:"ariaLabel"})," fallback. Without explicit naming overrides, progressbar naming falls back to ",e.jsx(n.code,{children:"label"})," (",e.jsx(n.code,{children:"Progress"}),` default). |
 | `,e.jsx(n.code,{children:"tone"})," / ",e.jsx(n.code,{children:"size"}),"         | ",e.jsx(n.code,{children:"'default' \\| 'success' \\| 'warning' \\| 'danger'"})," / ",e.jsx(n.code,{children:"'sm' \\| 'md'"}),` | Visual emphasis and bar density controls.                                                                                           |
 | `,e.jsx(n.code,{children:"showValueLabel"}),"        | ",e.jsx(n.code,{children:"boolean"}),"                                                          | Renders helper value text under the progress track.                                                                                 |"]}),`
-`,e.jsx(o,{of:Uo}),`
 `,e.jsx(o,{of:Qo}),`
-`,e.jsx(n.h3,{id:"alert",children:"Alert"}),`
 `,e.jsx(o,{of:qo}),`
-`,e.jsx(s,{of:Vo}),`
+`,e.jsx(n.h3,{id:"alert",children:"Alert"}),`
+`,e.jsx(o,{of:Vo}),`
+`,e.jsx(s,{of:Jo}),`
 `,e.jsxs(n.p,{children:[`| Prop                                  | Type                                                                                    | Notes                                                                                                                                                                                                        |
 | ------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `,e.jsx(n.code,{children:"tone"}),"                                | ",e.jsx(n.code,{children:"'info' \\| 'success' \\| 'warning' \\| 'danger'"}),`                                          | Controls visual emphasis and live-region urgency.                                                                                                                                                            |
@@ -603,11 +605,11 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | document-scoped focus intent fallback | owner-document `,e.jsx(n.code,{children:"keydown"})," / pointer listeners                                            | When ",e.jsx(n.code,{children:":focus-visible"})," matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores alert close-button focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and ",e.jsx(n.code,{children:"Ctrl + primary click"}),` do not clear fallback keyboard intent. |
 | `,e.jsx(n.code,{children:"ariaLabel"})," / ",e.jsx(n.code,{children:"ariaLabelledBy"}),"        | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"string"}),"                                                                     | Optional status-region naming controls. Blank values are ignored; when both are provided, ",e.jsx(n.code,{children:"ariaLabelledBy"})," takes precedence and suppresses ",e.jsx(n.code,{children:"ariaLabel"}),` fallback.                                                                                                           |
 | `,e.jsx(n.code,{children:"live"}),"                                | ",e.jsx(n.code,{children:"'polite' \\| 'assertive' \\| 'off'"}),"                                                      | Overrides default aria-live behavior.                                                                                                                                                                        |"]}),`
-`,e.jsx(o,{of:Jo}),`
 `,e.jsx(o,{of:Yo}),`
 `,e.jsx(o,{of:Xo}),`
 `,e.jsx(o,{of:_o}),`
 `,e.jsx(o,{of:Zo}),`
+`,e.jsx(o,{of:es}),`
 `,e.jsx(n.h3,{id:"toast",children:"Toast"}),`
 `,e.jsx(o,{of:j}),`
 `,e.jsx(s,{of:j}),`
@@ -640,7 +642,6 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | close-button keyboard pressed feedback | unmodified non-repeat `,e.jsx(n.code,{children:"Enter"}),"/",e.jsx(n.code,{children:"Space"})," (+ ",e.jsx(n.code,{children:"Space"})," / legacy ",e.jsx(n.code,{children:"Spacebar"})," key values) + ",e.jsx(n.code,{children:'aria-keyshortcuts="Enter Space"'})," | Close button exposes pressed-state offset for unmodified keyboard activation keys and explicit shortcut hints; preempted keydown (",e.jsx(n.code,{children:"event.defaultPrevented"}),"), repeated keydown, ",e.jsx(n.code,{children:"Ctrl/Meta/Alt"})," chords, and IME composition key paths (",e.jsx(n.code,{children:"isComposing"})," / ",e.jsx(n.code,{children:"keyCode=229"}),`) are ignored so host shortcuts, long-press, and CJK confirmation do not trigger false pressed visuals. |
 | `,e.jsx(n.code,{children:"closeLabel"}),"                           | ",e.jsx(n.code,{children:"string"}),"                                                                                                  | Customize close-button accessible name for i18n; blank values are ignored and fallback to ",e.jsx(n.code,{children:"Close toast"}),`.                                                                                                                                                                            |
 | `,e.jsx(n.code,{children:"ariaLabel"})," / ",e.jsx(n.code,{children:"ariaLabelledBy"}),"         | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"string"}),"                                                                                       | Optional live-region naming controls. Blank values are ignored; when both are provided, ",e.jsx(n.code,{children:"ariaLabelledBy"})," takes precedence and suppresses ",e.jsx(n.code,{children:"ariaLabel"})," fallback. Without ",e.jsx(n.code,{children:"ariaLabelledBy"}),", ",e.jsx(n.code,{children:"ariaLabel"})," falls back to title-derived naming. |"]}),`
-`,e.jsx(o,{of:es}),`
 `,e.jsx(o,{of:ns}),`
 `,e.jsx(o,{of:os}),`
 `,e.jsx(o,{of:ss}),`
@@ -657,6 +658,7 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 `,e.jsx(o,{of:us}),`
 `,e.jsx(o,{of:bs}),`
 `,e.jsx(o,{of:ms}),`
+`,e.jsx(o,{of:js}),`
 `,e.jsx(n.h2,{id:"ai",children:"AI"}),`
 `,e.jsx(n.h3,{id:"commandpalette",children:"CommandPalette"}),`
 `,e.jsx(o,{of:b}),`
@@ -701,7 +703,6 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | IME safety                                 | composition key guard                                                                                                 | Arrow/Enter command handling and query-clearing Escape behavior are ignored while `,e.jsx(n.code,{children:"isComposing"})," and legacy fallback paths that only expose ",e.jsx(n.code,{children:"keyCode=229"}),`, so CJK composition confirmation does not execute commands or clear active query.                                                                                                                                                         |
 | Escape priority                            | preempted events skip palette hook/dismiss                                                                            | If higher-level handlers already `,e.jsx(n.code,{children:"preventDefault()"})," Escape, palette keeps dialog open and does not fire ",e.jsx(n.code,{children:"onEscapeKeyDown"}),`.                                                                                                                                                                                                                                                                         |
 | managed-key priority                       | preempted events skip input-level Enter/Escape handling                                                               | If higher-level handlers preempt `,e.jsx(n.code,{children:"Enter"}),"/",e.jsx(n.code,{children:"Escape"}),", combobox command execution and query-clear handling stay no-op so host shortcut guards remain authoritative.                                                                                                                                                                                                                                      |"]}),`
-`,e.jsx(o,{of:no}),`
 `,e.jsx(o,{of:oo}),`
 `,e.jsx(o,{of:so}),`
 `,e.jsx(o,{of:io}),`
@@ -726,9 +727,10 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 `,e.jsx(o,{of:Co}),`
 `,e.jsx(o,{of:Eo}),`
 `,e.jsx(o,{of:Lo}),`
+`,e.jsx(o,{of:Po}),`
 `,e.jsx(n.h3,{id:"promptinput",children:"PromptInput"}),`
-`,e.jsx(o,{of:li}),`
-`,e.jsx(s,{of:hi}),`
+`,e.jsx(o,{of:hi}),`
+`,e.jsx(s,{of:pi}),`
 `,e.jsxs(n.p,{children:[`| Prop                                  | Type                                           | Notes                                                                                                                                                                                                     |
 | ------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `,e.jsx(n.code,{children:"onSubmit"}),"                            | ",e.jsx(n.code,{children:"(prompt: string) => void"}),"                     | Triggered by send button or Ctrl/Cmd + Enter shortcut. Submission is ignored during IME composition (",e.jsx(n.code,{children:"isComposing"})," / ",e.jsx(n.code,{children:"keyCode=229"}),"), repeated keydown (",e.jsx(n.code,{children:"event.repeat"}),"), and ",e.jsx(n.code,{children:"Alt + Ctrl/Cmd + Enter"})," host-shortcut chords. Accepted shortcut submits call ",e.jsx(n.code,{children:"preventDefault()"}),` to avoid textarea newline side effects. |
@@ -740,19 +742,19 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | helper hint binding                   | `,e.jsx(n.code,{children:"aria-describedby"}),`                             | Prompt textarea links to live helper copy so screen readers announce current shortcut or pending state guidance.                                                                                          |
 | focus intent policy                   | primary pointer clears focus-visible           | Non-primary pointer interactions and `,e.jsx(n.code,{children:"Ctrl + primary click"}),` context-click paths keep prompt textarea focus-visible state; plain primary pointer clears keyboard-intent focus-visible feedback before submit intent. |
 | document-scoped focus intent fallback | owner-document `,e.jsx(n.code,{children:"keydown"})," / pointer listeners   | When ",e.jsx(n.code,{children:":focus-visible"})," matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores prompt textarea focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and ",e.jsx(n.code,{children:"Ctrl + primary click"})," do not clear fallback keyboard intent. |"]}),`
-`,e.jsx(o,{of:pi}),`
 `,e.jsx(o,{of:xi}),`
 `,e.jsx(o,{of:ui}),`
-`,e.jsx(n.h3,{id:"messagebubble",children:"MessageBubble"}),`
 `,e.jsx(o,{of:bi}),`
-`,e.jsx(s,{of:mi}),`
+`,e.jsx(n.h3,{id:"messagebubble",children:"MessageBubble"}),`
+`,e.jsx(o,{of:mi}),`
+`,e.jsx(s,{of:ji}),`
 `,e.jsxs(n.p,{children:[`| Prop              | Type                                | Notes                                                                                                                                |
 | ----------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `,e.jsx(n.code,{children:"speaker"}),"         | ",e.jsx(n.code,{children:"'user' \\| 'assistant' \\| 'system'"})," | Applies alignment and semantic labeling (",e.jsx(n.code,{children:"aria-label"}),`).                                                                              |
 | `,e.jsx(n.code,{children:"children"}),"        | ",e.jsx(n.code,{children:"ReactNode"}),`                         | Message content body.                                                                                                                |
 | `,e.jsx(n.code,{children:"speakerLabel"}),"    | ",e.jsx(n.code,{children:"string"}),"                            | Optional localized speaker text used to compose fallback accessible label (",e.jsx(n.code,{children:"\\"}),"$",speakerLabel," message`",e.jsx(n.code,{children:"); blank values are ignored. | | "}),"ariaLabel",e.jsx(n.code,{children:"/"}),"ariaLabelledBy",e.jsx(n.code,{children:"|"}),"string",e.jsx(n.code,{children:"/"}),"string",e.jsx(n.code,{children:"             | Explicit naming controls for message bubbles. Blank values are ignored; when both are provided,"}),"ariaLabelledBy",e.jsx(n.code,{children:"takes precedence and suppresses"}),"ariaLabel",e.jsx(n.code,{children:"fallback. Without"}),"ariaLabelledBy",e.jsx(n.code,{children:", "}),"ariaLabel",e.jsx(n.code,{children:"falls back to speaker-derived naming. | |"}),"roleDescription",e.jsx(n.code,{children:"|"}),"string",e.jsx(n.code,{children:"                           | Optional localized"}),"aria-roledescription",e.jsx(n.code,{children:"for message semantics; blank values fallback to"}),"message`.                                 |"]}),`
-`,e.jsx(o,{of:ji}),`
 `,e.jsx(o,{of:fi}),`
+`,e.jsx(o,{of:yi}),`
 `,e.jsx(n.h3,{id:"reasoningpanel",children:"ReasoningPanel"}),`
 `,e.jsx(o,{of:g}),`
 `,e.jsx(s,{of:g}),`
@@ -765,9 +767,9 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | keyboard metadata               | `,e.jsx(n.code,{children:'aria-keyshortcuts="Enter Space"'}),` | Toggle button exposes disclosure shortcuts for QA/AT discoverability.                                                |
 | `,e.jsx(n.code,{children:"listAriaLabel"})," / ",e.jsx(n.code,{children:"listAriaLabelledBy"})," | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"string"}),"         | Accessible naming controls for the reasoning list region. Blank values are ignored, and ",e.jsx(n.code,{children:"listAriaLabelledBy"})," takes precedence over ",e.jsx(n.code,{children:"listAriaLabel"})," fallback (",e.jsx(n.code,{children:"Reasoning steps"}),`). |
 | `,e.jsx(n.code,{children:"emptyText"}),"                     | ",e.jsx(n.code,{children:"ReactNode"}),"                       | Empty-state copy when no reasoning steps remain. Blank strings fallback to default copy, while numeric values like ",e.jsx(n.code,{children:"0"})," remain renderable. |"]}),`
-`,e.jsx(o,{of:yi}),`
 `,e.jsx(o,{of:gi}),`
 `,e.jsx(o,{of:vi}),`
+`,e.jsx(o,{of:ki}),`
 `,e.jsx(n.h3,{id:"streamingcodeblock",children:"StreamingCodeBlock"}),`
 `,e.jsx(o,{of:v}),`
 `,e.jsx(s,{of:v}),`
@@ -780,4 +782,4 @@ controls are available, Storybook reflects the runtime API contract directly.`})
 | `,e.jsx(n.code,{children:"label"}),"    | ",e.jsx(n.code,{children:"string"}),"                           | Accessible region name for assistive tech context; blank values are ignored and fallback to ",e.jsx(n.code,{children:"Streaming code block"}),`. |
 | `,e.jsx(n.code,{children:"ariaLabel"})," / ",e.jsx(n.code,{children:"ariaLabelledBy"})," | ",e.jsx(n.code,{children:"string"})," / ",e.jsx(n.code,{children:"string"})," | Optional region naming controls. Blank values are ignored; when both are provided, ",e.jsx(n.code,{children:"ariaLabelledBy"})," takes precedence and suppresses ",e.jsx(n.code,{children:"ariaLabel"})," fallback. Without explicit naming overrides, region naming falls back to ",e.jsx(n.code,{children:"label"})," (",e.jsx(n.code,{children:"Streaming code block"}),` default). |
 | `,e.jsx(n.code,{children:"live"}),"     | ",e.jsx(n.code,{children:"'polite' \\| 'assertive' \\| 'off'"})," | Optional live-region politeness for progressive code narration; defaults to ",e.jsx(n.code,{children:"off"}),".                                  |"]}),`
-`,e.jsx(o,{of:ki})]})}function Er(i={}){const{wrapper:n}={...w(),...i.components};return n?e.jsx(n,{...i,children:e.jsx(k,{...i})}):k(i)}export{Er as default};
+`,e.jsx(o,{of:wi})]})}function Lr(i={}){const{wrapper:n}={...w(),...i.components};return n?e.jsx(n,{...i,children:e.jsx(k,{...i})}):k(i)}export{Lr as default};
