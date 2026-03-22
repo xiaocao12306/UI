@@ -74,6 +74,20 @@ export function PromptInput({
           }
 
           if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+            if (event.altKey) {
+              return;
+            }
+
+            if (event.repeat) {
+              event.preventDefault();
+              return;
+            }
+
+            if (event.defaultPrevented) {
+              return;
+            }
+
+            event.preventDefault();
             submit();
           }
         }}

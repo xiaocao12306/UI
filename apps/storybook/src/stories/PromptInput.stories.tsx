@@ -101,6 +101,10 @@ export const WithAiRequestState: Story = {
     fireEvent.compositionEnd(textbox);
     dispatchLegacyImeCtrlEnter(textbox);
     await expect(canvas.getByText(/Submission count:/)).toHaveTextContent("Submission count: 0");
+    fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true, repeat: true });
+    await expect(canvas.getByText(/Submission count:/)).toHaveTextContent("Submission count: 0");
+    fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true, altKey: true });
+    await expect(canvas.getByText(/Submission count:/)).toHaveTextContent("Submission count: 0");
 
     await userEvent.keyboard("{Control>}{Enter}{/Control}");
     await expect(canvas.getByText("Draft release retrospective")).toBeInTheDocument();

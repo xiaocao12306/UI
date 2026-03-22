@@ -27,10 +27,39 @@ describe("PromptInput", () => {
     const textbox = screen.getByRole("textbox", { name: "Prompt input" });
 
     fireEvent.change(textbox, { target: { value: "  Summarize migration risk  " } });
-    fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
+    const shortcutAccepted = fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true });
 
     expect(onSubmit).toHaveBeenCalledWith("Summarize migration risk");
     expect((textbox as HTMLTextAreaElement).value).toBe("");
+    expect(shortcutAccepted).toBe(false);
+  });
+
+  it("ignores repeated Ctrl + Enter shortcuts to avoid duplicate submit", () => {
+    const onSubmit = vi.fn();
+
+    render(<PromptInput onSubmit={onSubmit} />);
+    const textbox = screen.getByRole("textbox", { name: "Prompt input" });
+
+    fireEvent.change(textbox, { target: { value: "De-duplicate keyboard submit" } });
+    const repeatShortcutAccepted = fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true, repeat: true });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect((textbox as HTMLTextAreaElement).value).toBe("De-duplicate keyboard submit");
+    expect(repeatShortcutAccepted).toBe(false);
+  });
+
+  it("keeps Alt + Ctrl/Cmd + Enter for host shortcuts instead of submitting", () => {
+    const onSubmit = vi.fn();
+
+    render(<PromptInput onSubmit={onSubmit} />);
+    const textbox = screen.getByRole("textbox", { name: "Prompt input" });
+
+    fireEvent.change(textbox, { target: { value: "Host shortcut chord" } });
+    const altChordAccepted = fireEvent.keyDown(textbox, { key: "Enter", ctrlKey: true, altKey: true });
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect((textbox as HTMLTextAreaElement).value).toBe("Host shortcut chord");
+    expect(altChordAccepted).toBe(true);
   });
 
   it("blocks submit when empty or submitting", () => {
