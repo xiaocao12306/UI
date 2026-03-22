@@ -183,6 +183,70 @@ describe("RadioGroup", () => {
     expect(group).toHaveAttribute("aria-label", "Fallback group name");
   });
 
+  it("supports non-text option ariaLabelledBy precedence over ariaLabel", () => {
+    render(
+      <div>
+        <h4 id="radio-option-heading">Deployment mode</h4>
+        <RadioGroup
+          name="Deployment option"
+          options={[
+            {
+              value: "deploy",
+              label: <span aria-hidden="true">🚀</span>,
+              ariaLabel: "Fallback deploy option",
+              ariaLabelledBy: "radio-option-heading"
+            }
+          ]}
+        />
+      </div>
+    );
+
+    const radio = screen.getByRole("radio", { name: "Deployment mode" });
+    expect(radio).toHaveAttribute("aria-labelledby", "radio-option-heading");
+    expect(radio).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank option ariaLabelledBy and falls back to ariaLabel", () => {
+    render(
+      <RadioGroup
+        name="Deployment option"
+        options={[
+          {
+            value: "rollback",
+            label: <span aria-hidden="true">↩️</span>,
+            ariaLabel: "Rollback mode",
+            ariaLabelledBy: "   "
+          }
+        ]}
+      />
+    );
+
+    const radio = screen.getByRole("radio", { name: "Rollback mode" });
+    expect(radio).not.toHaveAttribute("aria-labelledby");
+    expect(radio).toHaveAttribute("aria-label", "Rollback mode");
+  });
+
+  it("warns when non-text radio options omit ariaLabel and ariaLabelledBy", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <RadioGroup
+          name="Deployment options"
+          options={[{ value: "icon-only", label: <span aria-hidden="true">🛰️</span> }]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          '[RadioGroup] Non-text option labels should provide ariaLabel or ariaLabelledBy: "icon-only".'
+        )
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("tracks keyboard focus-visible intent and clears it on plain primary pointer interaction", () => {
     render(<RadioGroup name="Focus ring group" options={baseOptions} defaultValue="m" />);
 

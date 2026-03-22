@@ -153,6 +153,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `options`                             | `RadioOption[]`                              | Defines each choice label/value pair. Development builds warn when option values are duplicated; runtime render keys are auto-suffixed to avoid React key collisions, but values should stay unique. |
 | `value` / `defaultValue`              | `string`                                     | Controlled and uncontrolled single-choice flows.                                                                                                                                                |
 | `ariaLabel` / `ariaLabelledBy`        | `string` / `string`                          | Optional radiogroup naming override; blank values are ignored, and `ariaLabelledBy` takes precedence when both are provided (`ariaLabel` otherwise falls back to `name`).                       |
+| `options[].ariaLabel` / `options[].ariaLabelledBy` | `string` / `string`                          | Accessible naming controls for icon/non-text options. Rich labels with inline `aria-label` are auto-detected, blank values are ignored, and when both are provided `ariaLabelledBy` takes precedence over `ariaLabel`. |
 | `options[].disabled`                  | `boolean`                                    | Disable specific choices without removing context.                                                                                                                                              |
 | option shortcut hints                 | actionable options expose `aria-keyshortcuts="Space"` | Keyboard-discoverability metadata is attached only to actionable radio options; disabled options omit hints so QA/AT metadata does not advertise unavailable activation paths.                  |
 | focus intent policy                   | primary pointer clears focus-visible         | Non-primary pointer interactions and `Ctrl + primary click` context-click paths keep focused-option focus-visible state; plain primary pointer clears keyboard-intent focus-visible feedback before selection intent. |
@@ -163,6 +164,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={RadioGroupStories.InvalidState} />
 <Canvas of={RadioGroupStories.ShortcutHintPrecision} />
 <Canvas of={RadioGroupStories.LabelledByPrecedence} />
+<Canvas of={RadioGroupStories.OptionLabelledByPrecedence} />
 <Canvas of={RadioGroupStories.FocusIntentReentry} />
 
 ### Switch

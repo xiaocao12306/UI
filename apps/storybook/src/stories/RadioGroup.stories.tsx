@@ -8,6 +8,27 @@ const options = [
   { label: "Medium", value: "m", description: "Balanced layout" },
   { label: "Large", value: "l", description: "Readable layout" }
 ];
+const iconOptions = [
+  {
+    label: (
+      <span aria-hidden="true" style={{ fontSize: 16 }}>
+        🚀
+      </span>
+    ),
+    value: "deploy",
+    ariaLabel: "Deploy mode",
+    ariaLabelledBy: "radio-option-heading"
+  },
+  {
+    label: (
+      <span aria-hidden="true" style={{ fontSize: 16 }}>
+        ↩️
+      </span>
+    ),
+    value: "rollback",
+    ariaLabel: "Rollback mode"
+  }
+];
 
 const meta = {
   title: "Form/RadioGroup",
@@ -118,6 +139,23 @@ export const LabelledByPrecedence: Story = {
     const group = canvas.getByRole("radiogroup", { name: "Release preference heading" });
     await expect(group).toHaveAttribute("aria-labelledby", "radiogroup-story-heading");
     await expect(group).not.toHaveAttribute("aria-label");
+  }
+};
+
+export const OptionLabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ width: 340, display: "grid", gap: 12 }}>
+      <p id="radio-option-heading" style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
+        Deploy mode
+      </p>
+      <RadioGroup name="Deployment mode fallback" options={iconOptions} defaultValue="deploy" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const deployOption = canvas.getByRole("radio", { name: "Deploy mode" });
+    await expect(deployOption).toHaveAttribute("aria-labelledby", "radio-option-heading");
+    await expect(deployOption).not.toHaveAttribute("aria-label");
   }
 };
 

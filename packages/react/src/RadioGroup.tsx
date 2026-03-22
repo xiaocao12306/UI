@@ -5,6 +5,8 @@ export type RadioOption = {
   label: React.ReactNode;
   value: string;
   description?: React.ReactNode;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
   disabled?: boolean;
 };
 
@@ -41,6 +43,7 @@ export function RadioGroup({
   const groupRef = React.useRef<HTMLDivElement | null>(null);
   const focusVisibleIntentRef = React.useRef(false);
   const warnedDuplicateValuesSignatureRef = React.useRef<string | null>(null);
+  const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const currentValue = value ?? internalValue;
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
@@ -90,6 +93,40 @@ export function RadioGroup({
       `[RadioGroup] Duplicate option values detected: ${Array.from(duplicateValues)
         .map((item) => `"${item}"`)
         .join(", ")}. Values should be unique to keep checked and focus semantics deterministic; duplicate render keys are auto-suffixed by option index for stability.`
+    );
+  }, [options]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const missingAriaLabelValues = options.reduce<string[]>((values, option) => {
+      const hasReadableLabelText = getReadableRadioOptionText(option).length > 0;
+      const hasExplicitAriaLabel = resolveNonEmptyLabel(option.ariaLabel) !== undefined;
+      const hasExplicitAriaLabelledBy = resolveNonEmptyLabel(option.ariaLabelledBy) !== undefined;
+
+      if (hasReadableLabelText || hasExplicitAriaLabel || hasExplicitAriaLabelledBy) {
+        return values;
+      }
+
+      values.push(`"${option.value}"`);
+      return values;
+    }, []);
+
+    if (missingAriaLabelValues.length === 0) {
+      warnedMissingAriaLabelSignatureRef.current = null;
+      return;
+    }
+
+    const signature = missingAriaLabelValues.slice().sort().join("|");
+    if (warnedMissingAriaLabelSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingAriaLabelSignatureRef.current = signature;
+
+    console.warn(
+      `[RadioGroup] Non-text option labels should provide ariaLabel or ariaLabelledBy: ${missingAriaLabelValues.join(", ")}.`
     );
   }, [options]);
 
@@ -161,6 +198,8 @@ export function RadioGroup({
         const optionDisabled = Boolean(disabled || option.disabled);
         const isFocused = focusedIndex === index;
         const isFocusVisible = focusVisibleIndex === index;
+        const optionAriaLabelledBy = resolveNonEmptyLabel(option.ariaLabelledBy);
+        const optionAriaLabel = optionAriaLabelledBy ? undefined : resolveNonEmptyLabel(option.ariaLabel);
 
         return (
           <label
@@ -179,6 +218,8 @@ export function RadioGroup({
               type="radio"
               name={name}
               value={option.value}
+              aria-labelledby={optionAriaLabelledBy}
+              aria-label={optionAriaLabel}
               checked={currentValue === option.value}
               disabled={optionDisabled}
               aria-keyshortcuts={optionDisabled ? undefined : "Space"}
@@ -241,6 +282,58 @@ function resolveNonEmptyLabel(label: string | undefined) {
 
   const normalized = label.trim();
   return normalized.length > 0 ? normalized : undefined;
+}
+
+function getReadableRadioOptionText(option: RadioOption) {
+  const labelText = getReadableRadioTextNode(option.label);
+  const descriptionText = getReadableRadioTextNode(option.description);
+  return normalizeReadableRadioText([labelText, descriptionText].filter((item) => item.length > 0).join(" "));
+}
+
+function getReadableRadioTextNode(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return normalizeReadableRadioText(node);
+  }
+
+  if (typeof node === "number") {
+    return normalizeReadableRadioText(String(node));
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeReadableRadioText(
+      node
+        .map((item) => getReadableRadioTextNode(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  if (
+    typeof elementProps["aria-label"] === "string" &&
+    elementProps["aria-label"].trim().length > 0
+  ) {
+    return normalizeReadableRadioText(elementProps["aria-label"]);
+  }
+
+  return getReadableRadioTextNode(elementProps.children);
+}
+
+function normalizeReadableRadioText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }
 
 function resolveFocusVisibleState(target: HTMLInputElement, fallback: boolean) {
