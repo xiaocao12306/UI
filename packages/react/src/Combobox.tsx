@@ -85,6 +85,15 @@ function shouldHandleComboboxHomeEndKey(event: React.KeyboardEvent<HTMLInputElem
   return selectionEnd === input.value.length;
 }
 
+function getComboboxOptionRenderKeys(options: ComboboxOption[]) {
+  const counts = new Map<string, number>();
+  return options.map((item) => {
+    const count = counts.get(item.value) ?? 0;
+    counts.set(item.value, count + 1);
+    return count === 0 ? item.value : `${item.value}__duplicate-${count}`;
+  });
+}
+
 function isPrimaryPointerButton(button: number | undefined) {
   return typeof button !== "number" || button <= 0;
 }
@@ -131,6 +140,12 @@ export function Combobox({
   const warnedDuplicateValuesSignatureRef = React.useRef<string | null>(null);
   const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const warnedMissingSearchMetadataSignatureRef = React.useRef<string | null>(null);
+  const wasOpenRef = React.useRef(false);
+  const previousQueryRef = React.useRef("");
+  const previousActiveSnapshotRef = React.useRef<{ activeIndex: number; filteredRenderKeys: string[] }>({
+    activeIndex: -1,
+    filteredRenderKeys: []
+  });
   const resolvedAriaLabelledBy =
     resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel =
@@ -177,7 +192,7 @@ export function Combobox({
     console.warn(
       `[Combobox] Duplicate option values detected: ${Array.from(duplicateValues)
         .map((item) => `"${item}"`)
-        .join(", ")}. Values should be unique to keep selection and active option semantics deterministic; duplicate values now receive render-key suffixes to avoid React key collisions.`
+        .join(", ")}. Values should be unique to keep selection and active option semantics deterministic; duplicate values now receive duplicate-occurrence render-key suffixes to avoid React key collisions.`
     );
   }, [options]);
 
@@ -322,30 +337,63 @@ export function Combobox({
 
     return shortcuts.length > 0 ? shortcuts.join(" ") : undefined;
   }, [canNavigateOptions, canSelectOption, disabled, open]);
-  const filteredRenderKeys = React.useMemo(() => {
-    const counts = new Map<string, number>();
-    return filtered.map((item) => {
-      const count = counts.get(item.value) ?? 0;
-      counts.set(item.value, count + 1);
-      return count === 0 ? item.value : `${item.value}__duplicate-${count}`;
-    });
-  }, [filtered]);
+  const filteredRenderKeys = React.useMemo(() => getComboboxOptionRenderKeys(filtered), [filtered]);
 
   React.useEffect(() => {
     if (!open) {
+      wasOpenRef.current = false;
+      previousQueryRef.current = query;
       setActiveIndex(-1);
       return;
     }
 
+    const queryUnchanged = wasOpenRef.current && previousQueryRef.current === query;
     const selectedIndex = filtered.findIndex((item) => item.value === currentValue && !item.disabled);
     if (selectedIndex >= 0) {
-      setActiveIndex(selectedIndex);
+      wasOpenRef.current = true;
+      previousQueryRef.current = query;
+      setActiveIndex((current) => (current === selectedIndex ? current : selectedIndex));
       return;
     }
 
+    if (queryUnchanged) {
+      const previousSnapshot = previousActiveSnapshotRef.current;
+      const previousActiveRenderKey =
+        previousSnapshot.activeIndex >= 0 &&
+        previousSnapshot.activeIndex < previousSnapshot.filteredRenderKeys.length
+          ? previousSnapshot.filteredRenderKeys[previousSnapshot.activeIndex] ?? null
+          : null;
+
+      if (previousActiveRenderKey !== null) {
+        const preservedActiveIndex = filteredRenderKeys.findIndex(
+          (renderKey, index) => renderKey === previousActiveRenderKey && !filtered[index]?.disabled
+        );
+        if (preservedActiveIndex >= 0) {
+          wasOpenRef.current = true;
+          previousQueryRef.current = query;
+          setActiveIndex((current) => (current === preservedActiveIndex ? current : preservedActiveIndex));
+          return;
+        }
+      }
+    }
+
     const firstEnabled = filtered.findIndex((item) => !item.disabled);
-    setActiveIndex(firstEnabled);
-  }, [currentValue, filtered, open]);
+    wasOpenRef.current = true;
+    previousQueryRef.current = query;
+    setActiveIndex((current) => {
+      if (current >= 0 && current < filtered.length && !filtered[current]?.disabled) {
+        return current;
+      }
+      return firstEnabled;
+    });
+  }, [currentValue, filtered, filteredRenderKeys, open, query]);
+
+  React.useEffect(() => {
+    previousActiveSnapshotRef.current = {
+      activeIndex,
+      filteredRenderKeys
+    };
+  }, [activeIndex, filteredRenderKeys]);
 
   const selectOption = (option: ComboboxOption) => {
     if (disabled || option.disabled) {

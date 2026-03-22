@@ -2,6 +2,7 @@ import { Meta, Title, Subtitle, Description, Canvas } from "@storybook/blocks";
 import * as ButtonStories from "../stories/Button.stories";
 import * as FormFieldStories from "../stories/FormField.stories";
 import * as InputStories from "../stories/Input.stories";
+import * as ComboboxStories from "../stories/Combobox.stories";
 import * as DatePickerStories from "../stories/DatePicker.stories";
 import * as DialogStories from "../stories/Dialog.stories";
 import * as DrawerStories from "../stories/Drawer.stories";
@@ -107,7 +108,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For icon-only/non-text tooltip triggers, provide `aria-labelledby` when a visible heading/label exists; otherwise provide non-empty `aria-label`. Rich trigger content with inline `aria-label` is auto-detected, and development builds warn when both naming paths are missing.
 - Avoid `autoFocus`; use intentional focus management when opening overlays.
 - For value-selection combobox/listbox patterns, map `aria-selected` to the committed value, not temporary active focus.
-- Keep `Combobox.options[].value` unique and stable; development builds warn on duplicate values and runtime render keys now auto-suffix duplicates to avoid React key collisions, but unique values remain required for deterministic selected/active semantics.
+- Keep `Combobox.options[].value` unique and stable; development builds warn on duplicate values and runtime render keys now auto-suffix duplicates by duplicate occurrence order to avoid React key collisions while preserving active-option identity across rerenders, but unique values remain required for deterministic selected/active semantics.
 - Prefer `ariaLabelledBy` for combobox/listbox naming when a visible heading already exists; use `ariaLabel` for standalone combobox inputs without nearby title context.
 - Treat blank combobox `ariaLabel` as missing so both combobox and listbox names fall back to readable defaults (`Combobox` / `Combobox options`) instead of empty labels.
 - For icon/non-text combobox options, prefer `options[].ariaLabelledBy` when a visible heading already exists; otherwise provide `options[].ariaLabel`. Rich labels that expose inline `aria-label` are auto-detected, and when explicit naming is omitted `options[].textValue` becomes option-name fallback; development builds warn only when all three naming paths are missing.
@@ -134,6 +135,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={InputStories.BlankAriaLabelFallback} />
 <Canvas of={InputStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={InputStories.ManagedKeysPreemptedByLocalHandler} />
+<Canvas of={ComboboxStories.DuplicateValueRerenderStability} />
 <Canvas of={DatePickerStories.BlankAriaLabelFallback} />
 <Canvas of={DatePickerStories.LabelledByPrecedence} />
 <Canvas of={ButtonStories.IconOnlyAccessibleName} />

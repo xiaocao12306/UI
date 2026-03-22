@@ -380,6 +380,41 @@ describe("Combobox", () => {
     }
   });
 
+  it("keeps duplicate-value active option stable when options rerender with prepended entries", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const onValueChange = vi.fn();
+    const baseOptions = [
+      { value: "react", label: "React core" },
+      { value: "react", label: "React legacy" },
+      { value: "vue", label: "Vue" }
+    ];
+
+    try {
+      const { rerender } = render(<Combobox options={baseOptions} onValueChange={onValueChange} />);
+      const input = screen.getByRole("combobox", { name: "Combobox" });
+
+      fireEvent.focus(input);
+      fireEvent.keyDown(input, { key: "ArrowDown" });
+
+      const activeIdBefore = input.getAttribute("aria-activedescendant");
+      expect(activeIdBefore).toEqual(expect.stringContaining("option-1"));
+      expect(screen.getByRole("option", { name: "React legacy" })).toHaveAttribute("id", activeIdBefore ?? "");
+
+      rerender(
+        <Combobox
+          options={[{ value: "share", label: "Share release" }, ...baseOptions]}
+          onValueChange={onValueChange}
+        />
+      );
+
+      const activeIdAfter = input.getAttribute("aria-activedescendant");
+      expect(activeIdAfter).toEqual(expect.stringContaining("option-2"));
+      expect(screen.getByRole("option", { name: "React legacy" })).toHaveAttribute("id", activeIdAfter ?? "");
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("selects option on click and closes popup", () => {
     const onValueChange = vi.fn();
     render(<Combobox options={options} onValueChange={onValueChange} />);

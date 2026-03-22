@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Button, Combobox, type ComboboxOption } from "@aurora-ui/react";
-import { expect, fireEvent, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, waitFor, within } from "@storybook/test";
 
 const frameworkOptions: ComboboxOption[] = [
   { value: "react", label: "React", keywords: ["library", "jsx"] },
@@ -73,6 +73,11 @@ const iconOptionTextValueNameFallbackOptions: ComboboxOption[] = [
     ),
     textValue: "Rollback release"
   }
+];
+const duplicateValueOptions: ComboboxOption[] = [
+  { value: "react", label: "React core" },
+  { value: "react", label: "React legacy" },
+  { value: "vue", label: "Vue" }
 ];
 
 function dispatchLegacyImeKeyDown(element: HTMLElement, key: string) {
@@ -512,6 +517,62 @@ export const ActivedescendantFocusModel: Story = {
 
     await userEvent.click(option);
     await expect(input).toHaveFocus();
+  }
+};
+
+function DuplicateValueRerenderStabilityComboboxDemo() {
+  const [prependAction, setPrependAction] = React.useState(false);
+  const options = prependAction ? [{ value: "share", label: "Share release" }, ...duplicateValueOptions] : duplicateValueOptions;
+
+  return (
+    <div style={{ width: 420, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        Press F2 while combobox is open to prepend a new option without resetting active duplicate option.
+      </p>
+      <Badge tone="default" data-testid="combobox-duplicate-rerender-prepend-state">
+        {prependAction ? "on" : "off"}
+      </Badge>
+      <Combobox
+        options={options}
+        onValueChange={() => {}}
+        ariaLabel="Duplicate value stability"
+        onInputKeyDown={(event) => {
+          if (event.key !== "F2") {
+            return;
+          }
+          event.preventDefault();
+          setPrependAction((current) => !current);
+        }}
+      />
+    </div>
+  );
+}
+
+export const DuplicateValueRerenderStability: Story = {
+  render: () => <DuplicateValueRerenderStabilityComboboxDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Duplicate value stability" });
+
+    await userEvent.click(input);
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
+
+    const legacyOption = canvas.getByRole("option", { name: "React legacy" });
+    await expect(legacyOption).toHaveAttribute("id", input.getAttribute("aria-activedescendant"));
+
+    await userEvent.keyboard("{F2}");
+    await waitFor(() => {
+      expect(canvas.getByTestId("combobox-duplicate-rerender-prepend-state")).toHaveTextContent("on");
+    });
+    await waitFor(() => {
+      expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-2"));
+    });
+    await expect(canvas.getByRole("option", { name: "React legacy" })).toHaveAttribute(
+      "id",
+      input.getAttribute("aria-activedescendant")
+    );
   }
 };
 
