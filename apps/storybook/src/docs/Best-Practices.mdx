@@ -413,6 +413,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Validate sortable headers with both pointer and keyboard (`Enter`/`Space`, including legacy `Spacebar`) so non-pointer workflows stay first-class.
 - Support sortable-header focus traversal with `ArrowLeft` / `ArrowRight` / `Home` / `End` / `PageUp` / `PageDown` so keyboard users can move between columns without forcing sort changes.
 - Keep modified shortcuts (`Ctrl/Meta/Alt + ArrowLeft/ArrowRight/Home/End/PageUp/PageDown/Enter/Space`) on host/browser behavior; sortable headers should only react to unmodified focus/activation keys in both LTR and RTL mirrored arrow flows.
+- When app-level shortcuts preempt sortable-header keydown with `preventDefault()`, keep header navigation/activation handlers side-effect free so host shortcut guards stay authoritative.
 - Ignore sortable-header `Enter/Space` activation during IME composition (`isComposing` or legacy `keyCode=229`) so CJK confirmation keystrokes do not mutate sort state.
 - In RTL containers, ensure sortable-header `ArrowLeft/ArrowRight` traversal follows visual order so keyboard movement maps to what users see on screen.
 - Keep `Shift + Enter/Space` available on sortable headers; only `Ctrl/Meta/Alt` combinations should be filtered from sort activation.

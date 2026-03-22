@@ -734,6 +734,9 @@ export function Table<T>({
                       }}
                       onKeyDown={(event) => {
                         sortFocusIntentRef.current = true;
+                        if (event.defaultPrevented) {
+                          return;
+                        }
                         if (event.altKey || event.ctrlKey || event.metaKey) {
                           return;
                         }

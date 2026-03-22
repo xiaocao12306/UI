@@ -634,6 +634,16 @@ export const SortTelemetry: Story = {
     await expect(canvas.getByText("id asc")).toBeInTheDocument();
     await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
 
+    const preemptedEnterEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      bubbles: true,
+      cancelable: true
+    });
+    preemptedEnterEvent.preventDefault();
+    issueSortDesc.dispatchEvent(preemptedEnterEvent);
+    await expect(canvas.getByText("id asc")).toBeInTheDocument();
+    await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
+
     await userEvent.keyboard("{Shift>}{Enter}{/Shift}");
     await waitFor(() => {
       expect(canvas.getByText("id desc")).toBeInTheDocument();
