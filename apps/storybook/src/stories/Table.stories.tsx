@@ -374,6 +374,12 @@ export const PrimaryPointerOnlySortPress: Story = {
     await expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
     await expect(sortState).toHaveTextContent("id asc");
 
+    fireEvent.mouseDown(sortButton, { button: 0 });
+    await expect(sortButton.style.transform).toContain("translateY(1px)");
+    fireEvent.pointerCancel(sortButton);
+    await expect(sortButton.style.transform).toContain("translateY(0");
+    await expect(sortState).toHaveTextContent("id asc");
+
     await userEvent.click(sortButton);
     await expect(sortState).toHaveTextContent("id desc");
   }

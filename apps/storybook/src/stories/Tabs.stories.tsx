@@ -329,6 +329,13 @@ export const PrimaryPointerOnlyPressedState: Story = {
     await expect(activeValue).toHaveTextContent("spec");
     await expect(changeCount).toHaveTextContent("0");
 
+    fireEvent.mouseDown(buildTab, { button: 0 });
+    await expect(buildTab.style.transform).toContain("translateY(1px)");
+    fireEvent.pointerCancel(buildTab);
+    await expect(buildTab.style.transform).toContain("translateY(0");
+    await expect(activeValue).toHaveTextContent("spec");
+    await expect(changeCount).toHaveTextContent("0");
+
     await userEvent.click(buildTab);
     await expect(activeValue).toHaveTextContent("build");
     await expect(changeCount).toHaveTextContent("1");

@@ -149,6 +149,11 @@ export const CloseButtonPrimaryPointerOnly: Story = {
     await expect(closeButton.style.transform).toContain("translateY(0");
 
     fireEvent.mouseDown(closeButton);
+    await expect(closeButton.style.transform).toContain("translateY(1px)");
+    fireEvent.pointerCancel(closeButton);
+    await expect(closeButton.style.transform).toContain("translateY(0");
+
+    fireEvent.mouseDown(closeButton);
     fireEvent.mouseUp(closeButton);
     await expect(closeButton.style.transform).toContain("translateY(0");
   }
