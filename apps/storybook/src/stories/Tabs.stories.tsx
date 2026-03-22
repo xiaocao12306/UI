@@ -443,6 +443,30 @@ export const AllTabsDisabled: Story = {
   }
 };
 
+export const EmptyTabsSkipTabStop: Story = {
+  render: () => (
+    <TabsShowcase>
+      <button type="button">Before empty tabs</button>
+      <Tabs ariaLabel="Empty tabs" items={[]} />
+      <button type="button">After empty tabs</button>
+    </TabsShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const tabList = canvas.getByRole("tablist", { name: "Empty tabs" });
+    await expect(tabList).not.toHaveAttribute("tabindex");
+    await expect(tabList).not.toHaveAttribute("aria-disabled");
+    await expect(canvas.queryByRole("tab")).not.toBeInTheDocument();
+    await expect(canvas.queryByRole("tabpanel")).not.toBeInTheDocument();
+
+    await userEvent.tab();
+    await expect(canvas.getByRole("button", { name: "Before empty tabs" })).toHaveFocus();
+
+    await userEvent.tab();
+    await expect(canvas.getByRole("button", { name: "After empty tabs" })).toHaveFocus();
+  }
+};
+
 export const SingleActionableTab: Story = {
   render: () => (
     <Tabs
