@@ -135,6 +135,31 @@ export const LocalizedCopy: Story = {
   }
 };
 
+export const BlankHintSemantics: Story = {
+  args: {
+    ariaLabel: "Blank hint prompt",
+    shortcutHint: "   "
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textbox = await canvas.findByRole("textbox", { name: "Blank hint prompt" });
+    await expect(textbox).not.toHaveAttribute("aria-describedby");
+  }
+};
+
+export const NumericHintSemantics: Story = {
+  args: {
+    ariaLabel: "Numeric hint prompt",
+    shortcutHint: 0
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textbox = await canvas.findByRole("textbox", { name: "Numeric hint prompt" });
+    const hint = canvas.getByText("0");
+    await expect(textbox).toHaveAttribute("aria-describedby", hint.getAttribute("id"));
+  }
+};
+
 function LabelledByPromptInputDemo() {
   return (
     <PromptInputShowcase>

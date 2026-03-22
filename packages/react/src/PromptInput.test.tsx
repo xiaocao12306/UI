@@ -126,6 +126,40 @@ describe("PromptInput", () => {
     expect(screen.queryByText("正在生成建议...")).not.toBeInTheDocument();
   });
 
+  it("omits described-by semantics when active hint content is blank", () => {
+    const { rerender } = render(<PromptInput ariaLabel="Hint semantics prompt" shortcutHint="   " />);
+
+    const textbox = screen.getByRole("textbox", { name: "Hint semantics prompt" });
+    expect(textbox).not.toHaveAttribute("aria-describedby");
+
+    rerender(
+      <PromptInput
+        ariaLabel="Hint semantics prompt"
+        submitting
+        shortcutHint="Ctrl/Cmd + Enter to send"
+        submittingHint="   "
+      />
+    );
+
+    expect(screen.getByRole("textbox", { name: "Hint semantics prompt" })).not.toHaveAttribute(
+      "aria-describedby"
+    );
+  });
+
+  it("keeps numeric hint semantics wired through aria-describedby", () => {
+    const { rerender } = render(<PromptInput ariaLabel="Numeric hint prompt" shortcutHint={0} />);
+
+    const shortcutTextbox = screen.getByRole("textbox", { name: "Numeric hint prompt" });
+    const shortcutHint = screen.getByText("0");
+    expect(shortcutTextbox).toHaveAttribute("aria-describedby", shortcutHint.getAttribute("id"));
+
+    rerender(<PromptInput ariaLabel="Numeric hint prompt" submitting submittingHint={0} />);
+
+    const submittingTextbox = screen.getByRole("textbox", { name: "Numeric hint prompt" });
+    const submittingHint = screen.getByText("0");
+    expect(submittingTextbox).toHaveAttribute("aria-describedby", submittingHint.getAttribute("id"));
+  });
+
   it("falls back to default prompt label when ariaLabel is blank", () => {
     render(<PromptInput ariaLabel="   " />);
 

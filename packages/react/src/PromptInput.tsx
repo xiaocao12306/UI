@@ -25,6 +25,8 @@ export function PromptInput({
   const composingRef = React.useRef(false);
   const hintId = React.useId();
   const trimmedValue = value.trim();
+  const activeHint = submitting ? submittingHint : shortcutHint;
+  const hasHintContent = hasRenderablePromptNode(activeHint);
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel =
     resolvedAriaLabelledBy === undefined ? resolveNonEmptyLabel(ariaLabel) ?? "Prompt input" : undefined;
@@ -56,7 +58,7 @@ export function PromptInput({
         placeholder={placeholder}
         aria-label={resolvedAriaLabel}
         aria-labelledby={resolvedAriaLabelledBy}
-        aria-describedby={hintId}
+        aria-describedby={hasHintContent ? hintId : undefined}
         aria-keyshortcuts={submitting ? undefined : "Control+Enter Meta+Enter"}
         disabled={submitting}
         rows={4}
@@ -76,10 +78,18 @@ export function PromptInput({
           }
         }}
       />
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <small id={hintId} aria-live="polite" style={{ color: "var(--aurora-text-secondary)" }}>
-          {submitting ? submittingHint : shortcutHint}
-        </small>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: hasHintContent ? "space-between" : "flex-end",
+          alignItems: "center"
+        }}
+      >
+        {hasHintContent ? (
+          <small id={hintId} aria-live="polite" style={{ color: "var(--aurora-text-secondary)" }}>
+            {activeHint}
+          </small>
+        ) : null}
         <Button onClick={submit} disabled={submitting || !trimmedValue}>
           {submitting ? "Sending..." : "Send"}
         </Button>
@@ -99,4 +109,16 @@ function resolveNonEmptyLabel(label: string | undefined) {
   }
 
   return undefined;
+}
+
+function hasRenderablePromptNode(node: React.ReactNode) {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return false;
+  }
+
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  return true;
 }
