@@ -86,3 +86,25 @@ export const Indeterminate: Story = {
     await expect(progressbar).toHaveAttribute("aria-valuetext", "Syncing deployment artifacts");
   }
 };
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <ProgressShowcase maxWidth="min(100%, 320px)">
+      <h3 id="progress-heading" style={{ margin: 0 }}>
+        Release pipeline heading
+      </h3>
+      <Progress
+        value={62}
+        label="Deployment progress"
+        ariaLabel="Fallback progress label"
+        ariaLabelledBy="progress-heading"
+      />
+    </ProgressShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const progressbar = await canvas.findByRole("progressbar", { name: "Release pipeline heading" });
+    await expect(progressbar).toHaveAttribute("aria-labelledby", "progress-heading");
+    await expect(progressbar).not.toHaveAttribute("aria-label");
+  }
+};

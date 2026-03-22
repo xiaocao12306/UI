@@ -718,10 +718,12 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `indeterminate`         | `boolean`                                                          | Removes `aria-valuenow` and switches to loading animation branch.                                                                   |
 | reduced-motion fallback | indicator tagged with `data-aurora-reduced-motion` tokens          | Indeterminate animation and determinate width transition auto-reduce under `prefers-reduced-motion` when `GlobalStyles` is mounted. |
 | `label` / `valueText`   | `string`                                                           | Explicit screen-reader label and override value narration text; blank `label` values are ignored and fallback to `Progress`.        |
+| `ariaLabel` / `ariaLabelledBy` | `string` / `string`                                         | Optional progressbar naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without explicit naming overrides, progressbar naming falls back to `label` (`Progress` default). |
 | `tone` / `size`         | `'default' \| 'success' \| 'warning' \| 'danger'` / `'sm' \| 'md'` | Visual emphasis and bar density controls.                                                                                           |
 | `showValueLabel`        | `boolean`                                                          | Renders helper value text under the progress track.                                                                                 |
 
 <Canvas of={ProgressStories.Indeterminate} />
+<Canvas of={ProgressStories.LabelledByPrecedence} />
 
 ### Alert
 

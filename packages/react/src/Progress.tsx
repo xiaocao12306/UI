@@ -11,6 +11,8 @@ export type ProgressProps = React.ComponentPropsWithoutRef<"div"> & {
   tone?: ProgressTone;
   size?: ProgressSize;
   label?: string;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
   valueText?: string;
   showValueLabel?: boolean;
 };
@@ -39,6 +41,8 @@ export function Progress({
   tone = "default",
   size = "md",
   label = "Progress",
+  ariaLabel,
+  ariaLabelledBy,
   valueText,
   showValueLabel = false,
   style,
@@ -48,17 +52,29 @@ export function Progress({
   const safeMax = Number.isFinite(max) && max > safeMin ? max : safeMin + 100;
   const safeValue = clamp(Number.isFinite(value) ? value : safeMin, safeMin, safeMax);
   const ratio = ((safeValue - safeMin) / (safeMax - safeMin)) * 100;
-  const resolvedLabel =
+  const fallbackLabel =
     typeof label === "string" && label.trim().length > 0
       ? label.trim()
       : "Progress";
+  const resolvedAriaLabelledBy =
+    typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
+      ? ariaLabelledBy.trim()
+      : undefined;
+  const explicitAriaLabel =
+    resolvedAriaLabelledBy === undefined && typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+      ? ariaLabel.trim()
+      : undefined;
+  const resolvedAriaLabel = resolvedAriaLabelledBy
+    ? undefined
+    : explicitAriaLabel ?? fallbackLabel;
   const resolvedValueText = valueText ?? (indeterminate ? "Loading" : `${Math.round(ratio)}%`);
 
   return (
     <div style={{ display: "grid", gap: 6 }}>
       <div
         role="progressbar"
-        aria-label={resolvedLabel}
+        aria-label={resolvedAriaLabel}
+        aria-labelledby={resolvedAriaLabelledBy}
         aria-valuemin={safeMin}
         aria-valuemax={safeMax}
         aria-valuenow={indeterminate ? undefined : safeValue}

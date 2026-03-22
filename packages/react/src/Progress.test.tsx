@@ -44,4 +44,32 @@ describe("Progress", () => {
       expect(indicator).toHaveAttribute("data-aurora-reduced-motion", "transition");
     }
   });
+
+  it("supports explicit ariaLabel override", () => {
+    render(<Progress label="Deployment progress" ariaLabel="Release pipeline progress" />);
+    const progressbar = screen.getByRole("progressbar", { name: "Release pipeline progress" });
+    expect(progressbar).toHaveAttribute("aria-label", "Release pipeline progress");
+    expect(progressbar).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("prefers ariaLabelledBy over ariaLabel and label fallback", () => {
+    render(
+      <div>
+        <h3 id="progress-heading">Release pipeline heading</h3>
+        <Progress label="Deployment progress" ariaLabel="Fallback progress label" ariaLabelledBy="progress-heading" />
+      </div>
+    );
+
+    const progressbar = screen.getByRole("progressbar", { name: "Release pipeline heading" });
+    expect(progressbar).toHaveAttribute("aria-labelledby", "progress-heading");
+    expect(progressbar).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and preserves ariaLabel naming", () => {
+    render(<Progress label="Deployment progress" ariaLabel="Release pipeline progress" ariaLabelledBy="   " />);
+
+    const progressbar = screen.getByRole("progressbar", { name: "Release pipeline progress" });
+    expect(progressbar).toHaveAttribute("aria-label", "Release pipeline progress");
+    expect(progressbar).not.toHaveAttribute("aria-labelledby");
+  });
 });
