@@ -548,6 +548,10 @@ function App() {
   const [tableRtl, setTableRtl] = React.useState(false);
   const [paletteLocalKeyGuardEnabled, setPaletteLocalKeyGuardEnabled] = React.useState(false);
   const [paletteLocalKeyGuardTelemetry, setPaletteLocalKeyGuardTelemetry] = React.useState("idle");
+  const [paletteCloseButtonGuardEnabled, setPaletteCloseButtonGuardEnabled] =
+    React.useState(false);
+  const [paletteCloseButtonGuardTelemetry, setPaletteCloseButtonGuardTelemetry] =
+    React.useState("idle");
   const [toastCloseButtonGuardEnabled, setToastCloseButtonGuardEnabled] = React.useState(false);
   const [toastCloseButtonGuardTelemetry, setToastCloseButtonGuardTelemetry] =
     React.useState("idle");
@@ -2038,6 +2042,17 @@ function App() {
                     description="Uses onSearchKeyDown + preventDefault() while enabled."
                   />
                   <Switch
+                    checked={paletteCloseButtonGuardEnabled}
+                    onCheckedChange={(checked) => {
+                      setPaletteCloseButtonGuardEnabled(checked);
+                      if (!checked) {
+                        setPaletteCloseButtonGuardTelemetry("idle");
+                      }
+                    }}
+                    label="Guard palette close Enter/Space via local hook"
+                    description="Uses onCloseButtonKeyDown + preventDefault() while enabled."
+                  />
+                  <Switch
                     checked={paletteLoading}
                     onCheckedChange={setPaletteLoading}
                     label="Simulate command loading state"
@@ -2085,6 +2100,15 @@ function App() {
                       style={telemetryValueStyle}
                     >
                       {paletteLocalKeyGuardTelemetry}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Palette close-button local guard telemetry:{" "}
+                    <strong
+                      data-testid="palette-close-button-guard-telemetry"
+                      style={telemetryValueStyle}
+                    >
+                      {paletteCloseButtonGuardTelemetry}
                     </strong>
                   </p>
                 </div>
@@ -2219,6 +2243,18 @@ function App() {
               if (event.key === "Enter" || event.key === "Escape") {
                 event.preventDefault();
                 setPaletteLocalKeyGuardTelemetry(`blocked:${event.key}`);
+              }
+            }}
+            onCloseButtonKeyDown={(event) => {
+              if (!paletteCloseButtonGuardEnabled) {
+                return;
+              }
+
+              if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+                event.preventDefault();
+                setPaletteCloseButtonGuardTelemetry(
+                  `blocked:${event.key === " " ? "Space" : event.key}`
+                );
               }
             }}
             onEscapeKeyDown={(event) => {

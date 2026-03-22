@@ -711,6 +711,43 @@ test("preempts command palette Enter and Escape via local search key guard", asy
   await expect(page.getByRole("dialog", { name: "Drawer Example" })).toBeVisible();
 });
 
+test("preempts command palette close button Enter via local key guard hook", async ({ page }) => {
+  await page.goto("/");
+
+  const guardSwitch = page.getByRole("switch", {
+    name: "Guard palette close Enter/Space via local hook"
+  });
+  const guardTelemetry = page.getByTestId("palette-close-button-guard-telemetry");
+
+  await expect(guardTelemetry).toHaveText("idle");
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  const closeButton = palette.getByRole("button", { name: "Close dialog" });
+  await expect(palette).toBeVisible();
+
+  await closeButton.focus();
+  await closeButton.press("Enter");
+  await expect(guardTelemetry).toHaveText("blocked:Enter");
+  await expect(palette).toBeVisible();
+
+  await closeButton.click();
+  await expect(palette).toBeHidden();
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(guardTelemetry).toHaveText("idle");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  await expect(palette).toBeVisible();
+
+  await closeButton.focus();
+  await closeButton.press("Enter");
+  await expect(palette).toBeHidden();
+});
+
 test("keeps command palette open after command select in persistent mode", async ({ page }) => {
   await page.goto("/");
 
