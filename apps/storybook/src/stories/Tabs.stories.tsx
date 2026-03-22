@@ -959,6 +959,44 @@ function ManagedKeysPreemptedDemo() {
   );
 }
 
+function ManagedKeysPreemptedLocallyDemo() {
+  const [value, setValue] = React.useState("spec");
+  const [changes, setChanges] = React.useState(0);
+
+  return (
+    <TabsShowcase gap={10}>
+      <p style={storyMutedTextStyle}>
+        Local tab key guards should be able to preempt managed navigation/activation keys.
+      </p>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={storyTelemetryLabelStyle}>Tab value changes</span>
+        <Badge tone="default" data-testid="managed-key-local-preempt-change-count">
+          {changes}
+        </Badge>
+      </div>
+      <Tabs
+        ariaLabel="Managed key local preempt tabs"
+        activationMode="manual"
+        value={value}
+        onTabKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === "ArrowRight") {
+            event.preventDefault();
+          }
+        }}
+        onValueChange={(nextValue) => {
+          setValue(nextValue);
+          setChanges((count) => count + 1);
+        }}
+        items={[
+          { key: "spec", label: "Spec", content: "Specification stage." },
+          { key: "build", label: "Build", content: "Build stage." },
+          { key: "release", label: "Release", content: "Release stage." }
+        ]}
+      />
+    </TabsShowcase>
+  );
+}
+
 export const ManualActivationRepeatGuard: Story = {
   render: () => <ManualActivationRepeatGuardDemo />,
   play: async ({ canvasElement }) => {
@@ -1005,6 +1043,29 @@ export const ManagedKeysPreemptedByGlobalHandler: Story = {
     const specTab = canvas.getByRole("tab", { name: "Spec" });
     const buildTab = canvas.getByRole("tab", { name: "Build" });
     const changeCount = canvas.getByTestId("managed-key-preempt-change-count");
+
+    await userEvent.click(specTab);
+    await expect(changeCount).toHaveTextContent("0");
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+
+    fireEvent.keyDown(specTab, { key: "ArrowRight" });
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+    await expect(changeCount).toHaveTextContent("0");
+
+    fireEvent.focus(buildTab);
+    fireEvent.keyDown(buildTab, { key: "Enter" });
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Specification stage.");
+    await expect(changeCount).toHaveTextContent("0");
+  }
+};
+
+export const ManagedKeysPreemptedByLocalHandler: Story = {
+  render: () => <ManagedKeysPreemptedLocallyDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+    const changeCount = canvas.getByTestId("managed-key-local-preempt-change-count");
 
     await userEvent.click(specTab);
     await expect(changeCount).toHaveTextContent("0");

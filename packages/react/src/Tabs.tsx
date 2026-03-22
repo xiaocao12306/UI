@@ -18,6 +18,7 @@ export type TabsProps = {
   orientation?: "horizontal" | "vertical";
   activationMode?: "automatic" | "manual";
   loop?: boolean;
+  onTabKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
   onValueChange?: (value: string) => void;
 };
 
@@ -126,6 +127,7 @@ export function Tabs({
   orientation = "horizontal",
   activationMode = "automatic",
   loop = true,
+  onTabKeyDown,
   onValueChange
 }: TabsProps) {
   const baseId = React.useId();
@@ -521,6 +523,7 @@ export function Tabs({
               }}
               onKeyDown={(event) => {
                 focusIntentRef.current = true;
+                onTabKeyDown?.(event);
                 if (event.defaultPrevented) {
                   return;
                 }
