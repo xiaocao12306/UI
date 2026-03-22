@@ -374,6 +374,40 @@ function IconOnlyCommandNamingPalette() {
   );
 }
 
+function IconOnlyCommandLabelledByPalette() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryFullscreenFrame>
+      <h3 id="deploy-command-heading" style={{ margin: 0, fontSize: "var(--aurora-font-size-sm)" }}>
+        Deploy Release
+      </h3>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        commands={[
+          {
+            key: "deploy",
+            label: <span aria-hidden="true">🚀</span>,
+            ariaLabel: "Fallback deploy command",
+            ariaLabelledBy: "deploy-command-heading",
+            textValue: "Deploy Release",
+            keywords: ["deploy", "release"]
+          },
+          {
+            key: "rollback",
+            label: <span aria-hidden="true">↩</span>,
+            ariaLabel: "Rollback Release",
+            textValue: "Rollback Release",
+            keywords: ["rollback", "release"]
+          }
+        ]}
+        placeholder="Try searching rollback..."
+      />
+    </StoryFullscreenFrame>
+  );
+}
+
 function PersistentSelectionPalette() {
   const [open, setOpen] = React.useState(true);
   const [selectedCount, setSelectedCount] = React.useState(0);
@@ -1172,6 +1206,21 @@ export const IconOnlyCommandNaming: Story = {
     const root = within(canvasElement.ownerDocument.body);
     const input = await root.findByRole("combobox");
     await expect(root.getByRole("option", { name: "Deploy Release" })).toBeInTheDocument();
+
+    await userEvent.type(input, "rollback");
+    await expect(root.getByRole("option", { name: "Rollback Release" })).toBeInTheDocument();
+    await expect(root.queryByRole("option", { name: "Deploy Release" })).not.toBeInTheDocument();
+  }
+};
+
+export const IconOnlyCommandLabelledByPrecedence: Story = {
+  render: () => <IconOnlyCommandLabelledByPalette />,
+  play: async ({ canvasElement }) => {
+    const root = within(canvasElement.ownerDocument.body);
+    const input = await root.findByRole("combobox");
+    const deployOption = root.getByRole("option", { name: "Deploy Release" });
+    await expect(deployOption).toHaveAttribute("aria-labelledby", "deploy-command-heading");
+    await expect(deployOption).not.toHaveAttribute("aria-label");
 
     await userEvent.type(input, "rollback");
     await expect(root.getByRole("option", { name: "Rollback Release" })).toBeInTheDocument();

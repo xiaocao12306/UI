@@ -274,7 +274,7 @@ describe("CommandPalette", () => {
     }
   });
 
-  it("warns when non-text labels omit ariaLabel", () => {
+  it("warns when non-text labels omit ariaLabel and ariaLabelledBy", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -295,7 +295,9 @@ describe("CommandPalette", () => {
       );
 
       expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Non-text labels should provide ariaLabel: "deploy"')
+        expect.stringContaining(
+          'Non-text labels should provide ariaLabel or ariaLabelledBy: "deploy"'
+        )
       );
     } finally {
       warnSpy.mockRestore();
@@ -325,6 +327,40 @@ describe("CommandPalette", () => {
       );
 
       expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text labels when ariaLabelledBy is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <div>
+          <h2 id="deploy-command-heading">Deploy Project</h2>
+          <CommandPalette
+            open
+            onOpenChange={() => {}}
+            commands={[
+              {
+                key: "deploy",
+                label: <span aria-hidden="true">🚀</span>,
+                ariaLabelledBy: "deploy-command-heading",
+                textValue: "Deploy Project"
+              },
+              { key: "settings", label: "Open Settings" }
+            ]}
+          />
+        </div>
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+      const option = screen.getByRole("option", { name: "Deploy Project" });
+      expect(option).toHaveAttribute("aria-labelledby", "deploy-command-heading");
+      expect(option).not.toHaveAttribute("aria-label");
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
@@ -378,6 +414,31 @@ describe("CommandPalette", () => {
     );
 
     expect(screen.getByRole("option", { name: "Deploy Project" })).toBeInTheDocument();
+  });
+
+  it("prioritizes option ariaLabelledBy over ariaLabel", () => {
+    render(
+      <div>
+        <h2 id="deploy-command-name">Deploy Project</h2>
+        <CommandPalette
+          open
+          onOpenChange={() => {}}
+          commands={[
+            {
+              key: "deploy",
+              label: <span aria-hidden="true">🚀</span>,
+              ariaLabel: "Fallback deploy command",
+              ariaLabelledBy: "deploy-command-name",
+              textValue: "Deploy Project"
+            }
+          ]}
+        />
+      </div>
+    );
+
+    const option = screen.getByRole("option", { name: "Deploy Project" });
+    expect(option).toHaveAttribute("aria-labelledby", "deploy-command-name");
+    expect(option).not.toHaveAttribute("aria-label");
   });
 
   it("matches accented labels with plain query text", () => {
@@ -1711,6 +1772,28 @@ describe("CommandPalette", () => {
 
     const option = screen.getByRole("option", { name: "Open Settings" });
     expect(option).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank option ariaLabelledBy and falls back to ariaLabel", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          {
+            key: "deploy",
+            label: <span aria-hidden="true">🚀</span>,
+            ariaLabel: "Deploy Project",
+            ariaLabelledBy: "   ",
+            textValue: "Deploy Project"
+          }
+        ]}
+      />
+    );
+
+    const option = screen.getByRole("option", { name: "Deploy Project" });
+    expect(option).not.toHaveAttribute("aria-labelledby");
+    expect(option).toHaveAttribute("aria-label", "Deploy Project");
   });
 
   it("supports localized dialog and search input copy", () => {

@@ -6,6 +6,7 @@ export type CommandItem = {
   key: string;
   label: React.ReactNode;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
   textValue?: string;
   keywords?: string[];
   disabled?: boolean;
@@ -185,7 +186,9 @@ export function CommandPalette({
       const hasReadableLabelText = getReadableCommandLabelText(item.label).trim().length > 0;
       const hasExplicitAriaLabel =
         typeof item.ariaLabel === "string" && item.ariaLabel.trim().length > 0;
-      if (hasReadableLabelText || hasExplicitAriaLabel) {
+      const hasExplicitAriaLabelledBy =
+        typeof item.ariaLabelledBy === "string" && item.ariaLabelledBy.trim().length > 0;
+      if (hasReadableLabelText || hasExplicitAriaLabel || hasExplicitAriaLabelledBy) {
         return keys;
       }
 
@@ -205,7 +208,7 @@ export function CommandPalette({
     warnedMissingAriaLabelSignatureRef.current = signature;
 
     console.warn(
-      `[CommandPalette] Non-text labels should provide ariaLabel: ${missingAriaLabelKeys
+      `[CommandPalette] Non-text labels should provide ariaLabel or ariaLabelledBy: ${missingAriaLabelKeys
         .map((key) => `"${key}"`)
         .join(", ")}.`
     );
@@ -618,7 +621,10 @@ export function CommandPalette({
           >
             {filtered.map((item, index) => {
               const active = index === safeActiveIndex;
-              const optionAriaLabel = resolveNonEmptyLabel(item.ariaLabel);
+              const optionAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
+              const optionAriaLabel = optionAriaLabelledBy
+                ? undefined
+                : resolveNonEmptyLabel(item.ariaLabel);
               return (
                 <div
                   key={filteredRenderKeys[index] ?? `${item.key}__dup-${index}`}
@@ -626,6 +632,7 @@ export function CommandPalette({
                   role="option"
                   aria-selected={active}
                   aria-disabled={item.disabled || undefined}
+                  aria-labelledby={optionAriaLabelledBy}
                   aria-label={optionAriaLabel}
                   aria-keyshortcuts={item.disabled ? undefined : "Enter Space"}
                   aria-posinset={index + 1}

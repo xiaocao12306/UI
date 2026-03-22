@@ -238,7 +238,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep command labels explicit and searchable.
 - Keep `commands[].key` unique and stable; development builds warn on duplicate keys to avoid active-option and telemetry drift, and runtime auto-suffixes duplicate option keys by filtered index to prevent React key-collision remount churn.
 - Provide `textValue` aliases for non-string command labels and accent-friendly matching terms.
-- For icon/non-text command labels, provide `commands[].ariaLabel` unless the rich label already exposes inline `aria-label`; development builds warn when both are missing.
+- For icon/non-text command labels, prefer `commands[].ariaLabelledBy` when a visible heading already exists; otherwise provide `commands[].ariaLabel`. Rich labels that expose inline `aria-label` are auto-detected, and development builds warn when both are missing.
 - For non-text command labels, ensure `textValue` or searchable `keywords` are present; development builds warn when both are missing.
 - Provide empty-state guidance when no command matches the query.
 - Use `loading` + `loadingContent` during async command fetch so stale options are hidden and command execution/navigation is paused until results are ready.
@@ -305,6 +305,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={CommandPaletteStories.SingleActionableShortcutHints} />
 <Canvas of={CommandPaletteStories.TextValueAndAccentSearch} />
 <Canvas of={CommandPaletteStories.IconOnlyCommandNaming} />
+<Canvas of={CommandPaletteStories.IconOnlyCommandLabelledByPrecedence} />
 <Canvas of={CommandPaletteStories.PersistentSelection} />
 <Canvas of={CommandPaletteStories.OptionActivationKeyGuard} />
 <Canvas of={CommandPaletteStories.RefinedSearchKeepsActiveCommand} />
