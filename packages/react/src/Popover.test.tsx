@@ -144,6 +144,34 @@ describe("Popover", () => {
     expect(onCloseReason).toHaveBeenNthCalledWith(2, "tab-key");
   });
 
+  it("skips unfocusable adjacent controls when dismissing on Tab boundary", () => {
+    render(
+      <div>
+        <Popover triggerLabel="Popover tab skip">
+          <button type="button">Popover boundary action</button>
+        </Popover>
+        <button type="button" style={{ display: "none" }}>
+          Hidden next candidate
+        </button>
+        <div inert={true}>
+          <button type="button">Inert next candidate</button>
+        </div>
+        <button type="button">Visible next candidate</button>
+      </div>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Popover tab skip" });
+    const visibleNextCandidate = screen.getByRole("button", { name: "Visible next candidate" });
+
+    fireEvent.click(trigger);
+    const boundaryAction = screen.getByRole("button", { name: "Popover boundary action" });
+    expect(boundaryAction).toHaveFocus();
+
+    fireEvent.keyDown(boundaryAction, { key: "Tab" });
+    expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+    expect(visibleNextCandidate).toHaveFocus();
+  });
+
   it("ignores modified ArrowDown combinations for trigger keyboard open", () => {
     render(
       <Popover triggerLabel="Arrow guard popover">

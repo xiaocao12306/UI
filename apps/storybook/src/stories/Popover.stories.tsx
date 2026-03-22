@@ -538,6 +538,35 @@ export const ShiftTabDismissToPreviousControl: Story = {
   }
 };
 
+export const TabDismissSkipsUnfocusableCandidates: Story = {
+  render: () => (
+    <PopoverShowcase>
+      <Popover triggerLabel="Popover Tab Skip">
+        <button type="button">Popover Tab Skip Action</button>
+      </Popover>
+      <button type="button" style={{ display: "none" }}>
+        Popover Hidden Candidate
+      </button>
+      <div inert={true}>
+        <button type="button">Popover Inert Candidate</button>
+      </div>
+      <button type="button">Popover Visible Candidate</button>
+    </PopoverShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Popover Tab Skip" });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Popover Tab Skip Action" })).toHaveFocus();
+
+    await userEvent.keyboard("{Tab}");
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Popover Visible Candidate" })).toHaveFocus();
+  }
+};
+
 function CloseReasonTelemetryPopoverDemo() {
   const [lastReason, setLastReason] = React.useState("none");
   const [lastTrace, setLastTrace] = React.useState("none");
