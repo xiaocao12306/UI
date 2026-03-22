@@ -43,6 +43,24 @@ describe("CommandPalette", () => {
     expect(dialog).not.toHaveAttribute("aria-labelledby");
   });
 
+  it("keeps numeric title and description semantics", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        title={0}
+        description={0}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    const dialog = screen.getByRole("dialog", { name: "0" });
+    const describedById = dialog.getAttribute("aria-describedby");
+
+    expect(describedById).toBeTruthy();
+    expect(document.getElementById(describedById as string)).toHaveTextContent("0");
+  });
+
   it("filters commands and handles selection", () => {
     const onOpenChange = vi.fn();
     const onCreateProject = vi.fn();

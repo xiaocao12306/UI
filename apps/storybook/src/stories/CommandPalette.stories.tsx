@@ -1099,6 +1099,29 @@ export const LabelledByPrecedence: Story = {
   }
 };
 
+export const NumericTitleDescriptionSemantics: Story = {
+  render: () => (
+    <CommandPalette
+      open
+      onOpenChange={() => {}}
+      title={0}
+      description={0}
+      commands={[
+        { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
+        { key: "run-e2e", label: "Run E2E Smoke", keywords: ["test"] }
+      ]}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const dialog = await canvas.findByRole("dialog", { name: "0" });
+    const describedById = dialog.getAttribute("aria-describedby");
+
+    await expect(describedById).toBeTruthy();
+    await expect(canvas.getAllByText("0").length).toBeGreaterThanOrEqual(2);
+  }
+};
+
 export const DisabledOnlyResults: Story = {
   render: () => <DisabledOnlyResultsPalette />,
   play: async ({ canvasElement }) => {
