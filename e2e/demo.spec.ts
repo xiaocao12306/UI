@@ -502,6 +502,44 @@ test("reports drawer close reason telemetry for close button, Escape, and outsid
   await expect(traceTelemetry).toHaveText("reason:outside-pointer -> open:false");
 });
 
+test("exposes close-button keyboard shortcut hints across overlay and toast surfaces", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  await page.getByRole("button", { name: "Open Dialog" }).click();
+  const dialog = page.getByRole("dialog").filter({ hasText: "Dialog Example" });
+  await expect(dialog).toBeVisible();
+  const dialogCloseButton = dialog.getByRole("button", { name: "Close dialog" });
+  await expect(dialogCloseButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await dialogCloseButton.click();
+  await expect(dialog).toBeHidden();
+
+  await page.getByRole("button", { name: "Open Drawer" }).click();
+  const drawer = page.getByRole("dialog", { name: "Drawer Example" });
+  await expect(drawer).toBeVisible();
+  const drawerCloseButton = drawer.getByRole("button", { name: "Close drawer" });
+  await expect(drawerCloseButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await drawerCloseButton.click();
+  await expect(drawer).toBeHidden();
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  await expect(palette).toBeVisible();
+  const paletteCloseButton = palette.getByRole("button", { name: "Close dialog" });
+  await expect(paletteCloseButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await paletteCloseButton.click();
+  await expect(palette).toBeHidden();
+
+  await page.getByRole("button", { name: "Trigger telemetry toast" }).click();
+  const telemetryToast = page.getByRole("status").filter({ hasText: "Telemetry toast" });
+  await expect(telemetryToast).toBeVisible();
+  const toastCloseButton = page.getByRole("button", { name: "Dismiss telemetry toast" });
+  await expect(toastCloseButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+  await toastCloseButton.click();
+  await expect(telemetryToast).toBeHidden();
+});
+
 test("keeps drawer open on non-primary outside pointer interaction", async ({ page }) => {
   await page.goto("/");
 
