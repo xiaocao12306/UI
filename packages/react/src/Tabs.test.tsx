@@ -848,6 +848,29 @@ describe("Tabs", () => {
     expect(screen.queryByRole("tabpanel", { name: "Two" })).toBeNull();
   });
 
+  it("keeps empty tablists out of keyboard tab order", async () => {
+    const user = userEvent.setup();
+    render(
+      <div>
+        <button type="button">Before empty tabs</button>
+        <Tabs ariaLabel="Empty tabs" items={[]} />
+        <button type="button">After empty tabs</button>
+      </div>
+    );
+
+    const tabList = screen.getByRole("tablist", { name: "Empty tabs" });
+    expect(tabList).not.toHaveAttribute("tabindex");
+    expect(tabList).not.toHaveAttribute("aria-disabled");
+    expect(screen.queryByRole("tab")).toBeNull();
+    expect(screen.queryByRole("tabpanel")).toBeNull();
+
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Before empty tabs" })).toHaveFocus();
+
+    await user.tab();
+    expect(screen.getByRole("button", { name: "After empty tabs" })).toHaveFocus();
+  });
+
   it("keeps current panel visible when every tab becomes disabled after rerender", () => {
     const { rerender } = render(
       <Tabs

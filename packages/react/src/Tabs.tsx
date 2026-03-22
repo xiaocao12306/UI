@@ -151,6 +151,8 @@ export function Tabs({
   const [focusVisibleTabKey, setFocusVisibleTabKey] = React.useState<string | null>(null);
   const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel, "Tabs");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
+  const hasTabItems = items.length > 0;
+  const shouldExposeDisabledTabStop = hasTabItems && !firstEnabledKey;
   const tabDomIds = React.useMemo(() => createTabDomIds(baseId, items), [baseId, items]);
   const itemRenderKeys = React.useMemo(() => createItemRenderKeys(items), [items]);
   const enabledTabCount = React.useMemo(
@@ -374,8 +376,8 @@ export function Tabs({
         aria-label={resolvedAriaLabelledBy ? undefined : resolvedAriaLabel}
         aria-labelledby={resolvedAriaLabelledBy}
         aria-orientation={orientation}
-        aria-disabled={firstEnabledKey ? undefined : true}
-        tabIndex={firstEnabledKey ? undefined : 0}
+        aria-disabled={shouldExposeDisabledTabStop ? true : undefined}
+        tabIndex={shouldExposeDisabledTabStop ? 0 : undefined}
         onBlurCapture={(event) => {
           const nextFocused = event.relatedTarget as Node | null;
           if (nextFocused && event.currentTarget.contains(nextFocused)) {
