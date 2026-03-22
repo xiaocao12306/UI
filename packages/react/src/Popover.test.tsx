@@ -191,6 +191,43 @@ describe("Popover", () => {
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   });
 
+  it("skips trigger and content keyboard handling when keydown is preempted upstream", () => {
+    const onCloseReason = vi.fn();
+    const preemptManagedKeys = (event: KeyboardEvent) => {
+      if (event.key === "ArrowDown" || event.key === "Tab") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptManagedKeys, true);
+
+    try {
+      render(
+        <Popover triggerLabel="Managed keys popover" onCloseReason={onCloseReason}>
+          <button type="button">Popover managed action</button>
+        </Popover>
+      );
+
+      const trigger = screen.getByRole("button", { name: "Managed keys popover" });
+      fireEvent.focus(trigger);
+
+      fireEvent.keyDown(trigger, { key: "ArrowDown" });
+      expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+
+      fireEvent.click(trigger);
+      const dialog = screen.getByRole("dialog", { name: "Popover content" });
+      const action = screen.getByRole("button", { name: "Popover managed action" });
+      expect(dialog).toBeInTheDocument();
+      expect(action).toHaveFocus();
+
+      fireEvent.keyDown(action, { key: "Tab" });
+      expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+      expect(onCloseReason).not.toHaveBeenCalled();
+    } finally {
+      document.removeEventListener("keydown", preemptManagedKeys, true);
+    }
+  });
+
   it("focuses popover container when no focusable content exists", () => {
     render(
       <Popover triggerLabel="No focusables">

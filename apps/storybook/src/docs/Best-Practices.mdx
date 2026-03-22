@@ -170,6 +170,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Use dropdown `onCloseReason` for deterministic telemetry (`trigger-click` / `item-select` / `escape-key` / `outside-pointer` / `tab-key`) instead of inferring close origin from focus/state side effects.
 - Keep popover/dropdown close callbacks ordered and single-purpose: close paths should emit `onCloseReason` before `onOpenChange(false)`, while dropdown `item-select` should run `onSelect` before close callbacks.
 - Keep popover trigger keyboard-open behavior scoped to unmodified `ArrowDown`; `Ctrl/Meta/Alt + ArrowDown` should remain available for host/browser shortcut handling.
+- When app-level shortcuts preempt popover `ArrowDown`/`Tab` keydown with `preventDefault()`, keep trigger open and boundary Tab-dismiss handlers side-effect free.
 - Keep popover trigger shortcut hints explicit (`aria-keyshortcuts="ArrowDown"`) only while closed so keyboard-open affordance stays discoverable without advertising unavailable shortcuts once open.
 - Keep popover boundary Tab behavior aligned with document order: keep popover open while focus stays inside, then close on first/last boundary Tab and continue focus to adjacent controls.
 - Keep popover dialog shortcut hints explicit (`aria-keyshortcuts="Tab [Escape]"`): always advertise boundary Tab dismiss, and include `Escape` only when `closeOnEscape` is enabled.
@@ -222,6 +223,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={PopoverStories.TabDismissToNextControl} />
 <Canvas of={PopoverStories.ShiftTabDismissToPreviousControl} />
 <Canvas of={PopoverStories.EscapePreemptedByGlobalHandler} />
+<Canvas of={PopoverStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={PopoverStories.EscapeRepeatGuard} />
 <Canvas of={PopoverStories.EscapeIgnoresImeComposition} />
 <Canvas of={PopoverStories.DismissGuardHooks} />

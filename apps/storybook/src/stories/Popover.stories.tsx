@@ -730,6 +730,76 @@ export const EscapePreemptedByGlobalHandler: Story = {
   }
 };
 
+function ManagedKeysPreemptedPopoverDemo() {
+  const [open, setOpen] = React.useState(false);
+  const [openCalls, setOpenCalls] = React.useState(0);
+  const [closeReason, setCloseReason] = React.useState("none");
+
+  return (
+    <div
+      onKeyDownCapture={(event) => {
+        if (event.key === "ArrowDown" || event.key === "Tab") {
+          event.preventDefault();
+        }
+      }}
+    >
+      <PopoverShowcase>
+        <p style={popoverTelemetryTextStyle}>
+          Open calls:{" "}
+          <strong data-testid="popover-managed-open-calls" style={popoverTelemetryValueStyle}>
+            {openCalls}
+          </strong>
+        </p>
+        <p style={popoverTelemetryTextStyle}>
+          Last close reason:{" "}
+          <strong data-testid="popover-managed-close-reason" style={popoverTelemetryValueStyle}>
+            {closeReason}
+          </strong>
+        </p>
+        <Popover
+          triggerLabel="Managed keys popover"
+          open={open}
+          onOpenChange={(nextOpen) => {
+            if (nextOpen) {
+              setOpenCalls((count) => count + 1);
+            }
+            setOpen(nextOpen);
+          }}
+          onCloseReason={setCloseReason}
+        >
+          <button type="button">Popover managed boundary action</button>
+        </Popover>
+      </PopoverShowcase>
+    </div>
+  );
+}
+
+export const ManagedKeysPreemptedByGlobalHandler: Story = {
+  args: {
+    triggerLabel: "Managed keys popover",
+    children: <button type="button">Popover managed boundary action</button>
+  },
+  render: () => <ManagedKeysPreemptedPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Managed keys popover" });
+
+    trigger.focus();
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-managed-open-calls")).toHaveTextContent("0");
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Popover managed boundary action" })).toHaveFocus();
+    await expect(canvas.getByTestId("popover-managed-open-calls")).toHaveTextContent("1");
+
+    await userEvent.keyboard("{Tab}");
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-managed-close-reason")).toHaveTextContent("none");
+  }
+};
+
 function EscapeRepeatPopoverDemo() {
   const [open, setOpen] = React.useState(false);
   const [escapeCalls, setEscapeCalls] = React.useState(0);

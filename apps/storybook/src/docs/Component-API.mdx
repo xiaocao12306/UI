@@ -431,6 +431,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | modifier-key guard                         | ignores `Ctrl/Meta/Alt + Escape`                                                      | Preserves host/browser modified-key shortcuts and avoids accidental popover dismiss/hook side effects from combined key chords.                                                                   |
 | dismiss key hints                          | `aria-keyshortcuts="Tab [Escape]"`                                                    | Popover surface always exposes boundary Tab-dismiss hints; `Escape` hint appears only when `closeOnEscape` is enabled so shortcut metadata matches runtime policy.                                |
 | trigger keyboard-open guard                | ignores `Ctrl/Meta/Alt + ArrowDown`                                                   | Trigger keyboard open shortcut responds only to unmodified `ArrowDown`, preserving host/browser shortcut chords.                                                                                  |
+| managed-key priority                       | preempted `ArrowDown`/`Tab` skips local handling                                      | Trigger keyboard-open and boundary Tab-dismiss handlers no-op when upstream guards already `preventDefault()` the same keydown event.                                                               |
 | trigger keyboard key hints                 | `aria-keyshortcuts="ArrowDown"` while closed                                          | Trigger exposes keyboard-open shortcut metadata for QA/AT discoverability when open action is available, and omits it while popover is already open.                                              |
 | Escape repeat guard                        | ignores repeated keydown                                                              | Long-press Escape (`event.repeat=true`) is ignored so one key press closes at most one popover and avoids duplicate dismiss telemetry.                                                            |
 | Escape priority                            | preempted events skip popover hook/dismiss                                            | If higher-level handlers already `preventDefault()` Escape, popover stays open and does not fire `onEscapeKeyDown`.                                                                               |
@@ -448,6 +449,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={PopoverStories.NonTextTriggerNameFallback} />
 <Canvas of={PopoverStories.TriggerArrowDownModifierGuard} />
 <Canvas of={PopoverStories.EscapePreemptedByGlobalHandler} />
+<Canvas of={PopoverStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={PopoverStories.EscapeRepeatGuard} />
 <Canvas of={PopoverStories.EscapeIgnoresImeComposition} />
 

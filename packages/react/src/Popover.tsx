@@ -154,6 +154,10 @@ export function Popover({
           setOpen(true);
         }}
         onKeyDown={(event) => {
+          if (event.defaultPrevented) {
+            return;
+          }
+
           if (event.key === "Tab" && isOpen) {
             dismissWithTabNavigation(event);
             return;
@@ -184,6 +188,10 @@ export function Popover({
           }
           tabIndex={-1}
           onKeyDown={(event) => {
+            if (event.defaultPrevented) {
+              return;
+            }
+
             if (event.key !== "Tab") {
               return;
             }
