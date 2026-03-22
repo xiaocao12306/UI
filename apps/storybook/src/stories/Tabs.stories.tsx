@@ -983,6 +983,51 @@ function ManagedKeysPreemptedDemo() {
   );
 }
 
+function DuplicateKeyRerenderStabilityDemo() {
+  const [version, setVersion] = React.useState(0);
+  const items = React.useMemo<TabItem[]>(
+    () =>
+      version % 2 === 0
+        ? [
+            { key: "spec", label: "Spec", content: "Specification stage." },
+            { key: "build", label: "Build", content: "Build stage." },
+            { key: "build", label: "Build backup", content: "Build backup stage." }
+          ]
+        : [
+            { key: "lint", label: "Lint", content: "Lint stage." },
+            { key: "spec", label: "Spec", content: "Specification stage." },
+            { key: "build", label: "Build", content: "Build stage." },
+            { key: "build", label: "Build backup", content: "Build backup stage." }
+          ],
+    [version]
+  );
+
+  return (
+    <TabsShowcase gap={10}>
+      <p style={storyMutedTextStyle}>
+        Duplicate-key tabs should keep focused tab identity stable when a non-duplicate tab is
+        prepended during rerender.
+      </p>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={storyTelemetryLabelStyle}>Refresh version</span>
+        <Badge tone="default" data-testid="tabs-duplicate-refresh-version">
+          {version}
+        </Badge>
+      </div>
+      <Button
+        size="sm"
+        variant="outline"
+        onPointerDown={(event) => event.preventDefault()}
+        onMouseDown={(event) => event.preventDefault()}
+        onClick={() => setVersion((current) => current + 1)}
+      >
+        Refresh tabs list
+      </Button>
+      <Tabs ariaLabel="Duplicate key rerender stability tabs" defaultValue="spec" items={items} />
+    </TabsShowcase>
+  );
+}
+
 function ManagedKeysPreemptedLocallyDemo() {
   const [value, setValue] = React.useState("spec");
   const [changes, setChanges] = React.useState(0);
@@ -1057,6 +1102,21 @@ export const ManualActivationRepeatGuard: Story = {
     await userEvent.keyboard("{Space}");
     await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Release stage.");
     await expect(changeCount).toHaveTextContent("2");
+  }
+};
+
+export const DuplicateKeyRerenderStability: Story = {
+  render: () => <DuplicateKeyRerenderStabilityDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const duplicateTab = canvas.getByRole("tab", { name: "Build backup" });
+
+    fireEvent.click(canvas.getByRole("button", { name: "Refresh tabs list" }));
+    await waitFor(() => {
+      expect(canvas.getByTestId("tabs-duplicate-refresh-version")).toHaveTextContent("1");
+    });
+
+    await expect(canvas.getByRole("tab", { name: "Build backup" })).toBe(duplicateTab);
   }
 };
 

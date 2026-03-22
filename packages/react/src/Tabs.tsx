@@ -190,7 +190,7 @@ export function Tabs({
         .map((key) => `"${key}"`)
         .join(
           ", "
-        )}. Keys should be unique to keep aria bindings and focus behavior deterministic. Duplicate render keys are auto-suffixed by item index for stability.`
+        )}. Keys should be unique to keep aria bindings and focus behavior deterministic. Duplicate render keys are auto-suffixed by duplicate occurrence order for stability.`
     );
   }, [items]);
 
@@ -842,14 +842,14 @@ function createTabDomIds(baseId: string, items: TabItem[]) {
 
 function createItemRenderKeys(items: TabItem[]) {
   const seenCounts = new Map<string, number>();
-  return items.map((item, index) => {
+  return items.map((item) => {
     const seenCount = seenCounts.get(item.key) ?? 0;
     seenCounts.set(item.key, seenCount + 1);
     if (seenCount === 0) {
       return item.key;
     }
 
-    return `${item.key}__dup-${index}`;
+    return `${item.key}__dup-${seenCount}`;
   });
 }
 

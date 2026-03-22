@@ -485,7 +485,7 @@ describe("Tabs", () => {
       expect(warnSpy).toHaveBeenCalledTimes(1);
       expect(warnSpy).toHaveBeenLastCalledWith(
         expect.stringContaining(
-          'Duplicate item keys detected: "one". Keys should be unique to keep aria bindings and focus behavior deterministic. Duplicate render keys are auto-suffixed by item index for stability.'
+          'Duplicate item keys detected: "one". Keys should be unique to keep aria bindings and focus behavior deterministic. Duplicate render keys are auto-suffixed by duplicate occurrence order for stability.'
         )
       );
       expect(errorSpy).not.toHaveBeenCalled();
@@ -515,6 +515,43 @@ describe("Tabs", () => {
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
+    }
+  });
+
+  it("keeps duplicate-key tab/panel nodes stable when prepending a non-duplicate item", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      const { rerender } = render(
+        <Tabs
+          items={[
+            { key: "one", label: "One", content: <div>Panel one</div> },
+            { key: "one", label: "One copy", content: <div>Panel one copy</div> },
+            { key: "two", label: "Two", content: <div>Panel two</div> }
+          ]}
+        />
+      );
+
+      const duplicateTabBefore = screen.getByRole("tab", { name: "One copy" });
+      const duplicatePanelBefore = screen.getByRole("tabpanel", { name: "One copy" });
+
+      rerender(
+        <Tabs
+          items={[
+            { key: "lint", label: "Lint", content: <div>Panel lint</div> },
+            { key: "one", label: "One", content: <div>Panel one</div> },
+            { key: "one", label: "One copy", content: <div>Panel one copy</div> },
+            { key: "two", label: "Two", content: <div>Panel two</div> }
+          ]}
+        />
+      );
+
+      const duplicateTabAfter = screen.getByRole("tab", { name: "One copy" });
+      const duplicatePanelAfter = screen.getByRole("tabpanel", { name: "One copy" });
+      expect(duplicateTabAfter).toBe(duplicateTabBefore);
+      expect(duplicatePanelAfter).toBe(duplicatePanelBefore);
+    } finally {
+      warnSpy.mockRestore();
     }
   });
 
