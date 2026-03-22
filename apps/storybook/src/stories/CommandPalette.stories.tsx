@@ -410,6 +410,32 @@ function IconOnlyCommandNamingPalette() {
   );
 }
 
+function IconOnlyCommandTextValueFallbackPalette() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <CommandPalette
+      open={open}
+      onOpenChange={setOpen}
+      commands={[
+        {
+          key: "deploy",
+          label: <span aria-hidden="true">🚀</span>,
+          textValue: "Deploy Release",
+          keywords: ["deploy", "release"]
+        },
+        {
+          key: "rollback",
+          label: <span aria-hidden="true">↩</span>,
+          textValue: "Rollback Release",
+          keywords: ["rollback", "release"]
+        }
+      ]}
+      placeholder="Try searching rollback..."
+    />
+  );
+}
+
 function IconOnlyCommandLabelledByPalette() {
   const [open, setOpen] = React.useState(true);
 
@@ -1402,6 +1428,20 @@ export const IconOnlyCommandNaming: Story = {
     const root = within(canvasElement.ownerDocument.body);
     const input = await root.findByRole("combobox");
     await expect(root.getByRole("option", { name: "Deploy Release" })).toBeInTheDocument();
+
+    await userEvent.type(input, "rollback");
+    await expect(root.getByRole("option", { name: "Rollback Release" })).toBeInTheDocument();
+    await expect(root.queryByRole("option", { name: "Deploy Release" })).not.toBeInTheDocument();
+  }
+};
+
+export const IconOnlyCommandTextValueFallback: Story = {
+  render: () => <IconOnlyCommandTextValueFallbackPalette />,
+  play: async ({ canvasElement }) => {
+    const root = within(canvasElement.ownerDocument.body);
+    const input = await root.findByRole("combobox");
+    const deployOption = root.getByRole("option", { name: "Deploy Release" });
+    await expect(deployOption).toHaveAttribute("aria-label", "Deploy Release");
 
     await userEvent.type(input, "rollback");
     await expect(root.getByRole("option", { name: "Rollback Release" })).toBeInTheDocument();

@@ -292,7 +292,7 @@ describe("CommandPalette", () => {
     }
   });
 
-  it("warns when non-text labels omit ariaLabel and ariaLabelledBy", () => {
+  it("warns when non-text labels omit accessible naming metadata", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -304,8 +304,7 @@ describe("CommandPalette", () => {
           commands={[
             {
               key: "deploy",
-              label: <span aria-hidden="true">🚀</span>,
-              textValue: "Deploy Project"
+              label: <span aria-hidden="true">🚀</span>
             },
             { key: "settings", label: "Open Settings" }
           ]}
@@ -314,7 +313,7 @@ describe("CommandPalette", () => {
 
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
-          'Non-text labels should provide ariaLabel or ariaLabelledBy: "deploy"'
+          'Non-text labels should provide ariaLabel, ariaLabelledBy, or textValue for accessible naming: "deploy"'
         )
       );
     } finally {
@@ -345,6 +344,39 @@ describe("CommandPalette", () => {
       );
 
       expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("uses textValue as fallback accessible name for icon-only commands", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <CommandPalette
+          open
+          onOpenChange={() => {}}
+          commands={[
+            {
+              key: "deploy",
+              label: <span aria-hidden="true">🚀</span>,
+              textValue: "Deploy Project"
+            },
+            { key: "settings", label: "Open Settings" }
+          ]}
+        />
+      );
+
+      const option = screen.getByRole("option", { name: "Deploy Project" });
+      expect(option).toHaveAttribute("aria-label", "Deploy Project");
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining(
+          "Non-text labels should provide ariaLabel, ariaLabelledBy, or textValue for accessible naming"
+        )
+      );
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();

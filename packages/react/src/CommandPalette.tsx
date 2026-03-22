@@ -200,7 +200,14 @@ export function CommandPalette({
         typeof item.ariaLabel === "string" && item.ariaLabel.trim().length > 0;
       const hasExplicitAriaLabelledBy =
         typeof item.ariaLabelledBy === "string" && item.ariaLabelledBy.trim().length > 0;
-      if (hasReadableLabelText || hasExplicitAriaLabel || hasExplicitAriaLabelledBy) {
+      const hasTextValueAlias =
+        typeof item.textValue === "string" && normalizeReadableCommandText(item.textValue).length > 0;
+      if (
+        hasReadableLabelText ||
+        hasExplicitAriaLabel ||
+        hasExplicitAriaLabelledBy ||
+        hasTextValueAlias
+      ) {
         return keys;
       }
 
@@ -220,7 +227,7 @@ export function CommandPalette({
     warnedMissingAriaLabelSignatureRef.current = signature;
 
     console.warn(
-      `[CommandPalette] Non-text labels should provide ariaLabel or ariaLabelledBy: ${missingAriaLabelKeys
+      `[CommandPalette] Non-text labels should provide ariaLabel, ariaLabelledBy, or textValue for accessible naming: ${missingAriaLabelKeys
         .map((key) => `"${key}"`)
         .join(", ")}.`
     );
@@ -645,9 +652,14 @@ export function CommandPalette({
               {filtered.map((item, index) => {
                 const active = index === safeActiveIndex;
                 const optionAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
+                const hasReadableOptionText =
+                  getReadableCommandLabelText(item.label).trim().length > 0;
                 const optionAriaLabel = optionAriaLabelledBy
                   ? undefined
-                  : resolveNonEmptyLabel(item.ariaLabel);
+                  : resolveNonEmptyLabel(
+                      item.ariaLabel,
+                      hasReadableOptionText ? undefined : getCommandText(item)
+                    );
                 return (
                   <div
                     key={filteredRenderKeys[index] ?? `${item.key}__dup-${index}`}
