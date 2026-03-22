@@ -379,7 +379,7 @@ function isComposingButtonActivationEvent(event: React.KeyboardEvent<HTMLButtonE
 
 function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) {
   try {
-    return target.matches(":focus-visible");
+    return target.matches(":focus-visible") || fallback;
   } catch {
     return fallback;
   }

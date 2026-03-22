@@ -1351,6 +1351,31 @@ describe("Toast", () => {
     matchesSpy.mockRestore();
   });
 
+  it("falls back to keyboard intent when close-button :focus-visible returns false", () => {
+    render(<Toast open title="Focus fallback false" duration={0} />);
+
+    const closeButton = screen.getByRole("button", { name: "Close toast" });
+    const nativeMatches = closeButton.matches.bind(closeButton);
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        return false;
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.mouseDown(closeButton, { button: 0 });
+    fireEvent.focus(closeButton);
+    expect(closeButton.style.boxShadow).toBe("none");
+
+    fireEvent.blur(closeButton);
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(closeButton);
+    expect(closeButton.style.boxShadow).toContain("0 0 0 3px");
+
+    matchesSpy.mockRestore();
+  });
+
   it("restores close-button focus fallback after pointer intent when keyboard intent is tracked on document", () => {
     render(<Toast open title="Keyboard re-entry" duration={0} />);
 

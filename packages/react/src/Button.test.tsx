@@ -132,6 +132,31 @@ describe("Button", () => {
     matchesSpy.mockRestore();
   });
 
+  it("falls back to keyboard intent when :focus-visible returns false", () => {
+    render(<Button>Fallback intent button</Button>);
+
+    const button = screen.getByRole("button", { name: "Fallback intent button" });
+    const nativeMatches = button.matches.bind(button);
+    const matchesSpy = vi.spyOn(button, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        return false;
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.mouseDown(button, { button: 0 });
+    fireEvent.focus(button);
+    expect(button.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+    fireEvent.blur(button);
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(button);
+    expect(button.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    matchesSpy.mockRestore();
+  });
+
   it("tracks ownerDocument keyboard focus intent for iframe-hosted renders", () => {
     const iframe = document.createElement("iframe");
     document.body.appendChild(iframe);
