@@ -279,6 +279,9 @@ export function Drawer({
                     }}
                     onKeyDown={(event) => {
                       closeButtonFocusIntentRef.current = true;
+                      if (event.defaultPrevented) {
+                        return;
+                      }
                       if (isComposingDrawerCloseButtonActivationEvent(event)) {
                         return;
                       }

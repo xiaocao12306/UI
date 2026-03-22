@@ -315,6 +315,21 @@ describe("Dialog", () => {
     );
 
     const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    const preemptActivationKeys = (event: KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === " " || event.key === "Space" || event.key === "Spacebar") {
+        event.preventDefault();
+      }
+    };
+
+    try {
+      document.addEventListener("keydown", preemptActivationKeys, true);
+      fireEvent.keyDown(closeButton, { key: "Enter" });
+      expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+      fireEvent.keyDown(closeButton, { key: "Space" });
+      expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+    } finally {
+      document.removeEventListener("keydown", preemptActivationKeys, true);
+    }
 
     fireEvent.keyDown(closeButton, { key: "Enter" });
     expect(closeButton.getAttribute("style")).toContain("translateY(1px)");

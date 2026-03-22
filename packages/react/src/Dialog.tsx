@@ -281,6 +281,9 @@ export function Dialog({
                     }}
                     onKeyDown={(event) => {
                       closeButtonFocusIntentRef.current = true;
+                      if (event.defaultPrevented) {
+                        return;
+                      }
                       if (isComposingDialogCloseButtonActivationEvent(event)) {
                         return;
                       }

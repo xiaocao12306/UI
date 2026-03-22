@@ -356,6 +356,7 @@ export const CloseButtonKeyboardPressedState: Story = {
   render: () => <CloseButtonKeyboardPressedDialog />,
   play: async ({ canvasElement }) => {
     const body = within(canvasElement.ownerDocument.body);
+    const ownerDocument = canvasElement.ownerDocument;
     const dialog = await body.findByRole("dialog", { name: "Keyboard pressed close affordance" });
     await expect(dialog).toHaveAttribute("aria-keyshortcuts", "Escape");
     const closeButton = await body.findByRole("button", { name: "Close dialog" });
@@ -385,6 +386,25 @@ export const CloseButtonKeyboardPressedState: Story = {
       expect(closeButton.style.transform).toContain("translateY(0");
     });
     fireEvent.keyUp(closeButton, { key: "Enter", ctrlKey: true });
+
+    const preemptActivationKeys = (event: KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === " " || event.key === "Space" || event.key === "Spacebar") {
+        event.preventDefault();
+      }
+    };
+    try {
+      ownerDocument.addEventListener("keydown", preemptActivationKeys, true);
+      fireEvent.keyDown(closeButton, { key: "Enter" });
+      await waitFor(() => {
+        expect(closeButton.style.transform).toContain("translateY(0");
+      });
+      fireEvent.keyDown(closeButton, { key: "Space" });
+      await waitFor(() => {
+        expect(closeButton.style.transform).toContain("translateY(0");
+      });
+    } finally {
+      ownerDocument.removeEventListener("keydown", preemptActivationKeys, true);
+    }
 
     fireEvent.keyDown(closeButton, { key: "Enter" });
     await waitFor(() => {
