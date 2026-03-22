@@ -383,6 +383,14 @@
   text-wrap: balance;
 }
 
+.demo-section-title-anchor:focus-visible {
+  outline: none;
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 36%, transparent),
+    0 2px 14px color-mix(in srgb, var(--aurora-accent-default) 14%, transparent);
+}
+
 .demo-section-title-row {
   align-items: flex-start;
 }

@@ -238,6 +238,7 @@
   - DatePicker 生产级返工（`aria-invalid` 推断、`onChange` + `onValueChange` 双回调、状态矩阵 Storybook 与单测补齐）
   - DatePicker 错误关联收口（`errorMessageId` 同步 `aria-describedby` + `aria-errormessage`，并做重复 ID 去重）
   - Alert 生产级返工（status/alert live region 语义、dismiss 分支、单测 + Storybook `Feedback/Alert`）
+  - Demo 导航可访问性收口（Skip Link 激活后聚焦目标 section 标题、Section Nav 支持 Arrow/Home/End 键盘快速导航）
   - CommandPalette 搜索语义收口（`textValue` 非文本标签别名 + 重音归一匹配，`cafe` 可命中 `Café`）
   - CommandPalette 结果播报补齐（查询命中启用+禁用混合结果时，live region 明确播报可执行子集）
   - CommandPalette 全禁用键盘收口（结果全禁用时 `Arrow/Home/End/PageUp/PageDown/Enter` 保持 no-op，不触发误关闭）

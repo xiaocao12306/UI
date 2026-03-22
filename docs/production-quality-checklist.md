@@ -238,6 +238,7 @@
 - PromptInput naming hardening: `ariaLabelledBy` now names the textarea from visible headings with precedence over `ariaLabel`, and blank naming values are ignored to keep fallback semantics deterministic.
 - MessageBubble naming hardening: `ariaLabelledBy` now names conversation bubbles from visible headings with precedence over `ariaLabel`, and blank naming values are ignored to keep fallback semantics deterministic.
 - Alert naming hardening: `ariaLabelledBy` now names status/alert regions from visible headings with precedence over `ariaLabel`, and blank naming values are ignored to keep fallback semantics deterministic.
+- Demo navigation accessibility hardening: Skip Link now programmatically focuses the first section heading, and section nav pills support `ArrowLeft/ArrowRight/Home/End` keyboard traversal with Playwright regression coverage.
 - Pointer-event type-safety hardening: ownerDocument focus-intent listeners across 14 components now use TS-safe primary-button guards (`event.button` narrowing), restoring `verify` typecheck gate without runtime behavior drift.
 - Textarea production hardening: aligned invalid/focus/hover/disabled/readOnly visual states with Input tokens, and added dedicated unit + Storybook coverage.
 - Select production hardening: aligned invalid/focus/hover/disabled state semantics with Input tokens, and added dedicated unit + Storybook coverage.

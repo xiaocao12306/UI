@@ -58,7 +58,33 @@ test("supports keyboard skip link jump to component sections", async ({ page }) 
 
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#basic-components$/);
-  await expect(page.getByRole("heading", { name: "Basic Components" })).toBeVisible();
+  const basicHeading = page.getByRole("heading", { name: "Basic Components" });
+  await expect(basicHeading).toBeVisible();
+  await expect(basicHeading).toBeFocused();
+});
+
+test("supports arrow/home/end keyboard navigation for section nav pills", async ({ page }) => {
+  await page.goto("/");
+
+  const navLinks = page.locator(".demo-section-nav-pill");
+  const first = navLinks.nth(0);
+  const second = navLinks.nth(1);
+  const last = navLinks.nth(4);
+
+  await first.focus();
+  await expect(first).toBeFocused();
+
+  await page.keyboard.press("ArrowRight");
+  await expect(second).toBeFocused();
+
+  await page.keyboard.press("End");
+  await expect(last).toBeFocused();
+
+  await page.keyboard.press("Home");
+  await expect(first).toBeFocused();
+
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/#basic-components$/);
 });
 
 test("switches theme from selector", async ({ page }) => {

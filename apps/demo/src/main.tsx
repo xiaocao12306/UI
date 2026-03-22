@@ -351,7 +351,8 @@ function Section({
         <div className="demo-section-title-row" style={sectionTitleRowStyle}>
           <h2
             id={headingId}
-            className="demo-section-title"
+            className="demo-section-title demo-section-title-anchor"
+            tabIndex={-1}
             style={{
               margin: 0,
               fontSize: "clamp(21px, 2.1vw, 24px)",
@@ -529,6 +530,18 @@ function App() {
   const tableRows = tableEmpty ? [] : readinessRows;
   const activeSectionLabel =
     sectionLinks.find((section) => section.id === activeSection)?.label ?? sectionLinks[0].label;
+  const focusSectionHeading = React.useCallback((sectionId: string) => {
+    const heading = document.getElementById(`${sectionId}-title`);
+    if (!(heading instanceof HTMLElement)) {
+      return;
+    }
+
+    heading.focus({ preventScroll: true });
+    heading.scrollIntoView({
+      block: "start",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"
+    });
+  }, []);
   const handleSectionNavigationIntent = React.useCallback(
     (targetId: string, event: React.MouseEvent<HTMLAnchorElement>) => {
       if (!shouldSyncSectionStateFromClick(event)) {
@@ -537,6 +550,64 @@ function App() {
       }
 
       setActiveSection(targetId);
+
+      if (event.detail === 0) {
+        event.preventDefault();
+        if (window.location.hash !== `#${targetId}`) {
+          window.history.pushState(null, "", `#${targetId}`);
+        }
+        focusSectionHeading(targetId);
+      }
+    },
+    [focusSectionHeading]
+  );
+  const handleSkipToSections = React.useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
+      if (!shouldSyncSectionStateFromClick(event)) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const firstSectionId = sectionLinks[0].id;
+      setActiveSection(firstSectionId);
+      if (window.location.hash !== `#${firstSectionId}`) {
+        window.history.pushState(null, "", `#${firstSectionId}`);
+      }
+      focusSectionHeading(firstSectionId);
+    },
+    [focusSectionHeading]
+  );
+  const handleSectionNavKeyDown = React.useCallback(
+    (event: React.KeyboardEvent<HTMLElement>) => {
+      const key = event.key;
+      if (key !== "ArrowRight" && key !== "ArrowLeft" && key !== "Home" && key !== "End") {
+        return;
+      }
+
+      const links = Array.from(
+        event.currentTarget.querySelectorAll<HTMLAnchorElement>(".demo-section-nav-pill")
+      );
+      if (links.length === 0) {
+        return;
+      }
+
+      const currentIndex = links.findIndex((link) => link === document.activeElement);
+      const isRtl = getComputedStyle(event.currentTarget).direction === "rtl";
+      let nextIndex = currentIndex >= 0 ? currentIndex : 0;
+
+      if (key === "Home") {
+        nextIndex = 0;
+      } else if (key === "End") {
+        nextIndex = links.length - 1;
+      } else {
+        const delta = key === "ArrowRight" ? (isRtl ? -1 : 1) : isRtl ? 1 : -1;
+        const seedIndex = currentIndex >= 0 ? currentIndex : 0;
+        nextIndex = (seedIndex + delta + links.length) % links.length;
+      }
+
+      event.preventDefault();
+      links[nextIndex]?.focus();
     },
     []
   );
@@ -774,7 +845,7 @@ function App() {
     <AuroraProvider theme={theme}>
       <GlobalStyles />
       <div className="demo-app-shell" style={appShellStyle}>
-        <a href="#basic-components" className="demo-skip-link">
+        <a href="#basic-components" className="demo-skip-link" onClick={handleSkipToSections}>
           Skip to component sections
         </a>
         <main className="demo-main-layout" style={mainLayoutStyle}>
@@ -870,7 +941,12 @@ function App() {
               <p className="demo-section-nav-label" style={sectionNavLabelStyle}>
                 Jump to section
               </p>
-              <nav aria-label="Demo sections" className="demo-section-nav" style={sectionNavStyle}>
+              <nav
+                aria-label="Demo sections"
+                className="demo-section-nav"
+                style={sectionNavStyle}
+                onKeyDown={handleSectionNavKeyDown}
+              >
                 {sectionLinks.map((item, index) => (
                   <SectionNavLink
                     key={item.id}
@@ -878,14 +954,7 @@ function App() {
                     index={index}
                     label={item.label}
                     active={activeSection === item.id}
-                    onNavigate={(event) => {
-                      if (!shouldSyncSectionStateFromClick(event)) {
-                        event.preventDefault();
-                        return;
-                      }
-
-                      setActiveSection(item.id);
-                    }}
+                    onNavigate={(event) => handleSectionNavigationIntent(item.id, event)}
                   />
                 ))}
               </nav>
