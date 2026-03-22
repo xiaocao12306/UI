@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Combobox } from "./Combobox";
-import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
+import { dispatchCtrlPrimaryPointerDown, dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 const options = [
   { value: "react", label: "React", keywords: ["frontend"] },
@@ -266,7 +266,7 @@ describe("Combobox", () => {
     expect(screen.queryByRole("listbox")).toBeNull();
   });
 
-  it("keeps popup open on non-primary outside pointer interactions", () => {
+  it("keeps popup open on non-primary or ctrl-primary outside pointer interactions", () => {
     render(<Combobox options={options} onValueChange={() => {}} />);
 
     const input = screen.getByRole("combobox", { name: "Combobox" });
@@ -274,6 +274,9 @@ describe("Combobox", () => {
     expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
 
     dispatchNonPrimaryPointerDown(document.body);
+    expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
+
+    dispatchCtrlPrimaryPointerDown(document.body);
     expect(screen.getByRole("listbox", { name: "Combobox options" })).toBeInTheDocument();
   });
 
@@ -585,7 +588,11 @@ describe("Combobox", () => {
       expect(screen.queryByRole("listbox", { name: "Main combobox options" })).toBeNull();
       expect(within(iframeDocument.body).getByRole("listbox", { name: "Iframe combobox options" })).toBeInTheDocument();
 
-      fireEvent.pointerDown(within(iframeDocument.body).getByRole("button", { name: "Iframe outside target" }));
+      const iframeOutsideTarget = within(iframeDocument.body).getByRole("button", { name: "Iframe outside target" });
+      dispatchCtrlPrimaryPointerDown(iframeOutsideTarget);
+      expect(within(iframeDocument.body).getByRole("listbox", { name: "Iframe combobox options" })).toBeInTheDocument();
+
+      fireEvent.pointerDown(iframeOutsideTarget);
       expect(within(iframeDocument.body).queryByRole("listbox", { name: "Iframe combobox options" })).toBeNull();
     } finally {
       unmountIframe?.();

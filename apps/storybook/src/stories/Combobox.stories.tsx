@@ -80,12 +80,24 @@ export const KeyboardDismissPaths: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const ownerDocument = canvasElement.ownerDocument;
     const input = canvas.getByRole("combobox", { name: "Framework dismiss demo" });
 
     await expect(input).not.toHaveAttribute("aria-controls");
     await userEvent.click(input);
     const listbox = canvas.getByRole("listbox", { name: "Framework dismiss demo options" });
     await expect(input).toHaveAttribute("aria-controls", listbox.id);
+
+    ownerDocument.body.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        button: 0,
+        ctrlKey: true,
+        pointerType: "mouse"
+      })
+    );
+    await expect(canvas.getByRole("listbox", { name: "Framework dismiss demo options" })).toBeInTheDocument();
 
     await userEvent.keyboard("{Escape}");
     await expect(canvas.queryByRole("listbox")).not.toBeInTheDocument();

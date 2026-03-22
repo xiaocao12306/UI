@@ -96,7 +96,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For command-palette `aria-activedescendant` flows, keep `aria-selected` on the active option so screen readers announce current keyboard focus target.
 - For `aria-activedescendant` combobox flows, keep listbox options out of tab order and preserve input focus during pointer selection.
 - For combobox option `mousedown` focus-guards, treat `Ctrl + primary click` as context-click intent and avoid calling `preventDefault()` so context menus and host shortcut flows remain intact.
-- For combobox outside-pointer dismissal, ignore non-primary pointer interactions and honor upstream `pointerdown.preventDefault()` guards so context/right-click and guarded workflows do not collapse the popup unexpectedly.
+- For combobox outside-pointer dismissal, ignore non-primary pointer interactions plus `Ctrl + primary` context-click paths, and honor upstream `pointerdown.preventDefault()` guards so context/right-click and guarded workflows do not collapse the popup unexpectedly.
 - Keep combobox `aria-controls` conditional on listbox visibility (not just focus/open shell) to avoid dangling listbox references in empty-result states.
 - Keep combobox keyboard handling scoped to unmodified keys; `Ctrl/Meta/Alt + Arrow/Home/End/Enter/Escape` should stay on host/browser shortcut behavior.
 - Ignore combobox managed keys (`Arrow/Home/End/Enter/Escape`) during IME composition, including legacy browsers that only expose `keyCode=229`, so CJK confirmation does not trigger accidental navigation, selection, or dismiss.
