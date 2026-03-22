@@ -136,7 +136,12 @@ function QueryTelemetryPalette() {
         open={open}
         onOpenChange={setOpen}
         commands={[
-          { key: "open-changelog", label: "Open Changelog", keywords: ["release", "notes"] }
+          {
+            key: "open-changelog",
+            label: "Open Changelog",
+            keywords: ["release", "notes"],
+            onSelect: () => {}
+          }
         ]}
         emptyMessage="No matching AI workflow command."
         onQueryChange={setQuery}
@@ -320,6 +325,37 @@ function DisabledCommandGuardPalette() {
           }
         ]}
         placeholder="Try searching publish..."
+      />
+    </StoryFullscreenFrame>
+  );
+}
+
+function MissingSelectHandlerGuardPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [lastReason, setLastReason] = React.useState("none");
+
+  return (
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
+        Last close reason:{" "}
+        <strong data-testid="missing-handler-close-reason" style={storyEmphasisTextStyle}>
+          {lastReason}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        onCloseReason={(reason) => setLastReason(reason)}
+        commands={[
+          { key: "run-e2e", label: "Run E2E Smoke", keywords: ["run", "test"] },
+          {
+            key: "open-changelog",
+            label: "Open Changelog",
+            keywords: ["release notes"],
+            onSelect: () => setLastReason("item-select")
+          }
+        ]}
+        placeholder="Try searching run..."
       />
     </StoryFullscreenFrame>
   );
@@ -1302,6 +1338,21 @@ export const DisabledCommandGuard: Story = {
 
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
     await expect(canvas.getByTestId("executed-count")).toHaveTextContent("0");
+  }
+};
+
+export const MissingSelectHandlerGuard: Story = {
+  render: () => <MissingSelectHandlerGuardPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "run");
+    await userEvent.click(canvas.getByRole("option", { name: "Run E2E Smoke" }));
+
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("missing-handler-close-reason")).toHaveTextContent("none");
   }
 };
 

@@ -416,7 +416,11 @@ export function CommandPalette({
         return;
       }
 
-      item.onSelect?.();
+      if (!item.onSelect) {
+        return;
+      }
+
+      item.onSelect();
       if (closeOnSelect) {
         closeWithReason("item-select");
       }

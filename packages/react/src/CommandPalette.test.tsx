@@ -1541,7 +1541,7 @@ describe("CommandPalette", () => {
             open={open}
             onOpenChange={setOpen}
             onCloseReason={onCloseReason}
-            commands={[{ key: "open-settings", label: "Open Settings" }]}
+            commands={[{ key: "open-settings", label: "Open Settings", onSelect: vi.fn() }]}
           />
         </div>
       );
@@ -2168,6 +2168,32 @@ describe("CommandPalette", () => {
 
     expect(onDisabledSelect).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  });
+
+  it("keeps palette open when command has no onSelect handler", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        commands={[
+          { key: "run-e2e", label: "Run E2E Smoke", keywords: ["run", "test"] },
+          { key: "open-settings", label: "Open Settings", onSelect: vi.fn() }
+        ]}
+      />
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "run" }
+    });
+    fireEvent.click(screen.getByRole("option", { name: "Run E2E Smoke" }));
+
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(onCloseReason).not.toHaveBeenCalled();
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
