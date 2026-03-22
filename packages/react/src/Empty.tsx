@@ -10,6 +10,8 @@ export type EmptyProps = React.ComponentPropsWithoutRef<"div"> & {
   tone?: EmptyTone;
   align?: "center" | "left";
   titleAs?: "h2" | "h3" | "h4" | "strong";
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
 };
 
 const toneStyleMap: Record<EmptyTone, React.CSSProperties> = {
@@ -36,6 +38,8 @@ export function Empty({
   tone = "default",
   align = "center",
   titleAs = "strong",
+  ariaLabel,
+  ariaLabelledBy,
   role,
   style,
   ...props
@@ -44,15 +48,48 @@ export function Empty({
   const descriptionId = React.useId();
   const TitleElement = titleAs;
   const isCenter = align === "center";
+  const warnedMissingAriaLabelRef = React.useRef(false);
   const hasDescriptionContent = hasRenderableEmptyNode(description);
   const hasActionContent = hasRenderableEmptyNode(action);
   const hasIconContent = hasRenderableEmptyNode(icon);
+  const resolvedAriaLabelledBy =
+    typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
+      ? ariaLabelledBy.trim()
+      : undefined;
+  const explicitAriaLabel =
+    resolvedAriaLabelledBy === undefined && typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+      ? ariaLabel.trim()
+      : undefined;
+  const hasReadableTitleText = getReadableEmptyTextNode(title).length > 0;
+  const hasExplicitName = explicitAriaLabel !== undefined || resolvedAriaLabelledBy !== undefined;
+  const resolvedAriaLabel = resolvedAriaLabelledBy
+    ? undefined
+    : explicitAriaLabel ?? (hasReadableTitleText ? undefined : "Empty state");
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    if (hasReadableTitleText || hasExplicitName) {
+      warnedMissingAriaLabelRef.current = false;
+      return;
+    }
+
+    if (warnedMissingAriaLabelRef.current) {
+      return;
+    }
+    warnedMissingAriaLabelRef.current = true;
+
+    console.warn("[Empty] Non-text title should provide ariaLabel or ariaLabelledBy.");
+  }, [hasExplicitName, hasReadableTitleText]);
 
   return (
     <div
       role={role ?? "status"}
       aria-live="polite"
-      aria-labelledby={titleId}
+      aria-label={resolvedAriaLabel}
+      aria-labelledby={resolvedAriaLabelledBy ?? (resolvedAriaLabel ? undefined : titleId)}
       aria-describedby={hasDescriptionContent ? descriptionId : undefined}
       style={{
         border: "1px dashed var(--aurora-border-default)",
@@ -99,4 +136,46 @@ function hasRenderableEmptyNode(node: React.ReactNode): boolean {
   }
 
   return React.isValidElement(node);
+}
+
+function getReadableEmptyTextNode(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return normalizeReadableEmptyText(node);
+  }
+
+  if (typeof node === "number") {
+    return normalizeReadableEmptyText(String(node));
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeReadableEmptyText(
+      node
+        .map((item) => getReadableEmptyTextNode(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  if (typeof elementProps["aria-label"] === "string" && elementProps["aria-label"].trim().length > 0) {
+    return normalizeReadableEmptyText(elementProps["aria-label"]);
+  }
+
+  return getReadableEmptyTextNode(elementProps.children);
+}
+
+function normalizeReadableEmptyText(value: string): string {
+  return value.replace(/\s+/g, " ").trim();
 }

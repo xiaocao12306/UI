@@ -62,6 +62,59 @@ export const WithAction: Story = {
   }
 };
 
+export const AccessibilityMetadata: Story = {
+  args: {
+    title: "No releases yet",
+    description: "Accessible naming can be provided explicitly for richer announcement copy.",
+    ariaLabel: "Release empty state"
+  },
+  render: (args) => (
+    <EmptyShowcase maxWidth="min(100%, 360px)">
+      <Empty {...args} />
+    </EmptyShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(await canvas.findByRole("status", { name: "Release empty state" })).toBeInTheDocument();
+  }
+};
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <EmptyShowcase maxWidth="min(100%, 360px)">
+      <h3 id="empty-heading" style={{ margin: 0 }}>
+        Release state heading
+      </h3>
+      <Empty
+        title={<span aria-hidden>📦</span>}
+        description="Explicit heading binding should take precedence over ariaLabel fallback."
+        ariaLabel="Fallback empty state"
+        ariaLabelledBy="empty-heading"
+      />
+    </EmptyShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const empty = await canvas.findByRole("status", { name: "Release state heading" });
+    await expect(empty).toHaveAttribute("aria-labelledby", "empty-heading");
+    await expect(empty).not.toHaveAttribute("aria-label");
+  }
+};
+
+export const NonTextTitleAutoNameFallback: Story = {
+  render: () => (
+    <EmptyShowcase maxWidth="min(100%, 360px)">
+      <Empty title={<span aria-hidden>📦</span>} description="Auto fallback name for icon-only title." />
+    </EmptyShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const empty = await canvas.findByRole("status", { name: "Empty state" });
+    await expect(empty).toHaveAttribute("aria-label", "Empty state");
+    await expect(empty).not.toHaveAttribute("aria-labelledby");
+  }
+};
+
 export const ToneMatrix: Story = {
   render: () => (
     <EmptyShowcase gap={12}>

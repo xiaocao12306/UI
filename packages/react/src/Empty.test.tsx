@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Button } from "./Button";
 import { Empty } from "./Empty";
 
@@ -42,5 +42,71 @@ describe("Empty", () => {
   it("respects custom role override", () => {
     render(<Empty title="No data" role="region" />);
     expect(screen.getByRole("region")).toBeInTheDocument();
+  });
+
+  it("supports explicit ariaLabel and ignores blank values", () => {
+    const { rerender } = render(<Empty title="No data" ariaLabel="Release empty state" />);
+    expect(screen.getByRole("status", { name: "Release empty state" })).toBeInTheDocument();
+
+    rerender(<Empty title="No data" ariaLabel="   " />);
+    expect(screen.getByRole("status", { name: "No data" })).toBeInTheDocument();
+  });
+
+  it("prefers ariaLabelledBy over ariaLabel for naming", () => {
+    render(
+      <div>
+        <h2 id="empty-heading">Release state heading</h2>
+        <Empty title="No data" ariaLabel="Fallback empty state" ariaLabelledBy="empty-heading" />
+      </div>
+    );
+
+    const empty = screen.getByRole("status", { name: "Release state heading" });
+    expect(empty).toHaveAttribute("aria-labelledby", "empty-heading");
+    expect(empty).not.toHaveAttribute("aria-label");
+  });
+
+  it("falls back to Empty state name when non-text title omits ariaLabel and ariaLabelledBy", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(<Empty title={<span aria-hidden>📦</span>} description="No releases yet." />);
+      const empty = screen.getByRole("status", { name: "Empty state" });
+      expect(empty).toHaveAttribute("aria-label", "Empty state");
+      expect(empty).not.toHaveAttribute("aria-labelledby");
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Empty] Non-text title should provide ariaLabel or ariaLabelledBy."
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn when non-text title provides ariaLabel", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(<Empty title={<span aria-hidden>📦</span>} ariaLabel="Release empty state" />);
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("does not warn when rich non-text title exposes aria-label on inner node", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(<Empty title={<span aria-label="Release empty state">📦</span>} />);
+      expect(warnSpy).not.toHaveBeenCalled();
+      expect(screen.getByRole("status", { name: "Release empty state" })).toBeInTheDocument();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
   });
 });

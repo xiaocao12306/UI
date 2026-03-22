@@ -331,6 +331,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 
 ## Notification Behavior
 
+- For icon-only/non-text empty-state titles, prefer `ariaLabelledBy` when a visible heading exists; otherwise provide non-empty `ariaLabel`. Rich title nodes with inline `aria-label` are auto-detected, and development builds warn when both naming paths are missing.
 - For alert banners, provide `ariaLabel` when title/body copy is icon-heavy or ambiguous, or prefer `ariaLabelledBy` when a visible heading already exists; keep blank values out so status naming stays deterministic.
 - Keep alert dismiss buttons discoverable with `aria-keyshortcuts="Enter Space"` and localized `closeLabel` copy for assistive-tech audits.
 - Actionable toasts are persistent by default (`duration` omitted -> `0`); set explicit `duration` only when product requires timed dismissal.

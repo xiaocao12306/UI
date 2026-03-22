@@ -654,8 +654,12 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `icon` / `action`       | `ReactNode`                                    | Optional visual cue and primary call-to-action slot. |
 | `tone`                  | `'default' \| 'info' \| 'warning' \| 'danger'` | Semantic emphasis for empty-state severity context.  |
 | `align` / `titleAs`     | `'center' \| 'left'` / heading element         | Control content layout and heading semantics.        |
+| `ariaLabel` / `ariaLabelledBy` | `string` / `string`                      | Optional status-region naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without explicit naming, empty state naming falls back to rendered `title`, and non-text titles auto-fallback to `Empty state` with development warning guidance. |
 
 <Canvas of={EmptyStories.ToneMatrix} />
+<Canvas of={EmptyStories.AccessibilityMetadata} />
+<Canvas of={EmptyStories.LabelledByPrecedence} />
+<Canvas of={EmptyStories.NonTextTitleAutoNameFallback} />
 
 ### Skeleton
 
