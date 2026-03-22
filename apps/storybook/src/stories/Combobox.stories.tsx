@@ -9,6 +9,31 @@ const frameworkOptions: ComboboxOption[] = [
   { value: "svelte", label: "Svelte", keywords: ["compiler"] },
   { value: "solid", label: "Solid", keywords: ["signals"], disabled: true }
 ];
+const iconOptionMetadataOptions: ComboboxOption[] = [
+  {
+    value: "deploy",
+    label: (
+      <span aria-hidden="true" style={{ fontSize: 16 }}>
+        🚀
+      </span>
+    ),
+    ariaLabel: "Deploy release",
+    ariaLabelledBy: "combobox-option-heading",
+    textValue: "Deploy release",
+    keywords: ["release", "ship"]
+  },
+  {
+    value: "rollback",
+    label: (
+      <span aria-hidden="true" style={{ fontSize: 16 }}>
+        ↩️
+      </span>
+    ),
+    ariaLabel: "Rollback release",
+    textValue: "Rollback release",
+    keywords: ["undo", "revert"]
+  }
+];
 
 function dispatchLegacyImeKeyDown(element: HTMLElement, key: string) {
   const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
@@ -240,6 +265,34 @@ export const LabelledByNameFallback: Story = {
     const listbox = canvas.getByRole("listbox", { name: "Framework heading" });
     await expect(listbox).toHaveAttribute("aria-labelledby", "framework-heading");
     await expect(listbox).not.toHaveAttribute("aria-label");
+  }
+};
+
+function IconOptionLabelledByComboboxDemo() {
+  return (
+    <div style={{ width: 400, display: "grid", gap: 10 }}>
+      <h3 id="combobox-option-heading" style={{ margin: 0 }}>
+        Deploy release
+      </h3>
+      <Combobox
+        options={iconOptionMetadataOptions}
+        onValueChange={() => {}}
+        ariaLabel="Release actions"
+      />
+    </div>
+  );
+}
+
+export const IconOptionLabelledByPrecedence: Story = {
+  render: () => <IconOptionLabelledByComboboxDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Release actions" });
+    await userEvent.click(input);
+
+    const deployOption = canvas.getByRole("option", { name: "Deploy release" });
+    await expect(deployOption).toHaveAttribute("aria-labelledby", "combobox-option-heading");
+    await expect(deployOption).not.toHaveAttribute("aria-label");
   }
 };
 

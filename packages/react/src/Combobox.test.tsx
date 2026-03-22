@@ -78,6 +78,57 @@ describe("Combobox", () => {
     expect(screen.getByRole("listbox", { name: "Release framework picker options" })).toBeInTheDocument();
   });
 
+  it("supports non-text option naming with ariaLabelledBy precedence over ariaLabel", () => {
+    render(
+      <div>
+        <h3 id="framework-icon-option-label">Framework icon option</h3>
+        <Combobox
+          options={[
+            {
+              value: "framework-icon",
+              label: <span aria-hidden="true">⚙️</span>,
+              ariaLabel: "Fallback icon option",
+              ariaLabelledBy: "framework-icon-option-label",
+              textValue: "Framework icon option"
+            }
+          ]}
+          onValueChange={() => {}}
+          ariaLabel="Combobox options"
+        />
+      </div>
+    );
+
+    const input = screen.getByRole("combobox", { name: "Combobox options" });
+    fireEvent.focus(input);
+    const option = screen.getByRole("option", { name: "Framework icon option" });
+    expect(option).toHaveAttribute("aria-labelledby", "framework-icon-option-label");
+    expect(option).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank option ariaLabelledBy and falls back to ariaLabel", () => {
+    render(
+      <Combobox
+        options={[
+          {
+            value: "release-icon",
+            label: <span aria-hidden="true">🚀</span>,
+            ariaLabel: "Release option",
+            ariaLabelledBy: "   ",
+            textValue: "Release option"
+          }
+        ]}
+        onValueChange={() => {}}
+        ariaLabel="Release options"
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Release options" });
+    fireEvent.focus(input);
+    const option = screen.getByRole("option", { name: "Release option" });
+    expect(option).not.toHaveAttribute("aria-labelledby");
+    expect(option).toHaveAttribute("aria-label", "Release option");
+  });
+
   it("filters options by query", () => {
     render(<Combobox options={options} onValueChange={() => {}} />);
 
@@ -87,6 +138,34 @@ describe("Combobox", () => {
 
     expect(screen.getByRole("option", { name: "Svelte" })).toBeInTheDocument();
     expect(screen.queryByRole("option", { name: "React" })).toBeNull();
+  });
+
+  it("filters non-text options via textValue metadata and keeps selected input text deterministic", () => {
+    const onValueChange = vi.fn();
+    render(
+      <Combobox
+        options={[
+          {
+            value: "design-system",
+            label: <span aria-hidden="true">🎨</span>,
+            ariaLabel: "Design system",
+            textValue: "Design system"
+          },
+          { value: "release-notes", label: "Release Notes" }
+        ]}
+        onValueChange={onValueChange}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Combobox" }) as HTMLInputElement;
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "design" } });
+
+    const designOption = screen.getByRole("option", { name: "Design system" });
+    fireEvent.click(designOption);
+
+    expect(onValueChange).toHaveBeenCalledWith("design-system");
+    expect(input.value).toBe("Design system");
   });
 
   it("matches accented labels and keywords with plain query text", () => {
@@ -134,6 +213,60 @@ describe("Combobox", () => {
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
+    }
+  });
+
+  it("warns when non-text option labels omit ariaLabel and ariaLabelledBy", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Combobox
+          options={[
+            {
+              value: "icon-only",
+              label: <span aria-hidden="true">⚙️</span>,
+              textValue: "Icon only option"
+            }
+          ]}
+          onValueChange={() => {}}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          '[Combobox] Non-text option labels should provide ariaLabel or ariaLabelledBy: "icon-only".'
+        )
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("warns when non-text option labels omit textValue and keywords search metadata", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Combobox
+          options={[
+            {
+              value: "icon-search-missing",
+              label: <span aria-hidden="true">🧭</span>,
+              ariaLabel: "Icon search missing"
+            }
+          ]}
+          onValueChange={() => {}}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          '[Combobox] Non-text option labels should provide textValue or keywords for searchable metadata: "icon-search-missing".'
+        )
+      );
+    } finally {
+      warnSpy.mockRestore();
     }
   });
 

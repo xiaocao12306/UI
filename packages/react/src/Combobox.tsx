@@ -3,7 +3,10 @@ import { Input } from "./Input";
 
 export type ComboboxOption = {
   value: string;
-  label: string;
+  label: React.ReactNode;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
+  textValue?: string;
   keywords?: string[];
   disabled?: boolean;
 };
@@ -101,15 +104,13 @@ export function Combobox({
   const [query, setQuery] = React.useState("");
   const [internalValue, setInternalValue] = React.useState(defaultValue);
   const warnedDuplicateValuesSignatureRef = React.useRef<string | null>(null);
+  const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
+  const warnedMissingSearchMetadataSignatureRef = React.useRef<string | null>(null);
   const resolvedAriaLabelledBy =
-    typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
-      ? ariaLabelledBy.trim()
-      : undefined;
+    resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel =
     resolvedAriaLabelledBy === undefined
-      ? typeof ariaLabel === "string" && ariaLabel.trim().length > 0
-        ? ariaLabel.trim()
-        : "Combobox"
+      ? resolveNonEmptyLabel(ariaLabel, "Combobox")
       : undefined;
   const resolvedListboxAriaLabel =
     resolvedAriaLabel === undefined ? undefined : `${resolvedAriaLabel} options`;
@@ -119,7 +120,7 @@ export function Combobox({
 
   React.useEffect(() => {
     if (!open) {
-      setQuery(selectedOption?.label ?? "");
+      setQuery(selectedOption ? getComboboxOptionText(selectedOption) : "");
     }
   }, [open, selectedOption]);
 
@@ -152,6 +153,76 @@ export function Combobox({
       `[Combobox] Duplicate option values detected: ${Array.from(duplicateValues)
         .map((item) => `"${item}"`)
         .join(", ")}. Values should be unique to keep selection and active option semantics deterministic; duplicate values now receive render-key suffixes to avoid React key collisions.`
+    );
+  }, [options]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const missingAriaLabelValues = options.reduce<string[]>((values, option) => {
+      const hasReadableLabelText = getReadableComboboxLabelText(option.label).length > 0;
+      const hasExplicitAriaLabel = resolveNonEmptyLabel(option.ariaLabel) !== undefined;
+      const hasExplicitAriaLabelledBy = resolveNonEmptyLabel(option.ariaLabelledBy) !== undefined;
+
+      if (hasReadableLabelText || hasExplicitAriaLabel || hasExplicitAriaLabelledBy) {
+        return values;
+      }
+
+      values.push(`"${option.value}"`);
+      return values;
+    }, []);
+
+    if (missingAriaLabelValues.length === 0) {
+      warnedMissingAriaLabelSignatureRef.current = null;
+      return;
+    }
+
+    const signature = missingAriaLabelValues.slice().sort().join("|");
+    if (warnedMissingAriaLabelSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingAriaLabelSignatureRef.current = signature;
+
+    console.warn(
+      `[Combobox] Non-text option labels should provide ariaLabel or ariaLabelledBy: ${missingAriaLabelValues.join(", ")}.`
+    );
+  }, [options]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    const missingSearchMetadataValues = options.reduce<string[]>((values, option) => {
+      const hasReadableLabelText = getReadableComboboxLabelText(option.label).length > 0;
+      const hasTextValue = resolveNonEmptyLabel(option.textValue) !== undefined;
+      const hasSearchKeywords =
+        Array.isArray(option.keywords) &&
+        option.keywords.some((keyword) => typeof keyword === "string" && keyword.trim().length > 0);
+
+      if (hasReadableLabelText || hasTextValue || hasSearchKeywords) {
+        return values;
+      }
+
+      values.push(`"${option.value}"`);
+      return values;
+    }, []);
+
+    if (missingSearchMetadataValues.length === 0) {
+      warnedMissingSearchMetadataSignatureRef.current = null;
+      return;
+    }
+
+    const signature = missingSearchMetadataValues.slice().sort().join("|");
+    if (warnedMissingSearchMetadataSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingSearchMetadataSignatureRef.current = signature;
+
+    console.warn(
+      `[Combobox] Non-text option labels should provide textValue or keywords for searchable metadata: ${missingSearchMetadataValues.join(", ")}.`
     );
   }, [options]);
 
@@ -193,7 +264,7 @@ export function Combobox({
     }
 
     return options.filter((option) => {
-      const haystack = normalizeSearchText([option.label, ...(option.keywords ?? [])].join(" "));
+      const haystack = normalizeSearchText([getComboboxOptionText(option), ...(option.keywords ?? [])].join(" "));
       return haystack.includes(normalized);
     });
   }, [options, query]);
@@ -377,6 +448,11 @@ export function Combobox({
           {filtered.map((item, index) => {
             const active = index === activeIndex;
             const selected = item.value === currentValue;
+            const resolvedOptionAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
+            const resolvedOptionAriaLabel =
+              resolvedOptionAriaLabelledBy === undefined
+                ? resolveNonEmptyLabel(item.ariaLabel)
+                : undefined;
             return (
               <button
                 key={filteredRenderKeys[index] ?? `${item.value}__index-${index}`}
@@ -384,6 +460,8 @@ export function Combobox({
                 type="button"
                 role="option"
                 tabIndex={-1}
+                aria-labelledby={resolvedOptionAriaLabelledBy}
+                aria-label={resolvedOptionAriaLabel}
                 aria-selected={selected}
                 aria-disabled={item.disabled || undefined}
                 disabled={item.disabled}
@@ -449,4 +527,71 @@ function normalizeSearchText(text: string) {
     .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
+}
+
+function getComboboxOptionText(option: ComboboxOption) {
+  const resolvedTextValue = resolveNonEmptyLabel(option.textValue);
+  if (resolvedTextValue !== undefined) {
+    return normalizeReadableComboboxText(resolvedTextValue);
+  }
+
+  const readableLabelText = getReadableComboboxLabelText(option.label);
+  if (readableLabelText.length > 0) {
+    return readableLabelText;
+  }
+
+  return normalizeReadableComboboxText(option.value);
+}
+
+function getReadableComboboxLabelText(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return normalizeReadableComboboxText(node);
+  }
+
+  if (typeof node === "number") {
+    return normalizeReadableComboboxText(String(node));
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeReadableComboboxText(
+      node
+        .map((item) => getReadableComboboxLabelText(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  if (
+    typeof elementProps["aria-label"] === "string" &&
+    elementProps["aria-label"].trim().length > 0
+  ) {
+    return normalizeReadableComboboxText(elementProps["aria-label"]);
+  }
+
+  return getReadableComboboxLabelText(elementProps.children);
+}
+
+function resolveNonEmptyLabel(label: string | undefined, fallback?: string): string | undefined {
+  if (typeof label === "string" && label.trim().length > 0) {
+    return label.trim();
+  }
+
+  return fallback;
+}
+
+function normalizeReadableComboboxText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }
