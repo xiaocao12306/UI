@@ -570,6 +570,8 @@ export function Table<T>({
           minimumKeyboardScrollStep,
           Math.floor(pageScrollStep * 0.3)
         );
+        const direction = resolveElementDirection(scrollContainer);
+        const arrowForwardKey = direction === "rtl" ? "ArrowLeft" : "ArrowRight";
         const applyRelativeScroll = (offset: number) => {
           if (offset === 0) {
             return;
@@ -583,11 +585,9 @@ export function Table<T>({
         };
 
         switch (event.key) {
-          case "ArrowRight":
-            applyRelativeScroll(lineScrollStep);
-            return;
           case "ArrowLeft":
-            applyRelativeScroll(-lineScrollStep);
+          case "ArrowRight":
+            applyRelativeScroll(event.key === arrowForwardKey ? lineScrollStep : -lineScrollStep);
             return;
           case "PageDown":
             applyRelativeScroll(pageScrollStep);
@@ -596,10 +596,10 @@ export function Table<T>({
             applyRelativeScroll(-pageScrollStep);
             return;
           case "Home":
-            applyAbsoluteScroll(0);
+            applyAbsoluteScroll(direction === "rtl" ? maxScrollOffset : 0);
             return;
           case "End":
-            applyAbsoluteScroll(maxScrollOffset);
+            applyAbsoluteScroll(direction === "rtl" ? 0 : maxScrollOffset);
             return;
           default:
             return;
@@ -904,20 +904,7 @@ export function Table<T>({
                             return;
                           }
 
-                          const ownerWindow =
-                            event.currentTarget.ownerDocument.defaultView ?? window;
-                          const styleDirection = ownerWindow.getComputedStyle(
-                            event.currentTarget
-                          ).direction;
-                          const attributeDirection = event.currentTarget
-                            .closest("[dir]")
-                            ?.getAttribute("dir");
-                          const computedDirection =
-                            styleDirection === "rtl" || styleDirection === "ltr"
-                              ? styleDirection
-                              : attributeDirection === "rtl"
-                                ? "rtl"
-                                : "ltr";
+                          const computedDirection = resolveElementDirection(event.currentTarget);
                           const movesForwardKey =
                             computedDirection === "rtl" ? "ArrowLeft" : "ArrowRight";
                           const delta = event.key === movesForwardKey ? 1 : -1;
@@ -1154,6 +1141,17 @@ function resolveFocusVisibleState(target: HTMLButtonElement | null, fallback: bo
   } catch {
     return fallback;
   }
+}
+
+function resolveElementDirection(element: HTMLElement): "ltr" | "rtl" {
+  const ownerWindow = element.ownerDocument.defaultView ?? window;
+  const styleDirection = ownerWindow.getComputedStyle(element).direction;
+  if (styleDirection === "rtl" || styleDirection === "ltr") {
+    return styleDirection;
+  }
+
+  const attributeDirection = element.closest("[dir]")?.getAttribute("dir");
+  return attributeDirection === "rtl" ? "rtl" : "ltr";
 }
 
 function hasRenderableNode(node: React.ReactNode): boolean {

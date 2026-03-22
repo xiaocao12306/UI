@@ -294,6 +294,83 @@ export const KeyboardReachableScrollContainer: Story = {
   }
 };
 
+export const RtlScrollContainerKeyboardPanning: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="220px" gap={10}>
+      <p style={storyMutedTextStyle}>
+        In RTL layouts, non-sortable table overflow keeps Arrow/Home/End panning aligned with visual
+        direction.
+      </p>
+      <div dir="rtl">
+        <Table
+          columns={[
+            { key: "id", header: "Issue" },
+            { key: "component", header: "Component" },
+            { key: "owner", header: "Owner" },
+            { key: "status", header: "Status" }
+          ]}
+          data={rows}
+        />
+      </div>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const scrollContainer = canvasElement.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement | null;
+    await expect(scrollContainer).not.toBeNull();
+    const ownerWindow = scrollContainer?.ownerDocument.defaultView ?? window;
+    let mockedScrollLeft = 0;
+    Object.defineProperty(scrollContainer as HTMLDivElement, "clientWidth", {
+      configurable: true,
+      value: 220
+    });
+    Object.defineProperty(scrollContainer as HTMLDivElement, "scrollWidth", {
+      configurable: true,
+      value: 640
+    });
+    Object.defineProperty(scrollContainer as HTMLDivElement, "scrollLeft", {
+      configurable: true,
+      get: () => mockedScrollLeft,
+      set: (value: number) => {
+        mockedScrollLeft = value;
+      }
+    });
+    Object.defineProperty(scrollContainer as HTMLDivElement, "scrollBy", {
+      configurable: true,
+      value: ({ left = 0 }: ScrollToOptions) => {
+        mockedScrollLeft += Number(left) || 0;
+      }
+    });
+    Object.defineProperty(scrollContainer as HTMLDivElement, "scrollTo", {
+      configurable: true,
+      value: ({ left = 0 }: ScrollToOptions) => {
+        mockedScrollLeft = Number(left) || 0;
+      }
+    });
+    fireEvent(ownerWindow, new ownerWindow.Event("resize"));
+
+    await userEvent.tab();
+    await expect(scrollContainer).toHaveFocus();
+
+    fireEvent.keyDown(scrollContainer as HTMLDivElement, { key: "ArrowLeft" });
+    await expect((scrollContainer as HTMLDivElement).scrollLeft).toBeGreaterThan(0);
+    fireEvent.keyDown(scrollContainer as HTMLDivElement, { key: "Home" });
+    await expect((scrollContainer as HTMLDivElement).scrollLeft).toBe(420);
+    fireEvent.keyDown(scrollContainer as HTMLDivElement, { key: "End" });
+    await expect((scrollContainer as HTMLDivElement).scrollLeft).toBe(0);
+
+    const preemptScrollHandler = (event: KeyboardEvent) => event.preventDefault();
+    (scrollContainer as HTMLDivElement).addEventListener("keydown", preemptScrollHandler, true);
+    fireEvent.keyDown(scrollContainer as HTMLDivElement, { key: "ArrowLeft" });
+    await expect((scrollContainer as HTMLDivElement).scrollLeft).toBe(0);
+    (scrollContainer as HTMLDivElement).removeEventListener("keydown", preemptScrollHandler, true);
+
+    await expect(canvas.getByRole("table", { name: "Data table" })).toBeInTheDocument();
+  }
+};
+
 export const KeyboardFocusRingAfterPointer: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>

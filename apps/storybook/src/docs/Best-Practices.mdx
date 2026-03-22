@@ -478,6 +478,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For empty datasets, use meaningful `emptyContent`; table announces it through polite live status narration.
 - Treat single-row tables as non-sortable UI at runtime; built-in sort controls are auto-disabled to prevent no-op telemetry and redundant keyboard stops.
 - When sorting is unavailable and the table becomes a focusable scroll region, keep Arrow/Home/End/Page keyboard panning enabled for overflowed layouts and expose scroll-region shortcut hints only while horizontal overflow exists.
+- In RTL layouts, mirror scroll-region Arrow/Home/End mappings so keyboard panning follows visual direction instead of LTR coordinate assumptions.
 - When app-level shortcuts preempt keydown with `preventDefault()`, keep scroll-region Arrow/Home/End/Page handlers side-effect free so host shortcut guards remain authoritative.
 - For pagination i18n, generate `getItemAriaLabel` from the provided `page` argument; boundary previous/next labels are already clamped to valid page ranges.
 - Prefer `ariaLabelledBy` for pagination when a visible heading already exists; use `ariaLabel` for standalone pagers without nearby title copy.
@@ -546,6 +547,8 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={TableStories.SingleSortableColumnShortcutHints} />
 <Canvas of={TableStories.PrimaryPointerOnlySortPress} />
 <Canvas of={TableStories.KeyboardFocusRingShiftTabReentry} />
+<Canvas of={TableStories.KeyboardReachableScrollContainer} />
+<Canvas of={TableStories.RtlScrollContainerKeyboardPanning} />
 <Canvas of={TableStories.WithRowAction} />
 <Canvas of={TableStories.InvalidDefaultSortKeyFallback} />
 <Canvas of={TableStories.RowHeaderSemantics} />

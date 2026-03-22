@@ -569,6 +569,74 @@ describe("Table", () => {
     expect(scrollToSpy).toHaveBeenCalledTimes(2);
   });
 
+  it("mirrors scroll-container Arrow/Home/End keyboard panning in RTL", () => {
+    const { container } = render(
+      <div dir="rtl">
+        <Table
+          columns={[
+            { key: "name", header: "Name" },
+            { key: "status", header: "Status" }
+          ]}
+          data={[
+            { name: "Button", status: "Stable" },
+            { name: "Dialog", status: "Stable" }
+          ]}
+        />
+      </div>
+    );
+
+    const scrollContainer = container.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement;
+    Object.defineProperty(scrollContainer, "clientWidth", {
+      configurable: true,
+      value: 200
+    });
+    Object.defineProperty(scrollContainer, "scrollWidth", {
+      configurable: true,
+      value: 600
+    });
+    Object.defineProperty(scrollContainer, "scrollLeft", {
+      configurable: true,
+      writable: true,
+      value: 0
+    });
+
+    const scrollBySpy = vi.fn(({ left }: { left: number }) => {
+      scrollContainer.scrollLeft += left;
+    });
+    const scrollToSpy = vi.fn(({ left }: { left: number }) => {
+      scrollContainer.scrollLeft = left;
+    });
+    Object.defineProperty(scrollContainer, "scrollBy", {
+      configurable: true,
+      value: scrollBySpy
+    });
+    Object.defineProperty(scrollContainer, "scrollTo", {
+      configurable: true,
+      value: scrollToSpy
+    });
+
+    scrollContainer.focus();
+    expect(scrollContainer).toHaveFocus();
+
+    fireEvent.keyDown(scrollContainer, { key: "ArrowLeft" });
+    expect(scrollBySpy).toHaveBeenLastCalledWith({ left: 60, behavior: "auto" });
+    expect(scrollContainer.scrollLeft).toBe(60);
+
+    fireEvent.keyDown(scrollContainer, { key: "ArrowRight" });
+    expect(scrollBySpy).toHaveBeenLastCalledWith({ left: -60, behavior: "auto" });
+    expect(scrollContainer.scrollLeft).toBe(0);
+
+    fireEvent.keyDown(scrollContainer, { key: "Home" });
+    expect(scrollToSpy).toHaveBeenLastCalledWith({ left: 400, behavior: "auto" });
+    expect(scrollContainer.scrollLeft).toBe(400);
+
+    fireEvent.keyDown(scrollContainer, { key: "End" });
+    expect(scrollToSpy).toHaveBeenLastCalledWith({ left: 0, behavior: "auto" });
+    expect(scrollContainer.scrollLeft).toBe(0);
+  });
+
   it("skips scroll-container keyboard panning when keydown is preempted upstream", () => {
     const { container } = render(
       <div onKeyDownCapture={(event) => event.preventDefault()}>
