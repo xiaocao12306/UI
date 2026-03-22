@@ -59,13 +59,17 @@ export function Drawer({
     typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
       ? ariaLabelledBy.trim()
       : undefined;
-  const resolvedAriaLabel =
+  const explicitAriaLabel =
     resolvedAriaLabelledBy === undefined &&
     typeof ariaLabel === "string" &&
     ariaLabel.trim().length > 0
       ? ariaLabel.trim()
       : undefined;
-  const hasExplicitDrawerName = resolvedAriaLabel !== undefined || resolvedAriaLabelledBy !== undefined;
+  const hasReadableTitleText = getReadableDrawerTextNode(title).length > 0;
+  const resolvedAriaLabel = resolvedAriaLabelledBy
+    ? undefined
+    : explicitAriaLabel ?? (hasReadableTitleText ? undefined : "Drawer");
+  const hasExplicitDrawerName = explicitAriaLabel !== undefined || resolvedAriaLabelledBy !== undefined;
 
   const closeWithReason = React.useCallback(
     (reason: DrawerCloseReason) => {
@@ -80,7 +84,7 @@ export function Drawer({
       return;
     }
 
-    if (getReadableDrawerTextNode(title).length > 0 || hasExplicitDrawerName) {
+    if (hasReadableTitleText || hasExplicitDrawerName) {
       warnedMissingAriaLabelSignatureRef.current = null;
       return;
     }
@@ -92,7 +96,7 @@ export function Drawer({
     warnedMissingAriaLabelSignatureRef.current = signature;
 
     console.warn("[Drawer] Non-text title should provide ariaLabel or ariaLabelledBy.");
-  }, [hasExplicitDrawerName, title]);
+  }, [hasExplicitDrawerName, hasReadableTitleText]);
 
   React.useEffect(() => {
     if (!open || !panelElement) {

@@ -409,6 +409,7 @@ describe("Drawer", () => {
       expect(warnSpy).toHaveBeenCalledWith(
         "[Drawer] Non-text title should provide ariaLabel or ariaLabelledBy."
       );
+      expect(screen.getByRole("dialog", { name: "Drawer" })).toHaveAttribute("aria-label", "Drawer");
     } finally {
       warnSpy.mockRestore();
     }

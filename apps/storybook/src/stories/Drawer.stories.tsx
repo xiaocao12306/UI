@@ -137,6 +137,28 @@ export const IconTitleAriaLabelFallback: Story = {
   }
 };
 
+function NonTextTitleAutoNameFallbackDrawerDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <Drawer open={open} onOpenChange={setOpen} title={<span aria-hidden>⚙️</span>}>
+        <p style={storyParagraphStyle}>Icon-only title now keeps fallback drawer naming.</p>
+      </Drawer>
+    </StoryFullscreenFrame>
+  );
+}
+
+export const NonTextTitleAutoNameFallback: Story = {
+  render: () => <NonTextTitleAutoNameFallbackDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const drawer = await body.findByRole("dialog", { name: "Drawer" });
+    await expect(drawer).toHaveAttribute("aria-label", "Drawer");
+    await expect(drawer).not.toHaveAttribute("aria-labelledby");
+  }
+};
+
 function NumericDescriptionDrawerDemo() {
   const [open, setOpen] = React.useState(true);
 

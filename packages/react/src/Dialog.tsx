@@ -66,13 +66,17 @@ export function Dialog({
     typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
       ? ariaLabelledBy.trim()
       : undefined;
-  const resolvedAriaLabel =
+  const explicitAriaLabel =
     resolvedAriaLabelledBy === undefined &&
     typeof ariaLabel === "string" &&
     ariaLabel.trim().length > 0
       ? ariaLabel.trim()
       : undefined;
-  const hasExplicitDialogName = resolvedAriaLabel !== undefined || resolvedAriaLabelledBy !== undefined;
+  const hasReadableTitleText = getReadableDialogTextNode(title).length > 0;
+  const resolvedAriaLabel = resolvedAriaLabelledBy
+    ? undefined
+    : explicitAriaLabel ?? (hasReadableTitleText ? undefined : "Dialog");
+  const hasExplicitDialogName = explicitAriaLabel !== undefined || resolvedAriaLabelledBy !== undefined;
 
   const closeWithReason = React.useCallback(
     (reason: DialogCloseReason) => {
@@ -87,7 +91,7 @@ export function Dialog({
       return;
     }
 
-    if (getReadableDialogTextNode(title).length > 0 || hasExplicitDialogName) {
+    if (hasReadableTitleText || hasExplicitDialogName) {
       warnedMissingAriaLabelSignatureRef.current = null;
       return;
     }
@@ -99,7 +103,7 @@ export function Dialog({
     warnedMissingAriaLabelSignatureRef.current = signature;
 
     console.warn("[Dialog] Non-text title should provide ariaLabel or ariaLabelledBy.");
-  }, [hasExplicitDialogName, title]);
+  }, [hasExplicitDialogName, hasReadableTitleText]);
 
   React.useEffect(() => {
     if (!open || !panelElement) {

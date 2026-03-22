@@ -171,6 +171,7 @@ describe("Dialog", () => {
       expect(warnSpy).toHaveBeenCalledWith(
         "[Dialog] Non-text title should provide ariaLabel or ariaLabelledBy."
       );
+      expect(screen.getByRole("dialog", { name: "Dialog" })).toHaveAttribute("aria-label", "Dialog");
     } finally {
       warnSpy.mockRestore();
     }
