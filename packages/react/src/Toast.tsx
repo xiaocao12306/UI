@@ -308,7 +308,7 @@ export function Toast({
       closeButtonFocusIntentRef.current = true;
     };
     const markPointerIntent = (event: Event) => {
-      if ("button" in event && !isPrimaryPointerButton(event.button)) {
+      if ("button" in event && !isPrimaryPointerButton((event as MouseEvent | PointerEvent).button)) {
         return;
       }
       if ("ctrlKey" in event && event.ctrlKey) {
