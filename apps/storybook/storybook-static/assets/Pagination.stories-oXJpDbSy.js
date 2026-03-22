@@ -1,0 +1,242 @@
+import{j as n}from"./jsx-runtime-BjG_zV1W.js";import{r as c}from"./index-BWu4c2F4.js";import{B as k}from"./Badge-ZJmMstsz.js";import{within as h,expect as s,userEvent as p,fireEvent as ze}from"./index-DgAF9SIF.js";function j(t,e,o){return Math.min(Math.max(t,e),o)}function ee(t,e){const o=e-t+1;return Array.from({length:o},(i,g)=>t+g)}function Ne(t,e,o,i){const g=i*2+o*2+3;if(e<=g)return ee(1,e);const l=Math.max(t-o,i+2),R=Math.min(t+o,e-i-1),f=[],Y=ee(1,i),K=ee(e-i+1,e);f.push(...Y),l>i+2?f.push("ellipsis-left"):i+1<l&&f.push(i+1);for(let b=l;b<=R;b+=1)f.push(b);return R<e-i-1?f.push("ellipsis-right"):R+1<e-i+1&&f.push(e-i),f.push(...K),f}function v({page:t,pageCount:e,onPageChange:o,siblingCount:i=1,boundaryCount:g=1,disabled:l=!1,showFirstLast:R=!0,ariaLabel:f="Pagination",ariaLabelledBy:Y,getItemAriaLabel:K=oe}){const b=c.useRef(null),L=c.useRef(null),G=c.useRef(!1),x=c.useRef(!1),[B,M]=c.useState(null),[C,P]=c.useState(null),We=te(f,"Pagination"),ae=te(Y),H=Math.max(e,1),d=j(t,1,H),_e=e<=1?[]:Ne(d,e,i,g),ne=j(d-1,1,H),re=j(d+1,1,H),y=!l&&e>1&&d>1,m=!l&&e>1&&d<e,D=c.useMemo(()=>{if(l||e<=1)return;const a=[];return y&&a.push("Home"),m&&a.push("End"),(y||m)&&a.push("ArrowLeft","ArrowRight"),a.length>0?a.join(" "):void 0},[m,y,l,e]),E=c.useCallback((a,r)=>te(K(a,r),oe(a,r)),[K]);c.useEffect(()=>{l&&(M(null),P(null))},[l]),c.useEffect(()=>{var T;const a=((T=b.current)==null?void 0:T.ownerDocument)??document,r=w=>{w.metaKey||w.altKey||w.ctrlKey||(x.current=!0)},u=w=>{"button"in w&&!se(w.button)||"ctrlKey"in w&&w.ctrlKey||(x.current=!1)};return a.addEventListener("keydown",r,!0),a.addEventListener("pointerdown",u,!0),a.addEventListener("mousedown",u,!0),a.addEventListener("touchstart",u,!0),()=>{a.removeEventListener("keydown",r,!0),a.removeEventListener("pointerdown",u,!0),a.removeEventListener("mousedown",u,!0),a.removeEventListener("touchstart",u,!0)}},[]);const A=a=>{if(l||e<=1)return;const r=j(a,1,e);r!==d&&o(r)};c.useLayoutEffect(()=>{var u;if(L.current===null)return;const a=L.current;L.current=null;const r=(u=b.current)==null?void 0:u.querySelector(`button[data-aurora-pagination-page="${a}"]`);r&&(G.current=!0,r.focus(),G.current=!1)},[d]);const Z=a=>{const r=j(a,1,e);if(r===d){L.current=null;return}const u=`page-${r}`;M(u),P(x.current?u:null),L.current=r,A(r)},I=a=>{if(x.current=!0,l||(a.altKey||a.ctrlKey||a.metaKey)&&Oe(a.key))return;if(a.key==="Home"){if(d===1)return;a.preventDefault(),Z(1);return}if(a.key==="End"){if(d===H)return;a.preventDefault(),Z(H);return}const r=Je(a.key,a.currentTarget);if(r===void 0)return;const u=j(d+r,1,H);u!==d&&(a.preventDefault(),Z(u))},F=c.useCallback(a=>({"data-focus-visible":B===a&&C===a?"true":void 0,onFocus:r=>{G.current||(M(a),P(Xe(r.currentTarget,x.current)?a:null))},onBlur:()=>{G.current||(M(r=>r===a?null:r),P(r=>r===a?null:r))},onMouseDown:r=>{r.button!==0||r.ctrlKey||(x.current=!1,P(u=>u===a?null:u))},onPointerDown:r=>{!se(r.button)||r.ctrlKey||(x.current=!1,P(u=>u===a?null:u))}}),[B,C]);return e<=1?null:n.jsx("nav",{ref:b,"aria-label":ae?void 0:We,"aria-labelledby":ae,children:n.jsxs("ul",{style:{listStyle:"none",padding:0,margin:0,display:"flex",flexWrap:"wrap",gap:6,alignItems:"center"},children:[R?n.jsx("li",{children:n.jsx("button",{...F("first"),type:"button",disabled:!y,onClick:()=>A(1),onKeyDown:I,"aria-label":E("first",1),"aria-keyshortcuts":y?D:void 0,style:S(!1,!y,B==="first"&&C==="first"),children:"«"})}):null,n.jsx("li",{children:n.jsx("button",{...F("previous"),type:"button",disabled:!y,onClick:()=>A(ne),onKeyDown:I,"aria-label":E("previous",ne),"aria-keyshortcuts":y?D:void 0,style:S(!1,!y,B==="previous"&&C==="previous"),children:"‹"})}),_e.map((a,r)=>{if(typeof a!="number")return n.jsx("li",{"aria-hidden":"true",style:{color:"var(--aurora-text-secondary)",minWidth:32,textAlign:"center"},children:"…"},`${a}-${r}`);const u=a===d,T=`page-${a}`;return n.jsx("li",{children:n.jsx("button",{...F(T),type:"button",onClick:()=>A(a),disabled:l,onKeyDown:I,"data-aurora-pagination-page":a,"aria-current":u?"page":void 0,"aria-label":E(u?"current":"page",a),"aria-keyshortcuts":l?void 0:D,style:S(u,l,B===T&&C===T),children:a})},a)}),n.jsx("li",{children:n.jsx("button",{...F("next"),type:"button",disabled:!m,onClick:()=>A(re),onKeyDown:I,"aria-label":E("next",re),"aria-keyshortcuts":m?D:void 0,style:S(!1,!m,B==="next"&&C==="next"),children:"›"})}),R?n.jsx("li",{children:n.jsx("button",{...F("last"),type:"button",disabled:!m,onClick:()=>A(e),onKeyDown:I,"aria-label":E("last",e),"aria-keyshortcuts":m?D:void 0,style:S(!1,!m,B==="last"&&C==="last"),children:"»"})}):null]})})}function Oe(t){return t==="Home"||t==="End"||t==="ArrowLeft"||t==="ArrowRight"}function Je(t,e){if(!(t!=="ArrowLeft"&&t!=="ArrowRight"))return Qe(t,Ue(e))}function Qe(t,e){return t==="ArrowRight"?e?-1:1:e?1:-1}function Ue(t){if(!t)return!1;const e=t.closest("[dir]");if((e==null?void 0:e.dir)==="rtl")return!0;if((e==null?void 0:e.dir)==="ltr")return!1;const o=t.ownerDocument.defaultView??(typeof window<"u"?window:null);return o?o.getComputedStyle(t).direction==="rtl":!1}function oe(t,e){switch(t){case"first":return"Go to first page";case"last":return"Go to last page";case"previous":return"Go to previous page";case"next":return"Go to next page";case"current":return`Current page, ${e}`;default:return`Go to page ${e}`}}function S(t,e,o){return{minWidth:32,height:32,padding:"0 8px",borderRadius:"var(--aurora-radius-sm)",border:t?"1px solid var(--aurora-accent-default)":"1px solid var(--aurora-border-default)",background:t?"color-mix(in srgb, var(--aurora-accent-default) 12%, var(--aurora-surface-default))":"var(--aurora-surface-default)",color:e?"color-mix(in srgb, var(--aurora-text-secondary) 65%, transparent)":"var(--aurora-text-primary)",cursor:e?"not-allowed":"pointer",font:"inherit",boxShadow:!e&&o?"0 0 0 3px color-mix(in srgb, var(--aurora-accent-default) 24%, transparent)":"none"}}function te(t,e){return typeof t=="string"&&t.trim().length>0?t.trim():e}function Xe(t,e){try{return t.matches(":focus-visible")||e}catch{return e}}function se(t){return typeof t!="number"||t<=0}v.__docgenInfo={description:"",methods:[],displayName:"Pagination",props:{page:{required:!0,tsType:{name:"number"},description:""},pageCount:{required:!0,tsType:{name:"number"},description:""},onPageChange:{required:!0,tsType:{name:"signature",type:"function",raw:"(page: number) => void",signature:{arguments:[{type:{name:"number"},name:"page"}],return:{name:"void"}}},description:""},siblingCount:{required:!1,tsType:{name:"number"},description:"",defaultValue:{value:"1",computed:!1}},boundaryCount:{required:!1,tsType:{name:"number"},description:"",defaultValue:{value:"1",computed:!1}},disabled:{required:!1,tsType:{name:"boolean"},description:"",defaultValue:{value:"false",computed:!1}},showFirstLast:{required:!1,tsType:{name:"boolean"},description:"",defaultValue:{value:"true",computed:!1}},ariaLabel:{required:!1,tsType:{name:"string"},description:"",defaultValue:{value:'"Pagination"',computed:!1}},ariaLabelledBy:{required:!1,tsType:{name:"string"},description:""},getItemAriaLabel:{required:!1,tsType:{name:"signature",type:"function",raw:`(
+  type: "page" | "current" | "first" | "last" | "next" | "previous",
+  page: number
+) => string`,signature:{arguments:[{type:{name:"union",raw:'"page" | "current" | "first" | "last" | "next" | "previous"',elements:[{name:"literal",value:'"page"'},{name:"literal",value:'"current"'},{name:"literal",value:'"first"'},{name:"literal",value:'"last"'},{name:"literal",value:'"next"'},{name:"literal",value:'"previous"'}]},name:"type"},{type:{name:"number"},name:"page"}],return:{name:"string"}}},description:"",defaultValue:{value:`function defaultGetItemAriaLabel(
+  type: "page" | "current" | "first" | "last" | "next" | "previous",
+  page: number
+) {
+  switch (type) {
+    case "first":
+      return "Go to first page";
+    case "last":
+      return "Go to last page";
+    case "previous":
+      return "Go to previous page";
+    case "next":
+      return "Go to next page";
+    case "current":
+      return \`Current page, \${page}\`;
+    default:
+      return \`Go to page \${page}\`;
+  }
+}`,computed:!1}}}};const it={title:"Data/Pagination",component:v,tags:["autodocs"],parameters:{layout:"centered",docs:{description:{component:"Pagination provides first/previous/number/next/last controls with compact ellipsis behavior and accessible page labels."}}},args:{page:6,pageCount:20,onPageChange:()=>{}}};function Ye(){const[t,e]=c.useState(1);return n.jsxs("div",{style:{width:640,display:"grid",gap:12},children:[n.jsxs("div",{style:{display:"flex",alignItems:"center",gap:8},children:[n.jsx("span",{style:{color:"var(--aurora-text-secondary)"},children:"Active page"}),n.jsx(k,{tone:"default",children:t})]}),n.jsx(v,{page:t,pageCount:12,onPageChange:e})]})}const $={render:()=>n.jsx(Ye,{}),play:async({canvasElement:t})=>{const e=h(t);await p.click(await e.findByRole("button",{name:"Go to page 2"})),await s(await e.findByRole("button",{name:"Current page, 2"})).toBeInTheDocument()}};function Ze(){const[t,e]=c.useState(4);return n.jsxs("div",{style:{width:640,display:"grid",gap:12},children:[n.jsxs("div",{style:{display:"flex",alignItems:"center",gap:8},children:[n.jsx("span",{style:{color:"var(--aurora-text-secondary)"},children:"Keyboard page"}),n.jsx(k,{tone:"default",children:t})]}),n.jsx(v,{page:t,pageCount:12,onPageChange:e})]})}const q={render:()=>n.jsx(Ze,{}),play:async({canvasElement:t})=>{const e=h(t),o=await e.findByRole("button",{name:"Current page, 4"});o.focus(),await s(o).toHaveFocus(),await s(o).toHaveAttribute("aria-keyshortcuts","Home End ArrowLeft ArrowRight"),await p.keyboard("{End}");const i=await e.findByRole("button",{name:"Current page, 12"});await s(i).toBeInTheDocument(),await s(i).toHaveFocus(),await p.keyboard("{Home}");const g=await e.findByRole("button",{name:"Current page, 1"});await s(g).toBeInTheDocument(),await s(g).toHaveFocus()}};function et(){const[t,e]=c.useState(4);return n.jsxs("div",{style:{width:640,display:"grid",gap:12},children:[n.jsxs("div",{style:{display:"flex",alignItems:"center",gap:8},children:[n.jsx("span",{style:{color:"var(--aurora-text-secondary)"},children:"Modifier guard page"}),n.jsx(k,{tone:"default","data-testid":"pagination-modifier-guard-page",children:t})]}),n.jsx(v,{page:t,pageCount:12,onPageChange:e})]})}const V={render:()=>n.jsx(et,{}),play:async({canvasElement:t})=>{const e=h(t),o=await e.findByRole("button",{name:"Current page, 4"});o.focus(),await s(o).toHaveFocus(),await s(e.getByTestId("pagination-modifier-guard-page")).toHaveTextContent("4"),await p.keyboard("{Control>}{End}{/Control}"),await p.keyboard("{Meta>}{ArrowRight}{/Meta}"),await p.keyboard("{Alt>}{Home}{/Alt}"),await s(e.getByTestId("pagination-modifier-guard-page")).toHaveTextContent("4"),await s(e.getByRole("button",{name:"Current page, 4"})).toHaveFocus(),await p.keyboard("{End}"),await s(e.getByTestId("pagination-modifier-guard-page")).toHaveTextContent("12"),await s(await e.findByRole("button",{name:"Current page, 12"})).toHaveFocus()}};function tt(){const[t,e]=c.useState(4);return n.jsxs("div",{dir:"rtl",style:{width:640,display:"grid",gap:12},children:[n.jsxs("div",{style:{display:"flex",alignItems:"center",gap:8},children:[n.jsx("span",{style:{color:"var(--aurora-text-secondary)"},children:"صفحه فعال"}),n.jsx(k,{tone:"default","data-testid":"rtl-page-value",children:t})]}),n.jsx(v,{page:t,pageCount:12,onPageChange:e})]})}const W={render:()=>n.jsx(tt,{}),play:async({canvasElement:t})=>{const e=h(t),o=await e.findByRole("button",{name:"Current page, 4"});o.focus(),await s(o).toHaveFocus(),await p.keyboard("{ArrowRight}");const i=await e.findByRole("button",{name:"Current page, 3"});await s(i).toBeInTheDocument(),await s(i).toHaveFocus(),await s(e.getByTestId("rtl-page-value")).toHaveTextContent("3"),await p.keyboard("{ArrowLeft}");const g=await e.findByRole("button",{name:"Current page, 4"});await s(g).toBeInTheDocument(),await s(g).toHaveFocus(),await s(e.getByTestId("rtl-page-value")).toHaveTextContent("4")}},_={args:{page:9,pageCount:48,onPageChange:()=>{}}},z={args:{page:3,pageCount:10,showFirstLast:!1,onPageChange:()=>{}}},N={args:{page:4,pageCount:12,disabled:!0,onPageChange:()=>{}}},O={args:{page:2,pageCount:9,getItemAriaLabel:(t,e)=>`Pagination ${t} ${e}`,onPageChange:()=>{}}},J={args:{page:1,pageCount:9,getItemAriaLabel:(t,e)=>`Pagination ${t} ${e}`,onPageChange:()=>{}},play:async({canvasElement:t})=>{const e=h(t);await s(e.getByRole("button",{name:"Pagination previous 1"})).toBeInTheDocument(),await s(e.getByRole("button",{name:"Pagination next 2"})).toBeInTheDocument()}};function at(){const[t,e]=c.useState(1);return n.jsxs("div",{style:{width:640,display:"grid",gap:12},children:[n.jsxs("div",{style:{display:"flex",alignItems:"center",gap:8},children:[n.jsx("span",{style:{color:"var(--aurora-text-secondary)"},children:"Boundary page"}),n.jsx(k,{tone:"default","data-testid":"boundary-page-value",children:t})]}),n.jsx(v,{page:t,pageCount:12,onPageChange:e})]})}const Q={render:()=>n.jsx(at,{}),play:async({canvasElement:t})=>{const e=h(t),o=await e.findByRole("button",{name:"Current page, 1"});await s(o).toHaveAttribute("aria-keyshortcuts","End ArrowLeft ArrowRight"),o.focus(),await s(o).toHaveFocus(),await p.keyboard("{Home}"),await s(e.getByTestId("boundary-page-value")).toHaveTextContent("1"),await p.keyboard("{End}");const i=await e.findByRole("button",{name:"Current page, 12"});await s(i).toHaveAttribute("aria-keyshortcuts","Home ArrowLeft ArrowRight"),await s(e.getByTestId("boundary-page-value")).toHaveTextContent("12")}},U={render:t=>n.jsxs("div",{style:{width:640,display:"grid",gap:12},children:[n.jsx("h3",{id:"pagination-release-heading",style:{margin:0},children:"Release pages"}),n.jsx(v,{...t,ariaLabelledBy:"pagination-release-heading"})]}),args:{page:3,pageCount:12,onPageChange:()=>{}},play:async({canvasElement:t})=>{const o=await h(t).findByRole("navigation",{name:"Release pages"});await s(o).toHaveAttribute("aria-labelledby","pagination-release-heading"),await s(o).not.toHaveAttribute("aria-label")}},X={render:()=>n.jsxs("div",{style:{width:640,display:"grid",gap:12},children:[n.jsx("p",{style:{margin:0,color:"var(--aurora-text-secondary)",fontSize:13},children:"Click the trigger first, then press Tab to verify keyboard re-entry restores pagination focus-visible state."}),n.jsx("button",{type:"button",children:"Before pagination"}),n.jsx(v,{page:4,pageCount:12,onPageChange:()=>{}})]}),play:async({canvasElement:t})=>{const e=h(t),o=await e.findByRole("button",{name:"Before pagination"}),i=e.getByRole("button",{name:"Go to first page"});await p.click(o),await p.tab(),await s(i).toHaveFocus(),await s(i).toHaveAttribute("data-focus-visible","true"),ze.mouseDown(i,{button:0,ctrlKey:!0}),await s(i).toHaveAttribute("data-focus-visible","true")}};var ie,ue,ce;$.parameters={...$.parameters,docs:{...(ie=$.parameters)==null?void 0:ie.docs,source:{originalSource:`{
+  render: () => <ControlledPaginationDemo />,
+  play: async ({
+    canvasElement
+  }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole("button", {
+      name: "Go to page 2"
+    }));
+    await expect(await canvas.findByRole("button", {
+      name: "Current page, 2"
+    })).toBeInTheDocument();
+  }
+}`,...(ce=(ue=$.parameters)==null?void 0:ue.docs)==null?void 0:ce.source}}};var le,de,pe;q.parameters={...q.parameters,docs:{...(le=q.parameters)==null?void 0:le.docs,source:{originalSource:`{
+  render: () => <KeyboardShortcutsDemo />,
+  play: async ({
+    canvasElement
+  }) => {
+    const canvas = within(canvasElement);
+    const current = await canvas.findByRole("button", {
+      name: "Current page, 4"
+    });
+    current.focus();
+    await expect(current).toHaveFocus();
+    await expect(current).toHaveAttribute("aria-keyshortcuts", "Home End ArrowLeft ArrowRight");
+    await userEvent.keyboard("{End}");
+    const currentLast = await canvas.findByRole("button", {
+      name: "Current page, 12"
+    });
+    await expect(currentLast).toBeInTheDocument();
+    await expect(currentLast).toHaveFocus();
+    await userEvent.keyboard("{Home}");
+    const currentFirst = await canvas.findByRole("button", {
+      name: "Current page, 1"
+    });
+    await expect(currentFirst).toBeInTheDocument();
+    await expect(currentFirst).toHaveFocus();
+  }
+}`,...(pe=(de=q.parameters)==null?void 0:de.docs)==null?void 0:pe.source}}};var ge,fe,ye;V.parameters={...V.parameters,docs:{...(ge=V.parameters)==null?void 0:ge.docs,source:{originalSource:`{
+  render: () => <ModifierGuardPaginationDemo />,
+  play: async ({
+    canvasElement
+  }) => {
+    const canvas = within(canvasElement);
+    const current = await canvas.findByRole("button", {
+      name: "Current page, 4"
+    });
+    current.focus();
+    await expect(current).toHaveFocus();
+    await expect(canvas.getByTestId("pagination-modifier-guard-page")).toHaveTextContent("4");
+    await userEvent.keyboard("{Control>}{End}{/Control}");
+    await userEvent.keyboard("{Meta>}{ArrowRight}{/Meta}");
+    await userEvent.keyboard("{Alt>}{Home}{/Alt}");
+    await expect(canvas.getByTestId("pagination-modifier-guard-page")).toHaveTextContent("4");
+    await expect(canvas.getByRole("button", {
+      name: "Current page, 4"
+    })).toHaveFocus();
+    await userEvent.keyboard("{End}");
+    await expect(canvas.getByTestId("pagination-modifier-guard-page")).toHaveTextContent("12");
+    await expect(await canvas.findByRole("button", {
+      name: "Current page, 12"
+    })).toHaveFocus();
+  }
+}`,...(ye=(fe=V.parameters)==null?void 0:fe.docs)==null?void 0:ye.source}}};var me,ve,we;W.parameters={...W.parameters,docs:{...(me=W.parameters)==null?void 0:me.docs,source:{originalSource:`{
+  render: () => <RtlKeyboardShortcutsDemo />,
+  play: async ({
+    canvasElement
+  }) => {
+    const canvas = within(canvasElement);
+    const current = await canvas.findByRole("button", {
+      name: "Current page, 4"
+    });
+    current.focus();
+    await expect(current).toHaveFocus();
+    await userEvent.keyboard("{ArrowRight}");
+    const currentRtl = await canvas.findByRole("button", {
+      name: "Current page, 3"
+    });
+    await expect(currentRtl).toBeInTheDocument();
+    await expect(currentRtl).toHaveFocus();
+    await expect(canvas.getByTestId("rtl-page-value")).toHaveTextContent("3");
+    await userEvent.keyboard("{ArrowLeft}");
+    const currentDefault = await canvas.findByRole("button", {
+      name: "Current page, 4"
+    });
+    await expect(currentDefault).toBeInTheDocument();
+    await expect(currentDefault).toHaveFocus();
+    await expect(canvas.getByTestId("rtl-page-value")).toHaveTextContent("4");
+  }
+}`,...(we=(ve=W.parameters)==null?void 0:ve.docs)==null?void 0:we.source}}};var he,be,xe;_.parameters={..._.parameters,docs:{...(he=_.parameters)==null?void 0:he.docs,source:{originalSource:`{
+  args: {
+    page: 9,
+    pageCount: 48,
+    onPageChange: () => {}
+  }
+}`,...(xe=(be=_.parameters)==null?void 0:be.docs)==null?void 0:xe.source}}};var Be,Ce,Re;z.parameters={...z.parameters,docs:{...(Be=z.parameters)==null?void 0:Be.docs,source:{originalSource:`{
+  args: {
+    page: 3,
+    pageCount: 10,
+    showFirstLast: false,
+    onPageChange: () => {}
+  }
+}`,...(Re=(Ce=z.parameters)==null?void 0:Ce.docs)==null?void 0:Re.source}}};var Pe,He,Ee;N.parameters={...N.parameters,docs:{...(Pe=N.parameters)==null?void 0:Pe.docs,source:{originalSource:`{
+  args: {
+    page: 4,
+    pageCount: 12,
+    disabled: true,
+    onPageChange: () => {}
+  }
+}`,...(Ee=(He=N.parameters)==null?void 0:He.docs)==null?void 0:Ee.source}}};var Ae,Te,je;O.parameters={...O.parameters,docs:{...(Ae=O.parameters)==null?void 0:Ae.docs,source:{originalSource:`{
+  args: {
+    page: 2,
+    pageCount: 9,
+    getItemAriaLabel: (type, page) => \`Pagination \${type} \${page}\`,
+    onPageChange: () => {}
+  }
+}`,...(je=(Te=O.parameters)==null?void 0:Te.docs)==null?void 0:je.source}}};var Le,De,Ie;J.parameters={...J.parameters,docs:{...(Le=J.parameters)==null?void 0:Le.docs,source:{originalSource:`{
+  args: {
+    page: 1,
+    pageCount: 9,
+    getItemAriaLabel: (type, page) => \`Pagination \${type} \${page}\`,
+    onPageChange: () => {}
+  },
+  play: async ({
+    canvasElement
+  }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", {
+      name: "Pagination previous 1"
+    })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", {
+      name: "Pagination next 2"
+    })).toBeInTheDocument();
+  }
+}`,...(Ie=(De=J.parameters)==null?void 0:De.docs)==null?void 0:Ie.source}}};var Fe,Se,ke;Q.parameters={...Q.parameters,docs:{...(Fe=Q.parameters)==null?void 0:Fe.docs,source:{originalSource:`{
+  render: () => <BoundaryShortcutHintsDemo />,
+  play: async ({
+    canvasElement
+  }) => {
+    const canvas = within(canvasElement);
+    const currentFirst = await canvas.findByRole("button", {
+      name: "Current page, 1"
+    });
+    await expect(currentFirst).toHaveAttribute("aria-keyshortcuts", "End ArrowLeft ArrowRight");
+    currentFirst.focus();
+    await expect(currentFirst).toHaveFocus();
+    await userEvent.keyboard("{Home}");
+    await expect(canvas.getByTestId("boundary-page-value")).toHaveTextContent("1");
+    await userEvent.keyboard("{End}");
+    const currentLast = await canvas.findByRole("button", {
+      name: "Current page, 12"
+    });
+    await expect(currentLast).toHaveAttribute("aria-keyshortcuts", "Home ArrowLeft ArrowRight");
+    await expect(canvas.getByTestId("boundary-page-value")).toHaveTextContent("12");
+  }
+}`,...(ke=(Se=Q.parameters)==null?void 0:Se.docs)==null?void 0:ke.source}}};var Ke,Ge,Me;U.parameters={...U.parameters,docs:{...(Ke=U.parameters)==null?void 0:Ke.docs,source:{originalSource:`{
+  render: args => <div style={{
+    width: 640,
+    display: "grid",
+    gap: 12
+  }}>
+      <h3 id="pagination-release-heading" style={{
+      margin: 0
+    }}>
+        Release pages
+      </h3>
+      <Pagination {...args} ariaLabelledBy="pagination-release-heading" />
+    </div>,
+  args: {
+    page: 3,
+    pageCount: 12,
+    onPageChange: () => {}
+  },
+  play: async ({
+    canvasElement
+  }) => {
+    const canvas = within(canvasElement);
+    const nav = await canvas.findByRole("navigation", {
+      name: "Release pages"
+    });
+    await expect(nav).toHaveAttribute("aria-labelledby", "pagination-release-heading");
+    await expect(nav).not.toHaveAttribute("aria-label");
+  }
+}`,...(Me=(Ge=U.parameters)==null?void 0:Ge.docs)==null?void 0:Me.source}}};var $e,qe,Ve;X.parameters={...X.parameters,docs:{...($e=X.parameters)==null?void 0:$e.docs,source:{originalSource:`{
+  render: () => <div style={{
+    width: 640,
+    display: "grid",
+    gap: 12
+  }}>
+      <p style={{
+      margin: 0,
+      color: "var(--aurora-text-secondary)",
+      fontSize: 13
+    }}>
+        Click the trigger first, then press Tab to verify keyboard re-entry restores pagination
+        focus-visible state.
+      </p>
+      <button type="button">Before pagination</button>
+      <Pagination page={4} pageCount={12} onPageChange={() => {}} />
+    </div>,
+  play: async ({
+    canvasElement
+  }) => {
+    const canvas = within(canvasElement);
+    const beforeButton = await canvas.findByRole("button", {
+      name: "Before pagination"
+    });
+    const firstButton = canvas.getByRole("button", {
+      name: "Go to first page"
+    });
+    await userEvent.click(beforeButton);
+    await userEvent.tab();
+    await expect(firstButton).toHaveFocus();
+    await expect(firstButton).toHaveAttribute("data-focus-visible", "true");
+    fireEvent.mouseDown(firstButton, {
+      button: 0,
+      ctrlKey: true
+    });
+    await expect(firstButton).toHaveAttribute("data-focus-visible", "true");
+  }
+}`,...(Ve=(qe=X.parameters)==null?void 0:qe.docs)==null?void 0:Ve.source}}};const ut=["Controlled","KeyboardShortcuts","ModifierKeyGuard","RtlKeyboardShortcuts","CompactRange","WithoutFirstLast","DisabledPagination","CustomAriaLabels","BoundaryAriaLabels","BoundaryShortcutHints","LabelledByHeading","FocusIntentReentry"];export{J as BoundaryAriaLabels,Q as BoundaryShortcutHints,_ as CompactRange,$ as Controlled,O as CustomAriaLabels,N as DisabledPagination,X as FocusIntentReentry,q as KeyboardShortcuts,U as LabelledByHeading,V as ModifierKeyGuard,W as RtlKeyboardShortcuts,z as WithoutFirstLast,ut as __namedExportsOrder,it as default};
