@@ -740,7 +740,7 @@ function resolveFocusVisibleState(target: HTMLButtonElement | null, fallback: bo
   }
 
   try {
-    return target.matches(":focus-visible");
+    return target.matches(":focus-visible") || fallback;
   } catch {
     return fallback;
   }

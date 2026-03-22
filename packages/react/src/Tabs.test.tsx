@@ -1397,6 +1397,39 @@ describe("Tabs", () => {
     matchesSpy.mockRestore();
   });
 
+  it("falls back to keyboard intent when :focus-visible returns false", () => {
+    render(
+      <Tabs
+        defaultValue="one"
+        items={[
+          { key: "one", label: "One", content: <div>Panel One</div> },
+          { key: "two", label: "Two", content: <div>Panel Two</div> }
+        ]}
+      />
+    );
+
+    const oneTab = screen.getByRole("tab", { name: "One" });
+    const nativeMatches = oneTab.matches.bind(oneTab);
+    const matchesSpy = vi.spyOn(oneTab, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        return false;
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.mouseDown(oneTab);
+    fireEvent.focus(oneTab);
+    expect(oneTab.style.boxShadow).toBe("none");
+
+    fireEvent.blur(oneTab);
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(oneTab);
+    expect(oneTab.style.boxShadow).toContain("0 0 0 3px");
+
+    matchesSpy.mockRestore();
+  });
+
   it("restores fallback focus ring when re-entering via user tab navigation", async () => {
     const user = userEvent.setup();
 

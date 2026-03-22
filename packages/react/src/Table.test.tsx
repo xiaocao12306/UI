@@ -1134,6 +1134,43 @@ describe("Table", () => {
     matchesSpy.mockRestore();
   });
 
+  it("falls back to keyboard intent when :focus-visible returns false on sortable headers", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    const nativeMatches = sortButton.matches.bind(sortButton);
+    const matchesSpy = vi.spyOn(sortButton, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        return false;
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.mouseDown(sortButton);
+    fireEvent.focus(sortButton);
+    expect(sortButton.style.boxShadow).toBe("none");
+
+    fireEvent.blur(sortButton);
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(sortButton);
+    expect(sortButton.style.boxShadow).toContain("0 0 0 3px");
+
+    matchesSpy.mockRestore();
+  });
+
   it("restores sort-button fallback focus ring when re-entering via user tab navigation", async () => {
     const user = userEvent.setup();
 
