@@ -66,3 +66,40 @@ export const LocalizedLabels: Story = {
     await expect(canvas.getByRole("list", { name: "推理步骤" })).toBeInTheDocument();
   }
 };
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 10 }}>
+      <h3 id="reasoning-heading" style={{ margin: 0 }}>
+        Reasoning timeline heading
+      </h3>
+      <ReasoningPanel
+        defaultOpen
+        steps={["Gather requirements", "Draft API contract"]}
+        listAriaLabel="Fallback reasoning steps"
+        listAriaLabelledBy="reasoning-heading"
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const list = await canvas.findByRole("list", { name: "Reasoning timeline heading" });
+    await expect(list).toHaveAttribute("aria-labelledby", "reasoning-heading");
+    await expect(list).not.toHaveAttribute("aria-label");
+  }
+};
+
+export const BlankStepFallback: Story = {
+  render: () => (
+    <ReasoningPanel
+      defaultOpen
+      steps={["   "]}
+      emptyText="   "
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("No reasoning steps captured.")).toBeInTheDocument();
+    await expect(canvas.getByRole("list", { name: "Reasoning steps" })).toBeInTheDocument();
+  }
+};

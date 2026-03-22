@@ -290,8 +290,9 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Localize message-bubble narration with `speakerLabel` or explicit `ariaLabel`; blank values should be omitted so speaker-based fallback naming remains valid.
 - Prefer `ariaLabelledBy` for message bubbles when a visible heading/title already exists; use `ariaLabel` for standalone bubbles without nearby naming context.
 - Localize message semantics with `roleDescription` when product vocabulary differs from plain `message`; blank values should fallback to default role description.
-- Localize reasoning disclosure semantics with `expandLabel`/`collapseLabel` and `listAriaLabel` so assistive-tech narration matches product language.
+- Localize reasoning disclosure semantics with `expandLabel`/`collapseLabel`, and prefer `listAriaLabelledBy` (or `listAriaLabel` when standalone) so list narration stays aligned with visible headings.
 - Keep reasoning disclosure shortcuts discoverable with `aria-keyshortcuts="Enter Space"` so QA/AT audits can verify keyboard toggle support.
+- Normalize reasoning step payloads before rendering (or rely on built-in blank-step filtering) so whitespace-only steps do not create empty list bullets; keep `emptyText` non-blank unless default fallback copy is desired.
 - Show reasoning disclosure with explicit user intent (default collapsed).
 - Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
 - Keep streaming-code narration `live="off"` for high-frequency token output; enable `live="polite"` only when progressive code updates must be announced.
@@ -307,6 +308,8 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={MessageBubbleStories.LabelledByPrecedence} />
 <Canvas of={ReasoningPanelStories.Default} />
 <Canvas of={ReasoningPanelStories.LocalizedLabels} />
+<Canvas of={ReasoningPanelStories.LabelledByPrecedence} />
+<Canvas of={ReasoningPanelStories.BlankStepFallback} />
 <Canvas of={StreamingCodeBlockStories.Default} />
 <Canvas of={CommandPaletteStories.AiInteractionFlow} />
 <Canvas of={CommandPaletteStories.QueryTelemetry} />

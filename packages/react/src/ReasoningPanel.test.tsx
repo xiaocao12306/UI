@@ -60,4 +60,34 @@ describe("ReasoningPanel", () => {
     expect(screen.getByRole("button", { name: "Collapse reasoning panel" })).toBeInTheDocument();
     expect(screen.getByRole("list", { name: "Reasoning steps" })).toBeInTheDocument();
   });
+
+  it("prefers listAriaLabelledBy over listAriaLabel", () => {
+    render(
+      <div>
+        <h3 id="reasoning-heading">Reasoning timeline heading</h3>
+        <ReasoningPanel
+          defaultOpen
+          steps={["Gather requirements"]}
+          listAriaLabel="Fallback reasoning steps"
+          listAriaLabelledBy="reasoning-heading"
+        />
+      </div>
+    );
+
+    const list = screen.getByRole("list", { name: "Reasoning timeline heading" });
+    expect(list).toHaveAttribute("aria-labelledby", "reasoning-heading");
+    expect(list).not.toHaveAttribute("aria-label");
+  });
+
+  it("treats blank-only steps and blank emptyText as fallback empty state", () => {
+    render(<ReasoningPanel defaultOpen steps={["   "]} emptyText="   " />);
+    expect(screen.getByText("No reasoning steps captured.")).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "Reasoning steps" })).toBeInTheDocument();
+  });
+
+  it("keeps numeric emptyText semantics when no reasoning step remains after normalization", () => {
+    render(<ReasoningPanel defaultOpen steps={["   "]} emptyText={0} />);
+    expect(screen.getByText("0")).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "Reasoning steps" })).toBeInTheDocument();
+  });
 });

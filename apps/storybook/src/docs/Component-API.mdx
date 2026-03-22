@@ -919,14 +919,16 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | Prop                            | Type                              | Notes                                                                                                                |
 | ------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `title`                         | `ReactNode`                       | Toggle trigger title.                                                                                                |
-| `steps`                         | `string[]`                        | Ordered reasoning steps; empty arrays show fallback state.                                                           |
+| `steps`                         | `string[]`                        | Ordered reasoning steps; blank-only entries are ignored, so whitespace-only payloads still resolve to fallback empty state. |
 | `defaultOpen`                   | `boolean`                         | Initial expanded state for diagnostics-oriented views.                                                               |
 | `expandLabel` / `collapseLabel` | `string`                          | Localizable button accessible labels for collapsed/expanded states; blank values fallback to default English labels. |
 | keyboard metadata               | `aria-keyshortcuts="Enter Space"` | Toggle button exposes disclosure shortcuts for QA/AT discoverability.                                                |
-| `listAriaLabel`                 | `string`                          | Accessible name for the reasoning list region; blank values fallback to `Reasoning steps`.                           |
-| `emptyText`                     | `ReactNode`                       | Empty-state copy when no reasoning steps are present.                                                                |
+| `listAriaLabel` / `listAriaLabelledBy` | `string` / `string`         | Accessible naming controls for the reasoning list region. Blank values are ignored, and `listAriaLabelledBy` takes precedence over `listAriaLabel` fallback (`Reasoning steps`). |
+| `emptyText`                     | `ReactNode`                       | Empty-state copy when no reasoning steps remain. Blank strings fallback to default copy, while numeric values like `0` remain renderable. |
 
 <Canvas of={ReasoningPanelStories.LocalizedLabels} />
+<Canvas of={ReasoningPanelStories.LabelledByPrecedence} />
+<Canvas of={ReasoningPanelStories.BlankStepFallback} />
 
 ### StreamingCodeBlock
 
