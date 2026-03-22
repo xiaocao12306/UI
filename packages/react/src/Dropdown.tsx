@@ -16,6 +16,7 @@ export type DropdownCloseReason = "trigger-click" | "item-select" | "escape-key"
 export type DropdownProps = {
   label: React.ReactNode;
   triggerAriaLabel?: string;
+  triggerAriaLabelledBy?: string;
   items: DropdownItem[];
   open?: boolean;
   defaultOpen?: boolean;
@@ -146,6 +147,7 @@ function isDropdownNavigationKey(key: string) {
 export function Dropdown({
   label,
   triggerAriaLabel,
+  triggerAriaLabelledBy,
   items,
   open,
   defaultOpen,
@@ -175,7 +177,11 @@ export function Dropdown({
 
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
-  const resolvedTriggerAriaLabel = resolveNonEmptyLabel(triggerAriaLabel);
+  const resolvedTriggerAriaLabelledBy = resolveNonEmptyLabel(triggerAriaLabelledBy);
+  const resolvedTriggerAriaLabel =
+    resolvedTriggerAriaLabelledBy === undefined
+      ? resolveNonEmptyLabel(triggerAriaLabel)
+      : undefined;
   const itemRenderKeys = React.useMemo(() => {
     const seenCounts = new Map<string, number>();
     return items.map((item, index) => {
@@ -391,6 +397,7 @@ export function Dropdown({
         ref={triggerRef}
         variant="outline"
         aria-label={resolvedTriggerAriaLabel}
+        aria-labelledby={resolvedTriggerAriaLabelledBy}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
@@ -466,7 +473,7 @@ export function Dropdown({
             ref={menuRef}
             id={menuId}
             role="menu"
-            aria-labelledby={triggerId}
+            aria-labelledby={resolvedTriggerAriaLabelledBy ?? triggerId}
             aria-orientation="vertical"
             aria-keyshortcuts={menuKeyboardShortcuts}
             style={{

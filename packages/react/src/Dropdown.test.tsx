@@ -5,6 +5,48 @@ import { Popover } from "./Popover";
 import { dispatchCtrlPrimaryPointerDown, dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 describe("Dropdown", () => {
+  it("prefers triggerAriaLabelledBy over triggerAriaLabel for trigger/menu naming", () => {
+    render(
+      <div>
+        <h2 id="dropdown-heading">Release actions menu</h2>
+        <Dropdown
+          label={<span aria-hidden>⋯</span>}
+          triggerAriaLabel="Fallback release actions"
+          triggerAriaLabelledBy="dropdown-heading"
+          items={[
+            { key: "duplicate", label: "Duplicate" },
+            { key: "archive", label: "Archive" }
+          ]}
+        />
+      </div>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Release actions menu" });
+    expect(trigger).toHaveAttribute("aria-labelledby", "dropdown-heading");
+    expect(trigger).not.toHaveAttribute("aria-label");
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole("menu", { name: "Release actions menu" })).toBeInTheDocument();
+  });
+
+  it("ignores blank triggerAriaLabelledBy and keeps triggerAriaLabel fallback naming", () => {
+    render(
+      <Dropdown
+        label={<span aria-hidden>⋯</span>}
+        triggerAriaLabel="More actions"
+        triggerAriaLabelledBy="   "
+        items={[
+          { key: "duplicate", label: "Duplicate" },
+          { key: "archive", label: "Archive" }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "More actions" });
+    expect(trigger).toHaveAttribute("aria-label", "More actions");
+    expect(trigger).not.toHaveAttribute("aria-labelledby");
+  });
+
   it("selects an item and closes the menu", () => {
     const onSelect = vi.fn();
     const onCloseReason = vi.fn();

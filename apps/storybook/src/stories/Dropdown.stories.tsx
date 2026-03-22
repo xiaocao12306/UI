@@ -75,6 +75,31 @@ export const IconTrigger: Story = {
   }
 };
 
+export const TriggerLabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 12 }}>
+      <h3 id="dropdown-heading" style={{ margin: 0 }}>
+        Release actions menu
+      </h3>
+      <Dropdown
+        label={<span aria-hidden>⋯</span>}
+        triggerAriaLabel="Fallback release actions"
+        triggerAriaLabelledBy="dropdown-heading"
+        items={items}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const trigger = await canvas.findByRole("button", { name: "Release actions menu" });
+    await expect(trigger).toHaveAttribute("aria-labelledby", "dropdown-heading");
+    await expect(trigger).not.toHaveAttribute("aria-label");
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Release actions menu" })).toBeInTheDocument();
+  }
+};
+
 export const IconItemNaming: Story = {
   args: {
     label: "Icon items",
