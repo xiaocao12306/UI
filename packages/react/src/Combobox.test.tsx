@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Combobox } from "./Combobox";
 import { dispatchCtrlPrimaryPointerDown, dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
@@ -330,6 +330,66 @@ describe("Combobox", () => {
 
     fireEvent.mouseDown(option, { button: 0 });
     expect(input).toHaveFocus();
+  });
+
+  it("prevents default on primary touch pointerdown option selection to preserve combobox focus", () => {
+    render(<Combobox options={options} onValueChange={() => {}} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    const option = screen.getByRole("option", { name: "React" });
+
+    const touchPointerDown = new Event("pointerdown", {
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(touchPointerDown, "button", { configurable: true, value: -1 });
+    Object.defineProperty(touchPointerDown, "pointerType", { configurable: true, value: "touch" });
+    act(() => {
+      option.dispatchEvent(touchPointerDown);
+    });
+
+    expect(touchPointerDown.defaultPrevented).toBe(true);
+    expect(input).toHaveFocus();
+  });
+
+  it("does not prevent default on primary mouse pointerdown for option selection", () => {
+    render(<Combobox options={options} onValueChange={() => {}} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    const option = screen.getByRole("option", { name: "React" });
+    const mousePointerDown = new Event("pointerdown", {
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(mousePointerDown, "button", { configurable: true, value: 0 });
+    Object.defineProperty(mousePointerDown, "pointerType", { configurable: true, value: "mouse" });
+    act(() => {
+      option.dispatchEvent(mousePointerDown);
+    });
+
+    expect(mousePointerDown.defaultPrevented).toBe(false);
+  });
+
+  it("does not prevent default on ctrl-modified touch pointerdown for option selection", () => {
+    render(<Combobox options={options} onValueChange={() => {}} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    const option = screen.getByRole("option", { name: "React" });
+    const ctrlTouchPointerDown = new Event("pointerdown", {
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(ctrlTouchPointerDown, "button", { configurable: true, value: -1 });
+    Object.defineProperty(ctrlTouchPointerDown, "pointerType", { configurable: true, value: "touch" });
+    Object.defineProperty(ctrlTouchPointerDown, "ctrlKey", { configurable: true, value: true });
+    act(() => {
+      option.dispatchEvent(ctrlTouchPointerDown);
+    });
+
+    expect(ctrlTouchPointerDown.defaultPrevented).toBe(false);
   });
 
   it("does not prevent default on ctrl-primary option mousedown", () => {

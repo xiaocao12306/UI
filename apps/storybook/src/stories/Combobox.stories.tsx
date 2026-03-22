@@ -229,6 +229,16 @@ export const ActivedescendantFocusModel: Story = {
     const option = canvas.getByRole("option", { name: "React" });
     await expect(option).toHaveAttribute("tabindex", "-1");
 
+    const touchPointerDown = new Event("pointerdown", {
+      bubbles: true,
+      cancelable: true
+    });
+    Object.defineProperty(touchPointerDown, "button", { configurable: true, value: -1 });
+    Object.defineProperty(touchPointerDown, "pointerType", { configurable: true, value: "touch" });
+    option.dispatchEvent(touchPointerDown);
+    await expect(touchPointerDown.defaultPrevented).toBe(true);
+    await expect(input).toHaveFocus();
+
     await userEvent.click(option);
     await expect(input).toHaveFocus();
   }

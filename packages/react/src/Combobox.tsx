@@ -57,12 +57,16 @@ function isComposingComboboxKeyEvent(event: React.KeyboardEvent<HTMLInputElement
   return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
 }
 
+function isPrimaryPointerButton(button: number | undefined) {
+  return typeof button !== "number" || button <= 0;
+}
+
 function isPrimaryPointerDownEvent(event: PointerEvent) {
-  const button = typeof event.button === "number" ? event.button : 0;
-  if (button > 0) {
+  if (!isPrimaryPointerButton(event.button)) {
     return false;
   }
 
+  const button = typeof event.button === "number" ? event.button : 0;
   if (event.ctrlKey && button === 0) {
     return false;
   }
@@ -376,6 +380,19 @@ export function Combobox({
                   if (event.button !== 0 || event.ctrlKey || item.disabled) {
                     return;
                   }
+                  event.preventDefault();
+                  inputRef.current?.focus();
+                }}
+                onPointerDown={(event) => {
+                  if (
+                    item.disabled ||
+                    event.pointerType === "mouse" ||
+                    !isPrimaryPointerButton(event.button) ||
+                    event.ctrlKey
+                  ) {
+                    return;
+                  }
+                  // Preserve combobox input focus for touch/pen selection.
                   event.preventDefault();
                   inputRef.current?.focus();
                 }}

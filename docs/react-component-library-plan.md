@@ -217,6 +217,7 @@
   - Demo E2E 扩展（AI 区域 PromptInput 提交 + ReasoningPanel 展开 + StreamingCodeBlock 完成态）
   - Combobox 生产级补齐（Escape/blur 关闭策略、`aria-selected` 语义修正、状态 Storybook 场景）
   - Combobox 语义收口（关闭态移除 `aria-controls`，打开时建立 listbox 关联）
+  - Combobox 触控焦点收口（option `pointerdown` 在 touch/pen 主键路径保持输入焦点，鼠标路径不拦截点击）
   - Textarea 生产级返工（invalid/focus/hover/readOnly/disabled 状态对齐、单测 + Storybook `Form/Textarea`）
   - Select 生产级返工（invalid/focus/hover/disabled 状态对齐、单测 + Storybook `Form/Select`）
   - Checkbox 生产级返工（indeterminate/invalid/disabled + helper narration 语义、单测 + Storybook `Form/Checkbox`）
