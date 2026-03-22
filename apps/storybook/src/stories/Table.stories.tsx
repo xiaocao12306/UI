@@ -215,7 +215,7 @@ export const SingleSortableColumnShortcutHints: Story = {
 
 export const KeyboardReachableScrollContainer: Story = {
   render: () => (
-    <StoryShowcaseFrame maxWidth="min(100%, 420px)" gap={10}>
+    <StoryShowcaseFrame maxWidth="220px" gap={10}>
       <p style={storyMutedTextStyle}>
         When sortable controls are unavailable, focus the scroll region and use Arrow/Home/End/Page
         keys to pan overflowed columns.
@@ -240,10 +240,42 @@ export const KeyboardReachableScrollContainer: Story = {
     await expect(scrollContainer).not.toBeNull();
     await expect(scrollContainer).toHaveAttribute("role", "region");
     await expect(scrollContainer).toHaveAttribute("tabindex", "0");
-    await expect(scrollContainer).toHaveAttribute(
-      "aria-keyshortcuts",
-      "ArrowLeft ArrowRight Home End PageDown PageUp"
-    );
+    const ownerWindow = scrollContainer?.ownerDocument.defaultView ?? window;
+    let mockedScrollLeft = 0;
+    Object.defineProperty(scrollContainer as HTMLDivElement, "clientWidth", {
+      configurable: true,
+      value: 220
+    });
+    Object.defineProperty(scrollContainer as HTMLDivElement, "scrollWidth", {
+      configurable: true,
+      value: 640
+    });
+    Object.defineProperty(scrollContainer as HTMLDivElement, "scrollLeft", {
+      configurable: true,
+      get: () => mockedScrollLeft,
+      set: (value: number) => {
+        mockedScrollLeft = value;
+      }
+    });
+    Object.defineProperty(scrollContainer as HTMLDivElement, "scrollBy", {
+      configurable: true,
+      value: ({ left = 0 }: ScrollToOptions) => {
+        mockedScrollLeft += Number(left) || 0;
+      }
+    });
+    Object.defineProperty(scrollContainer as HTMLDivElement, "scrollTo", {
+      configurable: true,
+      value: ({ left = 0 }: ScrollToOptions) => {
+        mockedScrollLeft = Number(left) || 0;
+      }
+    });
+    fireEvent(ownerWindow, new ownerWindow.Event("resize"));
+    await waitFor(() => {
+      expect(scrollContainer).toHaveAttribute(
+        "aria-keyshortcuts",
+        "ArrowLeft ArrowRight Home End PageDown PageUp"
+      );
+    });
 
     await userEvent.tab();
     await expect(scrollContainer).toHaveFocus();

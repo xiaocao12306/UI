@@ -395,16 +395,61 @@ describe("Table", () => {
     ) as HTMLDivElement;
     expect(scrollContainer).toHaveAttribute("role", "region");
     expect(scrollContainer).toHaveAttribute("tabindex", "0");
-    expect(scrollContainer).toHaveAttribute(
-      "aria-keyshortcuts",
-      "ArrowLeft ArrowRight Home End PageDown PageUp"
-    );
+    expect(scrollContainer).not.toHaveAttribute("aria-keyshortcuts");
 
     await user.tab();
     expect(scrollContainer).toHaveFocus();
 
     await user.tab();
     expect(screen.getByRole("button", { name: "After table" })).toHaveFocus();
+  });
+
+  it("exposes scroll-container keyboard hints only when horizontal overflow exists", () => {
+    const { container } = render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    const scrollContainer = container.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement;
+    const ownerWindow = scrollContainer.ownerDocument.defaultView as Window;
+
+    Object.defineProperty(scrollContainer, "clientWidth", {
+      configurable: true,
+      value: 220
+    });
+    Object.defineProperty(scrollContainer, "scrollWidth", {
+      configurable: true,
+      value: 220
+    });
+    fireEvent(ownerWindow, new ownerWindow.Event("resize"));
+    expect(scrollContainer).not.toHaveAttribute("aria-keyshortcuts");
+
+    Object.defineProperty(scrollContainer, "scrollWidth", {
+      configurable: true,
+      value: 640
+    });
+    fireEvent(ownerWindow, new ownerWindow.Event("resize"));
+    expect(scrollContainer).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowLeft ArrowRight Home End PageDown PageUp"
+    );
+
+    Object.defineProperty(scrollContainer, "scrollWidth", {
+      configurable: true,
+      value: 220
+    });
+    fireEvent(ownerWindow, new ownerWindow.Event("resize"));
+    expect(scrollContainer).not.toHaveAttribute("aria-keyshortcuts");
   });
 
   it("supports keyboard horizontal scrolling when sortable controls are unavailable", () => {

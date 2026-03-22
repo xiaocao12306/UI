@@ -142,6 +142,7 @@ export function Table<T>({
   const [hoveredSortKey, setHoveredSortKey] = React.useState<string | null>(null);
   const [pressedSortKey, setPressedSortKey] = React.useState<string | null>(null);
   const [focusVisibleSortKey, setFocusVisibleSortKey] = React.useState<string | null>(null);
+  const [hasKeyboardPannableOverflow, setHasKeyboardPannableOverflow] = React.useState(false);
 
   React.useEffect(() => {
     const ownerDocument = scrollContainerRef.current?.ownerDocument ?? document;
@@ -485,6 +486,44 @@ export function Table<T>({
     setFocusVisibleSortKey(null);
   }, [hasActionableSortControls]);
 
+  React.useEffect(() => {
+    if (hasActionableSortControls) {
+      setHasKeyboardPannableOverflow(false);
+      return;
+    }
+
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) {
+      setHasKeyboardPannableOverflow(false);
+      return;
+    }
+
+    const ownerWindow =
+      scrollContainer.ownerDocument.defaultView ?? (typeof window === "undefined" ? undefined : window);
+    if (!ownerWindow) {
+      return;
+    }
+
+    const syncOverflowState = () => {
+      const hasOverflow = scrollContainer.scrollWidth - scrollContainer.clientWidth > 0;
+      setHasKeyboardPannableOverflow((current) => (current === hasOverflow ? current : hasOverflow));
+    };
+
+    syncOverflowState();
+    ownerWindow.addEventListener("resize", syncOverflowState);
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ownerWindow.ResizeObserver === "function") {
+      resizeObserver = new ownerWindow.ResizeObserver(syncOverflowState);
+      resizeObserver.observe(scrollContainer);
+    }
+
+    return () => {
+      ownerWindow.removeEventListener("resize", syncOverflowState);
+      resizeObserver?.disconnect();
+    };
+  }, [columns.length, data.length, hasActionableSortControls, loading]);
+
   return (
     <div
       ref={scrollContainerRef}
@@ -499,7 +538,11 @@ export function Table<T>({
             : (resolvedAriaLabel ?? "Data table scroll container")
       }
       aria-labelledby={hasActionableSortControls ? undefined : resolvedAriaLabelledBy}
-      aria-keyshortcuts={hasActionableSortControls ? undefined : scrollContainerKeyboardShortcuts}
+      aria-keyshortcuts={
+        hasActionableSortControls || !hasKeyboardPannableOverflow
+          ? undefined
+          : scrollContainerKeyboardShortcuts
+      }
       onKeyDown={(event) => {
         if (hasActionableSortControls) {
           return;
