@@ -84,7 +84,7 @@ export function CommandPalette({
   const [query, setQuery] = React.useState("");
   const [activeIndex, setActiveIndex] = React.useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const activeCommandKeyRef = React.useRef<string | null>(null);
+  const activeCommandRenderKeyRef = React.useRef<string | null>(null);
   const closeReasonRef = React.useRef<CommandPaletteCloseReason | null>(null);
   const wasOpenRef = React.useRef(open);
   const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
@@ -189,7 +189,7 @@ export function CommandPalette({
         .map((key) => `"${key}"`)
         .join(
           ", "
-        )}. Keys should be unique to keep aria-activedescendant and selection behavior deterministic. Duplicate option keys are auto-suffixed by filtered index for render stability.`
+        )}. Keys should be unique to keep aria-activedescendant and selection behavior deterministic. Duplicate option keys are auto-suffixed by source index for render stability.`
     );
   }, [commands]);
 
@@ -289,29 +289,37 @@ export function CommandPalette({
 
   const normalizedQuery = React.useMemo(() => normalizeSearchText(query.trim()), [query]);
 
-  const filtered = React.useMemo(() => {
+  const commandEntries = React.useMemo(() => {
+    const keyCounts = new Map<string, number>();
+    commands.forEach((item) => {
+      keyCounts.set(item.key, (keyCounts.get(item.key) ?? 0) + 1);
+    });
+
+    return commands.map((item, sourceIndex) => ({
+      item,
+      renderKey:
+        (keyCounts.get(item.key) ?? 0) > 1 ? `${item.key}__source-${sourceIndex}` : item.key
+    }));
+  }, [commands]);
+
+  const filteredEntries = React.useMemo(() => {
     if (!normalizedQuery) {
-      return commands;
+      return commandEntries;
     }
 
-    return commands.filter((item) => {
+    return commandEntries.filter(({ item }) => {
       const labelText = getCommandText(item);
       const haystack = [labelText, ...(item.keywords ?? [])].join(" ");
       return normalizeSearchText(haystack).includes(normalizedQuery);
     });
-  }, [commands, normalizedQuery]);
+  }, [commandEntries, normalizedQuery]);
+  const filtered = React.useMemo(
+    () => filteredEntries.map((entry) => entry.item),
+    [filteredEntries]
+  );
   const filteredRenderKeys = React.useMemo(() => {
-    const seenCounts = new Map<string, number>();
-    return filtered.map((item, index) => {
-      const seenCount = seenCounts.get(item.key) ?? 0;
-      seenCounts.set(item.key, seenCount + 1);
-      if (seenCount === 0) {
-        return item.key;
-      }
-
-      return `${item.key}__dup-${index}`;
-    });
-  }, [filtered]);
+    return filteredEntries.map((entry) => entry.renderKey);
+  }, [filteredEntries]);
   const enabledCount = React.useMemo(
     () => filtered.reduce((count, command) => (command.disabled ? count : count + 1), 0),
     [filtered]
@@ -383,15 +391,15 @@ export function CommandPalette({
 
   React.useEffect(() => {
     if (filtered.length === 0) {
-      activeCommandKeyRef.current = null;
+      activeCommandRenderKeyRef.current = null;
       setActiveIndex(-1);
       return;
     }
 
-    const preferredKey = activeCommandKeyRef.current;
-    if (preferredKey) {
-      const preferredIndex = filtered.findIndex(
-        (command) => !command.disabled && command.key === preferredKey
+    const preferredRenderKey = activeCommandRenderKeyRef.current;
+    if (preferredRenderKey) {
+      const preferredIndex = filteredRenderKeys.findIndex(
+        (renderKey, index) => !filtered[index]?.disabled && renderKey === preferredRenderKey
       );
       if (preferredIndex >= 0) {
         setActiveIndex(preferredIndex);
@@ -400,18 +408,18 @@ export function CommandPalette({
     }
 
     setActiveIndex(firstEnabledIndex);
-    activeCommandKeyRef.current =
-      firstEnabledIndex >= 0 ? (filtered[firstEnabledIndex]?.key ?? null) : null;
-  }, [filtered, firstEnabledIndex]);
+    activeCommandRenderKeyRef.current =
+      firstEnabledIndex >= 0 ? (filteredRenderKeys[firstEnabledIndex] ?? null) : null;
+  }, [filtered, filteredRenderKeys, firstEnabledIndex]);
 
   React.useEffect(() => {
     if (safeActiveIndex < 0) {
-      activeCommandKeyRef.current = null;
+      activeCommandRenderKeyRef.current = null;
       return;
     }
 
-    activeCommandKeyRef.current = filtered[safeActiveIndex]?.key ?? null;
-  }, [filtered, safeActiveIndex]);
+    activeCommandRenderKeyRef.current = filteredRenderKeys[safeActiveIndex] ?? null;
+  }, [filteredRenderKeys, safeActiveIndex]);
 
   React.useEffect(() => {
     if (!open || safeActiveIndex < 0) {
@@ -673,7 +681,10 @@ export function CommandPalette({
                     );
                 return (
                   <div
-                    key={filteredRenderKeys[index] ?? `${item.key}__dup-${index}`}
+                    key={
+                      filteredRenderKeys[index] ??
+                      `${item.key}__source-fallback-${index}`
+                    }
                     id={`${listId}-option-${index}`}
                     role="option"
                     aria-selected={active}

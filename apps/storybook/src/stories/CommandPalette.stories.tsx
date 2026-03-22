@@ -527,6 +527,39 @@ function PersistentSelectionPalette() {
   );
 }
 
+function DuplicateKeyRerenderStabilityPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [version, setVersion] = React.useState(0);
+  const duplicateCommands = React.useMemo<CommandItem[]>(
+    () => [
+      { key: "deploy", label: "Deploy API" },
+      { key: "deploy", label: "Deploy Web" },
+      { key: "preview", label: "Preview Environment" }
+    ],
+    [version]
+  );
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <p style={storyMutedTextStyle}>
+        Refresh version:{" "}
+        <strong data-testid="duplicate-refresh-version" style={storyEmphasisTextStyle}>
+          {version}
+        </strong>
+      </p>
+      <Button size="sm" variant="outline" onClick={() => setVersion((current) => current + 1)}>
+        Refresh command list
+      </Button>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        closeOnSelect={false}
+        commands={duplicateCommands}
+      />
+    </StoryFullscreenFrame>
+  );
+}
+
 function OptionActivationKeyGuardPalette() {
   const [open, setOpen] = React.useState(true);
   const [selectedCount, setSelectedCount] = React.useState(0);
@@ -1592,6 +1625,37 @@ export const PersistentSelection: Story = {
       expect(canvas.getByTestId("selection-count")).toHaveTextContent("1");
     });
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  }
+};
+
+export const DuplicateKeyRerenderStability: Story = {
+  render: () => <DuplicateKeyRerenderStabilityPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-1")
+    );
+    await expect(canvas.getByRole("option", { name: "Deploy Web" })).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
+
+    fireEvent.click(canvas.getByRole("button", { name: "Refresh command list" }));
+    await waitFor(() => {
+      expect(canvas.getByTestId("duplicate-refresh-version")).toHaveTextContent("1");
+    });
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-1")
+    );
+    await expect(canvas.getByRole("option", { name: "Deploy Web" })).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
   }
 };
 
