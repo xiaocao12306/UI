@@ -133,6 +133,40 @@ describe("PromptInput", () => {
     expect(textbox).toHaveAttribute("aria-label", "Prompt input");
   });
 
+  it("ignores blank ariaLabelledBy and preserves ariaLabel naming", () => {
+    render(<PromptInput ariaLabel="Release prompt" ariaLabelledBy="   " />);
+
+    const textbox = screen.getByRole("textbox", { name: "Release prompt" });
+    expect(textbox).toHaveAttribute("aria-label", "Release prompt");
+    expect(textbox).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("prefers ariaLabelledBy over ariaLabel when both are provided", () => {
+    render(
+      <div>
+        <h2 id="prompt-heading">Release workflow prompt</h2>
+        <PromptInput ariaLabel="Fallback prompt name" ariaLabelledBy="prompt-heading" />
+      </div>
+    );
+
+    const textbox = screen.getByRole("textbox", { name: "Release workflow prompt" });
+    expect(textbox).toHaveAttribute("aria-labelledby", "prompt-heading");
+    expect(textbox).not.toHaveAttribute("aria-label");
+  });
+
+  it("uses ariaLabelledBy naming when ariaLabel is blank", () => {
+    render(
+      <div>
+        <h2 id="prompt-heading">Contextual prompt</h2>
+        <PromptInput ariaLabel="   " ariaLabelledBy="prompt-heading" />
+      </div>
+    );
+
+    const textbox = screen.getByRole("textbox", { name: "Contextual prompt" });
+    expect(textbox).toHaveAttribute("aria-labelledby", "prompt-heading");
+    expect(textbox).not.toHaveAttribute("aria-label");
+  });
+
   it("tracks keyboard focus-visible intent and clears it only on plain primary pointer interaction", () => {
     render(<PromptInput ariaLabel="Focus-visible prompt" />);
 

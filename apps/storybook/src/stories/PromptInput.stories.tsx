@@ -135,6 +135,27 @@ export const LocalizedCopy: Story = {
   }
 };
 
+function LabelledByPromptInputDemo() {
+  return (
+    <PromptInputShowcase>
+      <h3 id="prompt-heading" style={{ margin: 0 }}>
+        Prompt workflow heading
+      </h3>
+      <PromptInput ariaLabel="   " ariaLabelledBy="prompt-heading" />
+    </PromptInputShowcase>
+  );
+}
+
+export const LabelledByPrecedence: Story = {
+  render: () => <LabelledByPromptInputDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textbox = await canvas.findByRole("textbox", { name: "Prompt workflow heading" });
+    await expect(textbox).toHaveAttribute("aria-labelledby", "prompt-heading");
+    await expect(textbox).not.toHaveAttribute("aria-label");
+  }
+};
+
 function MultiActionFeedbackPromptInput() {
   const [submitting, setSubmitting] = React.useState(false);
   const [updates, setUpdates] = React.useState<string[]>([]);

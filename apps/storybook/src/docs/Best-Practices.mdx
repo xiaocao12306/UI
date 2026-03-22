@@ -268,6 +268,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep callback side effects ordered and single-purpose: `item-select` path should treat `onSelect` as action commit, then `onCloseReason`, then `onOpenChange(false)`; close-button path should use `onCloseReason` before `onOpenChange(false)`.
 - Guard Ctrl/Cmd + Enter submission against active IME composition, including legacy browsers that only expose `keyCode=229`, to avoid accidental sends for CJK input.
 - Localize prompt input naming and helper copy with `ariaLabel`, `shortcutHint`, and `submittingHint`; expose `aria-keyshortcuts="Control+Enter Meta+Enter"` only while not submitting so shortcut metadata does not advertise unavailable submit actions.
+- Prefer `ariaLabelledBy` for prompt input naming when a visible heading already exists; use `ariaLabel` for standalone prompt fields without nearby title context.
 - Keep prompt helper text bound through `aria-describedby` so assistive tech announces shortcut/pending guidance from the same live hint node.
 - Keep prompt textarea keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep prompt textarea focus intent primary-only: non-primary pointer interactions and `Ctrl + primary click` context-click paths should not clear keyboard-origin focus-visible state.
@@ -283,6 +284,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 
 <Canvas of={PromptInputStories.WithAiRequestState} />
 <Canvas of={PromptInputStories.LocalizedCopy} />
+<Canvas of={PromptInputStories.LabelledByPrecedence} />
 <Canvas of={PromptInputStories.FocusIntentReentry} />
 <Canvas of={MessageBubbleStories.Conversation} />
 <Canvas of={MessageBubbleStories.LocalizedNaming} />

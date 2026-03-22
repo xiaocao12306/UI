@@ -7,6 +7,7 @@ export type PromptInputProps = {
   submitting?: boolean;
   placeholder?: string;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
   shortcutHint?: React.ReactNode;
   submittingHint?: React.ReactNode;
 };
@@ -16,6 +17,7 @@ export function PromptInput({
   submitting,
   placeholder = "Type your prompt...",
   ariaLabel,
+  ariaLabelledBy,
   shortcutHint = "Ctrl/Cmd + Enter to send",
   submittingHint = "Generating response..."
 }: PromptInputProps) {
@@ -23,7 +25,9 @@ export function PromptInput({
   const composingRef = React.useRef(false);
   const hintId = React.useId();
   const trimmedValue = value.trim();
-  const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel) ?? "Prompt input";
+  const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
+  const resolvedAriaLabel =
+    resolvedAriaLabelledBy === undefined ? resolveNonEmptyLabel(ariaLabel) ?? "Prompt input" : undefined;
 
   const submit = () => {
     if (!trimmedValue || submitting) {
@@ -51,6 +55,7 @@ export function PromptInput({
         onChange={(event) => setValue(event.target.value)}
         placeholder={placeholder}
         aria-label={resolvedAriaLabel}
+        aria-labelledby={resolvedAriaLabelledBy}
         aria-describedby={hintId}
         aria-keyshortcuts={submitting ? undefined : "Control+Enter Meta+Enter"}
         disabled={submitting}

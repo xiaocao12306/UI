@@ -235,6 +235,7 @@
 - Combobox production hardening: added `Escape` + blur dismiss paths, corrected `aria-selected` semantics to track selected value, and added disabled non-open guard coverage in unit + Storybook interaction checks.
 - Combobox touch-focus hardening: option `pointerdown` now preserves combobox input focus for touch/pen primary interactions while leaving mouse clicks unblocked, with unit + Storybook interaction coverage.
 - Combobox naming hardening: `ariaLabelledBy` now names combobox/listbox from visible headings with precedence over `ariaLabel`, and blank naming values are ignored to keep fallback semantics deterministic.
+- PromptInput naming hardening: `ariaLabelledBy` now names the textarea from visible headings with precedence over `ariaLabel`, and blank naming values are ignored to keep fallback semantics deterministic.
 - Pointer-event type-safety hardening: ownerDocument focus-intent listeners across 14 components now use TS-safe primary-button guards (`event.button` narrowing), restoring `verify` typecheck gate without runtime behavior drift.
 - Textarea production hardening: aligned invalid/focus/hover/disabled/readOnly visual states with Input tokens, and added dedicated unit + Storybook coverage.
 - Select production hardening: aligned invalid/focus/hover/disabled state semantics with Input tokens, and added dedicated unit + Storybook coverage.
