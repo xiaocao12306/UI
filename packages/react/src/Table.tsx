@@ -43,6 +43,7 @@ export type TableProps<T> = {
     columnHeader: string;
     direction: TableSortDirection;
   }) => string;
+  onSortKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
   onSortChange?: (key: string, direction: TableSortDirection) => void;
 };
 
@@ -123,6 +124,7 @@ export function Table<T>({
   defaultSortDirection = "asc",
   getSortAriaLabel = defaultGetSortAriaLabel,
   getSortStatusText = defaultGetSortStatusText,
+  onSortKeyDown,
   onSortChange
 }: TableProps<T>) {
   const hasCaptionContent = hasRenderableNode(caption);
@@ -846,6 +848,7 @@ export function Table<T>({
                       }}
                       onKeyDown={(event) => {
                         sortFocusIntentRef.current = true;
+                        onSortKeyDown?.(event);
                         if (event.defaultPrevented) {
                           return;
                         }

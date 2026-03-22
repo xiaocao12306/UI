@@ -611,6 +611,35 @@ function SortTelemetryDemo() {
   );
 }
 
+function ManagedSortKeysPreemptedLocallyDemo() {
+  const [sortState, setSortState] = React.useState("id asc");
+
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={8}>
+      <p style={storyMutedTextStyle}>
+        Local sort-key guards should preempt sortable-header navigation and activation.
+      </p>
+      <p style={storyMutedTextStyle}>
+        Active sort:{" "}
+        <strong data-testid="table-local-preempt-sort-state" style={storyEmphasisTextStyle}>
+          {sortState}
+        </strong>
+      </p>
+      <Table
+        columns={columns}
+        data={rows}
+        defaultSortKey="id"
+        onSortKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === "ArrowRight") {
+            event.preventDefault();
+          }
+        }}
+        onSortChange={(key, direction) => setSortState(`${key} ${direction}`)}
+      />
+    </StoryShowcaseFrame>
+  );
+}
+
 export const SortTelemetry: Story = {
   render: () => <SortTelemetryDemo />,
   play: async ({ canvasElement }) => {
@@ -708,6 +737,23 @@ export const SortTelemetry: Story = {
       expect(canvas.getByText("id asc")).toBeInTheDocument();
       expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
     });
+  }
+};
+
+export const ManagedSortKeysPreemptedByLocalHandler: Story = {
+  render: () => <ManagedSortKeysPreemptedLocallyDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const issueSort = canvas.getByRole("button", { name: "Issue sort descending" });
+
+    issueSort.focus();
+    fireEvent.keyDown(issueSort, { key: "ArrowRight" });
+    await expect(issueSort).toHaveFocus();
+    await expect(canvas.getByTestId("table-local-preempt-sort-state")).toHaveTextContent("id asc");
+
+    fireEvent.keyDown(issueSort, { key: "Enter" });
+    await expect(canvas.getByTestId("table-local-preempt-sort-state")).toHaveTextContent("id asc");
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Issue ascending.");
   }
 };
 

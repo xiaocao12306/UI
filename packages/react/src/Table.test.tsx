@@ -1322,6 +1322,42 @@ describe("Table", () => {
     expect(scoreSort).not.toHaveFocus();
   });
 
+  it("skips sortable-header keyboard handling when keydown is preempted by local onSortKeyDown", () => {
+    const onSortChange = vi.fn();
+
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        onSortKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === "ArrowRight") {
+            event.preventDefault();
+          }
+        }}
+        onSortChange={onSortChange}
+      />
+    );
+
+    const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+    const scoreSort = screen.getByRole("button", { name: "Score sort ascending" });
+    const nameHeader = screen.getByRole("columnheader", { name: /Name/ });
+
+    fireEvent.focus(sortButton);
+    fireEvent.keyDown(sortButton, { key: "Enter" });
+    fireEvent.keyDown(sortButton, { key: "ArrowRight" });
+
+    expect(onSortChange).not.toHaveBeenCalled();
+    expect(nameHeader).toHaveAttribute("aria-sort", "ascending");
+    expect(scoreSort).not.toHaveFocus();
+  });
+
   it("exposes activation and focus-navigation keyboard shortcuts on sortable headers", () => {
     render(
       <Table
