@@ -50,6 +50,7 @@ export function Dialog({
 }: DialogProps) {
   const titleId = React.useId();
   const descriptionId = React.useId();
+  const hasDescriptionContent = hasRenderableDialogNode(description);
   const [closeButtonHovered, setCloseButtonHovered] = React.useState(false);
   const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
@@ -199,7 +200,7 @@ export function Dialog({
               aria-modal="true"
               aria-label={resolvedAriaLabel}
               aria-labelledby={resolvedAriaLabelledBy ?? (resolvedAriaLabel ? undefined : titleId)}
-              aria-describedby={description ? descriptionId : undefined}
+              aria-describedby={hasDescriptionContent ? descriptionId : undefined}
               aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
               data-state="open"
               style={{
@@ -220,7 +221,7 @@ export function Dialog({
                   <h2 id={titleId} style={{ margin: 0, color: "var(--aurora-text-primary)", fontSize: "var(--aurora-font-size-lg)" }}>
                     {title}
                   </h2>
-                  {description ? (
+                  {hasDescriptionContent ? (
                     <p id={descriptionId} style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>
                       {description}
                     </p>
@@ -406,6 +407,26 @@ function getReadableDialogTextNode(node: React.ReactNode): string {
   }
 
   return getReadableDialogTextNode(elementProps.children);
+}
+
+function hasRenderableDialogNode(node: React.ReactNode): boolean {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return false;
+  }
+
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  if (typeof node === "number") {
+    return true;
+  }
+
+  if (Array.isArray(node)) {
+    return node.some((item) => hasRenderableDialogNode(item));
+  }
+
+  return React.isValidElement(node);
 }
 
 function normalizeReadableDialogText(value: string) {

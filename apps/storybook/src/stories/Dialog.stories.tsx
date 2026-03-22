@@ -140,6 +140,31 @@ export const IconTitleAriaLabelFallback: Story = {
   }
 };
 
+function NumericDescriptionDialog() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryShowcaseFrame align="start">
+      <Dialog open={open} onOpenChange={setOpen} title="Numeric description dialog" description={0}>
+        <p style={storyParagraphStyle}>Dialog description supports numeric ReactNode content.</p>
+      </Dialog>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const NumericDescriptionSemantics: Story = {
+  render: () => <NumericDescriptionDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const dialog = await body.findByRole("dialog", { name: "Numeric description dialog" });
+    const descriptions = body.getAllByText("0");
+
+    await expect(descriptions).toHaveLength(1);
+    await expect(descriptions[0].tagName).toBe("P");
+    await expect(dialog).toHaveAttribute("aria-describedby", descriptions[0].id);
+  }
+};
+
 function FocusReturnDialog() {
   const [open, setOpen] = React.useState(false);
 

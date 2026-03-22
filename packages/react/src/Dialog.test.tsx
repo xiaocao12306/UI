@@ -211,6 +211,20 @@ describe("Dialog", () => {
     expect(dialog).toHaveAttribute("aria-describedby", description.getAttribute("id"));
   });
 
+  it("treats numeric description as renderable dialog semantics", () => {
+    render(
+      <Dialog open onOpenChange={() => {}} title="Numeric description dialog" description={0}>
+        Content
+      </Dialog>
+    );
+
+    const dialog = screen.getByRole("dialog", { name: "Numeric description dialog" });
+    const descriptions = screen.getAllByText("0");
+    expect(descriptions).toHaveLength(1);
+    expect(descriptions[0].tagName).toBe("P");
+    expect(dialog).toHaveAttribute("aria-describedby", descriptions[0].getAttribute("id"));
+  });
+
   it("constrains dialog height and enables scrollable content region", () => {
     render(
       <Dialog open onOpenChange={() => {}} title="Long content dialog">
