@@ -703,6 +703,29 @@ function PagedKeyboardNavigationPalette() {
   );
 }
 
+function HomeEndCaretPriorityPalette() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryFullscreenFrame>
+      <p style={storyMutedTextStyle}>
+        With caret in the middle of query text, Home/End should keep native cursor behavior and
+        avoid overriding active command focus.
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        closeOnSelect={false}
+        commands={[
+          { key: "release-checklist", label: "Release Checklist", keywords: ["release"] },
+          { key: "release-notes", label: "Release Notes", keywords: ["release"] },
+          { key: "release-pipeline", label: "Release Pipeline", keywords: ["release"] }
+        ]}
+      />
+    </StoryFullscreenFrame>
+  );
+}
+
 function ImeCompositionGuardPalette() {
   const [open, setOpen] = React.useState(true);
   const [selectedCount, setSelectedCount] = React.useState(0);
@@ -1534,6 +1557,33 @@ export const PagedKeyboardNavigation: Story = {
     await expect(input).toHaveAttribute(
       "aria-activedescendant",
       expect.stringContaining("option-0")
+    );
+  }
+};
+
+export const HomeEndCaretPriority: Story = {
+  render: () => <HomeEndCaretPriorityPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+    await userEvent.type(input, "release");
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-1")
+    );
+
+    input.setSelectionRange(2, 2);
+    fireEvent.keyDown(input, { key: "Home" });
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-1")
+    );
+
+    fireEvent.keyDown(input, { key: "End" });
+    await expect(input).toHaveAttribute(
+      "aria-activedescendant",
+      expect.stringContaining("option-1")
     );
   }
 };

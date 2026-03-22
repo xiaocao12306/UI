@@ -547,7 +547,7 @@ export function CommandPalette({
             }
 
             if (event.key === "Home") {
-              if (!canNavigateCommandList) {
+              if (!canNavigateCommandList || !shouldHandleCommandHomeEndKey(event)) {
                 return;
               }
               event.preventDefault();
@@ -556,7 +556,7 @@ export function CommandPalette({
             }
 
             if (event.key === "End") {
-              if (!canNavigateCommandList) {
+              if (!canNavigateCommandList || !shouldHandleCommandHomeEndKey(event)) {
                 return;
               }
               event.preventDefault();
@@ -752,6 +752,29 @@ function isComposingCommandKeyEvent(event: React.KeyboardEvent<HTMLInputElement>
 
   // Legacy fallback for IME workflows on browsers emitting keyCode=229.
   return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
+}
+
+function shouldHandleCommandHomeEndKey(event: React.KeyboardEvent<HTMLInputElement>) {
+  if (event.key !== "Home" && event.key !== "End") {
+    return true;
+  }
+
+  const input = event.currentTarget;
+  const selectionStart = input.selectionStart;
+  const selectionEnd = input.selectionEnd;
+  if (selectionStart === null || selectionEnd === null) {
+    return true;
+  }
+
+  if (selectionStart !== selectionEnd) {
+    return false;
+  }
+
+  if (event.key === "Home") {
+    return selectionStart === 0;
+  }
+
+  return selectionEnd === input.value.length;
 }
 
 function defaultGetResultsStatusText({

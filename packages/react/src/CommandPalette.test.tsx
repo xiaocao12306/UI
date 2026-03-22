@@ -2207,6 +2207,43 @@ describe("CommandPalette", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("keeps native Home/End caret behavior when cursor is inside query text", () => {
+    render(
+      <CommandPalette
+        open
+        closeOnSelect={false}
+        onOpenChange={() => {}}
+        commands={[
+          { key: "release-checklist", label: "Release Checklist", keywords: ["release"] },
+          { key: "release-notes", label: "Release Notes", keywords: ["release"] },
+          { key: "release-pipeline", label: "Release Pipeline", keywords: ["release"] }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" }) as HTMLInputElement;
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
+
+    fireEvent.change(input, { target: { value: "release" } });
+    input.setSelectionRange(2, 2);
+
+    fireEvent.keyDown(input, { key: "Home" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
+
+    fireEvent.keyDown(input, { key: "End" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-1"));
+
+    input.setSelectionRange(0, 0);
+    fireEvent.keyDown(input, { key: "Home" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-0"));
+
+    input.setSelectionRange(input.value.length, input.value.length);
+    fireEvent.keyDown(input, { key: "End" });
+    expect(input).toHaveAttribute("aria-activedescendant", expect.stringContaining("option-2"));
+  });
+
   it("updates active option on mouse enter for enabled items only", () => {
     render(
       <CommandPalette
