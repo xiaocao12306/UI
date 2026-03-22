@@ -750,7 +750,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | document-scoped focus intent fallback  | owner-document `keydown` / pointer listeners                                                              | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from a preceding control) still restores toast close-button focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and `Ctrl + primary click` do not clear fallback keyboard intent. |
 | close-button keyboard pressed feedback | unmodified non-repeat `Enter`/`Space` (+ `Space` / legacy `Spacebar` key values) + `aria-keyshortcuts="Enter Space"` | Close button exposes pressed-state offset for unmodified keyboard activation keys and explicit shortcut hints; repeated keydown, `Ctrl/Meta/Alt` chords, and IME composition key paths (`isComposing` / `keyCode=229`) are ignored so host shortcuts, long-press, and CJK confirmation do not trigger false pressed visuals. |
 | `closeLabel`                           | `string`                                                                                                  | Customize close-button accessible name for i18n; blank values are ignored and fallback to `Close toast`.                                                                                                                                                                            |
-| `ariaLabel`                            | `string`                                                                                                  | Optional live-region accessible name override for icon-only or non-text titles; rich titles with readable text or inline `aria-label` are auto-detected, and development builds warn when non-text titles omit both. Blank values are ignored and fallback to title-derived naming. |
+| `ariaLabel` / `ariaLabelledBy`         | `string` / `string`                                                                                       | Optional live-region naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without `ariaLabelledBy`, `ariaLabel` falls back to title-derived naming. |
 
 <Canvas of={ToastStories.ActionRequired} />
 <Canvas of={ToastStories.ActionRequiredDanger} />
@@ -767,6 +767,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={ToastStories.EscapePreemptedSkipsToastHook} />
 <Canvas of={ToastStories.EscapeGuardedByToastHandler} />
 <Canvas of={ToastStories.EscapeIgnoresImeComposition} />
+<Canvas of={ToastStories.LabelledByPrecedence} />
 <Canvas of={ToastStories.LiveRegionOff} />
 
 ## AI

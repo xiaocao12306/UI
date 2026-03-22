@@ -966,6 +966,30 @@ export const AriaLabelOverride: Story = {
   }
 };
 
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <ToastShowcase align="start">
+      <h3 id="toast-heading" style={{ margin: 0 }}>
+        Build artifact ready heading
+      </h3>
+      <Toast
+        open
+        duration={0}
+        title={<span aria-hidden>✅</span>}
+        description="Build artifact is ready."
+        ariaLabel="Fallback build artifact notification"
+        ariaLabelledBy="toast-heading"
+      />
+    </ToastShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const toast = canvas.getByRole("status", { name: "Build artifact ready heading" });
+    await expect(toast).toHaveAttribute("aria-labelledby", "toast-heading");
+    await expect(toast).not.toHaveAttribute("aria-label");
+  }
+};
+
 export const LiveRegionOff: Story = {
   args: {
     title: "Background sync",

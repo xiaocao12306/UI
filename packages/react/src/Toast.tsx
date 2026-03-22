@@ -18,6 +18,7 @@ export type ToastProps = {
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
   closeLabel?: string;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
   position?: ToastPosition;
   onClose?: () => void;
   onCloseReason?: (reason: ToastCloseReason) => void;
@@ -189,6 +190,7 @@ export function Toast({
   onEscapeKeyDown,
   closeLabel = "Close toast",
   ariaLabel,
+  ariaLabelledBy,
   position = "bottom-right",
   onClose,
   onCloseReason,
@@ -213,8 +215,14 @@ export function Toast({
   const paused = documentHidden || (pauseOnHover && (pauseState.hover || pauseState.focus));
   const titleId = React.useId();
   const descriptionId = React.useId();
+  const resolvedAriaLabelledBy =
+    typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
+      ? ariaLabelledBy.trim()
+      : undefined;
   const resolvedAriaLabel =
-    typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+    resolvedAriaLabelledBy === undefined &&
+    typeof ariaLabel === "string" &&
+    ariaLabel.trim().length > 0
       ? ariaLabel.trim()
       : undefined;
   const resolvedCloseLabel =
@@ -495,8 +503,8 @@ export function Toast({
       return;
     }
 
-    const hasExplicitAriaLabel = Boolean(resolvedAriaLabel);
-    if (hasExplicitAriaLabel || hasReadableTextNode(title)) {
+    const hasExplicitName = Boolean(resolvedAriaLabel || resolvedAriaLabelledBy);
+    if (hasExplicitName || hasReadableTextNode(title)) {
       warnedMissingAriaLabelRef.current = false;
       return;
     }
@@ -507,9 +515,9 @@ export function Toast({
     warnedMissingAriaLabelRef.current = true;
 
     console.warn(
-      "[Toast] Non-text titles should provide ariaLabel so notification name remains accessible."
+      "[Toast] Non-text titles should provide ariaLabel or ariaLabelledBy so notification name remains accessible."
     );
-  }, [resolvedAriaLabel, title]);
+  }, [resolvedAriaLabel, resolvedAriaLabelledBy, title]);
 
   if (!open) {
     return null;
@@ -529,7 +537,7 @@ export function Toast({
       aria-atomic="true"
       aria-keyshortcuts={showEscapeKeyShortcuts ? "Escape" : undefined}
       aria-label={resolvedAriaLabel}
-      aria-labelledby={resolvedAriaLabel ? undefined : titleId}
+      aria-labelledby={resolvedAriaLabelledBy ?? (resolvedAriaLabel ? undefined : titleId)}
       aria-describedby={description ? descriptionId : undefined}
       onMouseEnter={() => {
         promoteToTop();

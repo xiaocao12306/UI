@@ -85,6 +85,32 @@ describe("Toast", () => {
     expect(toast).not.toHaveAttribute("aria-labelledby");
   });
 
+  it("prefers ariaLabelledBy over ariaLabel and keeps heading naming canonical", () => {
+    render(
+      <div>
+        <h2 id="toast-heading">Release incident notice</h2>
+        <Toast
+          open
+          title="Fallback toast title"
+          ariaLabel="Fallback toast label"
+          ariaLabelledBy="toast-heading"
+        />
+      </div>
+    );
+
+    const toast = screen.getByRole("status", { name: "Release incident notice" });
+    expect(toast).toHaveAttribute("aria-labelledby", "toast-heading");
+    expect(toast).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and preserves ariaLabel naming", () => {
+    render(<Toast open title={<span aria-hidden>✅</span>} ariaLabel="Sync completed notification" ariaLabelledBy="   " />);
+
+    const toast = screen.getByRole("status", { name: "Sync completed notification" });
+    expect(toast).toHaveAttribute("aria-label", "Sync completed notification");
+    expect(toast).not.toHaveAttribute("aria-labelledby");
+  });
+
   it("ignores blank ariaLabel and falls back to title-derived naming", () => {
     render(<Toast open title="Saved" ariaLabel="   " />);
 
@@ -100,7 +126,7 @@ describe("Toast", () => {
     try {
       render(<Toast open title={<span aria-hidden>✅</span>} />);
       expect(warnSpy).toHaveBeenCalledWith(
-        "[Toast] Non-text titles should provide ariaLabel so notification name remains accessible."
+        "[Toast] Non-text titles should provide ariaLabel or ariaLabelledBy so notification name remains accessible."
       );
     } finally {
       warnSpy.mockRestore();
@@ -121,6 +147,24 @@ describe("Toast", () => {
     }
   });
 
+  it("does not warn when non-text title provides ariaLabelledBy", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <div>
+          <h2 id="toast-heading">Sync completed notification</h2>
+          <Toast open title={<span aria-hidden>✅</span>} ariaLabelledBy="toast-heading" />
+        </div>
+      );
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("warns when non-text title uses blank ariaLabel", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -128,7 +172,7 @@ describe("Toast", () => {
     try {
       render(<Toast open title={<span aria-hidden>✅</span>} ariaLabel="   " />);
       expect(warnSpy).toHaveBeenCalledWith(
-        "[Toast] Non-text titles should provide ariaLabel so notification name remains accessible."
+        "[Toast] Non-text titles should provide ariaLabel or ariaLabelledBy so notification name remains accessible."
       );
     } finally {
       warnSpy.mockRestore();

@@ -345,7 +345,8 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep alert close-button owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - Keep alert close-button local pointer press feedback primary-only and treat `Ctrl + primary click` as context-click intent so close-button pressed/focus visuals are not triggered on host context-click paths.
 - Keep alert close-button keyboard pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); keep `aria-keyshortcuts="Enter Space"` visible for AT/QA discoverability, and ensure `Ctrl/Meta/Alt` chords plus IME composition key paths (`isComposing` / `keyCode=229`) do not trigger pressed visuals.
-- For toast titles without readable text, provide `ariaLabel`; rich title nodes that expose inline `aria-label` are auto-detected, and development builds warn only when both are missing.
+- Prefer `ariaLabelledBy` for toast naming when a visible heading already exists; use `ariaLabel` for standalone icon/non-text titles without nearby heading context.
+- For toast titles without readable text, provide either `ariaLabelledBy` or `ariaLabel`; rich title nodes that expose inline `aria-label` are auto-detected, and development builds warn only when both are missing.
 - For high-frequency passive updates, set `live="off"` to reduce assistive-tech interruption while keeping visual toast context.
 
 <Canvas of={ToastStories.ActionRequired} />
