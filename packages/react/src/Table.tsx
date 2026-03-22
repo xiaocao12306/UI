@@ -55,6 +55,7 @@ const keyboardSortClickDedupeWindowMs = 400;
 
 function resolveInitialSortState<T>(
   columns: Array<TableColumn<T>>,
+  resolvedColumnRenderKeys: string[],
   defaultSortKey: string | undefined,
   defaultSortDirection: TableSortDirection
 ) {
@@ -62,14 +63,23 @@ function resolveInitialSortState<T>(
     return null;
   }
 
-  const initialColumn = columns.find((item) => String(item.key) === defaultSortKey);
-  if (!initialColumn?.sortable) {
+  const initialColumnIndex = columns.findIndex(
+    (item) => String(item.key) === defaultSortKey && item.sortable
+  );
+  if (initialColumnIndex < 0) {
     return null;
   }
 
-  return { key: defaultSortKey, direction: defaultSortDirection } satisfies {
+  return {
+    key: defaultSortKey,
+    direction: defaultSortDirection,
+    renderKey:
+      resolvedColumnRenderKeys[initialColumnIndex] ??
+      `${defaultSortKey}__index-${initialColumnIndex}`
+  } satisfies {
     key: string;
     direction: TableSortDirection;
+    renderKey: string;
   };
 }
 
@@ -200,10 +210,6 @@ export function Table<T>({
     [clearKeyboardActivationLatch]
   );
 
-  const [sortState, setSortState] = React.useState<{
-    key: string;
-    direction: TableSortDirection;
-  } | null>(() => resolveInitialSortState(columns, defaultSortKey, defaultSortDirection));
   const resolvedColumnRenderKeys = React.useMemo(() => {
     const counts = new Map<string, number>();
     return columns.map((column) => {
@@ -213,6 +219,18 @@ export function Table<T>({
       return count === 0 ? key : `${key}__duplicate-${count}`;
     });
   }, [columns]);
+  const [sortState, setSortState] = React.useState<{
+    key: string;
+    direction: TableSortDirection;
+    renderKey: string;
+  } | null>(() =>
+    resolveInitialSortState(
+      columns,
+      resolvedColumnRenderKeys,
+      defaultSortKey,
+      defaultSortDirection
+    )
+  );
   const sortableNavigationRenderKeys = React.useMemo(() => {
     if (loading || data.length <= 1) {
       return [];
@@ -234,11 +252,35 @@ export function Table<T>({
       return;
     }
 
-    const activeSortColumn = columns.find((column) => String(column.key) === sortState.key);
-    if (!activeSortColumn?.sortable) {
-      setSortState(null);
+    const activeSortColumnIndex = resolvedColumnRenderKeys.findIndex(
+      (renderKey) => renderKey === sortState.renderKey
+    );
+    if (activeSortColumnIndex >= 0 && columns[activeSortColumnIndex]?.sortable) {
+      return;
     }
-  }, [columns, sortState]);
+
+    const fallbackSortColumnIndex = columns.findIndex(
+      (column) => column.sortable && String(column.key) === sortState.key
+    );
+    if (fallbackSortColumnIndex < 0) {
+      setSortState(null);
+      return;
+    }
+
+    const fallbackRenderKey =
+      resolvedColumnRenderKeys[fallbackSortColumnIndex] ??
+      `${sortState.key}__index-${fallbackSortColumnIndex}`;
+    if (fallbackRenderKey !== sortState.renderKey) {
+      setSortState((current) =>
+        current
+          ? {
+              ...current,
+              renderKey: fallbackRenderKey
+            }
+          : current
+      );
+    }
+  }, [columns, resolvedColumnRenderKeys, sortState]);
 
   React.useEffect(() => {
     if (sortState) {
@@ -247,6 +289,7 @@ export function Table<T>({
 
     const nextInitialSortState = resolveInitialSortState(
       columns,
+      resolvedColumnRenderKeys,
       defaultSortKey,
       defaultSortDirection
     );
@@ -255,7 +298,7 @@ export function Table<T>({
     }
 
     setSortState(nextInitialSortState);
-  }, [columns, defaultSortDirection, defaultSortKey, sortState]);
+  }, [columns, defaultSortDirection, defaultSortKey, resolvedColumnRenderKeys, sortState]);
 
   const sourceRowKeys = React.useMemo(
     () =>
@@ -346,7 +389,7 @@ export function Table<T>({
         .map((key) => `"${key}"`)
         .join(
           ", "
-        )}. Ensure columns[].key values are unique to keep header associations and sorting behavior deterministic. Duplicate render keys are auto-suffixed by column index for stability.`
+        )}. Ensure columns[].key values are unique to keep header associations and sorting behavior deterministic. Duplicate render keys are auto-suffixed by duplicate occurrence order for stability.`
     );
   }, [columns]);
 
@@ -400,7 +443,14 @@ export function Table<T>({
       return sourceEntries;
     }
 
-    const column = columns.find((item) => String(item.key) === sortState.key);
+    const activeSortColumnIndexByRenderKey = resolvedColumnRenderKeys.findIndex(
+      (renderKey) => renderKey === sortState.renderKey
+    );
+    const activeSortColumnIndex =
+      activeSortColumnIndexByRenderKey >= 0
+        ? activeSortColumnIndexByRenderKey
+        : columns.findIndex((item) => String(item.key) === sortState.key);
+    const column = activeSortColumnIndex >= 0 ? columns[activeSortColumnIndex] : undefined;
     if (!column?.sortable) {
       return sourceEntries;
     }
@@ -446,7 +496,7 @@ export function Table<T>({
       // Preserve deterministic order for equal sort values.
       return leftEntry.sourceIndex - rightEntry.sourceIndex;
     });
-  }, [columns, data, sortState]);
+  }, [columns, data, resolvedColumnRenderKeys, sortState]);
 
   const ownerDocument = typeof document === "undefined" ? undefined : document;
   const sortStatusText = React.useMemo(() => {
@@ -454,9 +504,13 @@ export function Table<T>({
       return "";
     }
 
-    const activeSortColumnIndex = columns.findIndex(
-      (column) => String(column.key) === sortState.key
+    const activeSortColumnIndexByRenderKey = resolvedColumnRenderKeys.findIndex(
+      (renderKey) => renderKey === sortState.renderKey
     );
+    const activeSortColumnIndex =
+      activeSortColumnIndexByRenderKey >= 0
+        ? activeSortColumnIndexByRenderKey
+        : columns.findIndex((column) => String(column.key) === sortState.key);
     const activeSortColumn =
       activeSortColumnIndex >= 0 ? columns[activeSortColumnIndex] : undefined;
     if (!activeSortColumn?.sortable) {
@@ -473,7 +527,15 @@ export function Table<T>({
       columnHeader,
       direction: sortState.direction
     });
-  }, [columns, getSortStatusText, loading, ownerDocument, sortState, sortedEntries.length]);
+  }, [
+    columns,
+    getSortStatusText,
+    loading,
+    ownerDocument,
+    resolvedColumnRenderKeys,
+    sortState,
+    sortedEntries.length
+  ]);
   const hasActionableSortControls =
     !loading && sortedEntries.length > 1 && columns.some((column) => column.sortable);
   const tableColSpan = Math.max(columns.length, 1);
@@ -658,8 +720,12 @@ export function Table<T>({
                 `${key}__index-${columnIndex}`;
               const sortable = Boolean(column.sortable);
               const hasMultiRowData = sortedEntries.length > 1;
-              const activeSortDirection =
+              const keySortDirection =
                 sortable && sortState?.key === key ? sortState.direction : undefined;
+              const activeSortDirection =
+                keySortDirection && sortState?.renderKey === columnRenderKey
+                  ? keySortDirection
+                  : undefined;
               const sorted = !loading && hasMultiRowData ? activeSortDirection : undefined;
               const ariaSort = sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined;
               const textAlign = column.align ?? "left";
@@ -669,7 +735,7 @@ export function Table<T>({
                 ownerDocument
               );
               const nextDirection: TableSortDirection =
-                activeSortDirection === "asc" ? "desc" : "asc";
+                keySortDirection === "asc" ? "desc" : "asc";
               const sortAriaLabel = getSortAriaLabel({
                 columnKey: key,
                 columnHeader: headerLabel,
@@ -701,7 +767,7 @@ export function Table<T>({
                   return;
                 }
 
-                setSortState({ key, direction: nextDirection });
+                setSortState({ key, direction: nextDirection, renderKey: columnRenderKey });
                 onSortChange?.(key, nextDirection);
               };
 

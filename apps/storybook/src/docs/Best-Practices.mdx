@@ -449,7 +449,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 ## Data Presentation Patterns
 
 - Use typed columns and stable row keys in data tables; fallback source-index keys exist for safety but explicit `rowKey` is preferred.
-- Keep `columns[].key` values unique; development builds warn on duplicate column keys, and runtime render keys auto-suffix duplicates by column index to avoid header/cell key-collision remount churn.
+- Keep `columns[].key` values unique; development builds warn on duplicate column keys, and runtime render keys auto-suffix duplicates by duplicate occurrence order to avoid header/cell key-collision remount churn.
 - When sortable columns rely on fallback narration (no `sortLabel/sortLabelledBy`), keep `columns[].key` human-readable because fallback sort labels are normalized from key text; opaque/symbol-only keys will degrade to generic `Column N`.
 - Keep `rowKey` outputs unique per source row; development builds warn on duplicate keys to catch unstable identity wiring early, and runtime auto-suffixes duplicate outputs by source index to prevent key-collision remount churn.
 - If `rowKey` uses `rowIndex`, treat it as source-data index; avoid deriving keys from sorted visual position.

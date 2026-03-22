@@ -112,7 +112,9 @@ describe("Table", () => {
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining('Duplicate column keys detected: "name"')
       );
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("auto-suffixed by column index"));
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("auto-suffixed by duplicate occurrence order")
+      );
       const duplicateKeyErrors = errorSpy.mock.calls.filter(([message]) =>
         typeof message === "string" && message.includes("same key")
       );
@@ -148,6 +150,49 @@ describe("Table", () => {
 
       fireEvent.keyDown(copySort, { key: "ArrowRight" });
       expect(statusSort).toHaveFocus();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("anchors duplicate-key sort semantics to one active header and transfers on duplicate activation", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            { key: "name", header: "Name", sortable: true },
+            { key: "name", header: "Name copy", sortable: true },
+            { key: "status", header: "Status" }
+          ]}
+          data={[
+            { name: "Button", status: "Stable" },
+            { name: "Dialog", status: "Ready" }
+          ]}
+          defaultSortKey="name"
+        />
+      );
+
+      const primarySortButton = screen.getByRole("button", { name: "Name sort descending" });
+      const duplicateSortButton = screen.getByRole("button", { name: "Name copy sort descending" });
+      expect(primarySortButton.closest("th")).toHaveAttribute("aria-sort", "ascending");
+      expect(duplicateSortButton.closest("th")).not.toHaveAttribute("aria-sort");
+      expect(screen.getAllByRole("row")[1]).toHaveTextContent("Button");
+      expect(screen.getByRole("status")).toHaveTextContent("Sorted by Name ascending.");
+
+      fireEvent.click(duplicateSortButton);
+
+      const duplicateSortButtonAfter = screen.getByRole("button", {
+        name: "Name copy sort ascending"
+      });
+      expect(primarySortButton.closest("th")).not.toHaveAttribute("aria-sort");
+      expect(duplicateSortButtonAfter.closest("th")).toHaveAttribute("aria-sort", "descending");
+      expect(screen.getAllByRole("row")[1]).toHaveTextContent("Dialog");
+      expect(screen.getByRole("status")).toHaveTextContent("Sorted by Name copy descending.");
+      expect(errorSpy).not.toHaveBeenCalled();
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
