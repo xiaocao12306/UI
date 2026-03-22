@@ -65,3 +65,26 @@ export const LiveNarration: Story = {
     await expect(root).toHaveAttribute("aria-live", "polite");
   }
 };
+
+export const LabelledByPrecedence: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 10 }}>
+      <h3 id="code-heading" style={{ margin: 0 }}>
+        Release code heading
+      </h3>
+      <StreamingCodeBlock
+        language="ts"
+        code="export const releaseReady = true;"
+        speed={0}
+        label="Code stream"
+        ariaLabel="Fallback code region"
+        ariaLabelledBy="code-heading"
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.querySelector("[role='region']") as HTMLElement;
+    await expect(root).toHaveAttribute("aria-labelledby", "code-heading");
+    await expect(root).not.toHaveAttribute("aria-label");
+  }
+};

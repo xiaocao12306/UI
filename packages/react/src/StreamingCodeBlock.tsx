@@ -5,6 +5,8 @@ export type StreamingCodeBlockProps = React.ComponentPropsWithoutRef<"div"> & {
   language?: string;
   speed?: number;
   label?: string;
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
   live?: "polite" | "assertive" | "off";
 };
 
@@ -13,6 +15,8 @@ export function StreamingCodeBlock({
   language = "txt",
   speed = 8,
   label = "Streaming code block",
+  ariaLabel,
+  ariaLabelledBy,
   live = "off",
   style,
   ...props
@@ -21,6 +25,17 @@ export function StreamingCodeBlock({
   const [visible, setVisible] = React.useState("");
   const resolvedLabel =
     typeof label === "string" && label.trim().length > 0 ? label.trim() : "Streaming code block";
+  const resolvedAriaLabelledBy =
+    typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
+      ? ariaLabelledBy.trim()
+      : undefined;
+  const explicitAriaLabel =
+    resolvedAriaLabelledBy === undefined && typeof ariaLabel === "string" && ariaLabel.trim().length > 0
+      ? ariaLabel.trim()
+      : undefined;
+  const resolvedAriaLabel = resolvedAriaLabelledBy
+    ? undefined
+    : explicitAriaLabel ?? resolvedLabel;
 
   React.useEffect(() => {
     if (speed <= 0 || code.length === 0) {
@@ -49,7 +64,8 @@ export function StreamingCodeBlock({
     <div
       ref={rootRef}
       role="region"
-      aria-label={resolvedLabel}
+      aria-label={resolvedAriaLabel}
+      aria-labelledby={resolvedAriaLabelledBy}
       aria-live={live}
       aria-busy={visible.length < code.length}
       style={{

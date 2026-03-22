@@ -76,6 +76,50 @@ describe("StreamingCodeBlock", () => {
     expect(root).toHaveAttribute("aria-label", "Streaming code block");
   });
 
+  it("supports explicit ariaLabel override", () => {
+    const { container } = render(
+      <StreamingCodeBlock code="const ready = true;" speed={0} label="Code stream" ariaLabel="Release code region" />
+    );
+    const root = container.firstElementChild as HTMLElement;
+
+    expect(root).toHaveAttribute("aria-label", "Release code region");
+    expect(root).not.toHaveAttribute("aria-labelledby");
+  });
+
+  it("prefers ariaLabelledBy over ariaLabel and label fallback", () => {
+    const { container } = render(
+      <div>
+        <h3 id="code-heading">Release code heading</h3>
+        <StreamingCodeBlock
+          code="const ready = true;"
+          speed={0}
+          label="Code stream"
+          ariaLabel="Fallback code region"
+          ariaLabelledBy="code-heading"
+        />
+      </div>
+    );
+    const root = container.querySelector("[role='region']") as HTMLElement;
+
+    expect(root).toHaveAttribute("aria-labelledby", "code-heading");
+    expect(root).not.toHaveAttribute("aria-label");
+  });
+
+  it("ignores blank ariaLabelledBy and preserves ariaLabel naming", () => {
+    const { container } = render(
+      <StreamingCodeBlock
+        code="const ready = true;"
+        speed={0}
+        ariaLabel="Release code region"
+        ariaLabelledBy="   "
+      />
+    );
+    const root = container.firstElementChild as HTMLElement;
+
+    expect(root).toHaveAttribute("aria-label", "Release code region");
+    expect(root).not.toHaveAttribute("aria-labelledby");
+  });
+
   it("uses ownerDocument window interval timers in iframe-hosted renders", () => {
     const iframe = document.createElement("iframe");
     document.body.append(iframe);

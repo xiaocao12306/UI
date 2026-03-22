@@ -299,6 +299,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
 - Keep streaming-code narration `live="off"` for high-frequency token output; enable `live="polite"` only when progressive code updates must be announced.
 - Provide explicit `label` for streaming code regions so screen-reader users can distinguish concurrent AI outputs.
+- For streaming code regions, prefer `ariaLabelledBy` when a visible heading already exists; use `ariaLabel` (or `label` fallback) for standalone code stream panels.
 - Keep command-palette close-button keyboard-intent tracking document-scoped so keyboard re-entry (for example `Shift+Tab` from search input) restores focus-visible fallback consistently, including iframe hosts.
 
 <Canvas of={PromptInputStories.WithAiRequestState} />
@@ -313,6 +314,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={ReasoningPanelStories.LabelledByPrecedence} />
 <Canvas of={ReasoningPanelStories.BlankStepFallback} />
 <Canvas of={StreamingCodeBlockStories.Default} />
+<Canvas of={StreamingCodeBlockStories.LabelledByPrecedence} />
 <Canvas of={CommandPaletteStories.AiInteractionFlow} />
 <Canvas of={CommandPaletteStories.QueryTelemetry} />
 <Canvas of={CommandPaletteStories.LoadingState} />
