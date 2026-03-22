@@ -1,7 +1,7 @@
 import * as React from "react";
 
 export type AlertTone = "info" | "success" | "warning" | "danger";
-export type AlertProps = React.ComponentPropsWithoutRef<"div"> & {
+export type AlertProps = Omit<React.ComponentPropsWithoutRef<"div">, "title"> & {
   tone?: AlertTone;
   title?: React.ReactNode;
   description?: React.ReactNode;

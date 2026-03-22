@@ -1797,7 +1797,9 @@ export const HomeEndCaretPriority: Story = {
       expect.stringContaining("option-1")
     );
 
-    input.setSelectionRange(2, 2);
+    if (input instanceof HTMLInputElement) {
+      input.setSelectionRange(2, 2);
+    }
     fireEvent.keyDown(input, { key: "Home" });
     await expect(input).toHaveAttribute(
       "aria-activedescendant",

@@ -235,6 +235,10 @@ export const DescribedByLifecycle: Story = {
 };
 
 export const NonTextTriggerNameFallback: Story = {
+  args: {
+    content: "Labelled-by tooltip trigger",
+    children: <button type="button">Tooltip help</button>
+  },
   render: () => (
     <TooltipShowcase>
       <h3 id="tooltip-trigger-name-heading" style={{ margin: 0 }}>

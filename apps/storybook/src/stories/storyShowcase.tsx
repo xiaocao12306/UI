@@ -22,11 +22,13 @@ export const storyEmphasisTextStyle: React.CSSProperties = {
 export function StoryShowcaseFrame({
   children,
   maxWidth = "min(100%, 860px)",
-  gap = 10
+  gap = 10,
+  align = "stretch"
 }: {
   children: React.ReactNode;
   maxWidth?: string;
   gap?: number;
+  align?: "stretch" | "start";
 }) {
   return (
     <div
@@ -34,6 +36,7 @@ export function StoryShowcaseFrame({
         width: maxWidth,
         display: "grid",
         gap,
+        justifyItems: align,
         padding: "clamp(12px, 2vw, 18px)",
         ...baseSurfaceStyle
       }}

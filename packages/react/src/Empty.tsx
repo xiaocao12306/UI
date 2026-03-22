@@ -2,7 +2,7 @@ import * as React from "react";
 
 export type EmptyTone = "default" | "info" | "warning" | "danger";
 
-export type EmptyProps = React.ComponentPropsWithoutRef<"div"> & {
+export type EmptyProps = Omit<React.ComponentPropsWithoutRef<"div">, "title"> & {
   title: React.ReactNode;
   description?: React.ReactNode;
   action?: React.ReactNode;

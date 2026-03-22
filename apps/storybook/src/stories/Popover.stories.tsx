@@ -183,6 +183,10 @@ export const TriggerLabelledByPrecedence: Story = {
 };
 
 export const NonTextTriggerNameFallback: Story = {
+  args: {
+    triggerLabel: <span aria-hidden="true">⋯</span>,
+    children: <p style={{ margin: 0 }}>Standalone trigger naming path.</p>
+  },
   render: () => (
     <PopoverShowcase>
       <div style={{ display: "grid", gap: 8 }}>
@@ -553,6 +557,10 @@ export const ShiftTabDismissToPreviousControl: Story = {
 };
 
 export const TabDismissFallbackToTrigger: Story = {
+  args: {
+    triggerLabel: "Popover Tab Fallback",
+    children: <button type="button">Popover Tab Fallback Action</button>
+  },
   render: () => (
     <PopoverShowcase>
       <Popover triggerLabel="Popover Tab Fallback">
@@ -582,6 +590,10 @@ export const TabDismissFallbackToTrigger: Story = {
 };
 
 export const TabDismissSkipsUnfocusableCandidates: Story = {
+  args: {
+    triggerLabel: "Popover Tab Skip",
+    children: <button type="button">Popover Tab Skip Action</button>
+  },
   render: () => (
     <PopoverShowcase>
       <Popover triggerLabel="Popover Tab Skip">
