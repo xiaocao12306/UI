@@ -180,6 +180,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For icon-only/non-text dropdown items, provide `items[].textValue` unless the rich label already exposes readable text or inline `aria-label`; buffered typeahead relies on one of these metadata paths.
 - Keep dropdown menu-item keyboard activation explicit and cross-browser (`Enter` / `Space` / legacy `Spacebar`) so non-pointer flows can execute actions without click simulation.
 - Keep dropdown navigation/activation/dismiss scoped to unmodified keys; `Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space/Escape` should stay on host/browser shortcut behavior.
+- When app-level shortcuts preempt dropdown keydown with `preventDefault()`, keep trigger/menu keyboard handlers side-effect free so host shortcut guards remain authoritative.
 - Keep open-menu roving focus stable under modified `ArrowDown/ArrowUp`; `Ctrl/Meta/Alt` arrow chords should not move dropdown active item.
 - Keep dropdown trigger shortcut hints explicit (`aria-keyshortcuts="ArrowDown ArrowUp"`) only while closed so keyboard-open affordance stays discoverable without advertising unavailable shortcuts once open.
 - Keep dropdown trigger open targeting stable: `ArrowDown` should focus the first enabled item, and `ArrowUp` should focus the last enabled item for immediate tail-action access.
@@ -200,6 +201,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={DropdownStories.OutsideDismissFocusTransfer} />
 <Canvas of={DropdownStories.EscapeDismissFocusReturn} />
 <Canvas of={DropdownStories.EscapePreemptedByGlobalHandler} />
+<Canvas of={DropdownStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={DropdownStories.EscapeRepeatGuard} />
 <Canvas of={DropdownStories.TabDismissToNextControl} />
 <Canvas of={DropdownStories.ShiftTabDismissToPreviousControl} />

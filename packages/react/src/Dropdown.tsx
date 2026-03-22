@@ -437,6 +437,10 @@ export function Dropdown({
           setOpen(true);
         }}
         onKeyDown={(event) => {
+          if (event.defaultPrevented) {
+            return;
+          }
+
           if (event.key === "Tab" && isOpen) {
             dismissWithTabNavigation(event);
             return;
@@ -518,6 +522,10 @@ export function Dropdown({
               zIndex: "var(--aurora-z-overlay)"
             }}
             onKeyDown={(event) => {
+              if (event.defaultPrevented) {
+                return;
+              }
+
               if (
                 (event.altKey || event.ctrlKey || event.metaKey) &&
                 (isDropdownNavigationKey(event.key) || isDropdownItemActivationKey(event.key))
@@ -627,6 +635,10 @@ export function Dropdown({
                       }
                     }}
                     onKeyDown={(event) => {
+                      if (event.defaultPrevented) {
+                        return;
+                      }
+
                       if (!isDropdownItemActivationKey(event.key)) {
                         return;
                       }

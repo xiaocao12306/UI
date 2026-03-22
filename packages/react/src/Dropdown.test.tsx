@@ -799,6 +799,40 @@ describe("Dropdown", () => {
     expect(screen.queryByRole("menu", { name: "Modifier Guard" })).toBeNull();
   });
 
+  it("skips trigger and menu keyboard handling when keydown is preempted upstream", () => {
+    const onSelect = vi.fn();
+
+    render(
+      <div onKeyDownCapture={(event) => event.preventDefault()}>
+        <Dropdown
+          label="Managed key preempt guard"
+          items={[
+            { key: "run", label: "Run", onSelect },
+            { key: "archive", label: "Archive" }
+          ]}
+        />
+      </div>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Managed key preempt guard" });
+
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    expect(screen.queryByRole("menu", { name: "Managed key preempt guard" })).toBeNull();
+
+    fireEvent.click(trigger);
+    const menu = screen.getByRole("menu", { name: "Managed key preempt guard" });
+    const runItem = screen.getByRole("menuitem", { name: "Run" });
+
+    expect(runItem).toHaveFocus();
+
+    fireEvent.keyDown(menu, { key: "ArrowDown" });
+    expect(runItem).toHaveFocus();
+
+    fireEvent.keyDown(runItem, { key: "Enter" });
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(screen.getByRole("menu", { name: "Managed key preempt guard" })).toBeInTheDocument();
+  });
+
   it("ignores repeated activation keydown for menu items", () => {
     const onSelect = vi.fn();
 

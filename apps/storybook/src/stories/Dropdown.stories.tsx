@@ -369,6 +369,55 @@ export const EscapePreemptedByGlobalHandler: Story = {
   }
 };
 
+function ManagedKeysPreemptedDropdown() {
+  const [selectedCount, setSelectedCount] = React.useState(0);
+
+  return (
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
+        <p style={storyMutedTextStyle}>
+          Selected actions:{" "}
+          <strong data-testid="dropdown-managed-key-select-count" style={storyEmphasisTextStyle}>
+            {selectedCount}
+          </strong>
+        </p>
+        <div onKeyDownCapture={(event) => event.preventDefault()}>
+          <Dropdown
+            label="Preempted Managed Key Menu"
+            items={[
+              { key: "run", label: "Run", onSelect: () => setSelectedCount((count) => count + 1) },
+              { key: "archive", label: "Archive" }
+            ]}
+          />
+        </div>
+      </div>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const ManagedKeysPreemptedByGlobalHandler: Story = {
+  render: () => <ManagedKeysPreemptedDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Preempted Managed Key Menu" });
+
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    await expect(canvas.queryByRole("menu", { name: "Preempted Managed Key Menu" })).toBeNull();
+
+    await userEvent.click(trigger);
+    const menu = canvas.getByRole("menu", { name: "Preempted Managed Key Menu" });
+    const runItem = canvas.getByRole("menuitem", { name: "Run" });
+
+    await expect(runItem).toHaveFocus();
+    fireEvent.keyDown(menu, { key: "ArrowDown" });
+    await expect(runItem).toHaveFocus();
+
+    fireEvent.keyDown(runItem, { key: "Enter" });
+    await expect(canvas.getByTestId("dropdown-managed-key-select-count")).toHaveTextContent("0");
+    await expect(canvas.getByRole("menu", { name: "Preempted Managed Key Menu" })).toBeInTheDocument();
+  }
+};
+
 function EscapeRepeatDropdown() {
   const [open, setOpen] = React.useState(false);
   const [escapeCalls, setEscapeCalls] = React.useState(0);
