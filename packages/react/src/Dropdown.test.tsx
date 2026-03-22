@@ -47,6 +47,98 @@ describe("Dropdown", () => {
     expect(trigger).not.toHaveAttribute("aria-labelledby");
   });
 
+  it("warns when non-text trigger label omits triggerAriaLabel and triggerAriaLabelledBy", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dropdown
+          label={<span aria-hidden>⋯</span>}
+          items={[
+            { key: "duplicate", label: "Duplicate" },
+            { key: "archive", label: "Archive" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Dropdown] Non-text trigger labels should provide triggerAriaLabel or triggerAriaLabelledBy."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text trigger labels when triggerAriaLabel is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dropdown
+          label={<span aria-hidden>⋯</span>}
+          triggerAriaLabel="More actions"
+          items={[
+            { key: "duplicate", label: "Duplicate" },
+            { key: "archive", label: "Archive" }
+          ]}
+        />
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text trigger labels when triggerAriaLabelledBy is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <div>
+          <h2 id="dropdown-heading">Release actions menu</h2>
+          <Dropdown
+            label={<span aria-hidden>⋯</span>}
+            triggerAriaLabelledBy="dropdown-heading"
+            items={[
+              { key: "duplicate", label: "Duplicate" },
+              { key: "archive", label: "Archive" }
+            ]}
+          />
+        </div>
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text trigger labels when inline aria-label is present", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dropdown
+          label={
+            <span aria-label="More actions">
+              <span aria-hidden>⋯</span>
+            </span>
+          }
+          items={[
+            { key: "duplicate", label: "Duplicate" },
+            { key: "archive", label: "Archive" }
+          ]}
+        />
+      );
+
+      expect(screen.getByRole("button", { name: "More actions" })).toBeInTheDocument();
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("selects an item and closes the menu", () => {
     const onSelect = vi.fn();
     const onCloseReason = vi.fn();

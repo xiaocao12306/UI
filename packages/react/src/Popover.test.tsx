@@ -197,6 +197,82 @@ describe("Popover", () => {
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   });
 
+  it("warns when non-text triggerLabel omits triggerAriaLabel and triggerAriaLabelledBy", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Popover triggerLabel={<span aria-hidden="true">⋯</span>}>
+          <p>Popover content</p>
+        </Popover>
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Popover] Non-text triggerLabel should provide triggerAriaLabel or triggerAriaLabelledBy."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text triggerLabel when triggerAriaLabel is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Popover triggerLabel={<span aria-hidden="true">⋯</span>} triggerAriaLabel="More info">
+          <p>Popover content</p>
+        </Popover>
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text triggerLabel when triggerAriaLabelledBy is provided", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <div>
+          <h2 id="popover-heading">More info</h2>
+          <Popover triggerLabel={<span aria-hidden="true">⋯</span>} triggerAriaLabelledBy="popover-heading">
+            <p>Popover content</p>
+          </Popover>
+        </div>
+      );
+
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn for non-text triggerLabel when inline aria-label is present", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Popover
+          triggerLabel={
+            <span aria-label="More info">
+              <span aria-hidden="true">⋯</span>
+            </span>
+          }
+        >
+          <p>Popover content</p>
+        </Popover>
+      );
+
+      expect(screen.getByRole("button", { name: "More info" })).toBeInTheDocument();
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("prioritizes triggerAriaLabelledBy over triggerAriaLabel for icon trigger naming", () => {
     render(
       <div>

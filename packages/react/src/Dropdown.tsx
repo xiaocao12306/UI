@@ -171,6 +171,7 @@ export function Dropdown({
   const keyboardActivationResetTimerRef = React.useRef<number | null>(null);
   const keyboardActivationTimerWindowRef = React.useRef<Window | null>(null);
   const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
+  const warnedMissingTriggerNameRef = React.useRef(false);
   const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const warnedMissingTextValueSignatureRef = React.useRef<string | null>(null);
   const triggerId = React.useId();
@@ -183,6 +184,7 @@ export function Dropdown({
     resolvedTriggerAriaLabelledBy === undefined
       ? resolveNonEmptyLabel(triggerAriaLabel)
       : undefined;
+  const hasReadableTriggerLabelText = getReadableTextNode(label).trim().length > 0;
   const itemRenderKeys = React.useMemo(() => {
     const seenCounts = new Map<string, number>();
     return items.map((item, index) => {
@@ -288,6 +290,25 @@ export function Dropdown({
         )}. Keys should be unique to keep focus and close telemetry deterministic. Duplicate render keys are auto-suffixed by item index for stability.`
     );
   }, [items]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+    if (warnedMissingTriggerNameRef.current) {
+      return;
+    }
+    if (
+      hasReadableTriggerLabelText ||
+      resolvedTriggerAriaLabel !== undefined ||
+      resolvedTriggerAriaLabelledBy !== undefined
+    ) {
+      return;
+    }
+
+    warnedMissingTriggerNameRef.current = true;
+    console.warn("[Dropdown] Non-text trigger labels should provide triggerAriaLabel or triggerAriaLabelledBy.");
+  }, [hasReadableTriggerLabelText, resolvedTriggerAriaLabel, resolvedTriggerAriaLabelledBy]);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {

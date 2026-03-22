@@ -182,6 +182,48 @@ export const TriggerLabelledByPrecedence: Story = {
   }
 };
 
+export const NonTextTriggerNameFallback: Story = {
+  render: () => (
+    <PopoverShowcase>
+      <div style={{ display: "grid", gap: 8 }}>
+        <h3 id="popover-trigger-name-heading" style={{ margin: 0 }}>
+          Context actions
+        </h3>
+        <Popover
+          triggerLabel={<span aria-hidden="true">⋯</span>}
+          triggerAriaLabelledBy="popover-trigger-name-heading"
+          contentLabel="Heading linked popover content"
+        >
+          <p style={{ margin: 0 }}>Heading-linked trigger naming path.</p>
+        </Popover>
+      </div>
+      <Popover
+        triggerLabel={<span aria-hidden="true">⋯</span>}
+        triggerAriaLabel="Quick actions"
+        contentLabel="Aria label popover content"
+      >
+        <p style={{ margin: 0 }}>Standalone trigger naming path.</p>
+      </Popover>
+    </PopoverShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const headingTrigger = await canvas.findByRole("button", { name: "Context actions" });
+    const ariaLabelTrigger = canvas.getByRole("button", { name: "Quick actions" });
+
+    await expect(headingTrigger).toHaveAttribute("aria-labelledby", "popover-trigger-name-heading");
+    await expect(headingTrigger).not.toHaveAttribute("aria-label");
+    await expect(ariaLabelTrigger).toHaveAttribute("aria-label", "Quick actions");
+
+    await userEvent.click(headingTrigger);
+    await expect(canvas.getByRole("dialog", { name: "Heading linked popover content" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+
+    await userEvent.click(ariaLabelTrigger);
+    await expect(canvas.getByRole("dialog", { name: "Aria label popover content" })).toBeInTheDocument();
+  }
+};
+
 export const NonDismissible: Story = {
   args: {
     triggerLabel: "Review policy",

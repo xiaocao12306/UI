@@ -100,6 +100,44 @@ export const TriggerLabelledByPrecedence: Story = {
   }
 };
 
+export const NonTextTriggerNameFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame gap={12}>
+      <div style={{ display: "grid", gap: 8 }}>
+        <h3 id="dropdown-trigger-name-heading" style={{ margin: 0 }}>
+          Release actions menu
+        </h3>
+        <Dropdown
+          label={<span aria-hidden>⋯</span>}
+          triggerAriaLabelledBy="dropdown-trigger-name-heading"
+          items={items}
+        />
+      </div>
+      <Dropdown
+        label={<span aria-hidden>⋯</span>}
+        triggerAriaLabel="Quick actions"
+        items={items}
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const labelledByTrigger = await canvas.findByRole("button", { name: "Release actions menu" });
+    const ariaLabelTrigger = canvas.getByRole("button", { name: "Quick actions" });
+
+    await expect(labelledByTrigger).toHaveAttribute("aria-labelledby", "dropdown-trigger-name-heading");
+    await expect(labelledByTrigger).not.toHaveAttribute("aria-label");
+    await expect(ariaLabelTrigger).toHaveAttribute("aria-label", "Quick actions");
+
+    await userEvent.click(labelledByTrigger);
+    await expect(canvas.getByRole("menu", { name: "Release actions menu" })).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+
+    await userEvent.click(ariaLabelTrigger);
+    await expect(canvas.getByRole("menu", { name: "Quick actions" })).toBeInTheDocument();
+  }
+};
+
 export const IconItemNaming: Story = {
   args: {
     label: "Icon items",

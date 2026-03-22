@@ -49,6 +49,7 @@ export function Popover({
   const contentRef = React.useRef<HTMLDivElement>(null);
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
+  const warnedMissingTriggerNameRef = React.useRef(false);
   const resolvedTriggerAriaLabelledBy =
     typeof triggerAriaLabelledBy === "string" && triggerAriaLabelledBy.trim().length > 0
       ? triggerAriaLabelledBy.trim()
@@ -61,6 +62,7 @@ export function Popover({
     typeof contentLabel === "string" && contentLabel.trim().length > 0
       ? contentLabel.trim()
       : "Popover content";
+  const hasReadableTriggerLabelText = getReadablePopoverLabel(triggerLabel).length > 0;
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -107,6 +109,25 @@ export function Popover({
     );
     (firstFocusable ?? content).focus();
   }, [isOpen]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+    if (warnedMissingTriggerNameRef.current) {
+      return;
+    }
+    if (
+      hasReadableTriggerLabelText ||
+      resolvedTriggerAriaLabel !== undefined ||
+      resolvedTriggerAriaLabelledBy !== undefined
+    ) {
+      return;
+    }
+
+    warnedMissingTriggerNameRef.current = true;
+    console.warn("[Popover] Non-text triggerLabel should provide triggerAriaLabel or triggerAriaLabelledBy.");
+  }, [hasReadableTriggerLabelText, resolvedTriggerAriaLabel, resolvedTriggerAriaLabelledBy]);
 
   const horizontalPosition = align === "start" ? { left: 0 } : { right: 0 };
 
@@ -303,4 +324,46 @@ function isElementTabbable(element: HTMLElement) {
   }
 
   return true;
+}
+
+function getReadablePopoverLabel(node: React.ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") {
+    return normalizeReadablePopoverLabel(String(node));
+  }
+
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return "";
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeReadablePopoverLabel(
+      node
+        .map((item) => getReadablePopoverLabel(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  if (typeof elementProps["aria-label"] === "string" && elementProps["aria-label"].trim().length > 0) {
+    return normalizeReadablePopoverLabel(elementProps["aria-label"]);
+  }
+
+  return getReadablePopoverLabel(elementProps.children);
+}
+
+function normalizeReadablePopoverLabel(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }
