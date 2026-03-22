@@ -410,12 +410,19 @@ export function Dropdown({
   }, [clearKeyboardActivationLatch, isOpen, items]);
 
   React.useEffect(() => {
-    if (!isOpen || activeIndex < 0) {
+    if (!isOpen) {
       return;
     }
 
-    itemRefs.current[activeIndex]?.focus();
-  }, [activeIndex, isOpen]);
+    if (activeIndex >= 0) {
+      itemRefs.current[activeIndex]?.focus();
+      return;
+    }
+
+    if (enabledItemCount === 0) {
+      menuRef.current?.focus();
+    }
+  }, [activeIndex, enabledItemCount, isOpen]);
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
@@ -504,6 +511,7 @@ export function Dropdown({
             ref={menuRef}
             id={menuId}
             role="menu"
+            tabIndex={enabledItemCount === 0 ? -1 : undefined}
             aria-labelledby={resolvedTriggerAriaLabelledBy ?? triggerId}
             aria-orientation="vertical"
             aria-keyshortcuts={menuKeyboardShortcuts}

@@ -900,7 +900,15 @@ export const AllItemsDisabledKeyboardNoop: Story = {
     const trigger = await canvas.findByRole("button", { name: "All Disabled Keyboard" });
 
     await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "All Disabled Keyboard" })).toHaveFocus();
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("menu", { name: "All Disabled Keyboard" })).not.toBeInTheDocument();
+    await expect(trigger).toHaveFocus();
+
+    await userEvent.keyboard("{ArrowDown}");
     const menu = canvas.getByRole("menu", { name: "All Disabled Keyboard" });
+    await expect(menu).toHaveFocus();
+    await expect(menu).toHaveAttribute("tabindex", "-1");
     await expect(menu).toHaveAttribute("aria-keyshortcuts", "Tab Escape");
     const menuItems = canvas.getAllByRole("menuitem");
 
@@ -921,6 +929,13 @@ export const AllItemsDisabledKeyboardNoop: Story = {
     menuItems.forEach((item) => {
       expect(item).toHaveAttribute("tabindex", "-1");
     });
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("menu", { name: "All Disabled Keyboard" })).not.toBeInTheDocument();
+    await expect(trigger).toHaveFocus();
+
+    await userEvent.keyboard("{ArrowUp}");
+    await expect(canvas.getByRole("menu", { name: "All Disabled Keyboard" })).toHaveFocus();
   }
 };
 

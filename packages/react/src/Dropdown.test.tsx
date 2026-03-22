@@ -645,6 +645,8 @@ describe("Dropdown", () => {
     const trigger = screen.getByRole("button", { name: "All disabled" });
     fireEvent.click(trigger);
     const menu = screen.getByRole("menu", { name: "All disabled" });
+    expect(menu).toHaveFocus();
+    expect(menu).toHaveAttribute("tabindex", "-1");
     expect(menu).toHaveAttribute("aria-keyshortcuts", "Tab Escape");
     const menuItems = screen.getAllByRole("menuitem");
 
@@ -666,6 +668,37 @@ describe("Dropdown", () => {
     });
     expect(screen.getByRole("menu", { name: "All disabled" })).toBeInTheDocument();
     expect(onCloseReason).not.toHaveBeenCalled();
+  });
+
+  it("keeps keyboard-open focus on menu surface when all dropdown items are disabled", () => {
+    render(
+      <Dropdown
+        label="All disabled keyboard open"
+        items={[
+          { key: "archive", label: "Archive", disabled: true },
+          { key: "delete", label: "Delete", disabled: true }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "All disabled keyboard open" });
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+
+    const menu = screen.getByRole("menu", { name: "All disabled keyboard open" });
+    expect(menu).toHaveFocus();
+    expect(menu).toHaveAttribute("tabindex", "-1");
+
+    fireEvent.keyDown(menu, { key: "ArrowUp" });
+    expect(menu).toHaveFocus();
+    expect(screen.getByRole("menu", { name: "All disabled keyboard open" })).toBeInTheDocument();
+
+    fireEvent.keyDown(menu, { key: "Escape" });
+    expect(screen.queryByRole("menu", { name: "All disabled keyboard open" })).toBeNull();
+    expect(trigger).toHaveFocus();
+
+    fireEvent.keyDown(trigger, { key: "ArrowUp" });
+    expect(screen.getByRole("menu", { name: "All disabled keyboard open" })).toHaveFocus();
   });
 
   it("supports Enter/Space keyboard activation for menu items", () => {
