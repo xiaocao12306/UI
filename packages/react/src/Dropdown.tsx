@@ -195,7 +195,7 @@ export function Dropdown({
   const hasReadableTriggerLabelText = getReadableTextNode(label).trim().length > 0;
   const resolvedTriggerAriaLabel = resolvedTriggerAriaLabelledBy
     ? undefined
-    : explicitTriggerAriaLabel ?? (hasReadableTriggerLabelText ? undefined : "Open menu");
+    : explicitTriggerAriaLabel ?? (hasReadableTriggerLabelText ? undefined : "Open dropdown menu");
   const itemRenderKeys = React.useMemo(() => {
     const seenCounts = new Map<string, number>();
     return items.map((item, index) => {

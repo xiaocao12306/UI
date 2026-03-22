@@ -145,10 +145,10 @@ export const NonTextTriggerAutoNameFallback: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const trigger = await canvas.findByRole("button", { name: "Open menu" });
-    await expect(trigger).toHaveAttribute("aria-label", "Open menu");
+    const trigger = await canvas.findByRole("button", { name: "Open dropdown menu" });
+    await expect(trigger).toHaveAttribute("aria-label", "Open dropdown menu");
     await userEvent.click(trigger);
-    await expect(canvas.getByRole("menu", { name: "Open menu" })).toBeInTheDocument();
+    await expect(canvas.getByRole("menu", { name: "Open dropdown menu" })).toBeInTheDocument();
   }
 };
 
