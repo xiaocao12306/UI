@@ -96,7 +96,7 @@ export function CommandPalette({
   const listRef = React.useRef<HTMLDivElement>(null);
   const resolvedSearchAriaLabel = resolveNonEmptyLabel(searchAriaLabel, "Search commands");
   const resolvedResultsAriaLabel = resolveNonEmptyLabel(resultsAriaLabel, "Command results");
-  const resolvedCloseLabel = resolveNonEmptyLabel(closeLabel, "Close dialog");
+  const resolvedCloseLabel = resolveNonEmptyLabel(closeLabel, "Close command palette");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel =
     resolvedAriaLabelledBy === undefined

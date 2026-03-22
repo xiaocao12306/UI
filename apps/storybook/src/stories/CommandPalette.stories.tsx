@@ -1227,7 +1227,7 @@ export const CloseReasonTelemetry: Story = {
     const dialog = canvas.getByRole("dialog", { name: "Command Palette" });
     await expect(dialog).toBeInTheDocument();
     await expect(dialog).toHaveAttribute("aria-keyshortcuts", "Escape");
-    const closeButton = canvas.getByRole("button", { name: "Close dialog" });
+    const closeButton = canvas.getByRole("button", { name: "Close command palette" });
     await expect(closeButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     await userEvent.click(closeButton);
     await expect(canvas.getByTestId("command-close-reason")).toHaveTextContent("close-button");
@@ -1253,7 +1253,7 @@ export const CloseButtonFocusIntentReentry: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
     const input = await canvas.findByRole("combobox", { name: "Search commands" });
-    const closeButton = await canvas.findByRole("button", { name: "Close dialog" });
+    const closeButton = await canvas.findByRole("button", { name: "Close command palette" });
 
     await userEvent.click(input);
     await expect(input).toHaveFocus();
@@ -1930,7 +1930,7 @@ export const CloseButtonManagedKeysPreemptedByLocalHandler: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement.ownerDocument.body);
     const dialog = await canvas.findByRole("dialog", { name: "Local close-button guard palette" });
-    const closeButton = canvas.getByRole("button", { name: "Close dialog" });
+    const closeButton = canvas.getByRole("button", { name: "Close command palette" });
 
     closeButton.focus();
     fireEvent.keyDown(closeButton, { key: "Enter" });

@@ -141,7 +141,7 @@ test("opens command palette with keyboard shortcut", async ({ page }) => {
 
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
-  await expect(dialog.getByRole("button", { name: "Close dialog" })).toBeVisible();
+  await expect(dialog.getByRole("button", { name: "Close command palette" })).toBeVisible();
 });
 
 test("opens and dismisses dialog with keyboard", async ({ page }) => {
@@ -526,7 +526,7 @@ test("exposes close-button keyboard shortcut hints across overlay and toast surf
   await page.getByRole("button", { name: "Command Palette" }).click();
   const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
   await expect(palette).toBeVisible();
-  const paletteCloseButton = palette.getByRole("button", { name: "Close dialog" });
+  const paletteCloseButton = palette.getByRole("button", { name: "Close command palette" });
   await expect(paletteCloseButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
   await paletteCloseButton.click();
   await expect(palette).toBeHidden();
@@ -689,7 +689,7 @@ test("reports command palette close reason telemetry for all dismiss paths", asy
 
   await trigger.click();
   await expect(paletteDialog).toBeVisible();
-  await paletteDialog.getByRole("button", { name: "Close dialog" }).click();
+  await paletteDialog.getByRole("button", { name: "Close command palette" }).click();
   await expect(paletteDialog).toBeHidden();
   await expect(telemetry).toHaveText("close-button");
   await expect(traceTelemetry).toHaveText("reason:close-button -> open:false");
@@ -743,7 +743,7 @@ test("keeps command palette open when blocking dismiss mode is enabled", async (
   await page.mouse.click(8, 8);
   await expect(palette).toBeVisible();
 
-  await palette.getByRole("button", { name: "Close dialog" }).click();
+  await palette.getByRole("button", { name: "Close command palette" }).click();
   await expect(palette).toBeHidden();
 });
 
@@ -764,7 +764,7 @@ test("guards command palette dismiss through event hooks when enabled", async ({
   await page.mouse.click(8, 8);
   await expect(palette).toBeVisible();
 
-  await palette.getByRole("button", { name: "Close dialog" }).click();
+  await palette.getByRole("button", { name: "Close command palette" }).click();
   await expect(palette).toBeHidden();
 
   await guardSwitch.click();
@@ -804,7 +804,7 @@ test("preempts command palette Enter and Escape via local search key guard", asy
   await expect(guardTelemetry).toHaveText("blocked:Escape");
   await expect(palette).toBeVisible();
 
-  await palette.getByRole("button", { name: "Close dialog" }).click();
+  await palette.getByRole("button", { name: "Close command palette" }).click();
   await expect(palette).toBeHidden();
 
   await guardSwitch.click();
@@ -833,7 +833,7 @@ test("preempts command palette close button Enter via local key guard hook", asy
 
   await page.getByRole("button", { name: "Command Palette" }).click();
   const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
-  const closeButton = palette.getByRole("button", { name: "Close dialog" });
+  const closeButton = palette.getByRole("button", { name: "Close command palette" });
   await expect(palette).toBeVisible();
 
   await closeButton.focus();
@@ -870,7 +870,7 @@ test("preempts command palette close button Space via local key guard hook", asy
 
   await page.getByRole("button", { name: "Command Palette" }).click();
   const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
-  const closeButton = palette.getByRole("button", { name: "Close dialog" });
+  const closeButton = palette.getByRole("button", { name: "Close command palette" });
   await expect(palette).toBeVisible();
 
   await closeButton.focus();
@@ -909,7 +909,7 @@ test("preempts command palette close button key='Space' alias via local key guar
 
   await page.getByRole("button", { name: "Command Palette" }).click();
   const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
-  const closeButton = palette.getByRole("button", { name: "Close dialog" });
+  const closeButton = palette.getByRole("button", { name: "Close command palette" });
   await expect(palette).toBeVisible();
 
   await closeButton.focus();
@@ -948,7 +948,7 @@ test("keeps command palette open after command select in persistent mode", async
   await expect(palette).toBeVisible();
   await expect(page.getByRole("status").filter({ hasText: "Prompt submitted" })).toBeVisible();
 
-  await palette.getByRole("button", { name: "Close dialog" }).click();
+  await palette.getByRole("button", { name: "Close command palette" }).click();
   await expect(palette).toBeHidden();
 });
 

@@ -704,7 +704,7 @@ describe("CommandPalette", () => {
       expect(screen.getByRole("combobox", { name: "Search commands" })).toHaveFocus();
     });
 
-    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    const closeButton = screen.getByRole("button", { name: "Close command palette" });
     act(() => {
       closeButton.focus();
     });
@@ -728,7 +728,7 @@ describe("CommandPalette", () => {
     );
 
     const input = screen.getByRole("combobox", { name: "Search commands" });
-    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    const closeButton = screen.getByRole("button", { name: "Close command palette" });
     const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation(() => {
       throw new Error("focus-visible is unsupported");
     });
@@ -768,7 +768,7 @@ describe("CommandPalette", () => {
     );
 
     const input = getByRole("combobox", { name: "Search commands" });
-    const closeButton = getByRole("button", { name: "Close dialog" });
+    const closeButton = getByRole("button", { name: "Close command palette" });
     const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation(() => {
       throw new Error("focus-visible is unsupported");
     });
@@ -1512,7 +1512,7 @@ describe("CommandPalette", () => {
       />
     );
 
-    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+    const closeButton = screen.getByRole("button", { name: "Close command palette" });
 
     fireEvent.keyDown(closeButton, { key: "Enter" });
     expect(closeButton.getAttribute("style")).toContain("translateY(0)");
@@ -1534,7 +1534,7 @@ describe("CommandPalette", () => {
       />
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close command palette" }));
     expect(onCloseReason).toHaveBeenCalledWith("close-button");
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
@@ -1579,7 +1579,7 @@ describe("CommandPalette", () => {
       />
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close command palette" }));
     expect(events).toEqual(["reason:close-button", "open:false"]);
   });
 
@@ -1645,7 +1645,7 @@ describe("CommandPalette", () => {
       />
     );
 
-    expect(screen.getByRole("button", { name: "Close dialog" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Close command palette" })).toBeInTheDocument();
   });
 
   it("resets close-reason tracking between dismiss cycles", () => {
@@ -1675,7 +1675,7 @@ describe("CommandPalette", () => {
     expect(onCloseReason).toHaveBeenNthCalledWith(1, "item-select");
 
     fireEvent.click(screen.getByRole("button", { name: "Reopen palette" }));
-    fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close command palette" }));
     expect(onCloseReason).toHaveBeenNthCalledWith(2, "close-button");
   });
 
