@@ -432,6 +432,13 @@ function TextActionSemanticsDemo() {
           </span>
         }
       />
+      <Toast
+        open
+        onOpenChange={() => {}}
+        title="Action required focusable"
+        description="Focusable action nodes should also upgrade toast role semantics."
+        action={<span tabIndex={0}>Review details</span>}
+      />
     </ToastShowcase>
   );
 }
@@ -446,7 +453,9 @@ export const TextActionSemantics: Story = {
     await expect(canvas.queryByRole("dialog", { name: "Passive update text" })).toBeNull();
     await expect(canvas.queryByRole("dialog", { name: "Passive update element" })).toBeNull();
     await expect(canvas.getByRole("dialog", { name: "Action required nested" })).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog", { name: "Action required focusable" })).toBeInTheDocument();
     await expect(canvas.getByRole("button", { name: "Undo now" })).toBeInTheDocument();
+    await expect(canvas.getByText("Review details")).toBeInTheDocument();
   }
 };
 

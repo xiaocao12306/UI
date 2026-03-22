@@ -937,7 +937,7 @@ function hasInteractiveActionProps(props: {
     return true;
   }
 
-  return hasFocusableTabIndex && (hasInteractiveRole || hasInteractiveEventHandler);
+  return hasFocusableTabIndex;
 }
 
 function isActionElementDisabled(props: {

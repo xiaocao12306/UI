@@ -315,6 +315,21 @@ describe("Toast", () => {
     expect(screen.getByRole("button", { name: "Undo now" })).toBeInTheDocument();
   });
 
+  it("treats focusable action element as actionable surface", () => {
+    render(
+      <Toast
+        open
+        title="Action review"
+        action={<span tabIndex={0}>Review details</span>}
+      />
+    );
+
+    const toast = screen.getByRole("dialog", { name: "Action review" });
+    expect(toast).toHaveAttribute("aria-modal", "false");
+    expect(screen.getByText("Review details")).toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: "Action review" })).toBeNull();
+  });
+
   it("supports overriding live-region politeness", () => {
     render(<Toast open title="Background sync" live="off" duration={0} />);
     expect(screen.getByRole("status", { name: "Background sync" })).toHaveAttribute("aria-live", "off");

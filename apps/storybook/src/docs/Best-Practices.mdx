@@ -361,7 +361,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For alert banners, provide `ariaLabel` when title/body copy is icon-heavy or ambiguous, or prefer `ariaLabelledBy` when a visible heading already exists; keep blank values out so status naming stays deterministic.
 - Keep alert dismiss buttons discoverable with `aria-keyshortcuts="Enter Space"` and localized `closeLabel` copy for assistive-tech audits.
 - Actionable toasts are persistent by default (`duration` omitted -> `0`); set explicit `duration` only when product requires timed dismissal.
-- If a toast includes actionable controls in `action`, treat it as an interactive surface (`dialog` / `alertdialog`) and keep CTA labels explicit.
+- If a toast includes actionable controls in `action`, treat it as an interactive surface (`dialog` / `alertdialog`) and keep CTA labels explicit; focusable action nodes (for example `tabIndex={0}`) are also considered interactive affordances.
 - Treat non-interactive action content (plain text/number or static wrapper elements) as passive content: it should not upgrade toast role semantics or force persistence; set explicit `duration={0}` when product needs sticky passive notices.
 - Keep `closeOnEscape` aligned with task criticality; disable Escape only for must-read states.
 - Use `onEscapeKeyDown` when Escape policy must be toggled dynamically at runtime (e.g. approval checkpoints).
