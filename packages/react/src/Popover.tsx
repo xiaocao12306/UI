@@ -8,6 +8,7 @@ export type PopoverCloseReason = "trigger-click" | "escape-key" | "outside-point
 export type PopoverProps = {
   triggerLabel: React.ReactNode;
   triggerAriaLabel?: string;
+  triggerAriaLabelledBy?: string;
   children: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
@@ -28,6 +29,7 @@ const popoverContentKeyboardShortcuts = "Tab";
 export function Popover({
   triggerLabel,
   triggerAriaLabel,
+  triggerAriaLabelledBy,
   children,
   open,
   defaultOpen,
@@ -47,8 +49,12 @@ export function Popover({
   const contentRef = React.useRef<HTMLDivElement>(null);
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
+  const resolvedTriggerAriaLabelledBy =
+    typeof triggerAriaLabelledBy === "string" && triggerAriaLabelledBy.trim().length > 0
+      ? triggerAriaLabelledBy.trim()
+      : undefined;
   const resolvedTriggerAriaLabel =
-    typeof triggerAriaLabel === "string" && triggerAriaLabel.trim().length > 0
+    !resolvedTriggerAriaLabelledBy && typeof triggerAriaLabel === "string" && triggerAriaLabel.trim().length > 0
       ? triggerAriaLabel.trim()
       : undefined;
   const resolvedContentLabel =
@@ -109,6 +115,7 @@ export function Popover({
       <Button
         ref={triggerRef}
         variant="outline"
+        aria-labelledby={resolvedTriggerAriaLabelledBy}
         aria-label={resolvedTriggerAriaLabel}
         aria-haspopup="dialog"
         aria-expanded={isOpen}

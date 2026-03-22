@@ -197,6 +197,47 @@ describe("Popover", () => {
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   });
 
+  it("prioritizes triggerAriaLabelledBy over triggerAriaLabel for icon trigger naming", () => {
+    render(
+      <div>
+        <h2 id="popover-trigger-heading">Popover actions</h2>
+        <Popover
+          triggerLabel="⋯"
+          triggerAriaLabel="Fallback popover actions"
+          triggerAriaLabelledBy="popover-trigger-heading"
+        >
+          <p>Popover content</p>
+        </Popover>
+      </div>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Popover actions" });
+    expect(trigger).toHaveAttribute("aria-labelledby", "popover-trigger-heading");
+    expect(trigger).not.toHaveAttribute("aria-label");
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  });
+
+  it("ignores blank triggerAriaLabelledBy and falls back to triggerAriaLabel", () => {
+    render(
+      <Popover
+        triggerLabel="⋯"
+        triggerAriaLabel="Fallback popover actions"
+        triggerAriaLabelledBy="   "
+      >
+        <p>Popover content</p>
+      </Popover>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Fallback popover actions" });
+    expect(trigger).not.toHaveAttribute("aria-labelledby");
+    expect(trigger).toHaveAttribute("aria-label", "Fallback popover actions");
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  });
+
   it("ignores blank triggerAriaLabel and keeps visible trigger text as accessible name", () => {
     render(
       <Popover triggerLabel="Info" triggerAriaLabel="   ">

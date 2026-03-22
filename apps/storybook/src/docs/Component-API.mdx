@@ -402,7 +402,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | Prop                                       | Type                                                                                  | Notes                                                                                                                                                                                             |
 | ------------------------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `triggerLabel`                             | `ReactNode`                                                                           | Trigger button content.                                                                                                                                                                           |
-| `triggerAriaLabel`                         | `string`                                                                              | Accessible name override for icon-only trigger content; blank values are ignored to avoid overriding visible trigger naming.                                                                      |
+| `triggerAriaLabel` / `triggerAriaLabelledBy` | `string` / `string`                                                                   | Accessible naming controls for icon-only trigger content. Blank values are ignored; when both are provided, `triggerAriaLabelledBy` takes precedence and suppresses `triggerAriaLabel` fallback. |
 | `open` / `defaultOpen` / `onOpenChange`    | controlled/uncontrolled                                                               | Supports both managed and unmanaged overlay state.                                                                                                                                                |
 | `closeOnEscape` / `closeOnOutsidePointer`  | `boolean`                                                                             | Configures whether keyboard/pointer dismiss gestures are allowed for non-blocking vs blocking workflows.                                                                                          |
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks                                                                       | Observe or cancel dismiss intents before close policy resolves.                                                                                                                                   |
@@ -431,6 +431,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={PopoverStories.TabDismissToNextControl} />
 <Canvas of={PopoverStories.ShiftTabDismissToPreviousControl} />
 <Canvas of={PopoverStories.CloseReasonTelemetry} />
+<Canvas of={PopoverStories.TriggerLabelledByPrecedence} />
 <Canvas of={PopoverStories.TriggerArrowDownModifierGuard} />
 <Canvas of={PopoverStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={PopoverStories.EscapeRepeatGuard} />

@@ -156,6 +156,32 @@ export const IconTrigger: Story = {
   }
 };
 
+export const TriggerLabelledByPrecedence: Story = {
+  args: {
+    triggerLabel: "⋯",
+    triggerAriaLabel: "Fallback popover actions",
+    triggerAriaLabelledBy: "popover-trigger-heading",
+    children: <p style={{ margin: 0 }}>Visible heading naming should win.</p>
+  },
+  render: (args) => (
+    <PopoverShowcase>
+      <h3 id="popover-trigger-heading" style={{ margin: 0, fontSize: "var(--aurora-font-size-sm)" }}>
+        Popover heading actions
+      </h3>
+      <Popover {...args} />
+    </PopoverShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Popover heading actions" });
+    await expect(trigger).toHaveAttribute("aria-labelledby", "popover-trigger-heading");
+    await expect(trigger).not.toHaveAttribute("aria-label");
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  }
+};
+
 export const NonDismissible: Story = {
   args: {
     triggerLabel: "Review policy",
