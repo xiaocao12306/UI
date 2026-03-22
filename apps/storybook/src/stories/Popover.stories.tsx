@@ -519,6 +519,17 @@ export const CloseReasonTelemetry: Story = {
     await expect(canvas.getByTestId("popover-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
 
     await userEvent.click(trigger);
+    outsideTarget.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        button: 0,
+        ctrlKey: true,
+        pointerType: "mouse"
+      })
+    );
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("escape-key");
     await userEvent.click(outsideTarget);
     await expect(canvas.getByTestId("popover-close-reason")).toHaveTextContent("outside-pointer");
     await expect(canvas.getByTestId("popover-close-trace")).toHaveTextContent("reason:outside-pointer -> open:false");

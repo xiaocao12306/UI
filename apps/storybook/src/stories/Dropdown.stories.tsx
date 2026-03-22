@@ -539,6 +539,17 @@ export const CloseReasonTelemetry: Story = {
     await expect(canvas.getByTestId("dropdown-close-trace")).toHaveTextContent("reason:escape-key -> open:false");
 
     await userEvent.click(trigger);
+    outsideTarget.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        cancelable: true,
+        button: 0,
+        ctrlKey: true,
+        pointerType: "mouse"
+      })
+    );
+    await expect(canvas.getByRole("menu", { name: "Telemetry Menu" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("escape-key");
     await userEvent.click(outsideTarget);
     await expect(canvas.getByTestId("dropdown-close-reason")).toHaveTextContent("outside-pointer");
     await expect(canvas.getByTestId("dropdown-close-trace")).toHaveTextContent("reason:outside-pointer -> open:false");

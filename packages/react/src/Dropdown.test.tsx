@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from "@testing-library/rea
 import { describe, expect, it, vi } from "vitest";
 import { Dropdown } from "./Dropdown";
 import { Popover } from "./Popover";
-import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
+import { dispatchCtrlPrimaryPointerDown, dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 describe("Dropdown", () => {
   it("selects an item and closes the menu", () => {
@@ -1467,7 +1467,13 @@ describe("Dropdown", () => {
       expect(screen.queryByRole("menu", { name: "Main dropdown" })).toBeNull();
       expect(within(iframeDocument.body).getByRole("menu", { name: "Iframe dropdown" })).toBeInTheDocument();
 
-      fireEvent.pointerDown(within(iframeDocument.body).getByRole("button", { name: "Iframe outside target" }));
+      const iframeOutsideTarget = within(iframeDocument.body).getByRole("button", {
+        name: "Iframe outside target"
+      });
+      dispatchCtrlPrimaryPointerDown(iframeOutsideTarget);
+      expect(within(iframeDocument.body).getByRole("menu", { name: "Iframe dropdown" })).toBeInTheDocument();
+
+      fireEvent.pointerDown(iframeOutsideTarget);
       expect(within(iframeDocument.body).queryByRole("menu", { name: "Iframe dropdown" })).toBeNull();
     } finally {
       unmountIframe?.();

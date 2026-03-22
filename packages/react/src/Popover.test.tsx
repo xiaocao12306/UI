@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Popover } from "./Popover";
-import { dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
+import { dispatchCtrlPrimaryPointerDown, dispatchNonPrimaryPointerDown } from "./test-utils/pointer";
 
 describe("Popover", () => {
   it("opens and closes through trigger, escape key, and outside pointer", () => {
@@ -438,7 +438,13 @@ describe("Popover", () => {
       expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
       expect(within(iframeDocument.body).getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
 
-      fireEvent.pointerDown(within(iframeDocument.body).getByRole("button", { name: "Iframe outside target" }));
+      const iframeOutsideTarget = within(iframeDocument.body).getByRole("button", {
+        name: "Iframe outside target"
+      });
+      dispatchCtrlPrimaryPointerDown(iframeOutsideTarget);
+      expect(within(iframeDocument.body).getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+      fireEvent.pointerDown(iframeOutsideTarget);
       expect(within(iframeDocument.body).queryByRole("dialog", { name: "Popover content" })).toBeNull();
     } finally {
       unmountIframe?.();

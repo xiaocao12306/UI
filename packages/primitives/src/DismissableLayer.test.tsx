@@ -325,6 +325,25 @@ describe("DismissableLayer", () => {
     expect(onPointerDownOutside).not.toHaveBeenCalled();
     expect(onDismiss).not.toHaveBeenCalled();
   });
+
+  it("ignores ctrl-primary pointer interactions for outside dismiss", () => {
+    const onDismiss = vi.fn();
+    const onPointerDownOutside = vi.fn();
+
+    render(
+      <div>
+        <DismissableLayer onDismiss={onDismiss} onPointerDownOutside={onPointerDownOutside}>
+          <div>Layer body</div>
+        </DismissableLayer>
+        <button type="button">Outside target</button>
+      </div>
+    );
+
+    dispatchCtrlPrimaryPointerDown(screen.getByRole("button", { name: "Outside target" }));
+
+    expect(onPointerDownOutside).not.toHaveBeenCalled();
+    expect(onDismiss).not.toHaveBeenCalled();
+  });
 });
 
 function preemptEscape(event: KeyboardEvent) {
@@ -335,4 +354,13 @@ function preemptEscape(event: KeyboardEvent) {
 
 function preemptPointerDown(event: PointerEvent) {
   event.preventDefault();
+}
+
+function dispatchCtrlPrimaryPointerDown(target: EventTarget) {
+  const event = new Event("pointerdown", { bubbles: true, cancelable: true });
+  Object.defineProperty(event, "button", { configurable: true, value: 0 });
+  Object.defineProperty(event, "buttons", { configurable: true, value: 1 });
+  Object.defineProperty(event, "pointerType", { configurable: true, value: "mouse" });
+  Object.defineProperty(event, "ctrlKey", { configurable: true, value: true });
+  target.dispatchEvent(event);
 }

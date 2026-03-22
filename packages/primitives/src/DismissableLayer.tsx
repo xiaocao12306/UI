@@ -67,11 +67,12 @@ function isPrimaryPointerDownEvent(event: PointerEvent) {
     return false;
   }
 
+  if (event.ctrlKey && button === 0) {
+    return false;
+  }
+
   if (event.pointerType === "mouse" || event.pointerType === "") {
     if (typeof event.buttons === "number" && event.buttons !== 0 && (event.buttons & 1) === 0) {
-      return false;
-    }
-    if (event.ctrlKey) {
       return false;
     }
   }
