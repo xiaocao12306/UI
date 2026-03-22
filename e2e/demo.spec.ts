@@ -1971,6 +1971,36 @@ test("selects framework from combobox", async ({ page }) => {
   await expect(page.getByText("Current selection: svelte")).toBeVisible();
 });
 
+test("ignores repeated Enter keydown before combobox selection commit", async ({ page }) => {
+  await page.goto("/");
+
+  const combobox = page.getByRole("combobox", { name: "Framework Combobox" });
+  await combobox.click();
+  await combobox.fill("sv");
+  await expect(
+    page
+      .getByRole("listbox", { name: "Framework Combobox options" })
+      .getByRole("option", { name: "Svelte" })
+  ).toBeVisible();
+
+  await page.evaluate(() => {
+    const input = document.querySelector<HTMLInputElement>("#framework-combobox");
+    if (!input) {
+      throw new Error("Framework combobox input not found");
+    }
+
+    input.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "Enter", repeat: true, bubbles: true, cancelable: true })
+    );
+  });
+
+  await expect(page.getByRole("listbox", { name: "Framework Combobox options" })).toBeVisible();
+  await expect(page.getByText("Current selection: react")).toBeVisible();
+
+  await combobox.press("Enter");
+  await expect(page.getByText("Current selection: svelte")).toBeVisible();
+});
+
 test("ignores combobox managed keys when only legacy IME keyCode is present", async ({ page }) => {
   await page.goto("/");
 
