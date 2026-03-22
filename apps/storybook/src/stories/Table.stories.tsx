@@ -444,6 +444,19 @@ export const AccessibleNameFallback: Story = {
   }
 };
 
+export const NumericCaptionName: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
+      <Table caption={0} columns={columns} data={rows} rowKey={(row) => row.id} />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole("table", { name: "0" });
+    await expect(table).not.toHaveAttribute("aria-label");
+  }
+};
+
 export const AccessibleNameLabelledByHeading: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 780px)" gap={10}>

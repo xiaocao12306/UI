@@ -105,10 +105,11 @@ export function Table<T>({
   getSortStatusText = defaultGetSortStatusText,
   onSortChange
 }: TableProps<T>) {
+  const hasCaptionContent = hasRenderableNode(caption);
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel = resolvedAriaLabelledBy
     ? undefined
-    : resolveNonEmptyLabel(ariaLabel, caption ? undefined : "Data table");
+    : resolveNonEmptyLabel(ariaLabel, hasCaptionContent ? undefined : "Data table");
   const sortButtonRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const keyboardActivationSortKeyRef = React.useRef<string | null>(null);
@@ -505,7 +506,7 @@ export function Table<T>({
         aria-busy={loading || undefined}
         style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}
       >
-        {caption ? (
+        {hasCaptionContent ? (
           <caption
             style={{
               textAlign: "left",
@@ -1015,6 +1016,26 @@ function resolveFocusVisibleState(target: HTMLButtonElement | null, fallback: bo
   } catch {
     return fallback;
   }
+}
+
+function hasRenderableNode(node: React.ReactNode): boolean {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return false;
+  }
+
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  if (typeof node === "number") {
+    return true;
+  }
+
+  if (Array.isArray(node)) {
+    return node.some((item) => hasRenderableNode(item));
+  }
+
+  return React.isValidElement(node);
 }
 
 function getReadableHeaderText(node: React.ReactNode): string {

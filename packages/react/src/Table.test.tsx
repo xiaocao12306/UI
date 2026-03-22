@@ -676,6 +676,25 @@ describe("Table", () => {
     expect(table).not.toHaveAttribute("aria-label");
   });
 
+  it("treats numeric caption as renderable table name content", () => {
+    render(
+      <Table
+        caption={0}
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    const table = screen.getByRole("table", { name: "0" });
+    expect(table).not.toHaveAttribute("aria-label");
+  });
+
   it("sorts sortable columns and emits sort change", () => {
     const onSortChange = vi.fn();
 
