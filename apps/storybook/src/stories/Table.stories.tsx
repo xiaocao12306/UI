@@ -251,6 +251,11 @@ export const KeyboardReachableScrollContainer: Story = {
     await expect((scrollContainer as HTMLDivElement).scrollLeft).toBeGreaterThan(0);
     fireEvent.keyDown(scrollContainer as HTMLDivElement, { key: "Home" });
     await expect((scrollContainer as HTMLDivElement).scrollLeft).toBe(0);
+    const preemptScrollHandler = (event: KeyboardEvent) => event.preventDefault();
+    (scrollContainer as HTMLDivElement).addEventListener("keydown", preemptScrollHandler, true);
+    fireEvent.keyDown(scrollContainer as HTMLDivElement, { key: "ArrowRight" });
+    await expect((scrollContainer as HTMLDivElement).scrollLeft).toBe(0);
+    (scrollContainer as HTMLDivElement).removeEventListener("keydown", preemptScrollHandler, true);
 
     await userEvent.tab();
     await expect(canvas.getByRole("button", { name: "After table" })).toHaveFocus();

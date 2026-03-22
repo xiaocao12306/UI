@@ -486,6 +486,45 @@ describe("Table", () => {
     expect(scrollToSpy).toHaveBeenCalledTimes(2);
   });
 
+  it("skips scroll-container keyboard panning when keydown is preempted upstream", () => {
+    const { container } = render(
+      <div onKeyDownCapture={(event) => event.preventDefault()}>
+        <Table
+          columns={[
+            { key: "name", header: "Name" },
+            { key: "status", header: "Status" }
+          ]}
+          data={[
+            { name: "Button", status: "Stable" },
+            { name: "Dialog", status: "Stable" }
+          ]}
+        />
+      </div>
+    );
+
+    const scrollContainer = container.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement;
+    Object.defineProperty(scrollContainer, "clientWidth", {
+      configurable: true,
+      value: 200
+    });
+    Object.defineProperty(scrollContainer, "scrollWidth", {
+      configurable: true,
+      value: 600
+    });
+
+    const scrollBySpy = vi.fn();
+    Object.defineProperty(scrollContainer, "scrollBy", {
+      configurable: true,
+      value: scrollBySpy
+    });
+
+    scrollContainer.focus();
+    fireEvent.keyDown(scrollContainer, { key: "ArrowRight" });
+    expect(scrollBySpy).not.toHaveBeenCalled();
+  });
+
   it("does not add extra scroll-container tab stop when sortable controls are actionable", () => {
     const { container } = render(
       <Table
@@ -504,6 +543,7 @@ describe("Table", () => {
       "[data-aurora-table-scroll-container]"
     ) as HTMLDivElement;
     expect(scrollContainer).not.toHaveAttribute("tabindex");
+    expect(scrollContainer).not.toHaveAttribute("aria-keyshortcuts");
   });
 
   it("renders empty state when no rows", () => {
