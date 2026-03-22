@@ -180,11 +180,14 @@ export function Dropdown({
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
   const resolvedTriggerAriaLabelledBy = resolveNonEmptyLabel(triggerAriaLabelledBy);
-  const resolvedTriggerAriaLabel =
+  const explicitTriggerAriaLabel =
     resolvedTriggerAriaLabelledBy === undefined
       ? resolveNonEmptyLabel(triggerAriaLabel)
       : undefined;
   const hasReadableTriggerLabelText = getReadableTextNode(label).trim().length > 0;
+  const resolvedTriggerAriaLabel = resolvedTriggerAriaLabelledBy
+    ? undefined
+    : explicitTriggerAriaLabel ?? (hasReadableTriggerLabelText ? undefined : "Open menu");
   const itemRenderKeys = React.useMemo(() => {
     const seenCounts = new Map<string, number>();
     return items.map((item, index) => {
@@ -300,7 +303,7 @@ export function Dropdown({
     }
     if (
       hasReadableTriggerLabelText ||
-      resolvedTriggerAriaLabel !== undefined ||
+      explicitTriggerAriaLabel !== undefined ||
       resolvedTriggerAriaLabelledBy !== undefined
     ) {
       return;
@@ -308,7 +311,7 @@ export function Dropdown({
 
     warnedMissingTriggerNameRef.current = true;
     console.warn("[Dropdown] Non-text trigger labels should provide triggerAriaLabel or triggerAriaLabelledBy.");
-  }, [hasReadableTriggerLabelText, resolvedTriggerAriaLabel, resolvedTriggerAriaLabelledBy]);
+  }, [explicitTriggerAriaLabel, hasReadableTriggerLabelText, resolvedTriggerAriaLabelledBy]);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {

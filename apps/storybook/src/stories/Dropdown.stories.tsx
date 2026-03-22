@@ -138,6 +138,20 @@ export const NonTextTriggerNameFallback: Story = {
   }
 };
 
+export const NonTextTriggerAutoNameFallback: Story = {
+  args: {
+    label: <span aria-hidden>⋯</span>,
+    items
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Open menu" });
+    await expect(trigger).toHaveAttribute("aria-label", "Open menu");
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Open menu" })).toBeInTheDocument();
+  }
+};
+
 export const IconItemNaming: Story = {
   args: {
     label: "Icon items",

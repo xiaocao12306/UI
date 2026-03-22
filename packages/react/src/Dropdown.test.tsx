@@ -64,6 +64,10 @@ describe("Dropdown", () => {
       expect(warnSpy).toHaveBeenCalledWith(
         "[Dropdown] Non-text trigger labels should provide triggerAriaLabel or triggerAriaLabelledBy."
       );
+      expect(screen.getByRole("button", { name: "Open menu" })).toHaveAttribute(
+        "aria-label",
+        "Open menu"
+      );
     } finally {
       warnSpy.mockRestore();
     }

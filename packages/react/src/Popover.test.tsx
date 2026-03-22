@@ -238,6 +238,10 @@ describe("Popover", () => {
       expect(warnSpy).toHaveBeenCalledWith(
         "[Popover] Non-text triggerLabel should provide triggerAriaLabel or triggerAriaLabelledBy."
       );
+      expect(screen.getByRole("button", { name: "Open popover" })).toHaveAttribute(
+        "aria-label",
+        "Open popover"
+      );
     } finally {
       warnSpy.mockRestore();
     }

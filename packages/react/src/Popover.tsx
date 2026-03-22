@@ -54,7 +54,7 @@ export function Popover({
     typeof triggerAriaLabelledBy === "string" && triggerAriaLabelledBy.trim().length > 0
       ? triggerAriaLabelledBy.trim()
       : undefined;
-  const resolvedTriggerAriaLabel =
+  const explicitTriggerAriaLabel =
     !resolvedTriggerAriaLabelledBy && typeof triggerAriaLabel === "string" && triggerAriaLabel.trim().length > 0
       ? triggerAriaLabel.trim()
       : undefined;
@@ -63,6 +63,9 @@ export function Popover({
       ? contentLabel.trim()
       : "Popover content";
   const hasReadableTriggerLabelText = getReadablePopoverLabel(triggerLabel).length > 0;
+  const resolvedTriggerAriaLabel = resolvedTriggerAriaLabelledBy
+    ? undefined
+    : explicitTriggerAriaLabel ?? (hasReadableTriggerLabelText ? undefined : "Open popover");
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -119,7 +122,7 @@ export function Popover({
     }
     if (
       hasReadableTriggerLabelText ||
-      resolvedTriggerAriaLabel !== undefined ||
+      explicitTriggerAriaLabel !== undefined ||
       resolvedTriggerAriaLabelledBy !== undefined
     ) {
       return;
@@ -127,7 +130,7 @@ export function Popover({
 
     warnedMissingTriggerNameRef.current = true;
     console.warn("[Popover] Non-text triggerLabel should provide triggerAriaLabel or triggerAriaLabelledBy.");
-  }, [hasReadableTriggerLabelText, resolvedTriggerAriaLabel, resolvedTriggerAriaLabelledBy]);
+  }, [explicitTriggerAriaLabel, hasReadableTriggerLabelText, resolvedTriggerAriaLabelledBy]);
 
   const horizontalPosition = align === "start" ? { left: 0 } : { right: 0 };
 

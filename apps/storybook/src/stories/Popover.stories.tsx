@@ -224,6 +224,20 @@ export const NonTextTriggerNameFallback: Story = {
   }
 };
 
+export const NonTextTriggerAutoNameFallback: Story = {
+  args: {
+    triggerLabel: <span aria-hidden="true">⋯</span>,
+    children: <p style={{ margin: 0 }}>Auto-named trigger fallback content.</p>
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Open popover" });
+    await expect(trigger).toHaveAttribute("aria-label", "Open popover");
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+  }
+};
+
 export const NonDismissible: Story = {
   args: {
     triggerLabel: "Review policy",
