@@ -460,6 +460,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Ensure tabs support orientation-aware arrows (`Left/Right` or `Up/Down`) plus `Home/End`, and skip disabled entries.
 - In RTL layouts, verify horizontal `ArrowLeft`/`ArrowRight` intent is mirrored so tab navigation matches visual reading flow.
 - Prefer `ariaLabelledBy` with a visible heading when tabs already have on-screen context labels; fall back to `ariaLabel` for standalone tab groups.
+- When all tabs are disabled, keep the tablist itself keyboard-reachable (`tabIndex=0`) so assistive users can still discover disabled workflow state instead of skipping the component entirely.
 - For icon/custom tab labels, prefer `items[].ariaLabelledBy` when a visible heading already exists; otherwise provide `items[].ariaLabel`. Rich labels that expose readable text or inline `aria-label` are auto-detected, and development builds warn when non-text labels omit both.
 - Use `activationMode="manual"` when arrow-key navigation should not immediately trigger expensive panel renders.
 - Use `loop={false}` when boundary tabs should trap Arrow navigation (for linear workflows where wrap-around can feel like a jump).

@@ -784,6 +784,7 @@ describe("Tabs", () => {
 
     const tabList = screen.getByRole("tablist", { name: "Tabs" });
     expect(tabList).toHaveAttribute("aria-disabled", "true");
+    expect(tabList).toHaveAttribute("tabindex", "0");
 
     const allTabs = screen.getAllByRole("tab");
     expect(allTabs).toHaveLength(2);
@@ -793,6 +794,37 @@ describe("Tabs", () => {
       expect(tab).toHaveAttribute("tabindex", "-1");
       expect(tab).toHaveAttribute("aria-selected", "false");
     });
+  });
+
+  it("keeps all-disabled tablists keyboard reachable as a fallback tab stop", async () => {
+    const user = userEvent.setup();
+    render(
+      <div>
+        <button type="button">Before tabs</button>
+        <Tabs
+          ariaLabel="All disabled tabs"
+          activationMode="manual"
+          items={[
+            { key: "one", label: "One", content: <div>Panel One</div>, disabled: true },
+            { key: "two", label: "Two", content: <div>Panel Two</div>, disabled: true }
+          ]}
+        />
+        <button type="button">After tabs</button>
+      </div>
+    );
+
+    const tabList = screen.getByRole("tablist", { name: "All disabled tabs" });
+    expect(tabList).toHaveAttribute("tabindex", "0");
+    expect(tabList).toHaveAttribute("aria-disabled", "true");
+
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Before tabs" })).toHaveFocus();
+
+    await user.tab();
+    expect(tabList).toHaveFocus();
+
+    await user.tab();
+    expect(screen.getByRole("button", { name: "After tabs" })).toHaveFocus();
   });
 
   it("does not emit value change when selecting the already active tab", () => {

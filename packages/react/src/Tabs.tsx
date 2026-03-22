@@ -367,6 +367,7 @@ export function Tabs({
         aria-labelledby={resolvedAriaLabelledBy}
         aria-orientation={orientation}
         aria-disabled={firstEnabledKey ? undefined : true}
+        tabIndex={firstEnabledKey ? undefined : 0}
         onBlurCapture={(event) => {
           const nextFocused = event.relatedTarget as Node | null;
           if (nextFocused && event.currentTarget.contains(nextFocused)) {

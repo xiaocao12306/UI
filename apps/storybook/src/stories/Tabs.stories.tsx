@@ -423,6 +423,7 @@ export const AllTabsDisabled: Story = {
     const canvas = within(canvasElement);
     const tabList = canvas.getByRole("tablist", { name: "All disabled release tabs" });
     await expect(tabList).toHaveAttribute("aria-disabled", "true");
+    await expect(tabList).toHaveAttribute("tabindex", "0");
 
     const allTabs = canvas.getAllByRole("tab");
     await expect(allTabs).toHaveLength(2);
@@ -433,6 +434,9 @@ export const AllTabsDisabled: Story = {
       expect(tab).toHaveAttribute("aria-selected", "false");
       expect(tab).toHaveAttribute("tabindex", "-1");
     });
+
+    await userEvent.tab();
+    await expect(tabList).toHaveFocus();
   }
 };
 
