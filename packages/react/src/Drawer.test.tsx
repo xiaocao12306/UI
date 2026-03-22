@@ -607,6 +607,35 @@ describe("Drawer", () => {
     matchesSpy.mockRestore();
   });
 
+  it("falls back to keyboard intent when close-button :focus-visible returns false", () => {
+    render(
+      <Drawer open onOpenChange={() => {}} title="Focus fallback drawer" closeLabel="Fallback close">
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Fallback close" });
+    const nativeMatches = closeButton.matches.bind(closeButton);
+    const matchesSpy = vi.spyOn(closeButton, "matches").mockImplementation((selector) => {
+      if (selector === ":focus-visible") {
+        return false;
+      }
+
+      return nativeMatches(selector);
+    });
+
+    fireEvent.mouseDown(closeButton, { button: 0 });
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).not.toContain("var(--aurora-focus-ring)");
+
+    fireEvent.blur(closeButton);
+    fireEvent.keyDown(document, { key: "Tab" });
+    fireEvent.focus(closeButton);
+    expect(closeButton.getAttribute("style")).toContain("var(--aurora-focus-ring)");
+
+    matchesSpy.mockRestore();
+  });
+
   it("ignores modified ownerDocument keydown for close-button focus-visible fallback intent", () => {
     render(
       <div>
