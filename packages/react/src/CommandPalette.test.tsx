@@ -1585,6 +1585,62 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("status")).toHaveTextContent("Loading commands...");
   });
 
+  it("falls back visible loading copy when loadingContent is blank", () => {
+    render(
+      <CommandPalette
+        open
+        loading
+        loadingContent="   "
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings" }]}
+      />
+    );
+
+    expect(screen.getByTestId("command-palette-loading-content")).toHaveTextContent("Loading commands...");
+    expect(screen.getByRole("status")).toHaveTextContent("Loading commands...");
+  });
+
+  it("falls back visible empty-state copy when emptyMessage is blank", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        emptyMessage="   "
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText("Search commands"), { target: { value: "no-match" } });
+    expect(screen.getByText("No commands found.")).toBeInTheDocument();
+  });
+
+  it("keeps numeric loading and empty-state feedback copy", () => {
+    const { rerender } = render(
+      <CommandPalette
+        open
+        loading
+        loadingContent={0}
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    expect(screen.getByTestId("command-palette-loading-content")).toHaveTextContent("0");
+    expect(screen.getByRole("status")).toHaveTextContent("0");
+
+    rerender(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        emptyMessage={0}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText("Search commands"), { target: { value: "no-match" } });
+    expect(screen.getByText("0")).toBeInTheDocument();
+  });
+
   it("ignores arrow and page navigation when all filtered commands are disabled", () => {
     const onOpenChange = vi.fn();
 

@@ -907,6 +907,52 @@ export const LoadingState: Story = {
   }
 };
 
+export const BlankLoadingContentFallback: Story = {
+  args: {
+    open: true,
+    loading: true,
+    loadingContent: "   ",
+    onOpenChange: () => {},
+    commands: [{ key: "open-settings", label: "Open Settings" }]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await expect(canvas.getByTestId("command-palette-loading-content")).toHaveTextContent("Loading commands...");
+    await expect(canvas.getByRole("status")).toHaveTextContent("Loading commands...");
+  }
+};
+
+export const BlankEmptyMessageFallback: Story = {
+  args: {
+    open: true,
+    emptyMessage: "   ",
+    onOpenChange: () => {},
+    commands: [{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+    await userEvent.clear(input);
+    await userEvent.type(input, "no-match");
+    await expect(canvas.getByText("No commands found.")).toBeInTheDocument();
+  }
+};
+
+export const NumericFeedbackCopySemantics: Story = {
+  args: {
+    open: true,
+    loading: true,
+    loadingContent: 0,
+    onOpenChange: () => {},
+    commands: [{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await expect(canvas.getByTestId("command-palette-loading-content")).toHaveTextContent("0");
+    await expect(canvas.getByRole("status")).toHaveTextContent("0");
+  }
+};
+
 export const CloseReasonTelemetry: Story = {
   render: () => <CloseReasonTelemetryPalette />,
   play: async ({ canvasElement }) => {

@@ -99,6 +99,12 @@ export function CommandPalette({
     () => resolveLoadingStatusText(loadingContent),
     [loadingContent]
   );
+  const resolvedLoadingContent = hasRenderableCommandNode(loadingContent)
+    ? loadingContent
+    : "Loading commands...";
+  const resolvedEmptyMessage = hasRenderableCommandNode(emptyMessage)
+    ? emptyMessage
+    : "No commands found.";
 
   const markCloseReason = React.useCallback(
     (reason: CommandPaletteCloseReason) => {
@@ -609,7 +615,7 @@ export function CommandPalette({
             data-testid="command-palette-loading-content"
             style={{ margin: 0, color: "var(--aurora-text-secondary)" }}
           >
-            {loadingContent}
+            {resolvedLoadingContent}
           </p>
         ) : hasResults ? (
           <div
@@ -711,7 +717,7 @@ export function CommandPalette({
             })}
           </div>
         ) : (
-          <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>{emptyMessage}</p>
+          <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>{resolvedEmptyMessage}</p>
         )}
       </div>
     </Dialog>
@@ -786,6 +792,18 @@ function defaultGetResultsStatusText({
 function resolveLoadingStatusText(loadingContent: React.ReactNode) {
   const normalized = normalizeReadableCommandText(getReadableCommandLabelText(loadingContent));
   return normalized.length > 0 ? normalized : "Loading commands...";
+}
+
+function hasRenderableCommandNode(node: React.ReactNode) {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return false;
+  }
+
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  return true;
 }
 
 function getReadableCommandLabelText(node: React.ReactNode): string {
