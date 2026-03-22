@@ -210,6 +210,26 @@ describe("Input", () => {
     expect(input).not.toHaveAttribute("data-active");
   });
 
+  it("skips enter active feedback when keydown is preempted upstream", () => {
+    const preemptEnterKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptEnterKeydown, true);
+
+    try {
+      render(<Input aria-label="Preempted enter field" />);
+      const input = screen.getByRole("textbox", { name: "Preempted enter field" });
+
+      fireEvent.keyDown(input, { key: "Enter" });
+      expect(input).not.toHaveAttribute("data-active");
+    } finally {
+      document.removeEventListener("keydown", preemptEnterKeydown, true);
+    }
+  });
+
   it("retains focus-visible state on non-primary pointer interaction", () => {
     render(<Input aria-label="Pointer focus input" />);
     const input = screen.getByRole("textbox", { name: "Pointer focus input" });

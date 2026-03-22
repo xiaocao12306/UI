@@ -99,12 +99,14 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `aria-describedby`                    | `string`                                     | Recommended for helper/error narration in forms.                                                                                                                                                |
 | keyboard shortcut hints               | text-like inputs default `aria-keyshortcuts="Enter"` | Text-like actionable inputs (`text/search/email/url/tel/password`) expose Enter shortcut metadata for QA/AT discoverability; non-text types plus read-only/disabled inputs omit default hints (explicit overrides remain supported). |
 | Enter active feedback policy          | unmodified `Enter`/`Shift+Enter` only        | Ignores `Ctrl/Meta/Alt + Enter` so host shortcut chords do not trigger input active-press visuals.                                                                                              |
+| managed-key priority                  | preempted `Enter` keydown skips active feedback | Input enter-active visuals and handler-side effects stay no-op when upstream guards already `preventDefault()` the keydown event.                                                                |
 | focus intent policy                   | primary pointer clears focus-visible         | Non-primary `mousedown/pointerdown` plus `Ctrl + primary click` context-click paths keep keyboard-intent focus ring state, while plain primary pointer keeps prior active/pressed behavior.                       |
 | document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores input focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and `Ctrl + primary click` do not clear fallback keyboard intent. |
 | native input props                    | `InputHTMLAttributes`                        | Includes `value`, `defaultValue`, `onChange`, `type`, and autocomplete controls.                                                                                                                |
 
 <Canvas of={InputStories.InvalidTokenSemantics} />
 <Canvas of={InputStories.BlankAriaLabelFallback} />
+<Canvas of={InputStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={InputStories.ShortcutHintPrecision} />
 <Canvas of={InputStories.FocusIntentReentry} />
 

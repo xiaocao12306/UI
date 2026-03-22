@@ -220,6 +220,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
       onKeyDown={(event) => {
         focusVisibleIntentRef.current = true;
         if (
+          !event.defaultPrevented &&
           !isInteractionDisabled &&
           !readOnly &&
           supportsEnterKeyboardFeedback &&
