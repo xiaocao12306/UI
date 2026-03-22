@@ -188,8 +188,9 @@ export function Combobox({
       const hasReadableLabelText = getReadableComboboxLabelText(option.label).length > 0;
       const hasExplicitAriaLabel = resolveNonEmptyLabel(option.ariaLabel) !== undefined;
       const hasExplicitAriaLabelledBy = resolveNonEmptyLabel(option.ariaLabelledBy) !== undefined;
+      const hasTextValueAlias = resolveNonEmptyLabel(option.textValue) !== undefined;
 
-      if (hasReadableLabelText || hasExplicitAriaLabel || hasExplicitAriaLabelledBy) {
+      if (hasReadableLabelText || hasExplicitAriaLabel || hasExplicitAriaLabelledBy || hasTextValueAlias) {
         return values;
       }
 
@@ -209,7 +210,7 @@ export function Combobox({
     warnedMissingAriaLabelSignatureRef.current = signature;
 
     console.warn(
-      `[Combobox] Non-text option labels should provide ariaLabel or ariaLabelledBy: ${missingAriaLabelValues.join(", ")}.`
+      `[Combobox] Non-text option labels should provide ariaLabel, ariaLabelledBy, or textValue for accessible naming: ${missingAriaLabelValues.join(", ")}.`
     );
   }, [options]);
 
@@ -479,9 +480,14 @@ export function Combobox({
             const active = index === activeIndex;
             const selected = item.value === currentValue;
             const resolvedOptionAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
+            const hasReadableOptionLabelText = getReadableComboboxLabelText(item.label).length > 0;
+            const optionTextValueFallback = resolveNonEmptyLabel(item.textValue);
             const resolvedOptionAriaLabel =
               resolvedOptionAriaLabelledBy === undefined
-                ? resolveNonEmptyLabel(item.ariaLabel)
+                ? resolveNonEmptyLabel(
+                    item.ariaLabel,
+                    hasReadableOptionLabelText ? undefined : optionTextValueFallback
+                  )
                 : undefined;
             return (
               <button

@@ -243,7 +243,7 @@ describe("Combobox", () => {
     }
   });
 
-  it("warns when non-text option labels omit ariaLabel and ariaLabelledBy", () => {
+  it("uses textValue fallback naming for non-text options without ariaLabel metadata", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     try {
@@ -260,9 +260,35 @@ describe("Combobox", () => {
         />
       );
 
+      const input = screen.getByRole("combobox", { name: "Combobox" });
+      fireEvent.focus(input);
+      const option = screen.getByRole("option", { name: "Icon only option" });
+      expect(option).toHaveAttribute("aria-label", "Icon only option");
+      expect(warnSpy).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("warns when non-text option labels omit ariaLabel/ariaLabelledBy/textValue naming metadata", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Combobox
+          options={[
+            {
+              value: "icon-only-missing",
+              label: <span aria-hidden="true">⚙️</span>
+            }
+          ]}
+          onValueChange={() => {}}
+        />
+      );
+
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
-          '[Combobox] Non-text option labels should provide ariaLabel or ariaLabelledBy: "icon-only".'
+          '[Combobox] Non-text option labels should provide ariaLabel, ariaLabelledBy, or textValue for accessible naming: "icon-only-missing".'
         )
       );
     } finally {
