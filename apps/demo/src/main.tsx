@@ -324,6 +324,18 @@ function shouldSyncSectionStateFromClick(event: React.MouseEvent<HTMLAnchorEleme
   return true;
 }
 
+function normalizeGuardActivationKey(key: string): "Enter" | "Space" | null {
+  if (key === "Enter") {
+    return "Enter";
+  }
+
+  if (key === " " || key === "Space" || key === "Spacebar") {
+    return "Space";
+  }
+
+  return null;
+}
+
 function Section({
   id,
   index,
@@ -1435,19 +1447,17 @@ function App() {
                         return;
                       }
 
+                      const activationKey = normalizeGuardActivationKey(event.key);
+
                       if (
                         event.key === "ArrowRight" ||
                         event.key === "ArrowLeft" ||
                         event.key === "ArrowUp" ||
                         event.key === "ArrowDown" ||
-                        event.key === "Enter" ||
-                        event.key === " " ||
-                        event.key === "Spacebar"
+                        activationKey
                       ) {
                         event.preventDefault();
-                        setTabsLocalGuardTelemetry(
-                          `blocked:${event.key === " " ? "Space" : event.key}`
-                        );
+                        setTabsLocalGuardTelemetry(`blocked:${activationKey ?? event.key}`);
                       }
                     }}
                     items={[
@@ -1500,6 +1510,8 @@ function App() {
                         return;
                       }
 
+                      const activationKey = normalizeGuardActivationKey(event.key);
+
                       if (
                         event.key === "ArrowRight" ||
                         event.key === "ArrowLeft" ||
@@ -1507,14 +1519,10 @@ function App() {
                         event.key === "End" ||
                         event.key === "PageDown" ||
                         event.key === "PageUp" ||
-                        event.key === "Enter" ||
-                        event.key === " " ||
-                        event.key === "Spacebar"
+                        activationKey
                       ) {
                         event.preventDefault();
-                        setTableLocalGuardTelemetry(
-                          `blocked:${event.key === " " ? "Space" : event.key}`
-                        );
+                        setTableLocalGuardTelemetry(`blocked:${activationKey ?? event.key}`);
                       }
                     }}
                     columns={[
@@ -2191,11 +2199,10 @@ function App() {
                 return;
               }
 
-              if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+              const activationKey = normalizeGuardActivationKey(event.key);
+              if (activationKey) {
                 event.preventDefault();
-                setDialogCloseButtonGuardTelemetry(
-                  `blocked:${event.key === " " ? "Space" : event.key}`
-                );
+                setDialogCloseButtonGuardTelemetry(`blocked:${activationKey}`);
               }
             }}
           >
@@ -2213,11 +2220,10 @@ function App() {
                 return;
               }
 
-              if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+              const activationKey = normalizeGuardActivationKey(event.key);
+              if (activationKey) {
                 event.preventDefault();
-                setDrawerCloseButtonGuardTelemetry(
-                  `blocked:${event.key === " " ? "Space" : event.key}`
-                );
+                setDrawerCloseButtonGuardTelemetry(`blocked:${activationKey}`);
               }
             }}
           >
@@ -2250,11 +2256,10 @@ function App() {
                 return;
               }
 
-              if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+              const activationKey = normalizeGuardActivationKey(event.key);
+              if (activationKey) {
                 event.preventDefault();
-                setPaletteCloseButtonGuardTelemetry(
-                  `blocked:${event.key === " " ? "Space" : event.key}`
-                );
+                setPaletteCloseButtonGuardTelemetry(`blocked:${activationKey}`);
               }
             }}
             onEscapeKeyDown={(event) => {
@@ -2333,11 +2338,10 @@ function App() {
                 return;
               }
 
-              if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+              const activationKey = normalizeGuardActivationKey(event.key);
+              if (activationKey) {
                 event.preventDefault();
-                setToastCloseButtonGuardTelemetry(
-                  `blocked:${event.key === " " ? "Space" : event.key}`
-                );
+                setToastCloseButtonGuardTelemetry(`blocked:${activationKey}`);
               }
             }}
           />
