@@ -2490,6 +2490,65 @@ describe("CommandPalette", () => {
     });
     expect(screen.getByRole("status")).toHaveTextContent('No enabled commands match "release".');
     expect(input).toHaveAttribute("aria-keyshortcuts", "Escape");
+    expect(screen.getByTestId("command-palette-disabled-results-message")).toHaveTextContent(
+      "Matching commands are currently unavailable."
+    );
+
+    const describedBy = input.getAttribute("aria-describedby");
+    expect(describedBy).toBeTruthy();
+    const describedByIds = (describedBy ?? "").split(/\s+/).filter(Boolean);
+    expect(describedByIds.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("supports custom disabled-results helper copy and falls back when blank", () => {
+    const { rerender } = render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        disabledResultsMessage="Blocked by policy. Request approval to proceed."
+        commands={[
+          {
+            key: "publish-release",
+            label: "Publish Release",
+            keywords: ["release"],
+            disabled: true
+          },
+          { key: "open-settings", label: "Open Settings", keywords: ["settings"] }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    fireEvent.change(input, {
+      target: { value: "release" }
+    });
+    expect(screen.getByTestId("command-palette-disabled-results-message")).toHaveTextContent(
+      "Blocked by policy. Request approval to proceed."
+    );
+
+    rerender(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        disabledResultsMessage={"   "}
+        commands={[
+          {
+            key: "publish-release",
+            label: "Publish Release",
+            keywords: ["release"],
+            disabled: true
+          },
+          { key: "open-settings", label: "Open Settings", keywords: ["settings"] }
+        ]}
+      />
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "release" }
+    });
+    expect(screen.getByTestId("command-palette-disabled-results-message")).toHaveTextContent(
+      "Matching commands are currently unavailable."
+    );
   });
 
   it("does not prevent native input key behavior when filtered results have no enabled commands", () => {

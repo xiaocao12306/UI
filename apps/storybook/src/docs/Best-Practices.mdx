@@ -270,6 +270,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat `onQueryChange("")` on palette close as the telemetry reset signal so external state mirrors the internal query lifecycle.
 - Keep live-region narration aligned with actionable commands (enabled matches), not just visible results.
 - Keep disabled command entries non-executable and keep palette state unchanged on disabled clicks.
+- When filtered results are disabled-only, show explicit helper guidance (for example `disabledResultsMessage`) so users understand why Enter/navigation execution is unavailable.
 - Keep commands without `onSelect` inert: selecting them should not close the palette or emit `item-select` telemetry; provide `onSelect` for every executable command entry.
 - Keep command-palette `aria-keyshortcuts` aligned with actionable state: omit `Enter` when filtered results contain no enabled command, and omit Arrow/Home/End/Page navigation hints when at most one command is actionable.
 - Keep command-palette close-button shortcut hints explicit (`aria-keyshortcuts="Enter Space"`) so keyboard dismiss affordance remains discoverable in AT/QA flows.

@@ -1289,6 +1289,9 @@ export const DisabledOnlyResults: Story = {
       'No enabled commands match "release".'
     );
     await expect(input).toHaveAttribute("aria-keyshortcuts", "Escape");
+    await expect(canvas.getByTestId("command-palette-disabled-results-message")).toHaveTextContent(
+      "Matching commands are currently unavailable."
+    );
 
     for (const key of ["ArrowDown", "ArrowUp", "Home", "End", "PageDown", "PageUp"]) {
       const keyEvent = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });

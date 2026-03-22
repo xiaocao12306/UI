@@ -34,6 +34,7 @@ export type CommandPaletteProps = {
   loading?: boolean;
   loadingContent?: React.ReactNode;
   emptyMessage?: React.ReactNode;
+  disabledResultsMessage?: React.ReactNode;
   onQueryChange?: (query: string) => void;
   onCloseReason?: (reason: CommandPaletteCloseReason) => void;
   getResultsStatusText?: (params: {
@@ -71,6 +72,7 @@ export function CommandPalette({
   loading = false,
   loadingContent = "Loading commands...",
   emptyMessage = "No commands found.",
+  disabledResultsMessage = "Matching commands are currently unavailable.",
   onQueryChange,
   onCloseReason,
   getResultsStatusText = defaultGetResultsStatusText
@@ -86,6 +88,7 @@ export function CommandPalette({
   const warnedMissingSearchMetadataSignatureRef = React.useRef<string | null>(null);
   const listId = React.useId();
   const statusId = React.useId();
+  const disabledResultsId = React.useId();
   const listRef = React.useRef<HTMLDivElement>(null);
   const resolvedSearchAriaLabel = resolveNonEmptyLabel(searchAriaLabel, "Search commands");
   const resolvedResultsAriaLabel = resolveNonEmptyLabel(resultsAriaLabel, "Command results");
@@ -105,6 +108,9 @@ export function CommandPalette({
   const resolvedEmptyMessage = hasRenderableCommandNode(emptyMessage)
     ? emptyMessage
     : "No commands found.";
+  const resolvedDisabledResultsMessage = hasRenderableCommandNode(disabledResultsMessage)
+    ? disabledResultsMessage
+    : "Matching commands are currently unavailable.";
 
   const markCloseReason = React.useCallback(
     (reason: CommandPaletteCloseReason) => {
@@ -294,6 +300,7 @@ export function CommandPalette({
     () => filtered.reduce((count, command) => (command.disabled ? count : count + 1), 0),
     [filtered]
   );
+  const hasDisabledOnlyResults = !loading && filtered.length > 0 && enabledCount === 0;
   const canNavigateCommandList = !loading && enabledCount > 1;
   const canActivateCommandList = !loading && enabledCount > 0;
   const hasResults = !loading && filtered.length > 0;
@@ -331,6 +338,7 @@ export function CommandPalette({
     query,
     resolvedLoadingStatusText
   ]);
+  const inputDescriptionIds = hasDisabledOnlyResults ? `${statusId} ${disabledResultsId}` : statusId;
 
   const enabledIndices = React.useMemo(
     () =>
@@ -503,7 +511,7 @@ export function CommandPalette({
           aria-activedescendant={
             !loading && safeActiveIndex >= 0 ? `${listId}-option-${safeActiveIndex}` : undefined
           }
-          aria-describedby={statusId}
+          aria-describedby={inputDescriptionIds}
           aria-keyshortcuts={searchKeyShortcuts}
           placeholder={placeholder}
           value={query}
@@ -626,108 +634,119 @@ export function CommandPalette({
             {resolvedLoadingContent}
           </p>
         ) : hasResults ? (
-          <div
-            id={listId}
-            ref={listRef}
-            role="listbox"
-            aria-label={resolvedResultsAriaLabel}
-            style={{ maxHeight: 280, overflow: "auto", display: "grid", gap: 4 }}
-          >
-            {filtered.map((item, index) => {
-              const active = index === safeActiveIndex;
-              const optionAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
-              const optionAriaLabel = optionAriaLabelledBy
-                ? undefined
-                : resolveNonEmptyLabel(item.ariaLabel);
-              return (
-                <div
-                  key={filteredRenderKeys[index] ?? `${item.key}__dup-${index}`}
-                  id={`${listId}-option-${index}`}
-                  role="option"
-                  aria-selected={active}
-                  aria-disabled={item.disabled || undefined}
-                  aria-labelledby={optionAriaLabelledBy}
-                  aria-label={optionAriaLabel}
-                  aria-keyshortcuts={item.disabled ? undefined : "Enter Space"}
-                  aria-posinset={index + 1}
-                  aria-setsize={filtered.length}
-                  tabIndex={-1}
-                  onPointerDown={(event) => {
-                    if (
-                      event.pointerType === "mouse" ||
-                      !isPrimaryPointerButton(event.button) ||
-                      event.ctrlKey
-                    ) {
-                      return;
-                    }
-                    // Keep combobox input focus while selecting listbox options.
-                    event.preventDefault();
-                  }}
-                  onMouseDown={(event) => {
-                    if (event.button !== 0 || event.ctrlKey) {
-                      return;
-                    }
-                    // Keep combobox input focus while selecting listbox options.
-                    event.preventDefault();
-                  }}
-                  onMouseEnter={() => {
-                    if (!item.disabled) {
-                      setActiveIndex(index);
-                    }
-                  }}
-                  onClick={() => {
-                    if (item.disabled) {
-                      return;
-                    }
-
-                    selectItem(index);
-                  }}
-                  onKeyDown={(event) => {
-                    if (item.disabled) {
-                      return;
-                    }
-
-                    if (event.defaultPrevented) {
-                      return;
-                    }
-
-                    if (event.altKey || event.ctrlKey || event.metaKey) {
-                      return;
-                    }
-
-                    if (
-                      event.key === "Enter" ||
-                      event.key === " " ||
-                      event.key === "Space" ||
-                      event.key === "Spacebar"
-                    ) {
-                      event.preventDefault();
-                      if (event.repeat) {
+          <>
+            <div
+              id={listId}
+              ref={listRef}
+              role="listbox"
+              aria-label={resolvedResultsAriaLabel}
+              style={{ maxHeight: 280, overflow: "auto", display: "grid", gap: 4 }}
+            >
+              {filtered.map((item, index) => {
+                const active = index === safeActiveIndex;
+                const optionAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
+                const optionAriaLabel = optionAriaLabelledBy
+                  ? undefined
+                  : resolveNonEmptyLabel(item.ariaLabel);
+                return (
+                  <div
+                    key={filteredRenderKeys[index] ?? `${item.key}__dup-${index}`}
+                    id={`${listId}-option-${index}`}
+                    role="option"
+                    aria-selected={active}
+                    aria-disabled={item.disabled || undefined}
+                    aria-labelledby={optionAriaLabelledBy}
+                    aria-label={optionAriaLabel}
+                    aria-keyshortcuts={item.disabled ? undefined : "Enter Space"}
+                    aria-posinset={index + 1}
+                    aria-setsize={filtered.length}
+                    tabIndex={-1}
+                    onPointerDown={(event) => {
+                      if (
+                        event.pointerType === "mouse" ||
+                        !isPrimaryPointerButton(event.button) ||
+                        event.ctrlKey
+                      ) {
                         return;
                       }
+                      // Keep combobox input focus while selecting listbox options.
+                      event.preventDefault();
+                    }}
+                    onMouseDown={(event) => {
+                      if (event.button !== 0 || event.ctrlKey) {
+                        return;
+                      }
+                      // Keep combobox input focus while selecting listbox options.
+                      event.preventDefault();
+                    }}
+                    onMouseEnter={() => {
+                      if (!item.disabled) {
+                        setActiveIndex(index);
+                      }
+                    }}
+                    onClick={() => {
+                      if (item.disabled) {
+                        return;
+                      }
+
                       selectItem(index);
-                    }
-                  }}
-                  style={{
-                    border: "1px solid var(--aurora-border-default)",
-                    background: active
-                      ? "color-mix(in srgb, var(--aurora-accent-default) 14%, var(--aurora-surface-default))"
-                      : "var(--aurora-surface-default)",
-                    color: item.disabled
-                      ? "color-mix(in srgb, var(--aurora-text-secondary) 60%, transparent)"
-                      : "var(--aurora-text-primary)",
-                    borderRadius: 8,
-                    height: 36,
-                    padding: "0 10px",
-                    textAlign: "left",
-                    cursor: item.disabled ? "not-allowed" : "pointer"
-                  }}
-                >
-                  {item.label}
-                </div>
-              );
-            })}
-          </div>
+                    }}
+                    onKeyDown={(event) => {
+                      if (item.disabled) {
+                        return;
+                      }
+
+                      if (event.defaultPrevented) {
+                        return;
+                      }
+
+                      if (event.altKey || event.ctrlKey || event.metaKey) {
+                        return;
+                      }
+
+                      if (
+                        event.key === "Enter" ||
+                        event.key === " " ||
+                        event.key === "Space" ||
+                        event.key === "Spacebar"
+                      ) {
+                        event.preventDefault();
+                        if (event.repeat) {
+                          return;
+                        }
+                        selectItem(index);
+                      }
+                    }}
+                    style={{
+                      border: "1px solid var(--aurora-border-default)",
+                      background: active
+                        ? "color-mix(in srgb, var(--aurora-accent-default) 14%, var(--aurora-surface-default))"
+                        : "var(--aurora-surface-default)",
+                      color: item.disabled
+                        ? "color-mix(in srgb, var(--aurora-text-secondary) 60%, transparent)"
+                        : "var(--aurora-text-primary)",
+                      borderRadius: 8,
+                      height: 36,
+                      padding: "0 10px",
+                      textAlign: "left",
+                      cursor: item.disabled ? "not-allowed" : "pointer"
+                    }}
+                  >
+                    {item.label}
+                  </div>
+                );
+              })}
+            </div>
+            {hasDisabledOnlyResults ? (
+              <p
+                id={disabledResultsId}
+                data-testid="command-palette-disabled-results-message"
+                style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}
+              >
+                {resolvedDisabledResultsMessage}
+              </p>
+            ) : null}
+          </>
         ) : (
           <p style={{ margin: 0, color: "var(--aurora-text-secondary)" }}>{resolvedEmptyMessage}</p>
         )}
