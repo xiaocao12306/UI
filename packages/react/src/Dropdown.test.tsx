@@ -248,7 +248,9 @@ describe("Dropdown", () => {
         )
       );
       expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Non-text item labels should provide textValue for typeahead matching: "icon-only"')
+        expect.stringContaining(
+          'Non-text item labels should provide textValue or ariaLabel for typeahead matching: "icon-only"'
+        )
       );
     } finally {
       warnSpy.mockRestore();
@@ -281,7 +283,7 @@ describe("Dropdown", () => {
     }
   });
 
-  it("does not warn for non-text dropdown item labels when ariaLabel and textValue are provided", () => {
+  it("does not warn for non-text dropdown item labels when ariaLabel is provided", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     try {
@@ -292,8 +294,7 @@ describe("Dropdown", () => {
             {
               key: "settings",
               label: <span aria-hidden="true">⚙</span>,
-              ariaLabel: "Settings",
-              textValue: "Settings"
+              ariaLabel: "Settings"
             },
             { key: "delete", label: "Delete" }
           ]}
@@ -1101,6 +1102,25 @@ describe("Dropdown", () => {
 
     fireEvent.keyDown(menu, { key: "s" });
     expect(screen.getByRole("menuitem", { name: "Settings" })).toHaveFocus();
+  });
+
+  it("supports typeahead for non-text labels via ariaLabel without textValue", () => {
+    render(
+      <Dropdown
+        label="AriaLabel typeahead"
+        items={[
+          { key: "duplicate", label: "Duplicate" },
+          { key: "settings", label: <span aria-hidden="true">⚙</span>, ariaLabel: "Settings" },
+          { key: "archive", label: <span aria-hidden="true">🗄</span>, ariaLabel: "Archive" }
+        ]}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "AriaLabel typeahead" }));
+    const menu = screen.getByRole("menu");
+
+    fireEvent.keyDown(menu, { key: "a" });
+    expect(screen.getByRole("menuitem", { name: "Archive" })).toHaveFocus();
   });
 
   it("matches segmented rich-text labels when buffered query includes whitespace", () => {

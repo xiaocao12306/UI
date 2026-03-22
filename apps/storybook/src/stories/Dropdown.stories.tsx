@@ -210,6 +210,34 @@ export const IconItemTextValueNameFallback: Story = {
   }
 };
 
+export const IconItemAriaLabelTypeahead: Story = {
+  args: {
+    label: "AriaLabel typeahead",
+    items: [
+      {
+        key: "settings",
+        label: <span aria-hidden="true">⚙</span>,
+        ariaLabel: "Settings"
+      },
+      {
+        key: "archive",
+        label: <span aria-hidden="true">🗄</span>,
+        ariaLabel: "Archive"
+      }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole("button", { name: "AriaLabel typeahead" }));
+
+    const menu = canvas.getByRole("menu", { name: "AriaLabel typeahead" });
+    await expect(canvas.getByRole("menuitem", { name: "Settings" })).toBeInTheDocument();
+    await userEvent.keyboard("a");
+    await expect(canvas.getByRole("menuitem", { name: "Archive" })).toHaveFocus();
+    await expect(menu).toBeInTheDocument();
+  }
+};
+
 export const IconItemLabelledByPrecedence: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>

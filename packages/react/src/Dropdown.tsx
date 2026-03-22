@@ -58,6 +58,13 @@ function getDropdownItemText(item: DropdownItem) {
     }
   }
 
+  if (typeof item.ariaLabel === "string") {
+    const ariaLabel = normalizeReadableDropdownText(item.ariaLabel);
+    if (ariaLabel.length > 0) {
+      return ariaLabel;
+    }
+  }
+
   return normalizeReadableDropdownText(getReadableTextNode(item.label));
 }
 
@@ -361,7 +368,8 @@ export function Dropdown({
     const missingTextValueKeys = items.reduce<string[]>((keys, item) => {
       const hasTextValue = typeof item.textValue === "string" && item.textValue.trim().length > 0;
       const hasReadableLabelText = getReadableTextNode(item.label).trim().length > 0;
-      if (hasTextValue || hasReadableLabelText) {
+      const hasExplicitAriaLabel = typeof item.ariaLabel === "string" && item.ariaLabel.trim().length > 0;
+      if (hasTextValue || hasReadableLabelText || hasExplicitAriaLabel) {
         return keys;
       }
 
@@ -381,7 +389,7 @@ export function Dropdown({
     warnedMissingTextValueSignatureRef.current = signature;
 
     console.warn(
-      `[Dropdown] Non-text item labels should provide textValue for typeahead matching: ${missingTextValueKeys
+      `[Dropdown] Non-text item labels should provide textValue or ariaLabel for typeahead matching: ${missingTextValueKeys
         .map((key) => `"${key}"`)
         .join(", ")}.`
     );

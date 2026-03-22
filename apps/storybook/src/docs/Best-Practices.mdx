@@ -182,7 +182,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep dropdown `Shift+Tab` behavior aligned with document order: close menu and continue focus to the previous control.
 - For controlled dropdowns, treat Escape/outside/trigger dismiss as close intent only; apply final visual close in parent rerender to avoid state race conditions.
 - For icon-only/non-text dropdown items, prefer `items[].ariaLabelledBy` when a visible heading already exists; otherwise provide `items[].ariaLabel`. If explicit naming metadata is omitted, `items[].textValue` is used as accessible-name fallback; development builds warn only when `ariaLabel`/`ariaLabelledBy`/`textValue` are all missing.
-- For icon-only/non-text dropdown items, provide `items[].textValue` unless the rich label already exposes readable text or inline `aria-label`; buffered typeahead relies on one of these metadata paths.
+- For icon-only/non-text dropdown items, provide `items[].textValue` unless readable label text or `ariaLabel` is already available; buffered typeahead can use readable label text, `ariaLabel`, or `textValue`.
 - Keep dropdown menu-item keyboard activation explicit and cross-browser (`Enter` / `Space` / legacy `Spacebar`) so non-pointer flows can execute actions without click simulation.
 - Keep dropdown navigation/activation/dismiss scoped to unmodified keys; `Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space/Escape` should stay on host/browser shortcut behavior.
 - When app-level shortcuts preempt dropdown keydown with `preventDefault()`, keep trigger/menu keyboard handlers side-effect free so host shortcut guards remain authoritative.
@@ -220,6 +220,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={DropdownStories.TypeaheadNavigation} />
 <Canvas of={DropdownStories.IconItemNaming} />
 <Canvas of={DropdownStories.IconItemTextValueNameFallback} />
+<Canvas of={DropdownStories.IconItemAriaLabelTypeahead} />
 <Canvas of={DropdownStories.IconItemLabelledByPrecedence} />
 <Canvas of={DropdownStories.TriggerLabelledByPrecedence} />
 <Canvas of={DropdownStories.TypeaheadIgnoresImeComposition} />
