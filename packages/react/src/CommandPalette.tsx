@@ -240,6 +240,7 @@ export function CommandPalette({
 
     const missingSearchMetadataKeys = commands.reduce<string[]>((keys, item) => {
       const hasReadableLabelText = getReadableCommandLabelText(item.label).trim().length > 0;
+      const hasAriaLabel = typeof item.ariaLabel === "string" && item.ariaLabel.trim().length > 0;
 
       if (typeof item.textValue === "string" && item.textValue.trim().length > 0) {
         return keys;
@@ -253,6 +254,10 @@ export function CommandPalette({
       }
 
       if (hasReadableLabelText) {
+        return keys;
+      }
+
+      if (hasAriaLabel) {
         return keys;
       }
 
@@ -272,7 +277,7 @@ export function CommandPalette({
     warnedMissingSearchMetadataSignatureRef.current = signature;
 
     console.warn(
-      `[CommandPalette] Non-text labels should provide textValue or keywords for searchable metadata: ${missingSearchMetadataKeys
+      `[CommandPalette] Non-text labels should provide textValue, ariaLabel, or keywords for searchable metadata: ${missingSearchMetadataKeys
         .map((key) => `"${key}"`)
         .join(", ")}.`
     );
@@ -772,6 +777,13 @@ function getCommandText(item: CommandItem) {
     const textValue = normalizeReadableCommandText(item.textValue);
     if (textValue.length > 0) {
       return textValue;
+    }
+  }
+
+  if (typeof item.ariaLabel === "string") {
+    const ariaLabel = normalizeReadableCommandText(item.ariaLabel);
+    if (ariaLabel.length > 0) {
+      return ariaLabel;
     }
   }
 

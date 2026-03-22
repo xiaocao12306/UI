@@ -205,6 +205,30 @@ describe("CommandPalette", () => {
     expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
   });
 
+  it("filters icon-only labels via ariaLabel without requiring textValue", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[
+          {
+            key: "deploy",
+            label: <span aria-hidden="true">🚀</span>,
+            ariaLabel: "Deploy Project"
+          },
+          { key: "settings", label: "Open Settings" }
+        ]}
+      />
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "deploy project" }
+    });
+
+    expect(screen.getByRole("option", { name: "Deploy Project" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Open Settings" })).toBeNull();
+  });
+
   it("warns when duplicate command keys are provided", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -252,7 +276,7 @@ describe("CommandPalette", () => {
 
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
-          'Non-text labels should provide textValue or keywords for searchable metadata: "deploy"'
+          'Non-text labels should provide textValue, ariaLabel, or keywords for searchable metadata: "deploy"'
         )
       );
     } finally {
@@ -261,7 +285,7 @@ describe("CommandPalette", () => {
     }
   });
 
-  it("does not warn for non-text labels about searchable metadata when textValue or keywords are provided", () => {
+  it("does not warn for non-text labels about searchable metadata when textValue/ariaLabel/keywords are provided", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -276,6 +300,7 @@ describe("CommandPalette", () => {
               label: <span aria-hidden="true">🚀</span>,
               textValue: "Deploy Project"
             },
+            { key: "rollback", label: <span aria-hidden="true">↩</span>, ariaLabel: "Rollback Release" },
             { key: "release", label: <span aria-hidden="true">📦</span>, keywords: ["publish"] }
           ]}
         />
@@ -283,7 +308,7 @@ describe("CommandPalette", () => {
 
       expect(warnSpy).not.toHaveBeenCalledWith(
         expect.stringContaining(
-          "Non-text labels should provide textValue or keywords for searchable metadata"
+          "Non-text labels should provide textValue, ariaLabel, or keywords for searchable metadata"
         )
       );
     } finally {
@@ -335,8 +360,7 @@ describe("CommandPalette", () => {
             {
               key: "deploy",
               label: <span aria-hidden="true">🚀</span>,
-              ariaLabel: "Deploy Project",
-              textValue: "Deploy Project"
+              ariaLabel: "Deploy Project"
             },
             { key: "settings", label: "Open Settings" }
           ]}
