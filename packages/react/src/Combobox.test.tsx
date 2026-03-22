@@ -415,6 +415,36 @@ describe("Combobox", () => {
     }
   });
 
+  it("anchors duplicate-value selected semantics to one enabled occurrence", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Combobox
+          value="react"
+          options={[
+            { value: "react", label: "React archived", disabled: true },
+            { value: "react", label: "React stable" },
+            { value: "vue", label: "Vue" }
+          ]}
+          onValueChange={() => {}}
+        />
+      );
+
+      const input = screen.getByRole("combobox", { name: "Combobox" }) as HTMLInputElement;
+      expect(input.value).toBe("React stable");
+
+      fireEvent.focus(input);
+      const selectedOptions = screen
+        .getAllByRole("option")
+        .filter((option) => option.getAttribute("aria-selected") === "true");
+      expect(selectedOptions).toHaveLength(1);
+      expect(selectedOptions[0]).toHaveTextContent("React stable");
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("selects option on click and closes popup", () => {
     const onValueChange = vi.fn();
     render(<Combobox options={options} onValueChange={onValueChange} />);

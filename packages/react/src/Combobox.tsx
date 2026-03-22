@@ -155,8 +155,20 @@ export function Combobox({
   const resolvedListboxAriaLabel =
     resolvedAriaLabel === undefined ? undefined : `${resolvedAriaLabel} options`;
   const currentValue = value ?? internalValue;
+  const selectedOptionIndex = React.useMemo(() => {
+    const firstEnabledMatchIndex = options.findIndex(
+      (item) => item.value === currentValue && !item.disabled
+    );
+    if (firstEnabledMatchIndex >= 0) {
+      return firstEnabledMatchIndex;
+    }
 
-  const selectedOption = React.useMemo(() => options.find((item) => item.value === currentValue), [currentValue, options]);
+    return options.findIndex((item) => item.value === currentValue);
+  }, [currentValue, options]);
+  const selectedOption = React.useMemo(
+    () => (selectedOptionIndex >= 0 ? options[selectedOptionIndex] : undefined),
+    [options, selectedOptionIndex]
+  );
 
   React.useEffect(() => {
     if (!open) {
@@ -348,7 +360,9 @@ export function Combobox({
     }
 
     const queryUnchanged = wasOpenRef.current && previousQueryRef.current === query;
-    const selectedIndex = filtered.findIndex((item) => item.value === currentValue && !item.disabled);
+    const selectedIndex = filtered.findIndex(
+      (item) => item === selectedOption && !item.disabled
+    );
     if (selectedIndex >= 0) {
       wasOpenRef.current = true;
       previousQueryRef.current = query;
@@ -386,7 +400,7 @@ export function Combobox({
       }
       return firstEnabled;
     });
-  }, [currentValue, filtered, filteredRenderKeys, open, query]);
+  }, [filtered, filteredRenderKeys, open, query, selectedOption]);
 
   React.useEffect(() => {
     previousActiveSnapshotRef.current = {
@@ -535,7 +549,7 @@ export function Combobox({
         >
           {filtered.map((item, index) => {
             const active = index === activeIndex;
-            const selected = item.value === currentValue;
+            const selected = item === selectedOption;
             const resolvedOptionAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
             const hasReadableOptionLabelText = getReadableComboboxLabelText(item.label).length > 0;
             const optionTextValueFallback = resolveNonEmptyLabel(item.textValue);

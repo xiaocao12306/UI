@@ -548,6 +548,27 @@ function DuplicateValueRerenderStabilityComboboxDemo() {
   );
 }
 
+function DuplicateValueSelectedSemanticsComboboxDemo() {
+  return (
+    <div style={{ width: 420, display: "grid", gap: 10 }}>
+      <p style={{ margin: 0, color: "var(--aurora-text-secondary)", fontSize: 13 }}>
+        Duplicate values still expose one deterministic `aria-selected` option by anchoring to the
+        first enabled occurrence.
+      </p>
+      <Combobox
+        value="react"
+        options={[
+          { value: "react", label: "React archived", disabled: true },
+          { value: "react", label: "React stable" },
+          { value: "vue", label: "Vue" }
+        ]}
+        onValueChange={() => {}}
+        ariaLabel="Duplicate value selected semantics"
+      />
+    </div>
+  );
+}
+
 export const DuplicateValueRerenderStability: Story = {
   render: () => <DuplicateValueRerenderStabilityComboboxDemo />,
   play: async ({ canvasElement }) => {
@@ -573,6 +594,25 @@ export const DuplicateValueRerenderStability: Story = {
       "id",
       input.getAttribute("aria-activedescendant")
     );
+  }
+};
+
+export const DuplicateValueSelectedSemantics: Story = {
+  render: () => <DuplicateValueSelectedSemanticsComboboxDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Duplicate value selected semantics" });
+
+    await waitFor(() => {
+      expect(input).toHaveValue("React stable");
+    });
+    await userEvent.click(input);
+
+    const selectedOptions = canvas
+      .getAllByRole("option")
+      .filter((option) => option.getAttribute("aria-selected") === "true");
+    await expect(selectedOptions).toHaveLength(1);
+    await expect(selectedOptions[0]).toHaveTextContent("React stable");
   }
 };
 
