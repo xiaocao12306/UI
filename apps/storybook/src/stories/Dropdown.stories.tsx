@@ -626,6 +626,69 @@ export const ModifierArrowNavigationGuard: Story = {
   }
 };
 
+function TabModifierDismissGuardDropdown() {
+  const [tabDismissCount, setTabDismissCount] = React.useState(0);
+
+  return (
+    <StoryShowcaseFrame gap={8}>
+      <p style={storyMutedTextStyle}>
+        Tab dismiss calls:{" "}
+        <strong data-testid="dropdown-tab-dismiss-calls" style={storyEmphasisTextStyle}>
+          {tabDismissCount}
+        </strong>
+      </p>
+      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <Dropdown
+          label="Tab Modifier Guard"
+          items={items}
+          onCloseReason={(reason) => {
+            if (reason === "tab-key") {
+              setTabDismissCount((count) => count + 1);
+            }
+          }}
+        />
+        <button type="button">Next control</button>
+      </div>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const TabModifierDismissGuard: Story = {
+  render: () => <TabModifierDismissGuardDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Tab Modifier Guard" });
+
+    await userEvent.click(trigger);
+    const menu = canvas.getByRole("menu", { name: "Tab Modifier Guard" });
+    await expect(menu).toBeInTheDocument();
+
+    fireEvent.keyDown(menu, { key: "Tab", ctrlKey: true });
+    fireEvent.keyDown(menu, { key: "Tab", altKey: true });
+    fireEvent.keyDown(menu, { key: "Tab", metaKey: true });
+    await expect(canvas.getByRole("menu", { name: "Tab Modifier Guard" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-tab-dismiss-calls")).toHaveTextContent("0");
+
+    trigger.focus();
+    fireEvent.keyDown(trigger, { key: "Tab", ctrlKey: true });
+    fireEvent.keyDown(trigger, { key: "Tab", altKey: true });
+    fireEvent.keyDown(trigger, { key: "Tab", metaKey: true });
+    await expect(canvas.getByRole("menu", { name: "Tab Modifier Guard" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-tab-dismiss-calls")).toHaveTextContent("0");
+
+    fireEvent.keyDown(trigger, { key: "Tab" });
+    await waitFor(() => {
+      expect(canvas.queryByRole("menu", { name: "Tab Modifier Guard" })).not.toBeInTheDocument();
+    });
+    await waitFor(() => {
+      expect(canvas.getByRole("button", { name: "Next control" })).toHaveFocus();
+    });
+    await waitFor(() => {
+      expect(canvas.getByTestId("dropdown-tab-dismiss-calls")).toHaveTextContent("1");
+    });
+  }
+};
+
 function KeyboardActivationDedupeDropdown() {
   const [selectionCount, setSelectionCount] = React.useState(0);
   const [closeCount, setCloseCount] = React.useState(0);

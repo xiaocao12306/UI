@@ -1696,6 +1696,51 @@ describe("Dropdown", () => {
     expect(onCloseReason).toHaveBeenCalledWith("tab-key");
   });
 
+  it("ignores modified Tab combinations for trigger and menu dismiss paths", async () => {
+    const onCloseReason = vi.fn();
+
+    render(
+      <div>
+        <Dropdown
+          label="Tab modifier guard"
+          onCloseReason={onCloseReason}
+          items={[
+            { key: "one", label: "One" },
+            { key: "two", label: "Two" }
+          ]}
+        />
+        <button type="button">Next control</button>
+      </div>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Tab modifier guard" });
+    const nextControl = screen.getByRole("button", { name: "Next control" });
+
+    fireEvent.click(trigger);
+    const menu = screen.getByRole("menu", { name: "Tab modifier guard" });
+    expect(menu).toBeInTheDocument();
+
+    fireEvent.keyDown(menu, { key: "Tab", ctrlKey: true });
+    fireEvent.keyDown(menu, { key: "Tab", altKey: true });
+    fireEvent.keyDown(menu, { key: "Tab", metaKey: true });
+    expect(screen.getByRole("menu", { name: "Tab modifier guard" })).toBeInTheDocument();
+    expect(onCloseReason).not.toHaveBeenCalled();
+
+    fireEvent.focus(trigger);
+    fireEvent.keyDown(trigger, { key: "Tab", ctrlKey: true });
+    fireEvent.keyDown(trigger, { key: "Tab", altKey: true });
+    fireEvent.keyDown(trigger, { key: "Tab", metaKey: true });
+    expect(screen.getByRole("menu", { name: "Tab modifier guard" })).toBeInTheDocument();
+    expect(onCloseReason).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(trigger, { key: "Tab" });
+    await waitFor(() => {
+      expect(screen.queryByRole("menu", { name: "Tab modifier guard" })).toBeNull();
+    });
+    expect(nextControl).toHaveFocus();
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "tab-key");
+  });
+
   it("moves focus to adjacent controls on Tab and Shift+Tab dismiss", () => {
     render(
       <div>

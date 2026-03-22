@@ -194,7 +194,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For icon-only/non-text dropdown items, prefer `items[].ariaLabelledBy` when a visible heading already exists; otherwise provide `items[].ariaLabel`. If explicit naming metadata is omitted, `items[].textValue` is used as accessible-name fallback; development builds warn only when `ariaLabel`/`ariaLabelledBy`/`textValue` are all missing.
 - For icon-only/non-text dropdown items, provide `items[].textValue` unless readable label text or `ariaLabel` is already available; buffered typeahead can use readable label text, `ariaLabel`, or `textValue`.
 - Keep dropdown menu-item keyboard activation explicit and cross-browser (`Enter` / `Space` / legacy `Spacebar`) so non-pointer flows can execute actions without click simulation.
-- Keep dropdown navigation/activation/dismiss scoped to unmodified keys; `Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space/Escape` should stay on host/browser shortcut behavior.
+- Keep dropdown navigation/activation/dismiss scoped to unmodified keys; `Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space/Escape/Tab` should stay on host/browser shortcut behavior.
 - When app-level shortcuts preempt dropdown keydown with `preventDefault()`, keep trigger/menu keyboard handlers side-effect free so host shortcut guards remain authoritative.
 - Keep open-menu roving focus stable under modified `ArrowDown/ArrowUp`; `Ctrl/Meta/Alt` arrow chords should not move dropdown active item.
 - Keep dropdown trigger shortcut hints explicit (`aria-keyshortcuts="ArrowDown ArrowUp"`) only while closed so keyboard-open affordance stays discoverable without advertising unavailable shortcuts once open.
@@ -226,6 +226,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={DropdownStories.TabDismissFallbackToTrigger} />
 <Canvas of={DropdownStories.CloseReasonTelemetry} />
 <Canvas of={DropdownStories.ModifierArrowNavigationGuard} />
+<Canvas of={DropdownStories.TabModifierDismissGuard} />
 <Canvas of={DropdownStories.KeyboardActivationDedupe} />
 <Canvas of={DropdownStories.ControlledOpenContract} />
 <Canvas of={DropdownStories.AllItemsDisabledKeyboardNoop} />

@@ -469,6 +469,9 @@ export function Dropdown({
           }
 
           if (event.key === "Tab" && isOpen) {
+            if (event.altKey || event.ctrlKey || event.metaKey) {
+              return;
+            }
             dismissWithTabNavigation(event);
             return;
           }
@@ -620,6 +623,9 @@ export function Dropdown({
               }
 
               if (event.key === "Tab") {
+                if (event.altKey || event.ctrlKey || event.metaKey) {
+                  return;
+                }
                 dismissWithTabNavigation(event);
                 return;
               }
