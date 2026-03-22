@@ -1,7 +1,7 @@
-import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as a,T as t,S as l,D as c,C as s}from"./index-B64_ErHt.js";import{VariantMatrix as d,IconOnlyAccessibleName as h}from"./Button.stories-BfWud3tZ.js";import{WithInputControl as p,ExternalControlAssociation as x,LabelledByPrecedence as u,NonTextLabelNameFallback as m}from"./FormField.stories-B-kt9Nny.js";import{BlankAriaLabelFallback as j}from"./Input.stories-Odziv8Uz.js";import{BlankAriaLabelFallback as b,LabelledByPrecedence as f}from"./DatePicker.stories-gpZBmvhH.js";import{Interactive as y,CloseReasonTelemetry as g,FocusTrapKeyboardCycle as v,FocusIntentReentry as w,CloseButtonKeyboardPressedState as k,EscapeIgnoresImeComposition as E,EscapePreemptedByGlobalHandler as C,EscapeRepeatGuard as K,DismissGuardHooks as L}from"./Dialog.stories-BMTIRPDW.js";import{CloseReasonTelemetry as A,FocusTrapKeyboardCycle as S,FocusIntentReentry as P,CloseButtonKeyboardPressedState as D,EscapePreemptedByGlobalHandler as T,EscapeRepeatGuard as F,DismissGuardHooks as R}from"./Drawer.stories-CwF6nqPk.js";import{CloseReasonTelemetry as I,TriggerArrowDownModifierGuard as B,TabDismissToNextControl as M,ShiftTabDismissToPreviousControl as O,EscapePreemptedByGlobalHandler as H,EscapeRepeatGuard as G,EscapeIgnoresImeComposition as $,DismissGuardHooks as U,NestedOutsideDismissOrder as q}from"./Popover.stories-Pgf_lWpk.js";import{OutsideDismissFocusTransfer as z,EscapeDismissFocusReturn as N,EscapePreemptedByGlobalHandler as W,ManagedKeysPreemptedByGlobalHandler as V,EscapeRepeatGuard as Q,TabDismissToNextControl as J,ShiftTabDismissToPreviousControl as X,CloseReasonTelemetry as _,ModifierArrowNavigationGuard as Y,KeyboardActivationDedupe as Z,ControlledOpenContract as ee,TypeaheadNavigation as ne,IconItemNaming as se,IconItemLabelledByPrecedence as oe,TriggerLabelledByPrecedence as ie,TypeaheadIgnoresImeComposition as re,DismissGuardHooks as ae,NestedOutsideDismissOrder as te,SingleActionableShortcutHints as le}from"./Dropdown.stories-BPG3cCYq.js";import{DescribedByLifecycle as ce,NonTextTriggerNameFallback as de,EscapeModifierGuard as he,EscapeDisabled as pe}from"./Tooltip.stories-D8UZoY3v.js";import{AiInteractionFlow as xe,QueryTelemetry as ue,LoadingState as me,CloseReasonTelemetry as je,CloseButtonFocusIntentReentry as be,DisabledCommandGuard as fe,SingleActionableShortcutHints as ye,TextValueAndAccentSearch as ge,IconOnlyCommandNaming as ve,IconOnlyCommandLabelledByPrecedence as we,PersistentSelection as ke,OptionActivationKeyGuard as Ee,RefinedSearchKeepsActiveCommand as Ce,PagedKeyboardNavigation as Ke,LocalizedResultsLabel as Le,LocalizedDialogCopy as Ae,ImeCompositionGuard as Se,EscapePreemptedByGlobalHandler as Pe,ManagedKeysPreemptedByGlobalHandler as De,GuardedDismissEvents as Te,EscapeClearsQueryFirst as Fe,EscapeRepeatGuard as Re}from"./CommandPalette.stories-B3chiDLh.js";import{WithAiRequestState as Ie,LocalizedCopy as Be,LabelledByPrecedence as Me,FocusIntentReentry as Oe}from"./PromptInput.stories-BwrKpNBi.js";import{Conversation as He,LocalizedNaming as Ge,LabelledByPrecedence as $e}from"./MessageBubble.stories-B3iZ5PJn.js";import{Default as Ue,LocalizedLabels as qe,LabelledByPrecedence as ze,BlankStepFallback as Ne}from"./ReasoningPanel.stories-CVRZHLL_.js";import{Default as We,LabelledByPrecedence as Ve}from"./StreamingCodeBlock.stories-B-rVxO7_.js";import{AccessibilityMetadata as Qe,LabelledByPrecedence as Je,FocusIntentReentry as Xe,CloseButtonKeyboardPressedState as _e,CloseButtonPrimaryPointerOnly as Ye}from"./Alert.stories-BRy-bc6y.js";import{ActionRequired as Ze,ActionRequiredDanger as en,CloseReasonTelemetry as nn,EscapeStackOrder as sn,EscapeShortcutSync as on,StackedViewportOffset as rn,FocusedToastEscapesFirst as an,CloseButtonPrimaryPointerOnly as tn,CloseButtonKeyboardPressedState as ln,FocusIntentReentry as cn,EscapePreemptedByGlobalHandler as dn,EscapePreemptedSkipsToastHook as hn,EscapeGuardedByToastHandler as pn,EscapeIgnoresImeComposition as xn,LiveRegionOff as un}from"./Toast.stories-8884Spd4.js";import{KeyboardNavigationGuide as mn,NoLoopNavigation as jn,SingleActionableTab as bn,Vertical as fn,RtlKeyboardNavigation as yn,LabelledByHeading as gn,IconOnlyLabelledByPrecedence as vn,ManualActivation as wn,ManualActivationPressedFeedback as kn,ManualVerticalActivation as En,ImeCompositionGuard as Cn,ManagedKeysPreemptedByGlobalHandler as Kn,PrimaryPointerOnlyPressedState as Ln,KeyboardFocusRingShiftTabReentry as An}from"./Tabs.stories-CACSR2gD.js";import{ReleaseChecklist as Sn,SortTelemetry as Pn,RtlArrowNavigation as Dn,LocalizedSortLabels as Tn,SortLabelForCustomHeader as Fn,RichTextHeaderAutoSortLabel as Rn,AriaLabelHeaderAutoSortLabel as In,SortLabelledByPrecedence as Bn,SingleRowSortDisabled as Mn,SingleSortableColumnShortcutHints as On,PrimaryPointerOnlySortPress as Hn,KeyboardFocusRingShiftTabReentry as Gn,WithRowAction as $n,InvalidDefaultSortKeyFallback as Un,RowHeaderSemantics as qn,AccessibleNameFallback as zn}from"./Table.stories-BGegymYI.js";import{KeyboardShortcuts as Nn,ModifierKeyGuard as Wn,RtlKeyboardShortcuts as Vn,BoundaryShortcutHints as Qn,LabelledByHeading as Jn,FocusIntentReentry as Xn}from"./Pagination.stories-C2vh3EBY.js";import"./index-BWu4c2F4.js";import"./iframe-jqhxSgr3.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-DirECuRH.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-ZJmMstsz.js";import"./index-DgAF9SIF.js";import"./storyShowcase-Bw5VyCj0.js";import"./Input-CMwa0OIu.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-CU5SQrEA.js";import"./FormField-Xof8ejB2.js";import"./Textarea-BnJNX4pg.js";import"./Dialog-oHKJ7fpA.js";import"./bodyScrollLock-D0vp0S5S.js";import"./DismissableLayer-0MVldSzJ.js";import"./Dropdown-B2ONhs0F.js";import"./Popover-ZMDQgMom.js";import"./usePrefersReducedMotion-BRO3uCOn.js";function i(o){const n={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...r(),...o.components};return e.jsxs(e.Fragment,{children:[e.jsx(a,{title:"Docs/Best Practices"}),`
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{useMDXComponents as r}from"./index-CHKtz2QT.js";import{M as a,T as t,S as l,D as d,C as s}from"./index-CB2GI1BD.js";import{VariantMatrix as c,IconOnlyAccessibleName as h}from"./Button.stories-BfWud3tZ.js";import{WithInputControl as p,ExternalControlAssociation as x,LabelledByPrecedence as u,NonTextLabelNameFallback as m}from"./FormField.stories-B-kt9Nny.js";import{BlankAriaLabelFallback as j}from"./Input.stories-Odziv8Uz.js";import{BlankAriaLabelFallback as b,LabelledByPrecedence as f}from"./DatePicker.stories-gpZBmvhH.js";import{Interactive as y,CloseReasonTelemetry as g,FocusTrapKeyboardCycle as v,FocusIntentReentry as w,CloseButtonKeyboardPressedState as k,EscapeIgnoresImeComposition as E,EscapePreemptedByGlobalHandler as C,EscapeRepeatGuard as K,DismissGuardHooks as L}from"./Dialog.stories-BMTIRPDW.js";import{CloseReasonTelemetry as A,FocusTrapKeyboardCycle as S,FocusIntentReentry as P,CloseButtonKeyboardPressedState as D,EscapePreemptedByGlobalHandler as T,EscapeRepeatGuard as F,DismissGuardHooks as R}from"./Drawer.stories-CwF6nqPk.js";import{CloseReasonTelemetry as B,TriggerArrowDownModifierGuard as I,TabDismissToNextControl as M,ShiftTabDismissToPreviousControl as H,EscapePreemptedByGlobalHandler as O,ManagedKeysPreemptedByGlobalHandler as G,EscapeRepeatGuard as $,EscapeIgnoresImeComposition as U,DismissGuardHooks as q,NestedOutsideDismissOrder as z}from"./Popover.stories-BAQf7l-3.js";import{OutsideDismissFocusTransfer as N,EscapeDismissFocusReturn as W,EscapePreemptedByGlobalHandler as V,ManagedKeysPreemptedByGlobalHandler as Q,EscapeRepeatGuard as J,TabDismissToNextControl as X,ShiftTabDismissToPreviousControl as _,CloseReasonTelemetry as Y,ModifierArrowNavigationGuard as Z,KeyboardActivationDedupe as ee,ControlledOpenContract as ne,TypeaheadNavigation as se,IconItemNaming as oe,IconItemLabelledByPrecedence as ie,TriggerLabelledByPrecedence as re,TypeaheadIgnoresImeComposition as ae,DismissGuardHooks as te,NestedOutsideDismissOrder as le,SingleActionableShortcutHints as de}from"./Dropdown.stories-CdV2HeC9.js";import{DescribedByLifecycle as ce,NonTextTriggerNameFallback as he,EscapeModifierGuard as pe,EscapeDisabled as xe}from"./Tooltip.stories-D8UZoY3v.js";import{AiInteractionFlow as ue,QueryTelemetry as me,LoadingState as je,CloseReasonTelemetry as be,CloseButtonFocusIntentReentry as fe,DisabledCommandGuard as ye,SingleActionableShortcutHints as ge,TextValueAndAccentSearch as ve,IconOnlyCommandNaming as we,IconOnlyCommandLabelledByPrecedence as ke,PersistentSelection as Ee,OptionActivationKeyGuard as Ce,RefinedSearchKeepsActiveCommand as Ke,PagedKeyboardNavigation as Le,LocalizedResultsLabel as Ae,LocalizedDialogCopy as Se,ImeCompositionGuard as Pe,EscapePreemptedByGlobalHandler as De,ManagedKeysPreemptedByGlobalHandler as Te,GuardedDismissEvents as Fe,EscapeClearsQueryFirst as Re,EscapeRepeatGuard as Be}from"./CommandPalette.stories-DCNZfmy5.js";import{WithAiRequestState as Ie,LocalizedCopy as Me,LabelledByPrecedence as He,FocusIntentReentry as Oe}from"./PromptInput.stories-BwrKpNBi.js";import{Conversation as Ge,LocalizedNaming as $e,LabelledByPrecedence as Ue}from"./MessageBubble.stories-B3iZ5PJn.js";import{Default as qe,LocalizedLabels as ze,LabelledByPrecedence as Ne,BlankStepFallback as We}from"./ReasoningPanel.stories-CVRZHLL_.js";import{Default as Ve,LabelledByPrecedence as Qe}from"./StreamingCodeBlock.stories-B-rVxO7_.js";import{AccessibilityMetadata as Je,LabelledByPrecedence as Xe,FocusIntentReentry as _e,CloseButtonKeyboardPressedState as Ye,CloseButtonPrimaryPointerOnly as Ze}from"./Alert.stories-BRy-bc6y.js";import{ActionRequired as en,ActionRequiredDanger as nn,CloseReasonTelemetry as sn,EscapeStackOrder as on,EscapeShortcutSync as rn,StackedViewportOffset as an,FocusedToastEscapesFirst as tn,CloseButtonPrimaryPointerOnly as ln,CloseButtonKeyboardPressedState as dn,FocusIntentReentry as cn,EscapePreemptedByGlobalHandler as hn,EscapePreemptedSkipsToastHook as pn,EscapeGuardedByToastHandler as xn,EscapeIgnoresImeComposition as un,LiveRegionOff as mn}from"./Toast.stories-BSJ1rqz4.js";import{KeyboardNavigationGuide as jn,NoLoopNavigation as bn,SingleActionableTab as fn,Vertical as yn,RtlKeyboardNavigation as gn,LabelledByHeading as vn,IconOnlyLabelledByPrecedence as wn,ManualActivation as kn,ManualActivationPressedFeedback as En,ManualVerticalActivation as Cn,ImeCompositionGuard as Kn,ManagedKeysPreemptedByGlobalHandler as Ln,PrimaryPointerOnlyPressedState as An,KeyboardFocusRingShiftTabReentry as Sn}from"./Tabs.stories-CACSR2gD.js";import{ReleaseChecklist as Pn,SortTelemetry as Dn,RtlArrowNavigation as Tn,LocalizedSortLabels as Fn,SortLabelForCustomHeader as Rn,RichTextHeaderAutoSortLabel as Bn,AriaLabelHeaderAutoSortLabel as In,SortLabelledByPrecedence as Mn,SingleRowSortDisabled as Hn,SingleSortableColumnShortcutHints as On,PrimaryPointerOnlySortPress as Gn,KeyboardFocusRingShiftTabReentry as $n,WithRowAction as Un,InvalidDefaultSortKeyFallback as qn,RowHeaderSemantics as zn,AccessibleNameFallback as Nn}from"./Table.stories-BGegymYI.js";import{KeyboardShortcuts as Wn,ModifierKeyGuard as Vn,RtlKeyboardShortcuts as Qn,BoundaryShortcutHints as Jn,LabelledByHeading as Xn,FocusIntentReentry as _n}from"./Pagination.stories-C2vh3EBY.js";import"./index-BWu4c2F4.js";import"./iframe-CpNzgPyq.js";import"./index-DlVbWVVj.js";import"./index-4adcsI43.js";import"./index-DrFu-skq.js";import"./Button-DirECuRH.js";import"./Tag-Dmp9Dfgr.js";import"./Badge-ZJmMstsz.js";import"./index-DgAF9SIF.js";import"./storyShowcase-Bw5VyCj0.js";import"./Input-CMwa0OIu.js";import"./FieldStyles-CQy9UjBZ.js";import"./a11y-CU5SQrEA.js";import"./FormField-Xof8ejB2.js";import"./Textarea-BnJNX4pg.js";import"./Dialog-oHKJ7fpA.js";import"./bodyScrollLock-D0vp0S5S.js";import"./DismissableLayer-0MVldSzJ.js";import"./Dropdown-B2ONhs0F.js";import"./Popover-Yjmuv5h4.js";import"./usePrefersReducedMotion-BRO3uCOn.js";function i(o){const n={code:"code",h2:"h2",li:"li",p:"p",ul:"ul",...r(),...o.components};return e.jsxs(e.Fragment,{children:[e.jsx(a,{title:"Docs/Best Practices"}),`
 `,e.jsx(t,{}),`
 `,e.jsx(l,{children:"Design + Engineering Checklist"}),`
-`,e.jsx(c,{children:e.jsx(n.p,{children:`Use these rules to keep components consistent with the Aurora plan and avoid regressions in
+`,e.jsx(d,{children:e.jsx(n.p,{children:`Use these rules to keep components consistent with the Aurora plan and avoid regressions in
 accessibility or theming.`})}),`
 `,e.jsx(n.h2,{id:"api-design",children:"API Design"}),`
 `,e.jsxs(n.ul,{children:[`
@@ -9,7 +9,7 @@ accessibility or theming.`})}),`
 `,e.jsxs(n.li,{children:["Prefer controlled APIs for overlays (",e.jsx(n.code,{children:"open"}),", ",e.jsx(n.code,{children:"onOpenChange"}),")."]}),`
 `,e.jsxs(n.li,{children:["Expose semantic variants (",e.jsx(n.code,{children:"solid"}),", ",e.jsx(n.code,{children:"outline"}),") instead of hardcoded colors."]}),`
 `]}),`
-`,e.jsx(s,{of:d}),`
+`,e.jsx(s,{of:c}),`
 `,e.jsx(n.h2,{id:"theming",children:"Theming"}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsx(n.li,{children:"Do not hardcode color values inside component internals."}),`
@@ -101,9 +101,9 @@ accessibility or theming.`})}),`
 `,e.jsx(s,{of:f}),`
 `,e.jsx(s,{of:h}),`
 `,e.jsx(s,{of:ce}),`
-`,e.jsx(s,{of:de}),`
 `,e.jsx(s,{of:he}),`
 `,e.jsx(s,{of:pe}),`
+`,e.jsx(s,{of:xe}),`
 `,e.jsx(s,{of:y}),`
 `,e.jsx(n.h2,{id:"overlay-policies",children:"Overlay Policies"}),`
 `,e.jsxs(n.ul,{children:[`
@@ -143,6 +143,7 @@ accessibility or theming.`})}),`
 `,e.jsxs(n.li,{children:["Use dropdown ",e.jsx(n.code,{children:"onCloseReason"})," for deterministic telemetry (",e.jsx(n.code,{children:"trigger-click"})," / ",e.jsx(n.code,{children:"item-select"})," / ",e.jsx(n.code,{children:"escape-key"})," / ",e.jsx(n.code,{children:"outside-pointer"})," / ",e.jsx(n.code,{children:"tab-key"}),") instead of inferring close origin from focus/state side effects."]}),`
 `,e.jsxs(n.li,{children:["Keep popover/dropdown close callbacks ordered and single-purpose: close paths should emit ",e.jsx(n.code,{children:"onCloseReason"})," before ",e.jsx(n.code,{children:"onOpenChange(false)"}),", while dropdown ",e.jsx(n.code,{children:"item-select"})," should run ",e.jsx(n.code,{children:"onSelect"})," before close callbacks."]}),`
 `,e.jsxs(n.li,{children:["Keep popover trigger keyboard-open behavior scoped to unmodified ",e.jsx(n.code,{children:"ArrowDown"}),"; ",e.jsx(n.code,{children:"Ctrl/Meta/Alt + ArrowDown"})," should remain available for host/browser shortcut handling."]}),`
+`,e.jsxs(n.li,{children:["When app-level shortcuts preempt popover ",e.jsx(n.code,{children:"ArrowDown"}),"/",e.jsx(n.code,{children:"Tab"})," keydown with ",e.jsx(n.code,{children:"preventDefault()"}),", keep trigger open and boundary Tab-dismiss handlers side-effect free."]}),`
 `,e.jsxs(n.li,{children:["Keep popover trigger shortcut hints explicit (",e.jsx(n.code,{children:'aria-keyshortcuts="ArrowDown"'}),") only while closed so keyboard-open affordance stays discoverable without advertising unavailable shortcuts once open."]}),`
 `,e.jsx(n.li,{children:"Keep popover boundary Tab behavior aligned with document order: keep popover open while focus stays inside, then close on first/last boundary Tab and continue focus to adjacent controls."}),`
 `,e.jsxs(n.li,{children:["Keep popover dialog shortcut hints explicit (",e.jsx(n.code,{children:'aria-keyshortcuts="Tab [Escape]"'}),"): always advertise boundary Tab dismiss, and include ",e.jsx(n.code,{children:"Escape"})," only when ",e.jsx(n.code,{children:"closeOnEscape"})," is enabled."]}),`
@@ -171,7 +172,6 @@ accessibility or theming.`})}),`
 `,e.jsxs(n.li,{children:["Keep dialog/drawer close buttons visually state-complete (",e.jsx(n.code,{children:"hover"}),"/",e.jsx(n.code,{children:"focus-visible"}),"/",e.jsx(n.code,{children:"active"}),") so overlay dismissal affordances match the rest of the component system."]}),`
 `,e.jsx(n.li,{children:"Command palette and combobox-style overlays should keep text input as the primary focus anchor for navigation."}),`
 `]}),`
-`,e.jsx(s,{of:z}),`
 `,e.jsx(s,{of:N}),`
 `,e.jsx(s,{of:W}),`
 `,e.jsx(s,{of:V}),`
@@ -190,15 +190,17 @@ accessibility or theming.`})}),`
 `,e.jsx(s,{of:ae}),`
 `,e.jsx(s,{of:te}),`
 `,e.jsx(s,{of:le}),`
-`,e.jsx(s,{of:I}),`
+`,e.jsx(s,{of:de}),`
 `,e.jsx(s,{of:B}),`
+`,e.jsx(s,{of:I}),`
 `,e.jsx(s,{of:M}),`
-`,e.jsx(s,{of:O}),`
 `,e.jsx(s,{of:H}),`
+`,e.jsx(s,{of:O}),`
 `,e.jsx(s,{of:G}),`
 `,e.jsx(s,{of:$}),`
 `,e.jsx(s,{of:U}),`
 `,e.jsx(s,{of:q}),`
+`,e.jsx(s,{of:z}),`
 `,e.jsx(s,{of:g}),`
 `,e.jsx(s,{of:v}),`
 `,e.jsx(s,{of:w}),`
@@ -280,10 +282,9 @@ accessibility or theming.`})}),`
 `,e.jsxs(n.li,{children:["Keep command-palette close-button keyboard-intent tracking document-scoped so keyboard re-entry (for example ",e.jsx(n.code,{children:"Shift+Tab"})," from search input) restores focus-visible fallback consistently, including iframe hosts."]}),`
 `]}),`
 `,e.jsx(s,{of:Ie}),`
-`,e.jsx(s,{of:Be}),`
 `,e.jsx(s,{of:Me}),`
-`,e.jsx(s,{of:Oe}),`
 `,e.jsx(s,{of:He}),`
+`,e.jsx(s,{of:Oe}),`
 `,e.jsx(s,{of:Ge}),`
 `,e.jsx(s,{of:$e}),`
 `,e.jsx(s,{of:Ue}),`
@@ -292,7 +293,7 @@ accessibility or theming.`})}),`
 `,e.jsx(s,{of:Ne}),`
 `,e.jsx(s,{of:We}),`
 `,e.jsx(s,{of:Ve}),`
-`,e.jsx(s,{of:xe}),`
+`,e.jsx(s,{of:Qe}),`
 `,e.jsx(s,{of:ue}),`
 `,e.jsx(s,{of:me}),`
 `,e.jsx(s,{of:je}),`
@@ -314,6 +315,7 @@ accessibility or theming.`})}),`
 `,e.jsx(s,{of:Te}),`
 `,e.jsx(s,{of:Fe}),`
 `,e.jsx(s,{of:Re}),`
+`,e.jsx(s,{of:Be}),`
 `,e.jsx(n.h2,{id:"notification-behavior",children:"Notification Behavior"}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsxs(n.li,{children:["For icon-only/non-text empty-state titles, prefer ",e.jsx(n.code,{children:"ariaLabelledBy"})," when a visible heading exists; otherwise provide non-empty ",e.jsx(n.code,{children:"ariaLabel"}),". Rich title nodes with inline ",e.jsx(n.code,{children:"aria-label"})," are auto-detected, and development builds warn when both naming paths are missing."]}),`
@@ -350,7 +352,6 @@ accessibility or theming.`})}),`
 `,e.jsxs(n.li,{children:["For toast titles without readable text, provide either ",e.jsx(n.code,{children:"ariaLabelledBy"})," or ",e.jsx(n.code,{children:"ariaLabel"}),"; rich title nodes that expose inline ",e.jsx(n.code,{children:"aria-label"})," are auto-detected, and development builds warn only when both are missing."]}),`
 `,e.jsxs(n.li,{children:["For high-frequency passive updates, set ",e.jsx(n.code,{children:'live="off"'})," to reduce assistive-tech interruption while keeping visual toast context."]}),`
 `]}),`
-`,e.jsx(s,{of:Ze}),`
 `,e.jsx(s,{of:en}),`
 `,e.jsx(s,{of:nn}),`
 `,e.jsx(s,{of:sn}),`
@@ -359,17 +360,18 @@ accessibility or theming.`})}),`
 `,e.jsx(s,{of:an}),`
 `,e.jsx(s,{of:tn}),`
 `,e.jsx(s,{of:ln}),`
-`,e.jsx(s,{of:cn}),`
 `,e.jsx(s,{of:dn}),`
+`,e.jsx(s,{of:cn}),`
 `,e.jsx(s,{of:hn}),`
 `,e.jsx(s,{of:pn}),`
 `,e.jsx(s,{of:xn}),`
 `,e.jsx(s,{of:un}),`
-`,e.jsx(s,{of:Qe}),`
+`,e.jsx(s,{of:mn}),`
 `,e.jsx(s,{of:Je}),`
 `,e.jsx(s,{of:Xe}),`
 `,e.jsx(s,{of:_e}),`
 `,e.jsx(s,{of:Ye}),`
+`,e.jsx(s,{of:Ze}),`
 `,e.jsx(n.h2,{id:"data-presentation-patterns",children:"Data Presentation Patterns"}),`
 `,e.jsxs(n.ul,{children:[`
 `,e.jsxs(n.li,{children:["Use typed columns and stable row keys in data tables; fallback source-index keys exist for safety but explicit ",e.jsx(n.code,{children:"rowKey"})," is preferred."]}),`
@@ -437,7 +439,6 @@ accessibility or theming.`})}),`
 `,e.jsxs(n.li,{children:["Avoid duplicate telemetry from tabs by emitting ",e.jsx(n.code,{children:"onValueChange"})," only on actual key transitions."]}),`
 `,e.jsxs(n.li,{children:["Keep tab focus-visible fallback resilient for both ",e.jsx(n.code,{children:"Tab"})," and ",e.jsx(n.code,{children:"Shift+Tab"})," keyboard re-entry after pointer interactions so reverse keyboard traversal preserves active-tab focus affordance."]}),`
 `]}),`
-`,e.jsx(s,{of:mn}),`
 `,e.jsx(s,{of:jn}),`
 `,e.jsx(s,{of:bn}),`
 `,e.jsx(s,{of:fn}),`
@@ -457,11 +458,11 @@ accessibility or theming.`})}),`
 `,e.jsx(s,{of:Tn}),`
 `,e.jsx(s,{of:Fn}),`
 `,e.jsx(s,{of:Rn}),`
-`,e.jsx(s,{of:In}),`
 `,e.jsx(s,{of:Bn}),`
+`,e.jsx(s,{of:In}),`
 `,e.jsx(s,{of:Mn}),`
-`,e.jsx(s,{of:On}),`
 `,e.jsx(s,{of:Hn}),`
+`,e.jsx(s,{of:On}),`
 `,e.jsx(s,{of:Gn}),`
 `,e.jsx(s,{of:$n}),`
 `,e.jsx(s,{of:Un}),`
@@ -472,4 +473,5 @@ accessibility or theming.`})}),`
 `,e.jsx(s,{of:Vn}),`
 `,e.jsx(s,{of:Qn}),`
 `,e.jsx(s,{of:Jn}),`
-`,e.jsx(s,{of:Xn})]})}function Gs(o={}){const{wrapper:n}={...r(),...o.components};return n?e.jsx(n,{...o,children:e.jsx(i,{...o})}):i(o)}export{Gs as default};
+`,e.jsx(s,{of:Xn}),`
+`,e.jsx(s,{of:_n})]})}function $s(o={}){const{wrapper:n}={...r(),...o.components};return n?e.jsx(n,{...o,children:e.jsx(i,{...o})}):i(o)}export{$s as default};
