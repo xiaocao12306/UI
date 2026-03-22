@@ -228,7 +228,7 @@ describe("Dropdown", () => {
     }
   });
 
-  it("warns when non-text dropdown item labels omit ariaLabel/ariaLabelledBy and textValue", () => {
+  it("warns when non-text dropdown item labels omit ariaLabel/ariaLabelledBy/textValue", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     try {
@@ -244,12 +244,38 @@ describe("Dropdown", () => {
 
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining(
-          'Non-text item labels should provide ariaLabel or ariaLabelledBy: "icon-only"'
+          'Non-text item labels should provide ariaLabel, ariaLabelledBy, or textValue for accessible naming: "icon-only"'
         )
       );
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringContaining('Non-text item labels should provide textValue for typeahead matching: "icon-only"')
       );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("uses textValue fallback naming for non-text dropdown items without aria metadata", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dropdown
+          label="TextValue fallback"
+          items={[
+            {
+              key: "settings",
+              label: <span aria-hidden="true">⚙</span>,
+              textValue: "Settings"
+            }
+          ]}
+        />
+      );
+
+      fireEvent.click(screen.getByRole("button", { name: "TextValue fallback" }));
+      const settingsItem = screen.getByRole("menuitem", { name: "Settings" });
+      expect(settingsItem).toHaveAttribute("aria-label", "Settings");
+      expect(warnSpy).not.toHaveBeenCalled();
     } finally {
       warnSpy.mockRestore();
     }
@@ -335,7 +361,7 @@ describe("Dropdown", () => {
     }
   });
 
-  it("warns and ignores blank ariaLabel on non-text dropdown items", () => {
+  it("falls back to textValue when ariaLabel is blank on non-text dropdown items", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     try {
@@ -354,13 +380,9 @@ describe("Dropdown", () => {
       );
 
       fireEvent.click(screen.getByRole("button", { name: "Blank icon label" }));
-      const settingsItem = screen.getByRole("menuitem");
-      expect(settingsItem).not.toHaveAttribute("aria-label");
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Non-text item labels should provide ariaLabel or ariaLabelledBy: "settings"'
-        )
-      );
+      const settingsItem = screen.getByRole("menuitem", { name: "Settings" });
+      expect(settingsItem).toHaveAttribute("aria-label", "Settings");
+      expect(warnSpy).not.toHaveBeenCalled();
     } finally {
       warnSpy.mockRestore();
     }

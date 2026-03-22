@@ -325,7 +325,9 @@ export function Dropdown({
         typeof item.ariaLabel === "string" && item.ariaLabel.trim().length > 0;
       const hasExplicitAriaLabelledBy =
         typeof item.ariaLabelledBy === "string" && item.ariaLabelledBy.trim().length > 0;
-      if (hasReadableLabelText || hasExplicitAriaLabel || hasExplicitAriaLabelledBy) {
+      const hasTextValueAlias =
+        typeof item.textValue === "string" && normalizeReadableDropdownText(item.textValue).length > 0;
+      if (hasReadableLabelText || hasExplicitAriaLabel || hasExplicitAriaLabelledBy || hasTextValueAlias) {
         return keys;
       }
 
@@ -345,7 +347,7 @@ export function Dropdown({
     warnedMissingAriaLabelSignatureRef.current = signature;
 
     console.warn(
-      `[Dropdown] Non-text item labels should provide ariaLabel or ariaLabelledBy: ${missingAriaLabelKeys
+      `[Dropdown] Non-text item labels should provide ariaLabel, ariaLabelledBy, or textValue for accessible naming: ${missingAriaLabelKeys
         .map((key) => `"${key}"`)
         .join(", ")}.`
     );
@@ -638,9 +640,13 @@ export function Dropdown({
             {items.map((item, index) => {
               const isActive = index === activeIndex;
               const resolvedItemAriaLabelledBy = resolveNonEmptyLabel(item.ariaLabelledBy);
+              const hasReadableItemLabelText = getReadableTextNode(item.label).trim().length > 0;
               const resolvedItemAriaLabel =
                 resolvedItemAriaLabelledBy === undefined
-                  ? resolveNonEmptyLabel(item.ariaLabel)
+                  ? resolveNonEmptyLabel(
+                      item.ariaLabel,
+                      hasReadableItemLabelText ? undefined : getDropdownItemText(item)
+                    )
                   : undefined;
               return (
                 <li key={itemRenderKeys[index] ?? `${item.key}__dup-${index}`} role="none">
@@ -871,10 +877,10 @@ function normalizeReadableDropdownText(value: string) {
   return value.replace(/\s+/g, " ").trim();
 }
 
-function resolveNonEmptyLabel(label: string | undefined) {
+function resolveNonEmptyLabel(label: string | undefined, fallback?: string) {
   if (typeof label === "string" && label.trim().length > 0) {
     return label.trim();
   }
 
-  return undefined;
+  return fallback;
 }

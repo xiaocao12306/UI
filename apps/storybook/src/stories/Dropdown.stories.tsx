@@ -182,6 +182,34 @@ export const IconItemNaming: Story = {
   }
 };
 
+export const IconItemTextValueNameFallback: Story = {
+  args: {
+    label: "TextValue item names",
+    items: [
+      {
+        key: "settings",
+        label: <span aria-hidden="true">⚙</span>,
+        textValue: "Settings"
+      },
+      {
+        key: "archive",
+        label: <span aria-hidden="true">🗄</span>,
+        textValue: "Archive"
+      }
+    ]
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(await canvas.findByRole("button", { name: "TextValue item names" }));
+
+    const menu = canvas.getByRole("menu", { name: "TextValue item names" });
+    await expect(canvas.getByRole("menuitem", { name: "Settings" })).toBeInTheDocument();
+    await userEvent.keyboard("a");
+    await expect(canvas.getByRole("menuitem", { name: "Archive" })).toHaveFocus();
+    await expect(menu).toBeInTheDocument();
+  }
+};
+
 export const IconItemLabelledByPrecedence: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
