@@ -293,6 +293,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Prefer `ariaLabelledBy` for message bubbles when a visible heading/title already exists; use `ariaLabel` for standalone bubbles without nearby naming context.
 - Localize message semantics with `roleDescription` when product vocabulary differs from plain `message`; blank values should fallback to default role description.
 - Localize reasoning disclosure semantics with `expandLabel`/`collapseLabel`, and prefer `listAriaLabelledBy` (or `listAriaLabel` when standalone) so list narration stays aligned with visible headings.
+- Keep reasoning disclosure toggle labels unique across the page: default labels append readable `title` context automatically, and custom `expandLabel`/`collapseLabel` should preserve equivalent contextual specificity.
 - Keep reasoning disclosure shortcuts discoverable with `aria-keyshortcuts="Enter Space"` so QA/AT audits can verify keyboard toggle support.
 - Normalize reasoning step payloads before rendering (or rely on built-in blank-step filtering) so whitespace-only steps do not create empty list bullets; keep `emptyText` non-blank unless default fallback copy is desired.
 - Show reasoning disclosure with explicit user intent (default collapsed).

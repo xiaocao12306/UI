@@ -26,13 +26,13 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const toggle = await canvas.findByRole("button", { name: "Expand reasoning panel" });
+    const toggle = await canvas.findByRole("button", { name: "Expand reasoning panel: Model reasoning" });
 
     await expect(toggle).toHaveAttribute("aria-expanded", "false");
     await expect(toggle).toHaveAttribute("aria-keyshortcuts", "Enter Space");
     await userEvent.click(toggle);
     await expect(toggle).toHaveAttribute("aria-expanded", "true");
-    await expect(toggle).toHaveAttribute("aria-label", "Collapse reasoning panel");
+    await expect(toggle).toHaveAttribute("aria-label", "Collapse reasoning panel: Model reasoning");
     await expect(canvas.getByText("Understand release scope")).toBeInTheDocument();
   }
 };

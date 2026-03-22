@@ -15,8 +15,8 @@ export function ReasoningPanel({
   title = "Model reasoning",
   steps,
   defaultOpen = false,
-  expandLabel = "Expand reasoning panel",
-  collapseLabel = "Collapse reasoning panel",
+  expandLabel,
+  collapseLabel,
   emptyText = "No reasoning steps captured.",
   listAriaLabel = "Reasoning steps",
   listAriaLabelledBy
@@ -27,10 +27,11 @@ export function ReasoningPanel({
     () => steps.filter((step) => step.trim().length > 0),
     [steps]
   );
+  const resolvedTitleText = getReadableReasoningTextNode(title);
+  const resolvedExpandLabel = resolveToggleLabel(expandLabel, "Expand reasoning panel", resolvedTitleText);
+  const resolvedCollapseLabel = resolveToggleLabel(collapseLabel, "Collapse reasoning panel", resolvedTitleText);
   const hasEmptyTextContent = hasRenderableReasoningNode(emptyText);
   const resolvedEmptyText = hasEmptyTextContent ? emptyText : "No reasoning steps captured.";
-  const resolvedExpandLabel = resolveNonEmptyLabel(expandLabel) ?? "Expand reasoning panel";
-  const resolvedCollapseLabel = resolveNonEmptyLabel(collapseLabel) ?? "Collapse reasoning panel";
   const resolvedListAriaLabelledBy = resolveNonEmptyLabel(listAriaLabelledBy);
   const resolvedListAriaLabel = resolvedListAriaLabelledBy
     ? undefined
@@ -93,6 +94,65 @@ function resolveNonEmptyLabel(value: string | undefined) {
   }
 
   return undefined;
+}
+
+function resolveToggleLabel(
+  value: string | undefined,
+  fallbackActionLabel: string,
+  readableTitleText: string
+) {
+  const customLabel = resolveNonEmptyLabel(value);
+  if (customLabel) {
+    return customLabel;
+  }
+
+  if (readableTitleText.length === 0) {
+    return fallbackActionLabel;
+  }
+
+  return `${fallbackActionLabel}: ${readableTitleText}`;
+}
+
+function getReadableReasoningTextNode(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return normalizeReadableReasoningText(node);
+  }
+
+  if (typeof node === "number") {
+    return normalizeReadableReasoningText(String(node));
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeReadableReasoningText(
+      node
+        .map((item) => getReadableReasoningTextNode(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  if (typeof elementProps["aria-label"] === "string" && elementProps["aria-label"].trim().length > 0) {
+    return normalizeReadableReasoningText(elementProps["aria-label"]);
+  }
+
+  return getReadableReasoningTextNode(elementProps.children);
+}
+
+function normalizeReadableReasoningText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }
 
 function hasRenderableReasoningNode(node: React.ReactNode): boolean {
