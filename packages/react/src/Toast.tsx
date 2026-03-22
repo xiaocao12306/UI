@@ -203,8 +203,9 @@ export function Toast({
   const timeoutRef = React.useRef<number | null>(null);
   const timerWindowRef = React.useRef<Window | null>(null);
   const timerStartedAtRef = React.useRef(0);
-  const hasAction = hasRenderableToastNode(action);
-  const resolvedDuration = duration ?? (hasAction ? 0 : 4000);
+  const hasActionContent = hasRenderableToastNode(action);
+  const hasActionAffordance = hasInteractiveToastActionNode(action);
+  const resolvedDuration = duration ?? (hasActionAffordance ? 0 : 4000);
   const remainingDurationRef = React.useRef(resolvedDuration);
   const [documentHidden, setDocumentHidden] = React.useState(false);
   const [pauseState, setPauseState] = React.useState({ hover: false, focus: false });
@@ -528,8 +529,12 @@ export function Toast({
     return null;
   }
 
-  const role = hasAction ? (tone === "danger" ? "alertdialog" : "dialog") : tone === "danger" ? "alert" : "status";
-  const ariaLive = hasAction ? undefined : (live ?? (tone === "danger" ? "assertive" : "polite"));
+  const role = hasActionAffordance
+    ? (tone === "danger" ? "alertdialog" : "dialog")
+    : tone === "danger"
+      ? "alert"
+      : "status";
+  const ariaLive = hasActionAffordance ? undefined : (live ?? (tone === "danger" ? "assertive" : "polite"));
 
   return (
     <div
@@ -537,7 +542,7 @@ export function Toast({
       ref={rootRef}
       role={role}
       data-close-on-escape={closeOnEscape ? "true" : "false"}
-      aria-modal={hasAction ? "false" : undefined}
+      aria-modal={hasActionAffordance ? "false" : undefined}
       aria-live={ariaLive}
       aria-atomic="true"
       aria-keyshortcuts={showEscapeKeyShortcuts ? "Escape" : undefined}
@@ -692,7 +697,7 @@ export function Toast({
           {description}
         </div>
       ) : null}
-      {hasAction ? <div>{action}</div> : null}
+      {hasActionContent ? <div>{action}</div> : null}
     </div>
   );
 }
@@ -778,4 +783,29 @@ function hasRenderableToastNode(node: React.ReactNode): boolean {
   }
 
   return React.isValidElement(node);
+}
+
+function hasInteractiveToastActionNode(node: React.ReactNode): boolean {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return false;
+  }
+
+  if (typeof node === "string" || typeof node === "number") {
+    return false;
+  }
+
+  if (Array.isArray(node)) {
+    return node.some((item) => hasInteractiveToastActionNode(item));
+  }
+
+  if (!React.isValidElement(node)) {
+    return false;
+  }
+
+  if (node.type === React.Fragment) {
+    const fragmentProps = node.props as { children?: React.ReactNode };
+    return hasInteractiveToastActionNode(fragmentProps.children);
+  }
+
+  return true;
 }

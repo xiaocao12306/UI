@@ -404,6 +404,30 @@ export const BlankActionSemantics: Story = {
   }
 };
 
+function TextActionSemanticsDemo() {
+  return (
+    <ToastShowcase align="start">
+      <Toast
+        open
+        onOpenChange={() => {}}
+        title="Passive update"
+        description="Text action content should not upgrade toast role semantics."
+        action="Undo later"
+      />
+    </ToastShowcase>
+  );
+}
+
+export const TextActionSemantics: Story = {
+  render: () => <TextActionSemanticsDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    await expect(canvas.getByRole("status", { name: "Passive update" })).toBeInTheDocument();
+    await expect(canvas.getByText("Undo later")).toBeInTheDocument();
+    await expect(canvas.queryByRole("dialog", { name: "Passive update" })).toBeNull();
+  }
+};
+
 function CloseReasonTelemetryDemo() {
   const [open, setOpen] = React.useState(true);
   const [lastReason, setLastReason] = React.useState("none");
