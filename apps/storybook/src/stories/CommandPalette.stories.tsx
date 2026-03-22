@@ -985,6 +985,34 @@ function ManagedKeysPreemptedLocallyPalette() {
   );
 }
 
+function CloseButtonManagedKeysPreemptedLocallyPalette() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryFullscreenFrame>
+      <CommandPalette
+        open={open}
+        onOpenChange={setOpen}
+        title="Local close-button guard palette"
+        onCloseButtonKeyDown={(event) => {
+          if (
+            event.key === "Enter" ||
+            event.key === " " ||
+            event.key === "Space" ||
+            event.key === "Spacebar"
+          ) {
+            event.preventDefault();
+          }
+        }}
+        commands={[
+          { key: "open-settings", label: "Open Settings", keywords: ["open"] },
+          { key: "run-e2e", label: "Run E2E Smoke", keywords: ["run"] }
+        ]}
+      />
+    </StoryFullscreenFrame>
+  );
+}
+
 function NestedDismissOrderPalette() {
   const [paletteOpen, setPaletteOpen] = React.useState(false);
 
@@ -1894,6 +1922,30 @@ export const ManagedKeysPreemptedByLocalHandler: Story = {
     await userEvent.keyboard("{Escape}");
     await expect(canvas.getByTestId("command-local-preempt-query-value")).toHaveTextContent("open");
     await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+  }
+};
+
+export const CloseButtonManagedKeysPreemptedByLocalHandler: Story = {
+  render: () => <CloseButtonManagedKeysPreemptedLocallyPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const dialog = await canvas.findByRole("dialog", { name: "Local close-button guard palette" });
+    const closeButton = canvas.getByRole("button", { name: "Close dialog" });
+
+    closeButton.focus();
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+    await expect(dialog).toBeInTheDocument();
+    fireEvent.keyUp(closeButton, { key: "Enter" });
+
+    fireEvent.keyDown(closeButton, { key: "Space" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+    await expect(dialog).toBeInTheDocument();
+    fireEvent.keyUp(closeButton, { key: "Space" });
   }
 };
 

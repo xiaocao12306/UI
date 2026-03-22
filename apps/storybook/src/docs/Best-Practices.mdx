@@ -290,6 +290,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep commands without `onSelect` inert: selecting them should not close the palette or emit `item-select` telemetry; provide `onSelect` for every executable command entry.
 - Keep command-palette `aria-keyshortcuts` aligned with actionable state: omit `Enter` when filtered results contain no enabled command, and omit Arrow/Home/End/Page navigation hints when at most one command is actionable.
 - Keep command-palette close-button shortcut hints explicit (`aria-keyshortcuts="Enter Space"`) so keyboard dismiss affordance remains discoverable in AT/QA flows.
+- For workflow-level command-palette close-button guards, prefer `onCloseButtonKeyDown + event.preventDefault()` so local approval logic can preempt Enter/Space close-button key handling without forking palette internals.
 - Keep command-palette dialog Escape shortcut hints explicit (`aria-keyshortcuts="Escape"`) only when `closeOnEscape` is enabled so dismiss hint metadata matches runtime policy.
 - For batched command execution, set `closeOnSelect={false}` so users can run multiple actions without reopening the palette.
 - Treat repeated `Enter` keydown (`event.repeat`) as no-op for command execution so long-press does not trigger duplicate actions or telemetry noise.
@@ -369,6 +370,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={CommandPaletteStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={CommandPaletteStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={CommandPaletteStories.ManagedKeysPreemptedByLocalHandler} />
+<Canvas of={CommandPaletteStories.CloseButtonManagedKeysPreemptedByLocalHandler} />
 <Canvas of={CommandPaletteStories.GuardedDismissEvents} />
 <Canvas of={CommandPaletteStories.EscapeClearsQueryFirst} />
 <Canvas of={CommandPaletteStories.EscapeRepeatGuard} />

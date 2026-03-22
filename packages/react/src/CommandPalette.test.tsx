@@ -1490,6 +1490,37 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
+  it("keeps close-button keyboard pressed feedback idle when activation keydown is preempted locally", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        onCloseButtonKeyDown={(event) => {
+          if (
+            event.key === "Enter" ||
+            event.key === " " ||
+            event.key === "Space" ||
+            event.key === "Spacebar"
+          ) {
+            event.preventDefault();
+          }
+        }}
+        commands={[
+          { key: "open-settings", label: "Open Settings" },
+          { key: "run-e2e", label: "Run E2E Smoke" }
+        ]}
+      />
+    );
+
+    const closeButton = screen.getByRole("button", { name: "Close dialog" });
+
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+
+    fireEvent.keyDown(closeButton, { key: "Space" });
+    expect(closeButton.getAttribute("style")).toContain("translateY(0)");
+  });
+
   it("emits close-button close reason when dismiss button is clicked", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();
