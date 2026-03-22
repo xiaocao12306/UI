@@ -2804,6 +2804,37 @@ test("preempts telemetry toast close button Enter via local key guard hook", asy
   await expect(telemetryToast).toBeHidden();
 });
 
+test("preempts telemetry toast close button Space via local key guard hook", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Trigger telemetry toast" });
+  const guardSwitch = page.getByRole("switch", {
+    name: "Guard telemetry toast close Enter/Space via local hook"
+  });
+  const guardTelemetry = page.getByTestId("toast-close-button-guard-telemetry");
+  const closeButton = page.getByRole("button", { name: "Dismiss telemetry toast" });
+  const telemetryToast = page.getByRole("status").filter({ hasText: "Telemetry toast" });
+
+  await expect(guardTelemetry).toHaveText("idle");
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await trigger.click();
+  await expect(telemetryToast).toBeVisible();
+  await closeButton.focus();
+  await closeButton.press("Space");
+  await expect(guardTelemetry).toHaveText("blocked:Space");
+  await expect(telemetryToast).toBeVisible();
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(guardTelemetry).toHaveText("idle");
+
+  await closeButton.focus();
+  await closeButton.press("Space");
+  await expect(telemetryToast).toBeHidden();
+});
+
 test("renders actionable toast with dialog semantics and handles action click", async ({ page }) => {
   await page.goto("/");
 
