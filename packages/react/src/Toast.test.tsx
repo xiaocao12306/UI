@@ -313,6 +313,45 @@ describe("Toast", () => {
     expect(screen.queryByRole("dialog", { name: "Passive update" })).toBeNull();
   });
 
+  it("treats anchor action without href as non-actionable live region", () => {
+    render(
+      <Toast
+        open
+        title="Passive target-only anchor"
+        action={
+          <a target="_blank" rel="noreferrer">
+            Open docs target-only
+          </a>
+        }
+      />
+    );
+
+    const toast = screen.getByRole("status", { name: "Passive target-only anchor" });
+    expect(toast).toHaveAttribute("aria-live", "polite");
+    expect(toast).not.toHaveAttribute("aria-modal");
+    expect(screen.getByText("Open docs target-only")).toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Passive target-only anchor" })).toBeNull();
+  });
+
+  it("treats anchor action with href as actionable surface", () => {
+    render(
+      <Toast
+        open
+        title="Actionable docs link"
+        action={
+          <a href="https://example.com/docs" target="_blank" rel="noreferrer">
+            Open docs link
+          </a>
+        }
+      />
+    );
+
+    const toast = screen.getByRole("dialog", { name: "Actionable docs link" });
+    expect(toast).toHaveAttribute("aria-modal", "false");
+    expect(screen.getByRole("link", { name: "Open docs link" })).toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: "Actionable docs link" })).toBeNull();
+  });
+
   it("treats nested interactive action element as actionable surface", () => {
     render(
       <Toast

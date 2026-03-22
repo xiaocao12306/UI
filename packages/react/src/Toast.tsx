@@ -884,7 +884,6 @@ function isInteractiveNativeActionElement(
     disabled?: boolean;
     "aria-disabled"?: boolean | "true" | "false";
     href?: string;
-    target?: string;
     tabIndex?: number;
   }
 ) {
@@ -906,10 +905,7 @@ function isInteractiveNativeActionElement(
   }
 
   if (normalizedElementType === "a") {
-    return (
-      (typeof props.href === "string" && props.href.trim().length > 0) ||
-      typeof props.target === "string"
-    );
+    return typeof props.href === "string" && props.href.trim().length > 0;
   }
 
   return false;

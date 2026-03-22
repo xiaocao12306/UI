@@ -485,6 +485,28 @@ function TextActionSemanticsDemo() {
         description="Focusable action nodes should also upgrade toast role semantics."
         action={<span tabIndex={0}>Review details</span>}
       />
+      <Toast
+        open
+        onOpenChange={() => {}}
+        title="Passive target-only anchor"
+        description="Anchor actions without href should stay passive."
+        action={
+          <a target="_blank" rel="noreferrer">
+            Open docs target-only
+          </a>
+        }
+      />
+      <Toast
+        open
+        onOpenChange={() => {}}
+        title="Actionable docs link"
+        description="Anchor actions with href should upgrade to interactive toast semantics."
+        action={
+          <a href="https://example.com/docs" target="_blank" rel="noreferrer">
+            Open docs link
+          </a>
+        }
+      />
     </ToastShowcase>
   );
 }
@@ -500,8 +522,15 @@ export const TextActionSemantics: Story = {
     await expect(canvas.queryByRole("dialog", { name: "Passive update element" })).toBeNull();
     await expect(canvas.getByRole("dialog", { name: "Action required nested" })).toBeInTheDocument();
     await expect(canvas.getByRole("dialog", { name: "Action required focusable" })).toBeInTheDocument();
+    await expect(
+      canvas.getByRole("status", { name: "Passive target-only anchor" })
+    ).toBeInTheDocument();
+    await expect(canvas.queryByRole("dialog", { name: "Passive target-only anchor" })).toBeNull();
+    await expect(canvas.getByRole("dialog", { name: "Actionable docs link" })).toBeInTheDocument();
+    await expect(canvas.getByRole("link", { name: "Open docs link" })).toBeInTheDocument();
     await expect(canvas.getByRole("button", { name: "Undo now" })).toBeInTheDocument();
     await expect(canvas.getByText("Review details")).toBeInTheDocument();
+    await expect(canvas.getByText("Open docs target-only")).toBeInTheDocument();
   }
 };
 
