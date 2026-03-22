@@ -210,6 +210,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep dialog/drawer close-button focus intent fallback scoped to unmodified owner-document keydown only; ignore `Ctrl/Meta/Alt + key` chords so host shortcuts do not falsely restore keyboard focus-visible rings.
 - Keep dialog/drawer close-button owner-document pointer intent primary-only; non-primary pointer buttons and `Ctrl + primary click` (for example macOS context click) should not clear fallback keyboard focus intent.
 - Keep dialog/drawer close-button local pointer down feedback primary-only; non-primary pointer buttons and `Ctrl + primary click` context-click paths should not clear focus-visible state or trigger pressed visuals.
+- For workflow-level close-button keyboard guards, prefer `onCloseButtonKeyDown + event.preventDefault()` so local approval logic can preempt Enter/Space pressed feedback without forking overlay internals.
 - Keep dialog/drawer close buttons visually state-complete (`hover`/`focus-visible`/`active`) so overlay dismissal affordances match the rest of the component system.
 - Command palette and combobox-style overlays should keep text input as the primary focus anchor for navigation.
 
@@ -251,6 +252,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={DialogStories.FocusTrapKeyboardCycle} />
 <Canvas of={DialogStories.FocusIntentReentry} />
 <Canvas of={DialogStories.CloseButtonKeyboardPressedState} />
+<Canvas of={DialogStories.CloseButtonManagedKeysPreemptedByLocalHandler} />
 <Canvas of={DialogStories.EscapeIgnoresImeComposition} />
 <Canvas of={DialogStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={DialogStories.EscapeRepeatGuard} />
@@ -259,6 +261,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={DrawerStories.FocusTrapKeyboardCycle} />
 <Canvas of={DrawerStories.FocusIntentReentry} />
 <Canvas of={DrawerStories.CloseButtonKeyboardPressedState} />
+<Canvas of={DrawerStories.CloseButtonManagedKeysPreemptedByLocalHandler} />
 <Canvas of={DrawerStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={DrawerStories.EscapeRepeatGuard} />
 <Canvas of={DrawerStories.DismissGuardHooks} />

@@ -493,6 +493,52 @@ export const CloseButtonKeyboardPressedState: Story = {
   }
 };
 
+function CloseButtonManagedKeysPreemptedByLocalHandlerDrawerDemo() {
+  return (
+    <StoryFullscreenFrame align="start">
+      <Drawer
+        open
+        onOpenChange={() => {}}
+        title="Locally preempted keyboard close drawer"
+        description="Local close-button key guards should suppress pressed feedback."
+        onCloseButtonKeyDown={(event) => {
+          if (
+            event.key === "Enter" ||
+            event.key === " " ||
+            event.key === "Space" ||
+            event.key === "Spacebar"
+          ) {
+            event.preventDefault();
+          }
+        }}
+      >
+        <p style={storyParagraphStyle}>Local guards preempt managed close-button keyboard feedback.</p>
+      </Drawer>
+    </StoryFullscreenFrame>
+  );
+}
+
+export const CloseButtonManagedKeysPreemptedByLocalHandler: Story = {
+  render: () => <CloseButtonManagedKeysPreemptedByLocalHandlerDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const closeButton = await body.findByRole("button", { name: "Close drawer" });
+
+    closeButton.focus();
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+    fireEvent.keyUp(closeButton, { key: "Enter" });
+
+    fireEvent.keyDown(closeButton, { key: "Space" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+    fireEvent.keyUp(closeButton, { key: "Space" });
+  }
+};
+
 function CloseReasonTelemetryDrawerDemo() {
   const [open, setOpen] = React.useState(false);
   const [lastReason, setLastReason] = React.useState("none");

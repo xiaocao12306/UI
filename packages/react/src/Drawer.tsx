@@ -19,6 +19,7 @@ export type DrawerProps = {
   ariaLabelledBy?: string;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
   onPointerDownOutside?: (event: PointerEvent) => void;
+  onCloseButtonKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
   onCloseReason?: (reason: DrawerCloseReason) => void;
   onOpenChange: (open: boolean) => void;
 };
@@ -38,6 +39,7 @@ export function Drawer({
   ariaLabelledBy,
   onEscapeKeyDown,
   onPointerDownOutside,
+  onCloseButtonKeyDown,
   onCloseReason,
   onOpenChange
 }: DrawerProps) {
@@ -279,6 +281,7 @@ export function Drawer({
                     }}
                     onKeyDown={(event) => {
                       closeButtonFocusIntentRef.current = true;
+                      onCloseButtonKeyDown?.(event);
                       if (event.defaultPrevented) {
                         return;
                       }

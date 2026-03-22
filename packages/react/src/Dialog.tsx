@@ -20,6 +20,7 @@ export type DialogProps = {
   ariaLabelledBy?: string;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
   onPointerDownOutside?: (event: PointerEvent) => void;
+  onCloseButtonKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
   onCloseReason?: (reason: DialogCloseReason) => void;
   onOpenChange: (open: boolean) => void;
 };
@@ -45,6 +46,7 @@ export function Dialog({
   ariaLabelledBy,
   onEscapeKeyDown,
   onPointerDownOutside,
+  onCloseButtonKeyDown,
   onCloseReason,
   onOpenChange
 }: DialogProps) {
@@ -281,6 +283,7 @@ export function Dialog({
                     }}
                     onKeyDown={(event) => {
                       closeButtonFocusIntentRef.current = true;
+                      onCloseButtonKeyDown?.(event);
                       if (event.defaultPrevented) {
                         return;
                       }

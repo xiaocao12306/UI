@@ -445,6 +445,50 @@ export const CloseButtonKeyboardPressedState: Story = {
   }
 };
 
+function CloseButtonManagedKeysPreemptedByLocalHandlerDialog() {
+  return (
+    <Dialog
+      open
+      onOpenChange={() => {}}
+      title="Locally preempted keyboard close dialog"
+      description="Local close-button key guards should suppress pressed feedback."
+      onCloseButtonKeyDown={(event) => {
+        if (
+          event.key === "Enter" ||
+          event.key === " " ||
+          event.key === "Space" ||
+          event.key === "Spacebar"
+        ) {
+          event.preventDefault();
+        }
+      }}
+    >
+      <p style={storyParagraphStyle}>Local guards preempt managed close-button keyboard feedback.</p>
+    </Dialog>
+  );
+}
+
+export const CloseButtonManagedKeysPreemptedByLocalHandler: Story = {
+  render: () => <CloseButtonManagedKeysPreemptedByLocalHandlerDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const closeButton = await body.findByRole("button", { name: "Close dialog" });
+
+    closeButton.focus();
+    fireEvent.keyDown(closeButton, { key: "Enter" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+    fireEvent.keyUp(closeButton, { key: "Enter" });
+
+    fireEvent.keyDown(closeButton, { key: "Space" });
+    await waitFor(() => {
+      expect(closeButton.style.transform).toContain("translateY(0");
+    });
+    fireEvent.keyUp(closeButton, { key: "Space" });
+  }
+};
+
 export const OpenByDefault: Story = {
   render: () => <InitiallyOpenDialog />
 };
