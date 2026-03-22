@@ -2,6 +2,8 @@ import * as React from "react";
 
 const sortableHeaderActivationKeyboardShortcuts = "Enter Space";
 const sortableHeaderKeyboardShortcuts = `${sortableHeaderActivationKeyboardShortcuts} Home End PageDown PageUp ArrowLeft ArrowRight`;
+const scrollContainerKeyboardShortcuts = "ArrowLeft ArrowRight Home End PageDown PageUp";
+const minimumKeyboardScrollStep = 48;
 
 export type TableAlign = "left" | "center" | "right";
 export type TableSortDirection = "asc" | "desc";
@@ -487,6 +489,7 @@ export function Table<T>({
     <div
       ref={scrollContainerRef}
       data-aurora-table-scroll-container=""
+      role={hasActionableSortControls ? undefined : "region"}
       tabIndex={hasActionableSortControls ? undefined : 0}
       aria-label={
         hasActionableSortControls
@@ -496,6 +499,67 @@ export function Table<T>({
             : (resolvedAriaLabel ?? "Data table scroll container")
       }
       aria-labelledby={hasActionableSortControls ? undefined : resolvedAriaLabelledBy}
+      aria-keyshortcuts={hasActionableSortControls ? undefined : scrollContainerKeyboardShortcuts}
+      onKeyDown={(event) => {
+        if (hasActionableSortControls) {
+          return;
+        }
+        if (event.defaultPrevented) {
+          return;
+        }
+        if (event.altKey || event.ctrlKey || event.metaKey) {
+          return;
+        }
+        if (event.target !== event.currentTarget) {
+          return;
+        }
+
+        const scrollContainer = event.currentTarget;
+        const maxScrollOffset = Math.max(0, scrollContainer.scrollWidth - scrollContainer.clientWidth);
+        if (maxScrollOffset <= 0) {
+          return;
+        }
+
+        const pageScrollStep = scrollContainer.clientWidth;
+        const lineScrollStep = Math.max(
+          minimumKeyboardScrollStep,
+          Math.floor(pageScrollStep * 0.3)
+        );
+        const applyRelativeScroll = (offset: number) => {
+          if (offset === 0) {
+            return;
+          }
+          event.preventDefault();
+          scrollElementBy(scrollContainer, offset);
+        };
+        const applyAbsoluteScroll = (offset: number) => {
+          event.preventDefault();
+          scrollElementTo(scrollContainer, offset);
+        };
+
+        switch (event.key) {
+          case "ArrowRight":
+            applyRelativeScroll(lineScrollStep);
+            return;
+          case "ArrowLeft":
+            applyRelativeScroll(-lineScrollStep);
+            return;
+          case "PageDown":
+            applyRelativeScroll(pageScrollStep);
+            return;
+          case "PageUp":
+            applyRelativeScroll(-pageScrollStep);
+            return;
+          case "Home":
+            applyAbsoluteScroll(0);
+            return;
+          case "End":
+            applyAbsoluteScroll(maxScrollOffset);
+            return;
+          default:
+            return;
+        }
+      }}
       style={{
         border: "1px solid var(--aurora-border-default)",
         borderRadius: "var(--aurora-radius-md)",
@@ -1117,4 +1181,22 @@ function resolveNonEmptyLabel(label: string | undefined, fallback?: string): str
   }
 
   return fallback;
+}
+
+function scrollElementBy(element: HTMLElement, left: number) {
+  if (typeof element.scrollBy === "function") {
+    element.scrollBy({ left, behavior: "auto" });
+    return;
+  }
+
+  element.scrollLeft += left;
+}
+
+function scrollElementTo(element: HTMLElement, left: number) {
+  if (typeof element.scrollTo === "function") {
+    element.scrollTo({ left, behavior: "auto" });
+    return;
+  }
+
+  element.scrollLeft = left;
 }

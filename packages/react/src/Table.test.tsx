@@ -393,13 +393,97 @@ describe("Table", () => {
     const scrollContainer = container.querySelector(
       "[data-aurora-table-scroll-container]"
     ) as HTMLDivElement;
+    expect(scrollContainer).toHaveAttribute("role", "region");
     expect(scrollContainer).toHaveAttribute("tabindex", "0");
+    expect(scrollContainer).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowLeft ArrowRight Home End PageDown PageUp"
+    );
 
     await user.tab();
     expect(scrollContainer).toHaveFocus();
 
     await user.tab();
     expect(screen.getByRole("button", { name: "After table" })).toHaveFocus();
+  });
+
+  it("supports keyboard horizontal scrolling when sortable controls are unavailable", () => {
+    const { container } = render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    const scrollContainer = container.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement;
+    Object.defineProperty(scrollContainer, "clientWidth", {
+      configurable: true,
+      value: 200
+    });
+    Object.defineProperty(scrollContainer, "scrollWidth", {
+      configurable: true,
+      value: 600
+    });
+    Object.defineProperty(scrollContainer, "scrollLeft", {
+      configurable: true,
+      writable: true,
+      value: 0
+    });
+
+    const scrollBySpy = vi.fn(({ left }: { left: number }) => {
+      scrollContainer.scrollLeft += left;
+    });
+    const scrollToSpy = vi.fn(({ left }: { left: number }) => {
+      scrollContainer.scrollLeft = left;
+    });
+    Object.defineProperty(scrollContainer, "scrollBy", {
+      configurable: true,
+      value: scrollBySpy
+    });
+    Object.defineProperty(scrollContainer, "scrollTo", {
+      configurable: true,
+      value: scrollToSpy
+    });
+
+    scrollContainer.focus();
+    expect(scrollContainer).toHaveFocus();
+
+    fireEvent.keyDown(scrollContainer, { key: "ArrowRight" });
+    expect(scrollBySpy).toHaveBeenLastCalledWith({ left: 60, behavior: "auto" });
+    expect(scrollContainer.scrollLeft).toBe(60);
+
+    fireEvent.keyDown(scrollContainer, { key: "ArrowLeft" });
+    expect(scrollBySpy).toHaveBeenLastCalledWith({ left: -60, behavior: "auto" });
+    expect(scrollContainer.scrollLeft).toBe(0);
+
+    fireEvent.keyDown(scrollContainer, { key: "PageDown" });
+    expect(scrollBySpy).toHaveBeenLastCalledWith({ left: 200, behavior: "auto" });
+    expect(scrollContainer.scrollLeft).toBe(200);
+
+    fireEvent.keyDown(scrollContainer, { key: "PageUp" });
+    expect(scrollBySpy).toHaveBeenLastCalledWith({ left: -200, behavior: "auto" });
+    expect(scrollContainer.scrollLeft).toBe(0);
+
+    fireEvent.keyDown(scrollContainer, { key: "End" });
+    expect(scrollToSpy).toHaveBeenLastCalledWith({ left: 400, behavior: "auto" });
+    expect(scrollContainer.scrollLeft).toBe(400);
+
+    fireEvent.keyDown(scrollContainer, { key: "Home" });
+    expect(scrollToSpy).toHaveBeenLastCalledWith({ left: 0, behavior: "auto" });
+    expect(scrollContainer.scrollLeft).toBe(0);
+
+    fireEvent.keyDown(scrollContainer, { key: "ArrowRight", ctrlKey: true });
+    fireEvent.keyDown(scrollContainer, { key: "End", metaKey: true });
+    expect(scrollBySpy).toHaveBeenCalledTimes(4);
+    expect(scrollToSpy).toHaveBeenCalledTimes(2);
   });
 
   it("does not add extra scroll-container tab stop when sortable controls are actionable", () => {

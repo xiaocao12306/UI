@@ -215,7 +215,11 @@ export const SingleSortableColumnShortcutHints: Story = {
 
 export const KeyboardReachableScrollContainer: Story = {
   render: () => (
-    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
+    <StoryShowcaseFrame maxWidth="min(100%, 420px)" gap={10}>
+      <p style={storyMutedTextStyle}>
+        When sortable controls are unavailable, focus the scroll region and use Arrow/Home/End/Page
+        keys to pan overflowed columns.
+      </p>
       <Table
         columns={[
           { key: "id", header: "Issue" },
@@ -234,10 +238,20 @@ export const KeyboardReachableScrollContainer: Story = {
       "[data-aurora-table-scroll-container]"
     ) as HTMLDivElement | null;
     await expect(scrollContainer).not.toBeNull();
+    await expect(scrollContainer).toHaveAttribute("role", "region");
     await expect(scrollContainer).toHaveAttribute("tabindex", "0");
+    await expect(scrollContainer).toHaveAttribute(
+      "aria-keyshortcuts",
+      "ArrowLeft ArrowRight Home End PageDown PageUp"
+    );
 
     await userEvent.tab();
     await expect(scrollContainer).toHaveFocus();
+    fireEvent.keyDown(scrollContainer as HTMLDivElement, { key: "ArrowRight" });
+    await expect((scrollContainer as HTMLDivElement).scrollLeft).toBeGreaterThan(0);
+    fireEvent.keyDown(scrollContainer as HTMLDivElement, { key: "Home" });
+    await expect((scrollContainer as HTMLDivElement).scrollLeft).toBe(0);
+
     await userEvent.tab();
     await expect(canvas.getByRole("button", { name: "After table" })).toHaveFocus();
   }
