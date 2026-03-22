@@ -382,6 +382,42 @@ describe("Drawer", () => {
     expect(dialog).not.toHaveAttribute("aria-labelledby");
   });
 
+  it("warns when non-text drawer title omits ariaLabel and ariaLabelledBy", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Drawer open onOpenChange={() => {}} title={<span aria-hidden>✅</span>}>
+          <p>Drawer content</p>
+        </Drawer>
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Drawer] Non-text title should provide ariaLabel or ariaLabelledBy."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn when non-text drawer title exposes inline aria-label", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Drawer open onOpenChange={() => {}} title={<span aria-label="Release checklist">✅</span>}>
+          <p>Drawer content</p>
+        </Drawer>
+      );
+
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        "[Drawer] Non-text title should provide ariaLabel or ariaLabelledBy."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("dismisses nested overlays from top layer first on Escape", () => {
     function NestedOverlayFixture() {
       const [open, setOpen] = React.useState(true);

@@ -54,6 +54,7 @@ export function Dialog({
   const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
   const closeButtonFocusIntentRef = React.useRef(true);
+  const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const panelRef = React.useRef<HTMLElement | null>(null);
   const [panelElement, setPanelElement] = React.useState<HTMLElement | null>(null);
   const resolvedCloseLabel =
@@ -70,6 +71,7 @@ export function Dialog({
     ariaLabel.trim().length > 0
       ? ariaLabel.trim()
       : undefined;
+  const hasExplicitDialogName = resolvedAriaLabel !== undefined || resolvedAriaLabelledBy !== undefined;
 
   const closeWithReason = React.useCallback(
     (reason: DialogCloseReason) => {
@@ -78,6 +80,25 @@ export function Dialog({
     },
     [onCloseReason, onOpenChange]
   );
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    if (getReadableDialogTextNode(title).length > 0 || hasExplicitDialogName) {
+      warnedMissingAriaLabelSignatureRef.current = null;
+      return;
+    }
+
+    const signature = "missing-dialog-name";
+    if (warnedMissingAriaLabelSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingAriaLabelSignatureRef.current = signature;
+
+    console.warn("[Dialog] Non-text title should provide ariaLabel or ariaLabelledBy.");
+  }, [hasExplicitDialogName, title]);
 
   React.useEffect(() => {
     if (!open || !panelElement) {
@@ -344,4 +365,49 @@ function isComposingDialogCloseButtonActivationEvent(
   }
 
   return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
+}
+
+function getReadableDialogTextNode(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return normalizeReadableDialogText(node);
+  }
+
+  if (typeof node === "number") {
+    return normalizeReadableDialogText(String(node));
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeReadableDialogText(
+      node
+        .map((item) => getReadableDialogTextNode(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  if (
+    typeof elementProps["aria-label"] === "string" &&
+    elementProps["aria-label"].trim().length > 0
+  ) {
+    return normalizeReadableDialogText(elementProps["aria-label"]);
+  }
+
+  return getReadableDialogTextNode(elementProps.children);
+}
+
+function normalizeReadableDialogText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }

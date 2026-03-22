@@ -110,6 +110,33 @@ export const LabelledByPrecedence: Story = {
   }
 };
 
+function IconTitleAriaLabelFallbackDrawerDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <Drawer
+        open={open}
+        onOpenChange={setOpen}
+        title={<span aria-hidden>⚙️</span>}
+        ariaLabel="Automation settings drawer"
+      >
+        <p style={storyParagraphStyle}>Icon-only title should keep explicit ariaLabel naming.</p>
+      </Drawer>
+    </StoryFullscreenFrame>
+  );
+}
+
+export const IconTitleAriaLabelFallback: Story = {
+  render: () => <IconTitleAriaLabelFallbackDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const drawer = await body.findByRole("dialog", { name: "Automation settings drawer" });
+    await expect(drawer).toHaveAttribute("aria-label", "Automation settings drawer");
+    await expect(drawer).not.toHaveAttribute("aria-labelledby");
+  }
+};
+
 function NonDismissibleDrawerDemo() {
   const [open, setOpen] = React.useState(true);
 

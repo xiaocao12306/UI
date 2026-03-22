@@ -113,6 +113,33 @@ export const LabelledByPrecedence: Story = {
   }
 };
 
+function IconTitleAriaLabelFallbackDialog() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryShowcaseFrame align="start">
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        title={<span aria-hidden>⚙️</span>}
+        ariaLabel="Automation settings dialog"
+      >
+        <p style={storyParagraphStyle}>Icon-only title should keep explicit ariaLabel naming.</p>
+      </Dialog>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const IconTitleAriaLabelFallback: Story = {
+  render: () => <IconTitleAriaLabelFallbackDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const dialog = await body.findByRole("dialog", { name: "Automation settings dialog" });
+    await expect(dialog).toHaveAttribute("aria-label", "Automation settings dialog");
+    await expect(dialog).not.toHaveAttribute("aria-labelledby");
+  }
+};
+
 function FocusReturnDialog() {
   const [open, setOpen] = React.useState(false);
 

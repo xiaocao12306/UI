@@ -47,6 +47,7 @@ export function Drawer({
   const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
   const closeButtonFocusIntentRef = React.useRef(true);
+  const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const panelRef = React.useRef<HTMLElement | null>(null);
   const [panelElement, setPanelElement] = React.useState<HTMLElement | null>(null);
   const resolvedCloseLabel =
@@ -63,6 +64,7 @@ export function Drawer({
     ariaLabel.trim().length > 0
       ? ariaLabel.trim()
       : undefined;
+  const hasExplicitDrawerName = resolvedAriaLabel !== undefined || resolvedAriaLabelledBy !== undefined;
 
   const closeWithReason = React.useCallback(
     (reason: DrawerCloseReason) => {
@@ -71,6 +73,25 @@ export function Drawer({
     },
     [onCloseReason, onOpenChange]
   );
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      return;
+    }
+
+    if (getReadableDrawerTextNode(title).length > 0 || hasExplicitDrawerName) {
+      warnedMissingAriaLabelSignatureRef.current = null;
+      return;
+    }
+
+    const signature = "missing-drawer-name";
+    if (warnedMissingAriaLabelSignatureRef.current === signature) {
+      return;
+    }
+    warnedMissingAriaLabelSignatureRef.current = signature;
+
+    console.warn("[Drawer] Non-text title should provide ariaLabel or ariaLabelledBy.");
+  }, [hasExplicitDrawerName, title]);
 
   React.useEffect(() => {
     if (!open || !panelElement) {
@@ -340,4 +361,49 @@ function isComposingDrawerCloseButtonActivationEvent(
   }
 
   return typeof nativeEvent.keyCode === "number" && nativeEvent.keyCode === 229;
+}
+
+function getReadableDrawerTextNode(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return normalizeReadableDrawerText(node);
+  }
+
+  if (typeof node === "number") {
+    return normalizeReadableDrawerText(String(node));
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeReadableDrawerText(
+      node
+        .map((item) => getReadableDrawerTextNode(item))
+        .filter((item) => item.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const elementProps = node.props as {
+    children?: React.ReactNode;
+    "aria-hidden"?: boolean | "true" | "false";
+    "aria-label"?: string;
+  };
+  if (elementProps["aria-hidden"] === true || elementProps["aria-hidden"] === "true") {
+    return "";
+  }
+
+  if (
+    typeof elementProps["aria-label"] === "string" &&
+    elementProps["aria-label"].trim().length > 0
+  ) {
+    return normalizeReadableDrawerText(elementProps["aria-label"]);
+  }
+
+  return getReadableDrawerTextNode(elementProps.children);
+}
+
+function normalizeReadableDrawerText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
 }

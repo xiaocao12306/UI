@@ -158,6 +158,42 @@ describe("Dialog", () => {
     expect(dialog).not.toHaveAttribute("aria-labelledby");
   });
 
+  it("warns when non-text dialog title omits ariaLabel and ariaLabelledBy", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dialog open onOpenChange={() => {}} title={<span aria-hidden>✅</span>}>
+          <p>Body</p>
+        </Dialog>
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Dialog] Non-text title should provide ariaLabel or ariaLabelledBy."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it("does not warn when non-text dialog title exposes inline aria-label", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    try {
+      render(
+        <Dialog open onOpenChange={() => {}} title={<span aria-label="Release checklist">✅</span>}>
+          <p>Body</p>
+        </Dialog>
+      );
+
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        "[Dialog] Non-text title should provide ariaLabel or ariaLabelledBy."
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it("connects dialog description via aria-describedby", () => {
     render(
       <Dialog

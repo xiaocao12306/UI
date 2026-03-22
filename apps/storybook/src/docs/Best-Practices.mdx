@@ -131,6 +131,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep `restoreFocus` enabled for dialogs unless product flow intentionally redirects focus after close.
 - Keep `restoreFocus` enabled for drawers unless closing should intentionally hand focus to a different target.
 - Prefer `ariaLabelledBy` for dialog/drawer naming when a visible heading already exists; use `ariaLabel` only for standalone/non-text titles without nearby heading context.
+- For icon/non-text dialog/drawer titles, provide `ariaLabelledBy` when a visible heading exists, otherwise provide `ariaLabel`; development builds warn when both naming paths are missing.
 - Keep close-button focus intent primary-only in dialog/drawer surfaces so non-primary pointer interactions (for example context/right-click) do not clear keyboard focus-visible feedback.
 - Keep dialog/drawer close-button keyboard pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); keep `aria-keyshortcuts="Enter Space"` visible for AT/QA discoverability, and ensure `Ctrl/Meta/Alt` chords plus IME composition key paths (`isComposing` / `keyCode=229`) do not trigger pressed visuals.
 - Keep dialog/drawer Escape shortcut hints explicit (`aria-keyshortcuts="Escape"`) only when `closeOnEscape` is enabled so dismiss affordance metadata matches runtime policy.
