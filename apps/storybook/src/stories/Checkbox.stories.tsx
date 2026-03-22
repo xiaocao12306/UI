@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, Checkbox } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const meta = {
   title: "Form/Checkbox",
@@ -150,6 +150,8 @@ export const FocusIntentReentry: Story = {
     await userEvent.click(beforeButton);
     await userEvent.tab();
     await expect(checkbox).toHaveFocus();
+    await expect(checkbox).toHaveAttribute("data-focus-visible", "true");
+    fireEvent.mouseDown(checkbox, { button: 0, ctrlKey: true });
     await expect(checkbox).toHaveAttribute("data-focus-visible", "true");
   }
 };

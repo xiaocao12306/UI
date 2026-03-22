@@ -195,6 +195,10 @@ export const FocusIntentReentry: Story = {
     await waitFor(() => {
       expect(target.style.boxShadow).toContain("0 0 0 3px");
     });
+    fireEvent.mouseDown(target, { button: 0, ctrlKey: true });
+    await waitFor(() => {
+      expect(target.style.boxShadow).toContain("0 0 0 3px");
+    });
   }
 };
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Badge, RadioGroup } from "@aurora-ui/react";
-import { expect, userEvent, within } from "@storybook/test";
+import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const options = [
   { label: "Small", value: "s", description: "Compact layout" },
@@ -148,6 +148,8 @@ export const FocusIntentReentry: Story = {
     await userEvent.click(beforeButton);
     await userEvent.tab();
     await expect(medium).toHaveFocus();
+    await expect(medium).toHaveAttribute("data-focus-visible", "true");
+    fireEvent.mouseDown(medium, { button: 0, ctrlKey: true });
     await expect(medium).toHaveAttribute("data-focus-visible", "true");
   }
 };

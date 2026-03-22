@@ -214,6 +214,13 @@ describe("Switch", () => {
 
       fireEvent.blur(control);
       secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0, ctrlKey: true })
+      );
+      fireEvent.focus(control);
+      expect(control).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(control);
+      secondaryDocument.dispatchEvent(
         new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
       );
       fireEvent.focus(control);

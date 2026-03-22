@@ -173,6 +173,13 @@ describe("Checkbox", () => {
 
       fireEvent.blur(checkbox);
       secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0, ctrlKey: true })
+      );
+      fireEvent.focus(checkbox);
+      expect(checkbox).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(checkbox);
+      secondaryDocument.dispatchEvent(
         new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
       );
       fireEvent.focus(checkbox);

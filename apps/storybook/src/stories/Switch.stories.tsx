@@ -267,5 +267,7 @@ export const FocusIntentReentry: Story = {
     await userEvent.tab();
     await expect(control).toHaveFocus();
     await expect(control).toHaveAttribute("data-focus-visible", "true");
+    fireEvent.mouseDown(control, { button: 0, ctrlKey: true });
+    await expect(control).toHaveAttribute("data-focus-visible", "true");
   }
 };

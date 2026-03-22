@@ -283,6 +283,13 @@ describe("Input", () => {
 
       fireEvent.blur(input);
       secondaryDocument.dispatchEvent(
+        new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0, ctrlKey: true })
+      );
+      fireEvent.focus(input);
+      expect(input).toHaveAttribute("data-focus-visible", "true");
+
+      fireEvent.blur(input);
+      secondaryDocument.dispatchEvent(
         new secondaryWindow.MouseEvent("mousedown", { bubbles: true, button: 0 })
       );
       fireEvent.focus(input);
