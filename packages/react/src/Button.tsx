@@ -316,6 +316,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       onKeyDown={(event) => {
         focusVisibleIntentRef.current = true;
         if (
+          !event.defaultPrevented &&
           !interactionDisabled &&
           !isComposingButtonActivationEvent(event) &&
           isButtonActivationKey(event.key) &&

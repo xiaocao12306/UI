@@ -49,6 +49,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep visible labels or accessible names for form controls.
 - For icon-only buttons, provide non-empty `aria-label` or `aria-labelledby` on the button itself; blank values are invalid, `aria-labelledby` stays canonical when both are present, inline child `aria-label` is treated as fallback only, and decorative glyph text should remain `aria-hidden`.
 - Keep button pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); ignore `Ctrl/Meta/Alt` chords and IME composition key paths (`isComposing` / `keyCode=229`) so host shortcuts and CJK confirmation do not flash pressed visuals.
+- When app-level shortcuts preempt button activation keydown with `preventDefault()`, keep button pressed feedback side-effect free.
 - Keep button keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Respect OS reduced-motion preferences: keep `GlobalStyles` mounted so surfaces tagged with `data-aurora-reduced-motion` disable shimmer/spin/indeterminate motion (Button loading spinner, Progress indeterminate bar, Skeleton shimmer) under `prefers-reduced-motion`, and keep timer-driven feedback (`LoadingDots`, `StreamingText`) on default `respectReducedMotion` behavior unless the product explicitly requires animated narration.
 - For progress bars, prefer `ariaLabelledBy` when a visible heading already exists; use `ariaLabel` (or `label` fallback) for standalone bars without nearby title context.
@@ -126,6 +127,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={DatePickerStories.BlankAriaLabelFallback} />
 <Canvas of={DatePickerStories.LabelledByPrecedence} />
 <Canvas of={ButtonStories.IconOnlyAccessibleName} />
+<Canvas of={ButtonStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={TooltipStories.DescribedByLifecycle} />
 <Canvas of={TooltipStories.NonTextTriggerNameFallback} />
 <Canvas of={TooltipStories.EscapeModifierGuard} />

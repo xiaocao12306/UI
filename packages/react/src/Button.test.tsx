@@ -247,6 +247,29 @@ describe("Button", () => {
     expect(button.getAttribute("style")).not.toContain("translateY(1px)");
   });
 
+  it("skips keyboard pressed feedback when activation keydown is preempted upstream", () => {
+    const preemptActivationKeys = (event: KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === " " || event.key === "Space" || event.key === "Spacebar") {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("keydown", preemptActivationKeys, true);
+
+    try {
+      render(<Button>Preempted activation</Button>);
+      const button = screen.getByRole("button", { name: "Preempted activation" });
+
+      fireEvent.keyDown(button, { key: "Enter" });
+      expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+
+      fireEvent.keyDown(button, { key: "Space" });
+      expect(button.getAttribute("style")).not.toContain("translateY(1px)");
+    } finally {
+      document.removeEventListener("keydown", preemptActivationKeys, true);
+    }
+  });
+
   it("only uses primary mouse button for pressed feedback lifecycle", () => {
     render(<Button>Primary Only</Button>);
     const button = screen.getByRole("button", { name: "Primary Only" });

@@ -169,6 +169,52 @@ export const KeyboardActivation: Story = {
   }
 };
 
+function ManagedKeysPreemptedButtonDemo() {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <div
+      onKeyDownCapture={(event) => {
+        if (event.key === "Enter" || event.key === " " || event.key === "Space" || event.key === "Spacebar") {
+          event.preventDefault();
+        }
+      }}
+    >
+      <StoryShowcaseFrame maxWidth="min(100%, 520px)" gap={10}>
+        <p style={storyMutedTextStyle}>
+          Activation count: <strong data-testid="button-preempted-activation-count">{count}</strong>
+        </p>
+        <Button onClick={() => setCount((value) => value + 1)}>Preempted Action</Button>
+      </StoryShowcaseFrame>
+    </div>
+  );
+}
+
+export const ManagedKeysPreemptedByGlobalHandler: Story = {
+  render: () => <ManagedKeysPreemptedButtonDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = await canvas.findByRole("button", { name: "Preempted Action" });
+
+    button.focus();
+    fireEvent.keyDown(button, { key: "Enter" });
+    await waitFor(() => {
+      expect(button.style.transform).not.toContain("translateY(1px)");
+    });
+    fireEvent.keyUp(button, { key: "Enter" });
+
+    fireEvent.keyDown(button, { key: "Space" });
+    await waitFor(() => {
+      expect(button.style.transform).not.toContain("translateY(1px)");
+    });
+    fireEvent.keyUp(button, { key: "Space" });
+    await expect(canvas.getByTestId("button-preempted-activation-count")).toHaveTextContent("0");
+
+    await userEvent.click(button);
+    await expect(canvas.getByTestId("button-preempted-activation-count")).toHaveTextContent("1");
+  }
+};
+
 function FocusIntentReentryDemo() {
   return (
     <StoryShowcaseFrame maxWidth="min(100%, 560px)" gap={10}>
