@@ -597,6 +597,50 @@ test("guards command palette dismiss through event hooks when enabled", async ({
   await expect(palette).toBeHidden();
 });
 
+test("preempts command palette Enter and Escape via local search key guard", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  const guardSwitch = page.getByRole("switch", {
+    name: "Guard palette Enter/Escape via local search hook"
+  });
+  const guardTelemetry = page.getByTestId("palette-local-key-guard-telemetry");
+
+  await expect(guardTelemetry).toHaveText("idle");
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  const palette = page.getByRole("dialog").filter({ hasText: "Command Palette" });
+  const searchInput = palette.getByRole("combobox", { name: "Search commands" });
+  await expect(palette).toBeVisible();
+
+  await searchInput.fill("drawer");
+  await searchInput.press("Enter");
+  await expect(guardTelemetry).toHaveText("blocked:Enter");
+  await expect(palette).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Drawer Example" })).toBeHidden();
+
+  await searchInput.press("Escape");
+  await expect(guardTelemetry).toHaveText("blocked:Escape");
+  await expect(palette).toBeVisible();
+
+  await palette.getByRole("button", { name: "Close dialog" }).click();
+  await expect(palette).toBeHidden();
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(guardTelemetry).toHaveText("idle");
+
+  await page.getByRole("button", { name: "Command Palette" }).click();
+  await expect(palette).toBeVisible();
+  await searchInput.fill("drawer");
+  await searchInput.press("Enter");
+  await expect(palette).toBeHidden();
+  await expect(page.getByRole("dialog", { name: "Drawer Example" })).toBeVisible();
+});
+
 test("keeps command palette open after command select in persistent mode", async ({ page }) => {
   await page.goto("/");
 
@@ -1130,6 +1174,42 @@ test("updates tabs telemetry when active tab changes", async ({ page }) => {
   await expect(telemetry).toHaveText("settings");
 });
 
+test("preempts tabs managed keys through local onTabKeyDown guard in lab panel", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  const guardSwitch = page.getByRole("switch", {
+    name: "Guard Tabs managed keys via local onTabKeyDown"
+  });
+  const telemetry = page.getByTestId("tabs-local-guard-telemetry");
+  const tablist = page.getByRole("tablist", { name: "Local guard lab tabs" });
+  const auditTab = tablist.getByRole("tab", { name: "Audit" });
+  const handoffTab = tablist.getByRole("tab", { name: "Handoff" });
+
+  await expect(telemetry).toHaveText("idle");
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await auditTab.focus();
+  await auditTab.press("ArrowRight");
+  await expect(auditTab).toBeFocused();
+  await expect(auditTab).toHaveAttribute("aria-selected", "true");
+  await expect(telemetry).toHaveText("blocked:ArrowRight");
+
+  await auditTab.press("Enter");
+  await expect(telemetry).toHaveText("blocked:Enter");
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(telemetry).toHaveText("idle");
+
+  await auditTab.focus();
+  await auditTab.press("ArrowRight");
+  await expect(handoffTab).toBeFocused();
+  await expect(handoffTab).toHaveAttribute("aria-selected", "true");
+});
+
 test("mirrors horizontal tab arrows in rtl layout", async ({ page }) => {
   await page.goto("/");
 
@@ -1154,7 +1234,7 @@ test("mirrors horizontal tab arrows in rtl layout", async ({ page }) => {
 test("sorts demo table from column headers", async ({ page }) => {
   await page.goto("/");
 
-  const table = page.getByRole("table");
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
   const componentColumn = table.getByRole("columnheader", { name: /Component/ });
   const statusColumn = table.getByRole("columnheader", { name: /Status/ });
   const componentSortButton = table.getByRole("button", { name: /Component/ });
@@ -1173,7 +1253,7 @@ test("sorts demo table from column headers", async ({ page }) => {
 test("updates table sort telemetry across click and keyboard sort paths", async ({ page }) => {
   await page.goto("/");
 
-  const table = page.getByRole("table");
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
   const telemetry = page.getByTestId("table-sort-telemetry");
   const statusSortAscending = table.getByRole("button", { name: "Status sort ascending" });
 
@@ -1187,10 +1267,42 @@ test("updates table sort telemetry across click and keyboard sort paths", async 
   await expect(telemetry).toHaveText("status:desc");
 });
 
+test("preempts table sort activation through local onSortKeyDown guard in lab panel", async ({
+  page
+}) => {
+  await page.goto("/");
+
+  const guardSwitch = page.getByRole("switch", {
+    name: "Guard table sort keys via local onSortKeyDown"
+  });
+  const guardTelemetry = page.getByTestId("table-local-guard-telemetry");
+  const sortTelemetry = page.getByTestId("table-local-sort-telemetry");
+  const table = page.getByRole("table", { name: "Local guard lab readiness table" });
+  const componentSortButton = table.getByRole("button", { name: "Component sort descending" });
+
+  await expect(guardTelemetry).toHaveText("idle");
+  await expect(sortTelemetry).toHaveText("component:asc");
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await componentSortButton.focus();
+  await componentSortButton.press("Enter");
+  await expect(guardTelemetry).toHaveText("blocked:Enter");
+  await expect(sortTelemetry).toHaveText("component:asc");
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(guardTelemetry).toHaveText("idle");
+
+  await componentSortButton.focus();
+  await componentSortButton.press("Enter");
+  await expect(sortTelemetry).toHaveText("component:desc");
+});
+
 test("navigates demo table sortable headers with ArrowLeft/ArrowRight", async ({ page }) => {
   await page.goto("/");
 
-  const table = page.getByRole("table");
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
   const telemetry = page.getByTestId("table-sort-telemetry");
   const componentSortDesc = table.getByRole("button", { name: "Component sort descending" });
   const statusSort = table.getByRole("button", { name: "Status sort ascending" });
@@ -1249,7 +1361,7 @@ test("mirrors demo table ArrowLeft/ArrowRight navigation in rtl mode", async ({ 
 test("sorts demo table with keyboard activation", async ({ page }) => {
   await page.goto("/");
 
-  const table = page.getByRole("table");
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
   const componentColumn = table.getByRole("columnheader", { name: /Component/ });
   const componentSortButton = table.getByRole("button", { name: /Component/ });
   const firstRow = table.locator("tbody tr").first();
@@ -1267,7 +1379,7 @@ test("sorts demo table with keyboard activation", async ({ page }) => {
 test("sorts demo table with Shift-modified keyboard activation", async ({ page }) => {
   await page.goto("/");
 
-  const table = page.getByRole("table");
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
   const telemetry = page.getByTestId("table-sort-telemetry");
   const componentColumn = table.getByRole("columnheader", { name: /Component/ });
   const componentSortButton = table.getByRole("button", { name: /Component/ });
@@ -1292,7 +1404,7 @@ test("sorts demo table with Shift-modified keyboard activation", async ({ page }
 test("keeps demo table sort stable for modified activation keys", async ({ page }) => {
   await page.goto("/");
 
-  const table = page.getByRole("table");
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
   const telemetry = page.getByTestId("table-sort-telemetry");
   const componentColumn = table.getByRole("columnheader", { name: /Component/ });
   const componentSortButton = table.getByRole("button", { name: /Component/ });
@@ -1316,7 +1428,7 @@ test("keeps demo table sort stable for modified activation keys", async ({ page 
 test("ignores repeated Space keydown when sorting demo table", async ({ page }) => {
   await page.goto("/");
 
-  const table = page.getByRole("table");
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
   const telemetry = page.getByTestId("table-sort-telemetry");
   const componentColumn = table.getByRole("columnheader", { name: /Component/ });
   const componentSortButton = table.getByRole("button", { name: /Component/ });
@@ -1341,7 +1453,7 @@ test("ignores repeated Space keydown when sorting demo table", async ({ page }) 
 test("ignores repeated Enter keydown when sorting demo table", async ({ page }) => {
   await page.goto("/");
 
-  const table = page.getByRole("table");
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
   const telemetry = page.getByTestId("table-sort-telemetry");
   const componentColumn = table.getByRole("columnheader", { name: /Component/ });
   const componentSortButton = table.getByRole("button", { name: /Component/ });
@@ -1389,7 +1501,7 @@ test("ignores table sort activation when only legacy IME keyCode is present", as
 test("sorts demo table with legacy Spacebar key event", async ({ page }) => {
   await page.goto("/");
 
-  const table = page.getByRole("table");
+  const table = page.getByRole("table", { name: "Component readiness metrics" });
   const componentColumn = table.getByRole("columnheader", { name: /Component/ });
   const componentSortButton = table.getByRole("button", { name: /Component/ });
   const firstRow = table.locator("tbody tr").first();
@@ -2450,6 +2562,37 @@ test("reports toast close reason telemetry for Escape, close button, and timeout
   await expect(page.getByRole("status").filter({ hasText: "Telemetry toast" })).toBeVisible();
   await expect(telemetry).toHaveText("timeout", { timeout: 6000 });
   await expect(traceTelemetry).toHaveText("reason:timeout -> open:false", { timeout: 6000 });
+});
+
+test("preempts telemetry toast close button Enter via local key guard hook", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: "Trigger telemetry toast" });
+  const guardSwitch = page.getByRole("switch", {
+    name: "Guard telemetry toast close Enter/Space via local hook"
+  });
+  const guardTelemetry = page.getByTestId("toast-close-button-guard-telemetry");
+  const closeButton = page.getByRole("button", { name: "Dismiss telemetry toast" });
+  const telemetryToast = page.getByRole("status").filter({ hasText: "Telemetry toast" });
+
+  await expect(guardTelemetry).toHaveText("idle");
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "true");
+
+  await trigger.click();
+  await expect(telemetryToast).toBeVisible();
+  await closeButton.focus();
+  await closeButton.press("Enter");
+  await expect(guardTelemetry).toHaveText("blocked:Enter");
+  await expect(telemetryToast).toBeVisible();
+
+  await guardSwitch.click();
+  await expect(guardSwitch).toHaveAttribute("aria-checked", "false");
+  await expect(guardTelemetry).toHaveText("idle");
+
+  await closeButton.focus();
+  await closeButton.press("Enter");
+  await expect(telemetryToast).toBeHidden();
 });
 
 test("renders actionable toast with dialog semantics and handles action click", async ({ page }) => {

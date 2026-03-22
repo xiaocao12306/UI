@@ -525,10 +525,21 @@ function App() {
   const [feedPage, setFeedPage] = React.useState(1);
   const [rtlFeedPage, setRtlFeedPage] = React.useState(4);
   const [topTabsValue, setTopTabsValue] = React.useState("overview");
+  const [tabsLocalGuardValue, setTabsLocalGuardValue] = React.useState("audit");
+  const [tabsLocalGuardEnabled, setTabsLocalGuardEnabled] = React.useState(false);
+  const [tabsLocalGuardTelemetry, setTabsLocalGuardTelemetry] = React.useState("idle");
   const [tableSortTelemetry, setTableSortTelemetry] = React.useState("component:asc");
+  const [tableLocalGuardEnabled, setTableLocalGuardEnabled] = React.useState(false);
+  const [tableLocalGuardTelemetry, setTableLocalGuardTelemetry] = React.useState("idle");
+  const [tableLocalSortTelemetry, setTableLocalSortTelemetry] = React.useState("component:asc");
   const [tableLoading, setTableLoading] = React.useState(false);
   const [tableEmpty, setTableEmpty] = React.useState(false);
   const [tableRtl, setTableRtl] = React.useState(false);
+  const [paletteLocalKeyGuardEnabled, setPaletteLocalKeyGuardEnabled] = React.useState(false);
+  const [paletteLocalKeyGuardTelemetry, setPaletteLocalKeyGuardTelemetry] = React.useState("idle");
+  const [toastCloseButtonGuardEnabled, setToastCloseButtonGuardEnabled] = React.useState(false);
+  const [toastCloseButtonGuardTelemetry, setToastCloseButtonGuardTelemetry] =
+    React.useState("idle");
   const feedPageSize = 3;
   const feedPageCount = Math.ceil(releaseFeed.length / feedPageSize);
   const visibleFeed = releaseFeed.slice((feedPage - 1) * feedPageSize, feedPage * feedPageSize);
@@ -1332,6 +1343,142 @@ function App() {
                   />
                 </div>
               </div>
+              <div className="demo-panel">
+                <div className="demo-panel-header">
+                  <h3 style={panelTitleStyle}>Keyboard Guard Lab</h3>
+                  <p style={panelDescriptionStyle}>
+                    Validate local managed-key preemption hooks before they enter host shortcut
+                    workflows.
+                  </p>
+                </div>
+                <div className="demo-control-stack">
+                  <Switch
+                    checked={tabsLocalGuardEnabled}
+                    onCheckedChange={(checked) => {
+                      setTabsLocalGuardEnabled(checked);
+                      if (!checked) {
+                        setTabsLocalGuardTelemetry("idle");
+                      }
+                    }}
+                    label="Guard Tabs managed keys via local onTabKeyDown"
+                    description="Preempt Arrow/Enter/Space managed handling when enabled."
+                  />
+                  <Tabs
+                    ariaLabel="Local guard lab tabs"
+                    value={tabsLocalGuardValue}
+                    onValueChange={setTabsLocalGuardValue}
+                    onTabKeyDown={(event) => {
+                      if (!tabsLocalGuardEnabled) {
+                        return;
+                      }
+
+                      if (
+                        event.key === "ArrowRight" ||
+                        event.key === "ArrowLeft" ||
+                        event.key === "ArrowUp" ||
+                        event.key === "ArrowDown" ||
+                        event.key === "Enter" ||
+                        event.key === " " ||
+                        event.key === "Spacebar"
+                      ) {
+                        event.preventDefault();
+                        setTabsLocalGuardTelemetry(
+                          `blocked:${event.key === " " ? "Space" : event.key}`
+                        );
+                      }
+                    }}
+                    items={[
+                      {
+                        key: "audit",
+                        label: "Audit",
+                        content: (
+                          <p style={{ margin: 0 }}>
+                            Managed keys are intercepted locally before tab roving/activation.
+                          </p>
+                        )
+                      },
+                      {
+                        key: "handoff",
+                        label: "Handoff",
+                        content: (
+                          <p style={{ margin: 0 }}>
+                            Disable the guard to restore default Arrow/Enter keyboard behavior.
+                          </p>
+                        )
+                      }
+                    ]}
+                  />
+                  <div className="demo-telemetry-grid">
+                    <p style={mutedBodyStyle}>
+                      Tabs local guard telemetry:{" "}
+                      <strong data-testid="tabs-local-guard-telemetry" style={telemetryValueStyle}>
+                        {tabsLocalGuardTelemetry}
+                      </strong>
+                    </p>
+                  </div>
+
+                  <Switch
+                    checked={tableLocalGuardEnabled}
+                    onCheckedChange={(checked) => {
+                      setTableLocalGuardEnabled(checked);
+                      if (!checked) {
+                        setTableLocalGuardTelemetry("idle");
+                      }
+                    }}
+                    label="Guard table sort keys via local onSortKeyDown"
+                    description="Preempt sortable header navigation/activation keys when enabled."
+                  />
+                  <Table
+                    ariaLabel="Local guard lab readiness table"
+                    defaultSortKey="component"
+                    onSortChange={(key, direction) => setTableLocalSortTelemetry(`${key}:${direction}`)}
+                    onSortKeyDown={(event) => {
+                      if (!tableLocalGuardEnabled) {
+                        return;
+                      }
+
+                      if (
+                        event.key === "ArrowRight" ||
+                        event.key === "ArrowLeft" ||
+                        event.key === "Home" ||
+                        event.key === "End" ||
+                        event.key === "PageDown" ||
+                        event.key === "PageUp" ||
+                        event.key === "Enter" ||
+                        event.key === " " ||
+                        event.key === "Spacebar"
+                      ) {
+                        event.preventDefault();
+                        setTableLocalGuardTelemetry(
+                          `blocked:${event.key === " " ? "Space" : event.key}`
+                        );
+                      }
+                    }}
+                    columns={[
+                      { key: "component", header: "Component", sortable: true, rowHeader: true },
+                      { key: "status", header: "Status", sortable: true }
+                    ]}
+                    data={readinessRows}
+                  />
+                  <div className="demo-telemetry-grid">
+                    <p style={mutedBodyStyle}>
+                      Table local guard telemetry:{" "}
+                      <strong data-testid="table-local-guard-telemetry" style={telemetryValueStyle}>
+                        {tableLocalGuardTelemetry}
+                      </strong>
+                    </p>
+                    <p style={mutedBodyStyle}>
+                      Table local sort telemetry:{" "}
+                      <strong
+                        data-testid="table-local-sort-telemetry"
+                        style={telemetryValueStyle}
+                      >
+                        {tableLocalSortTelemetry}
+                      </strong>
+                    </p>
+                  </div>
+                </div>
+              </div>
               <div className="demo-two-column">
                 <div className="demo-panel">
                   <div className="demo-panel-header">
@@ -1519,6 +1666,17 @@ function App() {
                   label="Guard prompt toast Escape at toast layer"
                   description="Uses Toast onEscapeKeyDown + preventDefault() while enabled."
                 />
+                <Switch
+                  checked={toastCloseButtonGuardEnabled}
+                  onCheckedChange={(checked) => {
+                    setToastCloseButtonGuardEnabled(checked);
+                    if (!checked) {
+                      setToastCloseButtonGuardTelemetry("idle");
+                    }
+                  }}
+                  label="Guard telemetry toast close Enter/Space via local hook"
+                  description="Uses onCloseButtonKeyDown + preventDefault() while enabled."
+                />
                 <div className="demo-telemetry-grid">
                   <p style={mutedBodyStyle}>
                     Toast close reason telemetry:{" "}
@@ -1536,6 +1694,15 @@ function App() {
                     Action toast handled count:{" "}
                     <strong data-testid="action-toast-handled-count" style={telemetryValueStyle}>
                       {actionToastHandledCount}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Toast close-button local guard telemetry:{" "}
+                    <strong
+                      data-testid="toast-close-button-guard-telemetry"
+                      style={telemetryValueStyle}
+                    >
+                      {toastCloseButtonGuardTelemetry}
                     </strong>
                   </p>
                 </div>
@@ -1759,6 +1926,17 @@ function App() {
                     description="Use onEscapeKeyDown/onPointerDownOutside with preventDefault() while enabled."
                   />
                   <Switch
+                    checked={paletteLocalKeyGuardEnabled}
+                    onCheckedChange={(checked) => {
+                      setPaletteLocalKeyGuardEnabled(checked);
+                      if (!checked) {
+                        setPaletteLocalKeyGuardTelemetry("idle");
+                      }
+                    }}
+                    label="Guard palette Enter/Escape via local search hook"
+                    description="Uses onSearchKeyDown + preventDefault() while enabled."
+                  />
+                  <Switch
                     checked={paletteLoading}
                     onCheckedChange={setPaletteLoading}
                     label="Simulate command loading state"
@@ -1797,6 +1975,15 @@ function App() {
                     Palette close trace:{" "}
                     <strong data-testid="palette-close-trace-demo" style={telemetryValueStyle}>
                       {paletteCloseTrace}
+                    </strong>
+                  </p>
+                  <p style={mutedBodyStyle}>
+                    Palette local key guard telemetry:{" "}
+                    <strong
+                      data-testid="palette-local-key-guard-telemetry"
+                      style={telemetryValueStyle}
+                    >
+                      {paletteLocalKeyGuardTelemetry}
                     </strong>
                   </p>
                 </div>
@@ -1899,6 +2086,16 @@ function App() {
             loadingContent="Syncing command index..."
             onQueryChange={setPaletteQueryTelemetry}
             onCloseReason={handlePaletteCloseReason}
+            onSearchKeyDown={(event) => {
+              if (!paletteLocalKeyGuardEnabled) {
+                return;
+              }
+
+              if (event.key === "Enter" || event.key === "Escape") {
+                event.preventDefault();
+                setPaletteLocalKeyGuardTelemetry(`blocked:${event.key}`);
+              }
+            }}
             onEscapeKeyDown={(event) => {
               if (paletteDismissGuard) {
                 event.preventDefault();
@@ -1970,6 +2167,18 @@ function App() {
             pauseOnHover={false}
             closeLabel="Dismiss telemetry toast"
             position="bottom-left"
+            onCloseButtonKeyDown={(event) => {
+              if (!toastCloseButtonGuardEnabled) {
+                return;
+              }
+
+              if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+                event.preventDefault();
+                setToastCloseButtonGuardTelemetry(
+                  `blocked:${event.key === " " ? "Space" : event.key}`
+                );
+              }
+            }}
           />
           <Toast
             open={actionToastOpen}
