@@ -47,6 +47,24 @@ describe("FormField", () => {
     expect(screen.getByRole("alert").id).toBe(errorMessageId);
   });
 
+  it("treats numeric description and error nodes as renderable semantic content", () => {
+    render(
+      <FormField label="Retry attempts" description={0} error={0}>
+        <Input />
+      </FormField>
+    );
+
+    const input = screen.getByRole("textbox", { name: "Retry attempts" });
+    const describedBy = input.getAttribute("aria-describedby") ?? "";
+    const errorMessageId = input.getAttribute("aria-errormessage");
+
+    expect(screen.getAllByText("0")).toHaveLength(2);
+    expect(screen.getByRole("alert")).toHaveTextContent("0");
+    expect(input).toHaveAttribute("aria-invalid", "true");
+    expect(describedBy.split(" ").length).toBe(2);
+    expect(errorMessageId).toBe(screen.getByRole("alert").id);
+  });
+
   it("propagates disabled state to child control", () => {
     render(
       <FormField label="Disabled field" disabled>

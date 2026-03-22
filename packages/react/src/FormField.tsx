@@ -16,11 +16,13 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const labelId = React.useId();
   const describedById = React.useId();
   const errorId = React.useId();
+  const hasDescriptionContent = hasRenderableNode(description);
+  const hasErrorContent = hasRenderableNode(error);
   const canCloneControl = React.isValidElement(children) && typeof children.type !== "symbol";
   const childProps = canCloneControl ? (children.props as Record<string, unknown>) : undefined;
   const childControlId = canCloneControl ? (childProps?.id as string | undefined) : undefined;
   const controlId = htmlFor ?? childControlId ?? (canCloneControl ? generatedInputId : undefined);
-  const isInvalid = Boolean(error);
+  const isInvalid = hasErrorContent;
   const childDisabled = typeof childProps?.disabled === "boolean" ? childProps.disabled : undefined;
   const mergedDisabled = Boolean(disabled || childDisabled);
   const childDescribedBy = childProps?.["aria-describedby"] as string | undefined;
@@ -45,8 +47,12 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const mergedRequired = Boolean(required || childRequired);
   const childInvalidAria = resolveInvalidAria(undefined, childInvalid);
   const mergedInvalidAria = isInvalid ? true : childInvalidAria;
-  const mergedDescribedBy = mergeAriaReferenceIds(childDescribedBy, description ? describedById : undefined, error ? errorId : undefined);
-  const mergedErrorMessage = mergeAriaReferenceIds(childErrorMessage, error ? errorId : undefined);
+  const mergedDescribedBy = mergeAriaReferenceIds(
+    childDescribedBy,
+    hasDescriptionContent ? describedById : undefined,
+    hasErrorContent ? errorId : undefined
+  );
+  const mergedErrorMessage = mergeAriaReferenceIds(childErrorMessage, hasErrorContent ? errorId : undefined);
   const mergedLabelledBy = resolvedChildAriaLabel
     ? resolvedChildLabelledBy
     : mergeAriaReferenceIds(resolvedChildLabelledBy, labelId);
@@ -132,7 +138,7 @@ export function FormField({ label, htmlFor, description, error, required, disabl
 
       <div>{control}</div>
 
-      {description ? (
+      {hasDescriptionContent ? (
         <small
           id={describedById}
           style={{
@@ -145,7 +151,7 @@ export function FormField({ label, htmlFor, description, error, required, disabl
         </small>
       ) : null}
 
-      {error ? (
+      {hasErrorContent ? (
         <small
           id={errorId}
           role="alert"
@@ -156,6 +162,26 @@ export function FormField({ label, htmlFor, description, error, required, disabl
       ) : null}
     </div>
   );
+}
+
+function hasRenderableNode(node: React.ReactNode): boolean {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return false;
+  }
+
+  if (typeof node === "string") {
+    return node.trim().length > 0;
+  }
+
+  if (typeof node === "number") {
+    return true;
+  }
+
+  if (Array.isArray(node)) {
+    return node.some((item) => hasRenderableNode(item));
+  }
+
+  return React.isValidElement(node);
 }
 
 function extractReadableText(node: React.ReactNode): string {

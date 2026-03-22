@@ -159,3 +159,27 @@ export const NonTextLabelNameFallback: Story = {
     await expect(ariaLabelInput).toHaveAttribute("aria-label", "Experiment channel");
   }
 };
+
+export const NumericMessageSemantics: Story = {
+  render: () => (
+    <div style={{ width: 520 }}>
+      <FormField label="Retry attempts" description={0} error={0}>
+        <Input />
+      </FormField>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox", { name: "Retry attempts" });
+    const describedBy = input.getAttribute("aria-describedby") ?? "";
+    const errorMessage = input.getAttribute("aria-errormessage");
+    const [description, alert] = canvas.getAllByText("0");
+
+    await expect(description.tagName).toBe("SMALL");
+    await expect(alert).toHaveAttribute("role", "alert");
+    await expect(input).toHaveAttribute("aria-invalid", "true");
+    await expect(describedBy.split(" ").filter(Boolean)).toContain(description.id);
+    await expect(describedBy.split(" ").filter(Boolean)).toContain(alert.id);
+    await expect(errorMessage).toBe(alert.id);
+  }
+};
