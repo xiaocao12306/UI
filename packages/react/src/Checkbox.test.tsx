@@ -83,6 +83,25 @@ describe("Checkbox", () => {
     expect(checkbox).toHaveAttribute("aria-checked", "mixed");
   });
 
+  it("falls back invalid runtime disabled/indeterminate values to actionable non-mixed state", () => {
+    render(
+      <Checkbox
+        label="Runtime boolean checkbox"
+        disabled={"true" as unknown as boolean}
+        indeterminate={"true" as unknown as boolean}
+      />
+    );
+    const checkbox = screen.getByRole("checkbox", { name: "Runtime boolean checkbox" }) as HTMLInputElement;
+
+    expect(checkbox).not.toBeDisabled();
+    expect(checkbox).not.toHaveAttribute("aria-checked", "mixed");
+    expect(checkbox.indeterminate).toBe(false);
+    expect(checkbox).toHaveAttribute("aria-keyshortcuts", "Space");
+
+    fireEvent.click(checkbox);
+    expect(checkbox).toBeChecked();
+  });
+
   it("forwards focus and change handlers", () => {
     const onFocus = vi.fn();
     const onBlur = vi.fn();

@@ -8,6 +8,14 @@ export type CheckboxProps = Omit<React.ComponentPropsWithoutRef<"input">, "type"
   indeterminate?: boolean;
 };
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
   {
     label,
@@ -38,7 +46,9 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
   const labelId = React.useId();
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
-  const isInteractionDisabled = Boolean(disabled);
+  const resolvedDisabled = resolveBooleanFlag(disabled, false);
+  const resolvedIndeterminate = resolveBooleanFlag(indeterminate, false);
+  const isInteractionDisabled = resolvedDisabled;
   const hasLabelContent = hasRenderableCheckboxNode(label);
   const hasDescriptionContent = hasRenderableCheckboxNode(description);
   const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
@@ -115,9 +125,9 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
 
   React.useEffect(() => {
     if (localRef.current) {
-      localRef.current.indeterminate = indeterminate;
+      localRef.current.indeterminate = resolvedIndeterminate;
     }
-  }, [indeterminate]);
+  }, [resolvedIndeterminate]);
 
   const assignRef = React.useCallback(
     (node: HTMLInputElement | null) => {
@@ -139,8 +149,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
         gap: 10,
         color: "var(--aurora-text-primary)",
         fontSize: "var(--aurora-font-size-sm)",
-        cursor: disabled ? "not-allowed" : "pointer",
-        opacity: disabled ? 0.75 : 1,
+        cursor: resolvedDisabled ? "not-allowed" : "pointer",
+        opacity: resolvedDisabled ? 0.75 : 1,
         ...style
       }}
     >
@@ -148,11 +158,11 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
         {...restProps}
         ref={assignRef}
         type="checkbox"
-        disabled={disabled}
+        disabled={resolvedDisabled}
         aria-label={ariaLabel}
         aria-labelledby={labelledBy}
         aria-invalid={resolvedInvalidAria}
-        aria-checked={indeterminate ? "mixed" : restProps["aria-checked"]}
+        aria-checked={resolvedIndeterminate ? "mixed" : restProps["aria-checked"]}
         aria-describedby={describedBy}
         aria-keyshortcuts={ariaKeyShortcuts}
         data-focused={focused ? "true" : undefined}
@@ -162,7 +172,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(functi
           width: 16,
           height: 16,
           accentColor: isInvalid ? "var(--aurora-color-red-500)" : "var(--aurora-accent-default)",
-          cursor: disabled ? "not-allowed" : "pointer",
+          cursor: resolvedDisabled ? "not-allowed" : "pointer",
           boxShadow: focused && focusVisible && !isInteractionDisabled
             ? `0 0 0 3px ${isInvalid ? "color-mix(in srgb, var(--aurora-color-red-500) 24%, transparent)" : "color-mix(in srgb, var(--aurora-accent-default) 24%, transparent)"}`
             : "none"

@@ -2,6 +2,7 @@ import { Meta, Title, Subtitle, Description, Canvas } from "@storybook/blocks";
 import * as ButtonStories from "../stories/Button.stories";
 import * as FormFieldStories from "../stories/FormField.stories";
 import * as InputStories from "../stories/Input.stories";
+import * as CheckboxStories from "../stories/Checkbox.stories";
 import * as ComboboxStories from "../stories/Combobox.stories";
 import * as DatePickerStories from "../stories/DatePicker.stories";
 import * as DialogStories from "../stories/Dialog.stories";
@@ -69,6 +70,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For icon/non-text FormField labels, provide control-level `aria-labelledby` when a visible heading exists, otherwise provide `aria-label`; rich label nodes with inline `aria-label` are auto-detected, and development builds warn when control naming is still missing.
 - Treat blank input `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank checkbox `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
+- Normalize checkbox runtime boolean config from CMS/JSON payloads before binding props: malformed `disabled/indeterminate` values should degrade to `false` so toggle and mixed-state semantics remain deterministic.
 - Keep checkbox shortcut hints precise: expose `aria-keyshortcuts="Space"` only while actionable, and remove shortcut metadata when checkbox is disabled.
 - For icon/non-text checkbox labels, provide `aria-labelledby` when a visible heading exists, otherwise provide `aria-label`; rich label content with inline `aria-label` is auto-detected, and development builds warn when naming is still missing.
 - Keep checkbox helper text in `description`; it is exposed through `aria-describedby` and should not be relied on as the checkbox name source.
@@ -145,6 +147,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={FormFieldStories.LabelledByPrecedence} />
 <Canvas of={FormFieldStories.NonTextLabelNameFallback} />
 <Canvas of={InputStories.BlankAriaLabelFallback} />
+<Canvas of={CheckboxStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={InputStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={InputStories.ManagedKeysPreemptedByLocalHandler} />
 <Canvas of={InputStories.RuntimeBooleanConfigNormalization} />

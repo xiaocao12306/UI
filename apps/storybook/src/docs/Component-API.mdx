@@ -144,7 +144,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | Prop                                  | Type                                         | Notes                                                                                                                                                                                              |
 | ------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `checked` / `defaultChecked`          | `boolean`                                    | Native checkbox controlled/uncontrolled behavior.                                                                                                                                                  |
-| `indeterminate`                       | `boolean`                                    | Sets mixed state semantics (`aria-checked="mixed"`).                                                                                                                                               |
+| `indeterminate`                       | `boolean`                                    | Sets mixed state semantics (`aria-checked="mixed"`). Non-boolean runtime values fall back to `false` so malformed config does not silently lock mixed state.                                     |
 | keyboard shortcut hints               | default `aria-keyshortcuts="Space"`          | Actionable checkboxes expose `Space` shortcut metadata for QA/AT discoverability; disabled checkboxes omit hints so metadata never advertises unavailable keyboard actions.                         |
 | `description`                         | `ReactNode`                                  | Automatically wires helper text into `aria-describedby` while keeping checkbox naming anchored to `label`/explicit aria naming.                                                                  |
 | `aria-label` / `aria-labelledby`      | `string`                                     | Optional explicit naming; blank values are ignored, and `aria-labelledby` takes precedence when both are provided. Rich label nodes with inline `aria-label` are auto-detected before development warnings for non-text naming gaps. |
@@ -154,6 +154,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 
 <Canvas of={CheckboxStories.InvalidAndDisabled} />
 <Canvas of={CheckboxStories.ShortcutHintPrecision} />
+<Canvas of={CheckboxStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={CheckboxStories.LabelledByPrecedence} />
 <Canvas of={CheckboxStories.IconLabelledByPrecedence} />
 <Canvas of={CheckboxStories.FocusIntentReentry} />

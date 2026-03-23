@@ -106,6 +106,31 @@ export const ShortcutHintPrecision: Story = {
   }
 };
 
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => (
+    <div style={{ width: 320, display: "grid", gap: 14 }}>
+      <Checkbox
+        label="Runtime boolean checkbox"
+        description="Invalid runtime booleans should degrade to actionable, non-mixed checkbox behavior."
+        disabled={"true" as unknown as boolean}
+        indeterminate={"true" as unknown as boolean}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole("checkbox", { name: /^Runtime boolean checkbox/ }) as HTMLInputElement;
+
+    await expect(checkbox).not.toBeDisabled();
+    await expect(checkbox).not.toHaveAttribute("aria-checked", "mixed");
+    await expect(checkbox).toHaveAttribute("aria-keyshortcuts", "Space");
+    await expect(checkbox.indeterminate).toBe(false);
+
+    await userEvent.click(checkbox);
+    await expect(checkbox).toBeChecked();
+  }
+};
+
 export const LabelledByPrecedence: Story = {
   render: () => (
     <div style={{ width: 320, display: "grid", gap: 10 }}>
