@@ -222,6 +222,10 @@ export function Table<T>({
       return count === 0 ? key : `${key}__duplicate-${count}`;
     });
   }, [columns]);
+  const resolvedColumnWidths = React.useMemo(
+    () => columns.map((column) => resolveTableColumnWidth(column.width)),
+    [columns]
+  );
   const [sortState, setSortState] = React.useState<{
     key: string;
     direction: TableSortDirection;
@@ -784,7 +788,7 @@ export function Table<T>({
                     padding: "10px 12px",
                     fontSize: "var(--aurora-font-size-sm)",
                     fontWeight: "var(--aurora-font-weight-medium)",
-                    width: column.width
+                    width: resolvedColumnWidths[columnIndex]
                   }}
                 >
                   {sortable ? (
@@ -1237,6 +1241,25 @@ function resolveTableMinWidth(minTableWidth: number | string | undefined) {
   }
 
   return 560;
+}
+
+function resolveTableColumnWidth(width: number | string | undefined) {
+  if (typeof width === "number") {
+    if (Number.isFinite(width) && width >= 0) {
+      return width;
+    }
+
+    return undefined;
+  }
+
+  if (typeof width === "string") {
+    const normalizedWidth = width.trim();
+    if (normalizedWidth.length > 0) {
+      return normalizedWidth;
+    }
+  }
+
+  return undefined;
 }
 
 function hasRenderableNode(node: React.ReactNode): boolean {

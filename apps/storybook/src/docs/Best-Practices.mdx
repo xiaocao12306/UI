@@ -491,6 +491,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For empty datasets, use meaningful `emptyContent`; table announces it through polite live status narration.
 - Treat single-row tables as non-sortable UI at runtime; built-in sort controls are auto-disabled to prevent no-op telemetry and redundant keyboard stops.
 - Prefer `minTableWidth` over wrapper-level hardcoded widths when tuning compact table embeds; keep a readable minimum that matches your layout so non-overflow scenarios do not accidentally turn into keyboard-pannable overflow regions.
+- Keep `columns[].width` finite and intentional: non-finite numeric values and blank strings are ignored by the table to prevent unstable `NaNpx`/empty width styling in production.
 - When sorting is unavailable, expose table scroll region tab stop (`role="region" + tabIndex=0`) only while horizontal overflow exists; keep Arrow/Home/End/Page keyboard panning and shortcut hints aligned to that overflow-only affordance so non-overflow layouts do not add dead-end tab stops.
 - In RTL layouts, mirror scroll-region Arrow/Home/End mappings so keyboard panning follows visual direction instead of LTR coordinate assumptions.
 - When app-level shortcuts preempt keydown with `preventDefault()`, keep scroll-region Arrow/Home/End/Page handlers side-effect free so host shortcut guards remain authoritative.

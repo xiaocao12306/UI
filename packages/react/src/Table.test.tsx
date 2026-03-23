@@ -91,6 +91,40 @@ describe("Table", () => {
     expect(screen.getByRole("table", { name: "Data table" })).toHaveStyle({ minWidth: "560px" });
   });
 
+  it("supports column width configuration and ignores invalid width values", () => {
+    const { rerender } = render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", width: Number.NaN },
+          { key: "status", header: "Status", width: "   " }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("columnheader", { name: "Name" }).style.width).toBe("");
+    expect(screen.getByRole("columnheader", { name: "Status" }).style.width).toBe("");
+
+    rerender(
+      <Table
+        columns={[
+          { key: "name", header: "Name", width: 180.5 },
+          { key: "status", header: "Status", width: "12rem" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("columnheader", { name: "Name" })).toHaveStyle({ width: "180.5px" });
+    expect(screen.getByRole("columnheader", { name: "Status" })).toHaveStyle({ width: "12rem" });
+  });
+
   it("supports row-header cells for row identity semantics", () => {
     render(
       <Table
