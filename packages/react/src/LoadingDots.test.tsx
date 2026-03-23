@@ -32,6 +32,51 @@ describe("LoadingDots", () => {
     vi.useRealTimers();
   });
 
+  it("falls back to default interval and dotCount when non-finite values are provided", () => {
+    vi.useFakeTimers();
+
+    render(<LoadingDots interval={Number.NaN} dotCount={Number.POSITIVE_INFINITY} />);
+    const dots = screen.getByRole("status", { name: "Loading" });
+    expect(dots.textContent).toBe(".  ");
+
+    act(() => {
+      vi.advanceTimersByTime(279);
+    });
+    expect(dots.textContent).toBe(".  ");
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(dots.textContent).toBe(".. ");
+
+    vi.useRealTimers();
+  });
+
+  it("normalizes non-integer dotCount to stable integer animation steps", () => {
+    vi.useFakeTimers();
+
+    render(<LoadingDots interval={120} dotCount={3.9} />);
+    const dots = screen.getByRole("status", { name: "Loading" });
+    expect(dots.textContent).toBe(".  ");
+
+    act(() => {
+      vi.advanceTimersByTime(120);
+    });
+    expect(dots.textContent).toBe(".. ");
+
+    act(() => {
+      vi.advanceTimersByTime(120);
+    });
+    expect(dots.textContent).toBe("...");
+
+    act(() => {
+      vi.advanceTimersByTime(120);
+    });
+    expect(dots.textContent).toBe(".  ");
+
+    vi.useRealTimers();
+  });
+
   it("supports paused branch and live override", () => {
     render(<LoadingDots running={false} dotCount={4} live="off" />);
     const dots = screen.getByRole("status", { name: "Loading" });

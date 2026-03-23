@@ -16,6 +16,22 @@ function clampDotCount(dotCount: number) {
   return Math.min(Math.max(dotCount, 2), 6);
 }
 
+function resolveDotCount(dotCount: number, fallback: number) {
+  if (!Number.isFinite(dotCount)) {
+    return fallback;
+  }
+
+  return clampDotCount(Math.trunc(dotCount));
+}
+
+function resolveInterval(interval: number, fallback: number) {
+  if (!Number.isFinite(interval)) {
+    return fallback;
+  }
+
+  return Math.max(80, Math.trunc(interval));
+}
+
 export function LoadingDots({
   label = "Loading",
   ariaLabel,
@@ -30,7 +46,8 @@ export function LoadingDots({
 }: LoadingDotsProps) {
   const rootRef = React.useRef<HTMLSpanElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion(rootRef);
-  const safeDotCount = clampDotCount(dotCount);
+  const safeDotCount = resolveDotCount(dotCount, 3);
+  const safeInterval = resolveInterval(interval, 280);
   const shouldAnimate = running && !(respectReducedMotion && prefersReducedMotion);
   const resolvedLabel =
     typeof label === "string" && label.trim().length > 0
@@ -61,12 +78,12 @@ export function LoadingDots({
     const ownerWindow = rootRef.current?.ownerDocument.defaultView ?? window;
     const id = ownerWindow.setInterval(() => {
       setIndex((prev) => (prev + 1) % safeDotCount);
-    }, Math.max(80, interval));
+    }, safeInterval);
 
     return () => {
       ownerWindow.clearInterval(id);
     };
-  }, [interval, safeDotCount, shouldAnimate]);
+  }, [safeDotCount, safeInterval, shouldAnimate]);
 
   const visibleLength = shouldAnimate ? index + 1 : safeDotCount;
   const dotText = ".".repeat(visibleLength).padEnd(safeDotCount, " ");
