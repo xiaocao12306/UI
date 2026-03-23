@@ -74,6 +74,33 @@ export const InheritedControlSemantics: Story = {
   }
 };
 
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => (
+    <div style={{ width: 520 }}>
+      <FormField
+        label="Runtime boolean fallback field"
+        required={"true" as unknown as boolean}
+        disabled={"true" as unknown as boolean}
+        description="Invalid runtime booleans should degrade to optional + actionable field semantics."
+      >
+        <Input />
+      </FormField>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox", { name: "Runtime boolean fallback field" });
+    const wrapper = canvas.getByText("Runtime boolean fallback field").closest("div");
+
+    await expect(input).not.toBeDisabled();
+    await expect(input).not.toHaveAttribute("required");
+    await expect(input).not.toHaveAttribute("aria-required");
+    await expect(wrapper).not.toHaveAttribute("aria-disabled");
+    await expect(wrapper).not.toHaveAttribute("data-disabled");
+    await expect(canvas.queryByText("*")).not.toBeInTheDocument();
+  }
+};
+
 export const ExternalControlAssociation: Story = {
   render: () => (
     <div style={{ width: 520 }}>

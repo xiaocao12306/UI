@@ -78,6 +78,28 @@ describe("FormField", () => {
     expect(screen.getByText("Disabled field").closest("div")).toHaveAttribute("data-disabled", "true");
   });
 
+  it("falls back invalid runtime required/disabled values to optional actionable semantics", () => {
+    render(
+      <FormField
+        label="Runtime boolean fallback field"
+        required={"true" as unknown as boolean}
+        disabled={"true" as unknown as boolean}
+      >
+        <Input />
+      </FormField>
+    );
+
+    const input = screen.getByRole("textbox", { name: "Runtime boolean fallback field" });
+    const wrapper = screen.getByText("Runtime boolean fallback field").closest("div");
+
+    expect(input).not.toBeDisabled();
+    expect(input).not.toHaveAttribute("required");
+    expect(input).not.toHaveAttribute("aria-required");
+    expect(wrapper).not.toHaveAttribute("aria-disabled");
+    expect(wrapper).not.toHaveAttribute("data-disabled");
+    expect(screen.queryByText("*")).not.toBeInTheDocument();
+  });
+
   it("preserves child invalid semantics when no field error exists", () => {
     render(
       <FormField label="Existing invalid">

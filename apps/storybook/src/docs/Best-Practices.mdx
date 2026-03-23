@@ -62,6 +62,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For streaming status narration, prefer `ariaLabelledBy` when a visible heading already exists; use `ariaLabel` (or `label` fallback) for standalone streaming regions.
 - For narrated skeleton states, prefer `ariaLabelledBy` when a visible loading heading already exists; use `ariaLabel` for standalone placeholders without nearby heading context.
 - Prefer `FormField` wrappers for helper/error copy so `aria-describedby` and `aria-errormessage` stay in sync.
+- Normalize FormField runtime boolean config from CMS/JSON payloads before binding props: malformed `required/disabled` values should degrade to `false` so fields are not silently forced into blocked or mandatory state.
 - Keep `aria-errormessage` tied to active invalid semantics: do not expose it on optional/valid controls without `error` or existing child invalid state.
 - For composite/non-clonable field controls, provide `htmlFor` on `FormField` and a matching control `id`; otherwise label association cannot be inferred.
 - If a wrapped control already provides `aria-labelledby`, avoid passing `aria-label` together; keep `aria-labelledby` as the canonical name source.
@@ -139,6 +140,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Localize command-palette heading/search/close semantics with `title` / `description` / `searchAriaLabel` / `closeLabel`, and prefer `ariaLabelledBy` (or `ariaLabel` when standalone) for icon/non-text titles so dialog narration stays canonical.
 
 <Canvas of={FormFieldStories.WithInputControl} />
+<Canvas of={FormFieldStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={FormFieldStories.ExternalControlAssociation} />
 <Canvas of={FormFieldStories.LabelledByPrecedence} />
 <Canvas of={FormFieldStories.NonTextLabelNameFallback} />

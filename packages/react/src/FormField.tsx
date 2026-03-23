@@ -11,6 +11,14 @@ export type FormFieldProps = {
   children: React.ReactNode;
 };
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export function FormField({ label, htmlFor, description, error, required, disabled, children }: FormFieldProps) {
   const generatedInputId = React.useId();
   const labelId = React.useId();
@@ -23,7 +31,8 @@ export function FormField({ label, htmlFor, description, error, required, disabl
   const childControlId = canCloneControl ? (childProps?.id as string | undefined) : undefined;
   const controlId = htmlFor ?? childControlId ?? (canCloneControl ? generatedInputId : undefined);
   const childDisabled = typeof childProps?.disabled === "boolean" ? childProps.disabled : undefined;
-  const mergedDisabled = Boolean(disabled || childDisabled);
+  const resolvedDisabled = resolveBooleanFlag(disabled, false);
+  const mergedDisabled = Boolean(resolvedDisabled || childDisabled);
   const childDescribedBy = childProps?.["aria-describedby"] as string | undefined;
   const childErrorMessage = childProps?.["aria-errormessage"] as string | undefined;
   const childInvalid = childProps?.["aria-invalid"] as React.AriaAttributes["aria-invalid"] | undefined;
@@ -43,7 +52,8 @@ export function FormField({ label, htmlFor, description, error, required, disabl
     typeof childProps?.required === "boolean" ? childProps.required : undefined,
     childProps?.["aria-required"] as React.AriaAttributes["aria-required"] | undefined
   );
-  const mergedRequired = Boolean(required || childRequired);
+  const resolvedRequired = resolveBooleanFlag(required, false);
+  const mergedRequired = Boolean(resolvedRequired || childRequired);
   const childInvalidAria = resolveInvalidAria(undefined, childInvalid);
   const isInvalid = hasErrorContent || childInvalidAria !== undefined;
   const mergedInvalidAria = hasErrorContent ? true : childInvalidAria;
