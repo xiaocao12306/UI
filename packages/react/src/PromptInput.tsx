@@ -12,6 +12,14 @@ export type PromptInputProps = {
   submittingHint?: React.ReactNode;
 };
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export function PromptInput({
   onSubmit,
   submitting,
@@ -25,9 +33,10 @@ export function PromptInput({
   const composingRef = React.useRef(false);
   const hintId = React.useId();
   const trimmedValue = value.trim();
+  const resolvedSubmitting = resolveBooleanFlag(submitting, false);
   const hasSubmitHandler = typeof onSubmit === "function";
-  const canSubmit = hasSubmitHandler && !submitting && trimmedValue.length > 0;
-  const activeHint = submitting ? submittingHint : hasSubmitHandler ? shortcutHint : undefined;
+  const canSubmit = hasSubmitHandler && !resolvedSubmitting && trimmedValue.length > 0;
+  const activeHint = resolvedSubmitting ? submittingHint : hasSubmitHandler ? shortcutHint : undefined;
   const hasHintContent = hasRenderablePromptNode(activeHint);
   const resolvedPlaceholder = resolveNonEmptyLabel(placeholder, "Type your prompt...");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
@@ -46,7 +55,7 @@ export function PromptInput({
 
   return (
     <div
-      aria-busy={submitting || undefined}
+      aria-busy={resolvedSubmitting || undefined}
       style={{
         border: "1px solid var(--aurora-border-default)",
         borderRadius: "var(--aurora-radius-lg)",
@@ -63,8 +72,8 @@ export function PromptInput({
         aria-label={resolvedAriaLabel}
         aria-labelledby={resolvedAriaLabelledBy}
         aria-describedby={hasHintContent ? hintId : undefined}
-        aria-keyshortcuts={!submitting && hasSubmitHandler ? "Control+Enter Meta+Enter" : undefined}
-        disabled={submitting}
+        aria-keyshortcuts={!resolvedSubmitting && hasSubmitHandler ? "Control+Enter Meta+Enter" : undefined}
+        disabled={resolvedSubmitting}
         rows={4}
         onCompositionStart={() => {
           composingRef.current = true;
@@ -113,7 +122,7 @@ export function PromptInput({
           </small>
         ) : null}
         <Button onClick={submit} disabled={!canSubmit}>
-          {submitting ? "Sending..." : "Send"}
+          {resolvedSubmitting ? "Sending..." : "Send"}
         </Button>
       </div>
     </div>

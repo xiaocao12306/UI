@@ -84,6 +84,29 @@ describe("PromptInput", () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
+  it("falls back invalid runtime submitting values to idle state", () => {
+    const onSubmit = vi.fn();
+    render(
+      <PromptInput
+        onSubmit={onSubmit}
+        ariaLabel="Runtime submitting fallback prompt"
+        submitting={"true" as unknown as boolean}
+      />
+    );
+
+    const textbox = screen.getByRole("textbox", { name: "Runtime submitting fallback prompt" });
+    const sendButton = screen.getByRole("button", { name: "Send" });
+
+    expect(textbox).not.toBeDisabled();
+    expect(textbox).toHaveAttribute("aria-keyshortcuts", "Control+Enter Meta+Enter");
+    expect(sendButton).toBeDisabled();
+
+    fireEvent.change(textbox, { target: { value: "Runtime fallback draft" } });
+    expect(sendButton).toBeEnabled();
+    fireEvent.click(sendButton);
+    expect(onSubmit).toHaveBeenCalledWith("Runtime fallback draft");
+  });
+
   it("restores shortcut metadata after submitting state exits", () => {
     const onSubmit = vi.fn();
     const { rerender } = render(<PromptInput onSubmit={onSubmit} submitting />);

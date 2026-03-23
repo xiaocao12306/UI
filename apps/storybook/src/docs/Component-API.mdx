@@ -990,7 +990,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | Prop                                  | Type                                           | Notes                                                                                                                                                                                                     |
 | ------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `onSubmit`                            | `(prompt: string) => void`                     | Triggered by send button or Ctrl/Cmd + Enter shortcut. Submission is ignored during IME composition (`isComposing` / `keyCode=229`), repeated keydown (`event.repeat`), and `Alt + Ctrl/Cmd + Enter` host-shortcut chords. Accepted shortcut submits call `preventDefault()` to avoid textarea newline side effects. When omitted, submit affordances stay passive (send button disabled, shortcut metadata omitted) so prompt text is never cleared without a handler. |
-| `submitting`                          | `boolean`                                      | Locks input + button and updates live hint during AI request execution.                                                                                                                                   |
+| `submitting`                          | `boolean`                                      | Locks input + button and updates live hint during AI request execution. Non-boolean runtime values fall back to `false` so malformed config payloads do not silently force pending state.            |
 | `placeholder`                         | `string`                                       | Optional prompt guidance text. Blank values are ignored and fallback to `Type your prompt...`.                                                                                                           |
 | `ariaLabel` / `ariaLabelledBy`        | `string` / `string`                            | Optional textarea naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without `ariaLabelledBy`, `ariaLabel` falls back to `Prompt input`. |
 | `shortcutHint` / `submittingHint`     | `ReactNode`                                    | Customizable idle/pending helper copy for localization and product voice alignment.                                                                                                                       |
@@ -1002,6 +1002,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={PromptInputStories.LocalizedCopy} />
 <Canvas of={PromptInputStories.WithoutSubmitHandler} />
 <Canvas of={PromptInputStories.BlankPlaceholderFallback} />
+<Canvas of={PromptInputStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={PromptInputStories.LabelledByPrecedence} />
 <Canvas of={PromptInputStories.FocusIntentReentry} />
 

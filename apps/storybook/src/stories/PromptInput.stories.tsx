@@ -72,6 +72,47 @@ export const BlankPlaceholderFallback: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationPromptInput() {
+  const [submissionCount, setSubmissionCount] = React.useState(0);
+
+  return (
+    <PromptInputShowcase>
+      <p style={promptTelemetryTextStyle}>
+        Submission count:{" "}
+        <strong data-testid="prompt-runtime-submission-count" style={promptTelemetryValueStyle}>
+          {submissionCount}
+        </strong>
+      </p>
+      <PromptInput
+        ariaLabel="Runtime submitting fallback prompt"
+        submitting={"true" as unknown as boolean}
+        onSubmit={() => {
+          setSubmissionCount((value) => value + 1);
+        }}
+      />
+    </PromptInputShowcase>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationPromptInput />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textbox = await canvas.findByRole("textbox", { name: "Runtime submitting fallback prompt" });
+    const sendButton = canvas.getByRole("button", { name: "Send" });
+    const count = canvas.getByTestId("prompt-runtime-submission-count");
+
+    await expect(textbox).not.toBeDisabled();
+    await expect(textbox).toHaveAttribute("aria-keyshortcuts", "Control+Enter Meta+Enter");
+    await expect(sendButton).toBeDisabled();
+
+    await userEvent.type(textbox, "Runtime fallback prompt");
+    await expect(sendButton).toBeEnabled();
+    await userEvent.click(sendButton);
+    await expect(count).toHaveTextContent("1");
+  }
+};
+
 function InteractivePromptInput() {
   const [submitting, setSubmitting] = React.useState(false);
   const [lastPrompt, setLastPrompt] = React.useState("None");

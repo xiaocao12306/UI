@@ -357,6 +357,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Use `onCloseReason` to emit deterministic dismissal telemetry (`close-button` / `item-select` / `escape-key` / `outside-pointer`) instead of inferring close path from side effects.
 - Keep callback side effects ordered and single-purpose: `item-select` path should treat `onSelect` as action commit, then `onCloseReason`, then `onOpenChange(false)`; close-button path should use `onCloseReason` before `onOpenChange(false)`.
 - Guard Ctrl/Cmd + Enter submission against active IME composition (`isComposing` / `keyCode=229`), repeated keydown (`event.repeat`), and `Alt + Ctrl/Cmd + Enter` host-shortcut chords so long-press or modified shortcuts do not accidentally send prompts.
+- Normalize prompt-input runtime boolean config from CMS/JSON payloads before binding props: malformed `submitting` values should degrade to `false` so draft editing and submit affordances are not silently locked.
 - Keep prompt `placeholder` copy non-empty in product usage; blank values now fall back to `Type your prompt...` so baseline AI input guidance stays visible.
 - Localize prompt input naming and helper copy with `ariaLabel`, `shortcutHint`, and `submittingHint`; expose `aria-keyshortcuts="Control+Enter Meta+Enter"` only while `onSubmit` is provided and not submitting so shortcut metadata does not advertise unavailable submit actions.
 - Prefer `ariaLabelledBy` for prompt input naming when a visible heading already exists; use `ariaLabel` for standalone prompt fields without nearby title context.
@@ -383,6 +384,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={PromptInputStories.LocalizedCopy} />
 <Canvas of={PromptInputStories.WithoutSubmitHandler} />
 <Canvas of={PromptInputStories.BlankPlaceholderFallback} />
+<Canvas of={PromptInputStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={PromptInputStories.LabelledByPrecedence} />
 <Canvas of={PromptInputStories.FocusIntentReentry} />
 <Canvas of={MessageBubbleStories.Conversation} />
