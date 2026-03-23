@@ -1539,6 +1539,38 @@ export const SourceIndexRowKeyStability: Story = {
   }
 };
 
+export const RowKeyCallbackThrowFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 760px)" gap={8}>
+      <p style={storyMutedTextStyle}>
+        When `rowKey` throws at runtime, table falls back to source-index row keys and keeps sort
+        flows stable.
+      </p>
+      <Table
+        columns={columns}
+        data={rows}
+        defaultSortKey="component"
+        rowKey={(row, rowIndex) => {
+          if (row.id === "DLG-210") {
+            throw new Error("row key formatter failed");
+          }
+          return `${rowIndex}-${row.id}`;
+        }}
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("cell", { name: "Button" })).toBeInTheDocument();
+    await expect(canvas.getByRole("cell", { name: "Dialog" })).toBeInTheDocument();
+    await expect(canvas.getByRole("cell", { name: "PromptInput" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Component sort descending" }));
+    await expect(canvas.getByRole("cell", { name: "Dialog" })).toBeInTheDocument();
+    await expect(canvas.getByRole("cell", { name: "Button" })).toBeInTheDocument();
+  }
+};
+
 type IndexSemanticsRow = { key: string; score: number };
 
 const indexSemanticsRows: IndexSemanticsRow[] = [

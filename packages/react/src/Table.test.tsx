@@ -3044,6 +3044,56 @@ describe("Table", () => {
     expect(rowKey).not.toHaveBeenCalled();
   });
 
+  it("falls back to source-index row keys when rowKey throws", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const rowKey = vi.fn((row: { name: string }, rowIndex: number) => {
+      if (row.name === "Beta") {
+        throw new Error("row key failed");
+      }
+      return `${rowIndex}-${row.name}`;
+    });
+
+    try {
+      render(
+        <Table
+          columns={[
+            { key: "name", header: "Name" },
+            { key: "score", header: "Score", sortable: true }
+          ]}
+          data={[
+            { name: "Alpha", score: 1 },
+            { name: "Beta", score: 2 },
+            { name: "Gamma", score: 3 }
+          ]}
+          rowKey={rowKey}
+          defaultSortKey="score"
+        />
+      );
+
+      expect(rowKey).toHaveBeenCalledTimes(3);
+      expect(screen.getByRole("cell", { name: "Alpha" })).toBeInTheDocument();
+      expect(screen.getByRole("cell", { name: "Beta" })).toBeInTheDocument();
+      expect(screen.getByRole("cell", { name: "Gamma" })).toBeInTheDocument();
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Table] rowKey threw an error; falling back to source-index row keys for render stability.",
+        expect.any(Error)
+      );
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(errorSpy).not.toHaveBeenCalled();
+
+      rowKey.mockClear();
+      fireEvent.click(screen.getByRole("button", { name: "Score sort descending" }));
+      expect(rowKey).not.toHaveBeenCalled();
+      expect(screen.getByRole("cell", { name: "Alpha" })).toBeInTheDocument();
+      expect(screen.getByRole("cell", { name: "Beta" })).toBeInTheDocument();
+      expect(screen.getByRole("cell", { name: "Gamma" })).toBeInTheDocument();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("keeps row-local state stable when duplicate rowKey values are auto-suffixed", async () => {
     const user = userEvent.setup();
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});

@@ -160,6 +160,7 @@ export function Table<T>({
   const sortFocusIntentRef = React.useRef(true);
   const warnedDuplicateColumnKeysSignatureRef = React.useRef<string | null>(null);
   const warnedDuplicateRowKeysSignatureRef = React.useRef<string | null>(null);
+  const warnedRowKeyErrorRef = React.useRef(false);
   const warnedMissingSortLabelSignatureRef = React.useRef<string | null>(null);
   const warnedSortAriaLabelErrorRef = React.useRef(false);
   const warnedSortStatusTextErrorRef = React.useRef(false);
@@ -311,17 +312,34 @@ export function Table<T>({
     setSortState(nextInitialSortState);
   }, [columns, defaultSortKey, resolvedColumnRenderKeys, resolvedDefaultSortDirection, sortState]);
 
-  const sourceRowKeys = React.useMemo(
-    () =>
-      data.map((row, sourceIndex) => {
-        if (!rowKey) {
-          return String(sourceIndex);
-        }
+  const sourceRowKeys = React.useMemo(() => {
+    let rowKeyErrorDetected = false;
+    const keys = data.map((row, sourceIndex) => {
+      if (!rowKey) {
+        return String(sourceIndex);
+      }
 
+      try {
         return String(rowKey(row, sourceIndex));
-      }),
-    [data, rowKey]
-  );
+      } catch (error) {
+        rowKeyErrorDetected = true;
+        if (process.env.NODE_ENV !== "production" && !warnedRowKeyErrorRef.current) {
+          warnedRowKeyErrorRef.current = true;
+          console.warn(
+            "[Table] rowKey threw an error; falling back to source-index row keys for render stability.",
+            error
+          );
+        }
+        return String(sourceIndex);
+      }
+    });
+
+    if (!rowKeyErrorDetected) {
+      warnedRowKeyErrorRef.current = false;
+    }
+
+    return keys;
+  }, [data, rowKey]);
   const resolvedSourceRowKeys = React.useMemo(() => {
     const seenCounts = new Map<string, number>();
     return sourceRowKeys.map((key, sourceIndex) => {

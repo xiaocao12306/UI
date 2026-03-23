@@ -555,6 +555,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep `rowKey` outputs unique per source row; development builds warn on duplicate keys to catch unstable identity wiring early, and runtime auto-suffixes duplicate outputs by source index to prevent key-collision remount churn.
 - If `rowKey` uses `rowIndex`, treat it as source-data index; avoid deriving keys from sorted visual position.
 - Keep `rowKey` pure and deterministic: table caches source-row keys and reuses them on sort-only rerenders to avoid key churn and unnecessary key-function re-execution.
+- Keep `rowKey` error-safe: if runtime key formatting may fail, provide a deterministic fallback path because thrown `rowKey` callbacks degrade to source-index keys with development warnings.
 - For custom cell renderers, use `render(row, rowIndex, sourceIndex)` and pick the index intentionally (`rowIndex` for ranking UI, `sourceIndex` for source-linked IDs/telemetry).
 - Mark the primary identity column with `rowHeader` so screen readers can announce row context consistently.
 - Ensure each table has an accessible name through `caption`, `ariaLabel`, or `ariaLabelledBy`; fallback `Data table` naming exists but should be treated as a safety net.
@@ -677,6 +678,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={TableStories.WithRowAction} />
 <Canvas of={TableStories.InvalidDefaultSortKeyFallback} />
 <Canvas of={TableStories.RowHeaderSemantics} />
+<Canvas of={TableStories.RowKeyCallbackThrowFallback} />
 <Canvas of={TableStories.AccessibleNameFallback} />
 <Canvas of={PaginationStories.KeyboardShortcuts} />
 <Canvas of={PaginationStories.ModifierKeyGuard} />
