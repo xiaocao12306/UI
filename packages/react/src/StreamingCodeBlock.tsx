@@ -20,6 +20,14 @@ function resolveStreamingCodeSpeed(speed: number, fallback: number) {
   return Math.trunc(speed);
 }
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export function StreamingCodeBlock({
   code,
   language = "txt",
@@ -35,8 +43,9 @@ export function StreamingCodeBlock({
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion(rootRef);
   const safeSpeed = resolveStreamingCodeSpeed(speed, 8);
+  const resolvedRespectReducedMotion = resolveBooleanFlag(respectReducedMotion, true);
   const shouldStream =
-    safeSpeed > 0 && code.length > 0 && !(respectReducedMotion && prefersReducedMotion);
+    safeSpeed > 0 && code.length > 0 && !(resolvedRespectReducedMotion && prefersReducedMotion);
   const [visible, setVisible] = React.useState("");
   const resolvedLabel =
     typeof label === "string" && label.trim().length > 0 ? label.trim() : "Streaming code block";

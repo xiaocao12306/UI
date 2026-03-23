@@ -209,4 +209,19 @@ describe("StreamingCodeBlock", () => {
 
     matchMediaMock.restore();
   });
+
+  it("falls back invalid runtime respectReducedMotion flag to reduced-motion safe branch", () => {
+    const matchMediaMock = installMatchMediaMock({ initialMatches: true });
+
+    const { container } = render(
+      <StreamingCodeBlock code="const ready = true;" speed={12} respectReducedMotion={"false" as unknown as boolean} />
+    );
+    const root = container.firstElementChild as HTMLElement;
+    const codeNode = container.querySelector("code") as HTMLElement;
+
+    expect(codeNode).toHaveTextContent("const ready = true;");
+    expect(root).toHaveAttribute("aria-busy", "false");
+
+    matchMediaMock.restore();
+  });
 });

@@ -398,6 +398,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
 - Keep `StreamingText`/`StreamingCodeBlock` timing props finite and predictable in app state; non-finite values now fall back to built-in defaults (`StreamingText speed=16/startDelay=0`, `StreamingCodeBlock speed=8`) and fractional values are normalized to integer timing.
 - Normalize `StreamingText` runtime boolean config from CMS/JSON payloads before binding props: malformed `streaming/cursor/showCursorWhenDone/preserveLineBreaks/respectReducedMotion` values should degrade to `true/true/false/true/true` so token cadence, cursor visibility, line-break rendering, and reduced-motion policy remain deterministic.
+- Normalize `StreamingCodeBlock` runtime boolean config from CMS/JSON payloads before binding props: malformed `respectReducedMotion` values should degrade to `true` so reduced-motion policy cannot be silently bypassed.
 - Keep streaming-code narration `live="off"` for high-frequency token output; enable `live="polite"` only when progressive code updates must be announced.
 - Provide explicit `label` for streaming code regions so screen-reader users can distinguish concurrent AI outputs.
 - For streaming code regions, prefer `ariaLabelledBy` when a visible heading already exists; use `ariaLabel` (or `label` fallback) for standalone code stream panels.
@@ -420,6 +421,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={ReasoningPanelStories.BlankStepFallback} />
 <Canvas of={StreamingTextStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={StreamingCodeBlockStories.Default} />
+<Canvas of={StreamingCodeBlockStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={StreamingCodeBlockStories.LabelledByPrecedence} />
 <Canvas of={CommandPaletteStories.AiInteractionFlow} />
 <Canvas of={CommandPaletteStories.QueryTelemetry} />

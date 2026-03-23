@@ -66,6 +66,27 @@ export const LiveNarration: Story = {
   }
 };
 
+export const RuntimeBooleanConfigNormalization: Story = {
+  args: {
+    language: "bash",
+    code: "echo runtime-safe",
+    speed: 10,
+    live: "off",
+    respectReducedMotion: "false" as unknown as boolean
+  },
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.querySelector("[aria-busy]") as HTMLElement;
+    const codeNode = canvasElement.querySelector("code") as HTMLElement;
+
+    await expect(root).toHaveAttribute("aria-live", "off");
+    await expect(root).toHaveAttribute("aria-busy", "true");
+    await waitFor(() => {
+      expect(codeNode).toHaveTextContent("echo runtime-safe");
+      expect(root).toHaveAttribute("aria-busy", "false");
+    });
+  }
+};
+
 export const LabelledByPrecedence: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 10 }}>
