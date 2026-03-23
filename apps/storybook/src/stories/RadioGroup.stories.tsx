@@ -117,6 +117,57 @@ export const GroupDisabledSemantics: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationRadioGroup() {
+  const [selectedValue, setSelectedValue] = React.useState("none");
+  const [events, setEvents] = React.useState(0);
+
+  return (
+    <div style={{ width: 340, display: "grid", gap: 12 }}>
+      <RadioGroup
+        name="Runtime boolean radio group"
+        disabled={"true" as unknown as boolean}
+        options={[
+          { label: "Small", value: "s" },
+          { label: "Medium", value: "m", disabled: "true" as unknown as boolean }
+        ]}
+        onChange={(nextValue) => {
+          setSelectedValue(nextValue);
+          setEvents((value) => value + 1);
+        }}
+      />
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <Badge tone="default">
+          Selected: <span data-testid="radio-runtime-selected">{selectedValue}</span>
+        </Badge>
+        <Badge tone="default">
+          Change events: <span data-testid="radio-runtime-events">{events}</span>
+        </Badge>
+      </div>
+    </div>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationRadioGroup />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const group = canvas.getByRole("radiogroup", { name: "Runtime boolean radio group" });
+    const medium = canvas.getByRole("radio", { name: "Medium" });
+    const selected = canvas.getByTestId("radio-runtime-selected");
+    const events = canvas.getByTestId("radio-runtime-events");
+
+    await expect(group).not.toHaveAttribute("aria-disabled");
+    await expect(medium).not.toBeDisabled();
+    await expect(medium).toHaveAttribute("aria-keyshortcuts", "Space");
+    await expect(selected).toHaveTextContent("none");
+    await expect(events).toHaveTextContent("0");
+
+    await userEvent.click(medium);
+    await expect(selected).toHaveTextContent("m");
+    await expect(events).toHaveTextContent("1");
+  }
+};
+
 export const NumericDescriptionSemantics: Story = {
   args: {
     name: "Numeric descriptions",

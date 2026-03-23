@@ -24,6 +24,14 @@ export type RadioGroupProps = {
   direction?: "vertical" | "horizontal";
 };
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export function RadioGroup({
   name,
   value,
@@ -45,6 +53,7 @@ export function RadioGroup({
   const focusVisibleIntentRef = React.useRef(false);
   const warnedDuplicateValuesSignatureRef = React.useRef<string | null>(null);
   const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
+  const resolvedDisabled = resolveBooleanFlag(disabled, false);
   const currentValue = value ?? internalValue;
   const selectedOptionIndex = React.useMemo(
     () => resolveSelectedOptionIndex(options, currentValue),
@@ -61,13 +70,13 @@ export function RadioGroup({
     : "color-mix(in srgb, var(--aurora-accent-default) 24%, transparent)";
 
   React.useEffect(() => {
-    if (!disabled) {
+    if (!resolvedDisabled) {
       return;
     }
 
     setFocusedIndex(null);
     setFocusVisibleIndex(null);
-  }, [disabled]);
+  }, [resolvedDisabled]);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {
@@ -177,8 +186,8 @@ export function RadioGroup({
     };
   }, []);
 
-  const handleChange = (nextValue: string, optionDisabled: boolean | undefined) => {
-    if (disabled || optionDisabled) {
+  const handleChange = (nextValue: string, optionDisabled: boolean) => {
+    if (resolvedDisabled || optionDisabled) {
       return;
     }
     if (currentValue === nextValue) {
@@ -203,10 +212,11 @@ export function RadioGroup({
       aria-labelledby={resolvedAriaLabelledBy}
       aria-orientation={direction}
       aria-invalid={resolvedInvalidAria}
-      aria-disabled={disabled || undefined}
+      aria-disabled={resolvedDisabled || undefined}
     >
       {options.map((option, index) => {
-        const optionDisabled = Boolean(disabled || option.disabled);
+        const optionSelfDisabled = resolveBooleanFlag(option.disabled, false);
+        const optionDisabled = resolvedDisabled || optionSelfDisabled;
         const hasLabelContent = hasRenderableRadioNode(option.label);
         const hasDescriptionContent = hasRenderableRadioNode(option.description);
         const isFocused = focusedIndex === index;
@@ -243,7 +253,7 @@ export function RadioGroup({
               aria-keyshortcuts={optionDisabled ? undefined : "Space"}
               data-focused={isFocused ? "true" : undefined}
               data-focus-visible={isFocusVisible ? "true" : undefined}
-              onChange={() => handleChange(option.value, option.disabled)}
+              onChange={() => handleChange(option.value, optionDisabled)}
               onFocus={(event) => {
                 setFocusedIndex(index);
                 setFocusVisibleIndex(
@@ -324,7 +334,7 @@ function resolveSelectedOptionIndex(options: RadioOption[], selectedValue: strin
       firstMatchingIndex = index;
     }
 
-    if (!option.disabled) {
+    if (!resolveBooleanFlag(option.disabled, false)) {
       firstEnabledMatchingIndex = index;
       break;
     }

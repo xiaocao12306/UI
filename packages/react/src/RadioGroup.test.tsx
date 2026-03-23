@@ -63,6 +63,30 @@ describe("RadioGroup", () => {
     expect(screen.getByRole("radiogroup", { name: "Actionable group" })).not.toHaveAttribute("aria-disabled");
   });
 
+  it("falls back invalid runtime disabled flags to actionable semantics", () => {
+    const onChange = vi.fn();
+    render(
+      <RadioGroup
+        name="Runtime boolean radio group"
+        disabled={"true" as unknown as boolean}
+        options={[
+          { label: "Small", value: "s" },
+          { label: "Medium", value: "m", disabled: "true" as unknown as boolean }
+        ]}
+        onChange={onChange}
+      />
+    );
+
+    const group = screen.getByRole("radiogroup", { name: "Runtime boolean radio group" });
+    const medium = screen.getByRole("radio", { name: "Medium" });
+    expect(group).not.toHaveAttribute("aria-disabled");
+    expect(medium).not.toBeDisabled();
+    expect(medium).toHaveAttribute("aria-keyshortcuts", "Space");
+
+    fireEvent.click(medium);
+    expect(onChange).toHaveBeenCalledWith("m");
+  });
+
   it("renders numeric option descriptions via aria-describedby without polluting option names", () => {
     render(
       <RadioGroup

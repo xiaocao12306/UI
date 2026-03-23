@@ -3,6 +3,7 @@ import * as ButtonStories from "../stories/Button.stories";
 import * as FormFieldStories from "../stories/FormField.stories";
 import * as InputStories from "../stories/Input.stories";
 import * as CheckboxStories from "../stories/Checkbox.stories";
+import * as RadioGroupStories from "../stories/RadioGroup.stories";
 import * as SwitchStories from "../stories/Switch.stories";
 import * as ComboboxStories from "../stories/Combobox.stories";
 import * as DatePickerStories from "../stories/DatePicker.stories";
@@ -90,6 +91,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep radio option shortcut hints precise: expose `aria-keyshortcuts="Space"` only on actionable options, and remove shortcut metadata from disabled options.
 - Keep `RadioGroup.options[].value` unique and stable; development builds warn on duplicate values and runtime render keys auto-suffix duplicates for React stability. If duplicates still slip through, checked semantics are anchored to one deterministic duplicate occurrence (first enabled match), and same-value duplicate option interaction remains no-op (no extra `onChange` telemetry), but unique values are still required for fully deterministic checked/focus semantics.
 - When disabling an entire RadioGroup, prefer `disabled` at group level so all options become non-interactive and the container exposes `aria-disabled="true"` for assistive-tech clarity.
+- Normalize radio-group runtime boolean config from CMS/JSON payloads before binding props: malformed `disabled` and `options[].disabled` values should degrade to `false` so groups/options do not get silently locked.
 - Keep `RadioGroup.options[].label` as the concise option name and place helper copy in `options[].description`; the library maps description to `aria-describedby` so it does not bloat radio accessible names.
 - For icon/non-text radio options, prefer `options[].ariaLabelledBy` when a visible heading already exists; otherwise provide `options[].ariaLabel`. Rich labels that expose inline `aria-label` are auto-detected, and development builds warn when both naming paths are missing.
 - Keep radio-group `direction` aligned with visual layout so `aria-orientation` stays truthful (`horizontal` for inline groups, `vertical` for stacked groups).
@@ -151,6 +153,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={InputStories.BlankAriaLabelFallback} />
 <Canvas of={CheckboxStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={SwitchStories.RuntimeBooleanConfigNormalization} />
+<Canvas of={RadioGroupStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={InputStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={InputStories.ManagedKeysPreemptedByLocalHandler} />
 <Canvas of={InputStories.RuntimeBooleanConfigNormalization} />

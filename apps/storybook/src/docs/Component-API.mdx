@@ -171,8 +171,8 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `ariaLabel` / `ariaLabelledBy`        | `string` / `string`                          | Optional radiogroup naming override; blank values are ignored, and `ariaLabelledBy` takes precedence when both are provided (`ariaLabel` otherwise falls back to `name`).                       |
 | `options[].ariaLabel` / `options[].ariaLabelledBy` | `string` / `string`                          | Accessible naming controls for icon/non-text options. Rich labels with inline `aria-label` are auto-detected, blank values are ignored, and when both are provided `ariaLabelledBy` takes precedence over `ariaLabel`. |
 | `options[].description`               | `ReactNode`                                  | Helper copy is wired to each radio via `aria-describedby`; it stays out of the primary option name so screen-reader naming remains concise and deterministic.                                      |
-| `options[].disabled`                  | `boolean`                                    | Disable specific choices without removing context.                                                                                                                                              |
-| `disabled`                            | `boolean`                                    | Disables the full group and now mirrors state to `aria-disabled` on the `radiogroup` container so assistive tech gets a group-level unavailable signal in addition to disabled radios.       |
+| `options[].disabled`                  | `boolean`                                    | Disable specific choices without removing context. Non-boolean runtime values fall back to `false` so malformed config cannot silently disable options.                                         |
+| `disabled`                            | `boolean`                                    | Disables the full group and mirrors state to `aria-disabled` on the `radiogroup` container so assistive tech gets a group-level unavailable signal in addition to disabled radios. Non-boolean runtime values fall back to `false`. |
 | option shortcut hints                 | actionable options expose `aria-keyshortcuts="Space"` | Keyboard-discoverability metadata is attached only to actionable radio options; disabled options omit hints so QA/AT metadata does not advertise unavailable activation paths.                  |
 | focus intent policy                   | primary pointer clears focus-visible         | Non-primary pointer interactions and `Ctrl + primary click` context-click paths keep focused-option focus-visible state; plain primary pointer clears keyboard-intent focus-visible feedback before selection intent. |
 | document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores radio focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and `Ctrl + primary click` do not clear fallback keyboard intent. |
@@ -182,6 +182,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={RadioGroupStories.InvalidState} />
 <Canvas of={RadioGroupStories.GroupDisabledSemantics} />
 <Canvas of={RadioGroupStories.ShortcutHintPrecision} />
+<Canvas of={RadioGroupStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={RadioGroupStories.DuplicateValueSingleCheckedSemantics} />
 <Canvas of={RadioGroupStories.LabelledByPrecedence} />
 <Canvas of={RadioGroupStories.OptionLabelledByPrecedence} />
