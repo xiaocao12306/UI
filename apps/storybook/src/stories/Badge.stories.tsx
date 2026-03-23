@@ -58,3 +58,24 @@ export const AiInteractionStatus: Story = {
     await expect(canvas.getByText("Needs review")).toBeInTheDocument();
   }
 };
+
+export const RuntimeToneConfigNormalization: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 8 }}>
+      <Badge tone={" SUCCESS " as unknown as "success"}>Runtime success token</Badge>
+      <Badge tone={"critical" as unknown as "default"}>Runtime fallback token</Badge>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const runtimeSuccessBadge = canvas.getByText("Runtime success token");
+    const successStyle = runtimeSuccessBadge.getAttribute("style") ?? "";
+    await expect(successStyle).toContain("var(--aurora-feedback-success-bg)");
+    await expect(successStyle).toContain("var(--aurora-feedback-success-border)");
+
+    const runtimeFallbackBadge = canvas.getByText("Runtime fallback token");
+    const fallbackStyle = runtimeFallbackBadge.getAttribute("style") ?? "";
+    await expect(fallbackStyle).toContain("var(--aurora-surface-elevated)");
+    await expect(fallbackStyle).toContain("var(--aurora-border-default)");
+  }
+};

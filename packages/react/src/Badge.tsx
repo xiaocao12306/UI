@@ -23,7 +23,20 @@ const toneStyles: Record<BadgeTone, React.CSSProperties> = {
   }
 };
 
+function resolveBadgeTone(value: unknown, fallback: BadgeTone) {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    if (normalizedValue === "default" || normalizedValue === "success" || normalizedValue === "danger") {
+      return normalizedValue;
+    }
+  }
+
+  return fallback;
+}
+
 export function Badge({ tone = "default", style, ...props }: BadgeProps) {
+  const resolvedTone = resolveBadgeTone(tone, "default");
+
   return (
     <span
       style={{
@@ -35,7 +48,7 @@ export function Badge({ tone = "default", style, ...props }: BadgeProps) {
         padding: "0 10px",
         fontSize: "var(--aurora-font-size-xs)",
         fontWeight: "var(--aurora-font-weight-medium)",
-        ...toneStyles[tone],
+        ...toneStyles[resolvedTone],
         ...style
       }}
       {...props}

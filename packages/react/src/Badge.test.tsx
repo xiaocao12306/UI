@@ -27,4 +27,18 @@ describe("Badge", () => {
 
     expect(screen.getByText("AI")).toHaveStyle({ letterSpacing: "0.08em" });
   });
+
+  it("normalizes runtime tone tokens and falls back invalid values to default tone", () => {
+    const { rerender } = render(<Badge tone={" SUCCESS " as unknown as "success"}>Runtime success</Badge>);
+    const runtimeSuccessBadge = screen.getByText("Runtime success");
+    const successStyle = runtimeSuccessBadge.getAttribute("style") ?? "";
+    expect(successStyle).toContain("var(--aurora-feedback-success-bg)");
+    expect(successStyle).toContain("var(--aurora-feedback-success-border)");
+
+    rerender(<Badge tone={"critical" as unknown as "default"}>Runtime fallback</Badge>);
+    const runtimeFallbackBadge = screen.getByText("Runtime fallback");
+    const fallbackStyle = runtimeFallbackBadge.getAttribute("style") ?? "";
+    expect(fallbackStyle).toContain("var(--aurora-surface-elevated)");
+    expect(fallbackStyle).toContain("var(--aurora-border-default)");
+  });
 });

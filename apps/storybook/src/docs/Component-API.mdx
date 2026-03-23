@@ -83,8 +83,10 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 
 | Prop              | Type                                 | Notes                                                                |
 | ----------------- | ------------------------------------ | -------------------------------------------------------------------- |
-| `tone`            | `'default' \| 'success' \| 'danger'` | Semantic status signal without hardcoded app-level palettes.         |
+| `tone`            | `'default' \| 'success' \| 'danger'` | Semantic status signal without hardcoded app-level palettes. Runtime tokens are trim+lowercase normalized, and invalid values fall back to `default`. |
 | native span props | `HTMLAttributes<HTMLSpanElement>`    | Supports custom labels and style overrides for compact status chips. |
+
+<Canvas of={BadgeStories.RuntimeToneConfigNormalization} />
 
 ## Form
 
