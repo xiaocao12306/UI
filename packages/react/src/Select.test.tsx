@@ -42,6 +42,28 @@ describe("Select", () => {
     }
   });
 
+  it("warns when duplicate select options rely on implicit text values", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Select aria-label="Implicit duplicate value select">
+          <option>React</option>
+          <option>React</option>
+        </Select>
+      );
+
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining('Duplicate option values detected: "React"')
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("exposes default shortcut hints only when actionable", () => {
     render(
       <div>
@@ -310,6 +332,31 @@ describe("Select", () => {
       const select = screen.getByRole("combobox", { name: "Duplicate semantics select" });
       const options = screen.getAllByRole("option");
       expect(select).toHaveValue("react");
+      expect(select).toHaveProperty("selectedIndex", 1);
+      expect(options[0]).toHaveProperty("selected", false);
+      expect(options[1]).toHaveProperty("selected", true);
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("anchors duplicate implicit option values to the first enabled match", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Select aria-label="Implicit duplicate semantics select" defaultValue="React">
+          <option disabled>React</option>
+          <option>React</option>
+          <option>Vue</option>
+        </Select>
+      );
+
+      const select = screen.getByRole("combobox", { name: "Implicit duplicate semantics select" });
+      const options = screen.getAllByRole("option");
+      expect(select).toHaveValue("React");
       expect(select).toHaveProperty("selectedIndex", 1);
       expect(options[0]).toHaveProperty("selected", false);
       expect(options[1]).toHaveProperty("selected", true);

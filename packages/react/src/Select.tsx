@@ -271,8 +271,8 @@ function collectSelectOptionMetadata(children: React.ReactNode) {
 
       const type = typeof node.type === "string" ? node.type : null;
       if (type === "option") {
-        const optionProps = node.props as { value?: unknown; disabled?: boolean };
-        const optionValue = resolveOptionValue(optionProps.value);
+        const optionProps = node.props as { value?: unknown; disabled?: boolean; children?: React.ReactNode };
+        const optionValue = resolveOptionValue(optionProps.value, optionProps.children);
         if (optionValue !== undefined) {
           metadata.push({ value: optionValue, disabled: inheritedDisabled || Boolean(optionProps.disabled) });
         }
@@ -293,11 +293,41 @@ function collectSelectOptionMetadata(children: React.ReactNode) {
   return metadata;
 }
 
-function resolveOptionValue(value: unknown) {
+function resolveOptionValue(value: unknown, fallbackNode?: React.ReactNode) {
   if (value === undefined || value === null) {
-    return undefined;
+    const fallbackValue = getReadableOptionText(fallbackNode);
+    return fallbackValue.length > 0 ? fallbackValue : undefined;
   }
   return String(value);
+}
+
+function getReadableOptionText(node: React.ReactNode): string {
+  if (typeof node === "string") {
+    return normalizeOptionText(node);
+  }
+
+  if (typeof node === "number") {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return normalizeOptionText(
+      node
+        .map((child) => getReadableOptionText(child))
+        .filter((childText) => childText.length > 0)
+        .join(" ")
+    );
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  return getReadableOptionText((node.props as { children?: React.ReactNode }).children);
+}
+
+function normalizeOptionText(text: string) {
+  return text.replace(/\s+/g, " ").trim();
 }
 
 function resolvePreferredOptionIndex(options: SelectOptionMetadata[], selectedValue: string) {

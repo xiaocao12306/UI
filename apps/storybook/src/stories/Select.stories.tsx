@@ -85,6 +85,31 @@ export const DuplicateValueSelectedSemantics: Story = {
   }
 };
 
+export const ImplicitDuplicateValueSemantics: Story = {
+  render: () => (
+    <SelectShowcase gap={8}>
+      <p style={storyMutedTextStyle}>
+        Options without explicit values use text fallback and keep duplicate selected-state semantics deterministic.
+      </p>
+      <Select aria-label="Implicit duplicate semantics select" defaultValue="React">
+        <option disabled>React</option>
+        <option>React</option>
+        <option>Vue</option>
+      </Select>
+    </SelectShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const select = canvas.getByRole("combobox", { name: "Implicit duplicate semantics select" });
+    const options = canvas.getAllByRole("option");
+
+    await expect(select).toHaveValue("React");
+    await expect(select).toHaveProperty("selectedIndex", 1);
+    await expect(options[0]).toHaveProperty("selected", false);
+    await expect(options[1]).toHaveProperty("selected", true);
+  }
+};
+
 export const InvalidState: Story = {
   render: () => (
     <SelectShowcase gap={8}>
