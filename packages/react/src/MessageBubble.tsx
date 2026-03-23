@@ -38,6 +38,17 @@ const speakerLabels: Record<MessageSpeaker, string> = {
   system: "System"
 };
 
+function resolveSpeaker(value: unknown): MessageSpeaker {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    if (normalizedValue === "user" || normalizedValue === "assistant" || normalizedValue === "system") {
+      return normalizedValue;
+    }
+  }
+
+  return "assistant";
+}
+
 export function MessageBubble({
   speaker,
   children,
@@ -46,7 +57,8 @@ export function MessageBubble({
   speakerLabel,
   roleDescription
 }: MessageBubbleProps) {
-  const resolvedSpeakerLabel = resolveNonEmptyLabel(speakerLabel) ?? speakerLabels[speaker];
+  const resolvedSpeaker = resolveSpeaker(speaker);
+  const resolvedSpeakerLabel = resolveNonEmptyLabel(speakerLabel) ?? speakerLabels[resolvedSpeaker];
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel =
     resolvedAriaLabelledBy === undefined
@@ -59,13 +71,13 @@ export function MessageBubble({
       aria-label={resolvedAriaLabel}
       aria-labelledby={resolvedAriaLabelledBy}
       aria-roledescription={resolvedRoleDescription}
-      data-speaker={speaker}
+      data-speaker={resolvedSpeaker}
       style={{
         maxWidth: "min(680px, 90%)",
         borderRadius: 12,
         border: "1px solid",
         padding: "10px 12px",
-        ...speakerStyles[speaker]
+        ...speakerStyles[resolvedSpeaker]
       }}
     >
       {children}

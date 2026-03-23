@@ -396,6 +396,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Localize message-bubble narration with `speakerLabel` or explicit `ariaLabel`; blank values should be omitted so speaker-based fallback naming remains valid.
 - Prefer `ariaLabelledBy` for message bubbles when a visible heading/title already exists; use `ariaLabel` for standalone bubbles without nearby naming context.
 - Localize message semantics with `roleDescription` when product vocabulary differs from plain `message`; blank values should fallback to default role description.
+- Normalize `MessageBubble` runtime speaker tokens from CMS/JSON payloads before binding props: malformed `speaker` values should degrade to `assistant` so alignment and accessible naming remain deterministic.
 - Localize reasoning disclosure semantics with `expandLabel`/`collapseLabel`, and prefer `listAriaLabelledBy` (or `listAriaLabel` when standalone) so list narration stays aligned with visible headings.
 - Keep reasoning disclosure toggle labels unique across the page: default labels append readable `title` context automatically, and custom `expandLabel`/`collapseLabel` should preserve equivalent contextual specificity.
 - Keep reasoning disclosure shortcuts discoverable with `aria-keyshortcuts="Enter Space"` so QA/AT audits can verify keyboard toggle support.
@@ -422,6 +423,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={MessageBubbleStories.Conversation} />
 <Canvas of={MessageBubbleStories.LocalizedNaming} />
 <Canvas of={MessageBubbleStories.LabelledByPrecedence} />
+<Canvas of={MessageBubbleStories.RuntimeSpeakerConfigNormalization} />
 <Canvas of={ReasoningPanelStories.Default} />
 <Canvas of={ReasoningPanelStories.LocalizedLabels} />
 <Canvas of={ReasoningPanelStories.LabelledByPrecedence} />

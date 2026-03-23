@@ -100,4 +100,21 @@ describe("MessageBubble", () => {
       "message"
     );
   });
+
+  it("normalizes runtime speaker tokens and falls back invalid values to assistant", () => {
+    render(
+      <div>
+        <MessageBubble speaker={" SYSTEM " as unknown as "system"}>System normalized.</MessageBubble>
+        <MessageBubble speaker={"bot" as unknown as "assistant"}>Assistant fallback.</MessageBubble>
+      </div>
+    );
+
+    const normalizedSystemMessage = screen.getByRole("article", { name: "System message" });
+    expect(normalizedSystemMessage).toHaveAttribute("data-speaker", "system");
+    expect(normalizedSystemMessage).toHaveTextContent("System normalized.");
+
+    const fallbackAssistantMessage = screen.getByRole("article", { name: "Assistant message" });
+    expect(fallbackAssistantMessage).toHaveAttribute("data-speaker", "assistant");
+    expect(fallbackAssistantMessage).toHaveTextContent("Assistant fallback.");
+  });
 });

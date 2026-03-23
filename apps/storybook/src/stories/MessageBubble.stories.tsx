@@ -93,3 +93,19 @@ export const LabelledByPrecedence: Story = {
     await expect(message).not.toHaveAttribute("aria-label");
   }
 };
+
+export const RuntimeSpeakerConfigNormalization: Story = {
+  render: () => (
+    <StoryFullscreenFrame minHeight={240}>
+      <MessageBubble speaker={" SYSTEM " as unknown as "system"}>System normalized from runtime token.</MessageBubble>
+      <MessageBubble speaker={"bot" as unknown as "assistant"}>Fallback to assistant on invalid token.</MessageBubble>
+    </StoryFullscreenFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const normalizedSystemMessage = canvas.getByRole("article", { name: "System message" });
+    await expect(normalizedSystemMessage).toHaveAttribute("data-speaker", "system");
+    const fallbackAssistantMessage = canvas.getByRole("article", { name: "Assistant message" });
+    await expect(fallbackAssistantMessage).toHaveAttribute("data-speaker", "assistant");
+  }
+};
