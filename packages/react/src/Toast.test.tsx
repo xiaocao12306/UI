@@ -425,6 +425,34 @@ describe("Toast", () => {
     expect(screen.getByRole("status", { name: "Background sync" })).toHaveAttribute("aria-live", "off");
   });
 
+  it("normalizes runtime live tokens before applying aria-live", () => {
+    render(<Toast open title="Runtime live normalization" live={" ASSERTIVE " as unknown as "assertive"} duration={0} />);
+    expect(screen.getByRole("status", { name: "Runtime live normalization" })).toHaveAttribute("aria-live", "assertive");
+  });
+
+  it("falls back invalid runtime live tokens to tone-driven defaults", () => {
+    const { rerender } = render(
+      <Toast
+        open
+        title="Runtime live fallback info"
+        live={"invalid-live" as unknown as "polite"}
+        duration={0}
+      />
+    );
+    expect(screen.getByRole("status", { name: "Runtime live fallback info" })).toHaveAttribute("aria-live", "polite");
+
+    rerender(
+      <Toast
+        open
+        tone="danger"
+        title="Runtime live fallback danger"
+        live={"invalid-live" as unknown as "assertive"}
+        duration={0}
+      />
+    );
+    expect(screen.getByRole("alert", { name: "Runtime live fallback danger" })).toHaveAttribute("aria-live", "assertive");
+  });
+
   it("allows live override while preserving danger alert role", () => {
     render(<Toast open tone="danger" title="Incident" live="polite" duration={0} />);
     expect(screen.getByRole("alert", { name: "Incident" })).toHaveAttribute("aria-live", "polite");

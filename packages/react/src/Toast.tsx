@@ -562,9 +562,10 @@ export function Toast({
     : resolvedTone === "danger"
       ? "alert"
       : "status";
+  const resolvedLive = resolveToastLive(live, resolvedTone === "danger" ? "assertive" : "polite");
   const ariaLive = hasActionAffordance
     ? undefined
-    : (live ?? (resolvedTone === "danger" ? "assertive" : "polite"));
+    : resolvedLive;
 
   return (
     <div
@@ -790,6 +791,21 @@ function resolveToastPosition(value: unknown, fallback: ToastPosition) {
       normalizedPosition === "top-left"
     ) {
       return normalizedPosition;
+    }
+  }
+
+  return fallback;
+}
+
+function resolveToastLive(value: unknown, fallback: "polite" | "assertive" | "off") {
+  if (typeof value === "string") {
+    const normalizedLive = value.trim().toLowerCase();
+    if (
+      normalizedLive === "polite" ||
+      normalizedLive === "assertive" ||
+      normalizedLive === "off"
+    ) {
+      return normalizedLive;
     }
   }
 

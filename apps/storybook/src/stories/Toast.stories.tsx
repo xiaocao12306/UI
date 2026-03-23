@@ -164,6 +164,45 @@ export const RuntimeVisualConfigNormalization: Story = {
   }
 };
 
+function RuntimeLiveConfigNormalizationDemo() {
+  return (
+    <ToastShowcase minHeight={320} align="start">
+      <p style={toastTelemetryTextStyle}>
+        Runtime live config should normalize mixed-case tokens and fallback to tone-driven defaults when token is invalid.
+      </p>
+      <Toast
+        open
+        onOpenChange={() => {}}
+        duration={0}
+        title="Runtime live normalization"
+        description="Mixed-case runtime live token should normalize to assertive."
+        live={" ASSERTIVE " as unknown as "assertive"}
+      />
+      <Toast
+        open
+        onOpenChange={() => {}}
+        duration={0}
+        tone={" DANGER " as unknown as "danger"}
+        title="Runtime live fallback"
+        description="Invalid runtime live token should fallback to tone-driven assertive."
+        live={"invalid-live" as unknown as "assertive"}
+      />
+    </ToastShowcase>
+  );
+}
+
+export const RuntimeLiveConfigNormalization: Story = {
+  render: () => <RuntimeLiveConfigNormalizationDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const normalized = await canvas.findByRole("status", { name: "Runtime live normalization" });
+    const fallback = await canvas.findByRole("alert", { name: "Runtime live fallback" });
+
+    await expect(normalized).toHaveAttribute("aria-live", "assertive");
+    await expect(fallback).toHaveAttribute("aria-live", "assertive");
+  }
+};
+
 function CloseButtonPrimaryPointerOnlyDemo() {
   const [open, setOpen] = React.useState(true);
 
