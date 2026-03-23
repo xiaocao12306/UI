@@ -47,6 +47,23 @@ function resolveTooltipSideOffset(value: number, fallback: number) {
   return Math.trunc(value);
 }
 
+function resolveTooltipMaxWidth(value: number | string, fallback: number) {
+  if (typeof value === "number") {
+    if (Number.isFinite(value) && value >= 0) {
+      return value;
+    }
+
+    return fallback;
+  }
+
+  const normalizedValue = value.trim();
+  if (normalizedValue.length > 0) {
+    return normalizedValue;
+  }
+
+  return fallback;
+}
+
 export function Tooltip({
   content,
   children,
@@ -74,6 +91,7 @@ export function Tooltip({
   const safeDelayDuration = resolveTooltipDelay(delayDuration, 250);
   const safeCloseDelay = resolveTooltipDelay(closeDelay, 80);
   const safeSideOffset = resolveTooltipSideOffset(sideOffset, 8);
+  const safeMaxWidth = resolveTooltipMaxWidth(maxWidth, 320);
 
   const getOwnerWindow = React.useCallback(
     () => rootRef.current?.ownerDocument.defaultView ?? window,
@@ -294,7 +312,7 @@ export function Tooltip({
             borderRadius: 6,
             fontSize: 12,
             whiteSpace: "normal",
-            maxWidth,
+            maxWidth: safeMaxWidth,
             zIndex: "var(--aurora-z-overlay)"
           }}
         >

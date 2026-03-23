@@ -466,6 +466,39 @@ describe("Tooltip", () => {
     expect(tooltip.style.left).toBe("calc(100% + 14px)");
   });
 
+  it("falls back to default maxWidth when value is non-finite", () => {
+    render(
+      <Tooltip
+        content="Tooltip content"
+        maxWidth={Number.POSITIVE_INFINITY}
+        delayDuration={0}
+        closeDelay={0}
+      >
+        <button type="button">Fallback max width trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Fallback max width trigger" });
+    fireEvent.focus(trigger);
+
+    const tooltip = screen.getByRole("tooltip");
+    expect(tooltip.style.maxWidth).toBe("320px");
+  });
+
+  it("normalizes string maxWidth by trimming surrounding whitespace", () => {
+    render(
+      <Tooltip content="Tooltip content" maxWidth=" 18rem " delayDuration={0} closeDelay={0}>
+        <button type="button">Trimmed max width trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Trimmed max width trigger" });
+    fireEvent.focus(trigger);
+
+    const tooltip = screen.getByRole("tooltip");
+    expect(tooltip.style.maxWidth).toBe("18rem");
+  });
+
   it("keeps tooltip open when close timer is cancelled by re-entering tooltip content", () => {
     vi.useFakeTimers();
 
