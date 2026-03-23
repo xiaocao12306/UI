@@ -1,5 +1,5 @@
 import * as React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Table } from "./Table";
@@ -455,7 +455,7 @@ describe("Table", () => {
     expect(screen.getByRole("table", { name: "Data table" })).toBeInTheDocument();
   });
 
-  it("keeps scroll container keyboard reachable when sortable controls are unavailable", async () => {
+  it("keeps scroll container keyboard reachable when sortable controls are unavailable and overflow exists", async () => {
     const user = userEvent.setup();
     const { container } = render(
       <div>
@@ -476,13 +476,74 @@ describe("Table", () => {
     const scrollContainer = container.querySelector(
       "[data-aurora-table-scroll-container]"
     ) as HTMLDivElement;
-    expect(scrollContainer).toHaveAttribute("role", "region");
-    expect(scrollContainer).toHaveAttribute("tabindex", "0");
-    expect(scrollContainer).not.toHaveAttribute("aria-keyshortcuts");
+    const ownerWindow = scrollContainer.ownerDocument.defaultView as Window;
+    Object.defineProperty(scrollContainer, "clientWidth", {
+      configurable: true,
+      value: 220
+    });
+    Object.defineProperty(scrollContainer, "scrollWidth", {
+      configurable: true,
+      value: 640
+    });
+    fireEvent(ownerWindow, new ownerWindow.Event("resize"));
+
+    await waitFor(() => {
+      expect(scrollContainer).toHaveAttribute("role", "region");
+      expect(scrollContainer).toHaveAttribute("tabindex", "0");
+      expect(scrollContainer).toHaveAttribute(
+        "aria-keyshortcuts",
+        "ArrowLeft ArrowRight Home End PageDown PageUp"
+      );
+    });
 
     await user.tab();
     expect(scrollContainer).toHaveFocus();
 
+    await user.tab();
+    expect(screen.getByRole("button", { name: "After table" })).toHaveFocus();
+  });
+
+  it("skips scroll-container tab stop when sortable controls are unavailable but overflow does not exist", async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <div>
+        <button type="button">Before table</button>
+        <Table
+          columns={[
+            { key: "name", header: "Name" },
+            { key: "status", header: "Status" }
+          ]}
+          data={[
+            { name: "Button", status: "Stable" },
+            { name: "Dialog", status: "Stable" }
+          ]}
+        />
+        <button type="button">After table</button>
+      </div>
+    );
+
+    const scrollContainer = container.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement;
+    const ownerWindow = scrollContainer.ownerDocument.defaultView as Window;
+    Object.defineProperty(scrollContainer, "clientWidth", {
+      configurable: true,
+      value: 320
+    });
+    Object.defineProperty(scrollContainer, "scrollWidth", {
+      configurable: true,
+      value: 320
+    });
+    fireEvent(ownerWindow, new ownerWindow.Event("resize"));
+
+    await waitFor(() => {
+      expect(scrollContainer).not.toHaveAttribute("role");
+      expect(scrollContainer).not.toHaveAttribute("tabindex");
+      expect(scrollContainer).not.toHaveAttribute("aria-keyshortcuts");
+    });
+
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Before table" })).toHaveFocus();
     await user.tab();
     expect(screen.getByRole("button", { name: "After table" })).toHaveFocus();
   });
@@ -560,6 +621,7 @@ describe("Table", () => {
       configurable: true,
       value: 600
     });
+    const ownerWindow = scrollContainer.ownerDocument.defaultView as Window;
     Object.defineProperty(scrollContainer, "scrollLeft", {
       configurable: true,
       writable: true,
@@ -580,6 +642,8 @@ describe("Table", () => {
       configurable: true,
       value: scrollToSpy
     });
+    fireEvent(ownerWindow, new ownerWindow.Event("resize"));
+    expect(scrollContainer).toHaveAttribute("tabindex", "0");
 
     scrollContainer.focus();
     expect(scrollContainer).toHaveFocus();
@@ -641,6 +705,7 @@ describe("Table", () => {
       configurable: true,
       value: 600
     });
+    const ownerWindow = scrollContainer.ownerDocument.defaultView as Window;
     Object.defineProperty(scrollContainer, "scrollLeft", {
       configurable: true,
       writable: true,
@@ -661,6 +726,8 @@ describe("Table", () => {
       configurable: true,
       value: scrollToSpy
     });
+    fireEvent(ownerWindow, new ownerWindow.Event("resize"));
+    expect(scrollContainer).toHaveAttribute("tabindex", "0");
 
     scrollContainer.focus();
     expect(scrollContainer).toHaveFocus();
@@ -709,12 +776,15 @@ describe("Table", () => {
       configurable: true,
       value: 600
     });
+    const ownerWindow = scrollContainer.ownerDocument.defaultView as Window;
 
     const scrollBySpy = vi.fn();
     Object.defineProperty(scrollContainer, "scrollBy", {
       configurable: true,
       value: scrollBySpy
     });
+    fireEvent(ownerWindow, new ownerWindow.Event("resize"));
+    expect(scrollContainer).toHaveAttribute("tabindex", "0");
 
     scrollContainer.focus();
     fireEvent.keyDown(scrollContainer, { key: "ArrowRight" });

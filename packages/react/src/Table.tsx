@@ -538,6 +538,7 @@ export function Table<T>({
   ]);
   const hasActionableSortControls =
     !loading && sortedEntries.length > 1 && columns.some((column) => column.sortable);
+  const exposeKeyboardScrollableRegion = !hasActionableSortControls && hasKeyboardPannableOverflow;
   const tableColSpan = Math.max(columns.length, 1);
 
   React.useEffect(() => {
@@ -592,23 +593,19 @@ export function Table<T>({
     <div
       ref={scrollContainerRef}
       data-aurora-table-scroll-container=""
-      role={hasActionableSortControls ? undefined : "region"}
-      tabIndex={hasActionableSortControls ? undefined : 0}
+      role={exposeKeyboardScrollableRegion ? "region" : undefined}
+      tabIndex={exposeKeyboardScrollableRegion ? 0 : undefined}
       aria-label={
-        hasActionableSortControls
+        !exposeKeyboardScrollableRegion
           ? undefined
           : resolvedAriaLabelledBy
             ? undefined
             : (resolvedAriaLabel ?? "Data table scroll container")
       }
-      aria-labelledby={hasActionableSortControls ? undefined : resolvedAriaLabelledBy}
-      aria-keyshortcuts={
-        hasActionableSortControls || !hasKeyboardPannableOverflow
-          ? undefined
-          : scrollContainerKeyboardShortcuts
-      }
+      aria-labelledby={exposeKeyboardScrollableRegion ? resolvedAriaLabelledBy : undefined}
+      aria-keyshortcuts={exposeKeyboardScrollableRegion ? scrollContainerKeyboardShortcuts : undefined}
       onKeyDown={(event) => {
-        if (hasActionableSortControls) {
+        if (!exposeKeyboardScrollableRegion) {
           return;
         }
         if (event.defaultPrevented) {

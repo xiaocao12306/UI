@@ -217,8 +217,8 @@ export const KeyboardReachableScrollContainer: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="220px" gap={10}>
       <p style={storyMutedTextStyle}>
-        When sortable controls are unavailable, focus the scroll region and use Arrow/Home/End/Page
-        keys to pan overflowed columns.
+        When sortable controls are unavailable and horizontal overflow exists, focus the scroll
+        region and use Arrow/Home/End/Page keys to pan overflowed columns.
       </p>
       <Table
         columns={[
@@ -238,8 +238,8 @@ export const KeyboardReachableScrollContainer: Story = {
       "[data-aurora-table-scroll-container]"
     ) as HTMLDivElement | null;
     await expect(scrollContainer).not.toBeNull();
-    await expect(scrollContainer).toHaveAttribute("role", "region");
-    await expect(scrollContainer).toHaveAttribute("tabindex", "0");
+    await expect(scrollContainer).not.toHaveAttribute("role");
+    await expect(scrollContainer).not.toHaveAttribute("tabindex");
     const ownerWindow = scrollContainer?.ownerDocument.defaultView ?? window;
     let mockedScrollLeft = 0;
     Object.defineProperty(scrollContainer as HTMLDivElement, "clientWidth", {
@@ -271,6 +271,8 @@ export const KeyboardReachableScrollContainer: Story = {
     });
     fireEvent(ownerWindow, new ownerWindow.Event("resize"));
     await waitFor(() => {
+      expect(scrollContainer).toHaveAttribute("role", "region");
+      expect(scrollContainer).toHaveAttribute("tabindex", "0");
       expect(scrollContainer).toHaveAttribute(
         "aria-keyshortcuts",
         "ArrowLeft ArrowRight Home End PageDown PageUp"
@@ -289,6 +291,40 @@ export const KeyboardReachableScrollContainer: Story = {
     await expect((scrollContainer as HTMLDivElement).scrollLeft).toBe(0);
     (scrollContainer as HTMLDivElement).removeEventListener("keydown", preemptScrollHandler, true);
 
+    await userEvent.tab();
+    await expect(canvas.getByRole("button", { name: "After table" })).toHaveFocus();
+  }
+};
+
+export const ScrollContainerSkipsTabStopWithoutOverflow: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="760px" gap={10}>
+      <p style={storyMutedTextStyle}>
+        Non-sortable tables without horizontal overflow should not insert an extra keyboard tab stop.
+      </p>
+      <button type="button">Before table</button>
+      <Table
+        columns={[
+          { key: "id", header: "Issue" },
+          { key: "component", header: "Component" }
+        ]}
+        data={rows}
+      />
+      <button type="button">After table</button>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const scrollContainer = canvasElement.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement | null;
+    await expect(scrollContainer).not.toBeNull();
+    await expect(scrollContainer).not.toHaveAttribute("role");
+    await expect(scrollContainer).not.toHaveAttribute("tabindex");
+    await expect(scrollContainer).not.toHaveAttribute("aria-keyshortcuts");
+
+    await userEvent.tab();
+    await expect(canvas.getByRole("button", { name: "Before table" })).toHaveFocus();
     await userEvent.tab();
     await expect(canvas.getByRole("button", { name: "After table" })).toHaveFocus();
   }
@@ -350,8 +386,14 @@ export const RtlScrollContainerKeyboardPanning: Story = {
       }
     });
     fireEvent(ownerWindow, new ownerWindow.Event("resize"));
-
-    await userEvent.tab();
+    await waitFor(() => {
+      expect(scrollContainer).toHaveAttribute("tabindex", "0");
+      expect(scrollContainer).toHaveAttribute(
+        "aria-keyshortcuts",
+        "ArrowLeft ArrowRight Home End PageDown PageUp"
+      );
+    });
+    (scrollContainer as HTMLDivElement).focus();
     await expect(scrollContainer).toHaveFocus();
 
     fireEvent.keyDown(scrollContainer as HTMLDivElement, { key: "ArrowLeft" });
