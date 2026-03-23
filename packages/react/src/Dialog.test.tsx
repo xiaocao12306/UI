@@ -29,6 +29,21 @@ describe("Dialog", () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
+  it("falls back invalid runtime showCloseButton values to visible close affordance", () => {
+    render(
+      <Dialog
+        open
+        onOpenChange={() => {}}
+        title="Runtime showCloseButton"
+        showCloseButton={0 as unknown as boolean}
+      >
+        <p>Body</p>
+      </Dialog>
+    );
+
+    expect(screen.getByRole("button", { name: "Close dialog" })).toBeInTheDocument();
+  });
+
   it("marks close-button transitions for reduced-motion fallback", () => {
     render(
       <Dialog open onOpenChange={() => {}} title="Settings">
@@ -679,6 +694,34 @@ describe("Dialog", () => {
     expect(onOpenChange).not.toHaveBeenCalled();
   });
 
+  it("normalizes runtime dismiss booleans and keeps Escape/outside dismissal enabled", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <Dialog
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        title="Runtime dismiss policy"
+        closeOnEscape={0 as unknown as boolean}
+        closeOnOutsidePointer={null as unknown as boolean}
+      >
+        <p>Body</p>
+      </Dialog>
+    );
+
+    expect(screen.getByRole("dialog", { name: "Runtime dismiss policy" })).toHaveAttribute("aria-keyshortcuts", "Escape");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "escape-key");
+    expect(onOpenChange).toHaveBeenNthCalledWith(1, false);
+
+    fireEvent.pointerDown(document.body);
+    expect(onCloseReason).toHaveBeenNthCalledWith(2, "outside-pointer");
+    expect(onOpenChange).toHaveBeenNthCalledWith(2, false);
+  });
+
   it("ignores modified Escape combinations for dismiss and hook callbacks", () => {
     const onOpenChange = vi.fn();
     const onCloseReason = vi.fn();
@@ -1118,6 +1161,38 @@ describe("Dialog", () => {
     await user.click(screen.getByRole("button", { name: "Close dialog" }));
 
     expect(trigger).not.toHaveFocus();
+  });
+
+  it("falls back invalid runtime restoreFocus values to enabled focus restore", async () => {
+    const user = userEvent.setup();
+
+    function RuntimeRestoreFocusFixture() {
+      const [open, setOpen] = React.useState(false);
+
+      return (
+        <div>
+          <button type="button" onClick={() => setOpen(true)}>
+            Open dialog
+          </button>
+          <Dialog
+            open={open}
+            onOpenChange={setOpen}
+            title="Runtime restore focus"
+            restoreFocus={0 as unknown as boolean}
+          >
+            <p>Body</p>
+          </Dialog>
+        </div>
+      );
+    }
+
+    render(<RuntimeRestoreFocusFixture />);
+    const trigger = screen.getByRole("button", { name: "Open dialog" });
+
+    await user.click(trigger);
+    await user.click(screen.getByRole("button", { name: "Close dialog" }));
+
+    expect(trigger).toHaveFocus();
   });
 
   it("dismisses nested overlays from top layer first on Escape", () => {

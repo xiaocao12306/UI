@@ -31,6 +31,13 @@ const dialogSizeMap: Record<DialogSize, string> = {
   lg: "min(760px, calc(100vw - 32px))"
 };
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+  return value;
+}
+
 export function Dialog({
   open,
   title,
@@ -79,6 +86,10 @@ export function Dialog({
     ? undefined
     : explicitAriaLabel ?? (hasReadableTitleText ? undefined : "Dialog");
   const hasExplicitDialogName = explicitAriaLabel !== undefined || resolvedAriaLabelledBy !== undefined;
+  const resolvedRestoreFocus = resolveBooleanFlag(restoreFocus, true);
+  const resolvedCloseOnEscape = resolveBooleanFlag(closeOnEscape, true);
+  const resolvedCloseOnOutsidePointer = resolveBooleanFlag(closeOnOutsidePointer, true);
+  const resolvedShowCloseButton = resolveBooleanFlag(showCloseButton, true);
 
   const closeWithReason = React.useCallback(
     (reason: DialogCloseReason) => {
@@ -173,7 +184,7 @@ export function Dialog({
             if (event.defaultPrevented) {
               return;
             }
-            if (!closeOnEscape) {
+            if (!resolvedCloseOnEscape) {
               event.preventDefault();
               return;
             }
@@ -186,7 +197,7 @@ export function Dialog({
             if (event.defaultPrevented) {
               return;
             }
-            if (!closeOnOutsidePointer) {
+            if (!resolvedCloseOnOutsidePointer) {
               event.preventDefault();
               return;
             }
@@ -196,7 +207,7 @@ export function Dialog({
           }}
           onDismiss={() => onOpenChange(false)}
         >
-          <FocusScope restoreFocus={restoreFocus}>
+          <FocusScope restoreFocus={resolvedRestoreFocus}>
             <section
               ref={(node) => {
                 panelRef.current = node;
@@ -207,7 +218,7 @@ export function Dialog({
               aria-label={resolvedAriaLabel}
               aria-labelledby={resolvedAriaLabelledBy ?? (resolvedAriaLabel ? undefined : titleId)}
               aria-describedby={hasDescriptionContent ? descriptionId : undefined}
-              aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
+              aria-keyshortcuts={resolvedCloseOnEscape ? "Escape" : undefined}
               data-state="open"
               style={{
                 width: dialogSizeMap[size],
@@ -233,7 +244,7 @@ export function Dialog({
                     </p>
                   ) : null}
                 </div>
-                {showCloseButton ? (
+                {resolvedShowCloseButton ? (
                   <button
                     data-aurora-reduced-motion="transition"
                     type="button"
