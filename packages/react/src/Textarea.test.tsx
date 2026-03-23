@@ -10,6 +10,31 @@ describe("Textarea", () => {
     expect(textarea).toHaveAttribute("data-aurora-reduced-motion", "transition");
   });
 
+  it("preserves valid positive rows and normalizes fractional rows", () => {
+    const { rerender } = render(<Textarea aria-label="Rows textarea" rows={4} />);
+    const textarea = screen.getByRole("textbox", { name: "Rows textarea" });
+    expect(textarea).toHaveAttribute("rows", "4");
+
+    rerender(<Textarea aria-label="Rows textarea" rows={4.8} />);
+    expect(screen.getByRole("textbox", { name: "Rows textarea" })).toHaveAttribute("rows", "4");
+  });
+
+  it("ignores non-finite and non-positive rows", () => {
+    const { rerender } = render(<Textarea aria-label="Rows fallback textarea" rows={0} />);
+    const textarea = screen.getByRole("textbox", { name: "Rows fallback textarea" });
+    expect(textarea).not.toHaveAttribute("rows");
+
+    rerender(<Textarea aria-label="Rows fallback textarea" rows={-2} />);
+    expect(screen.getByRole("textbox", { name: "Rows fallback textarea" })).not.toHaveAttribute(
+      "rows"
+    );
+
+    rerender(<Textarea aria-label="Rows fallback textarea" rows={Number.NaN} />);
+    expect(screen.getByRole("textbox", { name: "Rows fallback textarea" })).not.toHaveAttribute(
+      "rows"
+    );
+  });
+
   it("applies invalid accessibility attributes", () => {
     render(<Textarea invalid aria-label="Notes" />);
     const textarea = screen.getByRole("textbox", { name: "Notes" });

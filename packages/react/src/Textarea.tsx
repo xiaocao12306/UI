@@ -10,6 +10,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
   {
     style,
     invalid,
+    rows,
     disabled,
     readOnly,
     onFocus,
@@ -33,6 +34,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
   const isInteractionDisabled = Boolean(disabled);
+  const resolvedRows = resolveTextareaRows(rows);
   const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
   const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
 
@@ -96,6 +98,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
     <textarea
       ref={setRefs}
       {...restProps}
+      rows={resolvedRows}
       disabled={disabled}
       readOnly={readOnly}
       aria-label={ariaLabel}
@@ -194,4 +197,13 @@ function resolveFocusVisibleState(target: HTMLTextAreaElement, fallback: boolean
 
 function isPrimaryPointerButton(button: number | undefined) {
   return typeof button !== "number" || button <= 0;
+}
+
+function resolveTextareaRows(rows: number | undefined) {
+  if (typeof rows !== "number" || !Number.isFinite(rows)) {
+    return undefined;
+  }
+
+  const normalized = Math.trunc(rows);
+  return normalized > 0 ? normalized : undefined;
 }

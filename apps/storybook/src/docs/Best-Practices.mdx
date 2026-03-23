@@ -94,6 +94,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep date-picker shortcut hints explicit: native `type="date"` should not expose default Enter shortcut metadata; only pass `aria-keyshortcuts` when product workflows require a custom documented shortcut.
 - Keep date-picker focus intent parity with text fields: non-primary pointer interactions and `Ctrl + primary click` context-click paths should not clear keyboard-origin focus-visible state.
 - Keep input keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
+- Keep textarea `rows` finite and positive in product config; fractional values are now normalized to integer rows, and non-finite/non-positive values are ignored to keep textarea geometry stable.
 - Keep textarea keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep select keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Keep switch keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
