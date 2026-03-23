@@ -177,6 +177,29 @@ describe("Tooltip", () => {
     expect(screen.queryByRole("tooltip")).toBeNull();
   });
 
+  it("normalizes runtime boolean config for disabled and closeOnEscape", () => {
+    render(
+      <Tooltip
+        content="Runtime tooltip content"
+        closeDelay={0}
+        delayDuration={0}
+        disabled={"true" as unknown as boolean}
+        closeOnEscape={0 as unknown as boolean}
+      >
+        <button type="button">Runtime boolean trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Runtime boolean trigger" });
+    fireEvent.focus(trigger);
+    const tooltip = screen.getByRole("tooltip");
+    expect(tooltip).toHaveAttribute("aria-keyshortcuts", "Escape");
+    expect(tooltip).toHaveTextContent("Runtime tooltip content");
+
+    fireEvent.keyDown(trigger, { key: "Escape" });
+    expect(screen.queryByRole("tooltip")).toBeNull();
+  });
+
   it("supports controlled mode and emits onOpenChange", () => {
     const onOpenChange = vi.fn();
 

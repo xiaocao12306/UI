@@ -159,6 +159,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={TooltipStories.NonTextTriggerNameFallback} />
 <Canvas of={TooltipStories.EscapeModifierGuard} />
 <Canvas of={TooltipStories.EscapeDisabled} />
+<Canvas of={TooltipStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={DialogStories.Interactive} />
 
 ## Overlay Policies
@@ -190,6 +191,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep tooltip Escape close behavior scoped to unmodified, non-repeat, non-IME keydown so host shortcut chords and CJK composition confirmation cannot collapse hint overlays unexpectedly.
 - Keep tooltip numeric props finite in product config; non-finite `delayDuration/closeDelay/sideOffset/maxWidth` now fall back to `250/80/8/320`, and fractional values are normalized to stable integer units while string `maxWidth` values are trimmed.
 - For persistent hint workflows, set tooltip `closeOnEscape={false}` and rely on blur/pointer-leave close paths; ensure shortcut hints do not expose `aria-keyshortcuts="Escape"` when Escape dismiss is disabled.
+- Normalize tooltip runtime boolean config from CMS/JSON payloads before binding props: malformed `disabled` should degrade to `false`, and malformed `closeOnEscape` should degrade to `true` so trigger affordance and dismiss policy do not drift silently.
 - For dialog/drawer in iframe or multi-root hosts, rely on owner-document portal mounting (`ownerDocument.body`) so overlay content and scroll-lock scope stay inside the invoking document.
 - For popover/dropdown in iframe or multi-root hosts, validate Escape/outside-pointer dismissal against the overlay `ownerDocument`; cross-document events and `Ctrl + primary` context-click pointer paths should not close the active surface.
 - For dialog/drawer flows under app-level shortcuts, rely on built-in Escape preemption behavior so `onEscapeKeyDown` hooks stay side-effect free when Escape is already prevented.

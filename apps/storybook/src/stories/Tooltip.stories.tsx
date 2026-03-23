@@ -120,6 +120,58 @@ export const EscapeDisabled: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationTooltipStory() {
+  const [closeCount, setCloseCount] = React.useState(0);
+
+  return (
+    <TooltipShowcase gap={8}>
+      <p style={storyMutedTextStyle}>
+        Escape close count: <strong data-testid="tooltip-runtime-close-count">{closeCount}</strong>
+      </p>
+      <Tooltip
+        content="Runtime booleans should normalize to enabled Escape and interactive trigger."
+        delayDuration={0}
+        closeDelay={0}
+        disabled={"true" as unknown as boolean}
+        closeOnEscape={0 as unknown as boolean}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) {
+            setCloseCount((count) => count + 1);
+          }
+        }}
+      >
+        <Button variant="outline">Runtime Boolean Trigger</Button>
+      </Tooltip>
+    </TooltipShowcase>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  args: {
+    content: "Runtime booleans should normalize to enabled Escape and interactive trigger.",
+    children: <Button variant="outline">Runtime Boolean Trigger</Button>
+  },
+  render: () => <RuntimeBooleanConfigNormalizationTooltipStory />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Runtime Boolean Trigger" });
+    await expect(canvas.getByTestId("tooltip-runtime-close-count")).toHaveTextContent("0");
+
+    trigger.focus();
+    const tooltip = await canvas.findByRole("tooltip");
+    await expect(tooltip).toHaveAttribute("aria-keyshortcuts", "Escape");
+    await expect(tooltip).toHaveTextContent(
+      "Runtime booleans should normalize to enabled Escape and interactive trigger."
+    );
+
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => {
+      expect(canvas.queryByRole("tooltip")).not.toBeInTheDocument();
+    });
+    await expect(canvas.getByTestId("tooltip-runtime-close-count")).toHaveTextContent("1");
+  }
+};
+
 export const InlineHint: Story = {
   args: {
     content: "Theme tokens are inherited from AuroraProvider.",

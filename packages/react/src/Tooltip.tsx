@@ -47,6 +47,13 @@ function resolveTooltipSideOffset(value: number, fallback: number) {
   return Math.trunc(value);
 }
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+  return value;
+}
+
 function resolveTooltipMaxWidth(value: number | string, fallback: number) {
   if (typeof value === "number") {
     if (Number.isFinite(value) && value >= 0) {
@@ -92,6 +99,8 @@ export function Tooltip({
   const safeCloseDelay = resolveTooltipDelay(closeDelay, 80);
   const safeSideOffset = resolveTooltipSideOffset(sideOffset, 8);
   const safeMaxWidth = resolveTooltipMaxWidth(maxWidth, 320);
+  const resolvedDisabled = resolveBooleanFlag(disabled, false);
+  const resolvedCloseOnEscape = resolveBooleanFlag(closeOnEscape, true);
 
   const getOwnerWindow = React.useCallback(
     () => rootRef.current?.ownerDocument.defaultView ?? window,
@@ -100,7 +109,7 @@ export function Tooltip({
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
-      if (disabled && nextOpen) {
+      if (resolvedDisabled && nextOpen) {
         return;
       }
       if (isOpen === nextOpen) {
@@ -111,7 +120,7 @@ export function Tooltip({
       }
       onOpenChange?.(nextOpen);
     },
-    [disabled, isControlled, isOpen, onOpenChange]
+    [resolvedDisabled, isControlled, isOpen, onOpenChange]
   );
 
   const clearTimers = React.useCallback(() => {
@@ -133,7 +142,7 @@ export function Tooltip({
   }, [clearTimers, setOpen]);
 
   const openImmediately = React.useCallback(() => {
-    if (disabled) {
+    if (resolvedDisabled) {
       return;
     }
     if (closeTimerRef.current !== null) {
@@ -142,10 +151,10 @@ export function Tooltip({
       closeTimerWindowRef.current = null;
     }
     setOpen(true);
-  }, [disabled, getOwnerWindow, setOpen]);
+  }, [resolvedDisabled, getOwnerWindow, setOpen]);
 
   const scheduleOpen = React.useCallback(() => {
-    if (disabled) {
+    if (resolvedDisabled) {
       return;
     }
     const ownerWindow = getOwnerWindow();
@@ -167,7 +176,7 @@ export function Tooltip({
       openTimerRef.current = null;
       openTimerWindowRef.current = null;
     }, safeDelayDuration);
-  }, [disabled, getOwnerWindow, safeDelayDuration, setOpen]);
+  }, [resolvedDisabled, getOwnerWindow, safeDelayDuration, setOpen]);
 
   const scheduleClose = React.useCallback(() => {
     const ownerWindow = getOwnerWindow();
@@ -194,12 +203,12 @@ export function Tooltip({
   React.useEffect(() => clearTimers, [clearTimers]);
 
   React.useEffect(() => {
-    if (disabled && isOpen) {
+    if (resolvedDisabled && isOpen) {
       setOpen(false);
     }
-  }, [disabled, isOpen, setOpen]);
+  }, [resolvedDisabled, isOpen, setOpen]);
 
-  const visible = isOpen && !disabled;
+  const visible = isOpen && !resolvedDisabled;
   const child = React.Children.only(children) as React.ReactElement<Record<string, unknown>>;
   const childProps = child.props;
   const resolvedTriggerAriaLabelledBy = resolveNonEmptyTooltipLabel(
@@ -280,7 +289,7 @@ export function Tooltip({
       );
       if (
         !event.defaultPrevented &&
-        closeOnEscape &&
+        resolvedCloseOnEscape &&
         event.key === "Escape" &&
         !event.altKey &&
         !event.ctrlKey &&
@@ -300,7 +309,7 @@ export function Tooltip({
         <span
           id={tooltipId}
           role="tooltip"
-          aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
+          aria-keyshortcuts={resolvedCloseOnEscape ? "Escape" : undefined}
           onMouseEnter={scheduleOpen}
           onMouseLeave={scheduleClose}
           style={{

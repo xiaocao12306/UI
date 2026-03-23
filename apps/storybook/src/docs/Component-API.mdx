@@ -337,8 +337,8 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `open` / `defaultOpen`         | `boolean`                                                                                      | Supports controlled and uncontrolled visibility flow.                                                                               |
 | `onOpenChange`                 | `(open: boolean) => void`                                                                      | Emits open-state transitions across pointer and keyboard interactions.                                                              |
 | `delayDuration` / `closeDelay` | `number`                                                                                       | Fine-grained pointer open/close timing control. Values are normalized to non-negative integers; non-finite values fall back to defaults (`delayDuration=250`, `closeDelay=80`). |
-| `disabled`                     | `boolean`                                                                                      | Prevents open behavior and closes active tooltip state.                                                                             |
-| `closeOnEscape`                | `boolean`                                                                                      | Controls whether Escape dismiss is enabled; disabling it keeps tooltip open on Escape and removes dismiss shortcut metadata.        |
+| `disabled`                     | `boolean`                                                                                      | Prevents open behavior and closes active tooltip state. Non-boolean runtime values fall back to `false` so malformed config does not silently disable trigger affordance. |
+| `closeOnEscape`                | `boolean`                                                                                      | Controls whether Escape dismiss is enabled; disabling it keeps tooltip open on Escape and removes dismiss shortcut metadata. Non-boolean runtime values fall back to `true`. |
 | `side` / `sideOffset`          | `'top' \| 'right' \| 'bottom' \| 'left'` / `number`                                            | Controls overlay placement around trigger. `sideOffset` is normalized to integer pixels; non-finite values fall back to `8`.     |
 | `maxWidth`                     | `number \| string`                                                                              | Optional tooltip bubble max-width. Numeric values must be finite and non-negative; blank/non-finite values fall back to `320`.     |
 | trigger naming                 | non-empty `aria-label` / `aria-labelledby` on trigger element                                  | For icon-only/non-text triggers, provide explicit naming on the trigger element itself. Rich trigger content with inline `aria-label` is auto-detected, and development builds warn when both naming paths are missing. |
@@ -350,6 +350,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={TooltipStories.NonTextTriggerNameFallback} />
 <Canvas of={TooltipStories.EscapeModifierGuard} />
 <Canvas of={TooltipStories.EscapeDisabled} />
+<Canvas of={TooltipStories.RuntimeBooleanConfigNormalization} />
 
 ### Dialog
 
