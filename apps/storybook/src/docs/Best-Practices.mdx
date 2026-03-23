@@ -569,7 +569,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - When tab labels are non-text and explicit naming is omitted, keep `items[].key` human-readable (for example `overview-stage` instead of opaque ids) because fallback names are normalized from key text; keys without readable characters fall back to `Tab N`.
 - Use `activationMode="manual"` when arrow-key navigation should not immediately trigger expensive panel renders.
 - Use `loop={false}` when boundary tabs should trap Arrow navigation (for linear workflows where wrap-around can feel like a jump).
-- Normalize runtime tab config (for example CMS/JSON strings) before wiring props: mixed-case `orientation` / `activationMode` tokens and non-boolean `loop` values should degrade to safe defaults (`vertical`/`manual` normalization, invalid `loop` -> wrapping enabled).
+- Normalize runtime tab config (for example CMS/JSON strings) before wiring props: mixed-case `orientation` / `activationMode` tokens and non-boolean `loop` / `items[].disabled` values should degrade to safe defaults (`vertical`/`manual` normalization, invalid `loop` -> wrapping enabled, invalid disabled flags -> actionable tabs).
 - Keep modified shortcuts (`Ctrl/Meta/Alt + Arrow/Home/End/PageUp/PageDown/Enter/Space`) on host/browser behavior; tabs should only react to unmodified navigation/activation keys.
 - Keep vertical tablists stable under modified `ArrowUp/ArrowDown`; `Ctrl/Meta/Alt` arrow chords should not move roving focus or selected panel.
 - When guard logic preempts tab keydown with `preventDefault()` (app-level capture or local `onTabKeyDown`), keep tablist navigation/activation handlers side-effect free so host shortcut guards remain authoritative.

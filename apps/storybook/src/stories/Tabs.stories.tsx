@@ -605,7 +605,7 @@ export const RuntimeConfigNormalization: Story = {
       <p style={storyMutedTextStyle}>
         Runtime string config from CMS/JSON should normalize safely: mixed-case{" "}
         <code>orientation</code>/<code>activationMode</code> map to supported values, and invalid{" "}
-        <code>loop</code> falls back to wrapping navigation.
+        <code>loop</code>/<code>items[].disabled</code> falls back to actionable wrapping semantics.
       </p>
       <Tabs
         ariaLabel="Runtime normalized tabs"
@@ -619,7 +619,13 @@ export const RuntimeConfigNormalization: Story = {
             label: "Spec",
             content: "Spec stays selected until manual activation confirms a new tab."
           },
-          { key: "build", label: "Build", content: "Build activation is manual + wraps at boundary." }
+          { key: "build", label: "Build", content: "Build activation is manual + wraps at boundary." },
+          {
+            key: "review",
+            label: "Review",
+            content: "Invalid runtime disabled flag should not lock this tab.",
+            disabled: "false" as unknown as boolean
+          }
         ]}
       />
     </TabsShowcase>
@@ -629,10 +635,13 @@ export const RuntimeConfigNormalization: Story = {
     const tabList = canvas.getByRole("tablist", { name: "Runtime normalized tabs" });
     const specTab = canvas.getByRole("tab", { name: "Spec" });
     const buildTab = canvas.getByRole("tab", { name: "Build" });
+    const reviewTab = canvas.getByRole("tab", { name: "Review" });
 
     await expect(tabList).toHaveAttribute("aria-orientation", "vertical");
     await expect(specTab).toHaveAttribute("aria-selected", "true");
     await expect(specTab).toHaveAttribute("aria-keyshortcuts", manualVerticalTabShortcuts);
+    await expect(reviewTab).not.toBeDisabled();
+    await expect(reviewTab).toHaveAttribute("aria-keyshortcuts", manualVerticalTabShortcuts);
 
     await userEvent.click(specTab);
     await userEvent.keyboard("{ArrowDown}");
@@ -641,6 +650,9 @@ export const RuntimeConfigNormalization: Story = {
 
     await userEvent.keyboard("{Enter}");
     await expect(buildTab).toHaveAttribute("aria-selected", "true");
+
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(reviewTab).toHaveFocus();
 
     await userEvent.keyboard("{ArrowDown}");
     await expect(specTab).toHaveFocus();

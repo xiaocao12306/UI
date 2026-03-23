@@ -50,7 +50,7 @@ function getNextEnabledIndex(
     return -1;
   }
 
-  const fallbackIndex = items[startIndex]?.disabled ? -1 : startIndex;
+  const fallbackIndex = isTabItemDisabled(items[startIndex]) ? -1 : startIndex;
   let index = startIndex;
   for (let i = 0; i < items.length; i += 1) {
     index += direction;
@@ -64,7 +64,7 @@ function getNextEnabledIndex(
       return fallbackIndex;
     }
 
-    if (!items[index]?.disabled) {
+    if (!isTabItemDisabled(items[index])) {
       return index;
     }
   }
@@ -73,12 +73,12 @@ function getNextEnabledIndex(
 }
 
 function getFirstEnabledIndex(items: TabItem[]) {
-  return items.findIndex((item) => !item.disabled);
+  return items.findIndex((item) => !isTabItemDisabled(item));
 }
 
 function getLastEnabledIndex(items: TabItem[]) {
   for (let index = items.length - 1; index >= 0; index -= 1) {
-    if (!items[index]?.disabled) {
+    if (!isTabItemDisabled(items[index])) {
       return index;
     }
   }
@@ -101,7 +101,7 @@ function getNearestEnabledKey(
 
   for (let distance = 0; distance < items.length; distance += 1) {
     const rightIndex = anchorIndex + distance;
-    if (rightIndex >= 0 && rightIndex < items.length && !items[rightIndex]?.disabled) {
+    if (rightIndex >= 0 && rightIndex < items.length && !isTabItemDisabled(items[rightIndex])) {
       return items[rightIndex]?.key ?? fallbackKey;
     }
 
@@ -110,7 +110,7 @@ function getNearestEnabledKey(
     }
 
     const leftIndex = anchorIndex - distance;
-    if (leftIndex >= 0 && leftIndex < items.length && !items[leftIndex]?.disabled) {
+    if (leftIndex >= 0 && leftIndex < items.length && !isTabItemDisabled(items[leftIndex])) {
       return items[leftIndex]?.key ?? fallbackKey;
     }
   }
@@ -144,7 +144,7 @@ export function Tabs({
     buildKeyIndexMap(items)
   );
   const firstItemKey = items[0]?.key;
-  const firstEnabledKey = items.find((item) => !item.disabled)?.key;
+  const firstEnabledKey = items.find((item) => !isTabItemDisabled(item))?.key;
   const firstEnabledIndex = React.useMemo(() => getFirstEnabledIndex(items), [items]);
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? firstEnabledKey);
   const [hoveredTabRenderKey, setHoveredTabRenderKey] = React.useState<string | null>(null);
@@ -160,7 +160,7 @@ export function Tabs({
   const tabDomIds = React.useMemo(() => createTabDomIds(baseId, items), [baseId, items]);
   const itemRenderKeys = React.useMemo(() => createItemRenderKeys(items), [items]);
   const enabledTabCount = React.useMemo(
-    () => items.reduce((count, item) => (item.disabled ? count : count + 1), 0),
+    () => items.reduce((count, item) => (isTabItemDisabled(item) ? count : count + 1), 0),
     [items]
   );
 
@@ -243,7 +243,9 @@ export function Tabs({
       return;
     }
 
-    const hasMatchingEnabledItem = items.some((item) => item.key === value && !item.disabled);
+    const hasMatchingEnabledItem = items.some(
+      (item) => item.key === value && !isTabItemDisabled(item)
+    );
     if (hasMatchingEnabledItem) {
       warnedInvalidControlledValueRef.current = null;
       return;
@@ -296,7 +298,7 @@ export function Tabs({
   const currentRawValue = value ?? internalValue;
   const currentItem = items.find((item) => item.key === currentRawValue);
   const currentValue = (() => {
-    if (currentItem && !currentItem.disabled) {
+    if (currentItem && !isTabItemDisabled(currentItem)) {
       return currentRawValue;
     }
 
@@ -334,12 +336,12 @@ export function Tabs({
     const focusedIndex =
       focusedValue === undefined
         ? -1
-        : items.findIndex((item) => item.key === focusedValue && !item.disabled);
+        : items.findIndex((item) => item.key === focusedValue && !isTabItemDisabled(item));
     if (focusedIndex >= 0) {
       return focusedIndex;
     }
 
-    if (activeTabIndex >= 0 && !items[activeTabIndex]?.disabled) {
+    if (activeTabIndex >= 0 && !isTabItemDisabled(items[activeTabIndex])) {
       return activeTabIndex;
     }
 
@@ -367,7 +369,7 @@ export function Tabs({
 
   React.useEffect(() => {
     const enabledRenderKeys = new Set(
-      itemRenderKeys.filter((_, index) => !items[index]?.disabled)
+      itemRenderKeys.filter((_, index) => !isTabItemDisabled(items[index]))
     );
     setHoveredTabRenderKey((currentKey) =>
       currentKey && !enabledRenderKeys.has(currentKey) ? null : currentKey
@@ -393,7 +395,7 @@ export function Tabs({
   const select = React.useCallback(
     (nextValue: string) => {
       const target = items.find((item) => item.key === nextValue);
-      if (!target || target.disabled || nextValue === currentValue) {
+      if (!target || isTabItemDisabled(target) || nextValue === currentValue) {
         return;
       }
 
@@ -434,7 +436,7 @@ export function Tabs({
           const domIds = tabDomIds[index];
           const itemRenderKey = itemRenderKeys[index] ?? `${item.key}__dup-${index}`;
           const selected = index === activeTabIndex;
-          const disabled = Boolean(item.disabled);
+          const disabled = isTabItemDisabled(item);
           const hovered = !disabled && hoveredTabRenderKey === itemRenderKey;
           const pressed = !disabled && pressedTabRenderKey === itemRenderKey;
           const focusVisible = !disabled && focusVisibleTabRenderKey === itemRenderKey;
@@ -769,6 +771,18 @@ function resolveTabLoop(loop: TabsProps["loop"] | unknown): boolean {
   }
 
   return loop;
+}
+
+function resolveBooleanFlag(value: unknown, fallback: boolean): boolean {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
+function isTabItemDisabled(item: TabItem | undefined): boolean {
+  return resolveBooleanFlag(item?.disabled, false);
 }
 
 function getTabKeyShortcuts(

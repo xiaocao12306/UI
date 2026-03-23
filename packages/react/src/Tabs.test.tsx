@@ -83,7 +83,7 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel One")).toBeInTheDocument();
   });
 
-  it("normalizes runtime orientation/activationMode tokens and falls back invalid loop to wrapping", () => {
+  it("normalizes runtime config tokens and falls back invalid boolean item flags to actionable tabs", () => {
     render(
       <Tabs
         ariaLabel="Runtime config tabs"
@@ -93,7 +93,13 @@ describe("Tabs", () => {
         loop={"invalid-loop" as unknown as boolean}
         items={[
           { key: "spec", label: "Spec", content: <div>Spec panel</div> },
-          { key: "build", label: "Build", content: <div>Build panel</div> }
+          { key: "build", label: "Build", content: <div>Build panel</div> },
+          {
+            key: "review",
+            label: "Review",
+            content: <div>Review panel</div>,
+            disabled: "false" as unknown as boolean
+          }
         ]}
       />
     );
@@ -101,6 +107,7 @@ describe("Tabs", () => {
     const tabList = screen.getByRole("tablist", { name: "Runtime config tabs" });
     const specTab = screen.getByRole("tab", { name: "Spec" });
     const buildTab = screen.getByRole("tab", { name: "Build" });
+    const reviewTab = screen.getByRole("tab", { name: "Review" });
 
     expect(tabList).toHaveAttribute("aria-orientation", "vertical");
     expect(specTab).toHaveAttribute(
@@ -108,6 +115,11 @@ describe("Tabs", () => {
       "Enter Space Home End PageDown PageUp ArrowUp ArrowDown"
     );
     expect(specTab).toHaveAttribute("aria-selected", "true");
+    expect(reviewTab).not.toBeDisabled();
+    expect(reviewTab).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space Home End PageDown PageUp ArrowUp ArrowDown"
+    );
 
     fireEvent.keyDown(specTab, { key: "ArrowDown" });
     expect(buildTab).toHaveFocus();
@@ -117,6 +129,9 @@ describe("Tabs", () => {
     expect(buildTab).toHaveAttribute("aria-selected", "true");
 
     fireEvent.keyDown(buildTab, { key: "ArrowDown" });
+    expect(reviewTab).toHaveFocus();
+
+    fireEvent.keyDown(reviewTab, { key: "ArrowDown" });
     expect(specTab).toHaveFocus();
   });
 
