@@ -109,4 +109,18 @@ describe("Empty", () => {
       errorSpy.mockRestore();
     }
   });
+
+  it("normalizes runtime tone tokens and falls back invalid values to default tone", () => {
+    const { unmount } = render(<Empty title="Runtime warning" tone={" WARNING " as unknown as "warning"} />);
+    const runtimeWarning = screen.getByRole("status", { name: "Runtime warning" });
+    const warningStyle = runtimeWarning.getAttribute("style") ?? "";
+    expect(warningStyle).toContain("var(--aurora-color-amber-500)");
+
+    unmount();
+    render(<Empty title="Runtime fallback" tone={"critical" as unknown as "default"} />);
+    const runtimeFallback = screen.getByRole("status", { name: "Runtime fallback" });
+    const fallbackStyle = runtimeFallback.getAttribute("style") ?? "";
+    expect(fallbackStyle).not.toContain("var(--aurora-color-amber-500)");
+    expect(fallbackStyle).not.toContain("var(--aurora-color-red-500)");
+  });
 });

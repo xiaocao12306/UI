@@ -126,6 +126,26 @@ export const ToneMatrix: Story = {
   )
 };
 
+export const RuntimeToneConfigNormalization: Story = {
+  render: () => (
+    <EmptyShowcase gap={12}>
+      <Empty title="Runtime warning token" description="Mixed-case warning token should normalize." tone={" WARNING " as unknown as "warning"} />
+      <Empty title="Runtime fallback token" description="Invalid tone token should fallback to default visual style." tone={"critical" as unknown as "default"} />
+    </EmptyShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const runtimeWarning = await canvas.findByRole("status", { name: "Runtime warning token" });
+    const warningStyle = runtimeWarning.getAttribute("style") ?? "";
+    await expect(warningStyle).toContain("var(--aurora-color-amber-500)");
+
+    const runtimeFallback = await canvas.findByRole("status", { name: "Runtime fallback token" });
+    const fallbackStyle = runtimeFallback.getAttribute("style") ?? "";
+    await expect(fallbackStyle).not.toContain("var(--aurora-color-amber-500)");
+    await expect(fallbackStyle).not.toContain("var(--aurora-color-red-500)");
+  }
+};
+
 export const NumericContentSemantics: Story = {
   render: () => (
     <EmptyShowcase maxWidth="min(100%, 360px)">

@@ -30,6 +30,22 @@ const toneStyleMap: Record<EmptyTone, React.CSSProperties> = {
   }
 };
 
+function resolveEmptyTone(value: unknown, fallback: EmptyTone) {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    if (
+      normalizedValue === "default" ||
+      normalizedValue === "info" ||
+      normalizedValue === "warning" ||
+      normalizedValue === "danger"
+    ) {
+      return normalizedValue;
+    }
+  }
+
+  return fallback;
+}
+
 export function Empty({
   title,
   description,
@@ -46,6 +62,7 @@ export function Empty({
 }: EmptyProps) {
   const titleId = React.useId();
   const descriptionId = React.useId();
+  const resolvedTone = resolveEmptyTone(tone, "default");
   const TitleElement = titleAs;
   const isCenter = align === "center";
   const warnedMissingAriaLabelRef = React.useRef(false);
@@ -99,7 +116,7 @@ export function Empty({
         justifyItems: isCenter ? "center" : "start",
         gap: 10,
         textAlign: isCenter ? "center" : "left",
-        ...toneStyleMap[tone],
+        ...toneStyleMap[resolvedTone],
         ...style
       }}
       {...props}
