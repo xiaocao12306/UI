@@ -159,6 +159,22 @@ export const BlankPlaceholderFallback: Story = {
   }
 };
 
+export const BlankEmptyMessageFallback: Story = {
+  args: {
+    options: frameworkOptions,
+    onValueChange: () => {},
+    emptyMessage: "   "
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Combobox" });
+    await userEvent.click(input);
+    await userEvent.clear(input);
+    await userEvent.type(input, "no-match");
+    await expect(canvas.getByRole("status")).toHaveTextContent("No option found.");
+  }
+};
+
 export const KeyboardDismissPaths: Story = {
   args: {
     ariaLabel: "Framework dismiss demo"

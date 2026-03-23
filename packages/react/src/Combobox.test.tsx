@@ -149,6 +149,26 @@ describe("Combobox", () => {
     expect(screen.queryByRole("option", { name: "React" })).toBeNull();
   });
 
+  it("falls back to default empty message when emptyMessage is blank", () => {
+    render(<Combobox options={options} onValueChange={() => {}} emptyMessage="   " />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "no-match" } });
+
+    expect(screen.getByRole("status")).toHaveTextContent("No option found.");
+  });
+
+  it("keeps numeric emptyMessage content renderable", () => {
+    render(<Combobox options={options} onValueChange={() => {}} emptyMessage={0} />);
+
+    const input = screen.getByRole("combobox", { name: "Combobox" });
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "no-match" } });
+
+    expect(screen.getByRole("status")).toHaveTextContent("0");
+  });
+
   it("filters non-text options via textValue metadata and keeps selected input text deterministic", () => {
     const onValueChange = vi.fn();
     render(
