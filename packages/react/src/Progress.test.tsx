@@ -28,6 +28,19 @@ describe("Progress", () => {
     expect(progressbar.querySelector("style")).toBeNull();
   });
 
+  it("falls back to computed value narration when valueText is blank", () => {
+    const { rerender } = render(<Progress value={55} valueText="   " showValueLabel />);
+    const determinateProgressbar = screen.getByRole("progressbar", { name: "Progress" });
+
+    expect(determinateProgressbar).toHaveAttribute("aria-valuetext", "55%");
+    expect(screen.getByText("55%")).toBeInTheDocument();
+
+    rerender(<Progress indeterminate valueText="   " showValueLabel />);
+    const indeterminateProgressbar = screen.getByRole("progressbar", { name: "Progress" });
+    expect(indeterminateProgressbar).toHaveAttribute("aria-valuetext", "Loading");
+    expect(screen.getByText("Loading")).toBeInTheDocument();
+  });
+
   it("renders helper value label when requested", () => {
     render(<Progress value={55} showValueLabel />);
     expect(screen.getByText("55%")).toBeInTheDocument();

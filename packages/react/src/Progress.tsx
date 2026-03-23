@@ -67,7 +67,11 @@ export function Progress({
   const resolvedAriaLabel = resolvedAriaLabelledBy
     ? undefined
     : explicitAriaLabel ?? fallbackLabel;
-  const resolvedValueText = valueText ?? (indeterminate ? "Loading" : `${Math.round(ratio)}%`);
+  const fallbackValueText = indeterminate ? "Loading" : `${Math.round(ratio)}%`;
+  const resolvedValueText =
+    typeof valueText === "string" && valueText.trim().length > 0
+      ? valueText.trim()
+      : fallbackValueText;
 
   return (
     <div style={{ display: "grid", gap: 6 }}>
