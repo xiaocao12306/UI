@@ -593,6 +593,36 @@ describe("Pagination", () => {
     expect(screen.getByRole("button", { name: "Go to next page" })).toBeInTheDocument();
   });
 
+  it("falls back to default pagination narration when getItemAriaLabel throws", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Pagination
+          page={2}
+          pageCount={6}
+          onPageChange={() => {}}
+          getItemAriaLabel={() => {
+            throw new Error("item aria formatter failed");
+          }}
+        />
+      );
+
+      expect(screen.getByRole("button", { name: "Go to first page" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Current page, 2" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Go to next page" })).toBeInTheDocument();
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Pagination] getItemAriaLabel threw an error; falling back to default pagination narration.",
+        expect.any(Error)
+      );
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("clamps custom previous/next aria label pages at boundaries", () => {
     const getItemAriaLabel = vi.fn((type: string, pageNumber: number) => `${type}:${pageNumber}`);
 

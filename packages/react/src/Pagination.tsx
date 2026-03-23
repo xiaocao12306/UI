@@ -116,6 +116,7 @@ export function Pagination({
   const pendingFocusPageRef = React.useRef<number | null>(null);
   const suppressProgrammaticFocusStateRef = React.useRef(false);
   const focusVisibleIntentRef = React.useRef(false);
+  const warnedItemAriaLabelErrorRef = React.useRef(false);
   const [focusedButtonId, setFocusedButtonId] = React.useState<string | null>(null);
   const [focusVisibleButtonId, setFocusVisibleButtonId] = React.useState<string | null>(null);
   const safeSiblingCount = resolvePaginationWindowCount(siblingCount, 1);
@@ -156,11 +157,26 @@ export function Pagination({
     (
       type: "page" | "current" | "first" | "last" | "next" | "previous",
       pageNumber: number
-    ) =>
-      resolveNonEmptyLabel(
-        getItemAriaLabel(type, pageNumber),
-        defaultGetItemAriaLabel(type, pageNumber)
-      ),
+    ) => {
+      const fallbackLabel = defaultGetItemAriaLabel(type, pageNumber);
+      let customLabel: unknown;
+
+      try {
+        customLabel = getItemAriaLabel(type, pageNumber);
+        warnedItemAriaLabelErrorRef.current = false;
+      } catch (error) {
+        customLabel = undefined;
+        if (process.env.NODE_ENV !== "production" && !warnedItemAriaLabelErrorRef.current) {
+          warnedItemAriaLabelErrorRef.current = true;
+          console.warn(
+            "[Pagination] getItemAriaLabel threw an error; falling back to default pagination narration.",
+            error
+          );
+        }
+      }
+
+      return resolveNonEmptyLabel(customLabel, fallbackLabel);
+    },
     [getItemAriaLabel]
   );
 
@@ -578,7 +594,7 @@ function buttonStyle(selected: boolean, disabled: boolean, focusVisible: boolean
   };
 }
 
-function resolveNonEmptyLabel(label: string | undefined, fallback?: string): string | undefined {
+function resolveNonEmptyLabel(label: unknown, fallback?: string): string | undefined {
   if (typeof label === "string" && label.trim().length > 0) {
     return label.trim();
   }

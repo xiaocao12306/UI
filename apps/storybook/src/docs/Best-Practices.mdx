@@ -592,7 +592,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - When sorting is unavailable, expose table scroll region tab stop (`role="region" + tabIndex=0`) only while horizontal overflow exists; keep Arrow/Home/End/Page keyboard panning and shortcut hints aligned to that overflow-only affordance so non-overflow layouts do not add dead-end tab stops.
 - In RTL layouts, mirror scroll-region Arrow/Home/End mappings so keyboard panning follows visual direction instead of LTR coordinate assumptions.
 - When app-level shortcuts preempt keydown with `preventDefault()`, keep scroll-region Arrow/Home/End/Page handlers side-effect free so host shortcut guards remain authoritative.
-- For pagination i18n, generate `getItemAriaLabel` from the provided `page` argument; boundary previous/next labels are already clamped to valid page ranges.
+- For pagination i18n, generate `getItemAriaLabel` from the provided `page` argument; boundary previous/next labels are already clamped to valid page ranges, and blank/invalid/throwing formatter output automatically falls back to built-in narration.
 - Keep pagination numeric inputs finite (`page`, `pageCount`, `siblingCount`, `boundaryCount`): non-finite values fall back to safe defaults and fractional values normalize to integer windows so token generation stays deterministic.
 - Normalize pagination runtime boolean config from CMS/JSON payloads before binding props: malformed `disabled/showFirstLast` values should degrade to `false/true` so controls are not silently locked and boundary jump buttons stay deterministic.
 - Prefer `ariaLabelledBy` for pagination when a visible heading already exists; use `ariaLabel` for standalone pagers without nearby title copy.
@@ -682,6 +682,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={PaginationStories.ModifierKeyGuard} />
 <Canvas of={PaginationStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={PaginationStories.RtlKeyboardShortcuts} />
+<Canvas of={PaginationStories.ItemAriaLabelErrorFallback} />
 <Canvas of={PaginationStories.BoundaryShortcutHints} />
 <Canvas of={PaginationStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={PaginationStories.LabelledByHeading} />

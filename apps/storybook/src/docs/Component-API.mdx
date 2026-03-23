@@ -725,7 +725,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `disabled` / `showFirstLast`          | `boolean`                                                               | Disable all controls and toggle first/last jump buttons. Non-boolean runtime values fall back to `false` / `true` so malformed payloads do not silently lock pagination or hide boundary controls.          |
 | `siblingCount` / `boundaryCount`      | `number`                                                                | Controls visible number tokens before ellipsis. Values are normalized to non-negative integers; non-finite values fall back to `1`.                                                                                                                    |
 | `ariaLabel` / `ariaLabelledBy`        | `string` / `string`                                                     | Name pagination nav with direct copy or an external heading reference; `ariaLabelledBy` takes precedence when both are provided, and blank naming values are ignored (`ariaLabel` falls back to `Pagination`). |
-| `getItemAriaLabel`                    | `(type, page) => string`                                                | Customize pagination control narration for i18n; boundary `previous/next` pages are clamped to valid range, and blank return values fallback to default narration.                                             |
+| `getItemAriaLabel`                    | `(type, page) => string`                                                | Customize pagination control narration for i18n; boundary `previous/next` pages are clamped to valid range, and blank/invalid return values or thrown formatter errors fallback to default narration.          |
 | RTL keyboard parity                   | ArrowLeft/ArrowRight auto-flip                                          | In `dir="rtl"` containers, horizontal arrow shortcuts mirror navigation intent to match visual flow.                                                                                                           |
 | modifier-key guard                    | ignores `Ctrl/Meta/Alt + Home/End/PageUp/PageDown/ArrowLeft/ArrowRight` | Preserves host app/browser modified-key shortcuts and avoids accidental page jumps under combined shortcut chords; `Shift`-modified shortcuts remain valid pagination navigation.                              |
 | managed-key priority                  | preempted keydown skips pagination keyboard handlers                     | If higher-level handlers already `preventDefault()` keydown, pagination ignores Home/End/PageUp/PageDown/Arrow keyboard navigation so host shortcut guards remain authoritative.                              |
@@ -737,6 +737,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={PaginationStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={PaginationStories.RtlKeyboardShortcuts} />
 <Canvas of={PaginationStories.BoundaryAriaLabels} />
+<Canvas of={PaginationStories.ItemAriaLabelErrorFallback} />
 <Canvas of={PaginationStories.BoundaryShortcutHints} />
 <Canvas of={PaginationStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={PaginationStories.LabelledByHeading} />

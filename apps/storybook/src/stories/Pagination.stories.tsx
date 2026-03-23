@@ -328,6 +328,23 @@ export const BoundaryAriaLabels: Story = {
   }
 };
 
+export const ItemAriaLabelErrorFallback: Story = {
+  args: {
+    page: 2,
+    pageCount: 9,
+    getItemAriaLabel: () => {
+      throw new Error("runtime item aria formatter failure");
+    },
+    onPageChange: () => {}
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: "Go to first page" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Current page, 2" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Go to next page" })).toBeInTheDocument();
+  }
+};
+
 function BoundaryShortcutHintsDemo() {
   const [page, setPage] = React.useState(1);
 
