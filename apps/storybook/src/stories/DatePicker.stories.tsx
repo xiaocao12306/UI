@@ -138,6 +138,19 @@ export const ShortcutHintPrecision: Story = {
   }
 };
 
+export const DefaultNameFallback: Story = {
+  args: {
+    "aria-label": "   ",
+    defaultValue: "2026-10-08"
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByLabelText("Date picker");
+    await expect(input).toHaveAttribute("aria-label", "Date picker");
+    await expect(input).not.toHaveAttribute("aria-labelledby");
+  }
+};
+
 export const BlankAriaLabelFallback: Story = {
   render: () => (
     <div style={{ width: 360, display: "grid", gap: 8 }}>

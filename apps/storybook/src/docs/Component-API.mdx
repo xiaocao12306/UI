@@ -290,7 +290,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `onChange`                            | `(event) => void`                            | Optional native change callback for analytics/instrumentation hooks.                                                                                                                                 |
 | `min` / `max`                         | `string`                                     | Native date range constraints.                                                                                                                                                                       |
 | `invalid`                             | `boolean`                                    | Adds `aria-invalid` to communicate validation state.                                                                                                                                                 |
-| `aria-label` / `aria-labelledby`      | `string`                                     | Blank values are ignored; when both naming props are provided, `aria-labelledby` remains canonical.                                                                                                  |
+| `aria-label` / `aria-labelledby`      | `string`                                     | Blank values are ignored; when both naming props are provided, `aria-labelledby` remains canonical. Without `aria-labelledby`, `aria-label` falls back to `Date picker`.                           |
 | keyboard shortcut hints               | no default hint for `type="date"`            | DatePicker intentionally omits default Enter shortcut metadata because it maps to a non-text native date input; explicit `aria-keyshortcuts` overrides remain supported for product-specific flows. |
 | `errorMessageId`                      | `string`                                     | Appends error helper ID into `aria-describedby` and `aria-errormessage` when `invalid` is true (deduped if ID already exists).                                                                       |
 | focus intent policy                   | primary pointer clears focus-visible         | Non-primary pointer interactions and `Ctrl + primary click` context-click paths keep date input focus-visible state; plain primary pointer clears keyboard-intent focus-visible feedback before selection intent. |
@@ -299,6 +299,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={DatePickerStories.InvalidWithHelper} />
 <Canvas of={DatePickerStories.StateMatrix} />
 <Canvas of={DatePickerStories.ShortcutHintPrecision} />
+<Canvas of={DatePickerStories.DefaultNameFallback} />
 <Canvas of={DatePickerStories.BlankAriaLabelFallback} />
 <Canvas of={DatePickerStories.LabelledByPrecedence} />
 <Canvas of={DatePickerStories.FocusIntentReentry} />

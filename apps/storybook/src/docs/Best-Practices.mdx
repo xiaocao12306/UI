@@ -106,6 +106,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep combobox keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - For guarded approval flows, use control-level `onClick(event.preventDefault())` on switch-like toggles to block pointer state mutation while preserving keyboard/readout semantics.
 - When using standalone DatePicker error messaging, pass `errorMessageId` with `invalid` so both `aria-describedby` and `aria-errormessage` stay aligned.
+- Keep DatePicker naming explicit; when product copy is unavailable, blank/missing `aria-label` now falls back to `Date picker` unless `ariaLabelledBy` provides visible-heading naming.
 - Preserve nuanced `aria-invalid` values (`grammar`/`spelling`) when integrating validation services; avoid normalizing them to generic `true`.
 - For tooltip-enhanced controls that already have helper text, keep `aria-describedby` lifecycle clean: append tooltip ID only while visible and remove it on close.
 - For icon-only/non-text tooltip triggers, provide `aria-labelledby` when a visible heading/label exists; otherwise provide non-empty `aria-label`. Rich trigger content with inline `aria-label` is auto-detected, and development builds warn when both naming paths are missing.
@@ -144,6 +145,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={ComboboxStories.DuplicateValueSelectedSemantics} />
 <Canvas of={ComboboxStories.BlankPlaceholderFallback} />
 <Canvas of={ComboboxStories.BlankEmptyMessageFallback} />
+<Canvas of={DatePickerStories.DefaultNameFallback} />
 <Canvas of={DatePickerStories.BlankAriaLabelFallback} />
 <Canvas of={DatePickerStories.LabelledByPrecedence} />
 <Canvas of={ButtonStories.IconOnlyAccessibleName} />

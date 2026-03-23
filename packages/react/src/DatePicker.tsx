@@ -21,6 +21,8 @@ export function DatePicker({
   onChange,
   invalid,
   errorMessageId,
+  "aria-label": rawAriaLabel,
+  "aria-labelledby": rawAriaLabelledBy,
   ...restProps
 }: DatePickerProps) {
   const resolvedInvalidAria = resolveInvalidAria(invalid, restProps["aria-invalid"]);
@@ -29,6 +31,11 @@ export function DatePicker({
   const errorMessage = isInvalid
     ? mergeAriaReferenceIds(restProps["aria-errormessage"], errorMessageId)
     : restProps["aria-errormessage"];
+  const resolvedAriaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
+  const resolvedAriaLabel =
+    resolvedAriaLabelledBy === undefined
+      ? resolveNonEmptyLabel(rawAriaLabel, "Date picker")
+      : undefined;
 
   return (
     <Input
@@ -36,6 +43,8 @@ export function DatePicker({
       type="date"
       value={value}
       defaultValue={defaultValue}
+      aria-label={resolvedAriaLabel}
+      aria-labelledby={resolvedAriaLabelledBy}
       aria-describedby={describedBy}
       aria-errormessage={errorMessage}
       aria-invalid={resolvedInvalidAria}
@@ -45,4 +54,12 @@ export function DatePicker({
       }}
     />
   );
+}
+
+function resolveNonEmptyLabel(label: string | undefined, fallback?: string): string | undefined {
+  if (typeof label === "string" && label.trim().length > 0) {
+    return label.trim();
+  }
+
+  return fallback;
 }

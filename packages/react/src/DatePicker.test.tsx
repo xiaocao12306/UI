@@ -110,6 +110,20 @@ describe("DatePicker", () => {
     expect(input).not.toHaveAttribute("data-invalid");
   });
 
+  it("falls back to default date picker name when aria-label is missing", () => {
+    render(<DatePicker onValueChange={() => {}} />);
+
+    const input = screen.getByLabelText("Date picker");
+    expect(input).toHaveAttribute("aria-label", "Date picker");
+  });
+
+  it("falls back to default date picker name when aria-label is blank", () => {
+    render(<DatePicker aria-label="   " onValueChange={() => {}} />);
+
+    const input = screen.getByLabelText("Date picker");
+    expect(input).toHaveAttribute("aria-label", "Date picker");
+  });
+
   it("ignores blank aria-label when aria-labelledby is present", () => {
     render(
       <>
