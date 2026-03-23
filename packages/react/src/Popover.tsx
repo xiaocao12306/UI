@@ -27,6 +27,14 @@ export type PopoverProps = {
 const popoverTriggerKeyboardShortcut = "ArrowDown";
 const popoverContentKeyboardShortcuts = "Tab";
 
+function resolvePopoverSideOffset(sideOffset: number, fallback: number) {
+  if (!Number.isFinite(sideOffset)) {
+    return fallback;
+  }
+
+  return Math.trunc(sideOffset);
+}
+
 export function Popover({
   triggerLabel,
   triggerAriaLabel,
@@ -64,6 +72,7 @@ export function Popover({
       ? contentLabel.trim()
       : "Popover content";
   const hasReadableTriggerLabelText = getReadablePopoverLabel(triggerLabel).length > 0;
+  const safeSideOffset = resolvePopoverSideOffset(sideOffset, 8);
   const resolvedTriggerAriaLabel = resolvedTriggerAriaLabelledBy
     ? undefined
     : explicitTriggerAriaLabel ?? (hasReadableTriggerLabelText ? undefined : "Open popover");
@@ -244,7 +253,7 @@ export function Popover({
           }}
           style={{
             position: "absolute",
-            top: `calc(100% + ${sideOffset}px)`,
+            top: `calc(100% + ${safeSideOffset}px)`,
             minWidth: 220,
             borderRadius: "var(--aurora-radius-md)",
             border: "1px solid var(--aurora-border-default)",

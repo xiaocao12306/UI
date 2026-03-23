@@ -42,6 +42,30 @@ describe("Popover", () => {
     expect(onCloseReason).toHaveBeenNthCalledWith(2, "outside-pointer");
   });
 
+  it("falls back to default sideOffset when value is non-finite", () => {
+    render(
+      <Popover triggerLabel="Side offset fallback" sideOffset={Number.POSITIVE_INFINITY}>
+        <p>Popover content</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Side offset fallback" }));
+    const dialog = screen.getByRole("dialog", { name: "Popover content" });
+    expect(dialog.style.top).toBe("calc(100% + 8px)");
+  });
+
+  it("normalizes fractional sideOffset to stable integer positioning", () => {
+    render(
+      <Popover triggerLabel="Fractional side offset" sideOffset={12.8}>
+        <p>Popover content</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Fractional side offset" }));
+    const dialog = screen.getByRole("dialog", { name: "Popover content" });
+    expect(dialog.style.top).toBe("calc(100% + 12px)");
+  });
+
   it("supports controlled mode", () => {
     const onOpenChange = vi.fn();
 
