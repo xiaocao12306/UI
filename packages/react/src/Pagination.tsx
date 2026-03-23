@@ -22,6 +22,30 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+function resolvePaginationPageCount(pageCount: number) {
+  if (!Number.isFinite(pageCount)) {
+    return 1;
+  }
+
+  return Math.max(1, Math.trunc(pageCount));
+}
+
+function resolvePaginationPage(page: number, fallback: number) {
+  if (!Number.isFinite(page)) {
+    return fallback;
+  }
+
+  return Math.trunc(page);
+}
+
+function resolvePaginationWindowCount(value: number, fallback: number) {
+  if (!Number.isFinite(value)) {
+    return fallback;
+  }
+
+  return Math.max(0, Math.trunc(value));
+}
+
 function createRange(start: number, end: number) {
   const length = end - start + 1;
   return Array.from({ length }, (_, index) => start + index);
@@ -86,17 +110,22 @@ export function Pagination({
   const focusVisibleIntentRef = React.useRef(false);
   const [focusedButtonId, setFocusedButtonId] = React.useState<string | null>(null);
   const [focusVisibleButtonId, setFocusVisibleButtonId] = React.useState<string | null>(null);
+  const safeSiblingCount = resolvePaginationWindowCount(siblingCount, 1);
+  const safeBoundaryCount = resolvePaginationWindowCount(boundaryCount, 1);
   const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel, "Pagination");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
-  const resolvedPageCount = Math.max(pageCount, 1);
-  const currentPage = clamp(page, 1, resolvedPageCount);
-  const tokens = pageCount <= 1 ? [] : getPaginationTokens(currentPage, pageCount, siblingCount, boundaryCount);
+  const resolvedPageCount = resolvePaginationPageCount(pageCount);
+  const currentPage = clamp(resolvePaginationPage(page, 1), 1, resolvedPageCount);
+  const tokens =
+    resolvedPageCount <= 1
+      ? []
+      : getPaginationTokens(currentPage, resolvedPageCount, safeSiblingCount, safeBoundaryCount);
   const previousPage = clamp(currentPage - 1, 1, resolvedPageCount);
   const nextPage = clamp(currentPage + 1, 1, resolvedPageCount);
-  const canGoPrevious = !disabled && pageCount > 1 && currentPage > 1;
-  const canGoNext = !disabled && pageCount > 1 && currentPage < pageCount;
+  const canGoPrevious = !disabled && resolvedPageCount > 1 && currentPage > 1;
+  const canGoNext = !disabled && resolvedPageCount > 1 && currentPage < resolvedPageCount;
   const paginationKeyboardShortcuts = React.useMemo(() => {
-    if (disabled || pageCount <= 1) {
+    if (disabled || resolvedPageCount <= 1) {
       return undefined;
     }
 
@@ -112,7 +141,7 @@ export function Pagination({
     }
 
     return shortcuts.length > 0 ? shortcuts.join(" ") : undefined;
-  }, [canGoNext, canGoPrevious, disabled, pageCount]);
+  }, [canGoNext, canGoPrevious, disabled, resolvedPageCount]);
   const resolveItemAriaLabel = React.useCallback(
     (
       type: "page" | "current" | "first" | "last" | "next" | "previous",
@@ -166,10 +195,10 @@ export function Pagination({
   }, []);
 
   const goToPage = (nextPage: number) => {
-    if (disabled || pageCount <= 1) {
+    if (disabled || resolvedPageCount <= 1) {
       return;
     }
-    const resolvedPage = clamp(nextPage, 1, pageCount);
+    const resolvedPage = clamp(nextPage, 1, resolvedPageCount);
     if (resolvedPage === currentPage) {
       return;
     }
@@ -193,7 +222,7 @@ export function Pagination({
   }, [currentPage]);
 
   const goToPageWithFocus = (nextPage: number) => {
-    const resolvedPage = clamp(nextPage, 1, pageCount);
+    const resolvedPage = clamp(nextPage, 1, resolvedPageCount);
     if (resolvedPage === currentPage) {
       pendingFocusPageRef.current = null;
       return;
@@ -311,7 +340,7 @@ export function Pagination({
     [focusedButtonId, focusVisibleButtonId]
   );
 
-  if (pageCount <= 1) {
+  if (resolvedPageCount <= 1) {
     return null;
   }
 
@@ -432,9 +461,9 @@ export function Pagination({
               {...createButtonFocusIntentProps("last")}
               type="button"
               disabled={!canGoNext}
-              onClick={() => goToPage(pageCount)}
+              onClick={() => goToPage(resolvedPageCount)}
               onKeyDown={handleKeyDown}
-              aria-label={resolveItemAriaLabel("last", pageCount)}
+              aria-label={resolveItemAriaLabel("last", resolvedPageCount)}
               aria-keyshortcuts={!canGoNext ? undefined : paginationKeyboardShortcuts}
               style={buttonStyle(
                 false,

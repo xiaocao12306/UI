@@ -9,12 +9,48 @@ describe("Pagination", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("returns null without throwing when pageCount is zero or negative", () => {
+  it("returns null without throwing when pageCount resolves to one or below", () => {
     const { container: zeroContainer } = render(<Pagination page={1} pageCount={0} onPageChange={() => {}} />);
     expect(zeroContainer).toBeEmptyDOMElement();
 
     const { container: negativeContainer } = render(<Pagination page={1} pageCount={-2} onPageChange={() => {}} />);
     expect(negativeContainer).toBeEmptyDOMElement();
+
+    const { container: nanContainer } = render(
+      <Pagination page={1} pageCount={Number.NaN} onPageChange={() => {}} />
+    );
+    expect(nanContainer).toBeEmptyDOMElement();
+
+    const { container: infinityContainer } = render(
+      <Pagination page={1} pageCount={Number.POSITIVE_INFINITY} onPageChange={() => {}} />
+    );
+    expect(infinityContainer).toBeEmptyDOMElement();
+  });
+
+  it("normalizes fractional page/pageCount and keeps keyboard navigation deterministic", () => {
+    const onPageChange = vi.fn();
+    render(<Pagination page={4.9} pageCount={5.9} onPageChange={onPageChange} />);
+
+    const activeButton = screen.getByRole("button", { name: "Current page, 4" });
+    fireEvent.keyDown(activeButton, { key: "ArrowRight" });
+    expect(onPageChange).toHaveBeenCalledWith(5);
+  });
+
+  it("falls back to default sibling/boundary windows when counts are non-finite", () => {
+    render(
+      <Pagination
+        page={6}
+        pageCount={12}
+        onPageChange={() => {}}
+        siblingCount={Number.NaN}
+        boundaryCount={Number.POSITIVE_INFINITY}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Go to page 1" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Current page, 6" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Go to page 12" })).toBeInTheDocument();
+    expect(screen.getAllByText("…")).toHaveLength(2);
   });
 
   it("marks current page with aria-current", () => {

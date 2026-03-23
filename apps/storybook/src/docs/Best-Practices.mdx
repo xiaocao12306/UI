@@ -496,6 +496,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - In RTL layouts, mirror scroll-region Arrow/Home/End mappings so keyboard panning follows visual direction instead of LTR coordinate assumptions.
 - When app-level shortcuts preempt keydown with `preventDefault()`, keep scroll-region Arrow/Home/End/Page handlers side-effect free so host shortcut guards remain authoritative.
 - For pagination i18n, generate `getItemAriaLabel` from the provided `page` argument; boundary previous/next labels are already clamped to valid page ranges.
+- Keep pagination numeric inputs finite (`page`, `pageCount`, `siblingCount`, `boundaryCount`): non-finite values fall back to safe defaults and fractional values normalize to integer windows so token generation stays deterministic.
 - Prefer `ariaLabelledBy` for pagination when a visible heading already exists; use `ariaLabel` for standalone pagers without nearby title copy.
 - In RTL layouts, verify Pagination ArrowLeft/ArrowRight keyboard shortcuts are mirrored so page movement follows visual direction.
 - Keep modified shortcuts (`Ctrl/Meta/Alt + Home/End/PageUp/PageDown/ArrowLeft/ArrowRight`) on host/browser behavior; pagination should only react to unmodified navigation keys.
