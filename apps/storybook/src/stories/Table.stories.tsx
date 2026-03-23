@@ -1112,6 +1112,27 @@ export const LocalizedSortLabels: Story = {
   }
 };
 
+export const SortAriaLabelErrorFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
+      <Table
+        columns={columns}
+        data={rows}
+        defaultSortKey="id"
+        getSortAriaLabel={() => {
+          throw new Error("runtime aria-label formatter failure");
+        }}
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const descendingButton = canvas.getByRole("button", { name: "Issue sort descending" });
+    await userEvent.click(descendingButton);
+    await expect(canvas.getByRole("button", { name: "Issue sort ascending" })).toBeInTheDocument();
+  }
+};
+
 export const SortStatusTextFallback: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 780px)">

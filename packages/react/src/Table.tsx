@@ -161,6 +161,7 @@ export function Table<T>({
   const warnedDuplicateColumnKeysSignatureRef = React.useRef<string | null>(null);
   const warnedDuplicateRowKeysSignatureRef = React.useRef<string | null>(null);
   const warnedMissingSortLabelSignatureRef = React.useRef<string | null>(null);
+  const warnedSortAriaLabelErrorRef = React.useRef(false);
   const [hoveredSortKey, setHoveredSortKey] = React.useState<string | null>(null);
   const [pressedSortKey, setPressedSortKey] = React.useState<string | null>(null);
   const [focusVisibleSortKey, setFocusVisibleSortKey] = React.useState<string | null>(null);
@@ -746,21 +747,31 @@ export function Table<T>({
               );
               const nextDirection: TableSortDirection =
                 keySortDirection === "asc" ? "desc" : "asc";
-              const sortAriaLabel = getSortAriaLabel({
+              const sortAriaLabelParams = {
                 columnKey: key,
                 columnHeader: headerLabel,
                 nextDirection
-              });
+              };
+              let sortAriaLabel: unknown;
+              try {
+                sortAriaLabel = getSortAriaLabel(sortAriaLabelParams);
+                warnedSortAriaLabelErrorRef.current = false;
+              } catch (error) {
+                sortAriaLabel = undefined;
+                if (process.env.NODE_ENV !== "production" && !warnedSortAriaLabelErrorRef.current) {
+                  warnedSortAriaLabelErrorRef.current = true;
+                  console.warn(
+                    "[Table] getSortAriaLabel threw an error; falling back to default sort button narration.",
+                    error
+                  );
+                }
+              }
               const resolvedSortLabelledBy = resolveNonEmptyLabel(column.sortLabelledBy);
               const resolvedSortAriaLabel = resolvedSortLabelledBy
                 ? undefined
                 : resolveNonEmptyLabel(
-                    sortAriaLabel,
-                    defaultGetSortAriaLabel({
-                      columnKey: key,
-                      columnHeader: headerLabel,
-                      nextDirection
-                    })
+                    typeof sortAriaLabel === "string" ? sortAriaLabel : undefined,
+                    defaultGetSortAriaLabel(sortAriaLabelParams)
                   );
               const sortDisabled = resolvedLoading || !hasMultiRowData;
               const sortKeyShortcuts = sortDisabled

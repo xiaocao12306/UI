@@ -2445,6 +2445,41 @@ describe("Table", () => {
     expect(screen.getByRole("button", { name: "Name sort descending" })).toBeInTheDocument();
   });
 
+  it("falls back to default sort aria labels when getSortAriaLabel throws", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            { key: "name", header: "Name", sortable: true },
+            { key: "score", header: "Score" }
+          ]}
+          data={[
+            { name: "Dialog", score: 80 },
+            { name: "Button", score: 95 }
+          ]}
+          defaultSortKey="name"
+          getSortAriaLabel={() => {
+            throw new Error("sort aria formatter failed");
+          }}
+        />
+      );
+
+      const sortButton = screen.getByRole("button", { name: "Name sort descending" });
+      fireEvent.click(sortButton);
+      expect(screen.getByRole("button", { name: "Name sort ascending" })).toBeInTheDocument();
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Table] getSortAriaLabel threw an error; falling back to default sort button narration.",
+        expect.any(Error)
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("uses sortLabel for sortable narration when header content is non-text", () => {
     render(
       <Table
