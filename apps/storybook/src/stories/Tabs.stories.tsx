@@ -599,6 +599,54 @@ export const NoLoopNavigation: Story = {
   }
 };
 
+export const RuntimeConfigNormalization: Story = {
+  render: () => (
+    <TabsShowcase>
+      <p style={storyMutedTextStyle}>
+        Runtime string config from CMS/JSON should normalize safely: mixed-case{" "}
+        <code>orientation</code>/<code>activationMode</code> map to supported values, and invalid{" "}
+        <code>loop</code> falls back to wrapping navigation.
+      </p>
+      <Tabs
+        ariaLabel="Runtime normalized tabs"
+        defaultValue="spec"
+        orientation={" VERTICAL " as unknown as "horizontal" | "vertical"}
+        activationMode={" MANUAL " as unknown as "automatic" | "manual"}
+        loop={"invalid-loop" as unknown as boolean}
+        items={[
+          {
+            key: "spec",
+            label: "Spec",
+            content: "Spec stays selected until manual activation confirms a new tab."
+          },
+          { key: "build", label: "Build", content: "Build activation is manual + wraps at boundary." }
+        ]}
+      />
+    </TabsShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const tabList = canvas.getByRole("tablist", { name: "Runtime normalized tabs" });
+    const specTab = canvas.getByRole("tab", { name: "Spec" });
+    const buildTab = canvas.getByRole("tab", { name: "Build" });
+
+    await expect(tabList).toHaveAttribute("aria-orientation", "vertical");
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+    await expect(specTab).toHaveAttribute("aria-keyshortcuts", manualVerticalTabShortcuts);
+
+    await userEvent.click(specTab);
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(buildTab).toHaveFocus();
+    await expect(specTab).toHaveAttribute("aria-selected", "true");
+
+    await userEvent.keyboard("{Enter}");
+    await expect(buildTab).toHaveAttribute("aria-selected", "true");
+
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(specTab).toHaveFocus();
+  }
+};
+
 function LabelledByHeadingDemo() {
   const headingId = React.useId();
 

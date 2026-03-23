@@ -83,6 +83,43 @@ describe("Tabs", () => {
     expect(screen.getByText("Panel One")).toBeInTheDocument();
   });
 
+  it("normalizes runtime orientation/activationMode tokens and falls back invalid loop to wrapping", () => {
+    render(
+      <Tabs
+        ariaLabel="Runtime config tabs"
+        defaultValue="spec"
+        orientation={" VERTICAL " as unknown as "horizontal" | "vertical"}
+        activationMode={" MANUAL " as unknown as "automatic" | "manual"}
+        loop={"invalid-loop" as unknown as boolean}
+        items={[
+          { key: "spec", label: "Spec", content: <div>Spec panel</div> },
+          { key: "build", label: "Build", content: <div>Build panel</div> }
+        ]}
+      />
+    );
+
+    const tabList = screen.getByRole("tablist", { name: "Runtime config tabs" });
+    const specTab = screen.getByRole("tab", { name: "Spec" });
+    const buildTab = screen.getByRole("tab", { name: "Build" });
+
+    expect(tabList).toHaveAttribute("aria-orientation", "vertical");
+    expect(specTab).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Enter Space Home End PageDown PageUp ArrowUp ArrowDown"
+    );
+    expect(specTab).toHaveAttribute("aria-selected", "true");
+
+    fireEvent.keyDown(specTab, { key: "ArrowDown" });
+    expect(buildTab).toHaveFocus();
+    expect(specTab).toHaveAttribute("aria-selected", "true");
+
+    fireEvent.keyDown(buildTab, { key: "Enter" });
+    expect(buildTab).toHaveAttribute("aria-selected", "true");
+
+    fireEvent.keyDown(buildTab, { key: "ArrowDown" });
+    expect(specTab).toHaveFocus();
+  });
+
   it("uses RTL arrow semantics for horizontal keyboard navigation", () => {
     render(
       <div dir="rtl">

@@ -124,9 +124,9 @@ export function Tabs({
   defaultValue,
   ariaLabel = "Tabs",
   ariaLabelledBy,
-  orientation = "horizontal",
-  activationMode = "automatic",
-  loop = true,
+  orientation,
+  activationMode,
+  loop,
   onTabKeyDown,
   onValueChange
 }: TabsProps) {
@@ -150,6 +150,9 @@ export function Tabs({
   const [hoveredTabRenderKey, setHoveredTabRenderKey] = React.useState<string | null>(null);
   const [pressedTabRenderKey, setPressedTabRenderKey] = React.useState<string | null>(null);
   const [focusVisibleTabRenderKey, setFocusVisibleTabRenderKey] = React.useState<string | null>(null);
+  const resolvedOrientation = resolveTabOrientation(orientation);
+  const resolvedActivationMode = resolveTabActivationMode(activationMode);
+  const resolvedLoop = resolveTabLoop(loop);
   const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel, "Tabs");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const hasTabItems = items.length > 0;
@@ -409,7 +412,7 @@ export function Tabs({
         role="tablist"
         aria-label={resolvedAriaLabelledBy ? undefined : resolvedAriaLabel}
         aria-labelledby={resolvedAriaLabelledBy}
-        aria-orientation={orientation}
+        aria-orientation={resolvedOrientation}
         aria-disabled={shouldExposeDisabledTabStop ? true : undefined}
         tabIndex={shouldExposeDisabledTabStop ? 0 : undefined}
         onBlurCapture={(event) => {
@@ -423,8 +426,8 @@ export function Tabs({
         style={{
           display: "flex",
           gap: 6,
-          flexWrap: orientation === "horizontal" ? "wrap" : "nowrap",
-          flexDirection: orientation === "vertical" ? "column" : "row"
+          flexWrap: resolvedOrientation === "horizontal" ? "wrap" : "nowrap",
+          flexDirection: resolvedOrientation === "vertical" ? "column" : "row"
         }}
       >
         {items.map((item, index) => {
@@ -462,14 +465,14 @@ export function Tabs({
               aria-keyshortcuts={
                 disabled || enabledTabCount <= 1
                   ? undefined
-                  : getTabKeyShortcuts(activationMode, orientation)
+                  : getTabKeyShortcuts(resolvedActivationMode, resolvedOrientation)
               }
               tabIndex={disabled ? -1 : focusTargetIndex === index ? 0 : -1}
               disabled={disabled}
               onClick={(event) => {
                 setFocusedValue(item.key);
                 const clickFromKeyboardActivation =
-                  activationMode === "manual" &&
+                  resolvedActivationMode === "manual" &&
                   event.detail === 0 &&
                   keyboardActivationTabRenderKeyRef.current === itemRenderKey;
                 clearKeyboardActivationLatch();
@@ -579,7 +582,7 @@ export function Tabs({
                 if (event.altKey || event.ctrlKey || event.metaKey) {
                   return;
                 }
-                if (activationMode === "manual" && isTabActivationKey(event.key)) {
+                if (resolvedActivationMode === "manual" && isTabActivationKey(event.key)) {
                   if (isComposingActivationEvent(event)) {
                     return;
                   }
@@ -611,7 +614,7 @@ export function Tabs({
                   }
 
                   setFocusedValue(nextKey);
-                  if (activationMode === "automatic") {
+                  if (resolvedActivationMode === "automatic") {
                     select(nextKey);
                   }
                   tabRefs.current[nextIndex]?.focus();
@@ -633,22 +636,24 @@ export function Tabs({
 
                 if (event.key === "PageDown") {
                   event.preventDefault();
-                  const nextIndex = getNextEnabledIndex(items, index, 1, loop);
+                  const nextIndex = getNextEnabledIndex(items, index, 1, resolvedLoop);
                   moveToIndex(nextIndex);
                   return;
                 }
 
                 if (event.key === "PageUp") {
                   event.preventDefault();
-                  const previousIndex = getNextEnabledIndex(items, index, -1, loop);
+                  const previousIndex = getNextEnabledIndex(items, index, -1, resolvedLoop);
                   moveToIndex(previousIndex);
                   return;
                 }
 
                 const moveDirection = getTabMoveDirection({
-                  orientation,
+                  orientation: resolvedOrientation,
                   key: event.key,
-                  isRtl: orientation === "horizontal" && isElementDirectionRtl(tabListRef.current)
+                  isRtl:
+                    resolvedOrientation === "horizontal" &&
+                    isElementDirectionRtl(tabListRef.current)
                 });
                 if (!moveDirection) {
                   return;
@@ -656,7 +661,7 @@ export function Tabs({
 
                 event.preventDefault();
 
-                const nextIndex = getNextEnabledIndex(items, index, moveDirection, loop);
+                const nextIndex = getNextEnabledIndex(items, index, moveDirection, resolvedLoop);
                 moveToIndex(nextIndex);
               }}
               onKeyUp={(event) => {
@@ -734,6 +739,36 @@ function isTabActivationKey(key: string) {
 
 function isPrimaryPointerButton(button: number | undefined) {
   return typeof button !== "number" || button <= 0;
+}
+
+function resolveTabOrientation(
+  orientation: TabsProps["orientation"] | string | undefined
+): "horizontal" | "vertical" {
+  if (typeof orientation !== "string") {
+    return "horizontal";
+  }
+
+  const normalizedOrientation = orientation.trim().toLowerCase();
+  return normalizedOrientation === "vertical" ? "vertical" : "horizontal";
+}
+
+function resolveTabActivationMode(
+  activationMode: TabsProps["activationMode"] | string | undefined
+): "automatic" | "manual" {
+  if (typeof activationMode !== "string") {
+    return "automatic";
+  }
+
+  const normalizedActivationMode = activationMode.trim().toLowerCase();
+  return normalizedActivationMode === "manual" ? "manual" : "automatic";
+}
+
+function resolveTabLoop(loop: TabsProps["loop"] | unknown): boolean {
+  if (typeof loop !== "boolean") {
+    return true;
+  }
+
+  return loop;
 }
 
 function getTabKeyShortcuts(
