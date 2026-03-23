@@ -25,6 +25,7 @@ export type TableProps<T> = {
   columns: Array<TableColumn<T>>;
   data: T[];
   rowKey?: (row: T, rowIndex: number) => string;
+  minTableWidth?: number | string;
   caption?: React.ReactNode;
   ariaLabel?: string;
   ariaLabelledBy?: string;
@@ -124,6 +125,7 @@ export function Table<T>({
   columns,
   data,
   rowKey,
+  minTableWidth,
   caption,
   ariaLabel,
   ariaLabelledBy,
@@ -146,6 +148,7 @@ export function Table<T>({
   const resolvedAriaLabel = resolvedAriaLabelledBy
     ? undefined
     : resolveNonEmptyLabel(ariaLabel, hasCaptionContent ? undefined : "Data table");
+  const resolvedMinTableWidth = resolveTableMinWidth(minTableWidth);
   const sortButtonRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const keyboardActivationSortKeyRef = React.useRef<string | null>(null);
@@ -693,7 +696,7 @@ export function Table<T>({
         aria-label={resolvedAriaLabel}
         aria-labelledby={resolvedAriaLabelledBy}
         aria-busy={loading || undefined}
-        style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}
+        style={{ width: "100%", borderCollapse: "collapse", minWidth: resolvedMinTableWidth }}
       >
         {hasCaptionContent ? (
           <caption
@@ -1215,6 +1218,25 @@ function resolveElementDirection(element: HTMLElement): "ltr" | "rtl" {
 
   const attributeDirection = element.closest("[dir]")?.getAttribute("dir");
   return attributeDirection === "rtl" ? "rtl" : "ltr";
+}
+
+function resolveTableMinWidth(minTableWidth: number | string | undefined) {
+  if (typeof minTableWidth === "number") {
+    if (Number.isFinite(minTableWidth) && minTableWidth > 0) {
+      return minTableWidth;
+    }
+
+    return 560;
+  }
+
+  if (typeof minTableWidth === "string") {
+    const normalizedMinWidth = minTableWidth.trim();
+    if (normalizedMinWidth.length > 0) {
+      return normalizedMinWidth;
+    }
+  }
+
+  return 560;
 }
 
 function hasRenderableNode(node: React.ReactNode): boolean {

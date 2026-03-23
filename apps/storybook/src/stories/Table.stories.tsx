@@ -330,6 +330,35 @@ export const ScrollContainerSkipsTabStopWithoutOverflow: Story = {
   }
 };
 
+export const CompactMinWidthWithoutOverflow: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="360px" gap={10}>
+      <p style={storyMutedTextStyle}>
+        Use <code>minTableWidth</code> to keep compact layouts readable without forcing overflow.
+      </p>
+      <Table
+        minTableWidth={320}
+        columns={[
+          { key: "id", header: "Issue" },
+          { key: "component", header: "Component" }
+        ]}
+        data={rows}
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole("table", { name: "Data table" });
+    const scrollContainer = canvasElement.querySelector(
+      "[data-aurora-table-scroll-container]"
+    ) as HTMLDivElement | null;
+    await expect(table).toHaveStyle({ minWidth: "320px" });
+    await expect(scrollContainer).not.toHaveAttribute("role");
+    await expect(scrollContainer).not.toHaveAttribute("tabindex");
+    await expect(scrollContainer).not.toHaveAttribute("aria-keyshortcuts");
+  }
+};
+
 export const RtlScrollContainerKeyboardPanning: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="220px" gap={10}>

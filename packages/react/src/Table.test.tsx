@@ -24,6 +24,73 @@ describe("Table", () => {
     expect(screen.getByText("Dialog")).toBeInTheDocument();
   });
 
+  it("uses 560px as the default table minimum width", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("table", { name: "Data table" })).toHaveStyle({ minWidth: "560px" });
+  });
+
+  it("supports custom table minimum width and falls back for invalid values", () => {
+    const { rerender } = render(
+      <Table
+        minTableWidth={320}
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+
+    expect(screen.getByRole("table", { name: "Data table" })).toHaveStyle({ minWidth: "320px" });
+
+    rerender(
+      <Table
+        minTableWidth="min(100%, 360px)"
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+    expect(screen.getByRole("table", { name: "Data table" })).toHaveStyle({
+      minWidth: "min(100%, 360px)"
+    });
+
+    rerender(
+      <Table
+        minTableWidth={0}
+        columns={[
+          { key: "name", header: "Name" },
+          { key: "status", header: "Status" }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Stable" }
+        ]}
+      />
+    );
+    expect(screen.getByRole("table", { name: "Data table" })).toHaveStyle({ minWidth: "560px" });
+  });
+
   it("supports row-header cells for row identity semantics", () => {
     render(
       <Table

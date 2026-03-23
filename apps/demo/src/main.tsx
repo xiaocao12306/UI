@@ -1634,12 +1634,13 @@ function App() {
                     </p>
                     <div
                       data-testid="table-non-overflow-shell"
-                      style={{ display: "grid", gap: 10, width: 720, minWidth: 720 }}
+                      style={{ display: "grid", gap: 10, maxWidth: 760 }}
                     >
                       <Button variant="outline" data-testid="table-non-overflow-before">
                         Before non-overflow table
                       </Button>
                       <Table
+                        minTableWidth={360}
                         ariaLabel="Non-overflow readiness snapshot"
                         columns={[
                           { key: "component", header: "Component", rowHeader: true },
