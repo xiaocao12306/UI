@@ -368,12 +368,16 @@ export function CommandPalette({
       return resolvedLoadingStatusText;
     }
 
-    return getResultsStatusText({
+    const statusTextParams = {
       query,
       visibleCount: filtered.length,
       enabledCount,
       totalCount: commands.length
-    });
+    };
+    const defaultStatusText = defaultGetResultsStatusText(statusTextParams);
+    const customStatusText = getResultsStatusText(statusTextParams);
+
+    return resolveResultsStatusText(customStatusText, defaultStatusText);
   }, [
     commands.length,
     enabledCount,
@@ -912,6 +916,17 @@ function defaultGetResultsStatusText({
 function resolveLoadingStatusText(loadingContent: React.ReactNode) {
   const normalized = normalizeReadableCommandText(getReadableCommandLabelText(loadingContent));
   return normalized.length > 0 ? normalized : "Loading commands...";
+}
+
+function resolveResultsStatusText(statusText: unknown, fallback: string) {
+  if (typeof statusText === "string") {
+    const normalizedStatusText = normalizeReadableCommandText(statusText);
+    if (normalizedStatusText.length > 0) {
+      return normalizedStatusText;
+    }
+  }
+
+  return fallback;
 }
 
 function hasRenderableCommandNode(node: React.ReactNode) {

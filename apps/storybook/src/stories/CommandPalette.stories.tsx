@@ -1430,6 +1430,30 @@ export const LocalizedResultsLabel: Story = {
   }
 };
 
+export const ResultsStatusTextFallback: Story = {
+  render: () => (
+    <CommandPalette
+      open
+      onOpenChange={() => {}}
+      commands={[
+        { key: "create-spec", label: "Create Spec", keywords: ["doc", "plan"] },
+        { key: "run-e2e", label: "Run E2E Smoke", keywords: ["playwright", "test"] }
+      ]}
+      getResultsStatusText={() => "   "}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const input = await canvas.findByRole("combobox", { name: "Search commands" });
+    const status = canvas.getByRole("status");
+
+    await expect(status).toHaveTextContent("2 commands available.");
+
+    await userEvent.type(input, "run");
+    await expect(status).toHaveTextContent('1 command found for "run".');
+  }
+};
+
 export const LocalizedDialogCopy: Story = {
   render: () => (
     <CommandPalette

@@ -2824,6 +2824,36 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("status")).toHaveTextContent("1/1 actionable match(es) for settings");
   });
 
+  it("falls back blank custom result status narration to default copy", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+        getResultsStatusText={() => "   "}
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("1 command available.");
+    fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+      target: { value: "settings" }
+    });
+    expect(screen.getByRole("status")).toHaveTextContent('1 command found for "settings".');
+  });
+
+  it("falls back non-string custom result status narration to default copy", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+        getResultsStatusText={() => 0 as unknown as string}
+      />
+    );
+
+    expect(screen.getByRole("status")).toHaveTextContent("1 command available.");
+  });
+
   it("keeps selection unset when all commands are disabled", () => {
     const onOpenChange = vi.fn();
 

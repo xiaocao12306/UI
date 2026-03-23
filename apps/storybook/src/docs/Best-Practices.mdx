@@ -368,6 +368,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Track user query updates with `onQueryChange` for downstream telemetry.
 - Treat `onQueryChange("")` on palette close as the telemetry reset signal so external state mirrors the internal query lifecycle.
 - Keep live-region narration aligned with actionable commands (enabled matches), not just visible results.
+- Ensure `getResultsStatusText` returns meaningful non-empty narration; blank or invalid runtime outputs should fall back to built-in status copy.
 - Keep disabled command entries non-executable and keep palette state unchanged on disabled clicks.
 - When filtered results are disabled-only, show explicit helper guidance (for example `disabledResultsMessage`) so users understand why Enter/navigation execution is unavailable.
 - Keep commands without `onSelect` inert: selecting them should not close the palette or emit `item-select` telemetry; provide `onSelect` for every executable command entry.
@@ -462,6 +463,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={CommandPaletteStories.RefinedSearchKeepsActiveCommand} />
 <Canvas of={CommandPaletteStories.PagedKeyboardNavigation} />
 <Canvas of={CommandPaletteStories.LocalizedResultsLabel} />
+<Canvas of={CommandPaletteStories.ResultsStatusTextFallback} />
 <Canvas of={CommandPaletteStories.LocalizedDialogCopy} />
 <Canvas of={CommandPaletteStories.ImeCompositionGuard} />
 <Canvas of={CommandPaletteStories.EscapePreemptedByGlobalHandler} />
