@@ -35,6 +35,13 @@ function resolvePopoverSideOffset(sideOffset: number, fallback: number) {
   return Math.trunc(sideOffset);
 }
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+  return value;
+}
+
 export function Popover({
   triggerLabel,
   triggerAriaLabel,
@@ -73,6 +80,8 @@ export function Popover({
       : "Popover content";
   const hasReadableTriggerLabelText = getReadablePopoverLabel(triggerLabel).length > 0;
   const safeSideOffset = resolvePopoverSideOffset(sideOffset, 8);
+  const resolvedCloseOnEscape = resolveBooleanFlag(closeOnEscape, true);
+  const resolvedCloseOnOutsidePointer = resolveBooleanFlag(closeOnOutsidePointer, true);
   const resolvedTriggerAriaLabel = resolvedTriggerAriaLabelledBy
     ? undefined
     : explicitTriggerAriaLabel ?? (hasReadableTriggerLabelText ? undefined : "Open popover");
@@ -205,7 +214,7 @@ export function Popover({
           role="dialog"
           aria-label={resolvedContentLabel}
           aria-keyshortcuts={
-            closeOnEscape ? `${popoverContentKeyboardShortcuts} Escape` : popoverContentKeyboardShortcuts
+            resolvedCloseOnEscape ? `${popoverContentKeyboardShortcuts} Escape` : popoverContentKeyboardShortcuts
           }
           tabIndex={-1}
           onKeyDown={(event) => {
@@ -228,7 +237,7 @@ export function Popover({
           }}
           onEscapeKeyDown={(event) => {
             onEscapeKeyDown?.(event);
-            if (event.defaultPrevented || !closeOnEscape) {
+            if (event.defaultPrevented || !resolvedCloseOnEscape) {
               event.preventDefault();
               return;
             }
@@ -244,7 +253,7 @@ export function Popover({
             }
 
             onPointerDownOutside?.(event);
-            if (event.defaultPrevented || !closeOnOutsidePointer) {
+            if (event.defaultPrevented || !resolvedCloseOnOutsidePointer) {
               event.preventDefault();
               return;
             }

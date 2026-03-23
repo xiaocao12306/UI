@@ -176,6 +176,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep popover spacing config (`sideOffset`) finite; non-finite values now fall back to `8`, and fractional values are normalized to integer pixels to avoid jittery placement.
 - For blocking confirmation/action menus, set `closeOnEscape={false}` + `closeOnOutsidePointer={false}` and provide an explicit close/confirm path.
 - For conditional runtime approval guards, keep `closeOnEscape/closeOnOutsidePointer` enabled and intercept `onEscapeKeyDown/onPointerDownOutside` with `event.preventDefault()` only while guard conditions are active.
+- Normalize popover runtime dismiss flags from CMS/JSON payloads before binding props: invalid `closeOnEscape/closeOnOutsidePointer` values should fall back to `true` so Escape/outside-dismiss policy remains stable.
 - Dropdown menus should expose an accessible name via trigger-linked `aria-labelledby`.
 - Keep `Dropdown.items[].key` unique and stable; development builds warn on duplicate keys to prevent focus and close-telemetry ambiguity, and runtime auto-suffixes duplicate render keys by duplicate occurrence order to avoid React remount churn while preserving active-option identity across rerenders.
 - For nested overlays, dismiss policy should resolve top-layer first so one Escape/outside click does not collapse the full stack.
@@ -271,6 +272,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={PopoverStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={PopoverStories.EscapeRepeatGuard} />
 <Canvas of={PopoverStories.EscapeIgnoresImeComposition} />
+<Canvas of={PopoverStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={PopoverStories.DismissGuardHooks} />
 <Canvas of={PopoverStories.NestedOutsideDismissOrder} />
 <Canvas of={DialogStories.CloseReasonTelemetry} />

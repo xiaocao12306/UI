@@ -303,6 +303,62 @@ export const NonTextTriggerAutoNameFallback: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationPopoverDemo() {
+  const [closeReason, setCloseReason] = React.useState("none");
+
+  return (
+    <PopoverShowcase>
+      <p style={popoverTelemetryTextStyle}>
+        Last close reason:{" "}
+        <strong data-testid="popover-runtime-close-reason" style={popoverTelemetryValueStyle}>
+          {closeReason}
+        </strong>
+      </p>
+      <p style={popoverTelemetryTextStyle}>
+        Runtime config values from CMS/JSON payloads should normalize non-boolean dismiss flags
+        and fall back to enabled Escape/outside dismissal.
+      </p>
+      <Popover
+        triggerLabel="Runtime config popover"
+        closeOnEscape={0 as unknown as boolean}
+        closeOnOutsidePointer={"false" as unknown as boolean}
+        onCloseReason={(reason) => setCloseReason(reason)}
+      >
+        <p style={{ margin: 0 }}>Runtime boolean normalization keeps dismiss policy stable.</p>
+      </Popover>
+      <button type="button">Runtime config outside target</button>
+    </PopoverShowcase>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  args: {
+    triggerLabel: "Runtime config popover",
+    children: <p style={{ margin: 0 }}>Runtime boolean normalization keeps dismiss policy stable.</p>
+  },
+  render: () => <RuntimeBooleanConfigNormalizationPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Runtime config popover" });
+    const outsideTarget = canvas.getByRole("button", { name: "Runtime config outside target" });
+
+    await userEvent.click(trigger);
+    const dialog = canvas.getByRole("dialog", { name: "Popover content" });
+    await expect(dialog).toHaveAttribute("aria-keyshortcuts", "Tab Escape");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-runtime-close-reason")).toHaveTextContent("escape-key");
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    await userEvent.click(outsideTarget);
+    await expect(canvas.queryByRole("dialog", { name: "Popover content" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("popover-runtime-close-reason")).toHaveTextContent("outside-pointer");
+  }
+};
+
 export const NonDismissible: Story = {
   args: {
     triggerLabel: "Review policy",

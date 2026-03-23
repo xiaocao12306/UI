@@ -512,6 +512,41 @@ describe("Popover", () => {
     expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
   });
 
+  it("normalizes runtime dismiss booleans and falls back to enabled dismiss gestures", () => {
+    const onCloseReason = vi.fn();
+
+    render(
+      <div>
+        <Popover
+          triggerLabel="Runtime policy"
+          closeOnEscape={0 as unknown as boolean}
+          closeOnOutsidePointer={"false" as unknown as boolean}
+          onCloseReason={onCloseReason}
+        >
+          <p>Runtime policy content</p>
+        </Popover>
+        <button type="button">Runtime outside target</button>
+      </div>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Runtime policy" });
+    const outsideTarget = screen.getByRole("button", { name: "Runtime outside target" });
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toHaveAttribute("aria-keyshortcuts", "Tab Escape");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "escape-key");
+    expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: "Popover content" })).toBeInTheDocument();
+
+    fireEvent.pointerDown(outsideTarget);
+    expect(onCloseReason).toHaveBeenNthCalledWith(2, "outside-pointer");
+    expect(screen.queryByRole("dialog", { name: "Popover content" })).toBeNull();
+  });
+
   it("keeps popover open when dismiss hooks call preventDefault", () => {
     const onEscapeKeyDown = vi.fn((event: KeyboardEvent) => {
       event.preventDefault();
