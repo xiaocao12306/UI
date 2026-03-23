@@ -144,6 +144,7 @@ export function Table<T>({
   const hasEmptyContent = hasRenderableNode(emptyContent);
   const resolvedLoadingContent = hasLoadingContent ? loadingContent : "Loading data...";
   const resolvedEmptyContent = hasEmptyContent ? emptyContent : "No data available.";
+  const resolvedLoading = resolveBooleanFlag(loading, false);
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel = resolvedAriaLabelledBy
     ? undefined
@@ -239,7 +240,7 @@ export function Table<T>({
     )
   );
   const sortableNavigationRenderKeys = React.useMemo(() => {
-    if (loading || data.length <= 1) {
+    if (resolvedLoading || data.length <= 1) {
       return [];
     }
 
@@ -252,7 +253,7 @@ export function Table<T>({
       }
       return keys;
     }, []);
-  }, [columns, data.length, loading, resolvedColumnRenderKeys]);
+  }, [columns, data.length, resolvedColumnRenderKeys, resolvedLoading]);
 
   React.useEffect(() => {
     if (!sortState) {
@@ -507,7 +508,7 @@ export function Table<T>({
 
   const ownerDocument = typeof document === "undefined" ? undefined : document;
   const sortStatusText = React.useMemo(() => {
-    if (loading || sortedEntries.length <= 1 || !sortState) {
+    if (resolvedLoading || sortedEntries.length <= 1 || !sortState) {
       return "";
     }
 
@@ -537,14 +538,14 @@ export function Table<T>({
   }, [
     columns,
     getSortStatusText,
-    loading,
     ownerDocument,
     resolvedColumnRenderKeys,
+    resolvedLoading,
     sortState,
     sortedEntries.length
   ]);
   const hasActionableSortControls =
-    !loading && sortedEntries.length > 1 && columns.some((column) => column.sortable);
+    !resolvedLoading && sortedEntries.length > 1 && columns.some((column) => column.sortable);
   const exposeKeyboardScrollableRegion = !hasActionableSortControls && hasKeyboardPannableOverflow;
   const tableColSpan = Math.max(columns.length, 1);
 
@@ -594,7 +595,7 @@ export function Table<T>({
       ownerWindow.removeEventListener("resize", syncOverflowState);
       resizeObserver?.disconnect();
     };
-  }, [columns.length, data.length, hasActionableSortControls, loading]);
+  }, [columns.length, data.length, hasActionableSortControls, resolvedLoading]);
 
   return (
     <div
@@ -699,7 +700,7 @@ export function Table<T>({
       <table
         aria-label={resolvedAriaLabel}
         aria-labelledby={resolvedAriaLabelledBy}
-        aria-busy={loading || undefined}
+        aria-busy={resolvedLoading || undefined}
         style={{ width: "100%", borderCollapse: "collapse", minWidth: resolvedMinTableWidth }}
       >
         {hasCaptionContent ? (
@@ -730,7 +731,7 @@ export function Table<T>({
                 keySortDirection && sortState?.renderKey === columnRenderKey
                   ? keySortDirection
                   : undefined;
-              const sorted = !loading && hasMultiRowData ? activeSortDirection : undefined;
+              const sorted = !resolvedLoading && hasMultiRowData ? activeSortDirection : undefined;
               const ariaSort = sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined;
               const textAlign = column.align ?? "left";
               const headerLabel = resolveColumnSortLabel(
@@ -756,7 +757,7 @@ export function Table<T>({
                       nextDirection
                     })
                   );
-              const sortDisabled = loading || !hasMultiRowData;
+              const sortDisabled = resolvedLoading || !hasMultiRowData;
               const sortKeyShortcuts = sortDisabled
                 ? undefined
                 : sortableNavigationRenderKeys.length > 1
@@ -1076,7 +1077,7 @@ export function Table<T>({
           </tr>
         </thead>
         <tbody>
-          {loading ? (
+          {resolvedLoading ? (
             <tr>
               <td
                 colSpan={tableColSpan}
@@ -1260,6 +1261,14 @@ function resolveTableColumnWidth(width: number | string | undefined) {
   }
 
   return undefined;
+}
+
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
 }
 
 function hasRenderableNode(node: React.ReactNode): boolean {

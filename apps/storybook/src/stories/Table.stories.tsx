@@ -521,6 +521,51 @@ export const LoadingState: Story = {
   }
 };
 
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => {
+    const [sortTrace, setSortTrace] = React.useState("none");
+
+    return (
+      <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
+        <p style={storyMutedTextStyle}>
+          Runtime bool-like config from CMS/JSON should degrade safely: invalid `loading` values
+          fall back to `false`.
+        </p>
+        <p style={storyMutedTextStyle}>
+          Sort trace:{" "}
+          <strong data-testid="table-runtime-boolean-sort-trace" style={storyEmphasisTextStyle}>
+            {sortTrace}
+          </strong>
+        </p>
+        <Table
+          columns={columns}
+          data={rows}
+          defaultSortKey="id"
+          loading={"invalid-loading-flag" as unknown as boolean}
+          loadingContent="Should stay hidden"
+          onSortChange={(key, direction) => setSortTrace(`${key} ${direction}`)}
+        />
+      </StoryShowcaseFrame>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole("table", { name: "Data table" });
+    const issueHeader = canvas.getByRole("columnheader", { name: /Issue/ });
+    const sortButton = canvas.getByRole("button", { name: "Issue sort descending" });
+
+    await expect(table).not.toHaveAttribute("aria-busy");
+    await expect(canvas.queryByText("Should stay hidden")).not.toBeInTheDocument();
+    await expect(canvas.getByRole("rowheader", { name: "BTN-102" })).toBeInTheDocument();
+    await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
+    await expect(sortButton).toBeEnabled();
+
+    await userEvent.click(sortButton);
+    await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
+    await expect(canvas.getByTestId("table-runtime-boolean-sort-trace")).toHaveTextContent("id desc");
+  }
+};
+
 export const BlankLoadingContentFallback: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 780px)">

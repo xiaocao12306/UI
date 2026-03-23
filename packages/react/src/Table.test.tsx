@@ -1062,6 +1062,30 @@ describe("Table", () => {
     expect(screen.queryByRole("cell", { name: "Button" })).toBeNull();
   });
 
+  it("falls back loading to false when runtime value is non-boolean", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Ready" }
+        ]}
+        defaultSortKey="name"
+        loading={"invalid-loading-flag" as unknown as boolean}
+        loadingContent="Should stay hidden"
+      />
+    );
+
+    expect(screen.getByRole("table", { name: "Data table" })).not.toHaveAttribute("aria-busy");
+    expect(screen.queryByText("Should stay hidden")).toBeNull();
+    expect(screen.getByRole("cell", { name: "Button" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toBeEnabled();
+    expect(screen.getByRole("columnheader", { name: /Name/ })).toHaveAttribute("aria-sort", "ascending");
+  });
+
   it("suppresses aria-sort while loading even when sort state exists, then restores when loading ends", () => {
     const { rerender } = render(
       <Table

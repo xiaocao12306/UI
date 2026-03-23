@@ -505,6 +505,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - Use `getSortStatusText` to localize active-sort live narration so keyboard and pointer sorting changes remain equally discoverable to assistive tech users.
 - During async refreshes, set `loading` so table emits `aria-busy` and temporarily suppresses stale row actions/sorting.
+- Normalize table runtime boolean config from CMS/JSON payloads before binding props: malformed `loading` values should degrade to `false` so table interactions are not silently locked.
 - During `loading`, clear `aria-sort` from headers so assistive narration does not announce stale sorted state while data is temporarily non-interactive.
 - For empty datasets, use meaningful `emptyContent`; table announces it through polite live status narration.
 - Treat single-row tables as non-sortable UI at runtime; built-in sort controls are auto-disabled to prevent no-op telemetry and redundant keyboard stops.
@@ -581,6 +582,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={TableStories.AriaLabelHeaderAutoSortLabel} />
 <Canvas of={TableStories.NormalizedKeySortLabelFallback} />
 <Canvas of={TableStories.SortLabelledByPrecedence} />
+<Canvas of={TableStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={TableStories.SingleRowSortDisabled} />
 <Canvas of={TableStories.SingleSortableColumnShortcutHints} />
 <Canvas of={TableStories.PrimaryPointerOnlySortPress} />
