@@ -35,6 +35,33 @@ const toneStyleMap: Record<AlertTone, React.CSSProperties> = {
   }
 };
 
+function resolveAlertTone(value: unknown, fallback: AlertTone) {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    if (
+      normalizedValue === "info" ||
+      normalizedValue === "success" ||
+      normalizedValue === "warning" ||
+      normalizedValue === "danger"
+    ) {
+      return normalizedValue;
+    }
+  }
+
+  return fallback;
+}
+
+function resolveAlertLive(value: unknown): NonNullable<AlertProps["live"]> | undefined {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    if (normalizedValue === "polite" || normalizedValue === "assertive" || normalizedValue === "off") {
+      return normalizedValue;
+    }
+  }
+
+  return undefined;
+}
+
 export function Alert({
   tone = "info",
   title,
@@ -56,8 +83,10 @@ export function Alert({
   const warnedMissingAriaLabelRef = React.useRef(false);
   const closeButtonRef = React.useRef<HTMLButtonElement | null>(null);
   const focusVisibleIntentRef = React.useRef(false);
-  const role = tone === "danger" ? "alert" : "status";
-  const ariaLive = live ?? (role === "alert" ? "assertive" : "polite");
+  const resolvedTone = resolveAlertTone(tone, "info");
+  const resolvedLive = resolveAlertLive(live);
+  const role = resolvedTone === "danger" ? "alert" : "status";
+  const ariaLive = resolvedLive ?? (role === "alert" ? "assertive" : "polite");
   const hasTitleContent = hasRenderableAlertNode(title);
   const hasDescriptionContent = hasRenderableAlertNode(description);
   const hasChildrenContent = hasRenderableAlertNode(children);
@@ -157,7 +186,7 @@ export function Alert({
         padding: "10px 12px",
         display: "grid",
         gap: 6,
-        ...toneStyleMap[tone],
+        ...toneStyleMap[resolvedTone],
         ...style
       }}
       {...props}

@@ -48,6 +48,33 @@ export const ToneMatrix: Story = {
   )
 };
 
+export const RuntimeConfigNormalization: Story = {
+  render: () => (
+    <AlertShowcase>
+      <Alert
+        tone={" DANGER " as unknown as "danger"}
+        live={" ASSERTIVE " as unknown as "assertive"}
+        title="Danger from runtime token"
+        description="Trim/lowercase runtime tokens map to supported alert semantics."
+      />
+      <Alert
+        tone={"critical" as unknown as "info"}
+        live={"LOUD" as unknown as "polite"}
+        title="Fallback from invalid token"
+        description="Invalid runtime tokens fall back to default info/polite semantics."
+      />
+    </AlertShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const normalizedAlert = canvas.getByRole("alert", { name: "Danger from runtime token" });
+    await expect(normalizedAlert).toHaveAttribute("aria-live", "assertive");
+
+    const fallbackAlert = canvas.getByRole("status", { name: "Fallback from invalid token" });
+    await expect(fallbackAlert).toHaveAttribute("aria-live", "polite");
+  }
+};
+
 function DismissibleAlertDemo() {
   const [open, setOpen] = React.useState(true);
 

@@ -33,6 +33,26 @@ describe("Alert", () => {
     expect(screen.getByRole("status")).toHaveAttribute("aria-live", "off");
   });
 
+  it("normalizes runtime tone/live tokens and falls back invalid values to safe defaults", () => {
+    const { rerender } = render(
+      <Alert
+        tone={" DANGER " as unknown as "danger"}
+        live={" ASSERTIVE " as unknown as "assertive"}
+        title="Danger runtime token"
+      />
+    );
+    expect(screen.getByRole("alert", { name: "Danger runtime token" })).toHaveAttribute("aria-live", "assertive");
+
+    rerender(
+      <Alert
+        tone={"critical" as unknown as "info"}
+        live={"LOUD" as unknown as "polite"}
+        title="Fallback runtime token"
+      />
+    );
+    expect(screen.getByRole("status", { name: "Fallback runtime token" })).toHaveAttribute("aria-live", "polite");
+  });
+
   it("supports dismiss callbacks", () => {
     const onClose = vi.fn();
     render(<Alert title="Notice" onClose={onClose} closeLabel="Close notice" />);
