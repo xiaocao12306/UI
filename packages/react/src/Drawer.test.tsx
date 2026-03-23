@@ -67,6 +67,23 @@ describe("Drawer", () => {
     expect(screen.getByRole("button", { name: "Close drawer" })).toBeInTheDocument();
   });
 
+  it("falls back invalid runtime side values to right placement", () => {
+    render(
+      <Drawer
+        open
+        onOpenChange={() => {}}
+        title="Runtime invalid side drawer"
+        side={" center " as unknown as React.ComponentProps<typeof Drawer>["side"]}
+      >
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    const drawer = screen.getByRole("dialog", { name: "Runtime invalid side drawer" });
+    expect(drawer).toHaveAttribute("data-side", "right");
+    expect(drawer).toHaveStyle({ right: "0px" });
+  });
+
   it("exposes close-button keyboard shortcut hints for Enter/Space activation", () => {
     render(
       <Drawer open onOpenChange={() => {}} title="Shortcut hints drawer">

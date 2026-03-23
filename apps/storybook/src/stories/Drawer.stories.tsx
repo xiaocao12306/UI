@@ -231,6 +231,35 @@ export const NonDismissible: Story = {
   }
 };
 
+function RuntimeVisualConfigNormalizationDrawerDemo() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <Drawer
+        open={open}
+        onOpenChange={setOpen}
+        title="Runtime visual config drawer"
+        side={" center " as unknown as React.ComponentProps<typeof Drawer>["side"]}
+      >
+        <p style={storyParagraphStyle}>
+          Runtime visual token normalization keeps drawer placement fallback deterministic.
+        </p>
+      </Drawer>
+    </StoryFullscreenFrame>
+  );
+}
+
+export const RuntimeVisualConfigNormalization: Story = {
+  render: () => <RuntimeVisualConfigNormalizationDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const drawer = await body.findByRole("dialog", { name: "Runtime visual config drawer" });
+    await expect(drawer).toHaveAttribute("data-side", "right");
+    await expect(drawer).toHaveStyle({ right: "0px" });
+  }
+};
+
 function RuntimeBooleanConfigNormalizationDrawerDemo() {
   const [open, setOpen] = React.useState(false);
   const [lastReason, setLastReason] = React.useState("none");

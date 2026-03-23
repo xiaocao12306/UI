@@ -421,7 +421,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 
 | Prop                                      | Type                                                                                                                        | Notes                                                                                                                                                                                                                    |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `side`                                    | `'left' \| 'right'`                                                                                                         | Controls panel placement and border direction.                                                                                                                                                                           |
+| `side`                                    | `'left' \| 'right'`                                                                                                         | Controls panel placement and border direction. Runtime tokens are trim+lowercase normalized, and invalid values fall back to `right`.                                                                                 |
 | `description`                             | `ReactNode`                                                                                                                 | Wires helper copy through `aria-describedby`.                                                                                                                                                                            |
 | `ariaLabel` / `ariaLabelledBy`            | `string` / `string`                                                                                                         | Optional drawer naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without overrides, drawer naming falls back to rendered `title`. Development builds warn when non-text `title` nodes omit both naming props.                                             |
 | `restoreFocus`                            | `boolean`                                                                                                                   | Controls whether focus returns to previously focused element when drawer closes. Non-boolean runtime values fall back to `true` so close-focus handoff remains deterministic.                                      |
@@ -460,6 +460,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={DrawerStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={DrawerStories.EscapeRepeatGuard} />
 <Canvas of={DrawerStories.RuntimeBooleanConfigNormalization} />
+<Canvas of={DrawerStories.RuntimeVisualConfigNormalization} />
 
 ### Popover
 

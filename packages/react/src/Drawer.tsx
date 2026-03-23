@@ -3,10 +3,11 @@ import { DismissableLayer, FocusScope, Portal } from "@aurora-ui/primitives";
 import { lockBodyScroll } from "./bodyScrollLock";
 
 export type DrawerCloseReason = "close-button" | "escape-key" | "outside-pointer";
+export type DrawerSide = "left" | "right";
 
 export type DrawerProps = {
   open: boolean;
-  side?: "left" | "right";
+  side?: DrawerSide;
   title: React.ReactNode;
   description?: React.ReactNode;
   children: React.ReactNode;
@@ -29,6 +30,17 @@ function resolveBooleanFlag(value: unknown, fallback: boolean) {
     return fallback;
   }
   return value;
+}
+
+function resolveDrawerSide(value: unknown, fallback: DrawerSide) {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    if (normalizedValue === "left" || normalizedValue === "right") {
+      return normalizedValue;
+    }
+  }
+
+  return fallback;
 }
 
 export function Drawer({
@@ -83,6 +95,7 @@ export function Drawer({
   const resolvedCloseOnEscape = resolveBooleanFlag(closeOnEscape, true);
   const resolvedCloseOnOutsidePointer = resolveBooleanFlag(closeOnOutsidePointer, true);
   const resolvedShowCloseButton = resolveBooleanFlag(showCloseButton, true);
+  const resolvedSide = resolveDrawerSide(side, "right");
 
   const closeWithReason = React.useCallback(
     (reason: DrawerCloseReason) => {
@@ -210,25 +223,25 @@ export function Drawer({
               aria-labelledby={resolvedAriaLabelledBy ?? (resolvedAriaLabel ? undefined : titleId)}
               aria-describedby={hasDescriptionContent ? descriptionId : undefined}
               aria-keyshortcuts={resolvedCloseOnEscape ? "Escape" : undefined}
-              data-side={side}
+              data-side={resolvedSide}
               style={{
                 position: "absolute",
                 top: 0,
                 bottom: 0,
-                [side]: 0,
+                [resolvedSide]: 0,
                 width: "min(420px, 90vw)",
-                borderLeft: side === "right" ? "1px solid var(--aurora-panel-border)" : undefined,
-                borderRight: side === "left" ? "1px solid var(--aurora-panel-border)" : undefined,
+                borderLeft: resolvedSide === "right" ? "1px solid var(--aurora-panel-border)" : undefined,
+                borderRight: resolvedSide === "left" ? "1px solid var(--aurora-panel-border)" : undefined,
                 background: "var(--aurora-panel-bg)",
                 boxShadow: "var(--aurora-panel-shadow)",
                 padding: 16,
                 display: "grid",
                 gridTemplateRows: "auto 1fr",
                 gap: 12,
-                borderTopLeftRadius: side === "right" ? "var(--aurora-radius-lg)" : 0,
-                borderBottomLeftRadius: side === "right" ? "var(--aurora-radius-lg)" : 0,
-                borderTopRightRadius: side === "left" ? "var(--aurora-radius-lg)" : 0,
-                borderBottomRightRadius: side === "left" ? "var(--aurora-radius-lg)" : 0
+                borderTopLeftRadius: resolvedSide === "right" ? "var(--aurora-radius-lg)" : 0,
+                borderBottomLeftRadius: resolvedSide === "right" ? "var(--aurora-radius-lg)" : 0,
+                borderTopRightRadius: resolvedSide === "left" ? "var(--aurora-radius-lg)" : 0,
+                borderBottomRightRadius: resolvedSide === "left" ? "var(--aurora-radius-lg)" : 0
               }}
             >
               <header style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: 8 }}>
