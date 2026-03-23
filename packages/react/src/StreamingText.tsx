@@ -35,6 +35,14 @@ function resolveStartDelay(startDelay: number, fallback: number) {
   return Math.max(0, Math.trunc(startDelay));
 }
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export function StreamingText({
   text,
   speed = 16,
@@ -56,10 +64,15 @@ export function StreamingText({
 }: StreamingTextProps) {
   const rootRef = React.useRef<HTMLSpanElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion(rootRef);
-  const shouldStream = streaming && !(respectReducedMotion && prefersReducedMotion);
+  const resolvedStreaming = resolveBooleanFlag(streaming, true);
+  const resolvedCursor = resolveBooleanFlag(cursor, true);
+  const resolvedShowCursorWhenDone = resolveBooleanFlag(showCursorWhenDone, false);
+  const resolvedPreserveLineBreaks = resolveBooleanFlag(preserveLineBreaks, true);
+  const resolvedRespectReducedMotion = resolveBooleanFlag(respectReducedMotion, true);
+  const shouldStream = resolvedStreaming && !(resolvedRespectReducedMotion && prefersReducedMotion);
   const safeSpeed = resolveStreamingSpeed(speed, 16);
   const safeStartDelay = resolveStartDelay(startDelay, 0);
-  const [visibleText, setVisibleText] = React.useState(streaming ? "" : text);
+  const [visibleText, setVisibleText] = React.useState(resolvedStreaming ? "" : text);
   const completedRef = React.useRef(false);
   const totalLength = text.length;
   const resolvedLabel =
@@ -133,7 +146,7 @@ export function StreamingText({
   }, [onComplete, onProgress, safeSpeed, safeStartDelay, shouldStream, text, totalLength]);
 
   const isComplete = visibleText.length >= totalLength;
-  const showCursor = cursor && shouldStream && (!isComplete || showCursorWhenDone);
+  const showCursor = resolvedCursor && shouldStream && (!isComplete || resolvedShowCursorWhenDone);
 
   return (
     <span
@@ -143,7 +156,7 @@ export function StreamingText({
       aria-labelledby={resolvedAriaLabelledBy}
       aria-live={live}
       aria-busy={shouldStream && !isComplete}
-      style={{ whiteSpace: preserveLineBreaks ? "pre-wrap" : "normal", ...style }}
+      style={{ whiteSpace: resolvedPreserveLineBreaks ? "pre-wrap" : "normal", ...style }}
       {...props}
     >
       {visibleText}

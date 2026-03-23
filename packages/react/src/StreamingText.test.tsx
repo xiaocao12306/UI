@@ -185,6 +185,46 @@ describe("StreamingText", () => {
     vi.useRealTimers();
   });
 
+  it("falls back invalid runtime streaming/cursor/showCursorWhenDone/preserveLineBreaks flags to safe defaults", () => {
+    vi.useFakeTimers();
+
+    render(
+      <StreamingText
+        text={"A\nB"}
+        speed={20}
+        streaming={"false" as unknown as boolean}
+        cursor={"false" as unknown as boolean}
+        showCursorWhenDone={"true" as unknown as boolean}
+        preserveLineBreaks={"false" as unknown as boolean}
+      />
+    );
+    const status = screen.getByRole("status", { name: "Streaming text" });
+    expect(status).toHaveAttribute("aria-busy", "true");
+    expect(status).toHaveStyle({ whiteSpace: "pre-wrap" });
+    expect(status).toHaveTextContent("|");
+
+    act(() => {
+      vi.advanceTimersByTime(20 * 3);
+    });
+    expect(status).toHaveTextContent(/A\s*B/);
+    expect(status).not.toHaveTextContent("|");
+    expect(status).toHaveAttribute("aria-busy", "false");
+
+    vi.useRealTimers();
+  });
+
+  it("falls back invalid runtime respectReducedMotion flag to reduced-motion safe branch", () => {
+    const matchMediaMock = installMatchMediaMock({ initialMatches: true });
+
+    render(<StreamingText text="Reduced motion response" respectReducedMotion={"false" as unknown as boolean} />);
+    const status = screen.getByRole("status", { name: "Streaming text" });
+
+    expect(status).toHaveTextContent("Reduced motion response");
+    expect(status).toHaveAttribute("aria-busy", "false");
+
+    matchMediaMock.restore();
+  });
+
   it("finishes immediately when reduced-motion preference toggles during streaming", () => {
     vi.useFakeTimers();
     const matchMediaMock = installMatchMediaMock({ initialMatches: false });

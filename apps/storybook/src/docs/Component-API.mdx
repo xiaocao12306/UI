@@ -793,15 +793,17 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 
 | Prop                                | Type                 | Notes                                                                                                                        |
 | ----------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `streaming`                         | `boolean`            | Toggle realtime token streaming vs instant completion mode.                                                                  |
+| `streaming`                         | `boolean`            | Toggle realtime token streaming vs instant completion mode. Non-boolean runtime values fall back to `true` so malformed payloads do not silently switch to instant mode. |
 | `speed` / `startDelay`              | `number`             | Controls token cadence and delayed start. `speed` is normalized to integer with a minimum `8ms`; `startDelay` is normalized to non-negative integer milliseconds. Non-finite values fall back to defaults (`speed=16`, `startDelay=0`). |
-| `cursorChar` / `showCursorWhenDone` | `string` / `boolean` | Cursor visual customization and completion behavior.                                                                         |
-| `respectReducedMotion`              | `boolean`            | Defaults to `true`; reduced-motion users see immediate final text and completion callbacks without token-by-token animation. |
+| `cursorChar` / `cursor` / `showCursorWhenDone` | `string` / `boolean` / `boolean` | Cursor visual customization and completion behavior. Non-boolean runtime values fall back to `cursor=true` and `showCursorWhenDone=false`. |
+| `preserveLineBreaks`                | `boolean`            | Keeps source line breaks with `white-space: pre-wrap` (default). Non-boolean runtime values fall back to `true`.           |
+| `respectReducedMotion`              | `boolean`            | Defaults to `true`; reduced-motion users see immediate final text and completion callbacks without token-by-token animation. Non-boolean runtime values fall back to `true` so reduced-motion policy remains deterministic. |
 | `label`                             | `string`             | Accessible narration label for streaming status; blank values are ignored and fallback to `Streaming text`.                  |
 | `ariaLabel` / `ariaLabelledBy`      | `string` / `string`  | Optional live-region naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without explicit naming overrides, streaming status naming falls back to `label` (`Streaming text` default). |
 | `onProgress` / `onComplete`         | callbacks            | Lifecycle hooks for telemetry and completion flow.                                                                           |
 
 <Canvas of={StreamingTextStories.MultilineCursor} />
+<Canvas of={StreamingTextStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={StreamingTextStories.LabelledByPrecedence} />
 
 ### Progress

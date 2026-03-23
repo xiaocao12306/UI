@@ -59,6 +59,27 @@ export const MultilineCursor: Story = {
   )
 };
 
+export const RuntimeBooleanConfigNormalization: Story = {
+  args: {
+    text: "A\nB",
+    speed: 20,
+    streaming: "false" as unknown as boolean,
+    cursor: "false" as unknown as boolean,
+    showCursorWhenDone: "true" as unknown as boolean,
+    preserveLineBreaks: "false" as unknown as boolean,
+    respectReducedMotion: "false" as unknown as boolean
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const status = await canvas.findByRole("status", { name: "Streaming text" });
+
+    await expect(status).toHaveAttribute("aria-busy", "true");
+    await expect(status).toHaveAttribute("aria-live", "polite");
+    await expect(status).toHaveTextContent("|");
+    await expect(status).toHaveStyle({ whiteSpace: "pre-wrap" });
+  }
+};
+
 export const LabelledByPrecedence: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 380px)">
