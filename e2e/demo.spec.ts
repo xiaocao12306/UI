@@ -2058,6 +2058,24 @@ test("supports keyboard panning in non-sortable table scroll region and respects
   });
 });
 
+test("skips non-overflow non-sortable table container in keyboard tab order", async ({ page }) => {
+  await page.goto("/");
+
+  const shell = page.getByTestId("table-non-overflow-shell");
+  const beforeButton = page.getByTestId("table-non-overflow-before");
+  const afterButton = page.getByTestId("table-non-overflow-after");
+  const scrollContainer = shell.locator("[data-aurora-table-scroll-container]");
+
+  await expect(scrollContainer).not.toHaveAttribute("role", "region");
+  await expect(scrollContainer).not.toHaveAttribute("tabindex", "0");
+  await expect(scrollContainer).not.toHaveAttribute("aria-keyshortcuts");
+
+  await beforeButton.focus();
+  await expect(beforeButton).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(afterButton).toBeFocused();
+});
+
 test("keeps manual tabs panel stable until Enter activation", async ({ page }) => {
   await page.goto("/");
 

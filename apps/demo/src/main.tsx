@@ -1627,6 +1627,30 @@ function App() {
                         data={nonSortableReadinessRows}
                       />
                     </div>
+                    <h4 style={sectionSubheadingStyle}>Non-Overflow Snapshot</h4>
+                    <p style={mutedBodyStyle}>
+                      When this non-sortable table does not overflow horizontally, it should not add
+                      an extra keyboard tab stop between surrounding controls.
+                    </p>
+                    <div
+                      data-testid="table-non-overflow-shell"
+                      style={{ display: "grid", gap: 10, width: 720, minWidth: 720 }}
+                    >
+                      <Button variant="outline" data-testid="table-non-overflow-before">
+                        Before non-overflow table
+                      </Button>
+                      <Table
+                        ariaLabel="Non-overflow readiness snapshot"
+                        columns={[
+                          { key: "component", header: "Component", rowHeader: true },
+                          { key: "status", header: "Status" }
+                        ]}
+                        data={readinessRows}
+                      />
+                      <Button variant="outline" data-testid="table-non-overflow-after">
+                        After non-overflow table
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 <div className="demo-panel">
