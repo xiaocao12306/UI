@@ -40,6 +40,34 @@ describe("Button", () => {
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
+  it("normalizes runtime variant/size tokens and falls back invalid values to safe defaults", () => {
+    const { rerender } = render(
+      <Button
+        variant={" OUTLINE " as unknown as "outline"}
+        size={" LG " as unknown as "lg"}
+      >
+        Runtime visual token
+      </Button>
+    );
+    const normalizedButton = screen.getByRole("button", { name: "Runtime visual token" });
+    const normalizedStyle = normalizedButton.getAttribute("style") ?? "";
+    expect(normalizedStyle).toContain("var(--aurora-button-height-lg)");
+    expect(normalizedStyle).toContain("var(--aurora-button-border)");
+
+    rerender(
+      <Button
+        variant={"fancy" as unknown as "solid"}
+        size={"xl" as unknown as "md"}
+      >
+        Runtime visual fallback
+      </Button>
+    );
+    const fallbackButton = screen.getByRole("button", { name: "Runtime visual fallback" });
+    const fallbackStyle = fallbackButton.getAttribute("style") ?? "";
+    expect(fallbackStyle).toContain("var(--aurora-button-height-md)");
+    expect(fallbackStyle).toContain("var(--aurora-button-solid-bg)");
+  });
+
   it("marks button transitions for reduced-motion fallback", () => {
     render(<Button>Publish</Button>);
     expect(screen.getByRole("button", { name: "Publish" })).toHaveAttribute("data-aurora-reduced-motion", "transition");

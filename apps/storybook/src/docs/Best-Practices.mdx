@@ -62,6 +62,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - When guard logic preempts button activation keydown with `preventDefault()` (global capture or local `onKeyDown`), keep button pressed feedback side-effect free.
 - Keep button keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
 - Normalize button runtime boolean config from CMS/JSON payloads before binding props: malformed `loading` values should degrade to `false` so action buttons are not silently locked in loading state.
+- Normalize button runtime visual config from CMS/JSON payloads before binding props: mixed-case `variant/size` tokens should map to supported values, and invalid values should fall back to `solid/md` so action affordance and density remain deterministic.
 - Normalize badge runtime tone config from CMS/JSON payloads before binding props: mixed-case tone tokens should map to supported variants, and invalid values should fall back to `default` so compact status chips remain semantically stable.
 - Respect OS reduced-motion preferences: keep `GlobalStyles` mounted so surfaces tagged with `data-aurora-reduced-motion` disable shimmer/spin/indeterminate motion (Button loading spinner, Progress indeterminate bar, Skeleton shimmer) under `prefers-reduced-motion`, and keep timer-driven feedback (`LoadingDots`, `StreamingText`) on default `respectReducedMotion` behavior unless the product explicitly requires animated narration.
 - Keep progress narration values non-blank: empty `valueText` now falls back to computed percentage (or `Loading` in indeterminate mode) so assistive announcements never become silent.
@@ -189,6 +190,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={ButtonStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={ButtonStories.ManagedKeysPreemptedByLocalHandler} />
 <Canvas of={ButtonStories.RuntimeBooleanConfigNormalization} />
+<Canvas of={ButtonStories.RuntimeVisualConfigNormalization} />
 <Canvas of={LoadingDotsStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={ProgressStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={ProgressStories.RuntimeVisualConfigNormalization} />

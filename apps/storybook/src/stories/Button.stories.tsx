@@ -131,6 +131,31 @@ export const RuntimeBooleanConfigNormalization: Story = {
   }
 };
 
+export const RuntimeVisualConfigNormalization: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 560px)" gap={10}>
+      <Button variant={" OUTLINE " as unknown as "outline"} size={" LG " as unknown as "lg"}>
+        Runtime visual token
+      </Button>
+      <Button variant={"fancy" as unknown as "solid"} size={"xl" as unknown as "md"}>
+        Runtime visual fallback
+      </Button>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const normalizedButton = await canvas.findByRole("button", { name: "Runtime visual token" });
+    const normalizedStyle = normalizedButton.getAttribute("style") ?? "";
+    await expect(normalizedStyle).toContain("var(--aurora-button-height-lg)");
+    await expect(normalizedStyle).toContain("var(--aurora-button-border)");
+
+    const fallbackButton = await canvas.findByRole("button", { name: "Runtime visual fallback" });
+    const fallbackStyle = fallbackButton.getAttribute("style") ?? "";
+    await expect(fallbackStyle).toContain("var(--aurora-button-height-md)");
+    await expect(fallbackStyle).toContain("var(--aurora-button-solid-bg)");
+  }
+};
+
 function KeyboardActivationDemo() {
   const [count, setCount] = React.useState(0);
   const [loading, setLoading] = React.useState(true);

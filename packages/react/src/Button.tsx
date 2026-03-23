@@ -98,6 +98,28 @@ function resolveBooleanFlag(value: unknown, fallback: boolean) {
   return value;
 }
 
+function resolveButtonVariant(value: unknown, fallback: ButtonVariant) {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    if (normalizedValue === "solid" || normalizedValue === "ghost" || normalizedValue === "outline") {
+      return normalizedValue;
+    }
+  }
+
+  return fallback;
+}
+
+function resolveButtonSize(value: unknown, fallback: ButtonSize) {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    if (normalizedValue === "sm" || normalizedValue === "md" || normalizedValue === "lg") {
+      return normalizedValue;
+    }
+  }
+
+  return fallback;
+}
+
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     variant = "solid",
@@ -132,6 +154,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   const focusVisibleIntentRef = React.useRef(true);
   const missingA11yNameWarnedRef = React.useRef(false);
   const resolvedLoading = resolveBooleanFlag(loading, false);
+  const resolvedVariant = resolveButtonVariant(variant, "solid");
+  const resolvedSize = resolveButtonSize(size, "md");
   const interactionDisabled = disabled || resolvedLoading;
   const ariaLabelledBy =
     typeof rawAriaLabelledBy === "string" && rawAriaLabelledBy.trim().length > 0
@@ -142,7 +166,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       ? rawAriaLabel.trim()
       : undefined;
   const title = props.title;
-  const variantStyles = variantStyleMap[variant];
+  const variantStyles = variantStyleMap[resolvedVariant];
   const stateStyle = interactionDisabled
     ? variantStyles.disabled
     : pressed
@@ -254,7 +278,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
           ? "0 0 0 3px color-mix(in srgb, var(--aurora-focus-ring) 45%, transparent)"
           : undefined,
         transform: !interactionDisabled && pressed ? "translateY(1px)" : undefined,
-        ...sizeStyleMap[size],
+        ...sizeStyleMap[resolvedSize],
         ...variantStyles.base,
         ...stateStyle,
         ...style
