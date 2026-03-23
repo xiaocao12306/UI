@@ -121,6 +121,34 @@ export const DescendingDefaultSortDirection: Story = {
   }
 };
 
+export const RuntimeSortDirectionNormalization: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
+      <p style={storyMutedTextStyle}>
+        Runtime sort-direction config from CMS/JSON should normalize mixed-case tokens before
+        sorting.
+      </p>
+      <Table
+        caption="Runtime sort direction normalization"
+        columns={columns}
+        data={rows}
+        rowKey={(row) => row.id}
+        defaultSortKey="id"
+        defaultSortDirection={" DESC " as unknown as "desc"}
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole("table", { name: "Runtime sort direction normalization" });
+    const issueHeader = within(table).getByRole("columnheader", { name: /Issue/ });
+
+    await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
+    await expect(within(table).getAllByRole("rowheader")[0]).toHaveTextContent("DLG-210");
+    await expect(within(table).getByRole("button", { name: "Issue sort ascending" })).toBeInTheDocument();
+  }
+};
+
 export const WithRowAction: Story = {
   render: () => {
     const actionColumns: Array<TableColumn<ReleaseRow>> = [

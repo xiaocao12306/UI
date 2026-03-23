@@ -145,6 +145,7 @@ export function Table<T>({
   const resolvedLoadingContent = hasLoadingContent ? loadingContent : "Loading data...";
   const resolvedEmptyContent = hasEmptyContent ? emptyContent : "No data available.";
   const resolvedLoading = resolveBooleanFlag(loading, false);
+  const resolvedDefaultSortDirection = resolveTableSortDirection(defaultSortDirection, "asc");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel = resolvedAriaLabelledBy
     ? undefined
@@ -236,7 +237,7 @@ export function Table<T>({
       columns,
       resolvedColumnRenderKeys,
       defaultSortKey,
-      defaultSortDirection
+      resolvedDefaultSortDirection
     )
   );
   const sortableNavigationRenderKeys = React.useMemo(() => {
@@ -299,14 +300,14 @@ export function Table<T>({
       columns,
       resolvedColumnRenderKeys,
       defaultSortKey,
-      defaultSortDirection
+      resolvedDefaultSortDirection
     );
     if (!nextInitialSortState) {
       return;
     }
 
     setSortState(nextInitialSortState);
-  }, [columns, defaultSortDirection, defaultSortKey, resolvedColumnRenderKeys, sortState]);
+  }, [columns, defaultSortKey, resolvedColumnRenderKeys, resolvedDefaultSortDirection, sortState]);
 
   const sourceRowKeys = React.useMemo(
     () =>
@@ -1242,6 +1243,20 @@ function resolveTableMinWidth(minTableWidth: number | string | undefined) {
   }
 
   return 560;
+}
+
+function resolveTableSortDirection(
+  direction: TableSortDirection | undefined,
+  fallback: TableSortDirection
+) {
+  if (typeof direction === "string") {
+    const normalizedDirection = direction.trim().toLowerCase();
+    if (normalizedDirection === "asc" || normalizedDirection === "desc") {
+      return normalizedDirection;
+    }
+  }
+
+  return fallback;
 }
 
 function resolveTableColumnWidth(width: number | string | undefined) {

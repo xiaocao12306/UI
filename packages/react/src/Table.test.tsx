@@ -1295,6 +1295,48 @@ describe("Table", () => {
     expect(screen.getAllByRole("row")[1]).toHaveTextContent("Button");
   });
 
+  it("normalizes runtime defaultSortDirection tokens before applying initial sort order", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        defaultSortDirection={" DESC " as unknown as TableSortDirection}
+      />
+    );
+
+    expect(screen.getByRole("columnheader", { name: /Name/ })).toHaveAttribute("aria-sort", "descending");
+    expect(screen.getAllByRole("row")[1]).toHaveTextContent("Dialog");
+    expect(screen.getByRole("button", { name: "Name sort ascending" })).toBeInTheDocument();
+  });
+
+  it("falls back invalid defaultSortDirection to ascending order", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: true },
+          { key: "score", header: "Score", sortable: true }
+        ]}
+        data={[
+          { name: "Dialog", score: 80 },
+          { name: "Button", score: 95 }
+        ]}
+        defaultSortKey="name"
+        defaultSortDirection={"invalid-direction" as unknown as TableSortDirection}
+      />
+    );
+
+    expect(screen.getByRole("columnheader", { name: /Name/ })).toHaveAttribute("aria-sort", "ascending");
+    expect(screen.getAllByRole("row")[1]).toHaveTextContent("Button");
+    expect(screen.getByRole("button", { name: "Name sort descending" })).toBeInTheDocument();
+  });
+
   it("clears stale sort state when active sort column becomes non-sortable", () => {
     const data = [
       { name: "Dialog", score: 80 },
