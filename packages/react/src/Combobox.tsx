@@ -152,6 +152,7 @@ export function Combobox({
     resolvedAriaLabelledBy === undefined
       ? resolveNonEmptyLabel(ariaLabel, "Combobox")
       : undefined;
+  const resolvedPlaceholder = resolveNonEmptyLabel(placeholder, "Search option...");
   const resolvedListboxAriaLabel =
     resolvedAriaLabel === undefined ? undefined : `${resolvedAriaLabel} options`;
   const currentValue = value ?? internalValue;
@@ -439,7 +440,7 @@ export function Combobox({
         autoComplete="off"
         value={query}
         disabled={disabled}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         onFocus={() => {
           if (disabled) {
             return;

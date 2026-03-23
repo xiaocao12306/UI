@@ -144,6 +144,21 @@ export const WithCustomEmptyMessage: Story = {
   }
 };
 
+export const BlankPlaceholderFallback: Story = {
+  args: {
+    options: frameworkOptions,
+    onValueChange: () => {},
+    placeholder: "   "
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("combobox", { name: "Combobox" })).toHaveAttribute(
+      "placeholder",
+      "Search option..."
+    );
+  }
+};
+
 export const KeyboardDismissPaths: Story = {
   args: {
     ariaLabel: "Framework dismiss demo"

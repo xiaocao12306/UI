@@ -16,6 +16,15 @@ function dispatchLegacyImeKeyDown(element: HTMLElement, key: string) {
 }
 
 describe("Combobox", () => {
+  it("ignores blank placeholder and falls back to default search hint", () => {
+    render(<Combobox options={options} onValueChange={() => {}} placeholder="   " />);
+
+    expect(screen.getByRole("combobox", { name: "Combobox" })).toHaveAttribute(
+      "placeholder",
+      "Search option..."
+    );
+  });
+
   it("ignores blank ariaLabel and falls back to default combobox name", () => {
     render(<Combobox options={options} onValueChange={() => {}} ariaLabel="   " />);
     expect(screen.getByRole("combobox", { name: "Combobox" })).toBeInTheDocument();
