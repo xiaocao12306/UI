@@ -117,6 +117,14 @@ function isPrimaryPointerDownEvent(event: PointerEvent) {
   return true;
 }
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export function Combobox({
   options,
   value,
@@ -156,22 +164,31 @@ export function Combobox({
   const resolvedEmptyMessage = hasRenderableComboboxNode(emptyMessage)
     ? emptyMessage
     : "No option found.";
+  const resolvedDisabled = resolveBooleanFlag(disabled, false);
+  const resolvedOptions = React.useMemo(
+    () =>
+      options.map((option) => ({
+        ...option,
+        disabled: resolveBooleanFlag(option.disabled, false)
+      })),
+    [options]
+  );
   const resolvedListboxAriaLabel =
     resolvedAriaLabel === undefined ? undefined : `${resolvedAriaLabel} options`;
   const currentValue = value ?? internalValue;
   const selectedOptionIndex = React.useMemo(() => {
-    const firstEnabledMatchIndex = options.findIndex(
+    const firstEnabledMatchIndex = resolvedOptions.findIndex(
       (item) => item.value === currentValue && !item.disabled
     );
     if (firstEnabledMatchIndex >= 0) {
       return firstEnabledMatchIndex;
     }
 
-    return options.findIndex((item) => item.value === currentValue);
-  }, [currentValue, options]);
+    return resolvedOptions.findIndex((item) => item.value === currentValue);
+  }, [currentValue, resolvedOptions]);
   const selectedOption = React.useMemo(
-    () => (selectedOptionIndex >= 0 ? options[selectedOptionIndex] : undefined),
-    [options, selectedOptionIndex]
+    () => (selectedOptionIndex >= 0 ? resolvedOptions[selectedOptionIndex] : undefined),
+    [resolvedOptions, selectedOptionIndex]
   );
 
   React.useEffect(() => {
@@ -187,7 +204,7 @@ export function Combobox({
 
     const duplicateValues = new Set<string>();
     const seenValues = new Set<string>();
-    options.forEach((option) => {
+    resolvedOptions.forEach((option) => {
       if (seenValues.has(option.value)) {
         duplicateValues.add(option.value);
       }
@@ -210,14 +227,14 @@ export function Combobox({
         .map((item) => `"${item}"`)
         .join(", ")}. Values should be unique to keep selection and active option semantics deterministic; duplicate values now receive duplicate-occurrence render-key suffixes to avoid React key collisions.`
     );
-  }, [options]);
+  }, [resolvedOptions]);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {
       return;
     }
 
-    const missingAriaLabelValues = options.reduce<string[]>((values, option) => {
+    const missingAriaLabelValues = resolvedOptions.reduce<string[]>((values, option) => {
       const hasReadableLabelText = getReadableComboboxLabelText(option.label).length > 0;
       const hasExplicitAriaLabel = resolveNonEmptyLabel(option.ariaLabel) !== undefined;
       const hasExplicitAriaLabelledBy = resolveNonEmptyLabel(option.ariaLabelledBy) !== undefined;
@@ -245,14 +262,14 @@ export function Combobox({
     console.warn(
       `[Combobox] Non-text option labels should provide ariaLabel, ariaLabelledBy, or textValue for accessible naming: ${missingAriaLabelValues.join(", ")}.`
     );
-  }, [options]);
+  }, [resolvedOptions]);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {
       return;
     }
 
-    const missingSearchMetadataValues = options.reduce<string[]>((values, option) => {
+    const missingSearchMetadataValues = resolvedOptions.reduce<string[]>((values, option) => {
       const hasReadableLabelText = getReadableComboboxLabelText(option.label).length > 0;
       const hasTextValue = resolveNonEmptyLabel(option.textValue) !== undefined;
       const hasAriaLabel = resolveNonEmptyLabel(option.ariaLabel) !== undefined;
@@ -282,14 +299,14 @@ export function Combobox({
     console.warn(
       `[Combobox] Non-text option labels should provide textValue, ariaLabel, or keywords for searchable metadata: ${missingSearchMetadataValues.join(", ")}.`
     );
-  }, [options]);
+  }, [resolvedOptions]);
 
   React.useEffect(() => {
-    if (disabled) {
+    if (resolvedDisabled) {
       setOpen(false);
       setActiveIndex(-1);
     }
-  }, [disabled]);
+  }, [resolvedDisabled]);
 
   React.useEffect(() => {
     if (!open) {
@@ -318,14 +335,14 @@ export function Combobox({
   const filtered = React.useMemo(() => {
     const normalized = normalizeSearchText(query);
     if (!normalized) {
-      return options;
+      return resolvedOptions;
     }
 
-    return options.filter((option) => {
+    return resolvedOptions.filter((option) => {
       const haystack = normalizeSearchText([getComboboxOptionText(option), ...(option.keywords ?? [])].join(" "));
       return haystack.includes(normalized);
     });
-  }, [options, query]);
+  }, [query, resolvedOptions]);
   const enabledCount = React.useMemo(
     () => filtered.reduce((count, option) => (option.disabled ? count : count + 1), 0),
     [filtered]
@@ -333,7 +350,7 @@ export function Combobox({
   const canNavigateOptions = enabledCount > 1;
   const canSelectOption = open && enabledCount > 0;
   const searchKeyShortcuts = React.useMemo(() => {
-    if (disabled) {
+    if (resolvedDisabled) {
       return undefined;
     }
     if (!open) {
@@ -352,7 +369,7 @@ export function Combobox({
     }
 
     return shortcuts.length > 0 ? shortcuts.join(" ") : undefined;
-  }, [canNavigateOptions, canSelectOption, disabled, open]);
+  }, [canNavigateOptions, canSelectOption, open, resolvedDisabled]);
   const filteredRenderKeys = React.useMemo(() => getComboboxOptionRenderKeys(filtered), [filtered]);
 
   React.useEffect(() => {
@@ -414,7 +431,7 @@ export function Combobox({
   }, [activeIndex, filteredRenderKeys]);
 
   const selectOption = (option: ComboboxOption) => {
-    if (disabled || option.disabled) {
+    if (resolvedDisabled || option.disabled) {
       return;
     }
 
@@ -442,10 +459,10 @@ export function Combobox({
         aria-labelledby={resolvedAriaLabelledBy}
         autoComplete="off"
         value={query}
-        disabled={disabled}
+        disabled={resolvedDisabled}
         placeholder={resolvedPlaceholder}
         onFocus={() => {
-          if (disabled) {
+          if (resolvedDisabled) {
             return;
           }
           setOpen(true);
@@ -456,14 +473,14 @@ export function Combobox({
           }
         }}
         onChange={(event) => {
-          if (disabled) {
+          if (resolvedDisabled) {
             return;
           }
           setQuery(event.target.value);
           setOpen(true);
         }}
         onKeyDown={(event) => {
-          if (disabled) {
+          if (resolvedDisabled) {
             return;
           }
           onInputKeyDown?.(event);

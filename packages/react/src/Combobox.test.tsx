@@ -990,6 +990,33 @@ describe("Combobox", () => {
     expect(screen.queryByRole("listbox")).toBeNull();
   });
 
+  it("falls back invalid runtime disabled flags to actionable combobox semantics", () => {
+    const onValueChange = vi.fn();
+    render(
+      <Combobox
+        ariaLabel="Runtime boolean combobox"
+        disabled={"true" as unknown as boolean}
+        options={[
+          { value: "react", label: "React" },
+          { value: "vue", label: "Vue", disabled: "true" as unknown as boolean }
+        ]}
+        onValueChange={onValueChange}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Runtime boolean combobox" });
+    expect(input).not.toBeDisabled();
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
+
+    fireEvent.focus(input);
+    expect(screen.getByRole("listbox", { name: "Runtime boolean combobox options" })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: "Vue" })).not.toBeDisabled();
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onValueChange).toHaveBeenCalledWith("vue");
+  });
+
   it("binds outside pointer listener to ownerDocument when opened", () => {
     const iframe = document.createElement("iframe");
     document.body.appendChild(iframe);

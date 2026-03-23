@@ -693,6 +693,59 @@ export const DisabledState: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationCombobox() {
+  const [selectedValue, setSelectedValue] = React.useState("none");
+  const [events, setEvents] = React.useState(0);
+
+  return (
+    <div style={{ width: 420, display: "grid", gap: 10 }}>
+      <Combobox
+        ariaLabel="Runtime boolean combobox"
+        disabled={"true" as unknown as boolean}
+        options={[
+          { value: "react", label: "React" },
+          { value: "vue", label: "Vue", disabled: "true" as unknown as boolean }
+        ]}
+        onValueChange={(value) => {
+          setSelectedValue(value);
+          setEvents((current) => current + 1);
+        }}
+      />
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <Badge tone="default">
+          Selected: <span data-testid="combobox-runtime-selected">{selectedValue}</span>
+        </Badge>
+        <Badge tone="default">
+          Change events: <span data-testid="combobox-runtime-events">{events}</span>
+        </Badge>
+      </div>
+    </div>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationCombobox />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("combobox", { name: "Runtime boolean combobox" });
+    const selected = canvas.getByTestId("combobox-runtime-selected");
+    const events = canvas.getByTestId("combobox-runtime-events");
+
+    await expect(input).not.toBeDisabled();
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
+    await expect(selected).toHaveTextContent("none");
+    await expect(events).toHaveTextContent("0");
+
+    await userEvent.click(input);
+    await expect(canvas.getByRole("listbox", { name: "Runtime boolean combobox options" })).toBeInTheDocument();
+    await expect(canvas.getByRole("option", { name: "Vue" })).not.toBeDisabled();
+
+    await userEvent.keyboard("{ArrowDown}{Enter}");
+    await expect(selected).toHaveTextContent("vue");
+    await expect(events).toHaveTextContent("1");
+  }
+};
+
 export const FocusIntentReentry: Story = {
   render: () => (
     <div style={{ width: 400, display: "grid", gap: 10 }}>
