@@ -953,6 +953,37 @@ describe("Toast", () => {
     }
   });
 
+  it("falls back pauseOnHover to enabled when runtime value is non-boolean", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+
+    try {
+      render(
+        <Toast
+          open
+          title="Runtime pause fallback"
+          duration={1000}
+          pauseOnHover={"invalid-flag" as unknown as boolean}
+          onOpenChange={onOpenChange}
+        />
+      );
+
+      fireEvent.focus(screen.getByRole("button", { name: "Close toast" }));
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+
+      fireEvent.blur(screen.getByRole("button", { name: "Close toast" }));
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("does not close on escape when closeOnEscape is disabled", () => {
     const onOpenChange = vi.fn();
 
@@ -960,6 +991,27 @@ describe("Toast", () => {
     expect(screen.getByRole("status", { name: "Sticky" })).not.toHaveAttribute("aria-keyshortcuts");
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it("falls back closeOnEscape to enabled when runtime value is non-boolean", () => {
+    const onOpenChange = vi.fn();
+
+    render(
+      <Toast
+        open
+        title="Runtime escape fallback"
+        closeOnEscape={0 as unknown as boolean}
+        onOpenChange={onOpenChange}
+      />
+    );
+
+    expect(screen.getByRole("status", { name: "Runtime escape fallback" })).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Escape"
+    );
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
   it("ignores modified Escape keydown for close and hook callbacks", () => {

@@ -798,6 +798,117 @@ export const EscapeShortcutSync: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationDemo() {
+  const [open, setOpen] = React.useState(true);
+  const [closeReason, setCloseReason] = React.useState("none");
+  const [probeTicks, setProbeTicks] = React.useState(0);
+  const [timeoutCloses, setTimeoutCloses] = React.useState(0);
+  const [escapeCloses, setEscapeCloses] = React.useState(0);
+
+  React.useEffect(() => {
+    if (!open) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setProbeTicks((value) => value + 1);
+    }, 50);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [open]);
+
+  return (
+    <ToastShowcase align="start" minHeight={320}>
+      <p style={toastTelemetryTextStyle}>
+        Runtime bool-like config from CMS/JSON should degrade safely: invalid flags fall back to
+        defaults (`pauseOnHover=true`, `closeOnEscape=true`).
+      </p>
+      <p style={toastTelemetryTextStyle}>
+        Reason:{" "}
+        <strong data-testid="runtime-boolean-close-reason" style={toastTelemetryValueStyle}>
+          {closeReason}
+        </strong>{" "}
+        · Probe ticks:{" "}
+        <strong data-testid="runtime-boolean-probe-ticks" style={toastTelemetryValueStyle}>
+          {probeTicks}
+        </strong>{" "}
+        · Timeout closes:{" "}
+        <strong data-testid="runtime-boolean-timeout-count" style={toastTelemetryValueStyle}>
+          {timeoutCloses}
+        </strong>{" "}
+        · Escape closes:{" "}
+        <strong data-testid="runtime-boolean-escape-count" style={toastTelemetryValueStyle}>
+          {escapeCloses}
+        </strong>
+      </p>
+      <div style={{ display: "flex", gap: 8 }}>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setCloseReason("none");
+            setProbeTicks(0);
+            setOpen(true);
+          }}
+        >
+          Reopen runtime toast
+        </Button>
+        <button type="button">Outside focus target</button>
+      </div>
+      <Toast
+        open={open}
+        onOpenChange={setOpen}
+        duration={120}
+        pauseOnHover={"invalid-pause-flag" as unknown as boolean}
+        closeOnEscape={0 as unknown as boolean}
+        title="Runtime boolean fallback"
+        description="Invalid bool props should preserve hover/focus pause and Escape dismissal."
+        tone="info"
+        onCloseReason={(reason) => {
+          setCloseReason(reason);
+          if (reason === "timeout") {
+            setTimeoutCloses((value) => value + 1);
+          }
+          if (reason === "escape-key") {
+            setEscapeCloses((value) => value + 1);
+          }
+        }}
+      />
+    </ToastShowcase>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const doc = canvasElement.ownerDocument;
+
+    const closeButton = await canvas.findByRole("button", { name: "Close toast" });
+    closeButton.focus();
+    await waitFor(() => {
+      expect(closeButton).toHaveFocus();
+    });
+    await waitFor(() => {
+      expect(Number(canvas.getByTestId("runtime-boolean-probe-ticks").textContent ?? "0")).toBeGreaterThanOrEqual(4);
+    });
+    await expect(canvas.getByRole("status", { name: "Runtime boolean fallback" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("runtime-boolean-timeout-count")).toHaveTextContent("0");
+
+    fireEvent.keyDown(doc, { key: "Escape" });
+    await waitFor(() => {
+      expect(canvas.queryByRole("status", { name: "Runtime boolean fallback" })).not.toBeInTheDocument();
+    });
+    await expect(canvas.getByTestId("runtime-boolean-close-reason")).toHaveTextContent("escape-key");
+    await expect(canvas.getByTestId("runtime-boolean-escape-count")).toHaveTextContent("1");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Reopen runtime toast" }));
+    const reopened = await canvas.findByRole("status", { name: "Runtime boolean fallback" });
+    await expect(reopened).toHaveAttribute("aria-keyshortcuts", "Escape");
+  }
+};
+
 function StackedViewportOffsetDemo() {
   const [openState, setOpenState] = React.useState({ first: true, second: true });
 

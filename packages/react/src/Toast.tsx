@@ -221,6 +221,8 @@ export function Toast({
   const timerStartedAtRef = React.useRef(0);
   const hasActionContent = hasRenderableToastNode(action);
   const hasActionAffordance = hasInteractiveToastActionNode(action);
+  const resolvedPauseOnHover = resolveBooleanFlag(pauseOnHover, true);
+  const resolvedCloseOnEscape = resolveBooleanFlag(closeOnEscape, true);
   const resolvedDuration = resolveToastDuration(duration, hasActionAffordance ? 0 : 4000);
   const remainingDurationRef = React.useRef(resolvedDuration);
   const [documentHidden, setDocumentHidden] = React.useState(false);
@@ -229,7 +231,7 @@ export function Toast({
   const [closeButtonPressed, setCloseButtonPressed] = React.useState(false);
   const [closeButtonFocusVisible, setCloseButtonFocusVisible] = React.useState(false);
   const [showEscapeKeyShortcuts, setShowEscapeKeyShortcuts] = React.useState(false);
-  const paused = documentHidden || (pauseOnHover && (pauseState.hover || pauseState.focus));
+  const paused = documentHidden || (resolvedPauseOnHover && (pauseState.hover || pauseState.focus));
   const titleId = React.useId();
   const descriptionId = React.useId();
   const hasDescriptionContent = hasRenderableToastNode(description);
@@ -265,12 +267,12 @@ export function Toast({
     setShowEscapeKeyShortcuts(
       Boolean(
         open &&
-          closeOnEscape &&
+          resolvedCloseOnEscape &&
           element &&
           isTopCloseableToast(element.ownerDocument, element)
       )
     );
-  }, [closeOnEscape, open]);
+  }, [open, resolvedCloseOnEscape]);
 
   React.useEffect(() => {
     updateEscapeKeyShortcutsVisibility();
@@ -306,7 +308,7 @@ export function Toast({
     }
 
     notifyToastStackChanged(rootRef.current.ownerDocument);
-  }, [closeOnEscape, open]);
+  }, [open, resolvedCloseOnEscape]);
 
   React.useEffect(() => {
     if (!open) {
@@ -475,10 +477,10 @@ export function Toast({
     if (timeoutRef.current === null) {
       startCloseTimer(remainingDurationRef.current);
     }
-  }, [open, pauseCloseTimer, pauseOnHover, paused, resolvedDuration, startCloseTimer]);
+  }, [open, pauseCloseTimer, paused, resolvedDuration, startCloseTimer]);
 
   React.useEffect(() => {
-    if (!open || !closeOnEscape) {
+    if (!open || !resolvedCloseOnEscape) {
       return;
     }
 
@@ -526,7 +528,7 @@ export function Toast({
     return () => {
       ownerDocument.removeEventListener("keydown", onKeyDown);
     };
-  }, [closeByEscape, closeOnEscape, onEscapeKeyDown, open]);
+  }, [closeByEscape, onEscapeKeyDown, open, resolvedCloseOnEscape]);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {
@@ -565,7 +567,7 @@ export function Toast({
       data-aurora-reduced-motion="transition"
       ref={rootRef}
       role={role}
-      data-close-on-escape={closeOnEscape ? "true" : "false"}
+      data-close-on-escape={resolvedCloseOnEscape ? "true" : "false"}
       aria-modal={hasActionAffordance ? "false" : undefined}
       aria-live={ariaLive}
       aria-atomic="true"
@@ -575,23 +577,26 @@ export function Toast({
       aria-describedby={hasDescriptionContent && !usesDescriptionAsFallbackName ? descriptionId : undefined}
       onMouseEnter={() => {
         promoteToTop();
-        if (pauseOnHover) {
+        if (resolvedPauseOnHover) {
           setPauseState((current) => ({ ...current, hover: true }));
         }
       }}
       onMouseLeave={() => {
-        if (pauseOnHover) {
+        if (resolvedPauseOnHover) {
           setPauseState((current) => ({ ...current, hover: false }));
         }
       }}
       onFocusCapture={() => {
         promoteToTop();
-        if (pauseOnHover) {
+        if (resolvedPauseOnHover) {
           setPauseState((current) => ({ ...current, focus: true }));
         }
       }}
       onBlurCapture={(event) => {
-        if (pauseOnHover && !event.currentTarget.contains(event.relatedTarget as Node | null)) {
+        if (
+          resolvedPauseOnHover &&
+          !event.currentTarget.contains(event.relatedTarget as Node | null)
+        ) {
           setPauseState((current) => ({ ...current, focus: false }));
         }
       }}
@@ -745,6 +750,14 @@ function resolveToastDuration(duration: number | undefined, fallback: number) {
   }
 
   return duration;
+}
+
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
 }
 
 function isToastCloseButtonActivationKey(key: string) {
