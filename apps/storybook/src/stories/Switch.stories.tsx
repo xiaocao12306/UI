@@ -104,6 +104,42 @@ export const ShortcutHintPrecision: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationSwitch() {
+  const [events, setEvents] = React.useState(0);
+
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 380px)" gap={12}>
+      <Switch
+        label="Runtime boolean switch"
+        description="Invalid runtime booleans should degrade to actionable switch semantics."
+        checked={"true" as unknown as boolean}
+        defaultChecked={"true" as unknown as boolean}
+        disabled={"true" as unknown as boolean}
+        onCheckedChange={() => setEvents((value) => value + 1)}
+      />
+      <Badge tone="default">
+        Toggle events: <span data-testid="switch-runtime-toggle-events">{events}</span>
+      </Badge>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationSwitch />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const control = canvas.getByRole("switch", { name: "Runtime boolean switch" });
+    const events = canvas.getByTestId("switch-runtime-toggle-events");
+
+    await expect(control).not.toBeDisabled();
+    await expect(control).toHaveAttribute("aria-checked", "false");
+    await expect(control).toHaveAttribute("aria-keyshortcuts", "Space");
+
+    await userEvent.click(control);
+    await expect(events).toHaveTextContent("1");
+  }
+};
+
 export const KeyboardToggle: Story = {
   args: {
     defaultChecked: false,

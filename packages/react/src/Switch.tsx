@@ -10,6 +10,14 @@ export type SwitchProps = Omit<React.ComponentPropsWithoutRef<"button">, "childr
   description?: React.ReactNode;
 };
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function Switch(
   {
     checked,
@@ -41,7 +49,9 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
   },
   forwardedRef
 ) {
-  const [internalChecked, setInternalChecked] = React.useState(defaultChecked);
+  const [internalChecked, setInternalChecked] = React.useState(() =>
+    resolveBooleanFlag(defaultChecked, false)
+  );
   const [focused, setFocused] = React.useState(false);
   const [focusVisible, setFocusVisible] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
@@ -51,17 +61,19 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
   const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
+  const resolvedDisabled = resolveBooleanFlag(disabled, false);
+  const resolvedChecked = checked === undefined ? undefined : resolveBooleanFlag(checked, false);
 
   const descriptionId = React.useId();
   const labelId = React.useId();
 
-  const isControlled = checked !== undefined;
-  const currentChecked = isControlled ? checked : internalChecked;
+  const isControlled = resolvedChecked !== undefined;
+  const currentChecked = isControlled ? resolvedChecked : internalChecked;
   const hasLabelContent = hasRenderableSwitchNode(label);
   const hasDescriptionContent = hasRenderableSwitchNode(description);
   const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
   const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
-  const ariaKeyShortcuts = disabled ? undefined : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "Space";
+  const ariaKeyShortcuts = resolvedDisabled ? undefined : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "Space";
   const describedBy = [props["aria-describedby"], hasDescriptionContent ? descriptionId : undefined]
     .filter(Boolean)
     .join(" ") || undefined;
@@ -73,10 +85,10 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     : "color-mix(in srgb, var(--aurora-accent-default) 30%, transparent)";
   const trackBorderColor = isInvalid
     ? "var(--aurora-color-red-500)"
-    : hovered && !disabled
+    : hovered && !resolvedDisabled
       ? "var(--aurora-border-strong)"
       : "var(--aurora-border-default)";
-  const trackBackground = disabled
+  const trackBackground = resolvedDisabled
     ? "color-mix(in srgb, var(--aurora-surface-elevated) 75%, var(--aurora-surface-default))"
     : isInvalid
       ? currentChecked
@@ -87,7 +99,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         : "var(--aurora-surface-elevated)";
 
   React.useEffect(() => {
-    if (!disabled) {
+    if (!resolvedDisabled) {
       return;
     }
 
@@ -95,7 +107,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     setFocusVisible(false);
     setHovered(false);
     setPressed(false);
-  }, [disabled]);
+  }, [resolvedDisabled]);
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {
@@ -165,7 +177,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
   );
 
   const handleToggle = React.useCallback(() => {
-    if (disabled) {
+    if (resolvedDisabled) {
       return;
     }
     const nextChecked = !Boolean(currentChecked);
@@ -173,7 +185,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       setInternalChecked(nextChecked);
     }
     onCheckedChange?.(nextChecked);
-  }, [currentChecked, disabled, isControlled, onCheckedChange]);
+  }, [currentChecked, isControlled, onCheckedChange, resolvedDisabled]);
 
   return (
     <button
@@ -183,12 +195,12 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       role="switch"
       aria-checked={currentChecked}
       aria-invalid={resolvedInvalidAria}
-      aria-disabled={disabled || undefined}
+      aria-disabled={resolvedDisabled || undefined}
       aria-label={ariaLabel}
       aria-describedby={describedBy}
       aria-labelledby={labelledBy}
       aria-keyshortcuts={ariaKeyShortcuts}
-      disabled={disabled}
+      disabled={resolvedDisabled}
       data-state={currentChecked ? "checked" : "unchecked"}
       data-invalid={isInvalid ? "true" : undefined}
       data-pressed={pressed ? "true" : undefined}
@@ -204,8 +216,8 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         alignItems: "flex-start",
         gap: 10,
         textAlign: "left",
-        cursor: disabled ? "not-allowed" : "pointer",
-        opacity: disabled ? 0.72 : 1,
+        cursor: resolvedDisabled ? "not-allowed" : "pointer",
+        opacity: resolvedDisabled ? 0.72 : 1,
         ...style
       }}
       onClick={(event) => {
@@ -229,7 +241,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
         onBlur?.(event);
       }}
       onMouseEnter={(event) => {
-        if (!disabled) {
+        if (!resolvedDisabled) {
           setHovered(true);
         }
         onMouseEnter?.(event);
@@ -244,7 +256,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
           focusVisibleIntentRef.current = false;
           setFocusVisible(false);
         }
-        if (!disabled && event.button === 0 && !event.ctrlKey) {
+        if (!resolvedDisabled && event.button === 0 && !event.ctrlKey) {
           setPressed(true);
         }
         onMouseDown?.(event);
@@ -255,7 +267,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
           setFocusVisible(false);
         }
         if (
-          !disabled &&
+          !resolvedDisabled &&
           !event.ctrlKey &&
           isPrimaryPointerButton(event.button)
         ) {
@@ -282,7 +294,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       onKeyDown={(event) => {
         focusVisibleIntentRef.current = true;
         onKeyDown?.(event);
-        if (event.defaultPrevented || disabled) {
+        if (event.defaultPrevented || resolvedDisabled) {
           return;
         }
 

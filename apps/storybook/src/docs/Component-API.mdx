@@ -194,7 +194,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 
 | Prop                                  | Type                                            | Notes                                                                                                                                                                                            |
 | ------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `checked` / `defaultChecked`          | `boolean`                                       | Controlled and uncontrolled switch flows.                                                                                                                                                        |
+| `checked` / `defaultChecked`          | `boolean`                                       | Controlled and uncontrolled switch flows. Non-boolean runtime values fall back to `false` so malformed config does not silently force on/off state.                                           |
 | `onCheckedChange`                     | `(checked: boolean) => void`                    | Triggered from pointer and keyboard activation (`Space`, `Spacebar`, ` `).                                                                                                                       |
 | keyboard shortcut hints               | default `aria-keyshortcuts="Space"`             | Actionable switches expose `Space` shortcut metadata for QA/AT discoverability; disabled switches omit hints so metadata never advertises unavailable keyboard actions.                           |
 | keyboard pressed feedback policy      | unmodified `Space` (` ` / `Space` / `Spacebar`) | Switch exposes `data-pressed` only while an unmodified activation key is held and ignores `event.repeat` long-press keydown pulses; `Ctrl/Meta/Alt` chords and IME composition paths (`isComposing` / `keyCode=229`) stay passive to avoid false feedback. |
@@ -208,6 +208,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 
 <Canvas of={SwitchStories.InvalidAndDisabled} />
 <Canvas of={SwitchStories.ShortcutHintPrecision} />
+<Canvas of={SwitchStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={SwitchStories.KeyboardModifierGuard} />
 <Canvas of={SwitchStories.ImeCompositionGuard} />
 <Canvas of={SwitchStories.LabelledByPrecedence} />

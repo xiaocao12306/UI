@@ -273,6 +273,27 @@ describe("Switch", () => {
     expect(onCheckedChange).not.toHaveBeenCalled();
   });
 
+  it("falls back invalid runtime checked/defaultChecked/disabled values to actionable semantics", () => {
+    const onCheckedChange = vi.fn();
+    render(
+      <Switch
+        label="Runtime boolean switch"
+        checked={"true" as unknown as boolean}
+        defaultChecked={"true" as unknown as boolean}
+        disabled={"true" as unknown as boolean}
+        onCheckedChange={onCheckedChange}
+      />
+    );
+
+    const control = screen.getByRole("switch", { name: "Runtime boolean switch" });
+    expect(control).not.toBeDisabled();
+    expect(control).toHaveAttribute("aria-checked", "false");
+    expect(control).toHaveAttribute("aria-keyshortcuts", "Space");
+
+    fireEvent.click(control);
+    expect(onCheckedChange).toHaveBeenCalledWith(true);
+  });
+
   it("wires invalid and helper semantics", () => {
     render(
       <Switch

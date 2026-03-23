@@ -3,6 +3,7 @@ import * as ButtonStories from "../stories/Button.stories";
 import * as FormFieldStories from "../stories/FormField.stories";
 import * as InputStories from "../stories/Input.stories";
 import * as CheckboxStories from "../stories/Checkbox.stories";
+import * as SwitchStories from "../stories/Switch.stories";
 import * as ComboboxStories from "../stories/Combobox.stories";
 import * as DatePickerStories from "../stories/DatePicker.stories";
 import * as DialogStories from "../stories/Dialog.stories";
@@ -79,6 +80,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Treat blank select `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank textarea `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank switch `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
+- Normalize switch runtime boolean config from CMS/JSON payloads before binding props: malformed `checked/defaultChecked/disabled` values should degrade to `false` so toggle availability and state semantics remain deterministic.
 - Treat blank date-picker `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Keep switch keyboard toggle and pressed-state feedback scoped to unmodified `Space` keys (` ` / `Space` / `Spacebar`) and ignore `event.repeat` long-press pulses; `Ctrl/Meta/Alt + Space` should remain host shortcut behavior, and IME composition key paths (`isComposing` / `keyCode=229`) should stay no-op.
 - Keep switch shortcut hints precise: expose `aria-keyshortcuts="Space"` only while actionable, and remove shortcut metadata when switch is disabled.
@@ -148,6 +150,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={FormFieldStories.NonTextLabelNameFallback} />
 <Canvas of={InputStories.BlankAriaLabelFallback} />
 <Canvas of={CheckboxStories.RuntimeBooleanConfigNormalization} />
+<Canvas of={SwitchStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={InputStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={InputStories.ManagedKeysPreemptedByLocalHandler} />
 <Canvas of={InputStories.RuntimeBooleanConfigNormalization} />
