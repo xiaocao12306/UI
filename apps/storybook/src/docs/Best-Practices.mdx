@@ -340,6 +340,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Normalize reasoning step payloads before rendering (or rely on built-in blank-step filtering) so whitespace-only steps do not create empty list bullets; keep `emptyText` non-blank unless default fallback copy is desired.
 - Show reasoning disclosure with explicit user intent (default collapsed).
 - Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
+- Keep `StreamingText`/`StreamingCodeBlock` timing props finite and predictable in app state; non-finite values now fall back to built-in defaults (`StreamingText speed=16/startDelay=0`, `StreamingCodeBlock speed=8`) and fractional values are normalized to integer timing.
 - Keep streaming-code narration `live="off"` for high-frequency token output; enable `live="polite"` only when progressive code updates must be announced.
 - Provide explicit `label` for streaming code regions so screen-reader users can distinguish concurrent AI outputs.
 - For streaming code regions, prefer `ariaLabelledBy` when a visible heading already exists; use `ariaLabel` (or `label` fallback) for standalone code stream panels.

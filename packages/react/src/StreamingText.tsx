@@ -19,6 +19,22 @@ export type StreamingTextProps = React.ComponentPropsWithoutRef<"span"> & {
   respectReducedMotion?: boolean;
 };
 
+function resolveStreamingSpeed(speed: number, fallback: number) {
+  if (!Number.isFinite(speed)) {
+    return fallback;
+  }
+
+  return Math.max(8, Math.trunc(speed));
+}
+
+function resolveStartDelay(startDelay: number, fallback: number) {
+  if (!Number.isFinite(startDelay)) {
+    return fallback;
+  }
+
+  return Math.max(0, Math.trunc(startDelay));
+}
+
 export function StreamingText({
   text,
   speed = 16,
@@ -41,6 +57,8 @@ export function StreamingText({
   const rootRef = React.useRef<HTMLSpanElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion(rootRef);
   const shouldStream = streaming && !(respectReducedMotion && prefersReducedMotion);
+  const safeSpeed = resolveStreamingSpeed(speed, 16);
+  const safeStartDelay = resolveStartDelay(startDelay, 0);
   const [visibleText, setVisibleText] = React.useState(streaming ? "" : text);
   const completedRef = React.useRef(false);
   const totalLength = text.length;
@@ -93,7 +111,7 @@ export function StreamingText({
             onComplete?.();
           }
         }
-      }, Math.max(8, speed));
+      }, safeSpeed);
     };
 
     if (totalLength === 0) {
@@ -104,7 +122,7 @@ export function StreamingText({
       return;
     }
 
-    const timeoutId = ownerWindow.setTimeout(start, Math.max(0, startDelay));
+    const timeoutId = ownerWindow.setTimeout(start, safeStartDelay);
 
     return () => {
       ownerWindow.clearTimeout(timeoutId);
@@ -112,7 +130,7 @@ export function StreamingText({
         ownerWindow.clearInterval(intervalId);
       }
     };
-  }, [onComplete, onProgress, shouldStream, speed, startDelay, text, totalLength]);
+  }, [onComplete, onProgress, safeSpeed, safeStartDelay, shouldStream, text, totalLength]);
 
   const isComplete = visibleText.length >= totalLength;
   const showCursor = cursor && shouldStream && (!isComplete || showCursorWhenDone);

@@ -12,6 +12,14 @@ export type StreamingCodeBlockProps = React.ComponentPropsWithoutRef<"div"> & {
   respectReducedMotion?: boolean;
 };
 
+function resolveStreamingCodeSpeed(speed: number, fallback: number) {
+  if (!Number.isFinite(speed)) {
+    return fallback;
+  }
+
+  return Math.trunc(speed);
+}
+
 export function StreamingCodeBlock({
   code,
   language = "txt",
@@ -26,7 +34,9 @@ export function StreamingCodeBlock({
 }: StreamingCodeBlockProps) {
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion(rootRef);
-  const shouldStream = speed > 0 && code.length > 0 && !(respectReducedMotion && prefersReducedMotion);
+  const safeSpeed = resolveStreamingCodeSpeed(speed, 8);
+  const shouldStream =
+    safeSpeed > 0 && code.length > 0 && !(respectReducedMotion && prefersReducedMotion);
   const [visible, setVisible] = React.useState("");
   const resolvedLabel =
     typeof label === "string" && label.trim().length > 0 ? label.trim() : "Streaming code block";
@@ -58,12 +68,12 @@ export function StreamingCodeBlock({
       if (pointer >= code.length) {
         ownerWindow.clearInterval(id);
       }
-    }, speed);
+    }, Math.max(1, safeSpeed));
 
     return () => {
       ownerWindow.clearInterval(id);
     };
-  }, [code, shouldStream, speed]);
+  }, [code, safeSpeed, shouldStream]);
 
   return (
     <div

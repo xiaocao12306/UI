@@ -763,7 +763,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | Prop                                | Type                 | Notes                                                                                                                        |
 | ----------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | `streaming`                         | `boolean`            | Toggle realtime token streaming vs instant completion mode.                                                                  |
-| `speed` / `startDelay`              | `number`             | Controls token cadence and delayed start.                                                                                    |
+| `speed` / `startDelay`              | `number`             | Controls token cadence and delayed start. `speed` is normalized to integer with a minimum `8ms`; `startDelay` is normalized to non-negative integer milliseconds. Non-finite values fall back to defaults (`speed=16`, `startDelay=0`). |
 | `cursorChar` / `showCursorWhenDone` | `string` / `boolean` | Cursor visual customization and completion behavior.                                                                         |
 | `respectReducedMotion`              | `boolean`            | Defaults to `true`; reduced-motion users see immediate final text and completion callbacks without token-by-token animation. |
 | `label`                             | `string`             | Accessible narration label for streaming status; blank values are ignored and fallback to `Streaming text`.                  |
@@ -1025,7 +1025,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | ---------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `code`     | `string`                           | Source content to progressively reveal.                                                                             |
 | `language` | `string`                           | Header hint for syntax context.                                                                                     |
-| `speed`    | `number`                           | Milliseconds per character; `0` renders immediately.                                                                |
+| `speed`    | `number`                           | Milliseconds per character; values are normalized to integer timing. Non-finite values fall back to `8`, while `0` or negative values render immediately. |
 | `respectReducedMotion` | `boolean`                | Defaults to `true`; reduced-motion users see full code immediately instead of character-by-character animation.     |
 | `label`    | `string`                           | Accessible region name for assistive tech context; blank values are ignored and fallback to `Streaming code block`. |
 | `ariaLabel` / `ariaLabelledBy` | `string` / `string` | Optional region naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without explicit naming overrides, region naming falls back to `label` (`Streaming code block` default). |

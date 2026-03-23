@@ -46,6 +46,44 @@ describe("StreamingText", () => {
     vi.useRealTimers();
   });
 
+  it("falls back to default speed and startDelay when values are non-finite", () => {
+    vi.useFakeTimers();
+
+    render(<StreamingText text="AB" speed={Number.NaN} startDelay={Number.POSITIVE_INFINITY} />);
+    const status = screen.getByRole("status", { name: "Streaming text" });
+    expect(status).toHaveTextContent("|");
+
+    act(() => {
+      vi.advanceTimersByTime(15);
+    });
+    expect(status).toHaveTextContent("|");
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(status).toHaveTextContent("A|");
+    vi.useRealTimers();
+  });
+
+  it("normalizes fractional speed and startDelay to stable integer timings", () => {
+    vi.useFakeTimers();
+
+    render(<StreamingText text="AB" speed={9.8} startDelay={10.7} />);
+    const status = screen.getByRole("status", { name: "Streaming text" });
+    expect(status).toHaveTextContent("|");
+
+    act(() => {
+      vi.advanceTimersByTime(18);
+    });
+    expect(status).toHaveTextContent("|");
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(status).toHaveTextContent("A|");
+    vi.useRealTimers();
+  });
+
   it("ignores blank label and falls back to default streaming narration name", () => {
     render(<StreamingText text="Result" streaming={false} label="   " />);
     expect(screen.getByRole("status", { name: "Streaming text" })).toBeInTheDocument();

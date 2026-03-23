@@ -60,6 +60,42 @@ describe("StreamingCodeBlock", () => {
     expect(readCode()).toBe("xy");
   });
 
+  it("falls back to default speed when speed is non-finite", () => {
+    vi.useFakeTimers();
+    const { container } = render(<StreamingCodeBlock code="AB" speed={Number.POSITIVE_INFINITY} />);
+    const root = container.firstElementChild as HTMLElement;
+    const codeNode = container.querySelector("code") as HTMLElement;
+
+    expect(root).toHaveAttribute("aria-busy", "true");
+    expect(codeNode).toHaveTextContent("");
+
+    act(() => {
+      vi.advanceTimersByTime(7);
+    });
+    expect(codeNode).toHaveTextContent("");
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(codeNode).toHaveTextContent("A");
+  });
+
+  it("normalizes fractional speed to stable integer interval timing", () => {
+    vi.useFakeTimers();
+    const { container } = render(<StreamingCodeBlock code="AB" speed={9.9} />);
+    const codeNode = container.querySelector("code") as HTMLElement;
+
+    act(() => {
+      vi.advanceTimersByTime(8);
+    });
+    expect(codeNode).toHaveTextContent("");
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(codeNode).toHaveTextContent("A");
+  });
+
   it("supports custom region label and live narration settings", () => {
     const { container } = render(
       <StreamingCodeBlock code="const ready = true;" speed={0} label="Release code stream" live="polite" />
