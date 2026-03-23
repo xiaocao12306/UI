@@ -1046,7 +1046,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | ------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `title`                         | `ReactNode`                       | Toggle trigger title.                                                                                                |
 | `steps`                         | `string[]`                        | Ordered reasoning steps; blank-only entries are ignored, so whitespace-only payloads still resolve to fallback empty state. |
-| `defaultOpen`                   | `boolean`                         | Initial expanded state for diagnostics-oriented views.                                                               |
+| `defaultOpen`                   | `boolean`                         | Initial expanded state for diagnostics-oriented views. Non-boolean runtime values fall back to `false` so malformed config payloads do not silently force expanded disclosure state. |
 | `expandLabel` / `collapseLabel` | `string`                          | Localizable button accessible labels for collapsed/expanded states. Blank values fallback to default action labels and automatically append readable `title` context (for example `Expand reasoning panel: Model reasoning`) for unique narration. |
 | keyboard metadata               | `aria-keyshortcuts="Enter Space"` | Toggle button exposes disclosure shortcuts for QA/AT discoverability.                                                |
 | `listAriaLabel` / `listAriaLabelledBy` | `string` / `string`         | Accessible naming controls for the reasoning list region. Blank values are ignored, and `listAriaLabelledBy` takes precedence over `listAriaLabel` fallback (`Reasoning steps`). |
@@ -1055,6 +1055,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={ReasoningPanelStories.LocalizedLabels} />
 <Canvas of={ReasoningPanelStories.LabelledByPrecedence} />
 <Canvas of={ReasoningPanelStories.BlankStepFallback} />
+<Canvas of={ReasoningPanelStories.RuntimeBooleanConfigNormalization} />
 
 ### StreamingCodeBlock
 

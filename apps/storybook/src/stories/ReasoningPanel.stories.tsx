@@ -43,6 +43,19 @@ export const OpenByDefault: Story = {
   }
 };
 
+export const RuntimeBooleanConfigNormalization: Story = {
+  args: {
+    defaultOpen: "true" as unknown as boolean
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toggle = await canvas.findByRole("button", { name: "Expand reasoning panel: Model reasoning" });
+
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(canvas.queryByRole("list")).toBeNull();
+  }
+};
+
 export const EmptyFallback: Story = {
   args: {
     steps: []

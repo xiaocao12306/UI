@@ -399,6 +399,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Localize reasoning disclosure semantics with `expandLabel`/`collapseLabel`, and prefer `listAriaLabelledBy` (or `listAriaLabel` when standalone) so list narration stays aligned with visible headings.
 - Keep reasoning disclosure toggle labels unique across the page: default labels append readable `title` context automatically, and custom `expandLabel`/`collapseLabel` should preserve equivalent contextual specificity.
 - Keep reasoning disclosure shortcuts discoverable with `aria-keyshortcuts="Enter Space"` so QA/AT audits can verify keyboard toggle support.
+- Normalize `ReasoningPanel` runtime boolean config from CMS/JSON payloads before binding props: malformed `defaultOpen` values should degrade to `false` so disclosure state does not open unexpectedly on first render.
 - Normalize reasoning step payloads before rendering (or rely on built-in blank-step filtering) so whitespace-only steps do not create empty list bullets; keep `emptyText` non-blank unless default fallback copy is desired.
 - Show reasoning disclosure with explicit user intent (default collapsed).
 - Use streaming containers that surface busy completion (`aria-busy`) for assistive tech parity.
@@ -425,6 +426,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={ReasoningPanelStories.LocalizedLabels} />
 <Canvas of={ReasoningPanelStories.LabelledByPrecedence} />
 <Canvas of={ReasoningPanelStories.BlankStepFallback} />
+<Canvas of={ReasoningPanelStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={StreamingTextStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={StreamingCodeBlockStories.Default} />
 <Canvas of={StreamingCodeBlockStories.RuntimeBooleanConfigNormalization} />

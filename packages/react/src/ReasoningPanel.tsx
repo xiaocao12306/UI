@@ -21,7 +21,8 @@ export function ReasoningPanel({
   listAriaLabel = "Reasoning steps",
   listAriaLabelledBy
 }: ReasoningPanelProps) {
-  const [open, setOpen] = React.useState(defaultOpen);
+  const resolvedDefaultOpen = resolveBooleanFlag(defaultOpen, false);
+  const [open, setOpen] = React.useState(resolvedDefaultOpen);
   const panelId = React.useId();
   const normalizedSteps = React.useMemo(
     () => steps.filter((step) => step.trim().length > 0),
@@ -86,6 +87,14 @@ export function ReasoningPanel({
       ) : null}
     </section>
   );
+}
+
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
 }
 
 function resolveNonEmptyLabel(value: string | undefined) {

@@ -35,6 +35,14 @@ describe("ReasoningPanel", () => {
     expect(screen.getByRole("list", { name: "Reasoning steps" })).toBeInTheDocument();
   });
 
+  it("falls back invalid runtime defaultOpen flag to collapsed initial state", () => {
+    render(<ReasoningPanel defaultOpen={"true" as unknown as boolean} steps={["Gather requirements"]} />);
+
+    const toggle = screen.getByRole("button", { name: "Expand reasoning panel: Model reasoning" });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("list")).toBeNull();
+  });
+
   it("supports localized toggle and list labels", () => {
     render(
       <ReasoningPanel
