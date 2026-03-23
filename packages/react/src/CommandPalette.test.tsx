@@ -951,6 +951,53 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
   });
 
+  it("normalizes runtime boolean-like config and falls back to safe defaults", () => {
+    const onOpenChange = vi.fn();
+    const onSelect = vi.fn();
+
+    render(
+      <CommandPalette
+        open
+        onOpenChange={onOpenChange}
+        closeOnSelect={0 as unknown as boolean}
+        clearQueryOnEscape={0 as unknown as boolean}
+        closeOnEscape={0 as unknown as boolean}
+        closeOnOutsidePointer={0 as unknown as boolean}
+        loading={"invalid-loading-flag" as unknown as boolean}
+        commands={[
+          {
+            key: "deploy-release",
+            label: "Deploy Release",
+            keywords: ["deploy"],
+            onSelect
+          }
+        ]}
+      />
+    );
+
+    const input = screen.getByRole("combobox", { name: "Search commands" });
+    expect(screen.queryByTestId("command-palette-loading-content")).not.toBeInTheDocument();
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Enter Escape");
+
+    fireEvent.pointerDown(document.body);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+
+    onOpenChange.mockClear();
+    fireEvent.change(input, { target: { value: "deploy" } });
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(input).toHaveValue("");
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+
+    onOpenChange.mockClear();
+    fireEvent.change(input, { target: { value: "deploy" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it("inherits Escape dismiss shortcut hints from dialog only when closeOnEscape is enabled", () => {
     const { rerender } = render(
       <CommandPalette

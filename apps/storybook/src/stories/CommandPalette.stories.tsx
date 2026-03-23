@@ -624,6 +624,73 @@ function NonDismissiblePalette() {
   );
 }
 
+function RuntimeBooleanConfigNormalizationPalette() {
+  const [open, setOpen] = React.useState(true);
+  const [selectedCount, setSelectedCount] = React.useState(0);
+  const [escapeCount, setEscapeCount] = React.useState(0);
+  const [outsideCount, setOutsideCount] = React.useState(0);
+  const [query, setQuery] = React.useState("");
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <p style={storyMutedTextStyle}>
+        Runtime bool-like config from CMS/JSON should degrade safely: invalid flags fall back to
+        defaults (`closeOnSelect/clearQueryOnEscape/closeOnEscape/closeOnOutsidePointer=true`,
+        `loading=false`).
+      </p>
+      <p style={storyMutedTextStyle}>
+        Selected:{" "}
+        <strong data-testid="runtime-boolean-selected" style={storyEmphasisTextStyle}>
+          {selectedCount}
+        </strong>{" "}
+        · Escape closes:{" "}
+        <strong data-testid="runtime-boolean-escape" style={storyEmphasisTextStyle}>
+          {escapeCount}
+        </strong>{" "}
+        · Outside closes:{" "}
+        <strong data-testid="runtime-boolean-outside" style={storyEmphasisTextStyle}>
+          {outsideCount}
+        </strong>{" "}
+        · Query:{" "}
+        <strong data-testid="runtime-boolean-query" style={storyEmphasisTextStyle}>
+          {query || "N/A"}
+        </strong>
+      </p>
+      <CommandPalette
+        open={open}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) {
+            if (query.length > 0) {
+              setEscapeCount((count) => count + 1);
+            } else {
+              setOutsideCount((count) => count + 1);
+            }
+          }
+          setOpen(nextOpen);
+        }}
+        closeOnSelect={0 as unknown as boolean}
+        clearQueryOnEscape={0 as unknown as boolean}
+        closeOnEscape={0 as unknown as boolean}
+        closeOnOutsidePointer={0 as unknown as boolean}
+        loading={"invalid-loading-flag" as unknown as boolean}
+        onQueryChange={setQuery}
+        commands={[
+          {
+            key: "deploy-release",
+            label: "Deploy Release",
+            keywords: ["deploy"],
+            onSelect: () => setSelectedCount((count) => count + 1)
+          }
+        ]}
+      />
+      <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
+        Reopen runtime config palette
+      </Button>
+      <button type="button">Outside target</button>
+    </StoryFullscreenFrame>
+  );
+}
+
 function GuardedDismissPalette() {
   const [open, setOpen] = React.useState(false);
   const [guardDismiss, setGuardDismiss] = React.useState(true);
@@ -1709,6 +1776,42 @@ export const NonDismissible: Story = {
 
     await userEvent.click(canvas.getByRole("button", { name: "Outside target" }));
     await expect(dialog).toBeInTheDocument();
+  }
+};
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationPalette />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    let input = await canvas.findByRole("combobox", { name: "Search commands" });
+
+    await expect(
+      canvas.queryByTestId("command-palette-loading-content")
+    ).not.toBeInTheDocument();
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "Enter Escape");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Outside target" }));
+    await expect(canvas.getByTestId("runtime-boolean-outside")).toHaveTextContent("1");
+    await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Reopen runtime config palette" }));
+    input = await canvas.findByRole("combobox", { name: "Search commands" });
+    await userEvent.type(input, "deploy");
+    await expect(canvas.getByTestId("runtime-boolean-query")).toHaveTextContent("deploy");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.getByRole("dialog", { name: "Command Palette" })).toBeInTheDocument();
+    await expect(canvas.getByTestId("runtime-boolean-query")).toHaveTextContent("N/A");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Reopen runtime config palette" }));
+    input = await canvas.findByRole("combobox", { name: "Search commands" });
+    await userEvent.type(input, "deploy");
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByTestId("runtime-boolean-selected")).toHaveTextContent("1");
+    await expect(canvas.queryByRole("dialog", { name: "Command Palette" })).not.toBeInTheDocument();
   }
 };
 

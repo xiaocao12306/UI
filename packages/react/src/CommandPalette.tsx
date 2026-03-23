@@ -103,6 +103,11 @@ export function CommandPalette({
     resolvedAriaLabelledBy === undefined
       ? resolveNonEmptyLabel(ariaLabel)
       : undefined;
+  const resolvedCloseOnSelect = resolveBooleanFlag(closeOnSelect, true);
+  const resolvedClearQueryOnEscape = resolveBooleanFlag(clearQueryOnEscape, true);
+  const resolvedCloseOnEscape = resolveBooleanFlag(closeOnEscape, true);
+  const resolvedCloseOnOutsidePointer = resolveBooleanFlag(closeOnOutsidePointer, true);
+  const resolvedLoading = resolveBooleanFlag(loading, false);
   const resolvedLoadingStatusText = React.useMemo(
     () => resolveLoadingStatusText(loadingContent),
     [loadingContent]
@@ -334,10 +339,10 @@ export function CommandPalette({
     () => filtered.reduce((count, command) => (command.disabled ? count : count + 1), 0),
     [filtered]
   );
-  const hasDisabledOnlyResults = !loading && filtered.length > 0 && enabledCount === 0;
-  const canNavigateCommandList = !loading && enabledCount > 1;
-  const canActivateCommandList = !loading && enabledCount > 0;
-  const hasResults = !loading && filtered.length > 0;
+  const hasDisabledOnlyResults = !resolvedLoading && filtered.length > 0 && enabledCount === 0;
+  const canNavigateCommandList = !resolvedLoading && enabledCount > 1;
+  const canActivateCommandList = !resolvedLoading && enabledCount > 0;
+  const hasResults = !resolvedLoading && filtered.length > 0;
   const searchKeyShortcuts = React.useMemo(() => {
     const shortcuts: string[] = [];
     if (canNavigateCommandList) {
@@ -346,14 +351,20 @@ export function CommandPalette({
     if (canActivateCommandList) {
       shortcuts.push("Enter");
     }
-    if (closeOnEscape || (clearQueryOnEscape && query.length > 0)) {
+    if (resolvedCloseOnEscape || (resolvedClearQueryOnEscape && query.length > 0)) {
       shortcuts.push("Escape");
     }
     return shortcuts.length > 0 ? shortcuts.join(" ") : undefined;
-  }, [canActivateCommandList, canNavigateCommandList, clearQueryOnEscape, closeOnEscape, query.length]);
+  }, [
+    canActivateCommandList,
+    canNavigateCommandList,
+    query.length,
+    resolvedClearQueryOnEscape,
+    resolvedCloseOnEscape
+  ]);
 
   const resultsStatusText = React.useMemo(() => {
-    if (loading) {
+    if (resolvedLoading) {
       return resolvedLoadingStatusText;
     }
 
@@ -368,7 +379,7 @@ export function CommandPalette({
     enabledCount,
     filtered.length,
     getResultsStatusText,
-    loading,
+    resolvedLoading,
     query,
     resolvedLoadingStatusText
   ]);
@@ -463,11 +474,11 @@ export function CommandPalette({
       }
 
       item.onSelect();
-      if (closeOnSelect) {
+      if (resolvedCloseOnSelect) {
         closeWithReason("item-select");
       }
     },
-    [closeOnSelect, closeWithReason, filtered]
+    [closeWithReason, filtered, resolvedCloseOnSelect]
   );
 
   const moveActiveIndex = (direction: 1 | -1) => {
@@ -513,12 +524,12 @@ export function CommandPalette({
       ariaLabelledBy={resolvedAriaLabelledBy}
       closeLabel={resolvedCloseLabel}
       size="md"
-      closeOnEscape={closeOnEscape}
-      closeOnOutsidePointer={closeOnOutsidePointer}
+      closeOnEscape={resolvedCloseOnEscape}
+      closeOnOutsidePointer={resolvedCloseOnOutsidePointer}
       onCloseButtonKeyDown={onCloseButtonKeyDown}
       onEscapeKeyDown={(event) => {
         onEscapeKeyDown?.(event);
-        if (event.defaultPrevented || !closeOnEscape) {
+        if (event.defaultPrevented || !resolvedCloseOnEscape) {
           return;
         }
 
@@ -526,7 +537,7 @@ export function CommandPalette({
       }}
       onPointerDownOutside={(event) => {
         onPointerDownOutside?.(event);
-        if (event.defaultPrevented || !closeOnOutsidePointer) {
+        if (event.defaultPrevented || !resolvedCloseOnOutsidePointer) {
           return;
         }
 
@@ -538,13 +549,13 @@ export function CommandPalette({
           ref={inputRef}
           data-autofocus=""
           role="combobox"
-          aria-busy={loading || undefined}
+          aria-busy={resolvedLoading || undefined}
           aria-expanded={hasResults}
           aria-haspopup="listbox"
           aria-autocomplete="list"
           aria-controls={hasResults ? listId : undefined}
           aria-activedescendant={
-            !loading && safeActiveIndex >= 0 ? `${listId}-option-${safeActiveIndex}` : undefined
+            !resolvedLoading && safeActiveIndex >= 0 ? `${listId}-option-${safeActiveIndex}` : undefined
           }
           aria-describedby={inputDescriptionIds}
           aria-keyshortcuts={searchKeyShortcuts}
@@ -572,7 +583,7 @@ export function CommandPalette({
               if (event.repeat) {
                 return;
               }
-              if (clearQueryOnEscape && query.length > 0) {
+              if (resolvedClearQueryOnEscape && query.length > 0) {
                 event.preventDefault();
                 setQuery("");
                 onQueryChange?.("");
@@ -634,7 +645,7 @@ export function CommandPalette({
               return;
             }
 
-            if (event.key === "Enter" && !loading && safeActiveIndex >= 0) {
+            if (event.key === "Enter" && !resolvedLoading && safeActiveIndex >= 0) {
               event.preventDefault();
               if (event.repeat) {
                 return;
@@ -662,7 +673,7 @@ export function CommandPalette({
         >
           {resultsStatusText}
         </p>
-        {loading ? (
+        {resolvedLoading ? (
           <p
             data-testid="command-palette-loading-content"
             style={{ margin: 0, color: "var(--aurora-text-secondary)" }}
@@ -962,6 +973,14 @@ function resolveNonEmptyLabel(label: string | undefined, fallback?: string): str
   }
 
   return fallback;
+}
+
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
 }
 
 function isPrimaryPointerButton(button: number | undefined) {
