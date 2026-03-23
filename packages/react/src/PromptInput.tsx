@@ -15,7 +15,7 @@ export type PromptInputProps = {
 export function PromptInput({
   onSubmit,
   submitting,
-  placeholder = "Type your prompt...",
+  placeholder,
   ariaLabel,
   ariaLabelledBy,
   shortcutHint = "Ctrl/Cmd + Enter to send",
@@ -29,6 +29,7 @@ export function PromptInput({
   const canSubmit = hasSubmitHandler && !submitting && trimmedValue.length > 0;
   const activeHint = submitting ? submittingHint : hasSubmitHandler ? shortcutHint : undefined;
   const hasHintContent = hasRenderablePromptNode(activeHint);
+  const resolvedPlaceholder = resolveNonEmptyLabel(placeholder, "Type your prompt...");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel =
     resolvedAriaLabelledBy === undefined ? resolveNonEmptyLabel(ariaLabel) ?? "Prompt input" : undefined;
@@ -58,7 +59,7 @@ export function PromptInput({
       <Textarea
         value={value}
         onChange={(event) => setValue(event.target.value)}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         aria-label={resolvedAriaLabel}
         aria-labelledby={resolvedAriaLabelledBy}
         aria-describedby={hasHintContent ? hintId : undefined}
@@ -124,12 +125,12 @@ function isComposingPromptKeyEvent(event: React.KeyboardEvent<HTMLTextAreaElemen
   return Boolean(nativeEvent.isComposing) || nativeEvent.keyCode === 229;
 }
 
-function resolveNonEmptyLabel(label: string | undefined) {
+function resolveNonEmptyLabel(label: string | undefined, fallback?: string) {
   if (typeof label === "string" && label.trim().length > 0) {
     return label.trim();
   }
 
-  return undefined;
+  return fallback;
 }
 
 function hasRenderablePromptNode(node: React.ReactNode) {

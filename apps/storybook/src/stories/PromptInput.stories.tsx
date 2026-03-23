@@ -59,6 +59,19 @@ export const Default: Story = {
   }
 };
 
+export const BlankPlaceholderFallback: Story = {
+  args: {
+    onSubmit: noopPromptSubmit,
+    ariaLabel: "Prompt placeholder fallback",
+    placeholder: "   "
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textbox = await canvas.findByRole("textbox", { name: "Prompt placeholder fallback" });
+    await expect(textbox).toHaveAttribute("placeholder", "Type your prompt...");
+  }
+};
+
 function InteractivePromptInput() {
   const [submitting, setSubmitting] = React.useState(false);
   const [lastPrompt, setLastPrompt] = React.useState("None");

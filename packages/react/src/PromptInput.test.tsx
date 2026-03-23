@@ -219,6 +219,13 @@ describe("PromptInput", () => {
     expect(textbox).toHaveAttribute("aria-label", "Prompt input");
   });
 
+  it("falls back to default placeholder when placeholder is blank", () => {
+    render(<PromptInput ariaLabel="Prompt placeholder fallback" placeholder="   " />);
+
+    const textbox = screen.getByRole("textbox", { name: "Prompt placeholder fallback" });
+    expect(textbox).toHaveAttribute("placeholder", "Type your prompt...");
+  });
+
   it("ignores blank ariaLabelledBy and preserves ariaLabel naming", () => {
     render(<PromptInput ariaLabel="Release prompt" ariaLabelledBy="   " />);
 
