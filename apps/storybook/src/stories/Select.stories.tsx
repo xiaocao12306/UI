@@ -58,6 +58,33 @@ export const Controlled: Story = {
   }
 };
 
+export const DuplicateValueSelectedSemantics: Story = {
+  render: () => (
+    <SelectShowcase gap={8}>
+      <p style={storyMutedTextStyle}>
+        Duplicate values fall back to the first enabled option for deterministic selected-state semantics.
+      </p>
+      <Select aria-label="Duplicate semantics select" defaultValue="react">
+        <option value="react" disabled>
+          React disabled
+        </option>
+        <option value="react">React enabled</option>
+        <option value="vue">Vue</option>
+      </Select>
+    </SelectShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const select = canvas.getByRole("combobox", { name: "Duplicate semantics select" });
+    const options = canvas.getAllByRole("option");
+
+    await expect(select).toHaveValue("react");
+    await expect(select).toHaveProperty("selectedIndex", 1);
+    await expect(options[0]).toHaveProperty("selected", false);
+    await expect(options[1]).toHaveProperty("selected", true);
+  }
+};
+
 export const InvalidState: Story = {
   render: () => (
     <SelectShowcase gap={8}>

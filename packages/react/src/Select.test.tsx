@@ -33,6 +33,9 @@ describe("Select", () => {
         expect.stringContaining('Duplicate option values detected: "react"')
       );
       expect(warnSpy).toHaveBeenLastCalledWith(expect.stringContaining("selected-option semantics"));
+      expect(warnSpy).toHaveBeenLastCalledWith(
+        expect.stringContaining("first enabled matching option")
+      );
     } finally {
       warnSpy.mockRestore();
       errorSpy.mockRestore();
@@ -286,6 +289,59 @@ describe("Select", () => {
     } finally {
       matchesSpy.mockRestore();
       iframe.remove();
+    }
+  });
+
+  it("anchors duplicate option selected-state to the first enabled match", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Select aria-label="Duplicate semantics select" defaultValue="react">
+          <option value="react" disabled>
+            React disabled
+          </option>
+          <option value="react">React enabled</option>
+          <option value="vue">Vue</option>
+        </Select>
+      );
+
+      const select = screen.getByRole("combobox", { name: "Duplicate semantics select" });
+      const options = screen.getAllByRole("option");
+      expect(select).toHaveValue("react");
+      expect(select).toHaveProperty("selectedIndex", 1);
+      expect(options[0]).toHaveProperty("selected", false);
+      expect(options[1]).toHaveProperty("selected", true);
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("resolves duplicate option preferred selection through disabled optgroup ancestry", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Select aria-label="Optgroup duplicate semantics select" defaultValue="react">
+          <optgroup label="Legacy" disabled>
+            <option value="react">React disabled by optgroup</option>
+          </optgroup>
+          <option value="react">React enabled</option>
+        </Select>
+      );
+
+      const select = screen.getByRole("combobox", { name: "Optgroup duplicate semantics select" });
+      const options = screen.getAllByRole("option");
+      expect(select).toHaveValue("react");
+      expect(select).toHaveProperty("selectedIndex", 1);
+      expect(options[0]).toHaveProperty("selected", false);
+      expect(options[1]).toHaveProperty("selected", true);
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
     }
   });
 

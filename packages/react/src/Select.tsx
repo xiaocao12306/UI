@@ -40,7 +40,11 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
   const ariaKeyShortcuts = isInteractionDisabled
     ? undefined
     : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "ArrowDown ArrowUp";
-  const optionValues = React.useMemo(() => collectSelectOptionValues(children), [children]);
+  const optionMetadata = React.useMemo(() => collectSelectOptionMetadata(children), [children]);
+  const optionValues = React.useMemo(
+    () => optionMetadata.map((option) => option.value),
+    [optionMetadata]
+  );
 
   React.useEffect(() => {
     if (process.env.NODE_ENV === "production") {
@@ -70,9 +74,31 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
     console.warn(
       `[Select] Duplicate option values detected: ${Array.from(duplicateValues)
         .map((item) => `"${item}"`)
-        .join(", ")}. Values should be unique to keep native selected-option semantics deterministic.`
+        .join(
+          ", "
+        )}. Values should be unique to keep native selected-option semantics deterministic. Duplicate values fall back to the first enabled matching option for selected-state semantics.`
     );
   }, [optionValues]);
+
+  React.useLayoutEffect(() => {
+    const select = selectRef.current;
+    if (!select) {
+      return;
+    }
+
+    const selectedValue = resolveOptionValue(select.value);
+    if (selectedValue === undefined) {
+      return;
+    }
+
+    const preferredSelectedIndex = resolvePreferredOptionIndex(optionMetadata, selectedValue);
+    if (preferredSelectedIndex < 0 || preferredSelectedIndex === select.selectedIndex) {
+      return;
+    }
+
+    // Keep duplicate option-value semantics deterministic by preferring the first enabled match.
+    select.selectedIndex = preferredSelectedIndex;
+  }, [optionMetadata]);
 
   React.useEffect(() => {
     if (!isInteractionDisabled) {
@@ -230,9 +256,14 @@ function isPrimaryPointerButton(button: number | undefined) {
   return typeof button !== "number" || button <= 0;
 }
 
-function collectSelectOptionValues(children: React.ReactNode) {
-  const values: string[] = [];
-  const collect = (nodes: React.ReactNode) => {
+type SelectOptionMetadata = {
+  value: string;
+  disabled: boolean;
+};
+
+function collectSelectOptionMetadata(children: React.ReactNode) {
+  const metadata: SelectOptionMetadata[] = [];
+  const collect = (nodes: React.ReactNode, inheritedDisabled = false) => {
     React.Children.forEach(nodes, (node) => {
       if (!React.isValidElement(node)) {
         return;
@@ -240,24 +271,26 @@ function collectSelectOptionValues(children: React.ReactNode) {
 
       const type = typeof node.type === "string" ? node.type : null;
       if (type === "option") {
-        const optionValue = resolveOptionValue((node.props as { value?: unknown }).value);
+        const optionProps = node.props as { value?: unknown; disabled?: boolean };
+        const optionValue = resolveOptionValue(optionProps.value);
         if (optionValue !== undefined) {
-          values.push(optionValue);
+          metadata.push({ value: optionValue, disabled: inheritedDisabled || Boolean(optionProps.disabled) });
         }
         return;
       }
 
       if (type === "optgroup") {
-        collect((node.props as { children?: React.ReactNode }).children);
+        const optionGroupProps = node.props as { children?: React.ReactNode; disabled?: boolean };
+        collect(optionGroupProps.children, inheritedDisabled || Boolean(optionGroupProps.disabled));
         return;
       }
 
-      collect((node.props as { children?: React.ReactNode }).children);
+      collect((node.props as { children?: React.ReactNode }).children, inheritedDisabled);
     });
   };
 
   collect(children);
-  return values;
+  return metadata;
 }
 
 function resolveOptionValue(value: unknown) {
@@ -265,4 +298,30 @@ function resolveOptionValue(value: unknown) {
     return undefined;
   }
   return String(value);
+}
+
+function resolvePreferredOptionIndex(options: SelectOptionMetadata[], selectedValue: string) {
+  let firstMatchingIndex = -1;
+  let firstEnabledMatchingIndex = -1;
+  for (let index = 0; index < options.length; index += 1) {
+    const option = options[index];
+    if (option.value !== selectedValue) {
+      continue;
+    }
+
+    if (firstMatchingIndex === -1) {
+      firstMatchingIndex = index;
+    }
+
+    if (!option.disabled) {
+      firstEnabledMatchingIndex = index;
+      break;
+    }
+  }
+
+  if (firstEnabledMatchingIndex !== -1) {
+    return firstEnabledMatchingIndex;
+  }
+
+  return firstMatchingIndex;
 }
