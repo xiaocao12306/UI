@@ -36,6 +36,82 @@ describe("Tooltip", () => {
     vi.useRealTimers();
   });
 
+  it("falls back to default delay values when delayDuration/closeDelay are non-finite", () => {
+    vi.useFakeTimers();
+
+    render(
+      <Tooltip
+        content="Tooltip content"
+        delayDuration={Number.NaN}
+        closeDelay={Number.POSITIVE_INFINITY}
+      >
+        <button type="button">Fallback delay trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Fallback delay trigger" });
+    fireEvent.mouseEnter(trigger);
+
+    act(() => {
+      vi.advanceTimersByTime(249);
+    });
+    expect(screen.queryByRole("tooltip")).toBeNull();
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+
+    fireEvent.mouseLeave(trigger);
+    act(() => {
+      vi.advanceTimersByTime(79);
+    });
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(screen.queryByRole("tooltip")).toBeNull();
+
+    vi.useRealTimers();
+  });
+
+  it("normalizes fractional delayDuration/closeDelay to stable integer timings", () => {
+    vi.useFakeTimers();
+
+    render(
+      <Tooltip content="Tooltip content" delayDuration={10.9} closeDelay={5.9}>
+        <button type="button">Fractional delay trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Fractional delay trigger" });
+    fireEvent.mouseEnter(trigger);
+
+    act(() => {
+      vi.advanceTimersByTime(9);
+    });
+    expect(screen.queryByRole("tooltip")).toBeNull();
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+
+    fireEvent.mouseLeave(trigger);
+    act(() => {
+      vi.advanceTimersByTime(4);
+    });
+    expect(screen.getByRole("tooltip")).toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(screen.queryByRole("tooltip")).toBeNull();
+
+    vi.useRealTimers();
+  });
+
   it("opens on focus and closes on escape / blur", () => {
     render(
       <Tooltip content="Tooltip content" closeDelay={0}>

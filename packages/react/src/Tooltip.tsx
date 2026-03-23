@@ -31,6 +31,14 @@ function getPositionStyle(side: TooltipSide, sideOffset: number): React.CSSPrope
   }
 }
 
+function resolveTooltipDelay(value: number, fallback: number) {
+  if (!Number.isFinite(value)) {
+    return fallback;
+  }
+
+  return Math.max(0, Math.trunc(value));
+}
+
 export function Tooltip({
   content,
   children,
@@ -55,6 +63,8 @@ export function Tooltip({
   const isControlled = open !== undefined;
   const isOpen = isControlled ? open : internalOpen;
   const warnedMissingTriggerNameRef = React.useRef(false);
+  const safeDelayDuration = resolveTooltipDelay(delayDuration, 250);
+  const safeCloseDelay = resolveTooltipDelay(closeDelay, 80);
 
   const getOwnerWindow = React.useCallback(
     () => rootRef.current?.ownerDocument.defaultView ?? window,
@@ -117,7 +127,7 @@ export function Tooltip({
       closeTimerRef.current = null;
       closeTimerWindowRef.current = null;
     }
-    if (delayDuration <= 0) {
+    if (safeDelayDuration <= 0) {
       setOpen(true);
       return;
     }
@@ -129,8 +139,8 @@ export function Tooltip({
       setOpen(true);
       openTimerRef.current = null;
       openTimerWindowRef.current = null;
-    }, delayDuration);
-  }, [delayDuration, disabled, getOwnerWindow, setOpen]);
+    }, safeDelayDuration);
+  }, [disabled, getOwnerWindow, safeDelayDuration, setOpen]);
 
   const scheduleClose = React.useCallback(() => {
     const ownerWindow = getOwnerWindow();
@@ -139,7 +149,7 @@ export function Tooltip({
       openTimerRef.current = null;
       openTimerWindowRef.current = null;
     }
-    if (closeDelay <= 0) {
+    if (safeCloseDelay <= 0) {
       setOpen(false);
       return;
     }
@@ -151,8 +161,8 @@ export function Tooltip({
       setOpen(false);
       closeTimerRef.current = null;
       closeTimerWindowRef.current = null;
-    }, closeDelay);
-  }, [closeDelay, getOwnerWindow, setOpen]);
+    }, safeCloseDelay);
+  }, [getOwnerWindow, safeCloseDelay, setOpen]);
 
   React.useEffect(() => clearTimers, [clearTimers]);
 
