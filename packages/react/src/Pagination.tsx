@@ -46,6 +46,14 @@ function resolvePaginationWindowCount(value: number, fallback: number) {
   return Math.max(0, Math.trunc(value));
 }
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 function createRange(start: number, end: number) {
   const length = end - start + 1;
   return Array.from({ length }, (_, index) => start + index);
@@ -114,6 +122,8 @@ export function Pagination({
   const safeBoundaryCount = resolvePaginationWindowCount(boundaryCount, 1);
   const resolvedAriaLabel = resolveNonEmptyLabel(ariaLabel, "Pagination");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
+  const resolvedDisabled = resolveBooleanFlag(disabled, false);
+  const resolvedShowFirstLast = resolveBooleanFlag(showFirstLast, true);
   const resolvedPageCount = resolvePaginationPageCount(pageCount);
   const currentPage = clamp(resolvePaginationPage(page, 1), 1, resolvedPageCount);
   const tokens =
@@ -122,10 +132,10 @@ export function Pagination({
       : getPaginationTokens(currentPage, resolvedPageCount, safeSiblingCount, safeBoundaryCount);
   const previousPage = clamp(currentPage - 1, 1, resolvedPageCount);
   const nextPage = clamp(currentPage + 1, 1, resolvedPageCount);
-  const canGoPrevious = !disabled && resolvedPageCount > 1 && currentPage > 1;
-  const canGoNext = !disabled && resolvedPageCount > 1 && currentPage < resolvedPageCount;
+  const canGoPrevious = !resolvedDisabled && resolvedPageCount > 1 && currentPage > 1;
+  const canGoNext = !resolvedDisabled && resolvedPageCount > 1 && currentPage < resolvedPageCount;
   const paginationKeyboardShortcuts = React.useMemo(() => {
-    if (disabled || resolvedPageCount <= 1) {
+    if (resolvedDisabled || resolvedPageCount <= 1) {
       return undefined;
     }
 
@@ -141,7 +151,7 @@ export function Pagination({
     }
 
     return shortcuts.length > 0 ? shortcuts.join(" ") : undefined;
-  }, [canGoNext, canGoPrevious, disabled, resolvedPageCount]);
+  }, [canGoNext, canGoPrevious, resolvedDisabled, resolvedPageCount]);
   const resolveItemAriaLabel = React.useCallback(
     (
       type: "page" | "current" | "first" | "last" | "next" | "previous",
@@ -155,13 +165,13 @@ export function Pagination({
   );
 
   React.useEffect(() => {
-    if (!disabled) {
+    if (!resolvedDisabled) {
       return;
     }
 
     setFocusedButtonId(null);
     setFocusVisibleButtonId(null);
-  }, [disabled]);
+  }, [resolvedDisabled]);
 
   React.useEffect(() => {
     const ownerDocument = navRef.current?.ownerDocument ?? document;
@@ -195,7 +205,7 @@ export function Pagination({
   }, []);
 
   const goToPage = (nextPage: number) => {
-    if (disabled || resolvedPageCount <= 1) {
+    if (resolvedDisabled || resolvedPageCount <= 1) {
       return;
     }
     const resolvedPage = clamp(nextPage, 1, resolvedPageCount);
@@ -241,7 +251,7 @@ export function Pagination({
     if (event.defaultPrevented) {
       return;
     }
-    if (disabled) {
+    if (resolvedDisabled) {
       return;
     }
     if (
@@ -361,7 +371,7 @@ export function Pagination({
           alignItems: "center"
         }}
       >
-        {showFirstLast ? (
+        {resolvedShowFirstLast ? (
           <li>
             <button
               {...createButtonFocusIntentProps("first")}
@@ -416,7 +426,7 @@ export function Pagination({
                 {...createButtonFocusIntentProps(buttonId)}
                 type="button"
                 onClick={() => goToPage(token)}
-                disabled={disabled}
+                disabled={resolvedDisabled}
                 onKeyDown={handleKeyDown}
                 data-aurora-pagination-page={token}
                 aria-current={selected ? "page" : undefined}
@@ -425,10 +435,10 @@ export function Pagination({
                     ? resolveItemAriaLabel("current", token)
                     : resolveItemAriaLabel("page", token)
                 }
-                aria-keyshortcuts={disabled ? undefined : paginationKeyboardShortcuts}
+                aria-keyshortcuts={resolvedDisabled ? undefined : paginationKeyboardShortcuts}
                 style={buttonStyle(
                   selected,
-                  disabled,
+                  resolvedDisabled,
                   focusedButtonId === buttonId && focusVisibleButtonId === buttonId
                 )}
               >
@@ -455,7 +465,7 @@ export function Pagination({
             ›
           </button>
         </li>
-        {showFirstLast ? (
+        {resolvedShowFirstLast ? (
           <li>
             <button
               {...createButtonFocusIntentProps("last")}

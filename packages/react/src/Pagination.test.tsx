@@ -142,6 +142,32 @@ describe("Pagination", () => {
     expect(onPageChange).not.toHaveBeenCalled();
   });
 
+  it("falls back invalid runtime disabled/showFirstLast flags to actionable semantics", () => {
+    const onPageChange = vi.fn();
+    render(
+      <Pagination
+        page={4}
+        pageCount={10}
+        onPageChange={onPageChange}
+        disabled={"true" as unknown as boolean}
+        showFirstLast={"false" as unknown as boolean}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: "Go to first page" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Go to last page" })).toBeInTheDocument();
+
+    const currentButton = screen.getByRole("button", { name: "Current page, 4" });
+    expect(currentButton).not.toBeDisabled();
+    expect(currentButton).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home PageUp End PageDown ArrowLeft ArrowRight"
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Go to next page" }));
+    expect(onPageChange).toHaveBeenCalledWith(5);
+  });
+
   it("does not emit redundant events when selecting current page", () => {
     const onPageChange = vi.fn();
     render(<Pagination page={4} pageCount={10} onPageChange={onPageChange} />);

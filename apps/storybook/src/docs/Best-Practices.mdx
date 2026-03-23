@@ -556,6 +556,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - When app-level shortcuts preempt keydown with `preventDefault()`, keep scroll-region Arrow/Home/End/Page handlers side-effect free so host shortcut guards remain authoritative.
 - For pagination i18n, generate `getItemAriaLabel` from the provided `page` argument; boundary previous/next labels are already clamped to valid page ranges.
 - Keep pagination numeric inputs finite (`page`, `pageCount`, `siblingCount`, `boundaryCount`): non-finite values fall back to safe defaults and fractional values normalize to integer windows so token generation stays deterministic.
+- Normalize pagination runtime boolean config from CMS/JSON payloads before binding props: malformed `disabled/showFirstLast` values should degrade to `false/true` so controls are not silently locked and boundary jump buttons stay deterministic.
 - Prefer `ariaLabelledBy` for pagination when a visible heading already exists; use `ariaLabel` for standalone pagers without nearby title copy.
 - In RTL layouts, verify Pagination ArrowLeft/ArrowRight keyboard shortcuts are mirrored so page movement follows visual direction.
 - Keep modified shortcuts (`Ctrl/Meta/Alt + Home/End/PageUp/PageDown/ArrowLeft/ArrowRight`) on host/browser behavior; pagination should only react to unmodified navigation keys.
@@ -641,5 +642,6 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={PaginationStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={PaginationStories.RtlKeyboardShortcuts} />
 <Canvas of={PaginationStories.BoundaryShortcutHints} />
+<Canvas of={PaginationStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={PaginationStories.LabelledByHeading} />
 <Canvas of={PaginationStories.FocusIntentReentry} />

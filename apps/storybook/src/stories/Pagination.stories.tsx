@@ -251,6 +251,60 @@ export const DisabledPagination: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationPagination() {
+  const [page, setPage] = React.useState(4);
+  const [events, setEvents] = React.useState(0);
+
+  return (
+    <div style={{ width: 640, display: "grid", gap: 12 }}>
+      <Pagination
+        page={page}
+        pageCount={12}
+        disabled={"true" as unknown as boolean}
+        showFirstLast={"false" as unknown as boolean}
+        onPageChange={(nextPage) => {
+          setPage(nextPage);
+          setEvents((current) => current + 1);
+        }}
+      />
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+        <Badge tone="default">
+          Page: <span data-testid="pagination-runtime-page">{page}</span>
+        </Badge>
+        <Badge tone="default">
+          Events: <span data-testid="pagination-runtime-events">{events}</span>
+        </Badge>
+      </div>
+    </div>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationPagination />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const current = canvas.getByRole("button", { name: "Current page, 4" });
+    const first = canvas.getByRole("button", { name: "Go to first page" });
+    const last = canvas.getByRole("button", { name: "Go to last page" });
+    const pageValue = canvas.getByTestId("pagination-runtime-page");
+    const events = canvas.getByTestId("pagination-runtime-events");
+
+    await expect(first).toBeInTheDocument();
+    await expect(last).toBeInTheDocument();
+    await expect(current).not.toBeDisabled();
+    await expect(current).toHaveAttribute(
+      "aria-keyshortcuts",
+      "Home PageUp End PageDown ArrowLeft ArrowRight"
+    );
+    await expect(pageValue).toHaveTextContent("4");
+    await expect(events).toHaveTextContent("0");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Go to next page" }));
+    await expect(pageValue).toHaveTextContent("5");
+    await expect(events).toHaveTextContent("1");
+  }
+};
+
 export const CustomAriaLabels: Story = {
   args: {
     page: 2,
