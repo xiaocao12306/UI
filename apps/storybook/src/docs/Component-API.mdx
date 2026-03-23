@@ -761,12 +761,13 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | Prop                          | Type                                                       | Notes                                                                                                                    |
 | ----------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `variant`                     | `'rect' \| 'text' \| 'circle'`                             | Shape selection for block/text/avatar placeholders.                                                                      |
-| `animated`                    | `boolean`                                                  | Toggle shimmer animation for reduced-motion or static placeholders.                                                      |
+| `animated`                    | `boolean`                                                  | Toggle shimmer animation for reduced-motion or static placeholders. Non-boolean runtime values fall back to `true`.     |
 | reduced-motion fallback       | shimmer tagged with `data-aurora-reduced-motion="animate"` | With `GlobalStyles`, shimmer auto-disables under `prefers-reduced-motion` while placeholder geometry stays stable.       |
 | `ariaLabel` / `ariaLabelledBy` | `string` / `string`                                      | Enables narrated loading status semantics when needed. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. |
 | `width` / `height` / `radius` | `number \| string`                                         | Explicit geometry control for layout matching. Numeric values must be finite and non-negative; blank/non-finite values fall back to built-in geometry defaults. |
 
 <Canvas of={SkeletonStories.ProfileCard} />
+<Canvas of={SkeletonStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={SkeletonStories.LabelledByPrecedence} />
 
 ### LoadingDots

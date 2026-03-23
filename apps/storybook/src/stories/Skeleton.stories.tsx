@@ -60,6 +60,20 @@ export const NarratedStatus: Story = {
   }
 };
 
+export const RuntimeBooleanConfigNormalization: Story = {
+  args: {
+    width: 320,
+    height: 16,
+    animated: "false" as unknown as boolean
+  },
+  render: (args) => <Skeleton data-testid="story-skeleton-runtime-boolean" {...args} />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const skeleton = canvas.getByTestId("story-skeleton-runtime-boolean");
+    await expect(skeleton).toHaveAttribute("data-aurora-reduced-motion", "animate");
+  }
+};
+
 export const LabelledByPrecedence: Story = {
   render: () => (
     <div style={{ width: 360, display: "grid", gap: 8 }}>

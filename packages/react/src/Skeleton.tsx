@@ -34,6 +34,14 @@ function resolveSkeletonMetric(
   return fallback;
 }
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export function Skeleton({
   width = "100%",
   height = 16,
@@ -45,6 +53,7 @@ export function Skeleton({
   style,
   ...props
 }: SkeletonProps) {
+  const resolvedAnimated = resolveBooleanFlag(animated, true);
   const fallbackRadius =
     variant === "circle"
       ? "9999px"
@@ -68,7 +77,7 @@ export function Skeleton({
 
   return (
     <div
-      data-aurora-reduced-motion={animated ? "animate" : undefined}
+      data-aurora-reduced-motion={resolvedAnimated ? "animate" : undefined}
       role={narrated ? "status" : undefined}
       aria-label={resolvedAriaLabel}
       aria-labelledby={resolvedAriaLabelledBy}
@@ -82,7 +91,7 @@ export function Skeleton({
         background:
           "linear-gradient(90deg, var(--aurora-skeleton-base) 0%, var(--aurora-skeleton-highlight) 50%, var(--aurora-skeleton-base) 100%)",
         backgroundSize: "200% 100%",
-        animation: animated ? "aurora-skeleton-shimmer 1.2s ease-in-out infinite" : undefined,
+        animation: resolvedAnimated ? "aurora-skeleton-shimmer 1.2s ease-in-out infinite" : undefined,
         ...style
       }}
       {...props}

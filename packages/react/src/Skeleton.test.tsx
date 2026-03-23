@@ -60,6 +60,14 @@ describe("Skeleton", () => {
     expect(skeleton).not.toHaveStyle({ animation: "aurora-skeleton-shimmer 1.2s ease-in-out infinite" });
   });
 
+  it("falls back invalid runtime animated flag to default shimmer state", () => {
+    render(<Skeleton data-testid="runtime-animated" animated={"false" as unknown as boolean} />);
+    const skeleton = screen.getByTestId("runtime-animated");
+
+    expect(skeleton).toHaveAttribute("data-aurora-reduced-motion", "animate");
+    expect(skeleton).toHaveStyle({ animation: "aurora-skeleton-shimmer 1.2s ease-in-out infinite" });
+  });
+
   it("falls back geometry props when width/height/radius values are invalid", () => {
     render(
       <Skeleton
