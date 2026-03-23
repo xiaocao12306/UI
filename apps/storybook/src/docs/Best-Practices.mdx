@@ -131,6 +131,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Ignore combobox managed keys (`Arrow/Home/End/Enter/Escape`) during IME composition, including legacy browsers that only expose `keyCode=229`, so CJK confirmation does not trigger accidental navigation, selection, or dismiss.
 - Normalize combobox search text (accent-insensitive + whitespace collapse) so plain input like `cafe` can match localized labels/keywords such as `Café` and `déploiement`.
 - Keep combobox `aria-keyshortcuts` state-aware: preserve closed-state baseline `Enter` hint from text-input semantics, add navigation hints only when multiple enabled options are present, and expose `Escape` only while popup dismiss is available.
+- Normalize `Input` `type` tokens from config/user input using trim + lowercase semantics; values like `EMAIL` should resolve to text-like behavior and keep default Enter shortcut discoverability.
 - Keep command-palette combobox `aria-controls` conditional on filtered-result listbox visibility so empty states do not expose stale or missing listbox IDs.
 - Localize command-palette result list semantics with `resultsAriaLabel` in non-English products, instead of relying on the default English listbox label.
 - Localize command-palette heading/search/close semantics with `title` / `description` / `searchAriaLabel` / `closeLabel`, and prefer `ariaLabelledBy` (or `ariaLabel` when standalone) for icon/non-text titles so dialog narration stays canonical.
@@ -143,6 +144,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={InputStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={InputStories.ManagedKeysPreemptedByLocalHandler} />
 <Canvas of={InputStories.BlankTypeFallback} />
+<Canvas of={InputStories.UppercaseTypeNormalization} />
 <Canvas of={ComboboxStories.DuplicateValueRerenderStability} />
 <Canvas of={ComboboxStories.DuplicateValueSelectedSemantics} />
 <Canvas of={ComboboxStories.BlankPlaceholderFallback} />

@@ -119,6 +119,17 @@ describe("Input", () => {
     expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
   });
 
+  it("normalizes uppercase input type to lowercase text-like semantics and preserves default Enter shortcut hints", () => {
+    render(<Input type=" EMAIL " aria-label="Uppercase type input" />);
+    const input = screen.getByRole("textbox", { name: "Uppercase type input" });
+
+    expect(input).toHaveAttribute("type", "email");
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(input).toHaveAttribute("data-active", "true");
+  });
+
   it("does not apply Enter active feedback for non-text input types", () => {
     render(<Input type="date" aria-label="Date active input" />);
     const input = screen.getByLabelText("Date active input");

@@ -296,6 +296,6 @@ function resolveInputType(type: string | undefined) {
     return "text";
   }
 
-  const normalized = type.trim();
+  const normalized = type.trim().toLowerCase();
   return normalized.length > 0 ? normalized : "text";
 }

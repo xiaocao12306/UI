@@ -326,6 +326,25 @@ export const BlankTypeFallback: Story = {
   }
 };
 
+export const UppercaseTypeNormalization: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={12}>
+      <FormField
+        label="Uppercase type normalization input"
+        description="Uppercase and padded type tokens should normalize to lowercase text-like semantics."
+      >
+        <Input type=" EMAIL " aria-label="Uppercase type normalization input control" />
+      </FormField>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox", { name: "Uppercase type normalization input control" });
+    await expect(input).toHaveAttribute("type", "email");
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
+  }
+};
+
 function FocusIntentReentryDemo() {
   return (
     <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={10}>
