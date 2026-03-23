@@ -735,7 +735,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `animated`                    | `boolean`                                                  | Toggle shimmer animation for reduced-motion or static placeholders.                                                      |
 | reduced-motion fallback       | shimmer tagged with `data-aurora-reduced-motion="animate"` | With `GlobalStyles`, shimmer auto-disables under `prefers-reduced-motion` while placeholder geometry stays stable.       |
 | `ariaLabel` / `ariaLabelledBy` | `string` / `string`                                      | Enables narrated loading status semantics when needed. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. |
-| `width` / `height` / `radius` | `number \| string`                                         | Explicit geometry control for layout matching.                                                                           |
+| `width` / `height` / `radius` | `number \| string`                                         | Explicit geometry control for layout matching. Numeric values must be finite and non-negative; blank/non-finite values fall back to built-in geometry defaults. |
 
 <Canvas of={SkeletonStories.ProfileCard} />
 <Canvas of={SkeletonStories.LabelledByPrecedence} />

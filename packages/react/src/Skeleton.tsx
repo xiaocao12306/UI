@@ -10,6 +10,30 @@ export type SkeletonProps = React.ComponentPropsWithoutRef<"div"> & {
   ariaLabelledBy?: string;
 };
 
+function resolveSkeletonMetric(
+  value: number | string | undefined,
+  fallback: number | string
+) {
+  if (typeof value === "number") {
+    if (Number.isFinite(value) && value >= 0) {
+      return value;
+    }
+
+    return fallback;
+  }
+
+  if (typeof value === "string") {
+    const normalizedValue = value.trim();
+    if (normalizedValue.length > 0) {
+      return normalizedValue;
+    }
+
+    return fallback;
+  }
+
+  return fallback;
+}
+
 export function Skeleton({
   width = "100%",
   height = 16,
@@ -21,11 +45,15 @@ export function Skeleton({
   style,
   ...props
 }: SkeletonProps) {
-  const resolvedRadius =
-    radius ??
-    (variant === "circle" ? "9999px" : variant === "text" ? "var(--aurora-radius-pill)" : "var(--aurora-radius-sm)");
-  const resolvedWidth = variant === "circle" ? width ?? height : width;
-  const resolvedHeight = variant === "text" ? height ?? 14 : height;
+  const fallbackRadius =
+    variant === "circle"
+      ? "9999px"
+      : variant === "text"
+        ? "var(--aurora-radius-pill)"
+        : "var(--aurora-radius-sm)";
+  const resolvedRadius = resolveSkeletonMetric(radius, fallbackRadius);
+  const resolvedWidth = resolveSkeletonMetric(variant === "circle" ? width ?? height : width, "100%");
+  const resolvedHeight = resolveSkeletonMetric(variant === "text" ? height ?? 14 : height, 16);
   const resolvedAriaLabelledBy =
     typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0
       ? ariaLabelledBy.trim()

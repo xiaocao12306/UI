@@ -59,4 +59,36 @@ describe("Skeleton", () => {
     expect(skeleton).toHaveStyle({ borderRadius: "9999px", width: "40px", height: "40px" });
     expect(skeleton).not.toHaveStyle({ animation: "aurora-skeleton-shimmer 1.2s ease-in-out infinite" });
   });
+
+  it("falls back geometry props when width/height/radius values are invalid", () => {
+    render(
+      <Skeleton
+        data-testid="invalid-geometry"
+        width={Number.NaN}
+        height={Number.POSITIVE_INFINITY}
+        radius="   "
+      />
+    );
+    const skeleton = screen.getByTestId("invalid-geometry");
+
+    expect(skeleton).toHaveStyle({
+      width: "100%",
+      height: "16px",
+      borderRadius: "var(--aurora-radius-sm)"
+    });
+  });
+
+  it("preserves valid geometry props with trimmed string values", () => {
+    render(
+      <Skeleton
+        data-testid="valid-geometry"
+        width={180.5}
+        height={20}
+        radius=" 12px "
+      />
+    );
+    const skeleton = screen.getByTestId("valid-geometry");
+
+    expect(skeleton).toHaveStyle({ width: "180.5px", height: "20px", borderRadius: "12px" });
+  });
 });
