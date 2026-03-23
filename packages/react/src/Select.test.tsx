@@ -392,6 +392,63 @@ describe("Select", () => {
     }
   });
 
+  it("keeps duplicate selection changes anchored and suppresses same-value onChange telemetry", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const onChange = vi.fn();
+
+    try {
+      render(
+        <Select aria-label="Duplicate interaction select" defaultValue="react" onChange={onChange}>
+          <option value="react">React primary</option>
+          <option value="react">React secondary</option>
+          <option value="vue">Vue</option>
+        </Select>
+      );
+
+      const select = screen.getByRole("combobox", { name: "Duplicate interaction select" }) as HTMLSelectElement;
+      const options = screen.getAllByRole("option");
+      select.selectedIndex = 1;
+      fireEvent.change(select);
+
+      expect(select).toHaveValue("react");
+      expect(select).toHaveProperty("selectedIndex", 0);
+      expect(options[0]).toHaveProperty("selected", true);
+      expect(options[1]).toHaveProperty("selected", false);
+      expect(onChange).not.toHaveBeenCalled();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
+  it("still emits onChange when select value actually changes under duplicate diagnostics", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const onChange = vi.fn();
+
+    try {
+      render(
+        <Select aria-label="Duplicate interaction value change select" defaultValue="react" onChange={onChange}>
+          <option value="react">React primary</option>
+          <option value="react">React secondary</option>
+          <option value="vue">Vue</option>
+        </Select>
+      );
+
+      const select = screen.getByRole("combobox", {
+        name: "Duplicate interaction value change select"
+      }) as HTMLSelectElement;
+      fireEvent.change(select, { target: { value: "vue" } });
+
+      expect(select).toHaveValue("vue");
+      expect(onChange).toHaveBeenCalledTimes(1);
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("forwards change and hover handlers", () => {
     const onChange = vi.fn();
     const onMouseEnter = vi.fn();

@@ -217,7 +217,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | Prop                                  | Type                                         | Notes                                                                                                                                                                                            |
 | ------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `value` / `defaultValue`              | `string`                                     | Supports controlled and uncontrolled native select flows.                                                                                                                                        |
-| option value diagnostics              | development duplicate-value warning          | Development builds warn when rendered `<option>` values are duplicated (including implicit text-value fallback); if duplicates still slip through, selected-state semantics deterministically anchor to the first enabled matching option (fallback to first match when all are disabled). |
+| option value diagnostics              | development duplicate-value warning          | Development builds warn when rendered `<option>` values are duplicated (including implicit text-value fallback); if duplicates still slip through, selected-state semantics deterministically anchor to the first enabled matching option (fallback to first match when all are disabled), and same-value duplicate interaction stays no-op for `onChange` telemetry. |
 | `invalid`                             | `boolean`                                    | Adds `aria-invalid` and error-token border/ring semantics.                                                                                                                                       |
 | `disabled`                            | `boolean`                                    | Applies disabled semantics and visual de-emphasis.                                                                                                                                               |
 | keyboard shortcut hints               | default `aria-keyshortcuts="ArrowDown ArrowUp"` | Actionable selects expose ArrowDown/ArrowUp shortcut metadata for QA/AT discoverability; disabled selects omit hints so metadata does not advertise unavailable interaction paths.               |
@@ -227,6 +227,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={SelectStories.InvalidState} />
 <Canvas of={SelectStories.DuplicateValueSelectedSemantics} />
 <Canvas of={SelectStories.ImplicitDuplicateValueSemantics} />
+<Canvas of={SelectStories.DuplicateValueInteractionNoopTelemetry} />
 <Canvas of={SelectStories.BlankAriaLabelFallback} />
 <Canvas of={SelectStories.LabelledByPrecedence} />
 <Canvas of={SelectStories.ShortcutHintPrecision} />

@@ -48,6 +48,32 @@ function ControlledSelectDemo() {
   );
 }
 
+function DuplicateTelemetrySelectDemo() {
+  const [framework, setFramework] = React.useState("react");
+  const [changeCount, setChangeCount] = React.useState(0);
+
+  return (
+    <SelectShowcase>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ color: "var(--aurora-text-primary)" }}>onChange count</span>
+        <Badge data-testid="duplicate-select-change-count">{changeCount}</Badge>
+      </div>
+      <Select
+        aria-label="Duplicate interaction guard select"
+        value={framework}
+        onChange={(event) => {
+          setFramework(event.target.value);
+          setChangeCount((previous) => previous + 1);
+        }}
+      >
+        <option value="react">React primary</option>
+        <option value="react">React secondary</option>
+        <option value="vue">Vue</option>
+      </Select>
+    </SelectShowcase>
+  );
+}
+
 export const Controlled: Story = {
   render: () => <ControlledSelectDemo />,
   play: async ({ canvasElement }) => {
@@ -107,6 +133,24 @@ export const ImplicitDuplicateValueSemantics: Story = {
     await expect(select).toHaveProperty("selectedIndex", 1);
     await expect(options[0]).toHaveProperty("selected", false);
     await expect(options[1]).toHaveProperty("selected", true);
+  }
+};
+
+export const DuplicateValueInteractionNoopTelemetry: Story = {
+  render: () => <DuplicateTelemetrySelectDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const select = canvas.getByRole("combobox", { name: "Duplicate interaction guard select" });
+    const options = canvas.getAllByRole("option");
+    const changeCount = canvas.getByTestId("duplicate-select-change-count");
+
+    await userEvent.selectOptions(select, options[1]);
+    await expect(select).toHaveProperty("selectedIndex", 0);
+    await expect(changeCount).toHaveTextContent("0");
+
+    await userEvent.selectOptions(select, "vue");
+    await expect(select).toHaveValue("vue");
+    await expect(changeCount).toHaveTextContent("1");
   }
 };
 

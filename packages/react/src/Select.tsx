@@ -11,6 +11,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
     style,
     invalid,
     disabled,
+    value,
+    defaultValue,
+    onChange,
     onFocus,
     onBlur,
     onMouseEnter,
@@ -31,6 +34,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
   const [focused, setFocused] = React.useState(false);
   const [focusVisible, setFocusVisible] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
+  const committedValueRef = React.useRef<string | undefined>(undefined);
   const focusVisibleIntentRef = React.useRef(false);
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
@@ -92,13 +96,12 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
     }
 
     const preferredSelectedIndex = resolvePreferredOptionIndex(optionMetadata, selectedValue);
-    if (preferredSelectedIndex < 0 || preferredSelectedIndex === select.selectedIndex) {
-      return;
+    if (preferredSelectedIndex >= 0 && preferredSelectedIndex !== select.selectedIndex) {
+      // Keep duplicate option-value semantics deterministic by preferring the first enabled match.
+      select.selectedIndex = preferredSelectedIndex;
     }
-
-    // Keep duplicate option-value semantics deterministic by preferring the first enabled match.
-    select.selectedIndex = preferredSelectedIndex;
-  }, [optionMetadata]);
+    committedValueRef.current = resolveOptionValue(select.value);
+  }, [optionMetadata, value]);
 
   React.useEffect(() => {
     if (!isInteractionDisabled) {
@@ -160,6 +163,8 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
     <select
       ref={setRefs}
       {...restProps}
+      value={value}
+      defaultValue={defaultValue}
       disabled={disabled}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
@@ -192,6 +197,27 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
           : "var(--aurora-input-text)",
         cursor: disabled ? "not-allowed" : "pointer",
         ...style
+      }}
+      onChange={(event) => {
+        const currentValue = resolveOptionValue(event.currentTarget.value);
+        if (currentValue !== undefined) {
+          const preferredSelectedIndex = resolvePreferredOptionIndex(optionMetadata, currentValue);
+          if (
+            preferredSelectedIndex >= 0 &&
+            preferredSelectedIndex !== event.currentTarget.selectedIndex
+          ) {
+            event.currentTarget.selectedIndex = preferredSelectedIndex;
+          }
+        }
+
+        const normalizedValue = resolveOptionValue(event.currentTarget.value);
+        const previousValue = committedValueRef.current;
+        committedValueRef.current = normalizedValue;
+        if (normalizedValue !== undefined && previousValue !== undefined && normalizedValue === previousValue) {
+          return;
+        }
+
+        onChange?.(event);
       }}
       onFocus={(event) => {
         setFocused(true);
