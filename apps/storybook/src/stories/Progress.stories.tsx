@@ -108,6 +108,33 @@ export const RuntimeBooleanConfigNormalization: Story = {
   }
 };
 
+export const RuntimeVisualConfigNormalization: Story = {
+  render: () => (
+    <ProgressShowcase maxWidth="min(100%, 320px)">
+      <Progress
+        value={62}
+        label="Runtime normalized progress"
+        tone={" SUCCESS " as unknown as "success"}
+        size={" SM " as unknown as "sm"}
+      />
+      <Progress
+        value={62}
+        label="Runtime fallback progress"
+        tone={"critical" as unknown as "default"}
+        size={"large" as unknown as "md"}
+      />
+    </ProgressShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const normalizedProgressbar = await canvas.findByRole("progressbar", { name: "Runtime normalized progress" });
+    await expect(normalizedProgressbar).toHaveStyle({ height: "6px" });
+
+    const fallbackProgressbar = await canvas.findByRole("progressbar", { name: "Runtime fallback progress" });
+    await expect(fallbackProgressbar).toHaveStyle({ height: "8px" });
+  }
+};
+
 export const LabelledByPrecedence: Story = {
   render: () => (
     <ProgressShowcase maxWidth="min(100%, 320px)">

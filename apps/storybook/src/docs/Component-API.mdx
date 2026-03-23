@@ -821,11 +821,12 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | reduced-motion fallback | indicator tagged with `data-aurora-reduced-motion` tokens          | Indeterminate animation and determinate width transition auto-reduce under `prefers-reduced-motion` when `GlobalStyles` is mounted. |
 | `label` / `valueText`   | `string`                                                           | Explicit screen-reader label and override value narration text; blank values are ignored (`label` falls back to `Progress`, `valueText` falls back to computed percentage or `Loading`).        |
 | `ariaLabel` / `ariaLabelledBy` | `string` / `string`                                         | Optional progressbar naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without explicit naming overrides, progressbar naming falls back to `label` (`Progress` default). |
-| `tone` / `size`         | `'default' \| 'success' \| 'warning' \| 'danger'` / `'sm' \| 'md'` | Visual emphasis and bar density controls.                                                                                           |
+| `tone` / `size`         | `'default' \| 'success' \| 'warning' \| 'danger'` / `'sm' \| 'md'` | Visual emphasis and bar density controls. Runtime tokens are trim+lowercase normalized; invalid values fall back to `default` / `md`. |
 | `showValueLabel`        | `boolean`                                                          | Renders helper value text under the progress track. Non-boolean runtime values fall back to `false`.                              |
 
 <Canvas of={ProgressStories.Indeterminate} />
 <Canvas of={ProgressStories.RuntimeBooleanConfigNormalization} />
+<Canvas of={ProgressStories.RuntimeVisualConfigNormalization} />
 <Canvas of={ProgressStories.LabelledByPrecedence} />
 
 ### Alert

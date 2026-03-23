@@ -66,6 +66,41 @@ describe("Progress", () => {
     }
   });
 
+  it("normalizes runtime tone/size tokens and falls back invalid values to safe defaults", () => {
+    const { rerender } = render(
+      <Progress
+        value={62}
+        tone={" SUCCESS " as unknown as "success"}
+        size={" SM " as unknown as "sm"}
+        label="Runtime normalized progress"
+      />
+    );
+
+    const normalizedProgressbar = screen.getByRole("progressbar", { name: "Runtime normalized progress" });
+    expect(normalizedProgressbar).toHaveStyle({ height: "6px" });
+    const normalizedIndicator = normalizedProgressbar.querySelector('[data-aurora-reduced-motion]');
+    expect(normalizedIndicator).not.toBeNull();
+    if (normalizedIndicator) {
+      expect(normalizedIndicator).toHaveStyle({ background: "var(--aurora-color-green-500)" });
+    }
+
+    rerender(
+      <Progress
+        value={62}
+        tone={"critical" as unknown as "default"}
+        size={"large" as unknown as "md"}
+        label="Runtime fallback progress"
+      />
+    );
+    const fallbackProgressbar = screen.getByRole("progressbar", { name: "Runtime fallback progress" });
+    expect(fallbackProgressbar).toHaveStyle({ height: "8px" });
+    const fallbackIndicator = fallbackProgressbar.querySelector('[data-aurora-reduced-motion]');
+    expect(fallbackIndicator).not.toBeNull();
+    if (fallbackIndicator) {
+      expect(fallbackIndicator).toHaveStyle({ background: "var(--aurora-accent-default)" });
+    }
+  });
+
   it("ignores blank label and falls back to default progressbar name", () => {
     render(<Progress label="   " />);
     const progressbar = screen.getByRole("progressbar", { name: "Progress" });

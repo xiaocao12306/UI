@@ -41,6 +41,33 @@ function resolveBooleanFlag(value: unknown, fallback: boolean) {
   return value;
 }
 
+function resolveProgressTone(value: unknown, fallback: ProgressTone) {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    if (
+      normalizedValue === "default" ||
+      normalizedValue === "success" ||
+      normalizedValue === "warning" ||
+      normalizedValue === "danger"
+    ) {
+      return normalizedValue;
+    }
+  }
+
+  return fallback;
+}
+
+function resolveProgressSize(value: unknown, fallback: ProgressSize) {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    if (normalizedValue === "sm" || normalizedValue === "md") {
+      return normalizedValue;
+    }
+  }
+
+  return fallback;
+}
+
 export function Progress({
   value = 0,
   min = 0,
@@ -58,6 +85,8 @@ export function Progress({
 }: ProgressProps) {
   const resolvedIndeterminate = resolveBooleanFlag(indeterminate, false);
   const resolvedShowValueLabel = resolveBooleanFlag(showValueLabel, false);
+  const resolvedTone = resolveProgressTone(tone, "default");
+  const resolvedSize = resolveProgressSize(size, "md");
   const safeMin = Number.isFinite(min) ? min : 0;
   const safeMax = Number.isFinite(max) && max > safeMin ? max : safeMin + 100;
   const safeValue = clamp(Number.isFinite(value) ? value : safeMin, safeMin, safeMax);
@@ -96,7 +125,7 @@ export function Progress({
         style={{
           position: "relative",
           width: "100%",
-          height: sizeStyleMap[size],
+          height: sizeStyleMap[resolvedSize],
           borderRadius: "var(--aurora-radius-pill)",
           background: "var(--aurora-surface-elevated)",
           overflow: "hidden",
@@ -109,7 +138,7 @@ export function Progress({
           style={{
             width: resolvedIndeterminate ? "35%" : `${ratio}%`,
             height: "100%",
-            background: toneStyleMap[tone],
+            background: toneStyleMap[resolvedTone],
             transition: resolvedIndeterminate ? undefined : "width var(--aurora-motion-duration-normal) var(--aurora-motion-easing-standard)",
             animation: resolvedIndeterminate ? "aurora-progress-indeterminate 1200ms ease-in-out infinite" : undefined,
             willChange: resolvedIndeterminate ? "transform" : undefined
