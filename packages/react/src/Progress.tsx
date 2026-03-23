@@ -33,6 +33,14 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export function Progress({
   value = 0,
   min = 0,
@@ -48,6 +56,8 @@ export function Progress({
   style,
   ...props
 }: ProgressProps) {
+  const resolvedIndeterminate = resolveBooleanFlag(indeterminate, false);
+  const resolvedShowValueLabel = resolveBooleanFlag(showValueLabel, false);
   const safeMin = Number.isFinite(min) ? min : 0;
   const safeMax = Number.isFinite(max) && max > safeMin ? max : safeMin + 100;
   const safeValue = clamp(Number.isFinite(value) ? value : safeMin, safeMin, safeMax);
@@ -67,7 +77,7 @@ export function Progress({
   const resolvedAriaLabel = resolvedAriaLabelledBy
     ? undefined
     : explicitAriaLabel ?? fallbackLabel;
-  const fallbackValueText = indeterminate ? "Loading" : `${Math.round(ratio)}%`;
+  const fallbackValueText = resolvedIndeterminate ? "Loading" : `${Math.round(ratio)}%`;
   const resolvedValueText =
     typeof valueText === "string" && valueText.trim().length > 0
       ? valueText.trim()
@@ -81,7 +91,7 @@ export function Progress({
         aria-labelledby={resolvedAriaLabelledBy}
         aria-valuemin={safeMin}
         aria-valuemax={safeMax}
-        aria-valuenow={indeterminate ? undefined : safeValue}
+        aria-valuenow={resolvedIndeterminate ? undefined : safeValue}
         aria-valuetext={resolvedValueText}
         style={{
           position: "relative",
@@ -95,18 +105,18 @@ export function Progress({
         {...props}
       >
         <div
-          data-aurora-reduced-motion={indeterminate ? "animate transform-reset" : "transition"}
+          data-aurora-reduced-motion={resolvedIndeterminate ? "animate transform-reset" : "transition"}
           style={{
-            width: indeterminate ? "35%" : `${ratio}%`,
+            width: resolvedIndeterminate ? "35%" : `${ratio}%`,
             height: "100%",
             background: toneStyleMap[tone],
-            transition: indeterminate ? undefined : "width var(--aurora-motion-duration-normal) var(--aurora-motion-easing-standard)",
-            animation: indeterminate ? "aurora-progress-indeterminate 1200ms ease-in-out infinite" : undefined,
-            willChange: indeterminate ? "transform" : undefined
+            transition: resolvedIndeterminate ? undefined : "width var(--aurora-motion-duration-normal) var(--aurora-motion-easing-standard)",
+            animation: resolvedIndeterminate ? "aurora-progress-indeterminate 1200ms ease-in-out infinite" : undefined,
+            willChange: resolvedIndeterminate ? "transform" : undefined
           }}
         />
       </div>
-      {showValueLabel ? (
+      {resolvedShowValueLabel ? (
         <span style={{ fontSize: "var(--aurora-font-size-xs)", color: "var(--aurora-text-secondary)" }}>{resolvedValueText}</span>
       ) : null}
     </div>

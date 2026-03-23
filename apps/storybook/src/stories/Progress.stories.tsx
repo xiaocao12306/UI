@@ -87,6 +87,27 @@ export const Indeterminate: Story = {
   }
 };
 
+export const RuntimeBooleanConfigNormalization: Story = {
+  args: {
+    value: 62,
+    label: "Deployment progress",
+    indeterminate: "true" as unknown as boolean,
+    showValueLabel: "true" as unknown as boolean
+  },
+  render: (args) => (
+    <ProgressShowcase maxWidth="min(100%, 320px)">
+      <Progress {...args} />
+    </ProgressShowcase>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const progressbar = await canvas.findByRole("progressbar", { name: "Deployment progress" });
+    await expect(progressbar).toHaveAttribute("aria-valuenow", "62");
+    await expect(progressbar).toHaveAttribute("aria-valuetext", "62%");
+    await expect(canvas.queryByText("62%")).not.toBeInTheDocument();
+  }
+};
+
 export const LabelledByPrecedence: Story = {
   render: () => (
     <ProgressShowcase maxWidth="min(100%, 320px)">

@@ -46,6 +46,26 @@ describe("Progress", () => {
     expect(screen.getByText("55%")).toBeInTheDocument();
   });
 
+  it("falls back invalid runtime indeterminate/showValueLabel flags to safe defaults", () => {
+    render(
+      <Progress
+        value={55}
+        indeterminate={"true" as unknown as boolean}
+        showValueLabel={"true" as unknown as boolean}
+      />
+    );
+
+    const progressbar = screen.getByRole("progressbar", { name: "Progress" });
+    const indicator = progressbar.querySelector('[data-aurora-reduced-motion]');
+    expect(progressbar).toHaveAttribute("aria-valuenow", "55");
+    expect(progressbar).toHaveAttribute("aria-valuetext", "55%");
+    expect(screen.queryByText("55%")).not.toBeInTheDocument();
+    expect(indicator).not.toBeNull();
+    if (indicator) {
+      expect(indicator).toHaveAttribute("data-aurora-reduced-motion", "transition");
+    }
+  });
+
   it("ignores blank label and falls back to default progressbar name", () => {
     render(<Progress label="   " />);
     const progressbar = screen.getByRole("progressbar", { name: "Progress" });
