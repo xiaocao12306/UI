@@ -221,7 +221,7 @@ export function Toast({
   const timerStartedAtRef = React.useRef(0);
   const hasActionContent = hasRenderableToastNode(action);
   const hasActionAffordance = hasInteractiveToastActionNode(action);
-  const resolvedDuration = duration ?? (hasActionAffordance ? 0 : 4000);
+  const resolvedDuration = resolveToastDuration(duration, hasActionAffordance ? 0 : 4000);
   const remainingDurationRef = React.useRef(resolvedDuration);
   const [documentHidden, setDocumentHidden] = React.useState(false);
   const [pauseState, setPauseState] = React.useState({ hover: false, focus: false });
@@ -733,6 +733,18 @@ function resolveFocusVisibleState(target: HTMLButtonElement, fallback: boolean) 
   } catch {
     return fallback;
   }
+}
+
+function resolveToastDuration(duration: number | undefined, fallback: number) {
+  if (typeof duration !== "number") {
+    return fallback;
+  }
+
+  if (!Number.isFinite(duration)) {
+    return fallback;
+  }
+
+  return duration;
 }
 
 function isToastCloseButtonActivationKey(key: string) {

@@ -409,6 +409,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep stacked toasts in the same corner so built-in visual offset preserves message legibility for older notifications.
 - Verify timer pause behavior for both pointer hover and keyboard focus when `pauseOnHover` is enabled.
 - Verify timed toasts pause in hidden browser tabs and resume from remaining time after visibility returns.
+- Keep toast `duration` finite (`Number.isFinite`) in app state; non-finite values now fall back to built-in defaults (passive `4000ms`, actionable `0`) to avoid accidental instant-close or runaway timers.
 - For iframe/multi-document hosts, keep toast timer/visibility/Escape behavior bound to each toast `ownerDocument`/`defaultView` so timing and dismissal state cannot leak across document roots.
 - Use `onCloseReason` for deterministic telemetry (`close-button` / `escape-key` / `timeout`) instead of inferring dismiss origin from side effects.
 - When combining `onCloseReason`, `onClose`, and `onOpenChange`, consume them as ordered lifecycle hooks (`onCloseReason` -> `onClose` -> `onOpenChange(false)`), not parallel duplicate side effects.

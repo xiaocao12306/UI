@@ -582,6 +582,38 @@ describe("Toast", () => {
     }
   });
 
+  it("falls back to passive default duration when duration is non-finite", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    try {
+      render(
+        <Toast
+          open
+          title="Passive fallback timer"
+          duration={Number.NaN}
+          onOpenChange={onOpenChange}
+          onCloseReason={onCloseReason}
+        />
+      );
+
+      act(() => {
+        vi.advanceTimersByTime(3999);
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+      expect(onCloseReason).not.toHaveBeenCalled();
+
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onCloseReason).toHaveBeenCalledWith("timeout");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("auto dismisses non-interactive text action toast after default 4000ms", () => {
     vi.useFakeTimers();
     const onOpenChange = vi.fn();
@@ -728,6 +760,35 @@ describe("Toast", () => {
       expect(onOpenChange).not.toHaveBeenCalled();
       expect(onCloseReason).not.toHaveBeenCalled();
       expect(screen.getByRole("dialog", { name: "Action required" })).toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("falls back to persistent actionable duration when duration is non-finite", () => {
+    vi.useFakeTimers();
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    try {
+      render(
+        <Toast
+          open
+          title="Action fallback timer"
+          action={<button type="button">Review</button>}
+          duration={Number.POSITIVE_INFINITY}
+          onOpenChange={onOpenChange}
+          onCloseReason={onCloseReason}
+        />
+      );
+
+      act(() => {
+        vi.advanceTimersByTime(10000);
+      });
+
+      expect(onOpenChange).not.toHaveBeenCalled();
+      expect(onCloseReason).not.toHaveBeenCalled();
+      expect(screen.getByRole("dialog", { name: "Action fallback timer" })).toBeInTheDocument();
     } finally {
       vi.useRealTimers();
     }
