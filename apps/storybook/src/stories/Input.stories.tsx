@@ -307,6 +307,25 @@ export const ShortcutHintPrecision: Story = {
   }
 };
 
+export const BlankTypeFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={12}>
+      <FormField
+        label="Blank type fallback input"
+        description="Blank input type should normalize to text semantics with Enter shortcut hints."
+      >
+        <Input type="   " aria-label="Blank type fallback input control" />
+      </FormField>
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox", { name: "Blank type fallback input control" });
+    await expect(input).toHaveAttribute("type", "text");
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
+  }
+};
+
 function FocusIntentReentryDemo() {
   return (
     <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={10}>

@@ -98,7 +98,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `readOnly` / `disabled`               | `boolean`                                    | Preserves semantic behavior and visual state boundaries.                                                                                                                                        |
 | `aria-label` / `aria-labelledby`      | `string`                                     | Blank values are ignored; when both are provided, `aria-labelledby` takes precedence so visible context labels remain canonical.                                                                |
 | `aria-describedby`                    | `string`                                     | Recommended for helper/error narration in forms.                                                                                                                                                |
-| keyboard shortcut hints               | text-like inputs default `aria-keyshortcuts="Enter"` | Text-like actionable inputs (`text/search/email/url/tel/password`) expose Enter shortcut metadata for QA/AT discoverability; non-text types plus read-only/disabled inputs omit default hints (explicit overrides remain supported). |
+| keyboard shortcut hints               | text-like inputs default `aria-keyshortcuts="Enter"` | Text-like actionable inputs (`text/search/email/url/tel/password`) expose Enter shortcut metadata for QA/AT discoverability; blank `type` values normalize to `text`, while non-text types plus read-only/disabled inputs omit default hints (explicit overrides remain supported). |
 | Enter active feedback policy          | unmodified `Enter`/`Shift+Enter` only        | Ignores `Ctrl/Meta/Alt + Enter` so host shortcut chords do not trigger input active-press visuals.                                                                                              |
 | managed-key priority                  | preempted `Enter` keydown skips active feedback | Input enter-active visuals and handler-side effects stay no-op when guard logic (capture-level or local `onKeyDown`) already `preventDefault()` the keydown event.                              |
 | focus intent policy                   | primary pointer clears focus-visible         | Non-primary `mousedown/pointerdown` plus `Ctrl + primary click` context-click paths keep keyboard-intent focus ring state, while plain primary pointer keeps prior active/pressed behavior.                       |
@@ -110,6 +110,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={InputStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={InputStories.ManagedKeysPreemptedByLocalHandler} />
 <Canvas of={InputStories.ShortcutHintPrecision} />
+<Canvas of={InputStories.BlankTypeFallback} />
 <Canvas of={InputStories.FocusIntentReentry} />
 
 ### FormField

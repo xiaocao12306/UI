@@ -89,7 +89,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep radio-group `direction` aligned with visual layout so `aria-orientation` stays truthful (`horizontal` for inline groups, `vertical` for stacked groups).
 - Keep input Enter active feedback scoped to unmodified keys: ignore `Ctrl/Meta/Alt + Enter` shortcut chords, while allowing normal `Enter` and `Shift+Enter` intent.
 - When guard logic preempts input `Enter` keydown with `preventDefault()` (global capture or local `onKeyDown`), keep enter active feedback and handler side effects no-op.
-- Keep input shortcut hints precise: expose default `aria-keyshortcuts="Enter"` only for actionable text-like inputs (`text/search/email/url/tel/password`), and remove default hints for non-text types plus read-only/disabled states.
+- Keep input shortcut hints precise: expose default `aria-keyshortcuts="Enter"` only for actionable text-like inputs (`text/search/email/url/tel/password`), normalize blank `type` values back to `text`, and remove default hints for non-text types plus read-only/disabled states.
 - Keep local pointer focus/active intent primary-only across button/input/textarea/select: non-primary pointer interactions and `Ctrl + primary click` context-click paths should not clear keyboard-origin focus-visible or trigger pressed/active visuals.
 - Keep date-picker shortcut hints explicit: native `type="date"` should not expose default Enter shortcut metadata; only pass `aria-keyshortcuts` when product workflows require a custom documented shortcut.
 - Keep date-picker focus intent parity with text fields: non-primary pointer interactions and `Ctrl + primary click` context-click paths should not clear keyboard-origin focus-visible state.
@@ -141,6 +141,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={InputStories.BlankAriaLabelFallback} />
 <Canvas of={InputStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={InputStories.ManagedKeysPreemptedByLocalHandler} />
+<Canvas of={InputStories.BlankTypeFallback} />
 <Canvas of={ComboboxStories.DuplicateValueRerenderStability} />
 <Canvas of={ComboboxStories.DuplicateValueSelectedSemantics} />
 <Canvas of={ComboboxStories.BlankPlaceholderFallback} />

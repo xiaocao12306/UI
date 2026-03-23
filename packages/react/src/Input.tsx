@@ -43,7 +43,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
   const isInteractionDisabled = Boolean(disabled);
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel = resolvedAriaLabelledBy ? undefined : resolveNonEmptyLabel(ariaLabel);
-  const resolvedInputType = type ?? "text";
+  const resolvedInputType = resolveInputType(type);
   const supportsEnterKeyboardFeedback = isTextLikeInputType(resolvedInputType);
   const ariaKeyShortcuts =
     isInteractionDisabled || readOnly
@@ -289,4 +289,13 @@ function isTextLikeInputType(type: string) {
     type === "tel" ||
     type === "password"
   );
+}
+
+function resolveInputType(type: string | undefined) {
+  if (typeof type !== "string") {
+    return "text";
+  }
+
+  const normalized = type.trim();
+  return normalized.length > 0 ? normalized : "text";
 }

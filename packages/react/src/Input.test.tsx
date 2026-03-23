@@ -111,6 +111,14 @@ describe("Input", () => {
     expect(input).not.toHaveAttribute("aria-keyshortcuts");
   });
 
+  it("normalizes blank input type to text and preserves default Enter shortcut hints", () => {
+    render(<Input type="   " aria-label="Blank type input" />);
+    const input = screen.getByRole("textbox", { name: "Blank type input" });
+
+    expect(input).toHaveAttribute("type", "text");
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
+  });
+
   it("does not apply Enter active feedback for non-text input types", () => {
     render(<Input type="date" aria-label="Date active input" />);
     const input = screen.getByLabelText("Date active input");
