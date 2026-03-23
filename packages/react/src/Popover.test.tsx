@@ -66,6 +66,21 @@ describe("Popover", () => {
     expect(dialog.style.top).toBe("calc(100% + 12px)");
   });
 
+  it("falls back invalid runtime align values to start placement", () => {
+    render(
+      <Popover
+        triggerLabel="Runtime align fallback"
+        align={" middle " as unknown as React.ComponentProps<typeof Popover>["align"]}
+      >
+        <p>Popover content</p>
+      </Popover>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Runtime align fallback" }));
+    const dialog = screen.getByRole("dialog", { name: "Popover content" });
+    expect(dialog.style.left).toBe("0px");
+  });
+
   it("supports controlled mode", () => {
     const onOpenChange = vi.fn();
 

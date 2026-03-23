@@ -219,6 +219,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep dialog/drawer Escape shortcut hints explicit (`aria-keyshortcuts="Escape"`) only when `closeOnEscape` is enabled so dismiss affordance metadata matches runtime policy.
 - Popover and Dropdown should restore focus to trigger on keyboard dismissal (Escape), but keep pointer target focus on outside-click dismissal.
 - Keep popover spacing config (`sideOffset`) finite; non-finite values now fall back to `8`, and fractional values are normalized to integer pixels to avoid jittery placement.
+- Normalize popover runtime visual config from CMS/JSON payloads before binding props: mixed-case `align` tokens should map to supported values, and invalid values should fall back to `start` so panel horizontal placement remains deterministic.
 - For blocking confirmation/action menus, set `closeOnEscape={false}` + `closeOnOutsidePointer={false}` and provide an explicit close/confirm path.
 - For conditional runtime approval guards, keep `closeOnEscape/closeOnOutsidePointer` enabled and intercept `onEscapeKeyDown/onPointerDownOutside` with `event.preventDefault()` only while guard conditions are active.
 - Normalize popover runtime dismiss flags from CMS/JSON payloads before binding props: invalid `closeOnEscape/closeOnOutsidePointer` values should fall back to `true` so Escape/outside-dismiss policy remains stable.
@@ -321,6 +322,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={PopoverStories.EscapeRepeatGuard} />
 <Canvas of={PopoverStories.EscapeIgnoresImeComposition} />
 <Canvas of={PopoverStories.RuntimeBooleanConfigNormalization} />
+<Canvas of={PopoverStories.RuntimeVisualConfigNormalization} />
 <Canvas of={PopoverStories.DismissGuardHooks} />
 <Canvas of={PopoverStories.NestedOutsideDismissOrder} />
 <Canvas of={DialogStories.CloseReasonTelemetry} />

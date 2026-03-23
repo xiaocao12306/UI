@@ -476,7 +476,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `onEscapeKeyDown` / `onPointerDownOutside` | event callbacks                                                                       | Observe or cancel dismiss intents before close policy resolves.                                                                                                                                   |
 | `onCloseReason`                            | `(reason: 'trigger-click' \| 'escape-key' \| 'outside-pointer' \| 'tab-key') => void` | Emits structured close telemetry for trigger-toggle vs dismiss-gesture analytics.                                                                                                                 |
 | close lifecycle order                      | `onCloseReason -> onOpenChange(false)`                                                | Trigger/Escape/outside-pointer/Tab dismiss paths share deterministic close callback order for telemetry reducers.                                                                                 |
-| `align` / `sideOffset`                     | `'start' \| 'end'` / `number`                                                         | Horizontal alignment and vertical spacing from trigger. `sideOffset` is normalized to integer pixels; non-finite values fall back to `8`.                                                                                                          |
+| `align` / `sideOffset`                     | `'start' \| 'end'` / `number`                                                         | Horizontal alignment and vertical spacing from trigger. `align` runtime tokens are trim+lowercase normalized with invalid values falling back to `start`; `sideOffset` is normalized to integer pixels and non-finite values fall back to `8`.    |
 | `contentLabel`                             | `string`                                                                              | Accessible name for popover dialog content region; blank values are ignored and fallback to `Popover content`.                                                                                    |
 | trigger relation                           | conditional `aria-controls`                                                           | Trigger references content ID only while open to avoid dangling ARIA links.                                                                                                                       |
 | dismiss focus policy                       | Escape restores trigger focus; outside pointer keeps target focus                     | Prevents keyboard dead-ends without stealing pointer intent.                                                                                                                                      |
@@ -495,6 +495,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 
 <Canvas of={PopoverStories.NonDismissible} />
 <Canvas of={PopoverStories.RuntimeBooleanConfigNormalization} />
+<Canvas of={PopoverStories.RuntimeVisualConfigNormalization} />
 <Canvas of={PopoverStories.DismissGuardHooks} />
 <Canvas of={PopoverStories.NestedDismissOrder} />
 <Canvas of={PopoverStories.NestedOutsideDismissOrder} />

@@ -35,6 +35,19 @@ function resolvePopoverSideOffset(sideOffset: number, fallback: number) {
   return Math.trunc(sideOffset);
 }
 
+function resolvePopoverAlign(align: PopoverAlign | string | undefined, fallback: PopoverAlign) {
+  if (typeof align !== "string") {
+    return fallback;
+  }
+
+  const normalizedAlign = align.trim().toLowerCase();
+  if (normalizedAlign === "start" || normalizedAlign === "end") {
+    return normalizedAlign;
+  }
+
+  return fallback;
+}
+
 function resolveBooleanFlag(value: unknown, fallback: boolean) {
   if (typeof value !== "boolean") {
     return fallback;
@@ -80,6 +93,7 @@ export function Popover({
       : "Popover content";
   const hasReadableTriggerLabelText = getReadablePopoverLabel(triggerLabel).length > 0;
   const safeSideOffset = resolvePopoverSideOffset(sideOffset, 8);
+  const resolvedAlign = resolvePopoverAlign(align, "start");
   const resolvedCloseOnEscape = resolveBooleanFlag(closeOnEscape, true);
   const resolvedCloseOnOutsidePointer = resolveBooleanFlag(closeOnOutsidePointer, true);
   const resolvedTriggerAriaLabel = resolvedTriggerAriaLabelledBy
@@ -159,7 +173,7 @@ export function Popover({
     console.warn("[Popover] Non-text triggerLabel should provide triggerAriaLabel or triggerAriaLabelledBy.");
   }, [explicitTriggerAriaLabel, hasReadableTriggerLabelText, resolvedTriggerAriaLabelledBy]);
 
-  const horizontalPosition = align === "start" ? { left: 0 } : { right: 0 };
+  const horizontalPosition = resolvedAlign === "start" ? { left: 0 } : { right: 0 };
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>

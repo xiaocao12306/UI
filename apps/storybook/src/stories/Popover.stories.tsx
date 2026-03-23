@@ -359,6 +359,37 @@ export const RuntimeBooleanConfigNormalization: Story = {
   }
 };
 
+function RuntimeVisualConfigNormalizationPopoverDemo() {
+  return (
+    <PopoverShowcase>
+      <p style={popoverTelemetryTextStyle}>
+        Runtime visual config should normalize invalid align tokens to keep placement deterministic.
+      </p>
+      <Popover
+        triggerLabel="Runtime visual popover"
+        align={" middle " as unknown as React.ComponentProps<typeof Popover>["align"]}
+      >
+        <p style={{ margin: 0 }}>Runtime visual normalization keeps horizontal alignment stable.</p>
+      </Popover>
+    </PopoverShowcase>
+  );
+}
+
+export const RuntimeVisualConfigNormalization: Story = {
+  args: {
+    triggerLabel: "Runtime visual popover",
+    children: <p style={{ margin: 0 }}>Runtime visual normalization keeps horizontal alignment stable.</p>
+  },
+  render: () => <RuntimeVisualConfigNormalizationPopoverDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Runtime visual popover" });
+    await userEvent.click(trigger);
+    const dialog = canvas.getByRole("dialog", { name: "Popover content" });
+    await expect(dialog).toHaveStyle({ left: "0px" });
+  }
+};
+
 export const NonDismissible: Story = {
   args: {
     triggerLabel: "Review policy",
