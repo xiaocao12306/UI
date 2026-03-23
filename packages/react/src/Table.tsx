@@ -161,6 +161,7 @@ export function Table<T>({
   const warnedDuplicateColumnKeysSignatureRef = React.useRef<string | null>(null);
   const warnedDuplicateRowKeysSignatureRef = React.useRef<string | null>(null);
   const warnedRowKeyErrorRef = React.useRef(false);
+  const warnedCellRenderErrorRef = React.useRef(false);
   const warnedMissingSortLabelSignatureRef = React.useRef<string | null>(null);
   const warnedSortAriaLabelErrorRef = React.useRef(false);
   const warnedSortStatusTextErrorRef = React.useRef(false);
@@ -1169,9 +1170,27 @@ export function Table<T>({
                   }}
                 >
                   {columns.map((column, columnIndex) => {
-                    const content = column.render
-                      ? column.render(row, index, entry.sourceIndex)
-                      : String((row as Record<string, unknown>)[String(column.key)] ?? "");
+                    const fallbackContent = String(
+                      (row as Record<string, unknown>)[String(column.key)] ?? ""
+                    );
+                    let content: React.ReactNode;
+                    if (column.render) {
+                      try {
+                        content = column.render(row, index, entry.sourceIndex);
+                        warnedCellRenderErrorRef.current = false;
+                      } catch (error) {
+                        content = fallbackContent;
+                        if (process.env.NODE_ENV !== "production" && !warnedCellRenderErrorRef.current) {
+                          warnedCellRenderErrorRef.current = true;
+                          console.warn(
+                            "[Table] columns[].render threw an error; falling back to raw cell value.",
+                            error
+                          );
+                        }
+                      }
+                    } else {
+                      content = fallbackContent;
+                    }
                     const columnRenderKey =
                       resolvedColumnRenderKeys[columnIndex] ??
                       `${String(column.key)}__index-${columnIndex}`;

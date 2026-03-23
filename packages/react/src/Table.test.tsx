@@ -3184,6 +3184,53 @@ describe("Table", () => {
     expect(rowKey).toHaveBeenNthCalledWith(3, { name: "Gamma", score: 3 }, 2);
   });
 
+  it("falls back to raw cell values when columns[].render throws", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            {
+              key: "name",
+              header: "Name",
+              sortable: true,
+              render: (row: { name: string }) => {
+                if (row.name === "Beta") {
+                  throw new Error("cell render failed");
+                }
+                return `Name ${row.name}`;
+              }
+            },
+            { key: "score", header: "Score", sortable: true }
+          ]}
+          data={[
+            { name: "Alpha", score: 1 },
+            { name: "Beta", score: 2 },
+            { name: "Gamma", score: 3 }
+          ]}
+          defaultSortKey="score"
+        />
+      );
+
+      expect(screen.getByRole("cell", { name: "Name Alpha" })).toBeInTheDocument();
+      expect(screen.getByRole("cell", { name: "Beta" })).toBeInTheDocument();
+      expect(screen.getByRole("cell", { name: "Name Gamma" })).toBeInTheDocument();
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Table] columns[].render threw an error; falling back to raw cell value.",
+        expect.any(Error)
+      );
+      expect(errorSpy).not.toHaveBeenCalled();
+
+      fireEvent.click(screen.getByRole("button", { name: "Score sort descending" }));
+      expect(screen.getByRole("cell", { name: "Beta" })).toBeInTheDocument();
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("passes both visual row index and source row index to column render callbacks", () => {
     const indexRenderer = vi.fn(
       (row: { name: string }, rowIndex: number, sourceIndex: number) =>

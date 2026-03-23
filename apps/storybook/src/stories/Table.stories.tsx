@@ -1571,6 +1571,44 @@ export const RowKeyCallbackThrowFallback: Story = {
   }
 };
 
+export const CellRenderErrorFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 760px)" gap={8}>
+      <p style={storyMutedTextStyle}>
+        When `columns[].render` throws, table falls back to raw cell values so one cell renderer
+        failure cannot crash the whole table.
+      </p>
+      <Table
+        columns={[
+          {
+            key: "component",
+            header: "Component",
+            sortable: true,
+            render: (row: ReleaseRow) => {
+              if (row.component === "Dialog") {
+                throw new Error("component cell render failed");
+              }
+              return `Component ${row.component}`;
+            }
+          },
+          { key: "owner", header: "Owner", sortable: true }
+        ]}
+        data={rows}
+        defaultSortKey="component"
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("cell", { name: "Component Button" })).toBeInTheDocument();
+    await expect(canvas.getByRole("cell", { name: "Dialog" })).toBeInTheDocument();
+    await expect(canvas.getByRole("cell", { name: "Component PromptInput" })).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Owner sort ascending" }));
+    await expect(canvas.getByRole("cell", { name: "Dialog" })).toBeInTheDocument();
+  }
+};
+
 type IndexSemanticsRow = { key: string; score: number };
 
 const indexSemanticsRows: IndexSemanticsRow[] = [
