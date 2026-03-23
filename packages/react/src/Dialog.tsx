@@ -38,6 +38,17 @@ function resolveBooleanFlag(value: unknown, fallback: boolean) {
   return value;
 }
 
+function resolveDialogSize(value: unknown, fallback: DialogSize) {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    if (normalizedValue === "sm" || normalizedValue === "md" || normalizedValue === "lg") {
+      return normalizedValue;
+    }
+  }
+
+  return fallback;
+}
+
 export function Dialog({
   open,
   title,
@@ -90,6 +101,7 @@ export function Dialog({
   const resolvedCloseOnEscape = resolveBooleanFlag(closeOnEscape, true);
   const resolvedCloseOnOutsidePointer = resolveBooleanFlag(closeOnOutsidePointer, true);
   const resolvedShowCloseButton = resolveBooleanFlag(showCloseButton, true);
+  const resolvedSize = resolveDialogSize(size, "md");
 
   const closeWithReason = React.useCallback(
     (reason: DialogCloseReason) => {
@@ -221,7 +233,7 @@ export function Dialog({
               aria-keyshortcuts={resolvedCloseOnEscape ? "Escape" : undefined}
               data-state="open"
               style={{
-                width: dialogSizeMap[size],
+                width: dialogSizeMap[resolvedSize],
                 borderRadius: "var(--aurora-radius-lg)",
                 border: "1px solid var(--aurora-panel-border)",
                 background: "var(--aurora-panel-bg)",

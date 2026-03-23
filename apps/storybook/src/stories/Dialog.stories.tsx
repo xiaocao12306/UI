@@ -535,6 +535,34 @@ export const NonDismissable: Story = {
   }
 };
 
+function RuntimeVisualConfigNormalizationDialog() {
+  const [open, setOpen] = React.useState(true);
+
+  return (
+    <StoryShowcaseFrame gap={12}>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Runtime visual config dialog"
+        size={" XL " as unknown as React.ComponentProps<typeof Dialog>["size"]}
+      >
+        <p style={storyParagraphStyle}>
+          Runtime visual token normalization keeps dialog width fallback deterministic.
+        </p>
+      </Dialog>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const RuntimeVisualConfigNormalization: Story = {
+  render: () => <RuntimeVisualConfigNormalizationDialog />,
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    const dialog = await body.findByRole("dialog", { name: "Runtime visual config dialog" });
+    await expect(dialog).toHaveStyle({ width: "560px" });
+  }
+};
+
 function RuntimeBooleanConfigNormalizationDialog() {
   const [open, setOpen] = React.useState(false);
   const [lastReason, setLastReason] = React.useState("none");

@@ -44,6 +44,23 @@ describe("Dialog", () => {
     expect(screen.getByRole("button", { name: "Close dialog" })).toBeInTheDocument();
   });
 
+  it("falls back invalid runtime size values to default panel width", () => {
+    render(
+      <Dialog
+        open
+        onOpenChange={() => {}}
+        title="Runtime invalid size dialog"
+        size={" XL " as unknown as React.ComponentProps<typeof Dialog>["size"]}
+      >
+        <p>Body</p>
+      </Dialog>
+    );
+
+    expect(screen.getByRole("dialog", { name: "Runtime invalid size dialog" })).toHaveStyle({
+      width: "min(560px, calc(100vw - 32px))"
+    });
+  });
+
   it("marks close-button transitions for reduced-motion fallback", () => {
     render(
       <Dialog open onOpenChange={() => {}} title="Settings">
