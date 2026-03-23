@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Textarea } from "@aurora-ui/react";
+import * as React from "react";
+import { Badge, Textarea } from "@aurora-ui/react";
 import { expect, fireEvent, userEvent, within } from "@storybook/test";
 
 const meta = {
@@ -117,6 +118,54 @@ export const DisabledAndReadOnly: Story = {
       </div>
     </div>
   )
+};
+
+function RuntimeBooleanConfigNormalizationTextarea() {
+  const [value, setValue] = React.useState("Initial draft");
+  const [changeCount, setChangeCount] = React.useState(0);
+
+  return (
+    <div style={{ width: 360, display: "grid", gap: 10 }}>
+      <Textarea
+        aria-label="Runtime boolean textarea"
+        value={value}
+        disabled={"true" as unknown as boolean}
+        readOnly={"true" as unknown as boolean}
+        onChange={(event) => {
+          setValue(event.target.value);
+          setChangeCount((count) => count + 1);
+        }}
+      />
+      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <Badge tone="default">
+          Value: <span data-testid="textarea-runtime-value">{value}</span>
+        </Badge>
+        <Badge tone="default">
+          Changes: <span data-testid="textarea-runtime-events">{changeCount}</span>
+        </Badge>
+      </div>
+    </div>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationTextarea />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const textarea = canvas.getByRole("textbox", { name: "Runtime boolean textarea" });
+    const value = canvas.getByTestId("textarea-runtime-value");
+    const events = canvas.getByTestId("textarea-runtime-events");
+
+    await expect(textarea).not.toBeDisabled();
+    await expect(textarea).not.toHaveAttribute("readonly");
+    await expect(value).toHaveTextContent("Initial draft");
+    await expect(events).toHaveTextContent("0");
+
+    fireEvent.change(textarea, { target: { value: "Delivery-ready update" } });
+    await expect(textarea).toHaveValue("Delivery-ready update");
+    await expect(value).toHaveTextContent("Delivery-ready update");
+    await expect(events).toHaveTextContent("1");
+  }
 };
 
 export const FocusIntentReentry: Story = {

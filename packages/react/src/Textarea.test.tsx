@@ -250,4 +250,22 @@ describe("Textarea", () => {
     expect(readOnlyTextarea).toHaveAttribute("readonly");
     expect(readOnlyTextarea).toHaveStyle("cursor: default");
   });
+
+  it("falls back invalid runtime disabled/readOnly values to editable semantics", () => {
+    render(
+      <Textarea
+        aria-label="Runtime boolean textarea"
+        defaultValue="Initial draft"
+        disabled={"true" as unknown as boolean}
+        readOnly={"true" as unknown as boolean}
+      />
+    );
+    const textarea = screen.getByRole("textbox", { name: "Runtime boolean textarea" });
+
+    expect(textarea).not.toBeDisabled();
+    expect(textarea).not.toHaveAttribute("readonly");
+
+    fireEvent.change(textarea, { target: { value: "Delivery-ready update" } });
+    expect(textarea).toHaveValue("Delivery-ready update");
+  });
 });

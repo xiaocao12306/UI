@@ -3,6 +3,7 @@ import * as ButtonStories from "../stories/Button.stories";
 import * as FormFieldStories from "../stories/FormField.stories";
 import * as InputStories from "../stories/Input.stories";
 import * as SelectStories from "../stories/Select.stories";
+import * as TextareaStories from "../stories/Textarea.stories";
 import * as CheckboxStories from "../stories/Checkbox.stories";
 import * as RadioGroupStories from "../stories/RadioGroup.stories";
 import * as SwitchStories from "../stories/Switch.stories";
@@ -82,6 +83,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Normalize select runtime boolean config from CMS/JSON payloads before binding props: malformed `disabled` / `<option disabled>` / `<optgroup disabled>` values should degrade to `false` so selection paths and shortcut metadata are not silently blocked.
 - Treat blank select `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank textarea `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
+- Normalize textarea runtime boolean config from CMS/JSON payloads before binding props: malformed `disabled/readOnly` values should degrade to `false` so multiline editing is not silently locked.
 - Treat blank switch `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Normalize switch runtime boolean config from CMS/JSON payloads before binding props: malformed `checked/defaultChecked/disabled` values should degrade to `false` so toggle availability and state semantics remain deterministic.
 - Treat blank date-picker `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
@@ -159,6 +161,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={InputStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={InputStories.ManagedKeysPreemptedByLocalHandler} />
 <Canvas of={InputStories.RuntimeBooleanConfigNormalization} />
+<Canvas of={TextareaStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={SelectStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={InputStories.BlankTypeFallback} />
 <Canvas of={InputStories.UppercaseTypeNormalization} />

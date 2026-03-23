@@ -322,7 +322,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | Prop                                  | Type                                         | Notes                                                                                                                                                                                              |
 | ------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `invalid`                             | `boolean`                                    | Adds `aria-invalid` and invalid token styles.                                                                                                                                                      |
-| `readOnly` / `disabled`               | `boolean`                                    | Preserves semantic behavior and visual state boundaries.                                                                                                                                           |
+| `readOnly` / `disabled`               | `boolean`                                    | Preserves semantic behavior and visual state boundaries. Non-boolean runtime values fall back to `false` so malformed config does not silently lock editing.                                     |
 | `rows`                                | `number`                                     | Optional visible row count. Fractional values are normalized to integers; non-finite or non-positive values are ignored to preserve stable textarea geometry.                                    |
 | `aria-label` / `aria-labelledby`      | `string`                                     | Blank values are ignored; when both are provided, `aria-labelledby` takes precedence so visible context headings remain canonical.                                                                 |
 | `aria-describedby`                    | `string`                                     | Supports helper/error hint linkage for form narration.                                                                                                                                             |
@@ -331,6 +331,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={TextareaStories.InvalidWithHelper} />
 <Canvas of={TextareaStories.BlankAriaLabelFallback} />
 <Canvas of={TextareaStories.LabelledByPrecedence} />
+<Canvas of={TextareaStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={TextareaStories.FocusIntentReentry} />
 
 ## Overlay

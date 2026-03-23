@@ -33,7 +33,9 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
   const focusVisibleIntentRef = React.useRef(false);
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
-  const isInteractionDisabled = Boolean(disabled);
+  const resolvedDisabled = resolveBooleanFlag(disabled, false);
+  const resolvedReadOnly = resolveBooleanFlag(readOnly, false);
+  const isInteractionDisabled = resolvedDisabled;
   const resolvedRows = resolveTextareaRows(rows);
   const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
   const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
@@ -99,8 +101,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
       ref={setRefs}
       {...restProps}
       rows={resolvedRows}
-      disabled={disabled}
-      readOnly={readOnly}
+      disabled={resolvedDisabled}
+      readOnly={resolvedReadOnly}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
       aria-invalid={resolvedInvalidAria}
@@ -123,15 +125,15 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
         boxShadow: focused && focusVisible && !isInteractionDisabled
           ? `0 0 0 3px ${isInvalid ? "color-mix(in srgb, var(--aurora-color-red-500) 25%, transparent)" : "color-mix(in srgb, var(--aurora-input-focus-ring) 38%, transparent)"}`
           : "none",
-        background: disabled
+        background: resolvedDisabled
           ? "color-mix(in srgb, var(--aurora-input-bg) 80%, var(--aurora-surface-elevated))"
-          : readOnly
+          : resolvedReadOnly
             ? "color-mix(in srgb, var(--aurora-input-bg) 85%, var(--aurora-surface-default))"
             : "var(--aurora-input-bg)",
-        color: disabled
+        color: resolvedDisabled
           ? "color-mix(in srgb, var(--aurora-input-text) 60%, transparent)"
           : "var(--aurora-input-text)",
-        cursor: disabled ? "not-allowed" : readOnly ? "default" : undefined,
+        cursor: resolvedDisabled ? "not-allowed" : resolvedReadOnly ? "default" : undefined,
         minHeight: 96,
         height: "auto",
         padding: "10px 12px",
@@ -185,6 +187,14 @@ function resolveNonEmptyLabel(label: string | undefined) {
 
   const normalized = label.trim();
   return normalized.length > 0 ? normalized : undefined;
+}
+
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
 }
 
 function resolveFocusVisibleState(target: HTMLTextAreaElement, fallback: boolean) {
