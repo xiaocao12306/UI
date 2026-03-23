@@ -578,6 +578,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Prefer `columns[].sortLabelledBy` when an external visible heading already exists for icon-only sortable headers; use `sortLabel` as fallback narration text for standalone headers.
 - Localize sortable header narration with `getSortAriaLabel` instead of hardcoding translated text into column titles.
 - Use `getSortStatusText` to localize active-sort live narration so keyboard and pointer sorting changes remain equally discoverable to assistive tech users.
+- Ensure `getSortStatusText` returns meaningful non-empty narration; blank or invalid runtime outputs should fall back to built-in sort status copy.
 - Normalize runtime default-sort config from CMS/JSON before wiring table props: mixed-case `defaultSortDirection` tokens should map to supported values (`asc`/`desc`) and invalid values should fall back to ascending order.
 - During async refreshes, set `loading` so table emits `aria-busy` and temporarily suppresses stale row actions/sorting.
 - Normalize table runtime boolean config from CMS/JSON payloads before binding props: malformed `loading` and `columns[].sortable` values should degrade to `false` so loading/sorting affordances are not silently drifted by payload noise.
@@ -654,6 +655,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={TableStories.RtlArrowNavigation} />
 <Canvas of={TableStories.RuntimeSortDirectionNormalization} />
 <Canvas of={TableStories.LocalizedSortLabels} />
+<Canvas of={TableStories.SortStatusTextFallback} />
 <Canvas of={TableStories.SortLabelForCustomHeader} />
 <Canvas of={TableStories.RichTextHeaderAutoSortLabel} />
 <Canvas of={TableStories.AriaLabelHeaderAutoSortLabel} />

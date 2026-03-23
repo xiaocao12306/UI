@@ -1112,6 +1112,26 @@ export const LocalizedSortLabels: Story = {
   }
 };
 
+export const SortStatusTextFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
+      <Table
+        columns={columns}
+        data={rows}
+        defaultSortKey="id"
+        getSortStatusText={() => "   "}
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const descendingButton = canvas.getByRole("button", { name: "Issue sort descending" });
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Issue ascending.");
+    await userEvent.click(descendingButton);
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Issue descending.");
+  }
+};
+
 export const SortLabelForCustomHeader: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 780px)">

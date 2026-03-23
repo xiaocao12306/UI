@@ -531,11 +531,15 @@ export function Table<T>({
       resolveFallbackSortColumnLabel(sortState.key, activeSortColumnIndex),
       ownerDocument
     );
-    return getSortStatusText({
+    const statusTextParams = {
       columnKey: sortState.key,
       columnHeader,
       direction: sortState.direction
-    });
+    };
+    const fallbackStatusText = defaultGetSortStatusText(statusTextParams);
+    const customStatusText = getSortStatusText(statusTextParams);
+
+    return resolveSortStatusText(customStatusText, fallbackStatusText);
   }, [
     columns,
     getSortStatusText,
@@ -1184,6 +1188,17 @@ function defaultGetSortStatusText({
   direction: TableSortDirection;
 }) {
   return `Sorted by ${columnHeader} ${direction === "asc" ? "ascending" : "descending"}.`;
+}
+
+function resolveSortStatusText(statusText: unknown, fallback: string) {
+  if (typeof statusText === "string") {
+    const normalizedStatusText = normalizeReadableText(statusText);
+    if (normalizedStatusText.length > 0) {
+      return normalizedStatusText;
+    }
+  }
+
+  return fallback;
 }
 
 function isSortActivationKey(key: string) {
