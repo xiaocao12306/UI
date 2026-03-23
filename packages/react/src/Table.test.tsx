@@ -2679,6 +2679,41 @@ describe("Table", () => {
     expect(screen.getByRole("status")).toHaveTextContent("Sorted by Name ascending.");
   });
 
+  it("falls back to default sort status narration when getSortStatusText throws", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <Table
+          columns={[
+            { key: "name", header: "Name", sortable: true },
+            { key: "score", header: "Score" }
+          ]}
+          data={[
+            { name: "Dialog", score: 80 },
+            { name: "Button", score: 95 }
+          ]}
+          defaultSortKey="name"
+          getSortStatusText={() => {
+            throw new Error("sort status formatter failed");
+          }}
+        />
+      );
+
+      expect(screen.getByRole("status")).toHaveTextContent("Sorted by Name ascending.");
+      fireEvent.click(screen.getByRole("button", { name: "Name sort descending" }));
+      expect(screen.getByRole("status")).toHaveTextContent("Sorted by Name descending.");
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[Table] getSortStatusText threw an error; falling back to default sort status narration.",
+        expect.any(Error)
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("disables sortable header controls while loading and preserves next-direction label", () => {
     const onSortChange = vi.fn();
 

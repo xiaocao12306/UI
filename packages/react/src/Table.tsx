@@ -162,6 +162,7 @@ export function Table<T>({
   const warnedDuplicateRowKeysSignatureRef = React.useRef<string | null>(null);
   const warnedMissingSortLabelSignatureRef = React.useRef<string | null>(null);
   const warnedSortAriaLabelErrorRef = React.useRef(false);
+  const warnedSortStatusTextErrorRef = React.useRef(false);
   const [hoveredSortKey, setHoveredSortKey] = React.useState<string | null>(null);
   const [pressedSortKey, setPressedSortKey] = React.useState<string | null>(null);
   const [focusVisibleSortKey, setFocusVisibleSortKey] = React.useState<string | null>(null);
@@ -538,7 +539,20 @@ export function Table<T>({
       direction: sortState.direction
     };
     const fallbackStatusText = defaultGetSortStatusText(statusTextParams);
-    const customStatusText = getSortStatusText(statusTextParams);
+    let customStatusText: unknown;
+    try {
+      customStatusText = getSortStatusText(statusTextParams);
+      warnedSortStatusTextErrorRef.current = false;
+    } catch (error) {
+      customStatusText = undefined;
+      if (process.env.NODE_ENV !== "production" && !warnedSortStatusTextErrorRef.current) {
+        warnedSortStatusTextErrorRef.current = true;
+        console.warn(
+          "[Table] getSortStatusText threw an error; falling back to default sort status narration.",
+          error
+        );
+      }
+    }
 
     return resolveSortStatusText(customStatusText, fallbackStatusText);
   }, [

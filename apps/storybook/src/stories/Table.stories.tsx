@@ -1153,6 +1153,28 @@ export const SortStatusTextFallback: Story = {
   }
 };
 
+export const SortStatusTextErrorFallback: Story = {
+  render: () => (
+    <StoryShowcaseFrame maxWidth="min(100%, 780px)">
+      <Table
+        columns={columns}
+        data={rows}
+        defaultSortKey="id"
+        getSortStatusText={() => {
+          throw new Error("runtime status formatter failure");
+        }}
+      />
+    </StoryShowcaseFrame>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const descendingButton = canvas.getByRole("button", { name: "Issue sort descending" });
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Issue ascending.");
+    await userEvent.click(descendingButton);
+    await expect(canvas.getByRole("status")).toHaveTextContent("Sorted by Issue descending.");
+  }
+};
+
 export const SortLabelForCustomHeader: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 780px)">
