@@ -2,7 +2,7 @@ import * as React from "react";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Popover } from "./Popover";
-import { Toast } from "./Toast";
+import { Toast, type ToastPosition, type ToastTone } from "./Toast";
 
 describe("Toast", () => {
   it("renders live region and closes via close button", () => {
@@ -247,6 +247,37 @@ describe("Toast", () => {
   it("uses alert role for danger tone", () => {
     render(<Toast open tone="danger" title="Failed" />);
     expect(screen.getByRole("alert")).toHaveAttribute("aria-live", "assertive");
+  });
+
+  it("normalizes runtime tone tokens before applying semantic role and live priority", () => {
+    render(<Toast open tone={" DANGER " as unknown as ToastTone} title="Runtime danger" />);
+    expect(screen.getByRole("alert", { name: "Runtime danger" })).toHaveAttribute("aria-live", "assertive");
+  });
+
+  it("falls back invalid runtime tone tokens to info styling", () => {
+    render(<Toast open tone={"unknown-tone" as unknown as ToastTone} title="Runtime tone fallback" />);
+
+    const toast = screen.getByRole("status", { name: "Runtime tone fallback" });
+    expect(toast).toHaveAttribute("aria-live", "polite");
+    expect(toast.getAttribute("style")).toContain("var(--aurora-feedback-info-border)");
+  });
+
+  it("normalizes runtime position tokens before applying viewport anchor", () => {
+    render(<Toast open position={" TOP-LEFT " as unknown as ToastPosition} title="Runtime top-left" />);
+
+    expect(screen.getByRole("status", { name: "Runtime top-left" })).toHaveStyle({
+      top: "16px",
+      left: "16px"
+    });
+  });
+
+  it("falls back invalid runtime position tokens to bottom-right anchor", () => {
+    render(<Toast open position={"bad-position" as unknown as ToastPosition} title="Runtime position fallback" />);
+
+    expect(screen.getByRole("status", { name: "Runtime position fallback" })).toHaveStyle({
+      right: "16px",
+      bottom: "16px"
+    });
   });
 
   it("uses dialog role for actionable non-danger toast", () => {

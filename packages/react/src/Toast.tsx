@@ -221,6 +221,8 @@ export function Toast({
   const timerStartedAtRef = React.useRef(0);
   const hasActionContent = hasRenderableToastNode(action);
   const hasActionAffordance = hasInteractiveToastActionNode(action);
+  const resolvedTone = resolveToastTone(tone, "info");
+  const resolvedPosition = resolveToastPosition(position, "bottom-right");
   const resolvedPauseOnHover = resolveBooleanFlag(pauseOnHover, true);
   const resolvedCloseOnEscape = resolveBooleanFlag(closeOnEscape, true);
   const resolvedDuration = resolveToastDuration(duration, hasActionAffordance ? 0 : 4000);
@@ -295,12 +297,12 @@ export function Toast({
 
     const ownerDocument = element.ownerDocument;
     pushToastToStack(ownerDocument, element);
-    pushToastToVisualStack(ownerDocument, element, position);
+    pushToastToVisualStack(ownerDocument, element, resolvedPosition);
     return () => {
       removeToastFromStack(ownerDocument, element);
-      removeToastFromVisualStack(ownerDocument, element, position);
+      removeToastFromVisualStack(ownerDocument, element, resolvedPosition);
     };
-  }, [open, position]);
+  }, [open, resolvedPosition]);
 
   React.useEffect(() => {
     if (!open || !rootRef.current) {
@@ -414,8 +416,8 @@ export function Toast({
     }
     const ownerDocument = element.ownerDocument;
     pushToastToStack(ownerDocument, element);
-    pushToastToVisualStack(ownerDocument, element, position);
-  }, [open, position]);
+    pushToastToVisualStack(ownerDocument, element, resolvedPosition);
+  }, [open, resolvedPosition]);
 
   const startCloseTimer = React.useCallback(
     (timeoutMs: number) => {
@@ -556,11 +558,13 @@ export function Toast({
   }
 
   const role = hasActionAffordance
-    ? (tone === "danger" ? "alertdialog" : "dialog")
-    : tone === "danger"
+    ? (resolvedTone === "danger" ? "alertdialog" : "dialog")
+    : resolvedTone === "danger"
       ? "alert"
       : "status";
-  const ariaLive = hasActionAffordance ? undefined : (live ?? (tone === "danger" ? "assertive" : "polite"));
+  const ariaLive = hasActionAffordance
+    ? undefined
+    : (live ?? (resolvedTone === "danger" ? "assertive" : "polite"));
 
   return (
     <div
@@ -613,8 +617,8 @@ export function Toast({
         gap: 8,
         transform: "translateY(var(--aurora-toast-stack-offset, 0px))",
         transition: "transform var(--aurora-motion-duration-fast) var(--aurora-motion-easing-standard)",
-        ...toneStyleMap[tone],
-        ...positionStyleMap[position]
+        ...toneStyleMap[resolvedTone],
+        ...positionStyleMap[resolvedPosition]
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "start" }}>
@@ -758,6 +762,38 @@ function resolveBooleanFlag(value: unknown, fallback: boolean) {
   }
 
   return value;
+}
+
+function resolveToastTone(value: unknown, fallback: ToastTone) {
+  if (typeof value === "string") {
+    const normalizedTone = value.trim().toLowerCase();
+    if (
+      normalizedTone === "info" ||
+      normalizedTone === "success" ||
+      normalizedTone === "warning" ||
+      normalizedTone === "danger"
+    ) {
+      return normalizedTone;
+    }
+  }
+
+  return fallback;
+}
+
+function resolveToastPosition(value: unknown, fallback: ToastPosition) {
+  if (typeof value === "string") {
+    const normalizedPosition = value.trim().toLowerCase();
+    if (
+      normalizedPosition === "bottom-right" ||
+      normalizedPosition === "bottom-left" ||
+      normalizedPosition === "top-right" ||
+      normalizedPosition === "top-left"
+    ) {
+      return normalizedPosition;
+    }
+  }
+
+  return fallback;
 }
 
 function isToastCloseButtonActivationKey(key: string) {

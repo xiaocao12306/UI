@@ -119,6 +119,51 @@ export const ToneMatrix: Story = {
   render: () => <ToneMatrixDemo />
 };
 
+function RuntimeVisualConfigNormalizationDemo() {
+  return (
+    <ToastShowcase minHeight={320} align="start">
+      <p style={toastTelemetryTextStyle}>
+        Runtime tone/position config from CMS or JSON payloads should normalize mixed-case tokens
+        and fall back safely for invalid values.
+      </p>
+      <Toast
+        open
+        onOpenChange={() => {}}
+        duration={0}
+        title="Runtime visual normalization"
+        description="Mixed-case runtime tokens should still map to supported danger + top-left visuals."
+        tone={" DANGER " as unknown as "danger"}
+        position={" TOP-LEFT " as unknown as "top-left"}
+      />
+      <Toast
+        open
+        onOpenChange={() => {}}
+        duration={0}
+        title="Runtime visual fallback"
+        description="Invalid runtime tokens should degrade to info + bottom-right defaults."
+        tone={"invalid-tone" as unknown as "info"}
+        position={"invalid-position" as unknown as "bottom-right"}
+      />
+    </ToastShowcase>
+  );
+}
+
+export const RuntimeVisualConfigNormalization: Story = {
+  render: () => <RuntimeVisualConfigNormalizationDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const normalized = await canvas.findByRole("alert", { name: "Runtime visual normalization" });
+    const fallback = await canvas.findByRole("status", { name: "Runtime visual fallback" });
+
+    await expect(normalized).toHaveStyle({ top: "16px", left: "16px" });
+    await expect(normalized.getAttribute("style")).toContain("var(--aurora-feedback-danger-border)");
+
+    await expect(fallback).toHaveStyle({ right: "16px", bottom: "16px" });
+    await expect(fallback.getAttribute("style")).toContain("var(--aurora-feedback-info-border)");
+    await expect(fallback).toHaveAttribute("aria-live", "polite");
+  }
+};
+
 function CloseButtonPrimaryPointerOnlyDemo() {
   const [open, setOpen] = React.useState(true);
 

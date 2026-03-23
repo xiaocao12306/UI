@@ -414,6 +414,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep alert dismiss buttons discoverable with `aria-keyshortcuts="Enter Space"` and localized `closeLabel` copy for assistive-tech audits.
 - Actionable toasts are persistent by default (`duration` omitted -> `0`); set explicit `duration` only when product requires timed dismissal.
 - If a toast includes actionable controls in `action`, treat it as an interactive surface (`dialog` / `alertdialog`) and keep CTA labels explicit; focusable action nodes (for example `tabIndex={0}`) are also considered interactive affordances.
+- Normalize toast runtime visual config from CMS/JSON payloads before binding props: mixed-case `tone/position` tokens should map to supported variants, and invalid values should fall back to safe defaults (`tone=info`, `position=bottom-right`).
 - For anchor-based toast actions, require a real navigation target (`href` or router `to`) before treating the toast as interactive; target-only anchor markup should remain passive semantics.
 - Treat non-interactive action content (plain text/number or static wrapper elements) as passive content: it should not upgrade toast role semantics or force persistence; set explicit `duration={0}` when product needs sticky passive notices.
 - Keep `closeOnEscape` aligned with task criticality; disable Escape only for must-read states.
@@ -451,6 +452,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={ToastStories.ActionRequiredDanger} />
 <Canvas of={ToastStories.TextActionSemantics} />
 <Canvas of={ToastStories.CloseReasonTelemetry} />
+<Canvas of={ToastStories.RuntimeVisualConfigNormalization} />
 <Canvas of={ToastStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={ToastStories.EscapeStackOrder} />
 <Canvas of={ToastStories.EscapeShortcutSync} />
