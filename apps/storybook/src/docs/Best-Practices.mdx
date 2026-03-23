@@ -172,7 +172,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For overlays built on `DismissableLayer`, keep `Ctrl/Meta/Alt + Escape` on host/app shortcut behavior; modified Escape should not trigger dismiss hooks or close transitions.
 - For overlays built on `DismissableLayer`, treat repeated Escape keydown (`event.repeat`) as no-op so long-press does not close multiple overlay layers or duplicate close telemetry.
 - Keep tooltip Escape close behavior scoped to unmodified, non-repeat, non-IME keydown so host shortcut chords and CJK composition confirmation cannot collapse hint overlays unexpectedly.
-- Keep tooltip timing props finite in product config; non-finite `delayDuration/closeDelay` now fall back to `250/80`, and fractional values are normalized to stable integer milliseconds.
+- Keep tooltip numeric props finite in product config; non-finite `delayDuration/closeDelay/sideOffset` now fall back to `250/80/8`, and fractional values are normalized to stable integer units.
 - For persistent hint workflows, set tooltip `closeOnEscape={false}` and rely on blur/pointer-leave close paths; ensure shortcut hints do not expose `aria-keyshortcuts="Escape"` when Escape dismiss is disabled.
 - For dialog/drawer in iframe or multi-root hosts, rely on owner-document portal mounting (`ownerDocument.body`) so overlay content and scroll-lock scope stay inside the invoking document.
 - For popover/dropdown in iframe or multi-root hosts, validate Escape/outside-pointer dismissal against the overlay `ownerDocument`; cross-document events and `Ctrl + primary` context-click pointer paths should not close the active surface.

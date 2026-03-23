@@ -39,6 +39,14 @@ function resolveTooltipDelay(value: number, fallback: number) {
   return Math.max(0, Math.trunc(value));
 }
 
+function resolveTooltipSideOffset(value: number, fallback: number) {
+  if (!Number.isFinite(value)) {
+    return fallback;
+  }
+
+  return Math.trunc(value);
+}
+
 export function Tooltip({
   content,
   children,
@@ -65,6 +73,7 @@ export function Tooltip({
   const warnedMissingTriggerNameRef = React.useRef(false);
   const safeDelayDuration = resolveTooltipDelay(delayDuration, 250);
   const safeCloseDelay = resolveTooltipDelay(closeDelay, 80);
+  const safeSideOffset = resolveTooltipSideOffset(sideOffset, 8);
 
   const getOwnerWindow = React.useCallback(
     () => rootRef.current?.ownerDocument.defaultView ?? window,
@@ -278,7 +287,7 @@ export function Tooltip({
           onMouseLeave={scheduleClose}
           style={{
             position: "absolute",
-            ...getPositionStyle(side, sideOffset),
+            ...getPositionStyle(side, safeSideOffset),
             background: "var(--aurora-color-slate-900)",
             color: "white",
             padding: "6px 8px",

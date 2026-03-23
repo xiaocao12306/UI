@@ -426,6 +426,46 @@ describe("Tooltip", () => {
     expect(tooltip.style.transform).toBe("translateY(-50%)");
   });
 
+  it("falls back to default sideOffset when value is non-finite", () => {
+    render(
+      <Tooltip
+        content="Tooltip content"
+        side="right"
+        sideOffset={Number.POSITIVE_INFINITY}
+        delayDuration={0}
+        closeDelay={0}
+      >
+        <button type="button">Fallback side offset trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Fallback side offset trigger" });
+    fireEvent.focus(trigger);
+
+    const tooltip = screen.getByRole("tooltip");
+    expect(tooltip.style.left).toBe("calc(100% + 8px)");
+  });
+
+  it("normalizes fractional sideOffset to stable integer positioning", () => {
+    render(
+      <Tooltip
+        content="Tooltip content"
+        side="right"
+        sideOffset={14.9}
+        delayDuration={0}
+        closeDelay={0}
+      >
+        <button type="button">Fractional side offset trigger</button>
+      </Tooltip>
+    );
+
+    const trigger = screen.getByRole("button", { name: "Fractional side offset trigger" });
+    fireEvent.focus(trigger);
+
+    const tooltip = screen.getByRole("tooltip");
+    expect(tooltip.style.left).toBe("calc(100% + 14px)");
+  });
+
   it("keeps tooltip open when close timer is cancelled by re-entering tooltip content", () => {
     vi.useFakeTimers();
 
