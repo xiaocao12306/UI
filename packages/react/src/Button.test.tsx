@@ -22,6 +22,24 @@ describe("Button", () => {
     expect(button).toHaveAttribute("data-loading", "true");
   });
 
+  it("falls back invalid runtime loading values to non-loading state", () => {
+    const onClick = vi.fn();
+
+    render(
+      <Button loading={"true" as unknown as boolean} onClick={onClick}>
+        Runtime loading
+      </Button>
+    );
+    const button = screen.getByRole("button", { name: "Runtime loading" });
+
+    expect(button).not.toBeDisabled();
+    expect(button).not.toHaveAttribute("aria-busy");
+    expect(button).not.toHaveAttribute("data-loading");
+
+    fireEvent.click(button);
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
   it("marks button transitions for reduced-motion fallback", () => {
     render(<Button>Publish</Button>);
     expect(screen.getByRole("button", { name: "Publish" })).toHaveAttribute("data-aurora-reduced-motion", "transition");

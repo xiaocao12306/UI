@@ -91,6 +91,13 @@ const variantStyleMap: Record<ButtonVariant, VariantStateStyles> = {
   }
 };
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+  return value;
+}
+
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     variant = "solid",
@@ -124,7 +131,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   const [focusVisible, setFocusVisible] = React.useState(false);
   const focusVisibleIntentRef = React.useRef(true);
   const missingA11yNameWarnedRef = React.useRef(false);
-  const interactionDisabled = disabled || loading;
+  const resolvedLoading = resolveBooleanFlag(loading, false);
+  const interactionDisabled = disabled || resolvedLoading;
   const ariaLabelledBy =
     typeof rawAriaLabelledBy === "string" && rawAriaLabelledBy.trim().length > 0
       ? rawAriaLabelledBy.trim()
@@ -211,7 +219,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       (typeof ariaLabel === "string" && ariaLabel.trim().length > 0) ||
       (typeof ariaLabelledBy === "string" && ariaLabelledBy.trim().length > 0) ||
       (typeof title === "string" && title.trim().length > 0);
-    const announcedContent = loading ? (loadingText ?? children) : children;
+    const announcedContent = resolvedLoading ? (loadingText ?? children) : children;
 
     if (!hasExplicitName && !hasReadableText(announcedContent)) {
       missingA11yNameWarnedRef.current = true;
@@ -219,7 +227,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         "[aurora-ui/Button] Icon-only usage requires an accessible name. Provide aria-label or aria-labelledby."
       );
     }
-  }, [ariaLabel, ariaLabelledBy, children, loading, loadingText, title]);
+  }, [ariaLabel, ariaLabelledBy, children, resolvedLoading, loadingText, title]);
 
   return (
     <button
@@ -227,10 +235,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       ref={setRefs}
       type={type ?? "button"}
       disabled={interactionDisabled}
-      aria-busy={loading || undefined}
+      aria-busy={resolvedLoading || undefined}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
-      data-loading={loading ? "true" : undefined}
+      data-loading={resolvedLoading ? "true" : undefined}
       style={{
         position: "relative",
         display: "inline-flex",
@@ -334,7 +342,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       }}
       {...props}
     >
-      {loading ? (
+      {resolvedLoading ? (
         <>
           <span
             aria-hidden="true"

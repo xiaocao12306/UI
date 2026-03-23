@@ -52,6 +52,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep button pressed-state feedback scoped to unmodified activation keys (`Enter`/`Space`, including `Space` and legacy `Spacebar` key values); ignore `Ctrl/Meta/Alt` chords and IME composition key paths (`isComposing` / `keyCode=229`) so host shortcuts and CJK confirmation do not flash pressed visuals.
 - When guard logic preempts button activation keydown with `preventDefault()` (global capture or local `onKeyDown`), keep button pressed feedback side-effect free.
 - Keep button keyboard-intent tracking bound to each control `ownerDocument` so focus-visible fallback still appears when users Tab in from adjacent controls, including iframe-hosted renders.
+- Normalize button runtime boolean config from CMS/JSON payloads before binding props: malformed `loading` values should degrade to `false` so action buttons are not silently locked in loading state.
 - Respect OS reduced-motion preferences: keep `GlobalStyles` mounted so surfaces tagged with `data-aurora-reduced-motion` disable shimmer/spin/indeterminate motion (Button loading spinner, Progress indeterminate bar, Skeleton shimmer) under `prefers-reduced-motion`, and keep timer-driven feedback (`LoadingDots`, `StreamingText`) on default `respectReducedMotion` behavior unless the product explicitly requires animated narration.
 - Keep progress narration values non-blank: empty `valueText` now falls back to computed percentage (or `Loading` in indeterminate mode) so assistive announcements never become silent.
 - Keep skeleton geometry props finite and explicit: non-finite numeric values and blank strings now fall back to default `width/height/radius` so placeholder layout remains stable in production.
@@ -155,6 +156,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={ButtonStories.IconOnlyAccessibleName} />
 <Canvas of={ButtonStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={ButtonStories.ManagedKeysPreemptedByLocalHandler} />
+<Canvas of={ButtonStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={TooltipStories.DescribedByLifecycle} />
 <Canvas of={TooltipStories.NonTextTriggerNameFallback} />
 <Canvas of={TooltipStories.EscapeModifierGuard} />

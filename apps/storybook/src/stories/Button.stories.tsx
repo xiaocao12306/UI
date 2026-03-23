@@ -92,6 +92,45 @@ export const StateMatrix: Story = {
   )
 };
 
+function RuntimeBooleanConfigNormalizationButtonDemo() {
+  const [activationCount, setActivationCount] = React.useState(0);
+
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 560px)" gap={10}>
+      <p style={storyMutedTextStyle}>
+        Activation count: <strong data-testid="button-runtime-loading-count">{activationCount}</strong>
+      </p>
+      <Button
+        variant="outline"
+        loading={"true" as unknown as boolean}
+        onClick={() => setActivationCount((value) => value + 1)}
+      >
+        Runtime loading fallback
+      </Button>
+      <small style={storyMutedTextStyle}>
+        Invalid runtime boolean config should degrade to non-loading so button interactions stay
+        available.
+      </small>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationButtonDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = await canvas.findByRole("button", { name: "Runtime loading fallback" });
+    const count = canvas.getByTestId("button-runtime-loading-count");
+
+    await expect(button).not.toBeDisabled();
+    await expect(button).not.toHaveAttribute("aria-busy");
+    await expect(button).not.toHaveAttribute("data-loading");
+
+    await userEvent.click(button);
+    await expect(count).toHaveTextContent("1");
+  }
+};
+
 function KeyboardActivationDemo() {
   const [count, setCount] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
