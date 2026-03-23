@@ -2854,6 +2854,37 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("status")).toHaveTextContent("1 command available.");
   });
 
+  it("falls back to default result status narration when getResultsStatusText throws", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      render(
+        <CommandPalette
+          open
+          onOpenChange={() => {}}
+          commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+          getResultsStatusText={() => {
+            throw new Error("status formatter failed");
+          }}
+        />
+      );
+
+      expect(screen.getByRole("status")).toHaveTextContent("1 command available.");
+      fireEvent.change(screen.getByRole("combobox", { name: "Search commands" }), {
+        target: { value: "settings" }
+      });
+      expect(screen.getByRole("status")).toHaveTextContent('1 command found for "settings".');
+      expect(warnSpy).toHaveBeenCalledWith(
+        "[CommandPalette] getResultsStatusText threw an error; falling back to default status narration.",
+        expect.any(Error)
+      );
+    } finally {
+      warnSpy.mockRestore();
+      errorSpy.mockRestore();
+    }
+  });
+
   it("keeps selection unset when all commands are disabled", () => {
     const onOpenChange = vi.fn();
 

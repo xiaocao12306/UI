@@ -90,6 +90,7 @@ export function CommandPalette({
   const warnedDuplicateKeysSignatureRef = React.useRef<string | null>(null);
   const warnedMissingAriaLabelSignatureRef = React.useRef<string | null>(null);
   const warnedMissingSearchMetadataSignatureRef = React.useRef<string | null>(null);
+  const warnedResultsStatusTextErrorRef = React.useRef(false);
   const listId = React.useId();
   const statusId = React.useId();
   const disabledResultsId = React.useId();
@@ -375,7 +376,20 @@ export function CommandPalette({
       totalCount: commands.length
     };
     const defaultStatusText = defaultGetResultsStatusText(statusTextParams);
-    const customStatusText = getResultsStatusText(statusTextParams);
+    let customStatusText: unknown;
+    try {
+      customStatusText = getResultsStatusText(statusTextParams);
+      warnedResultsStatusTextErrorRef.current = false;
+    } catch (error) {
+      customStatusText = undefined;
+      if (process.env.NODE_ENV !== "production" && !warnedResultsStatusTextErrorRef.current) {
+        warnedResultsStatusTextErrorRef.current = true;
+        console.warn(
+          "[CommandPalette] getResultsStatusText threw an error; falling back to default status narration.",
+          error
+        );
+      }
+    }
 
     return resolveResultsStatusText(customStatusText, defaultStatusText);
   }, [
