@@ -2043,6 +2043,19 @@ describe("CommandPalette", () => {
     expect(screen.getByRole("listbox", { name: "Command results" })).toBeInTheDocument();
   });
 
+  it("ignores blank placeholder and falls back to default search hint", () => {
+    render(
+      <CommandPalette
+        open
+        onOpenChange={() => {}}
+        placeholder="   "
+        commands={[{ key: "open-settings", label: "Open Settings", keywords: ["settings"] }]}
+      />
+    );
+
+    expect(screen.getByPlaceholderText("Search commands...")).toBeInTheDocument();
+  });
+
   it("ignores blank option ariaLabel and keeps visible text as option name", () => {
     render(
       <CommandPalette

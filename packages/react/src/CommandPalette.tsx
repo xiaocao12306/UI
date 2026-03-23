@@ -97,6 +97,7 @@ export function CommandPalette({
   const resolvedSearchAriaLabel = resolveNonEmptyLabel(searchAriaLabel, "Search commands");
   const resolvedResultsAriaLabel = resolveNonEmptyLabel(resultsAriaLabel, "Command results");
   const resolvedCloseLabel = resolveNonEmptyLabel(closeLabel, "Close command palette");
+  const resolvedPlaceholder = resolveNonEmptyLabel(placeholder, "Search commands...");
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel =
     resolvedAriaLabelledBy === undefined
@@ -547,7 +548,7 @@ export function CommandPalette({
           }
           aria-describedby={inputDescriptionIds}
           aria-keyshortcuts={searchKeyShortcuts}
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           value={query}
           onChange={(event) => {
             setQuery(event.target.value);
