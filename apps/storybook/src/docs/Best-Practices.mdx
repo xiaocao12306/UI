@@ -2,6 +2,7 @@ import { Meta, Title, Subtitle, Description, Canvas } from "@storybook/blocks";
 import * as ButtonStories from "../stories/Button.stories";
 import * as FormFieldStories from "../stories/FormField.stories";
 import * as InputStories from "../stories/Input.stories";
+import * as SelectStories from "../stories/Select.stories";
 import * as CheckboxStories from "../stories/Checkbox.stories";
 import * as RadioGroupStories from "../stories/RadioGroup.stories";
 import * as SwitchStories from "../stories/Switch.stories";
@@ -78,6 +79,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep checkbox helper text in `description`; it is exposed through `aria-describedby` and should not be relied on as the checkbox name source.
 - Keep select shortcut hints precise: expose `aria-keyshortcuts="ArrowDown ArrowUp"` only while actionable, and remove shortcut metadata when select is disabled.
 - Keep native select `<option>` values unique and stable (including implicit text-value fallback when `value` is omitted); development builds warn on duplicate values, duplicate selected-state semantics fall back to one deterministic match (first enabled option, or first match when all are disabled), and same-value duplicate interactions stay no-op to avoid false `onChange` telemetry.
+- Normalize select runtime boolean config from CMS/JSON payloads before binding props: malformed `disabled` / `<option disabled>` / `<optgroup disabled>` values should degrade to `false` so selection paths and shortcut metadata are not silently blocked.
 - Treat blank select `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank textarea `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
 - Treat blank switch `aria-label`/`aria-labelledby` as invalid config and remove them; keep `aria-labelledby` as the canonical source when both naming props are present.
@@ -157,6 +159,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={InputStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={InputStories.ManagedKeysPreemptedByLocalHandler} />
 <Canvas of={InputStories.RuntimeBooleanConfigNormalization} />
+<Canvas of={SelectStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={InputStories.BlankTypeFallback} />
 <Canvas of={InputStories.UppercaseTypeNormalization} />
 <Canvas of={ComboboxStories.DuplicateValueRerenderStability} />

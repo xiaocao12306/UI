@@ -38,13 +38,18 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
   const focusVisibleIntentRef = React.useRef(false);
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
-  const isInteractionDisabled = Boolean(disabled);
+  const resolvedDisabled = resolveBooleanFlag(disabled, false);
+  const isInteractionDisabled = resolvedDisabled;
   const ariaLabelledBy = resolveNonEmptyLabel(rawAriaLabelledBy);
   const ariaLabel = ariaLabelledBy ? undefined : resolveNonEmptyLabel(rawAriaLabel);
   const ariaKeyShortcuts = isInteractionDisabled
     ? undefined
     : resolveNonEmptyLabel(rawAriaKeyShortcuts) ?? "ArrowDown ArrowUp";
-  const optionMetadata = React.useMemo(() => collectSelectOptionMetadata(children), [children]);
+  const normalizedChildren = React.useMemo(() => normalizeSelectChildren(children), [children]);
+  const optionMetadata = React.useMemo(
+    () => collectSelectOptionMetadata(normalizedChildren),
+    [normalizedChildren]
+  );
   const optionValues = React.useMemo(
     () => optionMetadata.map((option) => option.value),
     [optionMetadata]
@@ -165,7 +170,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
       {...restProps}
       value={value}
       defaultValue={defaultValue}
-      disabled={disabled}
+      disabled={resolvedDisabled}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
       aria-invalid={resolvedInvalidAria}
@@ -189,13 +194,13 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
         boxShadow: focused && focusVisible && !isInteractionDisabled
           ? `0 0 0 3px ${isInvalid ? "color-mix(in srgb, var(--aurora-color-red-500) 25%, transparent)" : "color-mix(in srgb, var(--aurora-input-focus-ring) 38%, transparent)"}`
           : "none",
-        background: disabled
+        background: resolvedDisabled
           ? "color-mix(in srgb, var(--aurora-input-bg) 80%, var(--aurora-surface-elevated))"
           : "var(--aurora-input-bg)",
-        color: disabled
+        color: resolvedDisabled
           ? "color-mix(in srgb, var(--aurora-input-text) 60%, transparent)"
           : "var(--aurora-input-text)",
-        cursor: disabled ? "not-allowed" : "pointer",
+        cursor: resolvedDisabled ? "not-allowed" : "pointer",
         ...style
       }}
       onChange={(event) => {
@@ -256,10 +261,18 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
         onMouseLeave?.(event);
       }}
     >
-      {children}
+      {normalizedChildren}
     </select>
   );
 });
+
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
 
 function resolveNonEmptyLabel(label: string | undefined) {
   if (typeof label !== "string") {
@@ -287,6 +300,35 @@ type SelectOptionMetadata = {
   disabled: boolean;
 };
 
+function normalizeSelectChildren(children: React.ReactNode): React.ReactNode {
+  return React.Children.map(children, (node) => {
+    if (!React.isValidElement(node)) {
+      return node;
+    }
+
+    const type = typeof node.type === "string" ? node.type : null;
+    if (type === "option") {
+      const optionProps = node.props as { disabled?: unknown };
+      return React.cloneElement(node, {
+        disabled: resolveBooleanFlag(optionProps.disabled, false)
+      } as { disabled: boolean });
+    }
+
+    if (type === "optgroup") {
+      const optionGroupProps = node.props as { children?: React.ReactNode; disabled?: unknown };
+      return React.cloneElement(node, {
+        disabled: resolveBooleanFlag(optionGroupProps.disabled, false),
+        children: normalizeSelectChildren(optionGroupProps.children)
+      } as { disabled: boolean; children?: React.ReactNode });
+    }
+
+    const elementProps = node.props as { children?: React.ReactNode };
+    return React.cloneElement(node, {
+      children: normalizeSelectChildren(elementProps.children)
+    } as { children?: React.ReactNode });
+  });
+}
+
 function collectSelectOptionMetadata(children: React.ReactNode) {
   const metadata: SelectOptionMetadata[] = [];
   const collect = (nodes: React.ReactNode, inheritedDisabled = false) => {
@@ -297,17 +339,23 @@ function collectSelectOptionMetadata(children: React.ReactNode) {
 
       const type = typeof node.type === "string" ? node.type : null;
       if (type === "option") {
-        const optionProps = node.props as { value?: unknown; disabled?: boolean; children?: React.ReactNode };
+        const optionProps = node.props as { value?: unknown; disabled?: unknown; children?: React.ReactNode };
         const optionValue = resolveOptionValue(optionProps.value, optionProps.children);
         if (optionValue !== undefined) {
-          metadata.push({ value: optionValue, disabled: inheritedDisabled || Boolean(optionProps.disabled) });
+          metadata.push({
+            value: optionValue,
+            disabled: inheritedDisabled || resolveBooleanFlag(optionProps.disabled, false)
+          });
         }
         return;
       }
 
       if (type === "optgroup") {
-        const optionGroupProps = node.props as { children?: React.ReactNode; disabled?: boolean };
-        collect(optionGroupProps.children, inheritedDisabled || Boolean(optionGroupProps.disabled));
+        const optionGroupProps = node.props as { children?: React.ReactNode; disabled?: unknown };
+        collect(
+          optionGroupProps.children,
+          inheritedDisabled || resolveBooleanFlag(optionGroupProps.disabled, false)
+        );
         return;
       }
 

@@ -227,7 +227,8 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | `value` / `defaultValue`              | `string`                                     | Supports controlled and uncontrolled native select flows.                                                                                                                                        |
 | option value diagnostics              | development duplicate-value warning          | Development builds warn when rendered `<option>` values are duplicated (including implicit text-value fallback); if duplicates still slip through, selected-state semantics deterministically anchor to the first enabled matching option (fallback to first match when all are disabled), and same-value duplicate interaction stays no-op for `onChange` telemetry. |
 | `invalid`                             | `boolean`                                    | Adds `aria-invalid` and error-token border/ring semantics.                                                                                                                                       |
-| `disabled`                            | `boolean`                                    | Applies disabled semantics and visual de-emphasis.                                                                                                                                               |
+| `disabled`                            | `boolean`                                    | Applies disabled semantics and visual de-emphasis. Non-boolean runtime values fall back to `false` so malformed config does not silently lock the control.                                      |
+| option disabled normalization         | `<option disabled>` / `<optgroup disabled>` runtime guards | Non-boolean option/optgroup `disabled` flags are normalized to `false` before render so malformed config does not silently block selection paths or shortcut metadata.                           |
 | keyboard shortcut hints               | default `aria-keyshortcuts="ArrowDown ArrowUp"` | Actionable selects expose ArrowDown/ArrowUp shortcut metadata for QA/AT discoverability; disabled selects omit hints so metadata does not advertise unavailable interaction paths.               |
 | `aria-label` / `aria-labelledby`      | `string`                                     | Blank values are ignored; when both are provided, `aria-labelledby` takes precedence so visible external headings remain canonical.                                                              |
 | document-scoped focus intent fallback | owner-document `keydown` / pointer listeners | When `:focus-visible` matching is unavailable, keyboard re-entry (for example Tabbing from the previous control) still restores select focus-visible state consistently, including iframe hosts. Non-primary pointer buttons and `Ctrl + primary click` do not clear fallback keyboard intent. |
@@ -236,6 +237,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={SelectStories.DuplicateValueSelectedSemantics} />
 <Canvas of={SelectStories.ImplicitDuplicateValueSemantics} />
 <Canvas of={SelectStories.DuplicateValueInteractionNoopTelemetry} />
+<Canvas of={SelectStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={SelectStories.BlankAriaLabelFallback} />
 <Canvas of={SelectStories.LabelledByPrecedence} />
 <Canvas of={SelectStories.ShortcutHintPrecision} />

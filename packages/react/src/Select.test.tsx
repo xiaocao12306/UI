@@ -85,6 +85,38 @@ describe("Select", () => {
     );
   });
 
+  it("falls back invalid runtime disabled flags to actionable select semantics", () => {
+    const onChange = vi.fn();
+    render(
+      <Select
+        aria-label="Runtime boolean select"
+        disabled={"true" as unknown as boolean}
+        defaultValue="react"
+        onChange={onChange}
+      >
+        <option value="react">React</option>
+        <option value="vue" disabled={"true" as unknown as boolean}>
+          Vue
+        </option>
+        <optgroup label="Legacy" disabled={"true" as unknown as boolean}>
+          <option value="legacy">Legacy</option>
+        </optgroup>
+      </Select>
+    );
+
+    const select = screen.getByRole("combobox", { name: "Runtime boolean select" });
+    const vue = screen.getByRole("option", { name: "Vue" });
+    const legacy = screen.getByRole("option", { name: "Legacy" });
+    expect(select).not.toBeDisabled();
+    expect(select).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp");
+    expect(vue).not.toBeDisabled();
+    expect(legacy).not.toBeDisabled();
+
+    fireEvent.change(select, { target: { value: "vue" } });
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(select).toHaveValue("vue");
+  });
+
   it("accepts explicit shortcut hints and ignores blank overrides", () => {
     render(
       <div>

@@ -257,6 +257,65 @@ export const ShortcutHintPrecision: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationSelect() {
+  const [selectedValue, setSelectedValue] = React.useState("react");
+  const [changeCount, setChangeCount] = React.useState(0);
+
+  return (
+    <SelectShowcase gap={8}>
+      <Select
+        aria-label="Runtime boolean select"
+        disabled={"true" as unknown as boolean}
+        value={selectedValue}
+        onChange={(event) => {
+          setSelectedValue(event.target.value);
+          setChangeCount((value) => value + 1);
+        }}
+      >
+        <option value="react">React</option>
+        <option value="vue" disabled={"true" as unknown as boolean}>
+          Vue
+        </option>
+        <optgroup label="Legacy" disabled={"true" as unknown as boolean}>
+          <option value="legacy">Legacy</option>
+        </optgroup>
+      </Select>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <Badge tone="default">
+          Value: <span data-testid="select-runtime-value">{selectedValue}</span>
+        </Badge>
+        <Badge tone="default">
+          Changes: <span data-testid="select-runtime-events">{changeCount}</span>
+        </Badge>
+      </div>
+    </SelectShowcase>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationSelect />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const select = canvas.getByRole("combobox", { name: "Runtime boolean select" });
+    const vue = canvas.getByRole("option", { name: "Vue" });
+    const legacy = canvas.getByRole("option", { name: "Legacy" });
+    const value = canvas.getByTestId("select-runtime-value");
+    const events = canvas.getByTestId("select-runtime-events");
+
+    await expect(select).not.toBeDisabled();
+    await expect(select).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp");
+    await expect(vue).not.toBeDisabled();
+    await expect(legacy).not.toBeDisabled();
+    await expect(value).toHaveTextContent("react");
+    await expect(events).toHaveTextContent("0");
+
+    await userEvent.selectOptions(select, "vue");
+    await expect(select).toHaveValue("vue");
+    await expect(value).toHaveTextContent("vue");
+    await expect(events).toHaveTextContent("1");
+  }
+};
+
 export const FocusIntentReentry: Story = {
   render: () => (
     <SelectShowcase gap={8}>
