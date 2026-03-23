@@ -64,6 +64,25 @@ describe("Input", () => {
     expect(input).not.toHaveAttribute("data-active");
   });
 
+  it("falls back invalid runtime disabled/readOnly values to actionable state", () => {
+    render(
+      <Input
+        aria-label="Runtime boolean fallback input"
+        disabled={"true" as unknown as boolean}
+        readOnly={"true" as unknown as boolean}
+      />
+    );
+    const input = screen.getByRole("textbox", { name: "Runtime boolean fallback input" });
+
+    expect(input).not.toBeDisabled();
+    expect(input).not.toHaveAttribute("readonly");
+    expect(input).not.toHaveAttribute("data-disabled");
+    expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(input).toHaveAttribute("data-active", "true");
+  });
+
   it("exposes default Enter shortcut hints only when actionable", () => {
     render(
       <div>

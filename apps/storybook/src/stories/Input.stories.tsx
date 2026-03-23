@@ -307,6 +307,41 @@ export const ShortcutHintPrecision: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationInputDemo() {
+  return (
+    <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={12}>
+      <FormField
+        label="Runtime boolean fallback input"
+        description="Invalid runtime disabled/readOnly config should degrade to actionable input behavior."
+      >
+        <Input
+          aria-label="Runtime boolean fallback input control"
+          disabled={"true" as unknown as boolean}
+          readOnly={"true" as unknown as boolean}
+        />
+      </FormField>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationInputDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = await canvas.findByRole("textbox", { name: "Runtime boolean fallback input control" });
+
+    await expect(input).not.toBeDisabled();
+    await expect(input).not.toHaveAttribute("readonly");
+    await expect(input).not.toHaveAttribute("data-disabled");
+    await expect(input).toHaveAttribute("aria-keyshortcuts", "Enter");
+
+    fireEvent.keyDown(input, { key: "Enter" });
+    await waitFor(() => {
+      expect(input).toHaveAttribute("data-active", "true");
+    });
+  }
+};
+
 export const BlankTypeFallback: Story = {
   render: () => (
     <StoryShowcaseFrame maxWidth="min(100%, 600px)" gap={12}>

@@ -96,7 +96,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 | Prop                                  | Type                                         | Notes                                                                                                                                                                                           |
 | ------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
 | `invalid`                             | `boolean`                                    | Applies `aria-invalid` and error-token border/ring styles; incoming `aria-invalid="grammar                                                                                                      | spelling"` is preserved. |
-| `readOnly` / `disabled`               | `boolean`                                    | Preserves semantic behavior and visual state boundaries.                                                                                                                                        |
+| `readOnly` / `disabled`               | `boolean`                                    | Preserves semantic behavior and visual state boundaries. Non-boolean runtime values fall back to `false` so malformed config payloads do not silently lock editing or keyboard interaction. |
 | `aria-label` / `aria-labelledby`      | `string`                                     | Blank values are ignored; when both are provided, `aria-labelledby` takes precedence so visible context labels remain canonical.                                                                |
 | `aria-describedby`                    | `string`                                     | Recommended for helper/error narration in forms.                                                                                                                                                |
 | keyboard shortcut hints               | text-like inputs default `aria-keyshortcuts="Enter"` | Text-like actionable inputs (`text/search/email/url/tel/password`) expose Enter shortcut metadata for QA/AT discoverability; `type` values are normalized with trim + lowercase (`" EMAIL "` -> `email`, blank -> `text`), while non-text types plus read-only/disabled inputs omit default hints (explicit overrides remain supported). |
@@ -111,6 +111,7 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 <Canvas of={InputStories.ManagedKeysPreemptedByGlobalHandler} />
 <Canvas of={InputStories.ManagedKeysPreemptedByLocalHandler} />
 <Canvas of={InputStories.ShortcutHintPrecision} />
+<Canvas of={InputStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={InputStories.BlankTypeFallback} />
 <Canvas of={InputStories.UppercaseTypeNormalization} />
 <Canvas of={InputStories.FocusIntentReentry} />

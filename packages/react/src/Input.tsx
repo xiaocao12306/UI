@@ -6,6 +6,14 @@ export type InputProps = React.ComponentPropsWithoutRef<"input"> & {
   invalid?: boolean;
 };
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
   {
     style,
@@ -40,13 +48,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
   const focusVisibleIntentRef = React.useRef(false);
   const resolvedInvalidAria = resolveInvalidAria(invalid, ariaInvalid);
   const isInvalid = resolvedInvalidAria !== undefined;
-  const isInteractionDisabled = Boolean(disabled);
+  const resolvedDisabled = resolveBooleanFlag(disabled, false);
+  const resolvedReadOnly = resolveBooleanFlag(readOnly, false);
+  const isInteractionDisabled = resolvedDisabled;
   const resolvedAriaLabelledBy = resolveNonEmptyLabel(ariaLabelledBy);
   const resolvedAriaLabel = resolvedAriaLabelledBy ? undefined : resolveNonEmptyLabel(ariaLabel);
   const resolvedInputType = resolveInputType(type);
   const supportsEnterKeyboardFeedback = isTextLikeInputType(resolvedInputType);
   const ariaKeyShortcuts =
-    isInteractionDisabled || readOnly
+    isInteractionDisabled || resolvedReadOnly
       ? undefined
       : resolveNonEmptyLabel(rawAriaKeyShortcuts) ??
         (supportsEnterKeyboardFeedback ? "Enter" : undefined);
@@ -112,8 +122,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
     <input
       ref={setRefs}
       type={resolvedInputType}
-      disabled={disabled}
-      readOnly={readOnly}
+      disabled={resolvedDisabled}
+      readOnly={resolvedReadOnly}
       data-aurora-input="true"
       aria-invalid={resolvedInvalidAria}
       aria-label={resolvedAriaLabel}
@@ -142,16 +152,16 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
         boxShadow: focused && focusVisible && !isInteractionDisabled
           ? `0 0 0 3px ${isInvalid ? "color-mix(in srgb, var(--aurora-color-red-500) 25%, transparent)" : "color-mix(in srgb, var(--aurora-input-focus-ring) 38%, transparent)"}`
           : "none",
-        transform: active && !readOnly && !isInteractionDisabled ? "translateY(1px)" : undefined,
-        background: disabled
+        transform: active && !resolvedReadOnly && !isInteractionDisabled ? "translateY(1px)" : undefined,
+        background: resolvedDisabled
           ? "color-mix(in srgb, var(--aurora-input-bg) 80%, var(--aurora-surface-elevated))"
-          : readOnly
+          : resolvedReadOnly
             ? "color-mix(in srgb, var(--aurora-input-bg) 85%, var(--aurora-surface-default))"
             : "var(--aurora-input-bg)",
-        color: disabled
+        color: resolvedDisabled
           ? "color-mix(in srgb, var(--aurora-input-text) 60%, transparent)"
           : "var(--aurora-input-text)",
-        cursor: disabled ? "not-allowed" : readOnly ? "default" : undefined,
+        cursor: resolvedDisabled ? "not-allowed" : resolvedReadOnly ? "default" : undefined,
         ...style
       }}
       onFocus={(event) => {
@@ -181,7 +191,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
           focusVisibleIntentRef.current = false;
           setFocusVisible(false);
         }
-        if (!isInteractionDisabled && !readOnly && event.button === 0 && !event.ctrlKey) {
+        if (!isInteractionDisabled && !resolvedReadOnly && event.button === 0 && !event.ctrlKey) {
           setActive(true);
         }
         onMouseDown?.(event);
@@ -193,7 +203,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
         }
         if (
           !isInteractionDisabled &&
-          !readOnly &&
+          !resolvedReadOnly &&
           !event.ctrlKey &&
           isPrimaryPointerButton(event.button)
         ) {
@@ -223,7 +233,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
         if (
           !event.defaultPrevented &&
           !isInteractionDisabled &&
-          !readOnly &&
+          !resolvedReadOnly &&
           supportsEnterKeyboardFeedback &&
           isInputActivationKey(event.key) &&
           !isModifiedActivationChord(event) &&
