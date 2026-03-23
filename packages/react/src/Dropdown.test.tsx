@@ -1477,6 +1477,40 @@ describe("Dropdown", () => {
     expect(screen.getByRole("menu", { name: "Policy" })).toBeInTheDocument();
   });
 
+  it("normalizes runtime dismiss booleans and falls back to enabled dismiss gestures", () => {
+    const onCloseReason = vi.fn();
+
+    render(
+      <Dropdown
+        label="Runtime policy"
+        closeOnEscape={0 as unknown as boolean}
+        closeOnOutsidePointer={null as unknown as boolean}
+        onCloseReason={onCloseReason}
+        items={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" }
+        ]}
+      />
+    );
+
+    const trigger = screen.getByRole("button", { name: "Runtime policy" });
+
+    fireEvent.click(trigger);
+    const menu = screen.getByRole("menu", { name: "Runtime policy" });
+    expect(menu).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp Home End PageDown PageUp Tab Escape");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "escape-key");
+    expect(screen.queryByRole("menu", { name: "Runtime policy" })).toBeNull();
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole("menu", { name: "Runtime policy" })).toBeInTheDocument();
+
+    fireEvent.pointerDown(document.body);
+    expect(onCloseReason).toHaveBeenNthCalledWith(2, "outside-pointer");
+    expect(screen.queryByRole("menu", { name: "Runtime policy" })).toBeNull();
+  });
+
   it("keeps menu open when dismiss hooks call preventDefault", () => {
     const onEscapeKeyDown = vi.fn((event: KeyboardEvent) => {
       event.preventDefault();

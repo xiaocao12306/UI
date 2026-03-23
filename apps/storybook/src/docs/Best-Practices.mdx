@@ -177,6 +177,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - For blocking confirmation/action menus, set `closeOnEscape={false}` + `closeOnOutsidePointer={false}` and provide an explicit close/confirm path.
 - For conditional runtime approval guards, keep `closeOnEscape/closeOnOutsidePointer` enabled and intercept `onEscapeKeyDown/onPointerDownOutside` with `event.preventDefault()` only while guard conditions are active.
 - Normalize popover runtime dismiss flags from CMS/JSON payloads before binding props: invalid `closeOnEscape/closeOnOutsidePointer` values should fall back to `true` so Escape/outside-dismiss policy remains stable.
+- Normalize dropdown runtime dismiss flags from CMS/JSON payloads before binding props: invalid `closeOnEscape/closeOnOutsidePointer` values should fall back to `true` so Escape/outside-dismiss policy remains stable.
 - Dropdown menus should expose an accessible name via trigger-linked `aria-labelledby`.
 - Keep `Dropdown.items[].key` unique and stable; development builds warn on duplicate keys to prevent focus and close-telemetry ambiguity, and runtime auto-suffixes duplicate render keys by duplicate occurrence order to avoid React remount churn while preserving active-option identity across rerenders.
 - For nested overlays, dismiss policy should resolve top-layer first so one Escape/outside click does not collapse the full stack.
@@ -262,6 +263,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={DropdownStories.DismissGuardHooks} />
 <Canvas of={DropdownStories.NestedOutsideDismissOrder} />
 <Canvas of={DropdownStories.SingleActionableShortcutHints} />
+<Canvas of={DropdownStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={PopoverStories.CloseReasonTelemetry} />
 <Canvas of={PopoverStories.TriggerArrowDownModifierGuard} />
 <Canvas of={PopoverStories.TriggerTabModifierGuard} />

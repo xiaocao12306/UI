@@ -166,6 +166,13 @@ function getDropdownItemRenderKeys(items: DropdownItem[]) {
   });
 }
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+  return value;
+}
+
 export function Dropdown({
   label,
   triggerAriaLabel,
@@ -214,6 +221,8 @@ export function Dropdown({
   const resolvedTriggerAriaLabel = resolvedTriggerAriaLabelledBy
     ? undefined
     : explicitTriggerAriaLabel ?? (hasReadableTriggerLabelText ? undefined : "Open dropdown menu");
+  const resolvedCloseOnEscape = resolveBooleanFlag(closeOnEscape, true);
+  const resolvedCloseOnOutsidePointer = resolveBooleanFlag(closeOnOutsidePointer, true);
   const itemRenderKeys = React.useMemo(() => getDropdownItemRenderKeys(items), [items]);
   const enabledItemCount = items.reduce((count, item) => count + (item.disabled ? 0 : 1), 0);
   const canNavigateMenuItems = enabledItemCount > 1;
@@ -222,11 +231,11 @@ export function Dropdown({
     if (canNavigateMenuItems) {
       shortcuts.unshift(dropdownMenuNavigationShortcuts);
     }
-    if (closeOnEscape) {
+    if (resolvedCloseOnEscape) {
       shortcuts.push("Escape");
     }
     return shortcuts.join(" ");
-  }, [canNavigateMenuItems, closeOnEscape]);
+  }, [canNavigateMenuItems, resolvedCloseOnEscape]);
 
   const setOpen = React.useCallback(
     (nextOpen: boolean) => {
@@ -545,7 +554,7 @@ export function Dropdown({
         <DismissableLayer
           onEscapeKeyDown={(event) => {
             onEscapeKeyDown?.(event);
-            if (event.defaultPrevented || !closeOnEscape) {
+            if (event.defaultPrevented || !resolvedCloseOnEscape) {
               event.preventDefault();
               return;
             }
@@ -561,7 +570,7 @@ export function Dropdown({
             }
 
             onPointerDownOutside?.(event);
-            if (event.defaultPrevented || !closeOnOutsidePointer) {
+            if (event.defaultPrevented || !resolvedCloseOnOutsidePointer) {
               event.preventDefault();
               return;
             }

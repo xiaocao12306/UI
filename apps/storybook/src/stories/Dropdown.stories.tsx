@@ -274,6 +274,59 @@ export const IconItemLabelledByPrecedence: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationDropdown() {
+  const [closeReason, setCloseReason] = React.useState("none");
+
+  return (
+    <StoryShowcaseFrame gap={12}>
+      <div style={storyStackStyle}>
+        <p style={storyMutedTextStyle}>
+          Last close reason:{" "}
+          <strong data-testid="dropdown-runtime-close-reason" style={storyEmphasisTextStyle}>
+            {closeReason}
+          </strong>
+        </p>
+        <p style={storyMutedTextStyle}>
+          Runtime config values from CMS/JSON payloads should normalize non-boolean dismiss flags
+          and keep Escape/outside close policy stable.
+        </p>
+        <Dropdown
+          label="Runtime config menu"
+          closeOnEscape={0 as unknown as boolean}
+          closeOnOutsidePointer={null as unknown as boolean}
+          onCloseReason={(reason) => setCloseReason(reason)}
+          items={items}
+        />
+        <button type="button">Runtime config outside target</button>
+      </div>
+    </StoryShowcaseFrame>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationDropdown />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = await canvas.findByRole("button", { name: "Runtime config menu" });
+    const outsideTarget = canvas.getByRole("button", { name: "Runtime config outside target" });
+
+    await userEvent.click(trigger);
+    const menu = canvas.getByRole("menu", { name: "Runtime config menu" });
+    await expect(menu).toHaveAttribute("aria-keyshortcuts", "ArrowDown ArrowUp Home End PageDown PageUp Tab Escape");
+
+    await userEvent.keyboard("{Escape}");
+    await expect(canvas.queryByRole("menu", { name: "Runtime config menu" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-runtime-close-reason")).toHaveTextContent("escape-key");
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("menu", { name: "Runtime config menu" })).toBeInTheDocument();
+
+    await userEvent.click(outsideTarget);
+    await expect(canvas.queryByRole("menu", { name: "Runtime config menu" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("dropdown-runtime-close-reason")).toHaveTextContent("outside-pointer");
+  }
+};
+
 export const NonDismissible: Story = {
   args: {
     label: "Blocking actions",
