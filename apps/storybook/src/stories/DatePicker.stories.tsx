@@ -138,6 +138,53 @@ export const ShortcutHintPrecision: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationDatePicker() {
+  const [value, setValue] = React.useState("2026-08-15");
+  const [events, setEvents] = React.useState(0);
+
+  return (
+    <div style={{ width: 360, display: "grid", gap: 10 }}>
+      <DatePicker
+        aria-label="Runtime boolean date picker"
+        value={value}
+        invalid={"true" as unknown as boolean}
+        disabled={"true" as unknown as boolean}
+        onValueChange={(nextValue) => {
+          setValue(nextValue);
+          setEvents((current) => current + 1);
+        }}
+      />
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <Badge tone="default">
+          Value: <span data-testid="datepicker-runtime-value">{value}</span>
+        </Badge>
+        <Badge tone="default">
+          Changes: <span data-testid="datepicker-runtime-events">{events}</span>
+        </Badge>
+      </div>
+    </div>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationDatePicker />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByLabelText("Runtime boolean date picker");
+    const value = canvas.getByTestId("datepicker-runtime-value");
+    const events = canvas.getByTestId("datepicker-runtime-events");
+
+    await expect(input).not.toBeDisabled();
+    await expect(input).not.toHaveAttribute("aria-invalid");
+    await expect(value).toHaveTextContent("2026-08-15");
+    await expect(events).toHaveTextContent("0");
+
+    fireEvent.change(input, { target: { value: "2026-09-01" } });
+    await expect(value).toHaveTextContent("2026-09-01");
+    await expect(events).toHaveTextContent("1");
+  }
+};
+
 export const DefaultNameFallback: Story = {
   args: {
     "aria-label": "   ",

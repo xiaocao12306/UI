@@ -41,6 +41,23 @@ describe("DatePicker", () => {
     expect(input).toBeDisabled();
   });
 
+  it("falls back invalid runtime boolean flag to valid date-picker semantics", () => {
+    render(
+      <DatePicker
+        aria-label="Runtime boolean date picker"
+        invalid={"true" as unknown as boolean}
+        aria-describedby="release-hint"
+        errorMessageId="release-error"
+        onValueChange={() => {}}
+      />
+    );
+
+    const input = screen.getByLabelText("Runtime boolean date picker");
+    expect(input).not.toHaveAttribute("aria-invalid");
+    expect(input).toHaveAttribute("aria-describedby", "release-hint");
+    expect(input).not.toHaveAttribute("aria-errormessage");
+  });
+
   it("does not expose default Enter shortcut hints for native date inputs", () => {
     render(<DatePicker aria-label="Release date" onValueChange={() => {}} />);
 

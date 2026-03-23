@@ -25,7 +25,8 @@ export function DatePicker({
   "aria-labelledby": rawAriaLabelledBy,
   ...restProps
 }: DatePickerProps) {
-  const resolvedInvalidAria = resolveInvalidAria(invalid, restProps["aria-invalid"]);
+  const resolvedInvalid = resolveBooleanFlag(invalid);
+  const resolvedInvalidAria = resolveInvalidAria(resolvedInvalid, restProps["aria-invalid"]);
   const isInvalid = resolvedInvalidAria !== undefined;
   const describedBy = mergeAriaReferenceIds(restProps["aria-describedby"], isInvalid ? errorMessageId : undefined);
   const errorMessage = isInvalid
@@ -54,6 +55,14 @@ export function DatePicker({
       }}
     />
   );
+}
+
+function resolveBooleanFlag(value: unknown): boolean | undefined {
+  if (typeof value !== "boolean") {
+    return undefined;
+  }
+
+  return value;
 }
 
 function resolveNonEmptyLabel(label: string | undefined, fallback?: string): string | undefined {
