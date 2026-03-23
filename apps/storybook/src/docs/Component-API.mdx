@@ -776,13 +776,14 @@ import * as StreamingCodeBlockStories from "../stories/StreamingCodeBlock.storie
 
 | Prop                    | Type                                          | Notes                                                                                                          |
 | ----------------------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `running`               | `boolean`                                     | Pause/resume the animated dots.                                                                                |
+| `running`               | `boolean`                                     | Pause/resume the animated dots. Non-boolean runtime values fall back to `true` so malformed payloads do not silently freeze loading feedback. |
 | `interval` / `dotCount` | `number`                                      | Controls animation rhythm and max visible dots. `dotCount` normalizes to integer and clamps to `2..6`; `interval` enforces a minimum `80ms`. Non-finite values fall back to defaults (`interval=280`, `dotCount=3`). |
-| `respectReducedMotion`  | `boolean`                                     | Defaults to `true`; when OS reduced-motion is enabled, dots stay static while loading semantics remain intact. |
+| `respectReducedMotion`  | `boolean`                                     | Defaults to `true`; when OS reduced-motion is enabled, dots stay static while loading semantics remain intact. Non-boolean runtime values fall back to `true` so reduced-motion policy remains deterministic. |
 | `label` / `live`        | `string` / `'polite' \| 'assertive' \| 'off'` | Screen-reader narration and live-region urgency; blank `label` values are ignored and fallback to `Loading`.   |
 | `ariaLabel` / `ariaLabelledBy` | `string` / `string`                     | Optional status naming controls. Blank values are ignored; when both are provided, `ariaLabelledBy` takes precedence and suppresses `ariaLabel` fallback. Without explicit naming overrides, loading status naming falls back to `label` (`Loading` default). |
 
 <Canvas of={LoadingDotsStories.Paused} />
+<Canvas of={LoadingDotsStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={LoadingDotsStories.LabelledByPrecedence} />
 
 ### StreamingText

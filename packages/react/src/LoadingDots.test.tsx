@@ -86,6 +86,32 @@ describe("LoadingDots", () => {
     expect(dots).toHaveTextContent("....");
   });
 
+  it("falls back invalid runtime running/respectReducedMotion flags to safe loading semantics", () => {
+    vi.useFakeTimers();
+    const matchMediaMock = installMatchMediaMock({ initialMatches: true });
+
+    render(
+      <LoadingDots
+        running={"false" as unknown as boolean}
+        respectReducedMotion={"false" as unknown as boolean}
+        dotCount={4}
+      />
+    );
+    const dots = screen.getByRole("status", { name: "Loading" });
+
+    expect(dots).toHaveAttribute("aria-busy", "true");
+    expect(dots).toHaveAttribute("aria-live", "polite");
+    expect(dots).toHaveTextContent("....");
+
+    act(() => {
+      vi.advanceTimersByTime(560);
+    });
+    expect(dots).toHaveTextContent("....");
+
+    matchMediaMock.restore();
+    vi.useRealTimers();
+  });
+
   it("ignores blank label and falls back to default narration label", () => {
     render(<LoadingDots label="   " />);
     expect(screen.getByRole("status", { name: "Loading" })).toBeInTheDocument();

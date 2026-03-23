@@ -32,6 +32,14 @@ function resolveInterval(interval: number, fallback: number) {
   return Math.max(80, Math.trunc(interval));
 }
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+
+  return value;
+}
+
 export function LoadingDots({
   label = "Loading",
   ariaLabel,
@@ -48,7 +56,9 @@ export function LoadingDots({
   const prefersReducedMotion = usePrefersReducedMotion(rootRef);
   const safeDotCount = resolveDotCount(dotCount, 3);
   const safeInterval = resolveInterval(interval, 280);
-  const shouldAnimate = running && !(respectReducedMotion && prefersReducedMotion);
+  const resolvedRunning = resolveBooleanFlag(running, true);
+  const resolvedRespectReducedMotion = resolveBooleanFlag(respectReducedMotion, true);
+  const shouldAnimate = resolvedRunning && !(resolvedRespectReducedMotion && prefersReducedMotion);
   const resolvedLabel =
     typeof label === "string" && label.trim().length > 0
       ? label.trim()
@@ -87,7 +97,7 @@ export function LoadingDots({
 
   const visibleLength = shouldAnimate ? index + 1 : safeDotCount;
   const dotText = ".".repeat(visibleLength).padEnd(safeDotCount, " ");
-  const ariaLive = live ?? (running ? "polite" : "off");
+  const ariaLive = live ?? (resolvedRunning ? "polite" : "off");
 
   return (
     <span
@@ -96,7 +106,7 @@ export function LoadingDots({
       aria-label={resolvedAriaLabel}
       aria-labelledby={resolvedAriaLabelledBy}
       aria-live={ariaLive}
-      aria-busy={running}
+      aria-busy={resolvedRunning}
       style={{ color: "var(--aurora-text-secondary)", fontFamily: "var(--aurora-font-family-mono)", whiteSpace: "pre", ...style }}
       {...props}
     >

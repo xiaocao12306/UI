@@ -53,6 +53,22 @@ export const Paused: Story = {
   }
 };
 
+export const RuntimeBooleanConfigNormalization: Story = {
+  args: {
+    label: "Runtime boolean loading",
+    running: "false" as unknown as boolean,
+    respectReducedMotion: "false" as unknown as boolean,
+    dotCount: 4
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const dots = await canvas.findByRole("status", { name: "Runtime boolean loading" });
+
+    await expect(dots).toHaveAttribute("aria-busy", "true");
+    await expect(dots).toHaveAttribute("aria-live", "polite");
+  }
+};
+
 export const LabelledByPrecedence: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 10 }}>
