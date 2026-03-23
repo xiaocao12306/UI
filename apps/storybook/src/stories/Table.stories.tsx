@@ -552,12 +552,27 @@ export const LoadingState: Story = {
 export const RuntimeBooleanConfigNormalization: Story = {
   render: () => {
     const [sortTrace, setSortTrace] = React.useState("none");
+    const runtimeColumns: Array<TableColumn<ReleaseRow>> = [
+      { key: "id", header: "Issue", width: 120, sortable: "true" as unknown as boolean, rowHeader: true },
+      {
+        key: "status",
+        header: "Status",
+        width: 160,
+        sortable: true,
+        sortAccessor: (row) => row.status,
+        render: (row) => {
+          const tone =
+            row.status === "ready" ? "success" : row.status === "review" ? "default" : "danger";
+          return <Badge tone={tone}>{row.status}</Badge>;
+        }
+      }
+    ];
 
     return (
       <StoryShowcaseFrame maxWidth="min(100%, 840px)" gap={10}>
         <p style={storyMutedTextStyle}>
-          Runtime bool-like config from CMS/JSON should degrade safely: invalid `loading` values
-          fall back to `false`.
+          Runtime bool-like config from CMS/JSON should degrade safely: invalid `loading` and
+          `columns[].sortable` values fall back to deterministic `false`.
         </p>
         <p style={storyMutedTextStyle}>
           Sort trace:{" "}
@@ -566,7 +581,7 @@ export const RuntimeBooleanConfigNormalization: Story = {
           </strong>
         </p>
         <Table
-          columns={columns}
+          columns={runtimeColumns}
           data={rows}
           defaultSortKey="id"
           loading={"invalid-loading-flag" as unknown as boolean}
@@ -580,17 +595,22 @@ export const RuntimeBooleanConfigNormalization: Story = {
     const canvas = within(canvasElement);
     const table = canvas.getByRole("table", { name: "Data table" });
     const issueHeader = canvas.getByRole("columnheader", { name: /Issue/ });
-    const sortButton = canvas.getByRole("button", { name: "Issue sort descending" });
+    const statusHeader = canvas.getByRole("columnheader", { name: /Status/ });
+    const statusSortButton = canvas.getByRole("button", { name: /Status sort/ });
 
     await expect(table).not.toHaveAttribute("aria-busy");
     await expect(canvas.queryByText("Should stay hidden")).not.toBeInTheDocument();
     await expect(canvas.getByRole("rowheader", { name: "BTN-102" })).toBeInTheDocument();
-    await expect(issueHeader).toHaveAttribute("aria-sort", "ascending");
-    await expect(sortButton).toBeEnabled();
+    await expect(issueHeader).not.toHaveAttribute("aria-sort");
+    await expect(within(issueHeader).queryByRole("button")).toBeNull();
+    await expect(statusSortButton).toBeEnabled();
+    await expect(statusSortButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
 
-    await userEvent.click(sortButton);
-    await expect(issueHeader).toHaveAttribute("aria-sort", "descending");
-    await expect(canvas.getByTestId("table-runtime-boolean-sort-trace")).toHaveTextContent("id desc");
+    await userEvent.click(statusSortButton);
+    await expect(statusHeader).toHaveAttribute("aria-sort", "ascending");
+    await expect(canvas.getByTestId("table-runtime-boolean-sort-trace")).toHaveTextContent(
+      "status asc"
+    );
   }
 };
 

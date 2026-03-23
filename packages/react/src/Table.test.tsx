@@ -1086,6 +1086,32 @@ describe("Table", () => {
     expect(screen.getByRole("columnheader", { name: /Name/ })).toHaveAttribute("aria-sort", "ascending");
   });
 
+  it("falls back non-boolean sortable flags to non-sortable semantics", () => {
+    render(
+      <Table
+        columns={[
+          { key: "name", header: "Name", sortable: "true" as unknown as boolean },
+          { key: "status", header: "Status", sortable: true }
+        ]}
+        data={[
+          { name: "Button", status: "Stable" },
+          { name: "Dialog", status: "Ready" }
+        ]}
+        defaultSortKey="name"
+      />
+    );
+
+    expect(screen.queryByRole("button", { name: "Name sort descending" })).toBeNull();
+
+    const statusSortButton = screen.getByRole("button", { name: /Status sort/ });
+    expect(statusSortButton).toBeEnabled();
+    expect(statusSortButton).toHaveAttribute("aria-keyshortcuts", "Enter Space");
+    expect(screen.getByRole("columnheader", { name: /Name/ })).not.toHaveAttribute("aria-sort");
+
+    fireEvent.click(statusSortButton);
+    expect(screen.getByRole("columnheader", { name: /Status/ })).toHaveAttribute("aria-sort", "ascending");
+  });
+
   it("suppresses aria-sort while loading even when sort state exists, then restores when loading ends", () => {
     const { rerender } = render(
       <Table

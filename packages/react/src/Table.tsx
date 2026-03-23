@@ -65,7 +65,7 @@ function resolveInitialSortState<T>(
   }
 
   const initialColumnIndex = columns.findIndex(
-    (item) => String(item.key) === defaultSortKey && item.sortable
+    (item) => String(item.key) === defaultSortKey && isSortableColumn(item)
   );
   if (initialColumnIndex < 0) {
     return null;
@@ -246,7 +246,7 @@ export function Table<T>({
     }
 
     return columns.reduce<string[]>((keys, column, index) => {
-      if (column.sortable) {
+      if (isSortableColumn(column)) {
         keys.push(
           resolvedColumnRenderKeys[index] ??
             `${String(column.key)}__index-${index}`
@@ -264,12 +264,12 @@ export function Table<T>({
     const activeSortColumnIndex = resolvedColumnRenderKeys.findIndex(
       (renderKey) => renderKey === sortState.renderKey
     );
-    if (activeSortColumnIndex >= 0 && columns[activeSortColumnIndex]?.sortable) {
+    if (activeSortColumnIndex >= 0 && isSortableColumn(columns[activeSortColumnIndex])) {
       return;
     }
 
     const fallbackSortColumnIndex = columns.findIndex(
-      (column) => column.sortable && String(column.key) === sortState.key
+      (column) => isSortableColumn(column) && String(column.key) === sortState.key
     );
     if (fallbackSortColumnIndex < 0) {
       setSortState(null);
@@ -408,7 +408,7 @@ export function Table<T>({
     }
 
     const missingSortLabelKeys = columns.reduce<string[]>((keys, column, columnIndex) => {
-      if (!column.sortable) {
+      if (!isSortableColumn(column)) {
         return keys;
       }
 
@@ -460,7 +460,7 @@ export function Table<T>({
         ? activeSortColumnIndexByRenderKey
         : columns.findIndex((item) => String(item.key) === sortState.key);
     const column = activeSortColumnIndex >= 0 ? columns[activeSortColumnIndex] : undefined;
-    if (!column?.sortable) {
+    if (!column || !isSortableColumn(column)) {
       return sourceEntries;
     }
 
@@ -522,7 +522,7 @@ export function Table<T>({
         : columns.findIndex((column) => String(column.key) === sortState.key);
     const activeSortColumn =
       activeSortColumnIndex >= 0 ? columns[activeSortColumnIndex] : undefined;
-    if (!activeSortColumn?.sortable) {
+    if (!activeSortColumn || !isSortableColumn(activeSortColumn)) {
       return "";
     }
 
@@ -546,7 +546,7 @@ export function Table<T>({
     sortedEntries.length
   ]);
   const hasActionableSortControls =
-    !resolvedLoading && sortedEntries.length > 1 && columns.some((column) => column.sortable);
+    !resolvedLoading && sortedEntries.length > 1 && columns.some((column) => isSortableColumn(column));
   const exposeKeyboardScrollableRegion = !hasActionableSortControls && hasKeyboardPannableOverflow;
   const tableColSpan = Math.max(columns.length, 1);
 
@@ -724,7 +724,7 @@ export function Table<T>({
               const columnRenderKey =
                 resolvedColumnRenderKeys[columnIndex] ??
                 `${key}__index-${columnIndex}`;
-              const sortable = Boolean(column.sortable);
+              const sortable = isSortableColumn(column);
               const hasMultiRowData = sortedEntries.length > 1;
               const keySortDirection =
                 sortable && sortState?.key === key ? sortState.direction : undefined;
@@ -1284,6 +1284,10 @@ function resolveBooleanFlag(value: unknown, fallback: boolean) {
   }
 
   return value;
+}
+
+function isSortableColumn(column: { sortable?: boolean } | undefined): boolean {
+  return resolveBooleanFlag(column?.sortable, false);
 }
 
 function hasRenderableNode(node: React.ReactNode): boolean {
