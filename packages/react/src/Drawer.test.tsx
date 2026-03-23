@@ -52,6 +52,21 @@ describe("Drawer", () => {
     );
   });
 
+  it("falls back invalid runtime showCloseButton values to visible close affordance", () => {
+    render(
+      <Drawer
+        open
+        onOpenChange={() => {}}
+        title="Runtime showCloseButton drawer"
+        showCloseButton={0 as unknown as boolean}
+      >
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    expect(screen.getByRole("button", { name: "Close drawer" })).toBeInTheDocument();
+  });
+
   it("exposes close-button keyboard shortcut hints for Enter/Space activation", () => {
     render(
       <Drawer open onOpenChange={() => {}} title="Shortcut hints drawer">
@@ -145,6 +160,34 @@ describe("Drawer", () => {
 
     expect(onCloseReason).not.toHaveBeenCalled();
     expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it("normalizes runtime dismiss booleans and keeps Escape/outside dismissal enabled", () => {
+    const onOpenChange = vi.fn();
+    const onCloseReason = vi.fn();
+
+    render(
+      <Drawer
+        open
+        onOpenChange={onOpenChange}
+        onCloseReason={onCloseReason}
+        title="Runtime dismiss drawer"
+        closeOnEscape={0 as unknown as boolean}
+        closeOnOutsidePointer={null as unknown as boolean}
+      >
+        <p>Drawer content</p>
+      </Drawer>
+    );
+
+    expect(screen.getByRole("dialog", { name: "Runtime dismiss drawer" })).toHaveAttribute("aria-keyshortcuts", "Escape");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(onCloseReason).toHaveBeenNthCalledWith(1, "escape-key");
+    expect(onOpenChange).toHaveBeenNthCalledWith(1, false);
+
+    fireEvent.pointerDown(document.body);
+    expect(onCloseReason).toHaveBeenNthCalledWith(2, "outside-pointer");
+    expect(onOpenChange).toHaveBeenNthCalledWith(2, false);
   });
 
   it("prevents default on handled Escape and outside-pointer dismiss events", () => {
@@ -523,6 +566,38 @@ describe("Drawer", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Close drawer" }));
     expect(trigger).not.toHaveFocus();
+  });
+
+  it("falls back invalid runtime restoreFocus values to enabled focus restore", () => {
+    function RuntimeFocusRestoreFixture() {
+      const [open, setOpen] = React.useState(false);
+
+      return (
+        <div>
+          <button type="button" onClick={() => setOpen(true)}>
+            Open runtime restore drawer
+          </button>
+          <Drawer
+            open={open}
+            onOpenChange={setOpen}
+            title="Runtime restore drawer"
+            restoreFocus={0 as unknown as boolean}
+          >
+            <p>Drawer content</p>
+          </Drawer>
+        </div>
+      );
+    }
+
+    render(<RuntimeFocusRestoreFixture />);
+
+    const trigger = screen.getByRole("button", { name: "Open runtime restore drawer" });
+    trigger.focus();
+    fireEvent.click(trigger);
+    expect(screen.getByRole("dialog", { name: "Runtime restore drawer" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Close drawer" }));
+    expect(trigger).toHaveFocus();
   });
 
   it("shows close button focus ring only for focus-visible state", () => {

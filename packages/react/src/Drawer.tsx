@@ -24,6 +24,13 @@ export type DrawerProps = {
   onOpenChange: (open: boolean) => void;
 };
 
+function resolveBooleanFlag(value: unknown, fallback: boolean) {
+  if (typeof value !== "boolean") {
+    return fallback;
+  }
+  return value;
+}
+
 export function Drawer({
   open,
   side = "right",
@@ -72,6 +79,10 @@ export function Drawer({
     ? undefined
     : explicitAriaLabel ?? (hasReadableTitleText ? undefined : "Drawer");
   const hasExplicitDrawerName = explicitAriaLabel !== undefined || resolvedAriaLabelledBy !== undefined;
+  const resolvedRestoreFocus = resolveBooleanFlag(restoreFocus, true);
+  const resolvedCloseOnEscape = resolveBooleanFlag(closeOnEscape, true);
+  const resolvedCloseOnOutsidePointer = resolveBooleanFlag(closeOnOutsidePointer, true);
+  const resolvedShowCloseButton = resolveBooleanFlag(showCloseButton, true);
 
   const closeWithReason = React.useCallback(
     (reason: DrawerCloseReason) => {
@@ -164,7 +175,7 @@ export function Drawer({
             if (event.defaultPrevented) {
               return;
             }
-            if (!closeOnEscape) {
+            if (!resolvedCloseOnEscape) {
               event.preventDefault();
               return;
             }
@@ -177,7 +188,7 @@ export function Drawer({
             if (event.defaultPrevented) {
               return;
             }
-            if (!closeOnOutsidePointer) {
+            if (!resolvedCloseOnOutsidePointer) {
               event.preventDefault();
               return;
             }
@@ -187,7 +198,7 @@ export function Drawer({
           }}
           onDismiss={() => onOpenChange(false)}
         >
-          <FocusScope restoreFocus={restoreFocus}>
+          <FocusScope restoreFocus={resolvedRestoreFocus}>
             <aside
               ref={(node) => {
                 panelRef.current = node;
@@ -198,7 +209,7 @@ export function Drawer({
               aria-label={resolvedAriaLabel}
               aria-labelledby={resolvedAriaLabelledBy ?? (resolvedAriaLabel ? undefined : titleId)}
               aria-describedby={hasDescriptionContent ? descriptionId : undefined}
-              aria-keyshortcuts={closeOnEscape ? "Escape" : undefined}
+              aria-keyshortcuts={resolvedCloseOnEscape ? "Escape" : undefined}
               data-side={side}
               style={{
                 position: "absolute",
@@ -231,7 +242,7 @@ export function Drawer({
                     </p>
                   ) : null}
                 </div>
-                {showCloseButton ? (
+                {resolvedShowCloseButton ? (
                   <button
                     data-aurora-reduced-motion="transition"
                     type="button"

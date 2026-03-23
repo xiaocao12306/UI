@@ -167,6 +167,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 - Keep `restoreFocus` enabled for dialogs unless product flow intentionally redirects focus after close.
 - Keep `restoreFocus` enabled for drawers unless closing should intentionally hand focus to a different target.
 - Normalize dialog runtime boolean config from CMS/JSON payloads before binding props: malformed `restoreFocus/closeOnEscape/closeOnOutsidePointer/showCloseButton` values should degrade to `true` so dismiss policy, focus handoff, and close affordance stay stable.
+- Normalize drawer runtime boolean config from CMS/JSON payloads before binding props: malformed `restoreFocus/closeOnEscape/closeOnOutsidePointer/showCloseButton` values should degrade to `true` so dismiss policy, focus handoff, and close affordance stay stable.
 - Prefer `ariaLabelledBy` for dialog/drawer naming when a visible heading already exists; use `ariaLabel` only for standalone/non-text titles without nearby heading context.
 - For icon/non-text dialog/drawer titles, provide `ariaLabelledBy` when a visible heading exists, otherwise provide `ariaLabel`; development builds warn when both naming paths are missing.
 - Keep close-button focus intent primary-only in dialog/drawer surfaces so non-primary pointer interactions (for example context/right-click) do not clear keyboard focus-visible feedback.
@@ -295,6 +296,7 @@ import * as PaginationStories from "../stories/Pagination.stories";
 <Canvas of={DrawerStories.CloseButtonManagedKeysPreemptedByLocalHandler} />
 <Canvas of={DrawerStories.EscapePreemptedByGlobalHandler} />
 <Canvas of={DrawerStories.EscapeRepeatGuard} />
+<Canvas of={DrawerStories.RuntimeBooleanConfigNormalization} />
 <Canvas of={DrawerStories.DismissGuardHooks} />
 
 ## Testing

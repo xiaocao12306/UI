@@ -231,6 +231,73 @@ export const NonDismissible: Story = {
   }
 };
 
+function RuntimeBooleanConfigNormalizationDrawerDemo() {
+  const [open, setOpen] = React.useState(false);
+  const [lastReason, setLastReason] = React.useState("none");
+
+  return (
+    <StoryFullscreenFrame align="start">
+      <div style={storyTelemetryStackStyle}>
+        <button
+          type="button"
+          data-testid="drawer-runtime-outside-target"
+          aria-label="Drawer runtime outside target"
+          style={storyOutsideProbeStyle}
+        />
+        <p style={storyMutedTextStyle}>
+          Last close reason:{" "}
+          <strong data-testid="drawer-runtime-close-reason" style={storyEmphasisTextStyle}>
+            {lastReason}
+          </strong>
+        </p>
+        <Button variant="outline" onClick={() => setOpen(true)}>
+          Open Runtime Config Drawer
+        </Button>
+        <Drawer
+          open={open}
+          onOpenChange={setOpen}
+          title="Runtime config drawer"
+          restoreFocus={0 as unknown as boolean}
+          closeOnEscape={0 as unknown as boolean}
+          closeOnOutsidePointer={null as unknown as boolean}
+          showCloseButton={0 as unknown as boolean}
+          onCloseReason={(reason) => setLastReason(reason)}
+        >
+          <p style={storyParagraphStyle}>
+            Runtime boolean normalization keeps dismiss policy and close affordance stable.
+          </p>
+        </Drawer>
+      </div>
+    </StoryFullscreenFrame>
+  );
+}
+
+export const RuntimeBooleanConfigNormalization: Story = {
+  render: () => <RuntimeBooleanConfigNormalizationDrawerDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    const openButton = canvas.getByRole("button", { name: "Open Runtime Config Drawer" });
+    const outsideTarget = canvas.getByTestId("drawer-runtime-outside-target");
+
+    await userEvent.click(openButton);
+    const drawer = await body.findByRole("dialog", { name: "Runtime config drawer" });
+    await expect(drawer).toHaveAttribute("aria-keyshortcuts", "Escape");
+    await expect(body.getByRole("button", { name: "Close drawer" })).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await expect(body.queryByRole("dialog", { name: "Runtime config drawer" })).not.toBeInTheDocument();
+    await expect(openButton).toHaveFocus();
+    await expect(canvas.getByTestId("drawer-runtime-close-reason")).toHaveTextContent("escape-key");
+
+    await userEvent.click(openButton);
+    await expect(await body.findByRole("dialog", { name: "Runtime config drawer" })).toBeInTheDocument();
+    await userEvent.pointer({ target: outsideTarget, keys: "[MouseLeft]" });
+    await expect(body.queryByRole("dialog", { name: "Runtime config drawer" })).not.toBeInTheDocument();
+    await expect(canvas.getByTestId("drawer-runtime-close-reason")).toHaveTextContent("outside-pointer");
+  }
+};
+
 function DismissGuardDrawerDemo() {
   const [open, setOpen] = React.useState(true);
   const [escapeCalls, setEscapeCalls] = React.useState(0);
